@@ -1,33 +1,32 @@
 modLoader = "javafml"
 loaderVersion = "[36,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "GNU AGPL 3"
 
 [[mods]]
-modId = "examplemod"
+modId = "wynntils"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
-description = '''
-This is an example description! Tell everyone what your mod is about!
-'''
-#logoFile = ""
+displayName = "Wynntils"
+authors =  ["Scyu_","HeyZeer0","EHTYCSCYTHE","SHsuperCM","coehlrich","_Bedo_","HighCrit","Reticality","mag_icus","P0ke","Incompleteusern"]
+description =  "The best Wynncraft mod you'll probably find!"
+# needs to be "root" file
+#logoFile = "assets/wynntils/logo.png"
 
-[[dependencies.examplemod]]
+[[dependencies.wynntils]]
 modId = "forge"
 mandatory = true
 versionRange = "[36,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.wynntils]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.16.5,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.wynntils]]
 modId = "architectury"
 mandatory = true
 versionRange = "[1.25.36,)"

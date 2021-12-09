@@ -1,4 +1,4 @@
-package net.examplemod;
+package com.wynntils;
 
 import me.shedaniel.architectury.registry.CreativeTabs;
 import me.shedaniel.architectury.registry.DeferredRegister;
@@ -11,10 +11,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Supplier;
-
 public class ExampleMod {
-    public static final String MOD_ID = "examplemod";
+    public static final String MOD_ID = "wynntils";
     // We can use this if we don't want to use DeferredRegister
     public static final LazyLoadedValue<Registries> REGISTRIES = new LazyLoadedValue<>(() -> Registries.get(MOD_ID));
     // Registering a new creative tab

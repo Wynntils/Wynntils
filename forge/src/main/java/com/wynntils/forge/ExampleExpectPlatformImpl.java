@@ -1,7 +1,7 @@
-package net.examplemod.fabric;
+package com.wynntils.forge;
 
-import net.examplemod.ExampleExpectPlatform;
-import net.fabricmc.loader.api.FabricLoader;
+import com.wynntils.ExampleExpectPlatform;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.nio.file.Path;
 
@@ -10,6 +10,6 @@ public class ExampleExpectPlatformImpl {
      * This is our actual method to {@link ExampleExpectPlatform#getConfigDirectory()}.
      */
     public static Path getConfigDirectory() {
-        return FabricLoader.getInstance().getConfigDir();
+        return FMLPaths.CONFIGDIR.get();
     }
 }

@@ -1,9 +1,9 @@
-package net.examplemod.fabric;
+package com.wynntils.fabric;
 
-import net.examplemod.ExampleMod;
+import com.wynntils.ExampleMod;
 import net.fabricmc.api.ModInitializer;
 
-public class ExampleModFabric implements ModInitializer {
+public class WynntilsModFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         ExampleMod.init();

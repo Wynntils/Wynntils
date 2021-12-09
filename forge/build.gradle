@@ -3,8 +3,8 @@ plugins {
 }
 loom {
     forge {
-        mixinConfig "examplemod-common.mixins.json"
-        mixinConfig "examplemod.mixins.json"
+        mixinConfig "wynntils.mixins.json"
+        mixinConfig "wynntils-forge.mixins.json"
     }
 }
 

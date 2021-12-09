@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "net.examplemod.mixin.fabric",
+  "package": "com.wynntils.forge.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
   ],

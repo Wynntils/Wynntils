@@ -1,22 +1,20 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "wynntils",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
-  "authors": [
-    "Me!"
-  ],
+  "name": "Wynntils",
+  "description": "The best Wynncraft mod you'll probably find!",
+  "authors": ["Scyu_","HeyZeer0","EHTYCSCYTHE","SHsuperCM","coehlrich","_Bedo_","HighCrit","Reticality","mag_icus","P0ke","Incompleteusern"],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://wynntils.com",
+    "sources": "https://github.com/magicus/WynnArchi"
   },
-  "license": "Insert License Here",
-  "icon": "assets/examplemod/icon.png",
+  "license": "GNU AGPL 3",
+  "icon": "assets/wynntils/logo.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.examplemod.fabric.ExampleModFabric"
+      "com.wynntils.fabric.WynntilsModFabric"
     ]
   },
   "depends": {
