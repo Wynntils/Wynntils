@@ -23,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
@@ -71,11 +72,11 @@ public class WynntilsMod {
     }
 
 
-    public static void postTitleScreenInit(TitleScreen screen, List<AbstractWidget> buttons) {
+    public static void postTitleScreenInit(TitleScreen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         WynncraftButton wynncraftButton = new WynncraftButton(screen, wynncraftServer,
                 screen.width / 2 + 104, screen.height / 4 + 48 + 24);
-        buttons.add(wynncraftButton);
+        addButton.accept(wynncraftButton);
     }
 
     public static void postGameMenuScreenInit(PauseScreen screen, List<AbstractWidget> buttons) {

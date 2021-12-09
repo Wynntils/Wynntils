@@ -15,6 +15,6 @@ public class ScreenListener {
         Screen screen = e.getGui();
         List<AbstractWidget> buttons = e.getWidgetList();
 
-        ScreenEvents.onScreenCreated(screen, buttons);
+        ScreenEvents.onScreenCreated(screen, buttons, e::addWidget);
     }
 }
