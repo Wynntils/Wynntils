@@ -11,6 +11,7 @@ import java.util.List;
 public class ScreenEvents {
 
     public static void onScreenCreated(Screen screen, List<AbstractWidget> buttons) {
+        System.out.println("DEBUG: onScreenCreated");
         if (screen instanceof TitleScreen titleScreen) {
             WynntilsMod.postTitleScreenInit(titleScreen, buttons);
         } else if (screen instanceof PauseScreen gameMenuScreen) {

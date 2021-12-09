@@ -17,6 +17,9 @@
       "com.wynntils.fabric.WynntilsModFabric"
     ]
   },
+  "mixins": [
+    "wynntils-fabric.mixins.json"
+  ],
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.16.5",
