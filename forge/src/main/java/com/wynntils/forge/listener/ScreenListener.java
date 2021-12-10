@@ -17,4 +17,28 @@ public class ScreenListener {
 
         ScreenEvents.onScreenCreated(screen, buttons, e::addWidget);
     }
+
+    /*
+    @SubscribeEvent
+    public void onChest(GuiOverlapEvent.ChestOverlap.DrawScreen.Post e) {
+        if (e.getGui().getSlotUnderMouse() == null || !e.getGui().getSlotUnderMouse().hasItem()) return;
+
+        replaceLore(e.getGui().getSlotUnderMouse().getItem());
+    }
+
+    @SubscribeEvent
+    public void onInventory(GuiOverlapEvent.InventoryOverlap.DrawScreen e) {
+        if (e.getGui().getSlotUnderMouse() == null || !e.getGui().getSlotUnderMouse().hasItem()) return;
+
+        replaceLore(e.getGui().getSlotUnderMouse().getItem());
+    }
+
+    @SubscribeEvent
+    public void onHorse(GuiOverlapEvent.HorseOverlap.DrawScreen e) {
+        if (e.getGui().getSlotUnderMouse() == null || !e.getGui().getSlotUnderMouse().hasItem()) return;
+
+        replaceLore(e.getGui().getSlotUnderMouse().getItem());
+    }
+
+     */
 }

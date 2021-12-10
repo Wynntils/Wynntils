@@ -18,6 +18,7 @@
     ]
   },
   "mixins": [
+    "wynntils.mixins.json",
     "wynntils-fabric.mixins.json"
   ],
   "depends": {
