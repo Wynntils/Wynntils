@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "0.10.0-SNAPSHOT" apply false
+    id "com.diffplug.spotless" version "6.0.5"
 }
 
 architectury {
@@ -55,5 +56,26 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+}
+
+spotless {
+    java {
+        // spotless need help finding java with the Architectury layout
+        target '*/src/*/java/**/*.java'
+        // define the steps to apply to Java source code
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat('1.13.0').reflowLongStrings()
+        licenseHeader '/* (C)$YEAR */'
+    }
+    format 'misc', {
+        // define the files to apply `misc` to
+        target '*.gradle', '*.md', '.gitignore', '*.properties', "*.json"
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
     }
 }

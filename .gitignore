@@ -17,3 +17,5 @@ classes/
 .vscode
 .settings
 *.launch
+
+.architectury-transformer/
