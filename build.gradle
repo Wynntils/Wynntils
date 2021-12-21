@@ -27,34 +27,22 @@ subprojects {
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
-    group = rootProject.maven_group
 
     repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
         maven { url "https://maven.parchmentmc.org/" }
     }
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-
-        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-        // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-        // We'll use that if it's available, but otherwise we'll use the older option.
-        def targetVersion = 16
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.release = targetVersion
-        }
     }
 
     java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(rootProject.java_version))
+        }
         withSourcesJar()
     }
 }
@@ -66,7 +54,7 @@ spotless {
         // define the steps to apply to Java source code
         importOrder()
         removeUnusedImports()
-        googleJavaFormat('1.13.0').reflowLongStrings()
+        googleJavaFormat(rootProject.google_java_format_version).reflowLongStrings()
         licenseHeader '/*\n' +
                 ' * Copyright © Wynntils $YEAR.\n' +
                 ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
