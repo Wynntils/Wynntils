@@ -67,7 +67,10 @@ spotless {
         importOrder()
         removeUnusedImports()
         googleJavaFormat('1.13.0').reflowLongStrings()
-        licenseHeader '/* (C)$YEAR */'
+        licenseHeader '/*\n' +
+                ' * Copyright © Wynntils $YEAR.\n' +
+                ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
+                ' */'
     }
     format 'misc', {
         // define the files to apply `misc` to
