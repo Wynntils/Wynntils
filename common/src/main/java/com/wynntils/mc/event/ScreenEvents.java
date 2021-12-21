@@ -6,8 +6,10 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.utils.ItemUtils;
 import com.wynntils.WynntilsMod;
+import com.wynntils.utils.ItemUtils;
+import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -19,12 +21,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 public class ScreenEvents {
 
-    public static void onScreenCreated(Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
+    public static void onScreenCreated(
+            Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
         System.out.println("DEBUG: onScreenCreated");
         if (screen instanceof TitleScreen titleScreen) {
             WynntilsMod.postTitleScreenInit(titleScreen, buttons, addButton);
@@ -33,7 +33,13 @@ public class ScreenEvents {
         }
     }
 
-    public static void onInventoryRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+    public static void onInventoryRender(
+            Screen screen,
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float partialTicks,
+            Slot hoveredSlot) {
         System.out.println("DEBUG: onInventoryRender");
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
@@ -47,7 +53,8 @@ public class ScreenEvents {
 
     private static void replaceLore(ItemStack stack) {
         // Soul Point Timer
-        if ((stack.getItem() == Items.NETHER_STAR || stack.getItem() == Item.byBlock(Blocks.SNOW)) && stack.getDisplayName().getString().contains("Soul Point")) {
+        if ((stack.getItem() == Items.NETHER_STAR || stack.getItem() == Item.byBlock(Blocks.SNOW))
+                && stack.getDisplayName().getString().contains("Soul Point")) {
             List<String> lore = ItemUtils.getLore(stack);
             if (lore != null && !lore.isEmpty()) {
                 if (lore.get(lore.size() - 1).contains("Time until next soul point: ")) {
@@ -57,13 +64,20 @@ public class ScreenEvents {
             }
 
             lore.add("");
-            int secondsUntilSoulPoint = 900; //FIXME: PlayerInfo.get(InventoryData.class).getTicksToNextSoulPoint() / 20;
+            int secondsUntilSoulPoint =
+                    900; // FIXME: PlayerInfo.get(InventoryData.class).getTicksToNextSoulPoint() /
+            // 20;
             int minutesUntilSoulPoint = secondsUntilSoulPoint / 60;
             secondsUntilSoulPoint %= 60;
-            lore.add(ChatFormatting.AQUA + "Time until next soul point: " + ChatFormatting.WHITE + minutesUntilSoulPoint + ":" + String.format("%02d", secondsUntilSoulPoint));
+            lore.add(
+                    ChatFormatting.AQUA
+                            + "Time until next soul point: "
+                            + ChatFormatting.WHITE
+                            + minutesUntilSoulPoint
+                            + ":"
+                            + String.format("%02d", secondsUntilSoulPoint));
             ItemUtils.replaceLore(stack, lore);
             return;
-
         }
 
         /*

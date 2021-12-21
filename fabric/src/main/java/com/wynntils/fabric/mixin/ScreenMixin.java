@@ -5,6 +5,7 @@
 package com.wynntils.fabric.mixin;
 
 import com.wynntils.mc.event.ScreenEvents;
+import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -18,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @Mixin(value = Screen.class, priority = 1100)
-public abstract class ScreenMixin extends AbstractContainerEventHandler implements TickableWidget, Widget {
+public abstract class ScreenMixin extends AbstractContainerEventHandler
+        implements TickableWidget, Widget {
 
-    @Shadow protected abstract <T extends AbstractWidget> T addButton(T abstractWidget);
+    @Shadow
+    protected abstract <T extends AbstractWidget> T addButton(T abstractWidget);
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void init(Minecraft client, int width, int height, CallbackInfo info) {

@@ -4,35 +4,30 @@
  */
 package com.wynntils.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 public class ItemUtils {
-    /**
-     * Get the lore NBT tag from an item, else return null
-     */
+    /** Get the lore NBT tag from an item, else return null */
     public static ListTag getLoreTag(ItemStack item) {
         if (item.isEmpty()) return null;
         CompoundTag display = item.getTagElement("display");
 
-        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore")) return null;
+        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore"))
+            return null;
         Tag loreBase = display.get("Lore");
 
         if (loreBase.getType() != ListTag.TYPE) return null;
         return (ListTag) loreBase;
     }
 
-    /**
-     * Get the lore NBT tag from an item, else return null
-     */
+    /** Get the lore NBT tag from an item, else return null */
     public static ListTag getOrCreateLoreTag(ItemStack item) {
         if (item.isEmpty()) return null;
 
@@ -44,9 +39,7 @@ public class ItemUtils {
         return (ListTag) lore;
     }
 
-    /**
-     * Get the lore NBT tag from an item, else return null
-     */
+    /** Get the lore NBT tag from an item, else return null */
     public static Tag getOrCreateTag(CompoundTag tag, String key, Supplier<Tag> create) {
         return tag.contains(key) ? tag.get(key) : tag.put(key, create.get());
     }
@@ -88,7 +81,6 @@ public class ItemUtils {
      *
      * @param lore A {@link List} to be turned into a {@link ListTag}
      */
-
     public static void replaceLore(ItemStack stack, List<String> lore) {
         ListTag tag = new ListTag();
         lore.forEach(s -> tag.add(StringTag.valueOf(s)));

@@ -14,10 +14,10 @@ public class MathUtils {
     }
 
     public static float inverselerp(float a, float b, float value) {
-        return (value - a)/(b - a);
+        return (value - a) / (b - a);
     }
 
     public static double inverselerp(double a, double b, double value) {
-        return (value - a)/(b - a);
+        return (value - a) / (b - a);
     }
 }
