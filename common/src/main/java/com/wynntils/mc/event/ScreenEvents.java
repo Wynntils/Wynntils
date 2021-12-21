@@ -2,7 +2,7 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.ItemUtils;
+import com.wynntils.utils.ItemUtils;
 import com.wynntils.WynntilsMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;

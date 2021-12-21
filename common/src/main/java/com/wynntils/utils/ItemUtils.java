@@ -1,4 +1,4 @@
-package com.wynntils;
+package com.wynntils.utils;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
