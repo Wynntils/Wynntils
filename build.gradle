@@ -27,6 +27,7 @@ subprojects {
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
+    apply plugin: "com.diffplug.spotless"
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
@@ -45,28 +46,26 @@ allprojects {
         }
         withSourcesJar()
     }
-}
 
-spotless {
-    java {
-        // spotless need help finding java with the Architectury layout
-        target '*/src/*/java/**/*.java'
-        // define the steps to apply to Java source code
-        importOrder()
-        removeUnusedImports()
-        googleJavaFormat(rootProject.google_java_format_version).aosp().reflowLongStrings()
-        licenseHeader '/*\n' +
-                ' * Copyright © Wynntils $YEAR.\n' +
-                ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
-                ' */'
-    }
-    format 'misc', {
-        // define the files to apply `misc` to
-        target '*.gradle', '*.md', '.gitignore', '*.properties', "*.json"
+    spotless {
+        java {
+            // define the steps to apply to Java source code
+            importOrder()
+            removeUnusedImports()
+            googleJavaFormat(rootProject.google_java_format_version).aosp().reflowLongStrings()
+            licenseHeader '/*\n' +
+                    ' * Copyright © Wynntils $YEAR.\n' +
+                    ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
+                    ' */'
+        }
+        format 'misc', {
+            // define the files to apply `misc` to
+            target '*.gradle', '*.md', '.gitignore', '*.properties', "*.json"
 
-        // define the steps to apply to those files
-        trimTrailingWhitespace()
-        indentWithSpaces()
-        endWithNewline()
+            // define the steps to apply to those files
+            trimTrailingWhitespace()
+            indentWithSpaces()
+            endWithNewline()
+        }
     }
 }
