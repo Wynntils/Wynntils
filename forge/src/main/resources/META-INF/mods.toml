@@ -7,8 +7,8 @@ license = "GNU AGPL 3"
 modId = "wynntils"
 version = "${version}"
 displayName = "Wynntils"
-authors =  ["Scyu_","HeyZeer0","EHTYCSCYTHE","SHsuperCM","coehlrich","_Bedo_","HighCrit","Reticality","mag_icus","P0ke","Incompleteusern"]
-description =  "The best Wynncraft mod you'll probably find!"
+authors = ["Scyu_", "HeyZeer0", "EHTYCSCYTHE", "SHsuperCM", "coehlrich", "_Bedo_", "HighCrit", "Reticality", "mag_icus", "P0ke", "Incompleteusern"]
+description = "The best Wynncraft mod you'll probably find!"
 # needs to be "root" file
 #logoFile = "assets/wynntils/logo.png"
 
