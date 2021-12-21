@@ -54,7 +54,7 @@ spotless {
         // define the steps to apply to Java source code
         importOrder()
         removeUnusedImports()
-        googleJavaFormat(rootProject.google_java_format_version).reflowLongStrings()
+        googleJavaFormat(rootProject.google_java_format_version).aosp().reflowLongStrings()
         licenseHeader '/*\n' +
                 ' * Copyright © Wynntils $YEAR.\n' +
                 ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
