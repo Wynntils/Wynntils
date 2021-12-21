@@ -26,9 +26,3 @@ versionRange = "[1.16.5,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.wynntils]]
-modId = "architectury"
-mandatory = true
-versionRange = "[1.25.36,)"
-ordering = "AFTER"
-side = "BOTH"
