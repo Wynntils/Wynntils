@@ -1,5 +1,8 @@
 package com.wynntils.framework.events;
 
+/**
+ * The context dispatched when something happens as a hook
+ */
 public abstract class Event {
     boolean canceled = false;
 

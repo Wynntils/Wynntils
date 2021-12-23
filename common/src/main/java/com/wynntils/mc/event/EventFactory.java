@@ -21,6 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
+/**
+ * Creates events from mixins and platform dependent hooks
+ */
 public class EventFactory {
     public static void onScreenCreated(
             Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
