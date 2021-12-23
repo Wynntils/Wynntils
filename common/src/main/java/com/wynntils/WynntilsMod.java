@@ -6,9 +6,12 @@ package com.wynntils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.framework.events.EventBus;
 import com.wynntils.framework.feature.Feature;
@@ -32,10 +35,11 @@ public class WynntilsMod {
         eventBus = new EventBus();
     }
 
-    public static final Feature[] features = new Feature[]{new WynncraftButtonFeature()};
+    public static final Feature[] features = new Feature[]{new WynncraftButtonFeature(), new SoulPointTimerFeature()};
 
     public static void init() {
         System.out.println("Wynntils initialized");
+        Arrays.stream(features).forEach(f -> f.onEnable());
 
     }
 }
