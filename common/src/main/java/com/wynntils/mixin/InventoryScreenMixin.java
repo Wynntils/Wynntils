@@ -5,7 +5,7 @@
 package com.wynntils.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.event.ScreenEvents;
+import com.wynntils.mc.event.EventFactory;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -30,7 +30,7 @@ public abstract class InventoryScreenMixin extends AbstractContainerScreen<Inven
             PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        ScreenEvents.onInventoryRender(
+        EventFactory.onInventoryRender(
                 screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 }

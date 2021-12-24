@@ -4,7 +4,7 @@
  */
 package com.wynntils.forge.listener;
 
-import com.wynntils.mc.event.ScreenEvents;
+import com.wynntils.mc.event.EventFactory;
 import java.util.List;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,7 +18,7 @@ public class ScreenListener {
         Screen screen = e.getGui();
         List<AbstractWidget> buttons = e.getWidgetList();
 
-        ScreenEvents.onScreenCreated(screen, buttons, e::addWidget);
+        EventFactory.onScreenCreated(screen, buttons, e::addWidget);
     }
 
     /*

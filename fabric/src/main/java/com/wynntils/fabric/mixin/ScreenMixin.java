@@ -4,7 +4,7 @@
  */
 package com.wynntils.fabric.mixin;
 
-import com.wynntils.mc.event.ScreenEvents;
+import com.wynntils.mc.event.EventFactory;
 import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
@@ -31,6 +31,6 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler
         Screen screen = (Screen) (Object) this;
         List<AbstractWidget> buttons = Screens.getButtons(screen);
 
-        ScreenEvents.onScreenCreated(screen, buttons, this::addButton);
+        EventFactory.onScreenCreated(screen, buttons, this::addButton);
     }
 }
