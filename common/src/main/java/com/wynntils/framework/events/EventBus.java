@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+//TODO integrate forge's event bus or add asm for performance
 public class EventBus {
     private final ConcurrentMap<Class<?>, ListenerHandler> subscribers = new ConcurrentHashMap<>();
 
