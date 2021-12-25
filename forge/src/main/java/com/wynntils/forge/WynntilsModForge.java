@@ -5,11 +5,14 @@
 package com.wynntils.forge;
 
 import com.wynntils.WynntilsMod;
+import com.wynntils.forge.listener.ScreenListener;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
         WynntilsMod.init();
+        MinecraftForge.EVENT_BUS.register(new ScreenListener());
     }
 }
