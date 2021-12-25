@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.WynntilsMod;
 import com.wynntils.framework.Subscriber;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
@@ -22,11 +25,11 @@ public class WynncraftButtonFeature extends Feature {
     public static void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         WynncraftButton wynncraftButton =
-        new WynncraftButton(
-                    e.getTitleScreen(),
-                    wynncraftServer,
-                e.getTitleScreen().width / 2 + 104,
-                e.getTitleScreen().height / 4 + 48 + 24);
+                new WynncraftButton(
+                        e.getTitleScreen(),
+                        wynncraftServer,
+                        e.getTitleScreen().width / 2 + 104,
+                        e.getTitleScreen().height / 4 + 48 + 24);
         e.getAddButton().accept(wynncraftButton);
     }
 

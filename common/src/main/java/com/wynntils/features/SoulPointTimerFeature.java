@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features;
 
 import com.wynntils.framework.Subscriber;
@@ -28,32 +32,34 @@ public class SoulPointTimerFeature extends Feature {
         if (!stack.getDisplayName().getString().contains("Soul Point")) return;
 
         if (ItemUtils.hasMarker(stack, "soulpoint")) return;
-        
+
         ListTag lore = ItemUtils.getLoreTag(stack);
-        
+
         if (lore == null) {
             lore = new ListTag();
         } else {
             lore.add(StringTag.valueOf(ItemUtils.toLoreForm("")));
         }
 
-        lore.add(new DynamicTag(() -> {
-            int rawSecondsUntilSoulPoint = InventoryData.getTicksTillNextSoulPoint() / 20;
-            int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
-            int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
+        lore.add(
+                new DynamicTag(
+                        () -> {
+                            int rawSecondsUntilSoulPoint =
+                                    InventoryData.getTicksTillNextSoulPoint() / 20;
+                            int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
+                            int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-            return ItemUtils.toLoreForm(ChatFormatting.AQUA
-                    + "Time until next soul point: "
-                    + ChatFormatting.WHITE
-                    + minutesUntilSoulPoint
-                    + ":"
-                    + String.format("%02d", secondsUntilSoulPoint));
-        }));
+                            return ItemUtils.toLoreForm(
+                                    ChatFormatting.AQUA
+                                            + "Time until next soul point: "
+                                            + ChatFormatting.WHITE
+                                            + minutesUntilSoulPoint
+                                            + ":"
+                                            + String.format("%02d", secondsUntilSoulPoint));
+                        }));
 
         ItemUtils.addMarker(stack, "soulpoint");
         ItemUtils.replaceLore(stack, lore);
-
-        System.out.println("LORE REsuLt: " + ItemUtils.getLoreTag(stack));
     }
 
     @Override

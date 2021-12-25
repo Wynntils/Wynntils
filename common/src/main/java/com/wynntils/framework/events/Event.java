@@ -1,8 +1,10 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.framework.events;
 
-/**
- * The context dispatched when something happens as a hook
- */
+/** The context dispatched when something happens as a hook */
 public abstract class Event {
     boolean canceled = false;
 

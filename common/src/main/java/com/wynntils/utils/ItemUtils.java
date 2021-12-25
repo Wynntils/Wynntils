@@ -89,26 +89,19 @@ public class ItemUtils {
         replaceLore(stack, tag);
     }
 
-    /**
-     * Adds a boolean to an item's nbt as a marker
-     */
+    /** Adds a boolean to an item's nbt as a marker */
     public static void addMarker(ItemStack stack, String id) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putBoolean(id, true);
     }
 
-    /**
-     * Checks if a boolean to an item's nbt as a marker
-     */
+    /** Checks if a boolean to an item's nbt as a marker */
     public static boolean hasMarker(ItemStack stack, String id) {
         return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
     }
 
-    /**
-     * Converts a string to a mutable component form
-     */
+    /** Converts a string to a mutable component form */
     public static String toLoreForm(String toConvert) {
         return Serializer.toJson(new TextComponent(toConvert));
     }
-
 }
