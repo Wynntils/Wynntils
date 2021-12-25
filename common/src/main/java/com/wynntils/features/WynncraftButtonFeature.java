@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 public class WynncraftButtonFeature extends Feature {
 
     @Subscriber
-    public void onTitleScreenInit(TitleScreenInitEvent e) {
+    public static void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         WynncraftButton wynncraftButton =
         new WynncraftButton(

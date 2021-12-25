@@ -26,6 +26,9 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+
+    ],
+    "client": [
       "com.wynntils.fabric.WynntilsModFabric"
     ]
   },
