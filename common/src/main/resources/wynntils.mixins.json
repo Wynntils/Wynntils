@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8.4",
   "client": [
-    "AbstractContainerScreenMixin",
-    "InventoryScreenMixin"
+    "AbstractContainerScreenMixin"
   ],
   "mixins": [
   ],

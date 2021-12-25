@@ -11,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component.Serializer;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
@@ -86,4 +88,27 @@ public class ItemUtils {
         lore.forEach(s -> tag.add(StringTag.valueOf(s)));
         replaceLore(stack, tag);
     }
+
+    /**
+     * Adds a boolean to an item's nbt as a marker
+     */
+    public static void addMarker(ItemStack stack, String id) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putBoolean(id, true);
+    }
+
+    /**
+     * Checks if a boolean to an item's nbt as a marker
+     */
+    public static boolean hasMarker(ItemStack stack, String id) {
+        return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
+    }
+
+    /**
+     * Converts a string to a mutable component form
+     */
+    public static String toLoreForm(String toConvert) {
+        return Serializer.toJson(new TextComponent(toConvert));
+    }
+
 }

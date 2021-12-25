@@ -48,6 +48,7 @@ public class EventFactory {
     }
 
     public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
+        System.out.println("DEBUG: onTooltipRender");
         // this is done for inventory only. But why?
         //why not?
         GlStateManager._translated(0, 0, -300d);
