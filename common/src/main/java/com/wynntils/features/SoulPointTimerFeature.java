@@ -15,6 +15,7 @@ import com.wynntils.utils.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,7 +39,7 @@ public class SoulPointTimerFeature extends Feature {
         if (lore == null) {
             lore = new ListTag();
         } else {
-            lore.add(StringTag.valueOf(ItemUtils.toLoreForm("")));
+            lore.add(StringTag.valueOf("")); //Equivalent to adding "'
         }
 
         lore.add(
