@@ -8,17 +8,21 @@ import com.wynntils.framework.Subscriber;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
+import com.wynntils.framework.minecraft.DynamicTag;
+import com.wynntils.framework.wynntils.parsing.InventoryData;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.utils.ItemUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class SoulPointTimerFeature extends Feature {
     @Subscriber
-    public void onInventoryRender(InventoryRenderEvent e) {
+    public static void onInventoryRender(InventoryRenderEvent e) {
         Slot hoveredSlot = e.getHoveredSlot();
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
@@ -28,27 +32,34 @@ public class SoulPointTimerFeature extends Feature {
 
         if (!stack.getDisplayName().getString().contains("Soul Point")) return;
 
-        List<String> lore = ItemUtils.getLore(stack);
-        if (!lore.isEmpty()) {
-            if (lore.get(lore.size() - 1).contains("Time until next soul point: ")) {
-                lore.remove(lore.size() - 1);
-                lore.remove(lore.size() - 1);
-            }
+        if (ItemUtils.hasMarker(stack, "soulpoint")) return;
+
+        ListTag lore = ItemUtils.getLoreTag(stack);
+
+        if (lore == null) {
+            lore = new ListTag();
+        } else {
+            lore.add(StringTag.valueOf("")); // Equivalent to adding "'
         }
 
-        lore.add("");
-        int secondsUntilSoulPoint =
-                900; // FIXME: PlayerInfo.get(InventoryData.class).getTicksToNextSoulPoint() /
-        // 20;
-        int minutesUntilSoulPoint = secondsUntilSoulPoint / 60;
-        secondsUntilSoulPoint %= 60;
         lore.add(
-                ChatFormatting.AQUA
-                        + "Time until next soul point: "
-                        + ChatFormatting.WHITE
-                        + minutesUntilSoulPoint
-                        + ":"
-                        + String.format("%02d", secondsUntilSoulPoint));
+                new DynamicTag(
+                        () -> {
+                            int rawSecondsUntilSoulPoint =
+                                    InventoryData.getTicksTillNextSoulPoint() / 20;
+                            int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
+                            int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
+
+                            return ItemUtils.toLoreForm(
+                                    ChatFormatting.AQUA
+                                            + "Time until next soul point: "
+                                            + ChatFormatting.WHITE
+                                            + minutesUntilSoulPoint
+                                            + ":"
+                                            + String.format("%02d", secondsUntilSoulPoint));
+                        }));
+
+        ItemUtils.addMarker(stack, "soulpoint");
         ItemUtils.replaceLore(stack, lore);
     }
 

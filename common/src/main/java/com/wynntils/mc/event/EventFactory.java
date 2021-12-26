@@ -19,7 +19,6 @@ import net.minecraft.world.inventory.Slot;
 public class EventFactory {
     public static void onScreenCreated(
             Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
-        System.out.println("DEBUG: onScreenCreated");
         if (screen instanceof TitleScreen titleScreen) {
             WynntilsMod.eventBus.postEvent(
                     new TitleScreenInitEvent(titleScreen, buttons, addButton));
@@ -35,7 +34,6 @@ public class EventFactory {
             int mouseY,
             float partialTicks,
             Slot hoveredSlot) {
-        System.out.println("DEBUG: onInventoryRender");
 
         WynntilsMod.eventBus.postEvent(
                 new InventoryRenderEvent(

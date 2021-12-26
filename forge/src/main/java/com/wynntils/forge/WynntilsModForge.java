@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
+        // if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) return;
+        // Stops it from running on integrated server for single player, probably unnecessary for
+        // most cases
         WynntilsMod.init();
         MinecraftForge.EVENT_BUS.register(new ScreenListener());
     }

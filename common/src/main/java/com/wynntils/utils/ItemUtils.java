@@ -4,13 +4,13 @@
  */
 package com.wynntils.utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonSerializationContext;
+import java.lang.reflect.Type;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
@@ -45,24 +45,6 @@ public class ItemUtils {
     }
 
     /**
-     * Get the lore from an item
-     *
-     * @return an {@link List} containing all item lore
-     */
-    public static List<String> getLore(ItemStack item) {
-        ListTag loreTag = getLoreTag(item);
-
-        List<String> lore = new ArrayList<>();
-        if (loreTag == null) return lore;
-
-        for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(loreTag.getString(i));
-        }
-
-        return lore;
-    }
-
-    /**
      * Replace the lore on an item's NBT tag.
      *
      * @param stack The {@link ItemStack} to have its
@@ -76,14 +58,24 @@ public class ItemUtils {
         stack.setTag(nbt);
     }
 
+    /** Adds a boolean to an item's nbt as a marker */
+    public static void addMarker(ItemStack stack, String id) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putBoolean(id, true);
+    }
+
+    /** Checks if a boolean to an item's nbt as a marker */
+    public static boolean hasMarker(ItemStack stack, String id) {
+        return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
+    }
+
     /**
-     * Override of {@link #replaceLore(ItemStack, ListTag)}
+     * Converts a string to a mutable component form
      *
-     * @param lore A {@link List} to be turned into a {@link ListTag}
+     * <p>See {@link net.minecraft.network.chat.Component.Serializer#serialize(Component, Type,
+     * JsonSerializationContext)}
      */
-    public static void replaceLore(ItemStack stack, List<String> lore) {
-        ListTag tag = new ListTag();
-        lore.forEach(s -> tag.add(StringTag.valueOf(s)));
-        replaceLore(stack, tag);
+    public static String toLoreForm(String toConvert) {
+        return "\"" + (toConvert).replace("\"", "\\\"") + "\"";
     }
 }
