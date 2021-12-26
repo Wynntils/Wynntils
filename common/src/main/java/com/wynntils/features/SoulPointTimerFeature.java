@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features;
 
 import com.wynntils.framework.Subscriber;
@@ -6,12 +10,11 @@ import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.utils.ItemUtils;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
-import java.util.List;
 
 public class SoulPointTimerFeature extends Feature {
     @Subscriber

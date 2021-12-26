@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +17,13 @@ public class InventoryRenderEvent extends Event {
     private final float partialTicks;
     private final Slot hoveredSlot;
 
-    public InventoryRenderEvent(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+    public InventoryRenderEvent(
+            Screen screen,
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float partialTicks,
+            Slot hoveredSlot) {
         this.screen = screen;
         this.poseStack = poseStack;
         this.mouseX = mouseX;

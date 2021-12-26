@@ -1,12 +1,13 @@
+/*
+ * Copyright © Wynntils 2021.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.event;
 
 import com.wynntils.framework.events.Event;
+import java.util.List;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.client.gui.screens.TitleScreen;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 public class GameMenuInitEvent extends Event {
     private final PauseScreen pauseScreen;
