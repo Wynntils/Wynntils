@@ -21,6 +21,6 @@ public class WynntilsMod {
     public static void init() {
         System.out.println("Wynntils initialized");
 
-        Arrays.stream(features).forEach(f -> f.onEnable());
+        Arrays.stream(features).forEach(Feature::onEnable);
     }
 }
