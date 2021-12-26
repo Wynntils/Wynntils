@@ -22,6 +22,8 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    implementation "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
 }
 
 processResources {
