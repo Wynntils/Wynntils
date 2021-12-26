@@ -4,18 +4,13 @@
  */
 package com.wynntils.utils;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.google.gson.JsonSerializationContext;
+import java.lang.reflect.Type;
+import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
@@ -74,9 +69,11 @@ public class ItemUtils {
         return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
     }
 
-    /** Converts a string to a mutable component form
+    /**
+     * Converts a string to a mutable component form
      *
-     *  See {@link net.minecraft.network.chat.Component.Serializer#serialize(Component, Type, JsonSerializationContext)}
+     * <p>See {@link net.minecraft.network.chat.Component.Serializer#serialize(Component, Type,
+     * JsonSerializationContext)}
      */
     public static String toLoreForm(String toConvert) {
         return "\"" + (toConvert).replace("\"", "\\\"") + "\"";
