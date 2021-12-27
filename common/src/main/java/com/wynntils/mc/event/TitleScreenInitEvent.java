@@ -4,16 +4,19 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.framework.events.Event;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraftforge.eventbus.api.Event;
 
 public class TitleScreenInitEvent extends Event {
-    private final TitleScreen titleScreen;
-    private final List<AbstractWidget> buttons;
-    private final Consumer<AbstractWidget> addButton;
+    private TitleScreen titleScreen;
+    private List<AbstractWidget> buttons;
+    private Consumer<AbstractWidget> addButton;
+
+    public TitleScreenInitEvent() {
+    }
 
     public TitleScreenInitEvent(
             TitleScreen titleScreen,
@@ -34,10 +37,5 @@ public class TitleScreenInitEvent extends Event {
 
     public Consumer<AbstractWidget> getAddButton() {
         return addButton;
-    }
-
-    @Override
-    public boolean isCancellable() {
-        return false;
     }
 }

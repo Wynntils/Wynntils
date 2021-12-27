@@ -20,10 +20,10 @@ public class EventFactory {
     public static void onScreenCreated(
             Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            WynntilsMod.eventBus.postEvent(
+            WynntilsMod.EVENT_BUS.post(
                     new TitleScreenInitEvent(titleScreen, buttons, addButton));
         } else if (screen instanceof PauseScreen gameMenuScreen) {
-            WynntilsMod.eventBus.postEvent(new GameMenuInitEvent(gameMenuScreen, buttons));
+            WynntilsMod.EVENT_BUS.post(new GameMenuInitEvent(gameMenuScreen, buttons));
         }
     }
 
@@ -35,7 +35,7 @@ public class EventFactory {
             float partialTicks,
             Slot hoveredSlot) {
 
-        WynntilsMod.eventBus.postEvent(
+        WynntilsMod.EVENT_BUS.post(
                 new InventoryRenderEvent(
                         screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }

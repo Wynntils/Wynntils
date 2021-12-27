@@ -5,17 +5,20 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.framework.events.Event;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
+import net.minecraftforge.eventbus.api.Event;
 
 public class InventoryRenderEvent extends Event {
-    private final Screen screen;
-    private final PoseStack poseStack;
-    private final int mouseX;
-    private final int mouseY;
-    private final float partialTicks;
-    private final Slot hoveredSlot;
+    private Screen screen;
+    private PoseStack poseStack;
+    private int mouseX;
+    private int mouseY;
+    private float partialTicks;
+    private Slot hoveredSlot;
+
+    public InventoryRenderEvent() {
+    }
 
     public InventoryRenderEvent(
             Screen screen,
@@ -54,10 +57,5 @@ public class InventoryRenderEvent extends Event {
 
     public Slot getHoveredSlot() {
         return hoveredSlot;
-    }
-
-    @Override
-    public boolean isCancellable() {
-        return false;
     }
 }

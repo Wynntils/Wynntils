@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.framework.events.Event;
 import java.util.List;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraftforge.eventbus.api.Event;
 
 public class GameMenuInitEvent extends Event {
     private final PauseScreen pauseScreen;
@@ -24,10 +24,5 @@ public class GameMenuInitEvent extends Event {
 
     public List<AbstractWidget> getButtons() {
         return buttons;
-    }
-
-    @Override
-    public boolean isCancellable() {
-        return false;
     }
 }

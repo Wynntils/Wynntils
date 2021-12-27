@@ -4,7 +4,6 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.framework.Subscriber;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
@@ -19,9 +18,10 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SoulPointTimerFeature extends Feature {
-    @Subscriber
+    @SubscribeEvent
     public static void onInventoryRender(InventoryRenderEvent e) {
         Slot hoveredSlot = e.getHoveredSlot();
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
