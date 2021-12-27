@@ -5,8 +5,6 @@
 package com.wynntils.forge;
 
 import com.wynntils.WynntilsMod;
-import com.wynntils.forge.listener.ScreenListener;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(WynntilsMod.MOD_ID)
@@ -16,6 +14,5 @@ public class WynntilsModForge {
         // Stops it from running on integrated server for single player, probably unnecessary for
         // most cases
         WynntilsMod.init();
-        MinecraftForge.EVENT_BUS.register(new ScreenListener());
     }
 }

@@ -2,11 +2,9 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.fabric.mixin;
+package com.wynntils.mixin;
 
 import com.wynntils.mc.event.EventFactory;
-import java.util.List;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.TickableWidget;
