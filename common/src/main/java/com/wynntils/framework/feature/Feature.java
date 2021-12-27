@@ -9,12 +9,14 @@ import com.wynntils.WynntilsMod;
 public abstract class Feature {
     /** Called on a feature's activation */
     public void onEnable() {
-        WynntilsMod.eventBus.register(this);
+        WynntilsMod.EVENT_BUS.register(this);
+        WynntilsMod.EVENT_BUS.register(this.getClass());
     }
 
     /** Called on a feature's deactivation */
     public void onDisable() {
-        WynntilsMod.eventBus.unregister(this);
+        WynntilsMod.EVENT_BUS.unregister(this);
+        WynntilsMod.EVENT_BUS.unregister(this.getClass());
     }
 
     /** Subjective Performance impact of feature */

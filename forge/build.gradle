@@ -5,7 +5,6 @@ plugins {
 loom {
     forge {
         mixinConfig "wynntils.mixins.json"
-        mixinConfig "wynntils-forge.mixins.json"
     }
 }
 

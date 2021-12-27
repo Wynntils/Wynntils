@@ -25,16 +25,12 @@
   "icon": "assets/wynntils/logo.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-
-    ],
     "client": [
       "com.wynntils.fabric.WynntilsModFabric"
     ]
   },
   "mixins": [
-    "wynntils.mixins.json",
-    "wynntils-fabric.mixins.json"
+    "wynntils.mixins.json"
   ],
   "depends": {
     "fabric": "*",
