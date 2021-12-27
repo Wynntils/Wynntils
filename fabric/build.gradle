@@ -1,10 +1,32 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://maven.minecraftforge.net/"
+        }
+    }
+
+    dependencies {
+        classpath "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
+    }
+}
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
+import dev.architectury.transformer.transformers.base.ClassEditTransformer
+import dev.architectury.plugin.TransformingTask
+import net.minecraftforge.eventbus.EventBusEngine
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.Type
+import org.objectweb.asm.tree.ClassNode
+
 architectury {
     platformSetupLoomIde()
-    fabric()
+    fabric {
+        it.add(EventBusTransform.class)
+    }
 }
 
 configurations {
@@ -58,5 +80,44 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
+    }
+}
+
+tasks.register("applyEventBus", TransformingTask) {
+    it.group "Test"
+    it.platform = "fabric"
+    it.input.set shadowJar.archiveFile
+
+    it.plusAssign(new EventBusTransform())
+    println "running"
+
+    //it.dependsOn jar
+}
+
+applyEventBus {
+    dependsOn jar
+}
+
+build {
+    dependsOn "applyEventBus"
+}
+
+class EventBusTransform implements ClassEditTransformer {
+    @Override
+    public dev.architectury.transformer.shadowed.impl.org.objectweb.asm.tree.ClassNode doEdit(String name, dev.architectury.transformer.shadowed.impl.org.objectweb.asm.tree.ClassNode node) {
+        Type type = Type.getObjectType node.name
+        if (EventBusEngine.INSTANCE.handlesClass type) {
+            dev.architectury.transformer.shadowed.impl.org.objectweb.asm.ClassWriter architecturyClassWriter = new dev.architectury.transformer.shadowed.impl.org.objectweb.asm.ClassWriter(0)
+            node.accept(architecturyClassWriter)
+            ClassReader normalClassReader = new ClassReader(architecturyClassWriter.toByteArray())
+            ClassNode normalNode = new ClassNode()
+            normalClassReader.accept(normalNode, 0)
+
+            EventBusEngine.INSTANCE.processClass(normalNode, type)
+            println "test"
+        }
+        node.sourceFile = "test"
+        return node
+        //EventBusEngine.INSTANCE.processClass(node, )
     }
 }
