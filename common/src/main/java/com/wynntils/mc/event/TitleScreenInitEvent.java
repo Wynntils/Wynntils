@@ -12,27 +12,20 @@ import net.minecraftforge.eventbus.api.Event;
 
 public class TitleScreenInitEvent extends Event {
     private TitleScreen titleScreen;
-    private List<AbstractWidget> buttons;
     private Consumer<AbstractWidget> addButton;
 
     public TitleScreenInitEvent() {
     }
 
     public TitleScreenInitEvent(
-            TitleScreen titleScreen,
-            List<AbstractWidget> buttons,
-            Consumer<AbstractWidget> addButton) {
+        TitleScreen titleScreen,
+        Consumer<AbstractWidget> addButton) {
         this.titleScreen = titleScreen;
-        this.buttons = buttons;
         this.addButton = addButton;
     }
 
     public TitleScreen getTitleScreen() {
         return titleScreen;
-    }
-
-    public List<AbstractWidget> getButtons() {
-        return buttons;
     }
 
     public Consumer<AbstractWidget> getAddButton() {

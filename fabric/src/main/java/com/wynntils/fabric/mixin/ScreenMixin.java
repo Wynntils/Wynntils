@@ -29,8 +29,7 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void init(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
-        List<AbstractWidget> buttons = Screens.getButtons(screen);
 
-        EventFactory.onScreenCreated(screen, buttons, this::addButton);
+        EventFactory.onScreenCreated(screen, this::addButton);
     }
 }

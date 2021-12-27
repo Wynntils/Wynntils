@@ -16,9 +16,8 @@ public class ScreenListener {
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post e) {
         Screen screen = e.getGui();
-        List<AbstractWidget> buttons = e.getWidgetList();
 
-        EventFactory.onScreenCreated(screen, buttons, e::addWidget);
+        EventFactory.onScreenCreated(screen, e::addWidget);
     }
 
     /*

@@ -7,7 +7,6 @@ package com.wynntils.mc.event;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.WynntilsMod;
-import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -17,13 +16,11 @@ import net.minecraft.world.inventory.Slot;
 
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
-    public static void onScreenCreated(
-            Screen screen, List<AbstractWidget> buttons, Consumer<AbstractWidget> addButton) {
+    public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            WynntilsMod.EVENT_BUS.post(
-                    new TitleScreenInitEvent(titleScreen, buttons, addButton));
+            WynntilsMod.EVENT_BUS.post(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen gameMenuScreen) {
-            WynntilsMod.EVENT_BUS.post(new GameMenuInitEvent(gameMenuScreen, buttons));
+            WynntilsMod.EVENT_BUS.post(new GameMenuInitEvent(gameMenuScreen, addButton));
         }
     }
 
