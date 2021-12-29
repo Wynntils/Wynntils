@@ -10,15 +10,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
 public class InventoryRenderEvent extends Event {
-    private Screen screen;
-    private PoseStack poseStack;
-    private int mouseX;
-    private int mouseY;
-    private float partialTicks;
-    private Slot hoveredSlot;
-
-    public InventoryRenderEvent() {
-    }
+    private final Screen screen;
+    private final PoseStack poseStack;
+    private final int mouseX;
+    private final int mouseY;
+    private final float partialTicks;
+    private final Slot hoveredSlot;
 
     public InventoryRenderEvent(
             Screen screen,
