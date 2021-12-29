@@ -12,7 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out source code
+        uses: actions/checkout@v2
 
       - name: Set up JDK 16
         uses: actions/setup-java@v2
@@ -21,10 +22,12 @@ jobs:
           java-version: 16
           cache: "gradle"
 
-      - name: Build
-        run: ./gradlew build --no-daemon
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build --no-daemon
 
-      - name: Upload build
+      - name: Upload build result
         uses: actions/upload-artifact@v2
         with:
           name: build
