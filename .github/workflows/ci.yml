@@ -15,7 +15,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
 
-      - name: Set up JDK 16
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
@@ -26,9 +26,3 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build --no-daemon
-
-      - name: Upload build result
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build/libs
