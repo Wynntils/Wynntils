@@ -1,4 +1,4 @@
-name: Build on Submit
+name: CI for Submit and Pull Request
 
 on:
   push:
