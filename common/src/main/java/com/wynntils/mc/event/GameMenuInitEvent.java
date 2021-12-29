@@ -13,8 +13,7 @@ public class GameMenuInitEvent extends Event {
     private final PauseScreen pauseScreen;
     private final Consumer<AbstractWidget> addButton;
 
-    public GameMenuInitEvent(PauseScreen pauseScreen,
-        Consumer<AbstractWidget> addButton) {
+    public GameMenuInitEvent(PauseScreen pauseScreen, Consumer<AbstractWidget> addButton) {
         this.pauseScreen = pauseScreen;
         this.addButton = addButton;
     }

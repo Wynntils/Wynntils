@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -14,9 +13,7 @@ public class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
     private final Consumer<AbstractWidget> addButton;
 
-    public TitleScreenInitEvent(
-        TitleScreen titleScreen,
-        Consumer<AbstractWidget> addButton) {
+    public TitleScreenInitEvent(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
         this.titleScreen = titleScreen;
         this.addButton = addButton;
     }

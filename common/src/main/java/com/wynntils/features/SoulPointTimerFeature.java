@@ -11,7 +11,6 @@ import com.wynntils.framework.minecraft.DynamicTag;
 import com.wynntils.framework.wynntils.parsing.InventoryData;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.utils.ItemUtils;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;

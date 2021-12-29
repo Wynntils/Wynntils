@@ -17,10 +17,7 @@ public class WynntilsMod {
     public static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
     public static final Feature[] FEATURES =
-            new Feature[] {
-                new WynncraftButtonFeature() ,
-                new SoulPointTimerFeature()
-    };
+            new Feature[] {new WynncraftButtonFeature(), new SoulPointTimerFeature()};
 
     public static void init() {
         System.out.println("Wynntils initialized");

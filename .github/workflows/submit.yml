@@ -1,0 +1,31 @@
+name: Build on Submit
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 16
+          cache: "gradle"
+
+      - name: Build
+        run: ./gradlew build --no-daemon
+
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build/libs
