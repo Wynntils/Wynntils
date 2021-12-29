@@ -11,11 +11,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
 
 public class TitleScreenInitEvent extends Event {
-    private TitleScreen titleScreen;
-    private Consumer<AbstractWidget> addButton;
-
-    public TitleScreenInitEvent() {
-    }
+    private final TitleScreen titleScreen;
+    private final Consumer<AbstractWidget> addButton;
 
     public TitleScreenInitEvent(
         TitleScreen titleScreen,

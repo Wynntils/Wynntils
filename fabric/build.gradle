@@ -1,10 +1,26 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://jitpack.io/"
+        }
+
+        dependencies {
+            classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+        }
+    }
+}
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
+import com.wynntils.eventbustransformer.EventBusTransform
+
 architectury {
     platformSetupLoomIde()
-    fabric()
+    fabric {
+        it.add(EventBusTransform.class)
+    }
 }
 
 configurations {
@@ -16,6 +32,12 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
@@ -24,6 +46,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     implementation "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
+    implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
 }
 
 processResources {
@@ -59,4 +82,19 @@ components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
     }
+}
+
+task applyEventBus(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "com.wynntils.eventbustransformer.Main"
+    args shadowJar.archiveFile.get().getAsFile().getAbsolutePath()
+    workingDir = "${buildDir}"
+}
+
+applyEventBus {
+    dependsOn shadowJar
+}
+
+remapJar {
+    dependsOn applyEventBus
 }
