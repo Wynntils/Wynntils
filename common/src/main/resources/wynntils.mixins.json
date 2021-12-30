@@ -5,7 +5,8 @@
   "minVersion": "0.8.4",
   "client": [
     "AbstractContainerScreenMixin",
-    "ClientboundPlayerInfoPacketMixin",
+    "BossHealthOverlayMixin",
+    "ClientPacketListenerMixin",
     "ScoreboardMixin",
     "ScreenMixin"
   ],
