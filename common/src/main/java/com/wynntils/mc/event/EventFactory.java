@@ -40,7 +40,9 @@ public class EventFactory {
             int mouseY,
             float partialTicks,
             Slot hoveredSlot) {
-        post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
+        post(
+                new InventoryRenderEvent(
+                        screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
     public static void onPlayerInfoPacket(Action action, List<PlayerUpdate> entries) {
@@ -48,7 +50,9 @@ public class EventFactory {
             for (PlayerUpdate entry : entries) {
                 GameProfile profile = entry.getProfile();
                 if (entry.getDisplayName() == null) continue;
-                post(new PlayerInfoEvent.PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()));
+                post(
+                        new PlayerInfoEvent.PlayerDisplayNameChangeEvent(
+                                profile.getId(), entry.getDisplayName()));
             }
         } else if (action == Action.ADD_PLAYER) {
             for (PlayerUpdate entry : entries) {
