@@ -17,6 +17,14 @@ public class WynntilsMod {
 
     public static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
+    public static boolean onServer() {
+        return Models.getWorldState().onServer();
+    }
+
+    public static boolean onWorld() {
+        return Models.getWorldState().onWorld();
+    }
+
     public static void init() {
         System.out.println("Wynntils initialized");
         Models.init();
