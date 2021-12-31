@@ -7,6 +7,8 @@
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "ClientPacketListenerMixin",
+    "ConnectionMixin",
+    "MinecraftMixin",
     "ScoreboardMixin",
     "ScreenMixin"
   ],

@@ -8,20 +8,28 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.WynntilsMod;
+import com.wynntils.mc.McIf;
+import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
+import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
+import java.net.InetAddress;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
+    private static String currentTabListFooter;
+
     private static void post(Event event) {
         WynntilsMod.EVENT_BUS.post(event);
     }
@@ -32,6 +40,10 @@ public class EventFactory {
         } else if (screen instanceof PauseScreen gameMenuScreen) {
             post(new GameMenuInitEvent(gameMenuScreen, addButton));
         }
+    }
+
+    public static void onScreenOpened(Screen screen) {
+        post(new ScreenOpenedEvent(screen));
     }
 
     public static void onInventoryRender(
@@ -75,5 +87,23 @@ public class EventFactory {
         // this is done for inventory only. But why?
         // why not?
         GlStateManager._translated(0, 0, -300d);
+    }
+
+    public static void onTabListCustomisation(ClientboundTabListPacket packet) {
+        String footer = packet.getFooter().getString();
+        if (footer.equals(currentTabListFooter)) return;
+
+        currentTabListFooter = footer;
+        post(new PlayerInfoFooterChangedEvent(footer));
+    }
+
+    public static void onDisconnect() {
+        post(new DisconnectedEvent());
+    }
+
+    public static void onConnect(InetAddress inetAddress, int port) {
+        // When this happens, we know that the currentServer is setup in Minecraft
+        ServerData currentServer = McIf.mc().getCurrentServer();
+        post(new ConnectedEvent(currentServer.ip, port));
     }
 }
