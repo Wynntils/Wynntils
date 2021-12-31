@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.framework.wynncraft.parsing;
+package com.wynntils.wc.utils;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;

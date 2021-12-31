@@ -2,7 +2,9 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.model;
+package com.wynntils.wc.model.interfaces;
+
+import com.wynntils.wc.model.Model;
 
 public interface WorldState extends Model {
     boolean onServer();
@@ -16,10 +18,10 @@ public interface WorldState extends Model {
     State getCurrentState();
 
     enum State {
-        NOT_CONNECTED,
+        UNCONNECTED,
         CONNECTING,
-        INTERIM,
         HUB,
+        INTERIM,
         CHARACTER_SELECTION,
         WORLD
     }

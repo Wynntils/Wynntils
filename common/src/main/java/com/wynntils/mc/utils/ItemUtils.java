@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils;
+package com.wynntils.mc.utils;
 
 import com.google.gson.JsonSerializationContext;
 import java.lang.reflect.Type;

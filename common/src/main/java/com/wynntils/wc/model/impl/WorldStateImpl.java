@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.model.impl;
+package com.wynntils.wc.model.impl;
 
 import com.wynntils.WynntilsMod;
 import com.wynntils.mc.McIf;
@@ -13,9 +13,9 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.model.Models;
-import com.wynntils.model.WorldState;
-import com.wynntils.model.event.WorldStateEvent;
+import com.wynntils.wc.model.Models;
+import com.wynntils.wc.model.interfaces.WorldState;
+import com.wynntils.wc.model.event.WorldStateEvent;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -35,11 +35,11 @@ public class WorldStateImpl extends Models implements WorldState {
     private String currentWorldName = "";
     private boolean onBetaServer;
 
-    private State currentState = State.NOT_CONNECTED;
+    private State currentState = State.UNCONNECTED;
 
     @Override
     public boolean onServer() {
-        return currentState != State.NOT_CONNECTED;
+        return currentState != State.UNCONNECTED;
     }
 
     @Override
@@ -72,6 +72,65 @@ public class WorldStateImpl extends Models implements WorldState {
         WynntilsMod.EVENT_BUS.post(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
+    //Unconnectedd
+    @SubscribeEvent
+    public void screenOpened(ScreenOpenedEvent e) {
+        if (!onServer()) return;
+
+        if (e.getScreen() instanceof DisconnectedScreen) {
+            setState(State.UNCONNECTED, "");
+        }
+    }
+
+    @SubscribeEvent
+    public void disconnected(DisconnectedEvent e) {
+        if (!onServer()) return;
+
+        setState(State.UNCONNECTED, "");
+    }
+
+    //Connecting
+    @SubscribeEvent
+    public void connecting(ConnectedEvent e) {
+        if (onServer()) {
+            WynntilsMod.logUnknown("Got connected event while already connected to server", e);
+            currentState = State.UNCONNECTED;
+            currentWorldName = "";
+        }
+
+        String host = e.getHost().toLowerCase(Locale.ROOT);
+        if (host.endsWith(WYNNCRAFT_SERVER_SUFFIX)) {
+            onBetaServer = host.startsWith(WYNNCRAFT_BETA_PREFIX);
+            setState(State.CONNECTING, "");
+            currentTabListFooter = "";
+        }
+    }
+
+    //Hub
+    @SubscribeEvent
+    public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
+        if (!onServer()) return;
+
+        String footer = e.getFooter();
+        if (footer.equals(currentTabListFooter)) return;
+
+        currentTabListFooter = footer;
+
+        if (footer.length() > 0) {
+            if (HUB_NAME.matcher(footer).find()) {
+                setState(State.HUB, "");
+            }
+        }
+    }
+
+    //Interim
+    @SubscribeEvent
+    public void onResourcePack(ResourcePackEvent e) {
+        if (!onServer()) return;
+
+        setState(State.INTERIM, "");
+    }
+
     @SubscribeEvent
     public void remove(PlayerLogOutEvent e) {
         if (!onServer()) return;
@@ -81,6 +140,7 @@ public class WorldStateImpl extends Models implements WorldState {
         }
     }
 
+    //World
     @SubscribeEvent
     public void update(PlayerDisplayNameChangeEvent e) {
         if (!onServer()) return;
@@ -94,61 +154,6 @@ public class WorldStateImpl extends Models implements WorldState {
                 setState(State.WORLD, worldName);
             } else {
                 WynntilsMod.logUnknown("World name not matching pattern", name);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void screenOpened(ScreenOpenedEvent e) {
-        if (!onServer()) return;
-
-        if (e.getScreen() instanceof DisconnectedScreen) {
-            setState(State.NOT_CONNECTED, "");
-        }
-    }
-
-    @SubscribeEvent
-    public void disconnected(DisconnectedEvent e) {
-        if (!onServer()) return;
-
-        setState(State.NOT_CONNECTED, "");
-    }
-
-    @SubscribeEvent
-    public void connecting(ConnectedEvent e) {
-        if (onServer()) {
-            WynntilsMod.logUnknown("Got connection while connected", e);
-            currentState = State.NOT_CONNECTED;
-            currentWorldName = "";
-        }
-
-        String host = e.getHost().toLowerCase(Locale.ROOT);
-        if (host.endsWith(WYNNCRAFT_SERVER_SUFFIX)) {
-            onBetaServer = host.startsWith(WYNNCRAFT_BETA_PREFIX);
-            setState(State.CONNECTING, "");
-            currentTabListFooter = "";
-        }
-    }
-
-    @SubscribeEvent
-    public void onResourcePack(ResourcePackEvent e) {
-        if (!onServer()) return;
-
-        setState(State.INTERIM, "");
-    }
-
-    @SubscribeEvent
-    public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        if (!onServer()) return;
-
-        String footer = e.getFooter();
-        if (footer.equals(currentTabListFooter)) return;
-
-        currentTabListFooter = footer;
-
-        if (footer.length() > 0) {
-            if (HUB_NAME.matcher(footer).find()) {
-                setState(State.HUB, "");
             }
         }
     }

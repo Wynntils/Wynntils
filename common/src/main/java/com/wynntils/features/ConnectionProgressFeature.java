@@ -6,8 +6,8 @@ package com.wynntils.features;
 
 import com.wynntils.framework.feature.AbstractFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.model.WorldState.State;
-import com.wynntils.model.event.WorldStateEvent;
+import com.wynntils.wc.model.interfaces.WorldState.State;
+import com.wynntils.wc.model.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends AbstractFeature {
@@ -25,7 +25,7 @@ public class ConnectionProgressFeature extends AbstractFeature {
         }
         String msg =
                 switch (e.getNewState()) {
-                    case NOT_CONNECTED -> "Disconnected";
+                    case UNCONNECTED -> "Disconnected";
                     case CONNECTING -> "Connecting";
                     case CHARACTER_SELECTION -> "In character selection";
                     case HUB -> "On Hub";

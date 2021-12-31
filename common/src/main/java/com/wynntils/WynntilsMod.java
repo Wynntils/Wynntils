@@ -8,7 +8,7 @@ import com.wynntils.features.ConnectionProgressFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.framework.feature.FeatureHandler;
-import com.wynntils.model.Models;
+import com.wynntils.wc.model.Models;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -36,7 +36,7 @@ public class WynntilsMod {
     }
 
     public static void logUnknown(String msg, Object obj) {
-        System.out.println("Found unhandled input from Wynncraft: " + msg);
+        System.out.println("Could not handle input from Wynncraft: " + msg);
         System.out.println(obj);
     }
 }
