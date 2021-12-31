@@ -4,6 +4,20 @@ buildscript {
             url "https://jitpack.io/"
         }
 
+        /*
+        This implements the forge eventbus transformers, through the 2 following ways
+
+        Architectury fabric transformer
+        - Transforms relevant classes at runtime
+        - Reason for implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+        - class EventBusTransform
+
+        GradleTask applyEventBus
+        -
+         */
+
+
+
         dependencies {
             classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
         }
@@ -18,9 +32,10 @@ import com.wynntils.eventbustransformer.EventBusTransform
 
 architectury {
     platformSetupLoomIde()
-    fabric {
-        it.add(EventBusTransform.class)
-    }
+    fabric()
+            {
+                it.add(EventBusTransform.class)
+            }
 }
 
 configurations {
@@ -56,31 +71,19 @@ processResources {
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
-}
-
-remapJar {
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    classifier null
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
 }
 
 jar {
     classifier "dev"
 }
 
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
 }
 
 task applyEventBus(type: JavaExec) {
@@ -95,5 +98,13 @@ applyEventBus {
 }
 
 remapJar {
+    input.set shadowJar.archiveFile
     dependsOn applyEventBus
+    classifier null
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
