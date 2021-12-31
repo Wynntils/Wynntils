@@ -4,18 +4,4 @@
  */
 package com.wynntils.model;
 
-import com.wynntils.WynntilsMod;
-import java.util.Arrays;
-
-public abstract class Model {
-    public static final Model[] MODELS = new Model[] {new WorldState()};
-
-    public static void init() {
-        Arrays.stream(MODELS)
-                .forEach(
-                        model -> {
-                            WynntilsMod.EVENT_BUS.register(model);
-                            WynntilsMod.EVENT_BUS.register(model.getClass());
-                        });
-    }
-}
+public interface Model {}

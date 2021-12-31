@@ -11,6 +11,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +39,14 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     public void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         EventFactory.onTabListCustomisation(packet);
+    }
+
+    @Inject(
+            method =
+                    "handleResourcePack(Lnet/minecraft/network/protocol/game/ClientboundResourcePackPacket;)V",
+            at = @At("RETURN"))
+    public void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
+        EventFactory.onResourcePack(packet);
     }
 
     @Inject(

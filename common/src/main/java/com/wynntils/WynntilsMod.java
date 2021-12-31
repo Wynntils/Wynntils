@@ -4,10 +4,11 @@
  */
 package com.wynntils;
 
+import com.wynntils.features.ConnectionProgressFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.framework.feature.FeatureHandler;
-import com.wynntils.model.Model;
+import com.wynntils.model.Models;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -18,14 +19,15 @@ public class WynntilsMod {
 
     public static void init() {
         System.out.println("Wynntils initialized");
-        Model.init();
+        Models.init();
 
         FeatureHandler.registerFeature(new WynncraftButtonFeature());
         FeatureHandler.registerFeature(new SoulPointTimerFeature());
+        FeatureHandler.registerFeature(new ConnectionProgressFeature());
         FeatureHandler.initalizeFeatures();
     }
 
-    public static void logUnknown(String msg, String obj) {
+    public static void logUnknown(String msg, Object obj) {
         System.out.println("Found unhandled input from Wynncraft: " + msg);
         System.out.println(obj);
     }

@@ -22,6 +22,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
@@ -105,5 +106,9 @@ public class EventFactory {
         // When this happens, we know that the currentServer is setup in Minecraft
         ServerData currentServer = McIf.mc().getCurrentServer();
         post(new ConnectedEvent(currentServer.ip, port));
+    }
+
+    public static void onResourcePack(ClientboundResourcePackPacket packet) {
+        post(new ResourcePackEvent());
     }
 }
