@@ -4,7 +4,7 @@
  */
 package com.wynntils.forge;
 
-import com.wynntils.WynntilsMod;
+import com.wynntils.core.WynntilsMod;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(WynntilsMod.MOD_ID)

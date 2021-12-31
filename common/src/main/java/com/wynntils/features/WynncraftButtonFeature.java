@@ -6,10 +6,10 @@ package com.wynntils.features;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.framework.feature.Feature;
-import com.wynntils.framework.feature.GameplayImpact;
-import com.wynntils.framework.feature.PerformanceImpact;
-import com.wynntils.framework.feature.Stability;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.GameplayImpact;
+import com.wynntils.core.features.PerformanceImpact;
+import com.wynntils.core.features.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;

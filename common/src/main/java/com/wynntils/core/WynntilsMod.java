@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils;
+package com.wynntils.core;
 
 import com.wynntils.features.ConnectionProgressFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
-import com.wynntils.framework.feature.FeatureHandler;
+import com.wynntils.core.FeatureHandler;
 import com.wynntils.wc.Models;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;

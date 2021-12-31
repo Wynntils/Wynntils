@@ -89,9 +89,7 @@ public class EventFactory {
     }
 
     public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
-        // this is done for inventory only. But why?
-        // why not?
-        GlStateManager._translated(0, 0, -300d);
+        // TODO: Not implemented yet
     }
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {

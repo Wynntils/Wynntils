@@ -4,7 +4,7 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.framework.feature.AbstractFeature;
+import com.wynntils.core.features.AbstractFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState.State;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils;
 
-import com.wynntils.WynntilsMod;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.Models;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

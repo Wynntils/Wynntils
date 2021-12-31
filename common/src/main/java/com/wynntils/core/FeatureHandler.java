@@ -2,8 +2,9 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.framework.feature;
+package com.wynntils.core;
 
+import com.wynntils.core.features.Feature;
 import java.util.LinkedList;
 import java.util.List;
 

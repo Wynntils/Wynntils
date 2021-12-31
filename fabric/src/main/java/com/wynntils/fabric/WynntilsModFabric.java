@@ -4,7 +4,7 @@
  */
 package com.wynntils.fabric;
 
-import com.wynntils.WynntilsMod;
+import com.wynntils.core.WynntilsMod;
 import net.fabricmc.api.ClientModInitializer;
 
 public class WynntilsModFabric implements ClientModInitializer {
