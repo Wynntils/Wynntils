@@ -29,8 +29,6 @@ import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
-    private static String currentTabListFooter;
-
     private static void post(Event event) {
         WynntilsMod.EVENT_BUS.post(event);
     }
@@ -92,9 +90,6 @@ public class EventFactory {
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
         String footer = packet.getFooter().getString();
-        if (footer.equals(currentTabListFooter)) return;
-
-        currentTabListFooter = footer;
         post(new PlayerInfoFooterChangedEvent(footer));
     }
 

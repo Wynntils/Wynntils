@@ -26,11 +26,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldStateImpl extends Models implements WorldState {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
-    private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com\n$");
+    private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final UUID WORLD_UUID = UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af");
     private static final String WYNNCRAFT_SERVER_SUFFIX = ".wynncraft.com";
     private static final String WYNNCRAFT_BETA_PREFIX = "beta.";
 
+    private String currentTabListFooter = "";
     private String currentWorldName = "";
     private boolean onBetaServer;
 
@@ -125,6 +126,7 @@ public class WorldStateImpl extends Models implements WorldState {
         if (host.endsWith(WYNNCRAFT_SERVER_SUFFIX)) {
             onBetaServer = host.startsWith(WYNNCRAFT_BETA_PREFIX);
             setState(State.CONNECTING, "");
+            currentTabListFooter = "";
         }
     }
 
@@ -140,6 +142,10 @@ public class WorldStateImpl extends Models implements WorldState {
         if (!onServer()) return;
 
         String footer = e.getFooter();
+        if (footer.equals(currentTabListFooter)) return;
+
+        currentTabListFooter = footer;
+
         if (footer.length() > 0) {
             if (HUB_NAME.matcher(footer).find()) {
                 setState(State.HUB, "");
