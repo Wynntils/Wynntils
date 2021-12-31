@@ -1,9 +1,11 @@
-<p align="center">
+<div align="center">
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=30%>
+<p><i align="center">(Image in public domain)</i></p>
 <br>
 <a href="https://discord.gg/ve49m9J"><img src="https://discordapp.com/api/guilds/394189072635133952/widget.png"></a>
 <a href="https://github.com/Wynntils/Artemis/actions/workflows/ci.yml"><img src="https://github.com/Wynntils/Artemis/actions/workflows/ci.yml/badge.svg"></a>
 <a href="https://github.com/Wynntils/Artemis/blob/development/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%203.0-green.svg"></a>
-</p>
+</div>
 
 About Artemis
 ========
@@ -21,4 +23,4 @@ License
 ========
 
 Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/development/LICENSE)<br>
-All the assets **are over Wynntils domain © Wynntils**.
+All the assets unless specified otherwise **are over Wynntils domain © Wynntils**.
