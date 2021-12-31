@@ -4,10 +4,6 @@
  */
 package com.wynntils.core;
 
-import com.wynntils.features.ConnectionProgressFeature;
-import com.wynntils.features.SoulPointTimerFeature;
-import com.wynntils.features.WynncraftButtonFeature;
-import com.wynntils.core.FeatureHandler;
 import com.wynntils.wc.Models;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
