@@ -9,8 +9,8 @@ package com.wynntils.core.features;
  * would have a larger impact than a smaller feature like blocking health pots. Subjective.
  */
 public enum GameplayImpact {
-    Small,
-    Medium,
-    Large,
-    Extreme
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTREME
 }

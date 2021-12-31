@@ -23,11 +23,7 @@ public class WynntilsMod {
 
     public static void init() {
         Models.init();
-
-        FeatureHandler.registerFeature(new WynncraftButtonFeature());
-        FeatureHandler.registerFeature(new SoulPointTimerFeature());
-        FeatureHandler.registerFeature(new ConnectionProgressFeature());
-        FeatureHandler.initalizeFeatures();
+        FeatureHandler.init();
 
         System.out.println("Wynntils initialized");
     }

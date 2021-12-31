@@ -9,8 +9,8 @@ package com.wynntils.core.features;
  * performance impact than a Wynncraft Button.
  */
 public enum PerformanceImpact {
-    Small,
-    Medium,
-    Large,
-    Extreme
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTREME
 }

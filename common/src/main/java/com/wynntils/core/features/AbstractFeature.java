@@ -7,16 +7,16 @@ package com.wynntils.core.features;
 public abstract class AbstractFeature extends Feature {
     @Override
     public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.Medium;
+        return PerformanceImpact.MEDIUM;
     }
 
     @Override
     public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.Medium;
+        return GameplayImpact.MEDIUM;
     }
 
     @Override
     public Stability getStability() {
-        return Stability.Unstable;
+        return Stability.UNSTABLE;
     }
 }

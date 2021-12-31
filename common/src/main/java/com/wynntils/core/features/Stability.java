@@ -9,8 +9,8 @@ package com.wynntils.core.features;
  * and other similar judgements.
  */
 public enum Stability {
-    Experimental,
-    Unstable,
-    Stable,
-    Invariable
+    EXPERIMENTAL,
+    UNSTABLE,
+    STABLE,
+    INVARIABLE
 }

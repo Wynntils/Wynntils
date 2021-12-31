@@ -36,12 +36,12 @@ public class WynncraftButtonFeature extends Feature {
 
     @Override
     public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.Small;
+        return PerformanceImpact.SMALL;
     }
 
     @Override
     public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.Medium;
+        return GameplayImpact.MEDIUM;
     }
 
     private static class WynncraftButton extends Button {
@@ -80,6 +80,6 @@ public class WynncraftButtonFeature extends Feature {
 
     @Override
     public Stability getStability() {
-        return Stability.Invariable;
+        return Stability.INVARIABLE;
     }
 }

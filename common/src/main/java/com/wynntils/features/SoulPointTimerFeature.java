@@ -65,16 +65,16 @@ public class SoulPointTimerFeature extends Feature {
 
     @Override
     public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.Medium;
+        return PerformanceImpact.MEDIUM;
     }
 
     @Override
     public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.Medium;
+        return GameplayImpact.MEDIUM;
     }
 
     @Override
     public Stability getStability() {
-        return Stability.Stable;
+        return Stability.STABLE;
     }
 }
