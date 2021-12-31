@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.world.inventory.Slot;
@@ -45,7 +46,10 @@ public class EventFactory {
                         screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
-    public static void onPlayerInfoPacket(Action action, List<PlayerUpdate> entries) {
+    public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
+        Action action = packet.getAction();
+        List<PlayerUpdate> entries = packet.getEntries();
+
         if (action == Action.UPDATE_DISPLAY_NAME) {
             for (PlayerUpdate entry : entries) {
                 GameProfile profile = entry.getProfile();

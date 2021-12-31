@@ -7,6 +7,7 @@ package com.wynntils;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.framework.feature.Feature;
+import com.wynntils.model.Model;
 import java.util.Arrays;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,7 +22,13 @@ public class WynntilsMod {
 
     public static void init() {
         System.out.println("Wynntils initialized");
+        Model.init();
 
         Arrays.stream(FEATURES).forEach(Feature::onEnable);
+    }
+
+    public static void logUnknown(String msg, String obj) {
+        System.out.println("Found unhandled input from Wynncraft: " + msg);
+        System.out.println(obj);
     }
 }
