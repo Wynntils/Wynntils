@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.model;
 
-import com.wynntils.WynntilsMod;
+import com.wynntils.utils.Utils;
 import com.wynntils.wc.model.impl.WorldStateImpl;
 import com.wynntils.wc.model.interfaces.WorldState;
 import java.util.Arrays;
@@ -21,8 +21,8 @@ public abstract class Models {
         Arrays.stream(MODELS)
                 .forEach(
                         model -> {
-                            WynntilsMod.EVENT_BUS.register(model);
-                            WynntilsMod.EVENT_BUS.register(model.getClass());
+                            Utils.getEventBus().register(model);
+                            Utils.getEventBus().register(model.getClass());
                         });
     }
 }

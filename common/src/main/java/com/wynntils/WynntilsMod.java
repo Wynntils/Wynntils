@@ -15,28 +15,20 @@ import net.minecraftforge.eventbus.api.IEventBus;
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
 
-    public static final IEventBus EVENT_BUS = BusBuilder.builder().build();
+    private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
-    public static boolean onServer() {
-        return Models.getWorldState().onServer();
-    }
-
-    public static boolean onWorld() {
-        return Models.getWorldState().onWorld();
+    public static IEventBus getEventBus() {
+        return EVENT_BUS;
     }
 
     public static void init() {
-        System.out.println("Wynntils initialized");
         Models.init();
 
         FeatureHandler.registerFeature(new WynncraftButtonFeature());
         FeatureHandler.registerFeature(new SoulPointTimerFeature());
         FeatureHandler.registerFeature(new ConnectionProgressFeature());
         FeatureHandler.initalizeFeatures();
-    }
 
-    public static void logUnknown(String msg, Object obj) {
-        System.out.println("Could not handle input from Wynncraft: " + msg);
-        System.out.println(obj);
+        System.out.println("Wynntils initialized");
     }
 }

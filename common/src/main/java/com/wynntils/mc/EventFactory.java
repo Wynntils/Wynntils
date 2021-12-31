@@ -7,7 +7,6 @@ package com.wynntils.mc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.WynntilsMod;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
@@ -19,6 +18,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.utils.Utils;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.function.Consumer;
@@ -38,7 +38,7 @@ import net.minecraftforge.eventbus.api.Event;
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
     private static void post(Event event) {
-        WynntilsMod.EVENT_BUS.post(event);
+        Utils.getEventBus().post(event);
     }
 
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
@@ -105,7 +105,7 @@ public class EventFactory {
 
     public static void onConnect(InetAddress inetAddress, int port) {
         // When this happens, we know that the currentServer is setup in Minecraft
-        ServerData currentServer = McIf.mc().getCurrentServer();
+        ServerData currentServer = Utils.mc().getCurrentServer();
         post(new ConnectedEvent(currentServer.ip, port));
     }
 

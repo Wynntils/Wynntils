@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.McIf;
+import com.wynntils.utils.Utils;
 import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -58,7 +58,7 @@ public abstract class ClientPacketListenerMixin {
             ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (packet.getMethod() != 0
-                && McIf.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
+                && Utils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
             ci.cancel();
         }
     }

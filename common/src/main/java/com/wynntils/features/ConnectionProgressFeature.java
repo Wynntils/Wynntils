@@ -25,7 +25,7 @@ public class ConnectionProgressFeature extends AbstractFeature {
         }
         String msg =
                 switch (e.getNewState()) {
-                    case UNCONNECTED -> "Disconnected";
+                    case NOT_CONNECTED -> "Disconnected";
                     case CONNECTING -> "Connecting";
                     case CHARACTER_SELECTION -> "In character selection";
                     case HUB -> "On Hub";

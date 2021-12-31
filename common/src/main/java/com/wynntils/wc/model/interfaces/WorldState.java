@@ -18,10 +18,10 @@ public interface WorldState extends Model {
     State getCurrentState();
 
     enum State {
-        UNCONNECTED,
+        NOT_CONNECTED,
         CONNECTING,
-        HUB,
         INTERIM,
+        HUB,
         CHARACTER_SELECTION,
         WORLD
     }

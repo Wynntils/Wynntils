@@ -4,19 +4,19 @@
  */
 package com.wynntils.framework.feature;
 
-import com.wynntils.WynntilsMod;
+import com.wynntils.utils.Utils;
 
 public abstract class Feature {
     /** Called on a feature's activation */
     public void onEnable() {
-        WynntilsMod.EVENT_BUS.register(this);
-        WynntilsMod.EVENT_BUS.register(this.getClass());
+        Utils.getEventBus().register(this);
+        Utils.getEventBus().register(this.getClass());
     }
 
     /** Called on a feature's deactivation */
     public void onDisable() {
-        WynntilsMod.EVENT_BUS.unregister(this);
-        WynntilsMod.EVENT_BUS.unregister(this.getClass());
+        Utils.getEventBus().unregister(this);
+        Utils.getEventBus().unregister(this.getClass());
     }
 
     /** Subjective Performance impact of feature */
