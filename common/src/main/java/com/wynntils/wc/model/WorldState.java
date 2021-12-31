@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.model.interfaces;
+package com.wynntils.wc.model;
 
-import com.wynntils.wc.model.Model;
+import com.wynntils.wc.Model;
 
 public interface WorldState extends Model {
     boolean onServer();

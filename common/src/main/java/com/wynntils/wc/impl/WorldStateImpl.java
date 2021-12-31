@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.model.impl;
+package com.wynntils.wc.impl;
 
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -12,9 +12,9 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.Utils;
-import com.wynntils.wc.model.Models;
-import com.wynntils.wc.model.event.WorldStateEvent;
-import com.wynntils.wc.model.interfaces.WorldState;
+import com.wynntils.wc.Models;
+import com.wynntils.wc.event.WorldStateEvent;
+import com.wynntils.wc.model.WorldState;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;

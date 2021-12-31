@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.model;
+package com.wynntils.wc;
 
 import com.wynntils.utils.Utils;
-import com.wynntils.wc.model.impl.WorldStateImpl;
-import com.wynntils.wc.model.interfaces.WorldState;
+import com.wynntils.wc.impl.WorldStateImpl;
+import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
 public abstract class Models {
