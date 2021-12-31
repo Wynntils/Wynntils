@@ -9,6 +9,8 @@ import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.model.Model;
 import java.util.Arrays;
+
+import com.wynntils.framework.feature.FeatureHandler;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -17,14 +19,13 @@ public class WynntilsMod {
 
     public static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
-    public static final Feature[] FEATURES =
-            new Feature[] {new WynncraftButtonFeature(), new SoulPointTimerFeature()};
-
     public static void init() {
         System.out.println("Wynntils initialized");
         Model.init();
 
-        Arrays.stream(FEATURES).forEach(Feature::onEnable);
+        FeatureHandler.registerFeature(new WynncraftButtonFeature());
+        FeatureHandler.registerFeature(new SoulPointTimerFeature());
+        FeatureHandler.initalizeFeatures();
     }
 
     public static void logUnknown(String msg, String obj) {

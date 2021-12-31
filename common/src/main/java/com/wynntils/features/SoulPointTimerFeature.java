@@ -8,15 +8,15 @@ import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
 import com.wynntils.framework.minecraft.DynamicTag;
-import com.wynntils.framework.wynntils.parsing.InventoryData;
-import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.framework.wynncraft.parsing.InventoryData;
+import com.wynntils.framework.wynncraft.parsing.ItemMatchers;
+import com.wynntils.framework.minecraft.event.instances.InventoryRenderEvent;
 import com.wynntils.utils.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SoulPointTimerFeature extends Feature {
@@ -27,11 +27,8 @@ public class SoulPointTimerFeature extends Feature {
 
         ItemStack stack = hoveredSlot.getItem();
 
-        if (stack.getItem() != Items.NETHER_STAR && stack.getItem() != Items.SNOW) return;
-
-        if (!stack.getDisplayName().getString().contains("Soul Point")) return;
-
-        if (ItemUtils.hasMarker(stack, "soulpoint")) return;
+        if (ItemUtils.hasMarker(stack, "soulpoints")) return;
+        if (!ItemMatchers.isSoulPoint(stack)) return;
 
         ListTag lore = ItemUtils.getLoreTag(stack);
 
@@ -70,10 +67,5 @@ public class SoulPointTimerFeature extends Feature {
     @Override
     public GameplayImpact getGameplayImpactImpact() {
         return GameplayImpact.Medium;
-    }
-
-    @Override
-    public int getCreationPriority() {
-        return 1;
     }
 }

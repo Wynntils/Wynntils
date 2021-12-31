@@ -24,7 +24,4 @@ public abstract class Feature {
 
     /** Subjective Gameplay impact of feature */
     public abstract GameplayImpact getGameplayImpactImpact();
-
-    /** Priority in which thing was created; features created first have lower priority */
-    public abstract int getCreationPriority();
 }

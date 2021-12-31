@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
-import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.framework.minecraft.event.instances.TitleScreenInitEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
@@ -41,11 +41,6 @@ public class WynncraftButtonFeature extends Feature {
     @Override
     public GameplayImpact getGameplayImpactImpact() {
         return GameplayImpact.Medium;
-    }
-
-    @Override
-    public int getCreationPriority() {
-        return 0;
     }
 
     private static class WynncraftButton extends Button {
