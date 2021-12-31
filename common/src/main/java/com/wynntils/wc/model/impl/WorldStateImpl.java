@@ -14,8 +14,8 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.wc.model.Models;
-import com.wynntils.wc.model.interfaces.WorldState;
 import com.wynntils.wc.model.event.WorldStateEvent;
+import com.wynntils.wc.model.interfaces.WorldState;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -72,7 +72,7 @@ public class WorldStateImpl extends Models implements WorldState {
         WynntilsMod.EVENT_BUS.post(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
-    //Unconnectedd
+    // Unconnected
     @SubscribeEvent
     public void screenOpened(ScreenOpenedEvent e) {
         if (!onServer()) return;
@@ -89,7 +89,7 @@ public class WorldStateImpl extends Models implements WorldState {
         setState(State.UNCONNECTED, "");
     }
 
-    //Connecting
+    // Connecting
     @SubscribeEvent
     public void connecting(ConnectedEvent e) {
         if (onServer()) {
@@ -106,7 +106,7 @@ public class WorldStateImpl extends Models implements WorldState {
         }
     }
 
-    //Hub
+    // Hub
     @SubscribeEvent
     public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
         if (!onServer()) return;
@@ -123,7 +123,7 @@ public class WorldStateImpl extends Models implements WorldState {
         }
     }
 
-    //Interim
+    // Interim
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         if (!onServer()) return;
@@ -140,7 +140,7 @@ public class WorldStateImpl extends Models implements WorldState {
         }
     }
 
-    //World
+    // World
     @SubscribeEvent
     public void update(PlayerDisplayNameChangeEvent e) {
         if (!onServer()) return;

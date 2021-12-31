@@ -7,7 +7,6 @@ package com.wynntils.wc.model;
 import com.wynntils.WynntilsMod;
 import com.wynntils.wc.model.impl.WorldStateImpl;
 import com.wynntils.wc.model.interfaces.WorldState;
-
 import java.util.Arrays;
 
 public abstract class Models {

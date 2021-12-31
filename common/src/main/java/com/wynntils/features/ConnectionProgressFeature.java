@@ -6,8 +6,8 @@ package com.wynntils.features;
 
 import com.wynntils.framework.feature.AbstractFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.wc.model.interfaces.WorldState.State;
 import com.wynntils.wc.model.event.WorldStateEvent;
+import com.wynntils.wc.model.interfaces.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends AbstractFeature {

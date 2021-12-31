@@ -4,8 +4,8 @@
  */
 package com.wynntils.wc.model.event;
 
-import com.wynntils.wc.model.interfaces.WorldState.State;
 import com.wynntils.wc.model.impl.WorldStateImpl;
+import com.wynntils.wc.model.interfaces.WorldState.State;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WorldStateEvent extends Event {
