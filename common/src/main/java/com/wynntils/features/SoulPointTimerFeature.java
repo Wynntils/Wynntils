@@ -7,6 +7,7 @@ package com.wynntils.features;
 import com.wynntils.framework.feature.Feature;
 import com.wynntils.framework.feature.GameplayImpact;
 import com.wynntils.framework.feature.PerformanceImpact;
+import com.wynntils.framework.feature.Stability;
 import com.wynntils.framework.minecraft.DynamicTag;
 import com.wynntils.framework.wynncraft.parsing.ItemMatchers;
 import com.wynntils.framework.wynntils.parsing.InventoryData;
@@ -65,7 +66,12 @@ public class SoulPointTimerFeature extends Feature {
     }
 
     @Override
-    public GameplayImpact getGameplayImpactImpact() {
+    public GameplayImpact getGameplayImpact() {
         return GameplayImpact.Medium;
+    }
+
+    @Override
+    public Stability getStability() {
+        return Stability.Stable;
     }
 }

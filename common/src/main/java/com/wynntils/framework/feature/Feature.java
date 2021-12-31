@@ -23,5 +23,8 @@ public abstract class Feature {
     public abstract PerformanceImpact getPerformanceImpact();
 
     /** Subjective Gameplay impact of feature */
-    public abstract GameplayImpact getGameplayImpactImpact();
+    public abstract GameplayImpact getGameplayImpact();
+
+    /** Subjective stability of feature */
+    public abstract Stability getStability();
 }
