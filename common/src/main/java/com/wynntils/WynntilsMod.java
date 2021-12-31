@@ -6,11 +6,8 @@ package com.wynntils;
 
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
-import com.wynntils.framework.feature.Feature;
-import com.wynntils.model.Model;
-import java.util.Arrays;
-
 import com.wynntils.framework.feature.FeatureHandler;
+import com.wynntils.model.Model;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
