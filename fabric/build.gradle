@@ -9,15 +9,14 @@ buildscript {
 
         Architectury fabric transformer
         - Transforms relevant classes at runtime
-        - Reason for implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
-        - class EventBusTransform
+        - Reason for dependencies implementation
+        - class EventBusTransform in repo
 
         GradleTask applyEventBus
-        -
+        - Transforms relevant classes after shadowing jar
+        - Reason for buildscript classpath
+        - class Main in repo
          */
-
-
-
         dependencies {
             classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
         }
