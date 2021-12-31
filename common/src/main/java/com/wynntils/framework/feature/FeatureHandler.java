@@ -4,10 +4,11 @@
  */
 package com.wynntils.framework.feature;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FeatureHandler {
-    private static final Set<Feature> features = new HashSet<>();
+    private static final List<Feature> features = new LinkedList<>();
 
     public static void registerFeature(Feature feature) {
         features.add(feature);
