@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mixin;
+package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.event.EventFactory;
+import com.wynntils.mc.EventFactory;
 import java.net.InetAddress;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;

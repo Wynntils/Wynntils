@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mixin;
+package com.wynntils.mc.mixin;
 
+import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.McIf;
-import com.wynntils.mc.event.EventFactory;
 import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
