@@ -11,6 +11,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
@@ -47,6 +48,14 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     public void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
         EventFactory.onResourcePack(packet);
+    }
+
+    @Inject(
+            method =
+                    "handleMovePlayer(Lnet/minecraft/network/protocol/game/ClientboundPlayerPositionPacket;)V",
+            at = @At("RETURN"))
+    public void handleMovePlayer(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
+        EventFactory.onPlayerMove(packet);
     }
 
     @Inject(

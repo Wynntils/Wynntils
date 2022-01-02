@@ -9,6 +9,7 @@ import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.Utils;
@@ -20,12 +21,15 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldStateImpl extends Models implements WorldState {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
+    private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final UUID WORLD_UUID = UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af");
     private static final String WYNNCRAFT_SERVER_SUFFIX = ".wynncraft.com";
     private static final String WYNNCRAFT_BETA_PREFIX = "beta.";
@@ -149,6 +153,15 @@ public class WorldStateImpl extends Models implements WorldState {
             if (HUB_NAME.matcher(footer).find()) {
                 setState(State.HUB, "");
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTeleport(PlayerTeleportEvent e) {
+        if (!onServer()) return;
+
+        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
+            setState(State.CHARACTER_SELECTION, "");
         }
     }
 }

@@ -16,6 +16,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -28,13 +29,16 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
@@ -119,5 +123,12 @@ public class EventFactory {
 
     public static void onPacketReceived(Packet<?> packet) {
         post(new PacketReceivedEvent(packet));
+    }
+
+    public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {
+        if (!packet.getRelativeArguments().isEmpty()) return;
+
+        Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
+        post(new PlayerTeleportEvent(newPosition));
     }
 }
