@@ -8,6 +8,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.features.ConnectionProgressFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
+import com.wynntils.features.debug.PacketDebuggerFeature;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class FeatureHandler {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new PacketDebuggerFeature());
 
         initalizeFeatures();
     }

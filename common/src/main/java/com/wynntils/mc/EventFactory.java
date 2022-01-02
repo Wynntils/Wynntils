@@ -10,6 +10,8 @@ import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
+import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
@@ -26,6 +28,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
@@ -108,5 +111,13 @@ public class EventFactory {
 
     public static void onResourcePack(ClientboundResourcePackPacket packet) {
         post(new ResourcePackEvent());
+    }
+
+    public static void onPacketSent(Packet<?> packet) {
+        post(new PacketSentEvent(packet));
+    }
+
+    public static void onPacketReceived(Packet<?> packet) {
+        post(new PacketReceivedEvent(packet));
     }
 }
