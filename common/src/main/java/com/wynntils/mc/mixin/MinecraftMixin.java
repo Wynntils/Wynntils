@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
-    public void setScreenPost(Screen screen, CallbackInfo ci) {
+    private void setScreenPostPost(Screen screen, CallbackInfo ci) {
         EventFactory.onScreenOpened(screen);
     }
 }

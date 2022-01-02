@@ -18,21 +18,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
-    @Shadow protected Slot hoveredSlot;
+    @Shadow private Slot hoveredSlot;
 
     private AbstractContainerScreenMixin(Component component) {
         super(component);
     }
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", at = @At("RETURN"))
-    public void renderTooltipPre(PoseStack poseStack, int mouseX, int mouseY, CallbackInfo info) {
+    private void renderTooltipPre(PoseStack poseStack, int mouseX, int mouseY, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onTooltipRender(screen, poseStack, mouseX, mouseY);
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
-    public void renderPost(
+    private void renderPost(
             PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 

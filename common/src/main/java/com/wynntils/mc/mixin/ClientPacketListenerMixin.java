@@ -24,13 +24,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
     @Shadow
-    public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
+    abstract PlayerInfo getPlayerInfo(UUID uniqueId);
 
     @Inject(
             method =
                     "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
             at = @At("RETURN"))
-    public void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
         EventFactory.onPlayerInfoPacket(packet);
     }
 
@@ -38,7 +38,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleTabListCustomisation(Lnet/minecraft/network/protocol/game/ClientboundTabListPacket;)V",
             at = @At("RETURN"))
-    public void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
+    private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         EventFactory.onTabListCustomisation(packet);
     }
 
@@ -46,7 +46,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleResourcePack(Lnet/minecraft/network/protocol/game/ClientboundResourcePackPacket;)V",
             at = @At("RETURN"))
-    public void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
+    private void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
         EventFactory.onResourcePack(packet);
     }
 
@@ -54,7 +54,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleMovePlayer(Lnet/minecraft/network/protocol/game/ClientboundPlayerPositionPacket;)V",
             at = @At("RETURN"))
-    public void handleMovePlayer(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
+    private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
         EventFactory.onPlayerMove(packet);
     }
 
@@ -63,7 +63,7 @@ public abstract class ClientPacketListenerMixin {
                     "handleSetPlayerTeamPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPlayerTeamPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void handleSetPlayerTeamPacketPre(
+    private void handleSetPlayerTeamPacketPre(
             ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (packet.getMethod() != 0
@@ -77,7 +77,7 @@ public abstract class ClientPacketListenerMixin {
                     "handleAddPlayer(Lnet/minecraft/network/protocol/game/ClientboundAddPlayerPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void handleAddPlayerPre(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
+    private void handleAddPlayerPre(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         if (getPlayerInfo(packet.getPlayerId()) == null) {
             ci.cancel();

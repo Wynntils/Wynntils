@@ -26,7 +26,7 @@ public abstract class BossHealthOverlayMixin {
             method = "update(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
+    private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         Operation operation = packet.getOperation();
         if (operation != Operation.ADD && operation != Operation.REMOVE) {

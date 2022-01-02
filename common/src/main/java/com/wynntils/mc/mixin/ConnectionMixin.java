@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Connection.class)
 public abstract class ConnectionMixin {
     @Inject(method = "disconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("RETURN"))
-    public void disconnectPost(Component message, CallbackInfo ci) {
+    private void disconnectPost(Component message, CallbackInfo ci) {
         EventFactory.onDisconnect();
     }
 
@@ -49,7 +49,7 @@ public abstract class ConnectionMixin {
             method =
                     "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V",
             at = @At("RETURN"))
-    public void sendPost(
+    private void sendPost(
             Packet<?> packet,
             GenericFutureListener<? extends Future<? super Void>> genericFutureListener,
             CallbackInfo ci) {
