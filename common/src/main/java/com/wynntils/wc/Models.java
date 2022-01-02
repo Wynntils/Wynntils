@@ -5,16 +5,24 @@
 package com.wynntils.wc;
 
 import com.wynntils.utils.Utils;
+import com.wynntils.wc.impl.CharacterImpl;
 import com.wynntils.wc.impl.WorldStateImpl;
+import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
 public abstract class Models {
     private static final WorldState worldState = new WorldStateImpl();
-    public static final Model[] MODELS = new Model[] {worldState};
+    private static final Character character = new CharacterImpl();
+
+    public static final Model[] MODELS = new Model[] {worldState, character};
 
     public static WorldState getWorldState() {
         return worldState;
+    }
+
+    public static Character getCharacter() {
+        return character;
     }
 
     public static void init() {

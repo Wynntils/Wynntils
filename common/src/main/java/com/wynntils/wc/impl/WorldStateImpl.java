@@ -13,7 +13,6 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.Utils;
-import com.wynntils.wc.Models;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
 import java.util.Locale;
@@ -26,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WorldStateImpl extends Models implements WorldState {
+public class WorldStateImpl implements WorldState {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
