@@ -9,7 +9,10 @@ import com.wynntils.utils.Utils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.UUID;
 
 public class CharacterImpl implements Character {
     private CharacterInfo currentCharacter;
@@ -24,9 +27,13 @@ public class CharacterImpl implements Character {
         return currentCharacter;
     }
 
+    public ClassType getClassTyoe() {
+        return currentCharacter.getClassType();
+    }
+
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
-        if (e.getMenuType().equals(MenuOpenedEvent.MENU_3_LINES)
+        if (e.getMenuType().equals(MenuType.GENERIC_9x3)
                 && Utils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             System.out.println("In character selection menu");
         }
@@ -40,6 +47,32 @@ public class CharacterImpl implements Character {
         }
         if (e.getNewState() == State.CHARACTER_SELECTION) {
             System.out.println("Preparing for character selection");
+        }
+    }
+
+    public static class CharacterInfoImpl implements CharacterInfo {
+        private ClassType classType;
+        private boolean reskinned;
+        private int level;
+
+        @Override
+        public ClassType getClassType() {
+            return classType;
+        }
+
+        @Override
+        public boolean isReskinned() {
+            return reskinned;
+        }
+
+        @Override
+        public int getLevel() {
+            return level;
+        }
+
+        @Override
+        public UUID getId() {
+            return null;
         }
     }
 }

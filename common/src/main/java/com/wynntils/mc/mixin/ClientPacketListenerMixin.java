@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
     @Shadow
-    abstract PlayerInfo getPlayerInfo(UUID uniqueId);
+    public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
 
     @Inject(
             method =

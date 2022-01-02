@@ -137,8 +137,6 @@ public class EventFactory {
     }
 
     public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
-        ResourceLocation menuType = Registry.MENU.getKey(packet.getType());
-
-        post(new MenuOpenedEvent(menuType, packet.getTitle()));
+        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()));
     }
 }
