@@ -9,10 +9,9 @@ import com.wynntils.utils.Utils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
+import java.util.UUID;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.UUID;
 
 public class CharacterImpl implements Character {
     private CharacterInfo currentCharacter;

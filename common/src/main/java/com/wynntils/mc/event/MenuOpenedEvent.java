@@ -5,7 +5,6 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.Event;
 
