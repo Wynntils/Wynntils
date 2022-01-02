@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.event.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -30,13 +31,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.core.Position;
+import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
@@ -130,5 +134,11 @@ public class EventFactory {
 
         Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
         post(new PlayerTeleportEvent(newPosition));
+    }
+
+    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
+        ResourceLocation menuType = Registry.MENU.getKey(packet.getType());
+
+        post(new MenuOpenedEvent(menuType, packet.getTitle()));
     }
 }
