@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-/** Tests if an item belongs */
+/** Tests if an item is a certain wynncraft item */
 public class ItemMatchers {
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
@@ -16,7 +16,7 @@ public class ItemMatchers {
                 && stack.getDisplayName().getString().contains("Soul Point");
     }
 
-    public static boolean isPotion(ItemStack stack) {
+    public static boolean isHealingPotion(ItemStack stack) {
         return !stack.isEmpty()
                 && stack.getItem() == Items.POTION
                 && (!stack.getDisplayName()

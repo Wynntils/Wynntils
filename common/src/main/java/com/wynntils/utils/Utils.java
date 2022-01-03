@@ -28,7 +28,7 @@ public class Utils {
     }
 
     public static void logUnknown(String msg, Object obj) {
-        System.out.println("Could not handle input from Wynncraft " + msg);
+        System.out.println("Could not handle input from Wynncraft: " + msg);
         System.out.println(obj);
     }
 
