@@ -20,8 +20,8 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(
             method =
                     "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;",
-            at = @At("RETURN"))
-    private void handleInventoryMouseClickPost(
+            at = @At("HEAD"))
+    private void handleInventoryMouseClickPre(
             int containerId,
             int slotNum,
             int buttonNum,

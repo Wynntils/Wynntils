@@ -10,6 +10,7 @@ import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
@@ -63,8 +64,16 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleOpenScreen(Lnet/minecraft/network/protocol/game/ClientboundOpenScreenPacket;)V",
             at = @At("RETURN"))
-    public void handleOpenScreenPost(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
+    private void handleOpenScreenPost(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         EventFactory.onOpenScreen(packet);
+    }
+
+    @Inject(
+            method =
+                    "handleContainerClose(Lnet/minecraft/network/protocol/game/ClientboundContainerClosePacket;)V",
+            at = @At("RETURN"))
+    private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
+        EventFactory.onContainerClose(packet);
     }
 
     @Inject(

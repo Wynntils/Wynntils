@@ -6,6 +6,8 @@ package com.wynntils.mc.utils;
 
 import com.google.gson.JsonSerializationContext;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -14,6 +16,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
+    /**
+     * Get the lore from an item
+     *
+     * @return an {@link List} containing all item lore
+     */
+    public static List<String> getLore(ItemStack item) {
+        ListTag loreTag = getLoreTag(item);
+
+        List<String> lore = new LinkedList<>();
+        if (loreTag == null) return lore;
+
+        for (int i = 0; i < loreTag.size(); ++i) {
+            lore.add(loreTag.getString(i));
+        }
+
+        return lore;
+    }
+
     /** Get the lore NBT tag from an item, else return null */
     public static ListTag getLoreTag(ItemStack item) {
         if (item.isEmpty()) return null;

@@ -10,7 +10,8 @@ import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.InventoryRenderEvent;
-import com.wynntils.mc.event.MenuOpenedEvent;
+import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
+import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -33,6 +34,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.core.Position;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -140,5 +142,9 @@ public class EventFactory {
         ResourceLocation menuType = Registry.MENU.getKey(packet.getType());
 
         post(new MenuOpenedEvent(menuType, packet.getTitle()));
+    }
+
+    public static void onContainerClose(ClientboundContainerClosePacket packet) {
+        post(new MenuClosedEvent());
     }
 }
