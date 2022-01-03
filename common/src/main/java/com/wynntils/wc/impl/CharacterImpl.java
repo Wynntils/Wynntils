@@ -26,13 +26,9 @@ public class CharacterImpl implements Character {
         return currentCharacter;
     }
 
-    public ClassType getClassTyoe() {
-        return currentCharacter.getClassType();
-    }
-
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
-        if (e.getMenuType().equals(MenuType.GENERIC_9x3)
+        if (e.getMenuType().equals(MenuOpenedEvent.MENU_3_LINES)
                 && Utils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             System.out.println("In character selection menu");
         }
@@ -46,32 +42,6 @@ public class CharacterImpl implements Character {
         }
         if (e.getNewState() == State.CHARACTER_SELECTION) {
             System.out.println("Preparing for character selection");
-        }
-    }
-
-    public static class CharacterInfoImpl implements CharacterInfo {
-        private ClassType classType;
-        private boolean reskinned;
-        private int level;
-
-        @Override
-        public ClassType getClassType() {
-            return classType;
-        }
-
-        @Override
-        public boolean isReskinned() {
-            return reskinned;
-        }
-
-        @Override
-        public int getLevel() {
-            return level;
-        }
-
-        @Override
-        public UUID getId() {
-            return null;
         }
     }
 }
