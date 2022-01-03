@@ -44,25 +44,28 @@ public class ServerIcon {
                 new ResourceLocation(
                         "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
-        if (allowStale && server.pinged && getServerIcon() != null) {
+        //If someone converts this to get the actual ServerData used by the gui, check ServerData#pinged here and
+        //set it later
+        if (allowStale && getServerIcon() != null) {
+            System.out.println("Accepted stale server icon");
             onDone();
             return;
         }
 
-        System.out.println("av");
-        server.pinged = true;
+        System.out.println("Trying to ping server");
         try {
             pinger.pingServer(
                     server,
                     () -> {
-                        System.out.println("bv");
+                        System.out.println("Pinged server");
                         loadServerIcon(destination);
                         onDone();
                     });
         } catch (Exception e) {
+            System.out.println("Failed to ping server");
             onDone();
         }
-        System.out.println("qv");
+        System.out.println("Constructor done");
     }
 
     public ServerIcon(ServerData server, boolean allowStale) {
@@ -84,8 +87,7 @@ public class ServerIcon {
     }
 
     /**
-     * Returns whether getting the icon has succeeded. Due to implementation, it is by default false
-     * and likely onlu safe to be called from {@link ServerIcon#onDone}
+     * Returns whether getting the icon has succeeded.
      */
     public boolean isSuccess() {
         return !FALLBACK.equals(serverIconLocation);
@@ -129,7 +131,7 @@ public class ServerIcon {
         Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
-        System.out.println("cv");
+        System.out.println("Finished loading icon");
         Minecraft.getInstance()
                 .getTextureManager()
                 .register((serverIconLocation = destination), new DynamicTexture(nativeImage));
