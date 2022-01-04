@@ -12,6 +12,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
@@ -89,7 +90,7 @@ public class WorldStateImpl implements WorldState {
 
         if (e.getId().equals(WORLD_UUID)) {
             Component displayName = e.getDisplayName();
-            String name = Utils.getUnformatted(displayName);
+            String name = StringUtils.getUnformatted(displayName);
             Matcher m = WORLD_NAME.matcher(name);
             if (m.find()) {
                 String worldName = m.group(1);

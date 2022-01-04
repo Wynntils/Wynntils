@@ -8,7 +8,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
@@ -36,7 +36,7 @@ public class CharacterImpl implements Character {
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
         if (e.getMenuType().equals(MenuOpenedEvent.MENU_3_LINES)
-                && Utils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
+                && StringUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
             System.out.println("In character selection menu");
         }
@@ -107,7 +107,7 @@ public class CharacterImpl implements Character {
 
                 MutableComponent component = Component.Serializer.fromJson(s);
                 if (component == null) continue;
-                String loreStr = Utils.fromComponent(component);
+                String loreStr = StringUtils.fromComponent(component);
                 System.out.println("Lore: " + loreStr);
             }
 
