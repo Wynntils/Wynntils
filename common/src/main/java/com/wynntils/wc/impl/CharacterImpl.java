@@ -14,6 +14,8 @@ import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -102,7 +104,11 @@ public class CharacterImpl implements Character {
         public static CharacterInfo parseCharacter(ItemStack itemStack) {
             List<String> lore = ItemUtils.getLore(itemStack);
             for (String s : lore) {
-                System.out.println("Lore: " + s);
+
+                MutableComponent component = Component.Serializer.fromJson(s);
+                if (component == null) continue;
+                String loreStr = Utils.fromComponent(component);
+                System.out.println("Lore: " + loreStr);
             }
 
             return new CharacterInfoImpl(null, false, 0, UUID.randomUUID());
