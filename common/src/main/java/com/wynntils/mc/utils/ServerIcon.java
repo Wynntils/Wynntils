@@ -57,7 +57,6 @@ public class ServerIcon {
             pinger.pingServer(
                     server,
                     () -> {
-                        System.out.println("Pinged server");
                         loadServerIcon(destination);
                         onDone();
                     });
@@ -66,7 +65,6 @@ public class ServerIcon {
             Utils.logUnknown("Failed to ping server");
             onDone();
         }
-        System.out.println("Constructor done");
     }
 
     public ServerIcon(ServerData server, boolean allowStale) {
