@@ -7,7 +7,6 @@ package com.wynntils.utils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.Models;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 /**
@@ -30,10 +29,6 @@ public class Utils {
     public static void logUnknown(String msg, Object obj) {
         System.out.println("Could not handle input from Wynncraft: " + msg);
         System.out.println(obj);
-    }
-
-    public static String getUnformatted(Component msg) {
-        return msg.getString();
     }
 
     public static Minecraft mc() {

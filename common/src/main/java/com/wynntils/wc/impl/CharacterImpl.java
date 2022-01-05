@@ -8,12 +8,14 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -34,7 +36,7 @@ public class CharacterImpl implements Character {
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
         if (e.getMenuType().equals(MenuOpenedEvent.MENU_3_LINES)
-                && Utils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
+                && StringUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
             System.out.println("In character selection menu");
         }
@@ -102,7 +104,11 @@ public class CharacterImpl implements Character {
         public static CharacterInfo parseCharacter(ItemStack itemStack) {
             List<String> lore = ItemUtils.getLore(itemStack);
             for (String s : lore) {
-                System.out.println("Lore: " + s);
+
+                MutableComponent component = Component.Serializer.fromJson(s);
+                if (component == null) continue;
+                String loreStr = StringUtils.fromComponent(component);
+                System.out.println("Lore: " + loreStr);
             }
 
             return new CharacterInfoImpl(null, false, 0, UUID.randomUUID());
