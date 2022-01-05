@@ -20,7 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BossHealthOverlay.class)
 public abstract class BossHealthOverlayMixin {
-    @Shadow @Final private final Map<UUID, LerpingBossEvent> events = Maps.newLinkedHashMap();
+    @Final
+    @Shadow
+    private final Map<UUID, LerpingBossEvent> events = Maps.newLinkedHashMap();
 
     @Inject(
             method = "update(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;)V",

@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.Validate;
@@ -19,8 +20,6 @@ import org.apache.commons.lang3.Validate;
 /** Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods */
 public class ServerIcon {
     public static final ResourceLocation FALLBACK;
-
-    private final ServerStatusPinger pinger = new ServerStatusPinger();
 
     private final ServerData server;
     private ResourceLocation serverIconLocation;
@@ -47,14 +46,13 @@ public class ServerIcon {
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
         // set it later
-        if (allowStale && getServerIcon() != null) {
-            System.out.println("Accepted stale server icon");
+        if (allowStale && Minecraft.getInstance().getTextureManager().getTexture(destination) != null) {
             onDone();
             return;
         }
 
-        System.out.println("Trying to ping server");
         try {
+            ServerStatusPinger pinger = new ServerStatusPinger();
             pinger.pingServer(
                     server,
                     () -> {
@@ -63,7 +61,8 @@ public class ServerIcon {
                         onDone();
                     });
         } catch (Exception e) {
-            System.out.println("Failed to ping server");
+            e.printStackTrace();
+            Utils.logUnknown("Failed to ping server");
             onDone();
         }
         System.out.println("Constructor done");
@@ -81,10 +80,9 @@ public class ServerIcon {
         Minecraft.getInstance().getTextureManager().bind(serverIconLocation);
     }
 
-    /** Returns the {@link DynamicTexture} form of the icon */
-    public synchronized DynamicTexture getServerIcon() {
-        return (DynamicTexture)
-                Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation);
+    /** Returns the {@link AbstractTexture} form of the icon */
+    public synchronized AbstractTexture getServerIcon() {
+        return Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation);
     }
 
     /** Returns whether getting the icon has succeeded. */
@@ -112,7 +110,7 @@ public class ServerIcon {
         String iconString = server.getIconB64();
         // failed to ping server or icon wasn't sent
         if (iconString == null) {
-            Utils.logUnknown("Unable to load icon", null);
+            Utils.logUnknown("Unable to load icon");
             serverIconLocation = FALLBACK;
             return;
         }
@@ -130,7 +128,6 @@ public class ServerIcon {
         Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
-        System.out.println("Finished loading icon");
         Minecraft.getInstance()
                 .getTextureManager()
                 .register((serverIconLocation = destination), new DynamicTexture(nativeImage));

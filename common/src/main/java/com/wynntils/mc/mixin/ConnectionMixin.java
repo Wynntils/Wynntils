@@ -26,17 +26,6 @@ public abstract class ConnectionMixin {
     }
 
     @Inject(
-            method = "connectToServer(Ljava/net/InetAddress;IZ)Lnet/minecraft/network/Connection;",
-            at = @At("RETURN"))
-    private static void connectToServerPost(
-            InetAddress inetAddress,
-            int port,
-            boolean useEpoll,
-            CallbackInfoReturnable<Connection> cir) {
-        EventFactory.onConnect(inetAddress, port);
-    }
-
-    @Inject(
             method =
                     "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
             at = @At("RETURN"))

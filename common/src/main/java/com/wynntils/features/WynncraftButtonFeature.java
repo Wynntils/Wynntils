@@ -13,6 +13,7 @@ import com.wynntils.core.features.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.ServerIcon;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -64,7 +65,8 @@ public class WynncraftButtonFeature extends Feature {
             serverIcon.bind();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            this.blit(matrices, this.x, this.y, 0, 0, this.width, this.height);
+            //Insets the icon by 3
+            blit(matrices, this.x + 3, this.y + 3, this.width - 6, this.height - 6, 0, 0, 64, 64,64, 64);
         }
 
         public static void onPress(Button button) {
