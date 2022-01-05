@@ -44,8 +44,9 @@ public class ServerIcon {
                 new ResourceLocation(
                         "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
-        //If someone converts this to get the actual ServerData used by the gui, check ServerData#pinged here and
-        //set it later
+        // If someone converts this to get the actual ServerData used by the gui, check
+        // ServerData#pinged here and
+        // set it later
         if (allowStale && getServerIcon() != null) {
             System.out.println("Accepted stale server icon");
             onDone();
@@ -86,9 +87,7 @@ public class ServerIcon {
                 Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation);
     }
 
-    /**
-     * Returns whether getting the icon has succeeded.
-     */
+    /** Returns whether getting the icon has succeeded. */
     public boolean isSuccess() {
         return !FALLBACK.equals(serverIconLocation);
     }
