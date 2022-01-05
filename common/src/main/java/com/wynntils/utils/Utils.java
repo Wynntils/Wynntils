@@ -34,7 +34,6 @@ public class Utils {
         System.out.println("Could not handle input from Wynncraft: " + msg);
     }
 
-
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }

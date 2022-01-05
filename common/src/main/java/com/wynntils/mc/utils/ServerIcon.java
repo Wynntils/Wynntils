@@ -46,7 +46,8 @@ public class ServerIcon {
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
         // set it later
-        if (allowStale && Minecraft.getInstance().getTextureManager().getTexture(destination) != null) {
+        if (allowStale
+                && Minecraft.getInstance().getTextureManager().getTexture(destination) != null) {
             onDone();
             return;
         }
