@@ -11,10 +11,10 @@
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "ScoreboardMixin",
-    "ScreenMixin"
+    "ScreenMixin",
+    "ConnectScreenMixin"
   ],
   "mixins": [
-    "ConnectScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
