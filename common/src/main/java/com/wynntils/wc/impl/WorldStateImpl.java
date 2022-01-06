@@ -12,7 +12,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.StringUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;

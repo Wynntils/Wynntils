@@ -6,12 +6,11 @@ package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.Models;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 /**
- * This is a "high-quality misc" class. Helper methods that are commonly used throughout the project
- * can be put here. Keep the names short, but distinct.
+ * This is a "high-quality misc" class. Helper methods that are commonly used throughout the project without an aspect
+ * on minecraft can be put here. Keep the names short, but distinct.
  */
 public class Utils {
     public static IEventBus getEventBus() {
@@ -32,9 +31,5 @@ public class Utils {
 
     public static void logUnknown(String msg) {
         System.out.println("Could not handle input from Wynncraft: " + msg);
-    }
-
-    public static Minecraft mc() {
-        return Minecraft.getInstance();
     }
 }

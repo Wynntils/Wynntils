@@ -8,7 +8,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.StringUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
