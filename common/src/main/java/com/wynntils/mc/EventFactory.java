@@ -23,14 +23,12 @@ import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.Utils;
-import java.net.InetAddress;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.core.Position;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.Packet;
@@ -113,10 +111,8 @@ public class EventFactory {
         post(new DisconnectedEvent());
     }
 
-    public static void onConnect(InetAddress inetAddress, int port) {
-        // When this happens, we know that the currentServer is setup in Minecraft
-        ServerData currentServer = Utils.mc().getCurrentServer();
-        post(new ConnectedEvent(currentServer.ip, port));
+    public static void onConnect(String host, int port) {
+        post(new ConnectedEvent(host, port));
     }
 
     public static void onResourcePack(ClientboundResourcePackPacket packet) {

@@ -11,13 +11,13 @@ import com.wynntils.core.features.GameplayImpact;
 import com.wynntils.core.features.PerformanceImpact;
 import com.wynntils.core.features.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.utils.ServerIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WynncraftButtonFeature extends Feature {
@@ -45,25 +45,38 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private static class WynncraftButton extends Button {
-        public static final ResourceLocation WYNNCRAFT_SERVER_ICON =
-                new ResourceLocation("textures/misc/unknown_server.png");
         private final Screen backScreen;
         private final ServerData serverData;
+        private final ServerIcon serverIcon;
 
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
             super(x, y, 20, 20, new TranslatableComponent(""), WynncraftButton::onPress);
-            this.backScreen = backScreen;
             this.serverData = serverData;
+            this.backScreen = backScreen;
+
+            this.serverIcon = new ServerIcon(serverData, true);
         }
 
         @Override
         public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
-            Minecraft.getInstance().getTextureManager().bind(WYNNCRAFT_SERVER_ICON);
+            serverIcon.bind();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            this.blit(matrices, this.x, this.y, 0, 0, this.width, this.height);
+            // Insets the icon by 3
+            blit(
+                    matrices,
+                    this.x + 3,
+                    this.y + 3,
+                    this.width - 6,
+                    this.height - 6,
+                    0,
+                    0,
+                    64,
+                    64,
+                    64,
+                    64);
         }
 
         public static void onPress(Button button) {
