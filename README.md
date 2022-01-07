@@ -15,9 +15,7 @@ This is a preliminary rewrite of Wynntils in 1.16 using Architectury, to support
 
 Pull Request
 ========
-All pull requests are welcome. We'll analyse it and if we determine it should a part of the mod, we'll implement it.
-
-We welcome all forms of assistance. =)
+TODO
 
 License
 ========
