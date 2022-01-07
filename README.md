@@ -4,7 +4,7 @@
 <br>
 <a href="https://discord.gg/ve49m9J"><img src="https://discordapp.com/api/guilds/394189072635133952/widget.png"></a>
 <a href="https://github.com/Wynntils/Artemis/actions/workflows/ci.yml"><img src="https://github.com/Wynntils/Artemis/actions/workflows/ci.yml/badge.svg"></a>
-<a href="https://github.com/Wynntils/Artemis/blob/development/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%203.0-green.svg"></a>
+<a href="https://github.com/Wynntils/Artemis/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%203.0-green.svg"></a>
 </div>
 
 About Artemis
