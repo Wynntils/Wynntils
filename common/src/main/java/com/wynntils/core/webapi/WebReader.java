@@ -67,10 +67,7 @@ public class WebReader {
         lists = new HashMap<>();
 
         for (String str : data.split("\\r?\\n")) {
-            System.out.println("matching \"" + str + "\"");
             Matcher result = LINE_MATCHER.matcher(str);
-
-            System.out.println("matches: " + result.find());
 
             String key = result.group("Key");
             String value = result.group("Value");

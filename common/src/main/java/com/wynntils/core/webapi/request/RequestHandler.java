@@ -227,8 +227,6 @@ public class RequestHandler {
                     });
         }
 
-        System.out.println("invoking");
-
         try {
             pool.invokeAll(tasks);
         } catch (InterruptedException e) {
