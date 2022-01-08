@@ -4,36 +4,29 @@
  */
 package com.wynntils.core.webapi;
 
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-public class WebReader {
+import java.io.File;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    String url;
-    File file;
+public class WebReader {
+    private static final Pattern LINE_MATCHER = Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s+=\\s+(?<Value>.+)");
 
     private Map<String, String> values;
     private Map<String, List<String>> lists;
 
     public WebReader(String url) throws Exception {
-        this.url = url;
-
-        parseWebsite();
+        parseWebsite(url);
     }
 
     public WebReader(File file) throws Exception {
-        this.file = file;
-
-        parseFile();
+        parseFile(file);
     }
 
     private WebReader() {}
@@ -43,6 +36,7 @@ public class WebReader {
         if (!result.parseData(data)) {
             return null;
         }
+
         return result;
     }
 
@@ -50,20 +44,15 @@ public class WebReader {
         return values;
     }
 
-    private void parseFile() throws Exception {
-        try (FileReader fr = new FileReader(file)) {}
-
+    private void parseFile(File file) throws Exception {
         if (!parseData(FileUtils.readFileToString(file, StandardCharsets.UTF_8))) {
             throw new Exception("Invalid WebReader result");
         }
     }
 
-    private void parseWebsite() throws Exception {
+    private void parseWebsite(String url) throws Exception {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
-                        + " Firefox/3.6.2");
+        st.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
         if (!parseData(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))) {
             throw new Exception("Invalid WebReader result");
@@ -73,38 +62,22 @@ public class WebReader {
     private boolean parseData(String data) {
         values = new HashMap<>();
         lists = new HashMap<>();
+
         for (String str : data.split("\\r?\\n")) {
-            if (str.contains("[") && str.contains("]")) {
-                String[] split;
-                if (str.contains(" = ")) {
-                    split = str.split(" = ");
-                } else if (str.contains("=")) {
-                    split = str.split("=");
-                } else {
-                    return false;
-                }
+            Matcher result = LINE_MATCHER.matcher(str);
 
-                values.put(split[0].replace("[", "").replace("]", ""), split[1]);
+            String key = result.group("Key");
+            String value = result.group("Value");
 
-                if (split[1].contains(",")) {
-                    String[] array = split[1].split(",");
+            if (value.contains(",")) {
+                List<String> values = new ArrayList<>(Arrays.asList(value.split(",\\s*")));
 
-                    List<String> values = new ArrayList<>();
-                    for (String x : array) {
-                        if (x.startsWith(" ")) {
-                            x = x.substring(1);
-                        }
-                        values.add(x);
-                    }
-
-                    lists.put(split[0].replace("[", "").replace("]", ""), values);
-                } else {
-                    List<String> values = new ArrayList<>();
-                    values.add(split[1]);
-                    lists.put(split[0].replace("[", "").replace("]", ""), values);
-                }
+                lists.put(key, values);
+            } else {
+                values.put(key, value);
             }
         }
+
         return true;
     }
 
