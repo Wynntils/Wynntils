@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class Feature {
-    /**
-     * List of providers to mark for loading
-     */
+    /** List of providers to mark for loading */
     protected List<Supplier<WebManager.StaticProvider>> apis = new ArrayList<>();
 
     /** Called on a feature's activation */
