@@ -10,6 +10,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
+    public static String VERSION = "";
+    public static int BUILD_NUMBER = -1;
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
