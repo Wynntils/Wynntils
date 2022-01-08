@@ -6,6 +6,7 @@ package com.wynntils.core;
 
 import com.wynntils.core.features.Feature;
 import com.wynntils.features.ConnectionProgressFeature;
+import com.wynntils.features.ItemGuessFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -32,6 +33,7 @@ public class FeatureHandler {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
+        registerFeature(new ItemGuessFeature());
 
         initalizeFeatures();
     }

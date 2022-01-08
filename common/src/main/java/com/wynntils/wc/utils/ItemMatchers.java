@@ -26,4 +26,10 @@ public class ItemMatchers {
                                 .getString()
                                 .contains(ChatFormatting.RED + "Potion of Healing"));
     }
+
+    public static boolean isUnidentified(ItemStack stack) {
+        return (stack.getItem() == Items.STONE_SHOVEL
+                && stack.getDamageValue() >= 1
+                && stack.getDamageValue() <= 6);
+    }
 }

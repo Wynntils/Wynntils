@@ -18,7 +18,6 @@ public class WebReader {
     private static final Pattern LINE_MATCHER =
             Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");
 
-
     private Map<String, String> values;
     private Map<String, List<String>> lists;
 

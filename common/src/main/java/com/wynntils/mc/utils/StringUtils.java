@@ -34,14 +34,7 @@ public class StringUtils {
                     }
 
                     if (style.getColor() != null) {
-                        Optional<ChatFormatting> color =
-                                Arrays.stream(ChatFormatting.values())
-                                        .filter(
-                                                c ->
-                                                        c.isColor()
-                                                                && style.getColor().getValue()
-                                                                        == c.getColor())
-                                        .findFirst();
+                        Optional<ChatFormatting> color = getChatFormatting(style.getColor());
                         color.ifPresent(result::append);
                     }
 
@@ -87,5 +80,11 @@ public class StringUtils {
             add.append(ChatFormatting.OBFUSCATED);
 
         return add;
+    }
+
+    public static Optional<ChatFormatting> getChatFormatting(TextColor textColor) {
+        return Arrays.stream(ChatFormatting.values())
+                .filter(c -> c.isColor() && textColor.getValue() == c.getColor())
+                .findFirst();
     }
 }

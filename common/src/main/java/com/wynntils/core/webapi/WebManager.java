@@ -25,7 +25,37 @@ public class WebManager {
 
     public static @Nullable WebReader apiUrls;
 
+    private static final SingleStaticProvider<HashMap<String, ItemGuessProfile>>
+            itemGuessesProvider;
 
+    static {
+        itemGuessesProvider =
+                new SingleStaticProvider<>() {
+                    @Override
+                    protected Request getRequest() {
+                        return new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+                                .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
+                                .handleJsonObject(
+                                        json -> {
+                                            Type type =
+                                                    new TypeToken<
+                                                            HashMap<
+                                                                    String,
+                                                                    ItemGuessProfile>>() {}.getType();
+
+                                            GsonBuilder gsonBuilder = new GsonBuilder();
+                                            gsonBuilder.registerTypeHierarchyAdapter(
+                                                    HashMap.class,
+                                                    new ItemGuessProfile.ItemGuessDeserializer());
+                                            Gson gson = gsonBuilder.create();
+
+                                            value = gson.fromJson(json, type);
+                                            return true;
+                                        })
+                                .build();
+                    }
+                };
+    }
 
     public static void init() {
         tryReloadApiUrls(false, true);
@@ -70,7 +100,7 @@ public class WebManager {
         handler.dispatch(async);
     }
 
-    public static StaticProvider getItemGuessesProvider() {
+    public static SingleStaticProvider<HashMap<String, ItemGuessProfile>> getItemGuessesProvider() {
         return itemGuessesProvider;
     }
 
