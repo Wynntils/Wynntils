@@ -2,13 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi;
+package com.wynntils.core.webapi.request;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.io.File;
+import com.wynntils.core.webapi.LoadingPhase;
+import com.wynntils.utils.Utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +76,7 @@ public class RequestHandler {
         return dispatch(true);
     }
 
-    private Thread dispatch(boolean async) {
+    public Thread dispatch(boolean async) {
         List<Request>[] groupedRequests;
         boolean anyRequests = false;
         int thisDispatch;
@@ -87,10 +89,10 @@ public class RequestHandler {
             }
 
             for (Request request : requests) {
-                if (request.currentlyHandling != 0) continue;
+                if (request.currentlyHandling != LoadingPhase.UNLOADED) continue;
 
                 anyRequests = true;
-                request.currentlyHandling = 1;
+                request.currentlyHandling = LoadingPhase.TO_LOAD;
                 groupedRequests[request.parallelGroup].add(request);
             }
 
@@ -102,14 +104,14 @@ public class RequestHandler {
             if (!async) {
                 handleDispatch(thisDispatch, groupedRequests, 0);
                 return null;
+            } else {
+                Thread t =
+                        new Thread(
+                                () -> handleDispatch(thisDispatch, groupedRequests, 0),
+                                "wynntils-webrequesthandler");
+                t.start();
+                return t;
             }
-
-            Thread t =
-                    new Thread(
-                            () -> handleDispatch(thisDispatch, groupedRequests, 0),
-                            "wynntils-webrequesthandler");
-            t.start();
-            return t;
         }
 
         return null;
@@ -122,13 +124,12 @@ public class RequestHandler {
             nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
             return;
         }
+
         List<Callable<Void>> tasks = new ArrayList<>(currentGroup.size());
         for (Request req : currentGroup) {
             tasks.add(
                     () -> {
                         if (req.cacheValidator != null) {
-                            assert req.cacheFile != null
-                                    : req.id + ": You set a cache validator without a cache file!";
                             try {
                                 byte[] cachedData = FileUtils.readFileToByteArray(req.cacheFile);
                                 if (req.cacheValidator.test(cachedData)) {
@@ -139,111 +140,105 @@ public class RequestHandler {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    // Reference.LOGGER.error(req.id + ": Error using cached data
-                                    // that passed validator!");
-                                    moveInvalidCache(req.cacheFile);
+
+                                    Utils.logUnknown(
+                                            req.id
+                                                    + ": Error using cached data that passed"
+                                                    + " validator!");
+                                    FileUtils.deleteQuietly(req.cacheFile);
                                 } else {
-                                    // Reference.LOGGER.info("Cache for " + req.id + " at " +
-                                    // req.cacheFile.getPath() + " could not be validated");
+                                    Utils.logUnknown(
+                                            "Cache for "
+                                                    + req.id
+                                                    + " at "
+                                                    + req.cacheFile.getPath()
+                                                    + " could not be validated");
                                 }
                             } catch (FileNotFoundException ignore) {
                             } catch (Exception e) {
-                                // Reference.LOGGER.info("Error occurred whilst trying to use
-                                // validated cache for " + req.id + " at " +
-                                // req.cacheFile.getPath());
+                                Utils.logUnknown(
+                                        "Error occurred whilst trying to use validated cache for "
+                                                + req.id
+                                                + " at "
+                                                + req.cacheFile.getPath());
                                 e.printStackTrace();
                             }
                         }
 
-                        byte[] toCache = null;
-                        if (req.url != null && !cacheOnly) {
-                            Throwable readException = null;
+                        if (!cacheOnly) {
                             try {
                                 HttpURLConnection st = req.establishConnection();
-                                if (req.onError != null && st.getResponseCode() != 200) {
-                                    if (!req.onError.test(st.getResponseCode())) {
-                                        st.disconnect();
-                                        return null;
-                                    }
+                                if (st.getResponseCode() != 200) {
+                                    if (!req.onError(st.getResponseCode()))
+                                        req.currentlyHandling = LoadingPhase.LOADED;
+                                    st.disconnect();
+                                    return null;
                                 }
 
-                                byte[] data;
                                 try {
-                                    data = IOUtils.toByteArray(st.getInputStream());
-                                } catch (IOException e) {
-                                    readException = e;
-                                    throw e;
-                                }
-                                if (req.handler != null) {
-                                    if (req.handler.test(st, data)) {
-                                        toCache = data;
-                                    } else {
-                                        // Reference.LOGGER.info("Error occurred whilst fetching " +
-                                        // req.id + " from " + req.url + ": Invalid data received" +
-                                        // (req.cacheFile == null ? "" : "; Attempting to use
-                                        // cache"));
+                                    byte[] data = IOUtils.toByteArray(st.getInputStream());
+
+                                    if (req.handler != null) {
+                                        if (req.handler.test(st, data)) {
+                                            if (req.cacheFile != null) {
+                                                try {
+                                                    FileUtils.writeByteArrayToFile(
+                                                            req.cacheFile, data);
+                                                } catch (Exception e) {
+                                                    Utils.logUnknown(
+                                                            "Error occurred whilst writing cache"
+                                                                    + " for "
+                                                                    + req.id);
+                                                    e.printStackTrace();
+                                                    FileUtils.deleteQuietly(req.cacheFile);
+                                                }
+                                            }
+                                        } else {
+                                            Utils.logUnknown(
+                                                    "Error occurred whilst fetching "
+                                                            + req.id
+                                                            + " from "
+                                                            + req.url);
+                                        }
                                     }
+                                } catch (IOException e) {
+                                    Utils.logUnknown(
+                                            "Error occurred whilst fetching "
+                                                    + req.id
+                                                    + " from "
+                                                    + req.url
+                                                    + ": "
+                                                    + (e instanceof SocketTimeoutException
+                                                            ? "Socket timeout (server may be down)"
+                                                            : e.getMessage()));
                                 }
                             } catch (Exception e) {
-                                if (readException != null) {
-                                    // Reference.LOGGER.info("Error occurred whilst fetching " +
-                                    // req.id + " from " + req.url + ": " + (e instanceof
-                                    // SocketTimeoutException ? "Socket timeout (server may be
-                                    // down)" : e.getMessage()) + (req.cacheFile == null ? "" : ";
-                                    // Attempting to use cache"));
-                                } else {
-                                    // Reference.LOGGER.info("Error occurred whilst fetching " +
-                                    // req.id + " from " + req.url + (req.cacheFile == null ? "" :
-                                    // "; Attempting to use cache"));
-                                    e.printStackTrace();
-                                }
+                                Utils.logUnknown(
+                                        "Error occurred whilst fetching "
+                                                + req.id
+                                                + " from "
+                                                + req.url);
+                                e.printStackTrace();
                             }
                         }
 
-                        if (req.cacheFile != null) {
-                            if (toCache != null) {
-                                try {
-                                    FileUtils.writeByteArrayToFile(req.cacheFile, toCache);
-                                } catch (Exception e) {
-                                    // Reference.LOGGER.info("Error occurred whilst writing cache
-                                    // for " + req.id);
-                                    e.printStackTrace();
-                                    moveInvalidCache(req.cacheFile);
-                                }
-                            } else {
-                                try {
-                                    if (!req.handler.test(
-                                            null, FileUtils.readFileToByteArray(req.cacheFile))) {
-                                        // Reference.LOGGER.info("Error occurred whilst trying to
-                                        // use cache for " + req.id + " at " +
-                                        // req.cacheFile.getPath() + ": Cache file is invalid");
-                                        moveInvalidCache(req.cacheFile);
-                                    }
-                                } catch (FileNotFoundException ignore) {
-                                } catch (Exception e) {
-                                    // Reference.LOGGER.info("Error occurred whilst trying to use
-                                    // cache for " + req.id + " at " + req.cacheFile.getPath());
-                                    e.printStackTrace();
-                                    moveInvalidCache(req.cacheFile);
-                                }
-                            }
-                        }
-                        req.currentlyHandling = 2;
+                        req.currentlyHandling = LoadingPhase.LOADED;
                         return null;
                     });
         }
-        boolean interrupted = false;
+
+        System.out.println("invoking");
+
         try {
             pool.invokeAll(tasks);
         } catch (InterruptedException e) {
-            interrupted = true;
-        }
-        if (interrupted) {
             Set<String> completedIds = new HashSet<>();
             Set<String> interruptedIds = new HashSet<>();
             for (List<Request> requests : groupedRequests)
                 for (Request request : requests) {
-                    (request.currentlyHandling == 2 ? completedIds : interruptedIds)
+                    (request.currentlyHandling == LoadingPhase.LOADED
+                                    ? completedIds
+                                    : interruptedIds)
                             .add(request.id);
                 }
             synchronized (this) {
@@ -253,8 +248,9 @@ public class RequestHandler {
                                 return true;
                             }
                             if (interruptedIds.contains(req.id)) {
-                                req.currentlyHandling = 0;
+                                req.currentlyHandling = LoadingPhase.LOADED;
                             }
+
                             return false;
                         });
             }
@@ -263,16 +259,6 @@ public class RequestHandler {
         }
 
         nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
-    }
-
-    private static void moveInvalidCache(File from) {
-        File invalid = new File(from.getAbsolutePath() + ".invalid");
-        FileUtils.deleteQuietly(invalid);
-
-        try {
-            from.renameTo(invalid);
-        } catch (Exception ignore) {
-        }
     }
 
     private void nextDispatch(
@@ -286,7 +272,7 @@ public class RequestHandler {
         Set<String> ids = new HashSet<>();
         for (List<Request> requests : groupedRequests)
             for (Request request : requests) {
-                ids.add(request.id);
+                if (request.currentlyHandling == LoadingPhase.LOADED) ids.add(request.id);
             }
         synchronized (this) {
             requests.removeIf(req -> ids.contains(req.id));

@@ -2,19 +2,17 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi;
+package com.wynntils.core.webapi.request;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.webapi.WebReader;
 import com.wynntils.utils.MD5Verification;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +21,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Request {
+public class RequestBuilder {
 
     String url;
     String id;
@@ -33,10 +31,9 @@ public class Request {
     Map<String, String> headers = new HashMap<>();
     File cacheFile;
     Predicate<byte[]> cacheValidator = null;
-    int currentlyHandling = 0;
     int timeout = 16000;
 
-    public Request(String url, String id) {
+    public RequestBuilder(String url, String id) {
         this.url = url;
         this.id = id;
     }
@@ -45,7 +42,7 @@ public class Request {
      * Sets the parallel group. Requests in the same parallel group will be requested at the same
      * time. Greater parallel groups will be requested after smaller ones.
      */
-    public Request withParallelGroup(int group) {
+    public RequestBuilder withParallelGroup(int group) {
         this.parallelGroup = group;
         return this;
     }
@@ -57,7 +54,7 @@ public class Request {
      * If false or throws, the data is marked as bad (Uses cache file if this was a request, deletes
      * cache file if cache was bad)
      */
-    public Request handle(Predicate<byte[]> handler) {
+    public RequestBuilder handle(Predicate<byte[]> handler) {
         return handle((conn, data) -> handler.test(data));
     }
 
@@ -66,7 +63,7 @@ public class Request {
      * interpreted as in {{@link #handle(Predicate) handle}}. The connection will be `null` if
      * loading from cache
      */
-    public Request handle(ThrowingBiPredicate<URLConnection, byte[], IOException> handler) {
+    public RequestBuilder handle(ThrowingBiPredicate<URLConnection, byte[], IOException> handler) {
         this.handler = handler;
         return this;
     }
@@ -75,30 +72,31 @@ public class Request {
      * As {@link #handle(Predicate) handle}, but the data is converted into a String first using
      * Charset
      */
-    public Request handleString(Predicate<String> handler, Charset charset) {
+    public RequestBuilder handleString(Predicate<String> handler, Charset charset) {
         return handle(data -> handler.test(new String(data, charset)));
     }
 
-    public Request handleString(
+    public RequestBuilder handleString(
             ThrowingBiPredicate<URLConnection, String, IOException> handler, Charset charset) {
         return handle((conn, data) -> handler.test(conn, new String(data, charset)));
     }
 
     /** As {@link #handle(Predicate) handle}, but the data is interpreted as UTF-8 */
-    public Request handleString(Predicate<String> handler) {
+    public RequestBuilder handleString(Predicate<String> handler) {
         return handleString(handler, StandardCharsets.UTF_8);
     }
 
-    public Request handleString(ThrowingBiPredicate<URLConnection, String, IOException> handler) {
+    public RequestBuilder handleString(
+            ThrowingBiPredicate<URLConnection, String, IOException> handler) {
         return handleString(handler, StandardCharsets.UTF_8);
     }
 
     /** As {@link #handle(Predicate) handle}, but the data is parsed as JSON */
-    public Request handleJson(Predicate<JsonElement> handler) {
+    public RequestBuilder handleJson(Predicate<JsonElement> handler) {
         return handleString(s -> handler.test(new JsonParser().parse(s)));
     }
 
-    public Request handleJson(
+    public RequestBuilder handleJson(
             ThrowingBiPredicate<URLConnection, JsonElement, IOException> handler) {
         return handleString((conn, s) -> handler.test(conn, new JsonParser().parse(s)));
     }
@@ -107,7 +105,7 @@ public class Request {
      * As {@link #handle(Predicate) handle}, but the data is parsed as JSON and converted into an
      * Object
      */
-    public Request handleJsonObject(Predicate<JsonObject> handler) {
+    public RequestBuilder handleJsonObject(Predicate<JsonObject> handler) {
         return handleJson(
                 j -> {
                     if (!j.isJsonObject()) return false;
@@ -115,7 +113,7 @@ public class Request {
                 });
     }
 
-    public Request handleJsonObject(
+    public RequestBuilder handleJsonObject(
             ThrowingBiPredicate<URLConnection, JsonObject, IOException> handler) {
         return handleJson(
                 (conn, j) -> {
@@ -128,7 +126,7 @@ public class Request {
      * As {@link #handle(Predicate) handle}, but the data is parsed as JSON and converted into an
      * Array
      */
-    public Request handleJsonArray(Predicate<JsonArray> handler) {
+    public RequestBuilder handleJsonArray(Predicate<JsonArray> handler) {
         return handleJson(
                 j -> {
                     if (!j.isJsonArray()) return false;
@@ -136,7 +134,7 @@ public class Request {
                 });
     }
 
-    public Request handleJsonArray(
+    public RequestBuilder handleJsonArray(
             ThrowingBiPredicate<URLConnection, JsonArray, IOException> handler) {
         return handleJson(
                 (conn, j) -> {
@@ -149,7 +147,7 @@ public class Request {
      * As {@link #handle(Predicate) handle}, but the data is parsed by {@link
      * WebReader#fromString(String) WebReader}
      */
-    public Request handleWebReader(Predicate<WebReader> handler) {
+    public RequestBuilder handleWebReader(Predicate<WebReader> handler) {
         return handleString(
                 s -> {
                     WebReader reader = WebReader.fromString(s);
@@ -162,7 +160,7 @@ public class Request {
      * Sets the cache file. Good data will be written here, and if there is no good data, it will be
      * read from here.
      */
-    public Request cacheTo(File f) {
+    public RequestBuilder cacheTo(File f) {
         this.cacheFile = f;
         return this;
     }
@@ -174,7 +172,7 @@ public class Request {
      * true, the cache file is used first, and a web request probably won't be made If false, make a
      * web request as normal.
      */
-    public Request cacheValidator(Predicate<byte[]> validator) {
+    public RequestBuilder cacheValidator(Predicate<byte[]> validator) {
         this.cacheValidator =
                 data -> {
                     try {
@@ -188,13 +186,13 @@ public class Request {
     }
 
     /** A MD5 hash cache validator. */
-    public Request cacheMD5Validator(String expectedHash) {
+    public RequestBuilder cacheMD5Validator(String expectedHash) {
         if (!MD5Verification.isMd5Digest(expectedHash)) return this;
         return cacheMD5Validator(() -> expectedHash);
     }
 
     /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside of a thread). */
-    public Request cacheMD5Validator(Supplier<String> expectedHashSupplier) {
+    public RequestBuilder cacheMD5Validator(Supplier<String> expectedHashSupplier) {
         return cacheValidator(
                 data -> {
                     String expectedHash = expectedHashSupplier.get();
@@ -215,13 +213,13 @@ public class Request {
      * Called whenever the response code is different from 200 OK set to true if the request should
      * go on
      */
-    public Request onError(Predicate<Integer> onError) {
+    public RequestBuilder onError(Predicate<Integer> onError) {
         this.onError = onError;
         return this;
     }
 
     /** Timeout length for requests */
-    public Request setTimeout(int timeout) {
+    public RequestBuilder setTimeout(int timeout) {
         this.timeout = timeout;
         return this;
     }
@@ -232,20 +230,24 @@ public class Request {
      * @param key the header key
      * @param value the header value
      */
-    public Request addHeader(String key, String value) {
+    public RequestBuilder addHeader(String key, String value) {
         headers.put(key, value);
         return this;
     }
 
-    public HttpURLConnection establishConnection() throws IOException {
-        HttpURLConnection st = (HttpURLConnection) new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "WynntilsClient v" + WynntilsMod.VERSION + "/B" + WynntilsMod.BUILD_NUMBER);
-        if (!headers.isEmpty()) headers.forEach(st::addRequestProperty);
+    public Request build() {
+        if (cacheValidator != null && cacheFile == null)
+            throw new IllegalStateException("Invalid cache file and validator pairing");
 
-        st.setConnectTimeout(timeout);
-        st.setReadTimeout(timeout);
-        return st;
+        return new Request(
+                url,
+                id,
+                parallelGroup,
+                handler,
+                onError,
+                headers,
+                cacheFile,
+                cacheValidator,
+                timeout);
     }
 }
