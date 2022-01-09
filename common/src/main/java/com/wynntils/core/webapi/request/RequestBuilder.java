@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.webapi.WebReader;
 import com.wynntils.utils.MD5Verification;
+import com.wynntils.utils.Utils;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
 import java.io.File;
 import java.io.IOException;
@@ -74,10 +75,7 @@ public class RequestBuilder {
      * Charset
      */
     public RequestBuilder handleString(Predicate<String> handler, Charset charset) {
-        return handle(
-                data -> {
-                    return handler.test(new String(data, charset));
-                });
+        return handle(data -> handler.test(new String(data, charset)));
     }
 
     public RequestBuilder handleString(
@@ -110,20 +108,12 @@ public class RequestBuilder {
      * Object
      */
     public RequestBuilder handleJsonObject(Predicate<JsonObject> handler) {
-        return handleJson(
-                j -> {
-                    if (!j.isJsonObject()) return false;
-                    return handler.test(j.getAsJsonObject());
-                });
+        return handleJson(j -> j.isJsonObject() && handler.test(j.getAsJsonObject()));
     }
 
     public RequestBuilder handleJsonObject(
             ThrowingBiPredicate<URLConnection, JsonObject, IOException> handler) {
-        return handleJson(
-                (conn, j) -> {
-                    if (!j.isJsonObject()) return false;
-                    return handler.test(conn, j.getAsJsonObject());
-                });
+        return handleJson((conn, j) -> j.isJsonObject() && handler.test(conn, j.getAsJsonObject()));
     }
 
     /**
@@ -131,20 +121,12 @@ public class RequestBuilder {
      * Array
      */
     public RequestBuilder handleJsonArray(Predicate<JsonArray> handler) {
-        return handleJson(
-                j -> {
-                    if (!j.isJsonArray()) return false;
-                    return handler.test(j.getAsJsonArray());
-                });
+        return handleJson(j -> j.isJsonArray() && handler.test(j.getAsJsonArray()));
     }
 
     public RequestBuilder handleJsonArray(
             ThrowingBiPredicate<URLConnection, JsonArray, IOException> handler) {
-        return handleJson(
-                (conn, j) -> {
-                    if (!j.isJsonArray()) return false;
-                    return handler.test(conn, j.getAsJsonArray());
-                });
+        return handleJson((conn, j) -> j.isJsonArray() && handler.test(conn, j.getAsJsonArray()));
     }
 
     /**
@@ -182,6 +164,7 @@ public class RequestBuilder {
                     try {
                         return validator.test(data);
                     } catch (Exception e) {
+                        Utils.logUnknown("Unable to validate cache");
                         e.printStackTrace();
                         return false;
                     }
@@ -193,8 +176,8 @@ public class RequestBuilder {
      * Allows using the cache as back up if no result has been achieved from either the cache
      * validator if set or the connection.
      *
-     * <p>Naturally, if {@link RequestHandler#cacheOnly} is set, then the connection does not yield
-     * a result
+     * <p>Naturally, if {@link RequestHandler#cacheOnly} is set to true, then the connection does
+     * not yield a result
      */
     public RequestBuilder useCacheAsBackup() {
         this.useCacheAsBackup = true;
@@ -218,14 +201,19 @@ public class RequestBuilder {
                     boolean passed = verification.equals(expectedHash);
                     if (!passed) {
                         // TODO
-                        // Reference.LOGGER.info(this.id + ": MD5 verification failed. Expected: \""
-                        // + expectedHash + "\"; Got: \"" + verification.getMd5() + "\"");
+                        Utils.logUnknown(
+                                this.id
+                                        + ": MD5 verification failed. Expected: \""
+                                        + expectedHash
+                                        + "\"; Got: \""
+                                        + verification.getMd5()
+                                        + "\"");
                     }
                     return passed;
                 });
     }
 
-    /** Called whenever a result could not have been loaded */
+    /** Called whenever a result could not be loaded */
     public RequestBuilder onError(Request.RequestErrorHandler onError) {
         this.onError = onError;
         return this;

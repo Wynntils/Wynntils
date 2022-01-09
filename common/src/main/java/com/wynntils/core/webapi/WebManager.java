@@ -7,6 +7,7 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.FeatureHandler;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.Request;
@@ -28,6 +29,10 @@ public class WebManager {
 
     private static final SingleStaticProvider<HashMap<String, ItemGuessProfile>>
             itemGuessesProvider;
+
+    public static void init() {
+        tryReloadApiUrls(false, true);
+    }
 
     static {
         itemGuessesProvider =
@@ -63,7 +68,11 @@ public class WebManager {
                 };
     }
 
-    private static void tryReloadApiUrls(boolean async) {
+    public static void tryReloadApis(boolean async) {
+        tryReloadApiUrls(async, false);
+    }
+
+    private static void tryReloadApiUrls(boolean async, boolean isSetup) {
         if (apiUrls == null) {
             handler.addRequest(
                     new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
@@ -73,7 +82,7 @@ public class WebManager {
                                         apiUrls = reader;
                                         if (!setup) {
                                             setup = true;
-                                            WebManager.setupWebApi();
+                                            WebManager.setupWebApi(isSetup);
                                         }
                                         return true;
                                     })
@@ -83,7 +92,21 @@ public class WebManager {
         }
     }
 
-    public static void setupWebApi() {
+    public static void setupWebApi(boolean isSetup) {
+        // If it is during the setup the features will be enabled by the FeatureHandler later, so
+        // there is no
+        // need to do it here
+        // This is for if the apiUrls fail and are reloaded externally
+        if (!isSetup) {
+            FeatureHandler.getFeatures()
+                    .forEach(
+                            f -> {
+                                if (f.isApiDependent() && !f.isEnabled()) {
+                                    f.onEnable();
+                                }
+                            });
+        }
+
         // MapModule.getModule().getMainMap().updateMap();
     }
 

@@ -11,33 +11,53 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class Feature {
-    protected boolean enabled;
+    protected boolean enabled = false;
+    protected boolean loaded = false;
 
     /** List of providers to mark for loading */
     protected List<Supplier<WebManager.StaticProvider>> apis = new ArrayList<>();
 
-    /** Called on a feature's activation; Returns whether it was a success */
-    public void onEnable() {
+    /**
+     * Called for a feature's activation
+     *
+     * <p>Returns whether the feature was successfully activated
+     */
+    public boolean onEnable() {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        if (!apis.isEmpty()) {
-            if (!WebManager.isSetup()) return;
-
-            for (Supplier<WebManager.StaticProvider> apiSupplier : apis) {
-                apiSupplier.get().markToLoad();
-            }
-
-            WebManager.loadMarked(false);
-        }
+        if (!tryEnableAPIS(false)) return false;
 
         Utils.getEventBus().register(this);
         Utils.getEventBus().register(this.getClass());
 
         enabled = true;
+        return true;
     }
 
-    /** Called on a feature's deactivation */
+    /**
+     * Called to try and enable the apis the feature is dependent on Returns if feature can be
+     * safely activated
+     */
+    public boolean tryEnableAPIS(boolean async) {
+        if (loaded) return true;
+
+        if (!apis.isEmpty()) {
+            if (!WebManager.isSetup()) return false;
+
+            for (Supplier<WebManager.StaticProvider> apiSupplier : apis) {
+                apiSupplier.get().markToLoad();
+            }
+
+            WebManager.loadMarked(async);
+        }
+
+        loaded = true;
+
+        return true;
+    }
+
+    /** Called for a feature's deactivation */
     public void onDisable() {
         if (!enabled)
             throw new IllegalStateException(
@@ -49,6 +69,11 @@ public abstract class Feature {
         enabled = false;
     }
 
+    /** Returns whether a feature is api dependent */
+    public boolean isApiDependent() {
+        return !apis.isEmpty();
+    }
+
     /** Subjective Performance impact of feature */
     public abstract PerformanceImpact getPerformanceImpact();
 
@@ -57,4 +82,9 @@ public abstract class Feature {
 
     /** Subjective stability of feature */
     public abstract Stability getStability();
+
+    /** Whether a feature is enabled */
+    public boolean isEnabled() {
+        return enabled;
+    }
 }

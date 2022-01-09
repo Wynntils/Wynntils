@@ -20,7 +20,7 @@ public class FeatureHandler {
         FEATURES.add(feature);
     }
 
-    private static void initalizeFeatures() {
+    private static void initializeFeatures() {
         FEATURES.forEach(Feature::onEnable);
     }
 
@@ -35,6 +35,6 @@ public class FeatureHandler {
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new ItemGuessFeature());
 
-        initalizeFeatures();
+        initializeFeatures();
     }
 }
