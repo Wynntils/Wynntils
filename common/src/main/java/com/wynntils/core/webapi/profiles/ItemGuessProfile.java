@@ -5,6 +5,7 @@
 package com.wynntils.core.webapi.profiles;
 
 import com.google.gson.*;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.objects.ItemTier;
 import com.wynntils.wc.objects.ItemType;
 import java.lang.reflect.Type;
@@ -46,9 +47,7 @@ public class ItemGuessProfile {
 
                         raritiesMap.put(
                                 ItemTier.valueOf(rarity.getKey()),
-                                new ArrayList<>(
-                                        Arrays.asList(
-                                                rarity.getValue().getAsString().split(",\\s*"))));
+                                StringUtils.parseStringToList(rarity.getValue().getAsString()));
                     }
 
                     itemGuessProfile.items.put(ItemType.valueOf(weaponType.getKey()), raritiesMap);

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.objects;
 
-import com.wynntils.mc.utils.StringUtils;
+import com.wynntils.mc.utils.ComponentUtils;
 import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -34,7 +34,7 @@ public enum ItemTier {
     public static ItemTier fromComponent(Component component) {
         TextColor color = component.getStyle().getColor();
         if (color == null) return null;
-        Optional<ChatFormatting> formatting = StringUtils.getChatFormatting(color);
+        Optional<ChatFormatting> formatting = ComponentUtils.getChatFormatting(color);
         return formatting.map(ItemTier::fromChatFormatting).orElse(null);
     }
 

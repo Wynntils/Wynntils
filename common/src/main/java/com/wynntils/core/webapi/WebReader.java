@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi;
 
+import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
@@ -74,7 +75,7 @@ public class WebReader {
             String value = result.group("Value");
 
             if (value.contains(",")) {
-                List<String> values = new ArrayList<>(Arrays.asList(value.split(",\\s*")));
+                List<String> values = StringUtils.parseStringToList(value);
 
                 lists.put(key, values);
             } else {

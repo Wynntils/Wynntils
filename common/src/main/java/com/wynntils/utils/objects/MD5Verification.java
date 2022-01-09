@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils;
+package com.wynntils.utils.objects;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,6 @@ import java.security.MessageDigest;
 import java.util.regex.Pattern;
 
 public class MD5Verification {
-
     String md5;
 
     public MD5Verification(File f) {

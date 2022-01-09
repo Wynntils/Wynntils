@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
-public class StringUtils {
+public class ComponentUtils {
     public static String getUnformatted(Component msg) {
         return msg.getString();
     }
