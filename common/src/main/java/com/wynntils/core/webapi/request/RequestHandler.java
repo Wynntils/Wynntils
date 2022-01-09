@@ -165,63 +165,37 @@ public class RequestHandler {
                             }
                         }
 
-                        if (!cacheOnly) {
-                            try {
-                                HttpURLConnection st = req.establishConnection();
-                                if (st.getResponseCode() != 200) {
-                                    if (!req.onError(st.getResponseCode()))
-                                        req.currentlyHandling = LoadingPhase.LOADED;
-                                    st.disconnect();
-                                    return null;
-                                }
+                        boolean result = cacheOnly || handleHttpConnection(req);
 
+                        if (!result) {
+                            if (req.useCacheAsBackup) {
                                 try {
-                                    byte[] data = IOUtils.toByteArray(st.getInputStream());
-
-                                    if (req.handler != null) {
-                                        if (req.handler.test(st, data)) {
-                                            if (req.cacheFile != null) {
-                                                try {
-                                                    FileUtils.writeByteArrayToFile(
-                                                            req.cacheFile, data);
-                                                } catch (Exception e) {
-                                                    Utils.logUnknown(
-                                                            "Error occurred whilst writing cache"
-                                                                    + " for "
-                                                                    + req.id);
-                                                    e.printStackTrace();
-                                                    FileUtils.deleteQuietly(req.cacheFile);
-                                                }
-                                            }
-                                        } else {
-                                            Utils.logUnknown(
-                                                    "Error occurred whilst fetching "
-                                                            + req.id
-                                                            + " from "
-                                                            + req.url);
-                                        }
+                                    if (!req.handler.test(
+                                            null, FileUtils.readFileToByteArray(req.cacheFile))) {
+                                        Utils.logUnknown(
+                                                "Error occurred whilst trying to use cache for "
+                                                        + req.id
+                                                        + " at "
+                                                        + req.cacheFile.getPath()
+                                                        + ": Cache file is invalid");
+                                        FileUtils.deleteQuietly(req.cacheFile);
+                                        req.onError();
                                     }
-                                } catch (IOException e) {
+                                } catch (FileNotFoundException ignore) {
+                                } catch (Exception e) {
                                     Utils.logUnknown(
-                                            "Error occurred whilst fetching "
+                                            "Error occurred whilst trying to use cache for "
                                                     + req.id
-                                                    + " from "
-                                                    + req.url
-                                                    + ": "
-                                                    + (e instanceof SocketTimeoutException
-                                                            ? "Socket timeout (server may be down)"
-                                                            : e.getMessage()));
+                                                    + " at "
+                                                    + req.cacheFile.getPath());
+                                    e.printStackTrace();
+                                    FileUtils.deleteQuietly(req.cacheFile);
+                                    req.onError();
                                 }
-                            } catch (Exception e) {
-                                Utils.logUnknown(
-                                        "Error occurred whilst fetching "
-                                                + req.id
-                                                + " from "
-                                                + req.url);
-                                e.printStackTrace();
+                            } else {
+                                req.onError();
                             }
                         }
-
                         req.currentlyHandling = LoadingPhase.LOADED;
                         return null;
                     });
@@ -270,10 +244,63 @@ public class RequestHandler {
         Set<String> ids = new HashSet<>();
         for (List<Request> requests : groupedRequests)
             for (Request request : requests) {
-                if (request.currentlyHandling == LoadingPhase.LOADED) ids.add(request.id);
+                ids.add(request.id);
             }
         synchronized (this) {
             requests.removeIf(req -> ids.contains(req.id));
         }
+    }
+
+    private boolean handleHttpConnection(Request req) {
+        HttpURLConnection st;
+        try {
+            st = req.establishConnection();
+            if (st.getResponseCode() != 200) {
+                Utils.logUnknown("Invalid response code");
+                st.disconnect();
+                return false;
+            }
+        } catch (Exception e) {
+            Utils.logUnknown("Error occurred whilst fetching " + req.id + " from " + req.url);
+            e.printStackTrace();
+            return false;
+        }
+
+        try {
+            byte[] data = IOUtils.toByteArray(st.getInputStream());
+            if (req.handler != null) {
+                if (req.handler.test(st, data)) {
+                    if (req.cacheFile != null) {
+                        try {
+                            FileUtils.writeByteArrayToFile(req.cacheFile, data);
+                        } catch (Exception e) {
+                            Utils.logUnknown("Error occurred whilst writing cache for " + req.id);
+                            e.printStackTrace();
+                            FileUtils.deleteQuietly(req.cacheFile);
+                        }
+                    }
+
+                    return true;
+                } else {
+                    Utils.logUnknown(
+                            "Error occurred whilst fetching " + req.id + " from " + req.url);
+                }
+            }
+        } catch (IOException e) {
+            Utils.logUnknown(
+                    "Error occurred whilst fetching "
+                            + req.id
+                            + " from "
+                            + req.url
+                            + ": "
+                            + (e instanceof SocketTimeoutException
+                                    ? "Socket timeout (server may be down)"
+                                    : e.getMessage()));
+        } catch (Exception e) {
+            Utils.logUnknown("Error occurred whilst fetching " + req.id + " from " + req.url);
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

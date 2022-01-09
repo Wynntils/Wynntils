@@ -21,9 +21,10 @@ import org.jetbrains.annotations.Nullable;
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
 
+    private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    public static @Nullable WebReader apiUrls;
+    public static @Nullable WebReader apiUrls = null;
 
     private static final SingleStaticProvider<HashMap<String, ItemGuessProfile>>
             itemGuessesProvider;
@@ -52,20 +53,17 @@ public class WebManager {
                                             value = gson.fromJson(json, type);
                                             return true;
                                         })
+                                .useCacheAsBackup()
+                                .onError(
+                                        () -> {
+                                            value = new HashMap<>();
+                                        })
                                 .build();
                     }
                 };
     }
 
-    public static void init() {
-        tryReloadApiUrls(false, true);
-    }
-
-    public static void tryReloadApiUrls(boolean async) {
-        tryReloadApiUrls(async, false);
-    }
-
-    private static void tryReloadApiUrls(boolean async, boolean inSetup) {
+    private static void tryReloadApiUrls(boolean async) {
         if (apiUrls == null) {
             handler.addRequest(
                     new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
@@ -73,9 +71,9 @@ public class WebManager {
                             .handleWebReader(
                                     reader -> {
                                         apiUrls = reader;
-                                        if (!inSetup) {
+                                        if (!setup) {
+                                            setup = true;
                                             WebManager.setupWebApi();
-                                            // MapModule.getModule().getMainMap().updateMap();
                                         }
                                         return true;
                                     })
@@ -86,7 +84,7 @@ public class WebManager {
     }
 
     public static void setupWebApi() {
-        handler.dispatchAsync();
+        // MapModule.getModule().getMainMap().updateMap();
     }
 
     public static void loadMarked(boolean async) {
@@ -124,5 +122,9 @@ public class WebManager {
         public T getValue() {
             return value;
         }
+    }
+
+    public static boolean isSetup() {
+        return setup;
     }
 }

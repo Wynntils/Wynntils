@@ -27,10 +27,11 @@ public class RequestBuilder {
     String id;
     int parallelGroup = 0;
     ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
-    Predicate<Integer> onError;
+    Request.RequestErrorHandler onError;
     Map<String, String> headers = new HashMap<>();
     File cacheFile;
     Predicate<byte[]> cacheValidator = null;
+    boolean useCacheAsBackup;
     int timeout = 16000;
 
     public RequestBuilder(String url, String id) {
@@ -73,7 +74,10 @@ public class RequestBuilder {
      * Charset
      */
     public RequestBuilder handleString(Predicate<String> handler, Charset charset) {
-        return handle(data -> handler.test(new String(data, charset)));
+        return handle(
+                data -> {
+                    return handler.test(new String(data, charset));
+                });
     }
 
     public RequestBuilder handleString(
@@ -185,6 +189,18 @@ public class RequestBuilder {
         return this;
     }
 
+    /**
+     * Allows using the cache as back up if no result has been achieved from either the cache
+     * validator if set or the connection.
+     *
+     * <p>Naturally, if {@link RequestHandler#cacheOnly} is set, then the connection does not yield
+     * a result
+     */
+    public RequestBuilder useCacheAsBackup() {
+        this.useCacheAsBackup = true;
+        return this;
+    }
+
     /** A MD5 hash cache validator. */
     public RequestBuilder cacheMD5Validator(String expectedHash) {
         if (!MD5Verification.isMd5Digest(expectedHash)) return this;
@@ -209,11 +225,8 @@ public class RequestBuilder {
                 });
     }
 
-    /**
-     * Called whenever the response code is different from 200 OK set to true if the request should
-     * go on
-     */
-    public RequestBuilder onError(Predicate<Integer> onError) {
+    /** Called whenever a result could not have been loaded */
+    public RequestBuilder onError(Request.RequestErrorHandler onError) {
         this.onError = onError;
         return this;
     }
@@ -244,6 +257,7 @@ public class RequestBuilder {
                 id,
                 parallelGroup,
                 handler,
+                useCacheAsBackup,
                 onError,
                 headers,
                 cacheFile,

@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class Request {
-
     final String url;
     final String id;
     final int parallelGroup;
     final ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
-    private final Predicate<Integer> onError;
+    final boolean useCacheAsBackup;
+    private final RequestErrorHandler onError;
     private final Map<String, String> headers;
     private final int timeout;
 
@@ -35,7 +35,8 @@ public class Request {
             String id,
             int parallelGroup,
             ThrowingBiPredicate<URLConnection, byte[], IOException> handler,
-            Predicate<Integer> onError,
+            boolean useCacheAsBackup,
+            RequestErrorHandler onError,
             Map<String, String> headers,
             File cacheFile,
             Predicate<byte[]> cacheValidator,
@@ -44,6 +45,7 @@ public class Request {
         this.id = id;
         this.parallelGroup = parallelGroup;
         this.handler = handler;
+        this.useCacheAsBackup = useCacheAsBackup;
         this.onError = onError;
         this.headers = headers;
         this.cacheFile = cacheFile;
@@ -51,8 +53,8 @@ public class Request {
         this.timeout = timeout;
     }
 
-    public boolean onError(int code) {
-        return onError != null && onError.test(code);
+    public void onError() {
+        onError.invoke();
     }
 
     public HttpURLConnection establishConnection() throws IOException {
@@ -65,5 +67,10 @@ public class Request {
         st.setConnectTimeout(timeout);
         st.setReadTimeout(timeout);
         return st;
+    }
+
+    @FunctionalInterface
+    public static interface RequestErrorHandler {
+        void invoke();
     }
 }

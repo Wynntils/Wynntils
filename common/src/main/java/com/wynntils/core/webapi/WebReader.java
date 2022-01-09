@@ -68,6 +68,7 @@ public class WebReader {
 
         for (String str : data.split("\\r?\\n")) {
             Matcher result = LINE_MATCHER.matcher(str);
+            result.find();
 
             String key = result.group("Key");
             String value = result.group("Value");
