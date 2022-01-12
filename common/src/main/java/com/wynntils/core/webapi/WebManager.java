@@ -111,14 +111,17 @@ public class WebManager {
     }
 
     public static void loadMarked(boolean async) {
+        boolean toLoad = false;
+
         for (StaticProvider provider : Arrays.asList(itemGuessesProvider)) {
             if (provider.shouldLoad == LoadingPhase.TO_LOAD) {
                 handler.addRequest(provider.getRequest());
                 provider.shouldLoad = LoadingPhase.LOADED;
+                toLoad = true;
             }
         }
 
-        handler.dispatch(async);
+        if (toLoad) handler.dispatch(async);
     }
 
     public static SingleStaticProvider<HashMap<String, ItemGuessProfile>> getItemGuessesProvider() {

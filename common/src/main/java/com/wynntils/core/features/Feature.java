@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 
 public abstract class Feature {
     protected boolean enabled = false;
-    protected boolean loaded = false;
 
     /** List of providers to mark for loading */
     protected List<Supplier<WebManager.StaticProvider>> apis = new ArrayList<>();
@@ -40,8 +39,6 @@ public abstract class Feature {
      * safely activated
      */
     public boolean tryEnableAPIS(boolean async) {
-        if (loaded) return true;
-
         if (!apis.isEmpty()) {
             if (!WebManager.isSetup()) return false;
 
@@ -51,8 +48,6 @@ public abstract class Feature {
 
             WebManager.loadMarked(async);
         }
-
-        loaded = true;
 
         return true;
     }
