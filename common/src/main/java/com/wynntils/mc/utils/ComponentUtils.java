@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
-public class StringUtils {
+public class ComponentUtils {
     public static String getUnformatted(Component msg) {
         return msg.getString();
     }
@@ -34,14 +34,7 @@ public class StringUtils {
                     }
 
                     if (style.getColor() != null) {
-                        Optional<ChatFormatting> color =
-                                Arrays.stream(ChatFormatting.values())
-                                        .filter(
-                                                c ->
-                                                        c.isColor()
-                                                                && style.getColor().getValue()
-                                                                        == c.getColor())
-                                        .findFirst();
+                        Optional<ChatFormatting> color = getChatFormatting(style.getColor());
                         color.ifPresent(result::append);
                     }
 
@@ -87,5 +80,11 @@ public class StringUtils {
             add.append(ChatFormatting.OBFUSCATED);
 
         return add;
+    }
+
+    public static Optional<ChatFormatting> getChatFormatting(TextColor textColor) {
+        return Arrays.stream(ChatFormatting.values())
+                .filter(c -> c.isColor() && textColor.getValue() == c.getColor())
+                .findFirst();
     }
 }

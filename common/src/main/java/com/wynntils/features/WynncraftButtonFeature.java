@@ -11,7 +11,7 @@ import com.wynntils.core.features.GameplayImpact;
 import com.wynntils.core.features.PerformanceImpact;
 import com.wynntils.core.features.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.ServerIcon;
+import com.wynntils.mc.utils.objects.ServerIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;

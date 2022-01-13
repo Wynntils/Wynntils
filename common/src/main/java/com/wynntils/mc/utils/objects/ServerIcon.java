@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2018-2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils;
+package com.wynntils.mc.utils.objects;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
