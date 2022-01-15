@@ -11,14 +11,21 @@ About Artemis
 ========
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-This is a preliminary rewrite of Wynntils in 1.16.5 using Architectury, to support both fabric and forge.
+This is a preliminary rewrite of <a href="httpss;//github.com/Wynntils/Wynntils"><b>Wynntils</b></a> in 1.16.5 using Architectury, to support both Fabric and Forge.
 
 Pull Request
 ========
-TODO
+<i>TODO</i>
+  
+Setup the Workspace
+========
+To set up the workspace, just import the project as a gradle project into your IDE
+<br> To build the mod just call the ``buildDependents`` and the artifact should be generated in `build/libs`.
+
+<i>TODO Run Configurations and Authenticating</i>
 
 License
 ========
 
 Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/development/LICENSE)<br>
-All the assets unless specified otherwise **are over Wynntils domain © Wynntils**.
+Unless specified otherwise, All the assets **are over Wynntils domain © Wynntils**.
