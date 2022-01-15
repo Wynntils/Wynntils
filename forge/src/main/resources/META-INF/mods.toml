@@ -5,6 +5,8 @@ license = "GNU AGPL 3"
 
 [[mods]]
 modId = "wynntils"
+
+#Version is added in build.gradle
 version = "${version}"
 displayName = "Wynntils"
 authors = ["Scyu_", "HeyZeer0", "EHTYCSCYTHE", "SHsuperCM", "coehlrich", "_Bedo_", "HighCrit", "Reticality", "mag_icus", "P0ke", "Incompleteusern"]

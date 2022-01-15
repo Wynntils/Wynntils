@@ -40,13 +40,15 @@ subprojects {
     }
 }
 
+def versionObj = new Version(major: 1, minor: 0, revision: 0)
+
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
     apply plugin: "com.diffplug.spotless"
 
     archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
+    version = versionObj.toString()
 
     repositories {
         maven { url "https://maven.parchmentmc.org/" }
@@ -83,5 +85,21 @@ allprojects {
             indentWithSpaces()
             endWithNewline()
         }
+    }
+}
+
+class Version {
+    int major, minor, revision
+
+    static String getBuild() {
+        System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?: "DEV"
+    }
+
+    String toVersion() {
+        "${major}.${minor}.${revision}"
+    }
+
+    String toString() {
+        "${major}.${minor}.${revision}_$build-MC1.16.5"//${rootProject.minecraft_version}"
     }
 }
