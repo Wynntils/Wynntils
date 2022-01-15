@@ -68,7 +68,7 @@ public class ItemUtils {
      * Replace the lore on an item's NBT tag.
      *
      * @param stack The {@link ItemStack} to have its
-     * @param tag
+     * @param tag The {@link ListTag} to replace with
      */
     public static void replaceLore(ItemStack stack, ListTag tag) {
         CompoundTag nbt = stack.getOrCreateTag();

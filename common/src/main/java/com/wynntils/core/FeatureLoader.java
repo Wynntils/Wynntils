@@ -5,15 +5,15 @@
 package com.wynntils.core;
 
 import com.wynntils.core.features.Feature;
-import com.wynntils.features.ConnectionProgressFeature;
-import com.wynntils.features.ItemGuessFeature;
-import com.wynntils.features.SoulPointTimerFeature;
-import com.wynntils.features.WynncraftButtonFeature;
+import com.wynntils.features.*;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FeatureHandler {
+/**
+ * Loads {@link Feature}s
+ */
+public class FeatureLoader {
     private static final List<Feature> FEATURES = new LinkedList<>();
 
     private static void registerFeature(Feature feature) {

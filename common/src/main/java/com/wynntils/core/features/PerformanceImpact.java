@@ -6,7 +6,7 @@ package com.wynntils.core.features;
 
 /**
  * How much performance strain the feature causes. For example, cached chunks would have a higher
- * performance impact than a Wynncraft Button.
+ * performance impact than a Wynncraft Button. Subjective.
  */
 public enum PerformanceImpact {
     SMALL,

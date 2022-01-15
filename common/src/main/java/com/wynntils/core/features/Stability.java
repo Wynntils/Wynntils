@@ -5,8 +5,8 @@
 package com.wynntils.core.features;
 
 /**
- * Subjectively how stable a feature is to changes in wynncraft, how able it is to be maintained,
- * and other similar judgements.
+ * How stable a feature is to wynncraft changes, how able it is to be maintained,
+ * and other similar judgements. Subjective.
  */
 public enum Stability {
     EXPERIMENTAL,

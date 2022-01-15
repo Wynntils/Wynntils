@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature should never be a
+ * dependency for anything else.
+ *
+ * Ex: Soul Point Timer
+ */
 public abstract class Feature {
     protected boolean enabled = false;
 

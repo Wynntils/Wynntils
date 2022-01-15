@@ -4,6 +4,9 @@
  */
 package com.wynntils.core.webapi;
 
+/**
+ * General purpose enum for loading
+ */
 public enum LoadingPhase {
     UNLOADED,
     TO_LOAD,

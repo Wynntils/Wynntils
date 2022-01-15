@@ -4,4 +4,7 @@
  */
 package com.wynntils.core;
 
+/**
+ * TODO
+ */
 public class Reference {}

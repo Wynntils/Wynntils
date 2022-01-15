@@ -9,6 +9,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
+/**
+ * Fired on inventory render
+ */
 public class InventoryRenderEvent extends Event {
     private final Screen screen;
     private final PoseStack poseStack;

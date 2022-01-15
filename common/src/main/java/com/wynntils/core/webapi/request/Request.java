@@ -15,6 +15,11 @@ import java.net.URLConnection;
 import java.util.Map;
 import java.util.function.Predicate;
 
+/**
+ * Specifies how a request is to be carried out by {@link RequestHandler}, as well as handling for the request.
+ * Built through {@link RequestBuilder}
+ *
+ */
 public class Request {
     final String url;
     final String id;
@@ -70,7 +75,7 @@ public class Request {
     }
 
     @FunctionalInterface
-    public static interface RequestErrorHandler {
+    public interface RequestErrorHandler {
         void invoke();
     }
 }

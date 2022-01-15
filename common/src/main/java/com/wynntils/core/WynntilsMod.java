@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
+/**
+ * The common implementation of Wynntils
+ */
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
     public static String VERSION = "";
@@ -29,14 +32,14 @@ public class WynntilsMod {
     public static void init() {
         Models.init();
         WebManager.init();
-        FeatureHandler.init();
+        FeatureLoader.init();
 
         System.out.println("Wynntils initialized");
 
         parseVersion(Platform.getModVersion());
     }
 
-    public static void parseVersion(String versionString) {
+    private static void parseVersion(String versionString) {
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)_(DEV|\\d+)").matcher(versionString);
         result.find();
 

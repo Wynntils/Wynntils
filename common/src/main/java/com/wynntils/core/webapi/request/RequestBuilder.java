@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * Helper class for building a {@link Request}
+ */
 public class RequestBuilder {
-
     String url;
     String id;
     int parallelGroup = 0;

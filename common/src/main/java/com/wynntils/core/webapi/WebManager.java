@@ -7,7 +7,7 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.FeatureHandler;
+import com.wynntils.core.FeatureLoader;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.Request;
@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Provides and loads web content on demand
+ */
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
 
@@ -98,7 +101,7 @@ public class WebManager {
         // need to do it here
         // This is for if the apiUrls fail and are reloaded externally
         if (!isSetup) {
-            FeatureHandler.getFeatures()
+            FeatureLoader.getFeatures()
                     .forEach(
                             f -> {
                                 if (f.isApiDependent() && !f.isEnabled()) {

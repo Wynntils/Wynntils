@@ -8,6 +8,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
+ * Fires on packet sending or recieving
+ *
  * Please do not misuse this class by looking for specific packet classes; instead create a unique
  * Event class in mc.event and add a mixin for the handler in ClientPacketListenerMixin.
  */

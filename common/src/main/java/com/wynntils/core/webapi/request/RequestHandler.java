@@ -21,6 +21,9 @@ import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Handles and dispatches {@link Request}
+ */
 public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
     public static boolean cacheOnly = false;

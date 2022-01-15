@@ -15,6 +15,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Class that parses a String into a specific format of "[Key] = Value"
+ *
+ * Ex: https://api.wynntils.com/webapi provides such a format
+ */
 public class WebReader {
     private static final Pattern LINE_MATCHER =
             Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");

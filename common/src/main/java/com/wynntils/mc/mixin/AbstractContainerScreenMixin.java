@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
-    @Shadow private Slot hoveredSlot;
+    @Shadow
+    protected Slot hoveredSlot;
 
     private AbstractContainerScreenMixin(Component component) {
         super(component);

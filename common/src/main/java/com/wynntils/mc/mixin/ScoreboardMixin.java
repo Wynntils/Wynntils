@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Scoreboard.class)
 public abstract class ScoreboardMixin {
     @Shadow
-    abstract PlayerTeam getPlayersTeam(String username);
+    public abstract PlayerTeam getPlayersTeam(String username);
 
     @Inject(
             method =
