@@ -1,9 +1,12 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.fabric;
 
+import java.util.Optional;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-
-import java.util.Optional;
 
 public class PlatformImpl {
     public static String getModVersion() {
