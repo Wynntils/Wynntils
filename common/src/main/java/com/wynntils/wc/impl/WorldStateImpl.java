@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.impl;
 
+import com.wynntils.core.Reference;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -96,7 +97,7 @@ public class WorldStateImpl implements WorldState {
                 String worldName = m.group(1);
                 setState(State.WORLD, worldName);
             } else {
-                Utils.logUnknown("World name not matching pattern", name);
+                Reference.LOGGER.error("World name did not match pattern: " + name);
             }
         }
     }
@@ -120,7 +121,7 @@ public class WorldStateImpl implements WorldState {
     @SubscribeEvent
     public void connecting(ConnectedEvent e) {
         if (onServer()) {
-            Utils.logUnknown("Got connected event while already connected to server", e);
+            Reference.LOGGER.error("Got connected event while already connected to server: " + e);
             currentState = State.NOT_CONNECTED;
             currentWorldName = "";
         }

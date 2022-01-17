@@ -6,6 +6,7 @@ package com.wynntils.mc.utils.objects;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.wynntils.core.Reference;
 import com.wynntils.utils.Utils;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -62,7 +63,7 @@ public class ServerIcon {
                     });
         } catch (Exception e) {
             e.printStackTrace();
-            Utils.logUnknown("Failed to ping server");
+            Reference.LOGGER.warn("Failed to ping server");
             onDone();
         }
     }
@@ -109,7 +110,7 @@ public class ServerIcon {
         String iconString = server.getIconB64();
         // failed to ping server or icon wasn't sent
         if (iconString == null) {
-            Utils.logUnknown("Unable to load icon");
+            Reference.LOGGER.warn("Unable to load icon");
             serverIconLocation = FALLBACK;
             return;
         }
@@ -119,7 +120,7 @@ public class ServerIcon {
             nativeImage = NativeImage.fromBase64(iconString);
         } catch (IOException e) {
             e.printStackTrace();
-            Utils.logUnknown("Unable to convert image from base64", iconString);
+            Reference.LOGGER.error("Unable to convert image from base64: " + iconString);
             serverIconLocation = FALLBACK;
             return;
         }

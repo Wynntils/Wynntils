@@ -26,7 +26,16 @@ public abstract class ConnectionEvent extends Event {
         public int getPort() {
             return port;
         }
+
+        @Override
+        public String toString() {
+            return "ConnectedEvent{" +
+                    "host='" + host + '\'' +
+                    ", port=" + port +
+                    '}';
+        }
     }
 
     public static class DisconnectedEvent extends ConnectionEvent {}
+
 }

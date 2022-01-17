@@ -24,12 +24,4 @@ public class Utils {
     public static boolean onWorld() {
         return Models.getWorldState().onWorld();
     }
-
-    public static void logUnknown(String msg, Object obj) {
-        System.out.printf("Could not handle input from Wynncraft: %s (%s)%n", msg, obj);
-    }
-
-    public static void logUnknown(String msg) {
-        System.out.println("Could not handle input from Wynncraft: " + msg);
-    }
 }
