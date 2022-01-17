@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -35,7 +36,7 @@ public class CharacterImpl implements Character {
 
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
-        if (e.getMenuType().equals(MenuOpenedEvent.MENU_3_LINES)
+        if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
             System.out.println("In character selection menu");

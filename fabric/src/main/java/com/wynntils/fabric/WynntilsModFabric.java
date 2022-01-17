@@ -5,11 +5,23 @@
 package com.wynntils.fabric;
 
 import com.wynntils.core.WynntilsMod;
+import java.util.Optional;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 
 public class WynntilsModFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        WynntilsMod.init();
+        WynntilsMod.init(getModVersion());
+    }
+
+    public static String getModVersion() {
+        Optional<ModContainer> wynntilsMod = FabricLoader.getInstance().getModContainer("wynntils");
+        if (wynntilsMod.isEmpty()) {
+            throw new RuntimeException("Where is my Wynntils?");
+        }
+
+        return wynntilsMod.get().getMetadata().getVersion().getFriendlyString();
     }
 }

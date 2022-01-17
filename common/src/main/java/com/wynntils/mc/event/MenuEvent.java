@@ -5,25 +5,22 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired for Menu events */
 public abstract class MenuEvent extends Event {
     /** Fired for Menu opened events */
     public static class MenuOpenedEvent extends MenuEvent {
-        public static final ResourceLocation MENU_3_LINES =
-                new ResourceLocation("minecraft:generic_9x3");
-
-        private final ResourceLocation menuType;
+        private final MenuType<?> menuType;
         private final Component title;
 
-        public MenuOpenedEvent(ResourceLocation menuType, Component title) {
+        public MenuOpenedEvent(MenuType<?> menuType, Component title) {
             this.menuType = menuType;
             this.title = title;
         }
 
-        public ResourceLocation getMenuType() {
+        public MenuType<?> getMenuType() {
             return menuType;
         }
 

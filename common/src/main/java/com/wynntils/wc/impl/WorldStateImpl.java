@@ -77,32 +77,6 @@ public class WorldStateImpl implements WorldState {
     }
 
     @SubscribeEvent
-    public void remove(PlayerLogOutEvent e) {
-        if (!onServer()) return;
-
-        if (e.getId().equals(WORLD_UUID) && currentWorldName.length() > 0) {
-            setState(State.INTERIM, "");
-        }
-    }
-
-    @SubscribeEvent
-    public void update(PlayerDisplayNameChangeEvent e) {
-        if (!onServer()) return;
-
-        if (e.getId().equals(WORLD_UUID)) {
-            Component displayName = e.getDisplayName();
-            String name = ComponentUtils.getUnformatted(displayName);
-            Matcher m = WORLD_NAME.matcher(name);
-            if (m.find()) {
-                String worldName = m.group(1);
-                setState(State.WORLD, worldName);
-            } else {
-                Reference.LOGGER.error("World name did not match pattern: " + name);
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void screenOpened(ScreenOpenedEvent e) {
         if (!onServer()) return;
 
@@ -135,10 +109,28 @@ public class WorldStateImpl implements WorldState {
     }
 
     @SubscribeEvent
+    public void remove(PlayerLogOutEvent e) {
+        if (!onServer()) return;
+
+        if (e.getId().equals(WORLD_UUID) && currentWorldName.length() > 0) {
+            setState(State.INTERIM, "");
+        }
+    }
+
+    @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         if (!onServer()) return;
 
         setState(State.INTERIM, "");
+    }
+
+    @SubscribeEvent
+    public void onTeleport(PlayerTeleportEvent e) {
+        if (!onServer()) return;
+
+        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
+            setState(State.CHARACTER_SELECTION, "");
+        }
     }
 
     @SubscribeEvent
@@ -158,11 +150,19 @@ public class WorldStateImpl implements WorldState {
     }
 
     @SubscribeEvent
-    public void onTeleport(PlayerTeleportEvent e) {
+    public void update(PlayerDisplayNameChangeEvent e) {
         if (!onServer()) return;
 
-        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
-            setState(State.CHARACTER_SELECTION, "");
+        if (e.getId().equals(WORLD_UUID)) {
+            Component displayName = e.getDisplayName();
+            String name = ComponentUtils.getUnformatted(displayName);
+            Matcher m = WORLD_NAME.matcher(name);
+            if (m.find()) {
+                String worldName = m.group(1);
+                setState(State.WORLD, worldName);
+            } else {
+                Reference.LOGGER.error("World name did not match pattern: " + name);
+            }
         }
     }
 }

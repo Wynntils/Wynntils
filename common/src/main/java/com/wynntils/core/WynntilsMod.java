@@ -4,7 +4,6 @@
  */
 package com.wynntils.core;
 
-import com.wynntils.Platform;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.MinecraftUtils;
 import com.wynntils.wc.Models;
@@ -27,17 +26,16 @@ public class WynntilsMod {
         return EVENT_BUS;
     }
 
-    public static void init() {
+    public static void init(String versionString) {
         Models.init();
         WebManager.init();
         FeatureLoader.init();
 
-        System.out.println("Wynntils initialized");
-
-        parseVersion(Platform.getModVersion());
+        Reference.LOGGER.info("Wynntils initialized");
+        parseVersion(versionString);
     }
 
-    private static void parseVersion(String versionString) {
+    public static void parseVersion(String versionString) {
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)_(DEV|\\d+)").matcher(versionString);
         result.find();
 
