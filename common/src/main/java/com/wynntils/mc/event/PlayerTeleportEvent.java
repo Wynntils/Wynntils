@@ -7,9 +7,7 @@ package com.wynntils.mc.event;
 import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fires when player is teleported
- */
+/** Fires when player is teleported */
 public class PlayerTeleportEvent extends Event {
     private final Position newPosition;
 

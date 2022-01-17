@@ -8,13 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fired for Menu events
- */
+/** Fired for Menu events */
 public abstract class MenuEvent extends Event {
-    /**
-     * Fired for Menu opened events
-     */
+    /** Fired for Menu opened events */
     public static class MenuOpenedEvent extends MenuEvent {
         public static final ResourceLocation MENU_3_LINES =
                 new ResourceLocation("minecraft:generic_9x3");
@@ -36,8 +32,6 @@ public abstract class MenuEvent extends Event {
         }
     }
 
-    /**
-     * Fired for Menu closed events
-     */
+    /** Fired for Menu closed events */
     public static class MenuClosedEvent extends MenuEvent {}
 }

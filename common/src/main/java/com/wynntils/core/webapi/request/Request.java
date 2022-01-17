@@ -16,9 +16,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /**
- * Specifies how a request is to be carried out by {@link RequestHandler}, as well as handling for the request.
- * Built through {@link RequestBuilder}
- *
+ * Specifies how a request is to be carried out by {@link RequestHandler}, as well as handling for
+ * the request. Built through {@link RequestBuilder}
  */
 public class Request {
     final String url;

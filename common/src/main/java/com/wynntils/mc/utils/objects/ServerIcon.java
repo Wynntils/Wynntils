@@ -7,7 +7,6 @@ package com.wynntils.mc.utils.objects;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.Reference;
-import com.wynntils.utils.Utils;
 import java.io.IOException;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;

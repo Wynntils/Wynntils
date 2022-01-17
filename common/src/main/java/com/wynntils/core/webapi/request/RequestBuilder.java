@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebReader;
-import com.wynntils.utils.Utils;
 import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
 import java.io.File;
@@ -23,9 +22,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-/**
- * Helper class for building a {@link Request}
- */
+/** Helper class for building a {@link Request} */
 public class RequestBuilder {
     String url;
     String id;

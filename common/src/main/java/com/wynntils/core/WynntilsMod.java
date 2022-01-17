@@ -14,9 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
-/**
- * The common implementation of Wynntils
- */
+/** The common implementation of Wynntils */
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
     public static String VERSION = "";

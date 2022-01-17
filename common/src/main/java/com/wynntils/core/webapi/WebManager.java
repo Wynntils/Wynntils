@@ -19,9 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Provides and loads web content on demand
- */
+/** Provides and loads web content on demand */
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
 

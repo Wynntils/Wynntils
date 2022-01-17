@@ -10,9 +10,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.regex.Pattern;
 
-/**
- * Helper class for getting the hex digest form of the md5 of an input
- */
+/** Helper class for getting the hex digest form of the md5 of an input */
 public class MD5Verification {
     String md5;
 

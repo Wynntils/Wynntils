@@ -9,9 +9,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 // This is a bad place to have it, but I can't find a better place for it to be put and not break
 // everything
 
-/**
- * Utility class for Platform specific data
- */
+/** Utility class for Platform specific data */
 public class Platform {
     @ExpectPlatform
     public static String getModVersion() {

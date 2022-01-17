@@ -7,9 +7,7 @@ package com.wynntils.core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * TODO
- */
+/** TODO */
 public class Reference {
     public static final Logger LOGGER = LogManager.getFormatterLogger(WynntilsMod.MOD_ID);
 }

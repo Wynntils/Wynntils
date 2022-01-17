@@ -16,7 +16,7 @@ This is a preliminary rewrite of <a href="httpss;//github.com/Wynntils/Wynntils"
 Pull Request
 ========
 <i>TODO</i>
-  
+
 Setup the Workspace
 ========
 To set up the workspace, just import the project as a gradle project into your IDE

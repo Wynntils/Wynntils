@@ -18,7 +18,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * Class that parses a String into a specific format of "[Key] = Value"
  *
- * Ex: https://api.wynntils.com/webapi provides such a format
+ * <p>Ex: https://api.wynntils.com/webapi provides such a format
  */
 public class WebReader {
     private static final Pattern LINE_MATCHER =

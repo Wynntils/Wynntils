@@ -10,9 +10,7 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Loads {@link Feature}s
- */
+/** Loads {@link Feature}s */
 public class FeatureLoader {
     private static final List<Feature> FEATURES = new LinkedList<>();
 

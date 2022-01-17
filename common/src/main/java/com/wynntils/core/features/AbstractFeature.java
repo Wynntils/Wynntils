@@ -4,9 +4,7 @@
  */
 package com.wynntils.core.features;
 
-/**
- * TODO document
- */
+/** TODO document */
 public abstract class AbstractFeature extends Feature {
     @Override
     public PerformanceImpact getPerformanceImpact() {

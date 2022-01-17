@@ -7,9 +7,7 @@ package com.wynntils.mc.event;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fired on setting the active screen
- */
+/** Fired on setting the active screen */
 public class ScreenOpenedEvent extends Event {
     private final Screen screen;
 

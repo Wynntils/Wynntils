@@ -9,9 +9,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fired on initalization of {@link PauseScreen}
- */
+/** Fired on initalization of {@link PauseScreen} */
 public class GameMenuInitEvent extends Event {
     private final PauseScreen pauseScreen;
     private final Consumer<AbstractWidget> addButton;

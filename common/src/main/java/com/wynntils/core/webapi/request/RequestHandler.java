@@ -7,7 +7,6 @@ package com.wynntils.core.webapi.request;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.LoadingPhase;
-import com.wynntils.utils.Utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,9 +21,7 @@ import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-/**
- * Handles and dispatches {@link Request}
- */
+/** Handles and dispatches {@link Request} */
 public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
     public static boolean cacheOnly = false;
@@ -278,7 +275,8 @@ public class RequestHandler {
                         try {
                             FileUtils.writeByteArrayToFile(req.cacheFile, data);
                         } catch (Exception e) {
-                            Reference.LOGGER.warn("Error occurred whilst writing cache for " + req.id);
+                            Reference.LOGGER.warn(
+                                    "Error occurred whilst writing cache for " + req.id);
                             e.printStackTrace();
                             FileUtils.deleteQuietly(req.cacheFile);
                         }

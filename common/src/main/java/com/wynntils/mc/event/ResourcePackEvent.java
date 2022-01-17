@@ -6,7 +6,5 @@ package com.wynntils.mc.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fires on recieving {@link net.minecraft.network.protocol.game.ClientboundResourcePackPacket}
- */
+/** Fires on recieving {@link net.minecraft.network.protocol.game.ClientboundResourcePackPacket} */
 public class ResourcePackEvent extends Event {}

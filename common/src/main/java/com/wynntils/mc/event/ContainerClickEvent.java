@@ -8,9 +8,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fired on click in a container
- */
+/** Fired on click in a container */
 public class ContainerClickEvent extends Event {
     private final int containerId;
     private final int slotNum;
