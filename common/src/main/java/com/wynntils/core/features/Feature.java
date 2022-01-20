@@ -70,11 +70,19 @@ public abstract class Feature {
         keybinds.forEach(k -> KeyManager.registerKeybinding(k.get()));
     }
 
+    /** Called to try and disable a feature's keybinds */
+    public void unloadKeybinds() {
+        keybinds.forEach(k -> KeyManager.unregisterKeybind(k.get()));
+    }
+
+
     /** Called for a feature's deactivation */
     public void onDisable() {
         if (!enabled)
             throw new IllegalStateException(
                     "Feature can not be disabled as it already is disabled");
+
+        unloadKeybinds();
 
         Utils.getEventBus().unregister(this);
         Utils.getEventBus().unregister(this.getClass());

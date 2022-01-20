@@ -15,7 +15,6 @@ public class KeyBindTestFeature extends AbstractFeature {
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                this,
                                 "testKeybind",
                                 GLFW.GLFW_KEY_0,
                                 "WynntilsTest",
@@ -29,7 +28,6 @@ public class KeyBindTestFeature extends AbstractFeature {
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                this,
                                 "testKeybindOnce",
                                 GLFW.GLFW_KEY_1,
                                 "WynntilsTest",

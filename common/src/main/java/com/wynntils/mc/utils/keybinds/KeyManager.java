@@ -8,29 +8,25 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 
 public class KeyManager {
-    private static final List<KeyHolder> keyHolders = new ArrayList<>();
+    private static final HashMap<String, KeyHolder> keyHolders = new HashMap<>();
 
     public static void init() {
         WynntilsMod.getProvider().registerEndTickEvent(client -> triggerKeybinds());
     }
 
     public static void registerKeybinding(KeyHolder toAdd) {
-        for (KeyHolder holder : keyHolders) {
-            if (holder == toAdd) {
-                throw new IllegalStateException("Can not add holder already existing");
-            } else if (holder.getCategory().equals(toAdd.getCategory())
-                    && holder.getName().equals(toAdd.getName())) {
-                throw new IllegalStateException("Can not add holder with same name and category");
-            }
+        if (keyHolders.containsKey(toAdd.getName())) {
+            throw new IllegalStateException("Can not add key holder since the name already exists");
         }
 
-        keyHolders.add(toAdd);
+        keyHolders.put(toAdd.getName(), toAdd);
 
         Options options = Minecraft.getInstance().options;
         KeyMapping[] keyMappings = options.keyMappings;
@@ -44,7 +40,7 @@ public class KeyManager {
     }
 
     public static void unregisterKeybind(KeyHolder toAdd) {
-        if (keyHolders.remove(toAdd)) {
+        if (keyHolders.containsKey(toAdd.getName())) {
             Options options = Minecraft.getInstance().options;
             KeyMapping[] keyMappings = options.keyMappings;
 
@@ -52,25 +48,23 @@ public class KeyManager {
             newKeyMappings.remove(toAdd.getKeybind());
 
             synchronized (options) {
-                ((OptionsAccessor) options)
-                        .setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
+                ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
             }
         }
     }
 
     public static void triggerKeybinds() {
-        keyHolders.forEach(
+        keyHolders.values().forEach(
                 k -> {
-                    if (!k.getParent().isEnabled()) return;
-
                     if (k.isFirstPress()) {
                         if (k.getKeybind().consumeClick()) {
                             k.onPress();
                         }
-                    } else {
-                        if (k.getKeybind().isDown()) {
-                            k.onPress();
-                        }
+                        return;
+                    }
+
+                    if (k.getKeybind().isDown()) {
+                        k.onPress();
                     }
                 });
     }
