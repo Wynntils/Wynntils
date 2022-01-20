@@ -8,11 +8,12 @@
     "BossHealthOverlayMixin",
     "ClientPacketListenerMixin",
     "ConnectionMixin",
+    "ConnectScreenMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "ScoreboardMixin",
     "ScreenMixin",
-    "ConnectScreenMixin"
+    "accessors.OptionsAccessor"
   ],
   "mixins": [
   ],

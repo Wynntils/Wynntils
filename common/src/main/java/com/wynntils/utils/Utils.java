@@ -5,7 +5,7 @@
 package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.wc.Models;
+import com.wynntils.wc.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 /**
@@ -18,10 +18,10 @@ public class Utils {
     }
 
     public static boolean onServer() {
-        return Models.getWorldState().onServer();
+        return ModelLoader.getWorldState().onServer();
     }
 
     public static boolean onWorld() {
-        return Models.getWorldState().onWorld();
+        return ModelLoader.getWorldState().onWorld();
     }
 }

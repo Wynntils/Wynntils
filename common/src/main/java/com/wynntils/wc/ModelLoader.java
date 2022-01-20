@@ -11,7 +11,7 @@ import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
-public abstract class Models {
+public abstract class ModelLoader {
     private static final WorldState worldState = new WorldStateImpl();
     private static final Character character = new CharacterImpl();
 
