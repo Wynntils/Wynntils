@@ -75,7 +75,6 @@ public abstract class Feature {
         keybinds.forEach(k -> KeyManager.unregisterKeybind(k.get()));
     }
 
-
     /** Called for a feature's deactivation */
     public void onDisable() {
         if (!enabled)
