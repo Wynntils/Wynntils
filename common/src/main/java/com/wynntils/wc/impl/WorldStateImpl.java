@@ -5,6 +5,7 @@
 package com.wynntils.wc.impl;
 
 import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -14,7 +15,6 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
 import java.util.Locale;
@@ -73,7 +73,7 @@ public class WorldStateImpl implements WorldState {
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
-        Utils.getEventBus().post(new WorldStateEvent(newState, oldState, newWorldName));
+        WynntilsMod.getEventBus().post(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
     @SubscribeEvent

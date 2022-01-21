@@ -9,11 +9,10 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wc.objects.ItemTier;
 import com.wynntils.wc.objects.ItemType;
 import com.wynntils.wc.utils.ItemMatchers;
-import com.wynntils.wc.utils.WynncraftUtils;
+import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -29,7 +28,7 @@ public class ItemGuessFeature extends Feature {
 
     @SubscribeEvent
     public static void onInventoryRender(InventoryRenderEvent e) {
-        if (!Utils.onWorld()) return;
+        if (!WynnUtils.onWorld()) return;
 
         Slot hoveredSlot = e.getHoveredSlot();
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
@@ -42,7 +41,7 @@ public class ItemGuessFeature extends Feature {
         ItemUtils.addMarker(stack, "itemGuesses");
 
         String name =
-                WynncraftUtils.normalizeBadString(
+                WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(stack.getDisplayName().getString()));
         String itemType = name.split(" ", 3)[1];
         String levelRange = null;

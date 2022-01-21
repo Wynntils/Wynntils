@@ -11,8 +11,10 @@
     "ConnectScreenMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
+    "OptionsMixin",
     "ScoreboardMixin",
     "ScreenMixin",
+    "KeyMappingMixin",
     "accessors.OptionsAccessor"
   ],
   "mixins": [

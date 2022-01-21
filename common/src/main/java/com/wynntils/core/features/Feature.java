@@ -4,10 +4,10 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
-import com.wynntils.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -38,8 +38,8 @@ public abstract class Feature {
 
         if (!loadAPIs(false)) return false;
 
-        Utils.getEventBus().register(this);
-        Utils.getEventBus().register(this.getClass());
+        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.getEventBus().register(this.getClass());
 
         loadKeybinds();
 
@@ -83,8 +83,8 @@ public abstract class Feature {
 
         unloadKeybinds();
 
-        Utils.getEventBus().unregister(this);
-        Utils.getEventBus().unregister(this.getClass());
+        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.getEventBus().unregister(this.getClass());
 
         enabled = false;
     }

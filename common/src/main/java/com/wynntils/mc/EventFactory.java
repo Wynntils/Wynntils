@@ -6,10 +6,10 @@ package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.*;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
-import com.wynntils.mc.event.GameMenuInitEvent;
-import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
@@ -17,14 +17,9 @@ import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
-import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.utils.Utils;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -46,7 +41,7 @@ import net.minecraftforge.eventbus.api.Event;
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
     private static void post(Event event) {
-        Utils.getEventBus().post(event);
+        WynntilsMod.getEventBus().post(event);
     }
 
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
@@ -59,6 +54,10 @@ public class EventFactory {
 
     public static void onScreenOpened(Screen screen) {
         post(new ScreenOpenedEvent(screen));
+    }
+
+    public static void onOptionsInit(Options options) {
+        post(new OptionsInitEvent(options));
     }
 
     public static void onInventoryRender(

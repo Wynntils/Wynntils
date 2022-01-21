@@ -11,9 +11,9 @@ import com.wynntils.core.features.Stability;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.objects.DynamicTag;
-import com.wynntils.utils.Utils;
 import com.wynntils.wc.utils.InventoryData;
 import com.wynntils.wc.utils.ItemMatchers;
+import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SoulPointTimerFeature extends Feature {
     @SubscribeEvent
     public static void onInventoryRender(InventoryRenderEvent e) {
-        if (!Utils.onWorld()) return;
+        if (!WynnUtils.onWorld()) return;
 
         Slot hoveredSlot = e.getHoveredSlot();
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;

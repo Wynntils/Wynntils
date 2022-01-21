@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc;
 
-import com.wynntils.utils.Utils;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.impl.CharacterImpl;
 import com.wynntils.wc.impl.WorldStateImpl;
 import com.wynntils.wc.model.Character;
@@ -29,8 +29,8 @@ public abstract class ModelLoader {
         Arrays.stream(MODELS)
                 .forEach(
                         model -> {
-                            Utils.getEventBus().register(model);
-                            Utils.getEventBus().register(model.getClass());
+                            WynntilsMod.getEventBus().register(model);
+                            WynntilsMod.getEventBus().register(model.getClass());
                         });
     }
 }

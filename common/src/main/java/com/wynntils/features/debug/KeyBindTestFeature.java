@@ -29,7 +29,7 @@ public class KeyBindTestFeature extends AbstractFeature {
                 () ->
                         new KeyHolder(
                                 "testKeybindOnce",
-                                GLFW.GLFW_KEY_KP_DECIMAL,
+                                GLFW.GLFW_KEY_SEMICOLON,
                                 "WynntilsTest",
                                 true,
                                 () -> {
