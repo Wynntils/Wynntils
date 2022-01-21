@@ -16,7 +16,7 @@ public class KeyBindTestFeature extends AbstractFeature {
                 () ->
                         new KeyHolder(
                                 "testKeybind",
-                                GLFW.GLFW_KEY_0,
+                                GLFW.GLFW_KEY_COMMA,
                                 "WynntilsTest",
                                 false,
                                 () -> {
@@ -29,7 +29,7 @@ public class KeyBindTestFeature extends AbstractFeature {
                 () ->
                         new KeyHolder(
                                 "testKeybindOnce",
-                                GLFW.GLFW_KEY_1,
+                                GLFW.GLFW_KEY_KP_DECIMAL,
                                 "WynntilsTest",
                                 true,
                                 () -> {

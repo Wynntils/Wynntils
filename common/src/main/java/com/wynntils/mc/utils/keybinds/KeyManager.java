@@ -62,6 +62,10 @@ public class KeyManager {
                         if (k.getKeybind().consumeClick()) {
                             k.onPress();
                         }
+
+                        while (k.getKeybind().consumeClick()) {
+                        }
+
                         return;
                     }
 
