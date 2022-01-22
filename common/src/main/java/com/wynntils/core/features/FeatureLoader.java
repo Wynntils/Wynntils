@@ -5,8 +5,7 @@
 package com.wynntils.core.features;
 
 import com.wynntils.features.*;
-import com.wynntils.features.debug.ConnectionProgressFeature;
-import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.debug.*;
 import java.util.LinkedList;
 import java.util.List;
 

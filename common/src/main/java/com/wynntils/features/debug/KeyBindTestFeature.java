@@ -4,40 +4,33 @@
  */
 package com.wynntils.features.debug;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.features.AbstractFeature;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
-import org.lwjgl.glfw.GLFW;
 
 public class KeyBindTestFeature extends AbstractFeature {
     {
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                "testKeybind",
-                                GLFW.GLFW_KEY_COMMA,
+                                "Add Splash Text",
+                                InputConstants.UNKNOWN.getValue(),
                                 "WynntilsTest",
                                 false,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent("keybind pressed"), null);
+                                    Minecraft.getInstance().player.sendMessage(new TextComponent(Minecraft.getInstance().getSplashManager().getSplash()), null);
                                 }));
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                "testKeybindOnce",
-                                GLFW.GLFW_KEY_SEMICOLON,
+                                "Add Sticky Splash Text",
+                                InputConstants.UNKNOWN.getValue(),
                                 "WynntilsTest",
                                 true,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent("onetime keybind pressed"),
-                                                    null);
+                                    Minecraft.getInstance().player.sendMessage(new TextComponent(Minecraft.getInstance().getSplashManager().getSplash()), null);
                                 }));
     }
 }
