@@ -33,6 +33,7 @@ public class FeatureLoader {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new ItemGuessFeature());
+        registerFeature(new GammabrightFeature());
 
         if (debug) {
             registerFeature(new PacketDebuggerFeature());

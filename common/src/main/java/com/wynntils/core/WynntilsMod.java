@@ -6,7 +6,7 @@ package com.wynntils.core;
 
 import com.wynntils.core.features.FeatureLoader;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.MinecraftUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
@@ -22,7 +22,7 @@ public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
-    public static final File MOD_STORAGE_ROOT = new File(MinecraftUtils.mc().gameDirectory, MOD_ID);
+    public static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 

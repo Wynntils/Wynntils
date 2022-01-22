@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
  * This is a "high-quality misc" class for Minecraft utilities without an aspect on Wynntils
  * commonly used. Tags used more often should be moved elsewhere Keep the names short, but distinct.
  */
-public class MinecraftUtils {
+public class McUtils {
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }
