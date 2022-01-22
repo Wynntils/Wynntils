@@ -13,6 +13,8 @@ import com.wynntils.mc.utils.keybinds.KeyHolder;
 import org.lwjgl.glfw.GLFW;
 
 public class GammabrightFeature extends Feature {
+    private double lastGamma = 1f;
+
     {
         keybinds.add(
                 () ->
@@ -32,8 +34,6 @@ public class GammabrightFeature extends Feature {
                                     McUtils.mc().options.gamma = lastGamma;
                                 }));
     }
-
-    private static double lastGamma = 1f;
 
     @Override
     public PerformanceImpact getPerformanceImpact() {
