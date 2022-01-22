@@ -37,7 +37,7 @@ public class FeatureLoader {
 
         if (debug) {
             registerFeature(new PacketDebuggerFeature());
-            registerFeature(new KeyBindTestFeature());
+            //registerFeature(new KeyBindTestFeature());
             registerFeature(new ConnectionProgressFeature());
         }
 
