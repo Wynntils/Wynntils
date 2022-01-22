@@ -30,6 +30,11 @@ public class WynntilsModFabric implements ClientModInitializer {
                     }
 
                     @Override
+                    public void registerStartTickEvent(Consumer<Minecraft> listener) {
+                        ClientTickEvents.START_CLIENT_TICK.register(listener::accept);
+                    }
+
+                    @Override
                     public void registerEndTickEvent(Consumer<Minecraft> listener) {
                         ClientTickEvents.END_CLIENT_TICK.register(listener::accept);
                     }

@@ -30,9 +30,23 @@ public class WynntilsModForge {
                     }
 
                     @Override
+                    public void registerStartTickEvent(Consumer<Minecraft> listener) {
+                        MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
+                                e -> {
+                                    if (e.phase == TickEvent.Phase.START) {
+                                        listener.accept(Minecraft.getInstance());
+                                    }
+                                });
+                    }
+
+                    @Override
                     public void registerEndTickEvent(Consumer<Minecraft> listener) {
                         MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
-                                e -> listener.accept(Minecraft.getInstance()));
+                                e -> {
+                                    if (e.phase == TickEvent.Phase.END) {
+                                        listener.accept(Minecraft.getInstance());
+                                    }
+                                });
                     }
                 });
     }

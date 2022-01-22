@@ -66,6 +66,8 @@ public class WynntilsMod {
     public interface Provider {
         String getModVersion();
 
+        void registerStartTickEvent(Consumer<Minecraft> listener);
+
         void registerEndTickEvent(Consumer<Minecraft> listener);
     }
 }
