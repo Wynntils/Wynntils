@@ -20,7 +20,14 @@ public class KeyBindTestFeature extends AbstractFeature {
                                 "WynntilsTest",
                                 false,
                                 () -> {
-                                    Minecraft.getInstance().player.sendMessage(new TextComponent(Minecraft.getInstance().getSplashManager().getSplash()), null);
+                                    Minecraft.getInstance()
+                                            .player
+                                            .sendMessage(
+                                                    new TextComponent(
+                                                            Minecraft.getInstance()
+                                                                    .getSplashManager()
+                                                                    .getSplash()),
+                                                    null);
                                 }));
         keybinds.add(
                 () ->
@@ -30,7 +37,14 @@ public class KeyBindTestFeature extends AbstractFeature {
                                 "WynntilsTest",
                                 true,
                                 () -> {
-                                    Minecraft.getInstance().player.sendMessage(new TextComponent(Minecraft.getInstance().getSplashManager().getSplash()), null);
+                                    Minecraft.getInstance()
+                                            .player
+                                            .sendMessage(
+                                                    new TextComponent(
+                                                            Minecraft.getInstance()
+                                                                    .getSplashManager()
+                                                                    .getSplash()),
+                                                    null);
                                 }));
     }
 }
