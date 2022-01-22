@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.wynntils.features.*;
 import com.wynntils.features.debug.ConnectionProgressFeature;
-import com.wynntils.features.debug.KeyBindTestFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class FeatureLoader {
 
         if (debug) {
             registerFeature(new PacketDebuggerFeature());
-            //registerFeature(new KeyBindTestFeature());
+            // registerFeature(new KeyBindTestFeature());
             registerFeature(new ConnectionProgressFeature());
         }
 
