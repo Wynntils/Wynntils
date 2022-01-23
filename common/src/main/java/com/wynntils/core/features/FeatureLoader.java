@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.*;
 import com.wynntils.features.debug.*;
 import java.util.LinkedList;
@@ -25,17 +26,15 @@ public class FeatureLoader {
         return FEATURES;
     }
 
-    public static final boolean debug = true;
-
     public static void init() {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new GammabrightFeature());
 
-        if (debug) {
+        if (WynntilsMod.developmentEnvironment) {
             registerFeature(new PacketDebuggerFeature());
-            // registerFeature(new KeyBindTestFeature());
+            registerFeature(new KeyBindTestFeature());
             registerFeature(new ConnectionProgressFeature());
         }
 

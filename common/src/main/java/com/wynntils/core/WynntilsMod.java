@@ -26,11 +26,19 @@ public class WynntilsMod {
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
+    public static boolean developmentEnvironment = true;
+
     public static IEventBus getEventBus() {
         return EVENT_BUS;
     }
 
     public static void init(Provider provider) {
+        // TODO find out if dev environ
+        // Reference.developmentEnvironment = ((boolean)
+        // Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+        // || (System.getProperty("wynntils.development") != null &&
+        // System.getProperty("wynntils.development").equals("true"));
+
         WynntilsMod.provider = provider;
 
         WebManager.init();
@@ -44,8 +52,14 @@ public class WynntilsMod {
     }
 
     public static void parseVersion(String versionString) {
-        Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)_(DEV|\\d+)").matcher(versionString);
-        result.find();
+        if (developmentEnvironment)
+            Reference.LOGGER.info("Wynntils running on version " + versionString);
+
+        Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
+
+        if (!result.find()) {
+            Reference.LOGGER.warn("Unable to parse mod version");
+        }
 
         VERSION = result.group(1);
 
@@ -53,8 +67,6 @@ public class WynntilsMod {
             BUILD_NUMBER = Integer.parseInt(result.group(2));
         } catch (NumberFormatException ignored) {
         }
-
-        System.out.println(VERSION + ":" + BUILD_NUMBER);
     }
 
     private static Provider provider;
