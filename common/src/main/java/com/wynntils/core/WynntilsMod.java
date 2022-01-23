@@ -55,7 +55,8 @@ public class WynntilsMod {
         if (developmentEnvironment)
             Reference.LOGGER.info("Wynntils running on version " + versionString);
 
-        Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
+        Matcher result =
+                Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
 
         if (!result.find()) {
             Reference.LOGGER.warn("Unable to parse mod version");
