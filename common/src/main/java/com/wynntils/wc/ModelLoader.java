@@ -4,14 +4,14 @@
  */
 package com.wynntils.wc;
 
-import com.wynntils.utils.Utils;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.impl.CharacterImpl;
 import com.wynntils.wc.impl.WorldStateImpl;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
-public abstract class Models {
+public abstract class ModelLoader {
     private static final WorldState worldState = new WorldStateImpl();
     private static final Character character = new CharacterImpl();
 
@@ -29,8 +29,8 @@ public abstract class Models {
         Arrays.stream(MODELS)
                 .forEach(
                         model -> {
-                            Utils.getEventBus().register(model);
-                            Utils.getEventBus().register(model.getClass());
+                            WynntilsMod.getEventBus().register(model);
+                            WynntilsMod.getEventBus().register(model.getClass());
                         });
     }
 }

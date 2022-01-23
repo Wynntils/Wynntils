@@ -60,6 +60,8 @@ dependencies {
 
     implementation "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
     implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 }
 
 processResources {

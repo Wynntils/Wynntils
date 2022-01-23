@@ -4,12 +4,16 @@
  */
 package com.wynntils.core;
 
+import com.wynntils.core.features.FeatureLoader;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.MinecraftUtils;
-import com.wynntils.wc.Models;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.wc.ModelLoader;
 import java.io.File;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -18,7 +22,7 @@ public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
-    public static final File MOD_STORAGE_ROOT = new File(MinecraftUtils.mc().gameDirectory, MOD_ID);
+    public static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
@@ -26,13 +30,17 @@ public class WynntilsMod {
         return EVENT_BUS;
     }
 
-    public static void init(String versionString) {
-        Models.init();
+    public static void init(Provider provider) {
+        WynntilsMod.provider = provider;
+
         WebManager.init();
+        KeyManager.init();
+
+        ModelLoader.init();
         FeatureLoader.init();
 
         Reference.LOGGER.info("Wynntils initialized");
-        parseVersion(versionString);
+        parseVersion(provider.getModVersion());
     }
 
     public static void parseVersion(String versionString) {
@@ -47,5 +55,19 @@ public class WynntilsMod {
         }
 
         System.out.println(VERSION + ":" + BUILD_NUMBER);
+    }
+
+    private static Provider provider;
+
+    public static Provider getProvider() {
+        return provider;
+    }
+
+    public interface Provider {
+        String getModVersion();
+
+        void registerStartTickEvent(Consumer<Minecraft> listener);
+
+        void registerEndTickEvent(Consumer<Minecraft> listener);
     }
 }

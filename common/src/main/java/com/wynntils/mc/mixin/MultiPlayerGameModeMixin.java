@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.utils.Utils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -29,7 +29,7 @@ public abstract class MultiPlayerGameModeMixin {
             Player player,
             CallbackInfoReturnable<ItemStack> cir) {
         ItemStack itemStack = player.containerMenu.getSlot(slotNum).getItem();
-        Utils.getEventBus()
+        WynntilsMod.getEventBus()
                 .post(
                         new ContainerClickEvent(
                                 containerId, slotNum, itemStack, clickType, buttonNum));

@@ -4,8 +4,10 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.utils.Utils;
+import com.wynntils.mc.utils.keybinds.KeyHolder;
+import com.wynntils.mc.utils.keybinds.KeyManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -19,8 +21,11 @@ import java.util.function.Supplier;
 public abstract class Feature {
     protected boolean enabled = false;
 
-    /** List of providers to mark for loading */
+    /** List of web providers to mark for loading */
     protected List<Supplier<WebManager.StaticProvider>> apis = new ArrayList<>();
+
+    /** List of keybinds to load */
+    protected List<Supplier<KeyHolder>> keybinds = new ArrayList<>();
 
     /**
      * Called for a feature's activation
@@ -31,10 +36,12 @@ public abstract class Feature {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        if (!tryEnableAPIS(false)) return false;
+        if (!loadAPIs(false)) return false;
 
-        Utils.getEventBus().register(this);
-        Utils.getEventBus().register(this.getClass());
+        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.getEventBus().register(this.getClass());
+
+        loadKeybinds();
 
         enabled = true;
         return true;
@@ -44,7 +51,7 @@ public abstract class Feature {
      * Called to try and enable the apis the feature is dependent on Returns if feature can be
      * safely activated
      */
-    public boolean tryEnableAPIS(boolean async) {
+    public boolean loadAPIs(boolean async) {
         if (!apis.isEmpty()) {
             if (!WebManager.isSetup()) return false;
 
@@ -58,14 +65,26 @@ public abstract class Feature {
         return true;
     }
 
+    /** Called to try and enable a feature's keybinds */
+    public void loadKeybinds() {
+        keybinds.forEach(k -> KeyManager.registerKeybinding(k.get()));
+    }
+
+    /** Called to try and disable a feature's keybinds */
+    public void unloadKeybinds() {
+        keybinds.forEach(k -> KeyManager.unregisterKeybind(k.get()));
+    }
+
     /** Called for a feature's deactivation */
     public void onDisable() {
         if (!enabled)
             throw new IllegalStateException(
                     "Feature can not be disabled as it already is disabled");
 
-        Utils.getEventBus().unregister(this);
-        Utils.getEventBus().unregister(this.getClass());
+        unloadKeybinds();
+
+        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.getEventBus().unregister(this.getClass());
 
         enabled = false;
     }

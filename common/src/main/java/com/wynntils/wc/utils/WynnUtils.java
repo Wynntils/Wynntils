@@ -4,7 +4,9 @@
  */
 package com.wynntils.wc.utils;
 
-public class WynncraftUtils {
+import com.wynntils.wc.ModelLoader;
+
+public class WynnUtils {
     /**
      * Removes the characters 'À' ('\u00c0') and '\u058e' that is sometimes added in Wynn APIs and
      * replaces '\u2019' (RIGHT SINGLE QUOTATION MARK) with '\'' (And trims)
@@ -20,5 +22,13 @@ public class WynncraftUtils {
                 .replace("\u058e", "")
                 .replace('\u2019', '\'')
                 .trim();
+    }
+
+    public static boolean onServer() {
+        return ModelLoader.getWorldState().onServer();
+    }
+
+    public static boolean onWorld() {
+        return ModelLoader.getWorldState().onWorld();
     }
 }
