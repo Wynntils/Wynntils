@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.features;
+package com.wynntils.core.features.properties;
 
 /**
  * How stable a feature is to wynncraft changes, how able it is to be maintained, and other similar

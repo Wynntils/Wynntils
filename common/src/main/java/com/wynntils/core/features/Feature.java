@@ -5,6 +5,9 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.properties.GameplayImpact;
+import com.wynntils.core.features.properties.PerformanceImpact;
+import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;

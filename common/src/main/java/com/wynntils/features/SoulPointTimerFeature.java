@@ -5,9 +5,9 @@
 package com.wynntils.features;
 
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.GameplayImpact;
-import com.wynntils.core.features.PerformanceImpact;
-import com.wynntils.core.features.Stability;
+import com.wynntils.core.features.properties.GameplayImpact;
+import com.wynntils.core.features.properties.PerformanceImpact;
+import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.objects.DynamicTag;

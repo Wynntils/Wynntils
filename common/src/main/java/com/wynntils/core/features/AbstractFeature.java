@@ -4,6 +4,10 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.features.properties.GameplayImpact;
+import com.wynntils.core.features.properties.PerformanceImpact;
+import com.wynntils.core.features.properties.Stability;
+
 /** TODO document */
 public abstract class AbstractFeature extends Feature {
     @Override

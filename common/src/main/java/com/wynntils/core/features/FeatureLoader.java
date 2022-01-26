@@ -1,43 +1,14 @@
-/*
- * Copyright © Wynntils 2021.
- * This file is released under AGPLv3. See LICENSE for full license details.
- */
 package com.wynntils.core.features;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.features.*;
-import com.wynntils.features.debug.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-/** Loads {@link Feature}s */
-public class FeatureLoader {
-    private static final List<Feature> FEATURES = new LinkedList<>();
+public abstract class FeatureLoader {
+    protected final List<Feature> features = new ArrayList<>();
 
-    private static void registerFeature(Feature feature) {
-        FEATURES.add(feature);
+    public List<Feature> features() {
+        return features;
     }
 
-    private static void initializeFeatures() {
-        FEATURES.forEach(Feature::onEnable);
-    }
-
-    public static List<Feature> getFeatures() {
-        return FEATURES;
-    }
-
-    public static void init() {
-        registerFeature(new WynncraftButtonFeature());
-        registerFeature(new SoulPointTimerFeature());
-        registerFeature(new ItemGuessFeature());
-        registerFeature(new GammabrightFeature());
-
-        if (WynntilsMod.developmentEnvironment) {
-            registerFeature(new PacketDebuggerFeature());
-            registerFeature(new KeyBindTestFeature());
-            registerFeature(new ConnectionProgressFeature());
-        }
-
-        initializeFeatures();
-    }
+    public abstract void load();
 }

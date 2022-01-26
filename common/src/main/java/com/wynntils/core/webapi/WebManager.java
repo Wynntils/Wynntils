@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.FeatureLoader;
+import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
@@ -95,11 +95,10 @@ public class WebManager {
 
     public static void setupWebApi(boolean isSetup) {
         // If it is during the setup the features will be enabled by the FeatureHandler later, so
-        // there is no
-        // need to do it here
+        // there is no need to do it here
         // This is for if the apiUrls fail and are reloaded externally
         if (!isSetup) {
-            FeatureLoader.getFeatures()
+            FeatureRegistry.getFeatures()
                     .forEach(
                             f -> {
                                 if (f.isApiDependent() && !f.isEnabled()) {

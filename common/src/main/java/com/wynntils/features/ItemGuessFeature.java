@@ -5,6 +5,9 @@
 package com.wynntils.features;
 
 import com.wynntils.core.features.*;
+import com.wynntils.core.features.properties.GameplayImpact;
+import com.wynntils.core.features.properties.PerformanceImpact;
+import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.mc.event.InventoryRenderEvent;
