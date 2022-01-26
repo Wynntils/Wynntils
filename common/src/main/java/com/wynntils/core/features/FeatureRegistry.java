@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.features.loaders.DebugFeatureLoader;
 import com.wynntils.core.features.loaders.DefaultFeatureLoader;
-
 import java.util.LinkedList;
 import java.util.List;
 
