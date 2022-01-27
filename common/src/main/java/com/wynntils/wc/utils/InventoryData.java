@@ -11,6 +11,10 @@ public class InventoryData {
      * @return The maximum number of soul points the current player can have
      *     <p>Note: If veteran, this should always be 15, but currently might return the wrong value
      */
+
+    // The wynncraft api has some info on if someone's a veteran, TODO either use that or find out
+    // if veterans
+    // still exist
     public int getMaxSoulPoints() throws Exception {
         throw new Exception("TODO");
         /*

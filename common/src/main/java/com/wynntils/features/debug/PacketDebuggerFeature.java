@@ -60,7 +60,7 @@ public class PacketDebuggerFeature extends DebugFeature {
     public void onPacketSent(PacketSentEvent e) {
         if (!DEBUG_PACKETS) return;
 
-        Packet packet = e.getPacket();
+        Packet<?> packet = e.getPacket();
 
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
@@ -71,7 +71,7 @@ public class PacketDebuggerFeature extends DebugFeature {
     public void onPacketReceived(PacketReceivedEvent e) {
         if (!DEBUG_PACKETS) return;
 
-        Packet packet = e.getPacket();
+        Packet<?> packet = e.getPacket();
 
         if (IGNORE_LIST.contains(packet.getClass())) return;
 

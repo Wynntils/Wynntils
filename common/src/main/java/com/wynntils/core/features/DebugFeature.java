@@ -6,11 +6,16 @@ package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 
 /** Feature for debugging */
+@FeatureInfo(
+        stability = Stability.UNSTABLE,
+        gameplay = GameplayImpact.MEDIUM,
+        performance = PerformanceImpact.MEDIUM)
 public abstract class DebugFeature extends Feature {
     @Override
     protected void init(
@@ -18,21 +23,6 @@ public abstract class DebugFeature extends Feature {
             ImmutableList.Builder<KeySupplier> keybinds,
             ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
-    }
-
-    @Override
-    public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.MEDIUM;
-    }
-
-    @Override
-    public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.MEDIUM;
-    }
-
-    @Override
-    public Stability getStability() {
-        return Stability.UNSTABLE;
     }
 
     public class DevelopmentCondition extends Condition {

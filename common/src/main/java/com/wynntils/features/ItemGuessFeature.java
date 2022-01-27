@@ -6,6 +6,7 @@ package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.*;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
@@ -25,6 +26,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(
+        performance = PerformanceImpact.SMALL,
+        gameplay = GameplayImpact.LARGE,
+        stability = Stability.STABLE)
 public class ItemGuessFeature extends Feature {
 
     @Override
@@ -111,20 +116,5 @@ public class ItemGuessFeature extends Feature {
                                                 + ChatFormatting.GRAY
                                                 + "Possibilities: "
                                                 + itemNamesAndCosts)));
-    }
-
-    @Override
-    public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.SMALL;
-    }
-
-    @Override
-    public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.LARGE;
-    }
-
-    @Override
-    public Stability getStability() {
-        return Stability.STABLE;
     }
 }

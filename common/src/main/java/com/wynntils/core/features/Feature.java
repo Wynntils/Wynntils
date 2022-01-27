@@ -7,9 +7,6 @@ package com.wynntils.core.features;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
@@ -127,15 +124,6 @@ public abstract class Feature {
     public boolean isApiDependent() {
         return !apis.isEmpty();
     }
-
-    /** Subjective Performance impact of feature */
-    public abstract PerformanceImpact getPerformanceImpact();
-
-    /** Subjective Gameplay impact of feature */
-    public abstract GameplayImpact getGameplayImpact();
-
-    /** Subjective stability of feature */
-    public abstract Stability getStability();
 
     /** Whether a feature is enabled */
     public boolean isEnabled() {

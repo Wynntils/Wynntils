@@ -7,6 +7,7 @@ package com.wynntils.features;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
@@ -20,6 +21,10 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(
+        stability = Stability.INVARIABLE,
+        gameplay = GameplayImpact.MEDIUM,
+        performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
 
     @SubscribeEvent
@@ -32,16 +37,6 @@ public class WynncraftButtonFeature extends Feature {
                         e.getTitleScreen().width / 2 + 104,
                         e.getTitleScreen().height / 4 + 48 + 24);
         e.getAddButton().accept(wynncraftButton);
-    }
-
-    @Override
-    public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.SMALL;
-    }
-
-    @Override
-    public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.MEDIUM;
     }
 
     private static class WynncraftButton extends Button {
@@ -94,10 +89,5 @@ public class WynncraftButtonFeature extends Feature {
                                         wynncraftButton.serverData));
             }
         }
-    }
-
-    @Override
-    public Stability getStability() {
-        return Stability.INVARIABLE;
     }
 }

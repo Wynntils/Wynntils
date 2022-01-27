@@ -5,6 +5,7 @@
 package com.wynntils.features;
 
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
@@ -21,6 +22,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(
+        stability = Stability.STABLE,
+        gameplay = GameplayImpact.MEDIUM,
+        performance = PerformanceImpact.MEDIUM)
 public class SoulPointTimerFeature extends Feature {
     @SubscribeEvent
     public static void onInventoryRender(InventoryRenderEvent e) {
@@ -61,20 +66,5 @@ public class SoulPointTimerFeature extends Feature {
 
         ItemUtils.addMarker(stack, "soulpoint");
         ItemUtils.replaceLore(stack, lore);
-    }
-
-    @Override
-    public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.MEDIUM;
-    }
-
-    @Override
-    public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.MEDIUM;
-    }
-
-    @Override
-    public Stability getStability() {
-        return Stability.STABLE;
     }
 }
