@@ -4,13 +4,13 @@
  */
 package com.wynntils.features.debug;
 
-import com.wynntils.core.features.AbstractFeature;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ConnectionProgressFeature extends AbstractFeature {
+public class ConnectionProgressFeature extends DebugFeature {
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         System.out.println("Connection confirmed");

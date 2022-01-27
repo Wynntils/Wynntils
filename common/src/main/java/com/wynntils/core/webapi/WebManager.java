@@ -8,11 +8,11 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.EventFactory;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class WebManager {
             itemGuessesProvider;
 
     public static void init() {
-        tryReloadApiUrls(false, true);
+        tryReloadApiUrls(false);
     }
 
     static {
@@ -69,11 +69,7 @@ public class WebManager {
                 };
     }
 
-    public static void tryReloadApis(boolean async) {
-        tryReloadApiUrls(async, false);
-    }
-
-    private static void tryReloadApiUrls(boolean async, boolean isSetup) {
+    private static void tryReloadApiUrls(boolean async) {
         if (apiUrls == null) {
             handler.addRequest(
                     new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
@@ -83,7 +79,7 @@ public class WebManager {
                                         apiUrls = reader;
                                         if (!setup) {
                                             setup = true;
-                                            WebManager.setupWebApi(isSetup);
+                                            EventFactory.onWebSetup();
                                         }
                                         return true;
                                     })
@@ -91,23 +87,6 @@ public class WebManager {
 
             handler.dispatch(async);
         }
-    }
-
-    public static void setupWebApi(boolean isSetup) {
-        // If it is during the setup the features will be enabled by the FeatureHandler later, so
-        // there is no need to do it here
-        // This is for if the apiUrls fail and are reloaded externally
-        if (!isSetup) {
-            FeatureRegistry.getFeatures()
-                    .forEach(
-                            f -> {
-                                if (f.isApiDependent() && !f.isEnabled()) {
-                                    f.onEnable();
-                                }
-                            });
-        }
-
-        // MapModule.getModule().getMainMap().updateMap();
     }
 
     public static void loadMarked(boolean async) {

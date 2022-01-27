@@ -4,6 +4,7 @@
  */
 package com.wynntils.features;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -15,7 +16,11 @@ import org.lwjgl.glfw.GLFW;
 public class GammabrightFeature extends Feature {
     private double lastGamma = 1f;
 
-    {
+    @Override
+    public void init(
+            ImmutableList.Builder<WebProviderSupplier> apis,
+            ImmutableList.Builder<KeySupplier> keybinds,
+            ImmutableList.Builder<Condition> conditions) {
         keybinds.add(
                 () ->
                         new KeyHolder(

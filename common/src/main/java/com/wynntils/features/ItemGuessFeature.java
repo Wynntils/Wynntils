@@ -4,6 +4,7 @@
  */
 package com.wynntils.features;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.*;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -25,7 +26,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemGuessFeature extends Feature {
-    {
+
+    @Override
+    public void init(
+            ImmutableList.Builder<WebProviderSupplier> apis,
+            ImmutableList.Builder<KeySupplier> keybinds,
+            ImmutableList.Builder<Condition> conditions) {
         apis.add(WebManager::getItemGuessesProvider);
     }
 

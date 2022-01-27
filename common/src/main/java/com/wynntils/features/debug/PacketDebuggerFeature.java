@@ -6,7 +6,7 @@ package com.wynntils.features.debug;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import com.wynntils.core.features.AbstractFeature;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-public class PacketDebuggerFeature extends AbstractFeature {
+public class PacketDebuggerFeature extends DebugFeature {
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */

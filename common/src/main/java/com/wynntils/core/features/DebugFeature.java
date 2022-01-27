@@ -4,12 +4,22 @@
  */
 package com.wynntils.core.features;
 
+import com.google.common.collect.ImmutableList;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 
-/** TODO document */
-public abstract class AbstractFeature extends Feature {
+/** Feature for debugging */
+public abstract class DebugFeature extends Feature {
+    @Override
+    protected void init(
+            ImmutableList.Builder<WebProviderSupplier> apis,
+            ImmutableList.Builder<KeySupplier> keybinds,
+            ImmutableList.Builder<Condition> conditions) {
+        conditions.add(new DevelopmentCondition());
+    }
+
     @Override
     public PerformanceImpact getPerformanceImpact() {
         return PerformanceImpact.MEDIUM;
@@ -23,5 +33,13 @@ public abstract class AbstractFeature extends Feature {
     @Override
     public Stability getStability() {
         return Stability.UNSTABLE;
+    }
+
+    public class DevelopmentCondition extends Condition {
+
+        @Override
+        public void init() {
+            setSatisfied(WynntilsMod.developmentEnvironment);
+        }
     }
 }
