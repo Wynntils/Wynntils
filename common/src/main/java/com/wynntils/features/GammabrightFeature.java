@@ -6,6 +6,7 @@ package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
@@ -13,6 +14,10 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import org.lwjgl.glfw.GLFW;
 
+@FeatureInfo(
+        stability = Stability.INVARIABLE,
+        gameplay = GameplayImpact.LARGE,
+        performance = PerformanceImpact.SMALL)
 public class GammabrightFeature extends Feature {
     private double lastGamma = 1f;
 
@@ -38,20 +43,5 @@ public class GammabrightFeature extends Feature {
 
                                     McUtils.mc().options.gamma = lastGamma;
                                 }));
-    }
-
-    @Override
-    public PerformanceImpact getPerformanceImpact() {
-        return PerformanceImpact.SMALL;
-    }
-
-    @Override
-    public GameplayImpact getGameplayImpact() {
-        return GameplayImpact.LARGE;
-    }
-
-    @Override
-    public Stability getStability() {
-        return Stability.INVARIABLE;
     }
 }
