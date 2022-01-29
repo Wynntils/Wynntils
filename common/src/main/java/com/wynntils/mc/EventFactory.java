@@ -115,12 +115,16 @@ public class EventFactory {
         post(new ResourcePackEvent());
     }
 
-    public static void onPacketSent(Packet<?> packet) {
-        post(new PacketSentEvent(packet));
+    public static <T extends Packet<?>> boolean onPacketSent(T packet) {
+        PacketSentEvent<T> event = new PacketSentEvent<>(packet);
+        post(event);
+        return event.isCanceled();
     }
 
-    public static void onPacketReceived(Packet<?> packet) {
-        post(new PacketReceivedEvent(packet));
+    public static <T extends Packet<?>> boolean onPacketReceived(T packet) {
+        PacketReceivedEvent<T> event = new PacketReceivedEvent<>(packet);
+        post(event);
+        return event.isCanceled();
     }
 
     public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {

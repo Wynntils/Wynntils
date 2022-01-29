@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.network.protocol.Packet;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.GenericEvent;
 
 /**
  * Fires on packet sending or recieving
@@ -13,25 +13,26 @@ import net.minecraftforge.eventbus.api.Event;
  * <p>Please do not misuse this class by looking for specific packet classes; instead create a
  * unique Event class in mc.event and add a mixin for the handler in ClientPacketListenerMixin.
  */
-public class PacketEvent extends Event {
-    private final Packet packet;
+public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
+    private final T packet;
 
-    public PacketEvent(Packet packet) {
+    public PacketEvent(T packet) {
+        super((Class<T>) packet.getClass());
         this.packet = packet;
     }
 
-    public Packet getPacket() {
+    public T getPacket() {
         return packet;
     }
 
-    public static class PacketSentEvent extends PacketEvent {
-        public PacketSentEvent(Packet packet) {
+    public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> {
+        public PacketSentEvent(T packet) {
             super(packet);
         }
     }
 
-    public static class PacketReceivedEvent extends PacketEvent {
-        public PacketReceivedEvent(Packet packet) {
+    public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> {
+        public PacketReceivedEvent(T packet) {
             super(packet);
         }
     }

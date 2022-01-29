@@ -4,10 +4,7 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.features.GammabrightFeature;
-import com.wynntils.features.ItemGuessFeature;
-import com.wynntils.features.SoulPointTimerFeature;
-import com.wynntils.features.WynncraftButtonFeature;
+import com.wynntils.features.*;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.KeyBindTestFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -31,6 +28,7 @@ public class FeatureRegistry {
     }
 
     public static void init() {
+        // debug
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new KeyBindTestFeature());
         registerFeature(new ConnectionProgressFeature());
@@ -39,5 +37,6 @@ public class FeatureRegistry {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new HealthPotionBlockerFeature());
     }
 }

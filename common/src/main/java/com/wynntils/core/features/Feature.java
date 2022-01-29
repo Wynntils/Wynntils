@@ -131,7 +131,7 @@ public abstract class Feature {
     }
 
     /** Whether a feature can be enabled */
-    public boolean canEnable() {
+    private boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }

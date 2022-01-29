@@ -26,20 +26,24 @@ public abstract class ConnectionMixin {
     @Inject(
             method =
                     "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
-            at = @At("RETURN"))
+            at = @At("HEAD"))
     private void channelRead0Post(
             ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
-        EventFactory.onPacketReceived(packet);
+        if (EventFactory.onPacketReceived(packet)) {
+            ci.cancel();
+        }
     }
 
     @Inject(
             method =
                     "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V",
-            at = @At("RETURN"))
+            at = @At("HEAD"))
     private void sendPost(
             Packet<?> packet,
             GenericFutureListener<? extends Future<? super Void>> genericFutureListener,
             CallbackInfo ci) {
-        EventFactory.onPacketSent(packet);
+        if (EventFactory.onPacketSent(packet)) {
+            ci.cancel();
+        }
     }
 }

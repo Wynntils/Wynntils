@@ -20,7 +20,7 @@ public class PacketDebuggerFeature extends DebugFeature {
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */
-    private static final List<Class<? extends Packet>> IGNORE_LIST =
+    private static final List<Class<? extends Packet<?>>> IGNORE_LIST =
             Arrays.asList(
                     // General
                     ServerboundKeepAlivePacket.class,
@@ -51,13 +51,13 @@ public class PacketDebuggerFeature extends DebugFeature {
                     ServerboundMovePlayerPacket.PosRot.class,
                     ServerboundMovePlayerPacket.Rot.class);
 
-    private String describePacket(Packet packet) {
+    private String describePacket(Packet<?> packet) {
         return ReflectionToStringBuilder.toString(packet, SHORT_PREFIX_STYLE)
                 .replaceFirst("net\\.minecraft\\.network\\.protocol\\..*\\.", "");
     }
 
     @SubscribeEvent
-    public void onPacketSent(PacketSentEvent e) {
+    public void onPacketSent(PacketSentEvent<?> e) {
         if (!DEBUG_PACKETS) return;
 
         Packet<?> packet = e.getPacket();
@@ -68,7 +68,7 @@ public class PacketDebuggerFeature extends DebugFeature {
     }
 
     @SubscribeEvent
-    public void onPacketReceived(PacketReceivedEvent e) {
+    public void onPacketReceived(PacketReceivedEvent<?> e) {
         if (!DEBUG_PACKETS) return;
 
         Packet<?> packet = e.getPacket();
