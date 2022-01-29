@@ -21,7 +21,9 @@ import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -60,10 +62,12 @@ public class ItemGuessFeature extends Feature {
         String itemType = name.split(" ", 3)[1];
         String levelRange = null;
 
-        List<String> lore = ItemUtils.getLore(stack);
+        ListTag lore = ItemUtils.getLoreTagElseEmpty(stack);
 
-        for (String line : lore) {
-            System.out.println("Line: " + line);
+        if (lore.isEmpty()) return;
+
+        for (Tag lineTag : lore) {
+            String line = lineTag.getAsString();
             if (line.contains("Lv. Range")) {
                 levelRange = ChatFormatting.stripFormatting(line).replace("- Lv. Range: ", "");
                 break;
@@ -107,14 +111,15 @@ public class ItemGuessFeature extends Feature {
             itemNamesAndCosts.append(itemDescription);
         }
 
-        ItemUtils.getLoreTag(stack)
-                .add(
-                        StringTag.valueOf(
-                                ItemUtils.toLoreForm(
-                                        ChatFormatting.GREEN
-                                                + "- "
-                                                + ChatFormatting.GRAY
-                                                + "Possibilities: "
-                                                + itemNamesAndCosts)));
+        lore.add(
+                StringTag.valueOf(
+                        ItemUtils.toLoreForm(
+                                ChatFormatting.GREEN
+                                        + "- "
+                                        + ChatFormatting.GRAY
+                                        + "Possibilities: "
+                                        + itemNamesAndCosts)));
+
+        ItemUtils.replaceLore(stack, lore);
     }
 }

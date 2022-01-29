@@ -34,6 +34,19 @@ public class ItemUtils {
         return lore;
     }
 
+    /** Get the lore NBT tag from an item, else return empty */
+    public static ListTag getLoreTagElseEmpty(ItemStack item) {
+        if (item.isEmpty()) return new ListTag();
+        CompoundTag display = item.getTagElement("display");
+
+        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore"))
+            return new ListTag();
+        Tag loreBase = display.get("Lore");
+
+        if (loreBase.getType() != ListTag.TYPE) return new ListTag();
+        return (ListTag) loreBase;
+    }
+
     /** Get the lore NBT tag from an item, else return null */
     public static ListTag getLoreTag(ItemStack item) {
         if (item.isEmpty()) return null;
