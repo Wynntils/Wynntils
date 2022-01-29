@@ -9,12 +9,12 @@
     "ClientPacketListenerMixin",
     "ConnectionMixin",
     "ConnectScreenMixin",
+    "KeyMappingMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "OptionsMixin",
     "ScoreboardMixin",
     "ScreenMixin",
-    "KeyMappingMixin",
     "accessors.OptionsAccessor"
   ],
   "mixins": [
