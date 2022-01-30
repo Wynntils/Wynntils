@@ -5,7 +5,6 @@
 package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
