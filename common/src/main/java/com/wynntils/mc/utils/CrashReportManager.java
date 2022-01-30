@@ -22,7 +22,7 @@ public class CrashReportManager {
 
             for (String info : infos) {
                 if (info != null && !info.isEmpty()) {
-                    result.append("\n\t ").append(info);
+                    result.append("\n\t\t").append(info);
                 }
             }
         }

@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 /** The common implementation of Wynntils */
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
-    public static String MOD_VERSION;
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
     public static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
@@ -53,8 +52,8 @@ public class WynntilsMod {
         FeatureRegistry.init();
 
         Reference.LOGGER.info("Wynntils initialized");
-        MOD_VERSION = modVersion;
         parseVersion(modVersion);
+        throw new RuntimeException("E");
     }
 
     public static void parseVersion(String versionString) {
@@ -77,7 +76,6 @@ public class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(() -> List.of("Version: " + MOD_VERSION));
         CrashReportManager.registerCrashContext(
                 () -> List.of("In Development: " + (developmentEnvironment ? "Yes" : "No")));
     }

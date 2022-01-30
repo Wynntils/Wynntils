@@ -30,7 +30,7 @@ public class FeatureRegistry {
     }
 
     public static void init() {
-        addCrashCallback();
+        addCrashContext();
 
         // debug
         registerFeature(new PacketDebuggerFeature());
@@ -44,14 +44,14 @@ public class FeatureRegistry {
         registerFeature(new HealthPotionBlockerFeature());
     }
 
-    private static void addCrashCallback() {
+    private static void addCrashContext() {
         CrashReportManager.registerCrashContext(
                 () -> {
                     List<String> result = new ArrayList<>();
 
                     for (Feature feature : FEATURES) {
                         if (feature.isEnabled()) {
-                            result.add("\t" + feature.getClass().getSimpleName());
+                            result.add("\t" + feature.getClass().getName());
                         }
                     }
 

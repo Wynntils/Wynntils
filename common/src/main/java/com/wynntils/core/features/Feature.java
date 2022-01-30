@@ -62,8 +62,6 @@ public abstract class Feature {
      * <p>Returns whether the feature was successfully activated
      */
     public boolean enable() {
-        Reference.LOGGER.info("Loading " + getClass().getName());
-
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
