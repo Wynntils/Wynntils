@@ -21,15 +21,6 @@ public class WynntilsModForge {
         WynntilsMod.init(
                 new WynntilsMod.Provider() {
                     @Override
-                    public String getModVersion() {
-                        return ModLoadingContext.get()
-                                .getActiveContainer()
-                                .getModInfo()
-                                .getVersion()
-                                .toString();
-                    }
-
-                    @Override
                     public void registerStartTickEvent(Consumer<Minecraft> listener) {
                         MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
                                 e -> {
@@ -48,6 +39,12 @@ public class WynntilsModForge {
                                     }
                                 });
                     }
-                });
+                },
+                getModVersion());
+    }
+
+    // Only works on init time
+    private String getModVersion() {
+        return ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
     }
 }

@@ -6,7 +6,6 @@ package com.wynntils.mc.utils.keybinds;
 
 import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.OptionsInitEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +19,6 @@ public class KeyManager {
 
     public static void init() {
         WynntilsMod.getProvider().registerEndTickEvent(client -> triggerKeybinds());
-        WynntilsMod.getEventBus()
-                .<OptionsInitEvent>addListener(
-                        e -> {
-                            Options options = e.getOptions();
-                            loadKeybinds(options);
-                        });
     }
 
     public static void registerKeybinding(KeyHolder toAdd) {

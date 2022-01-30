@@ -19,17 +19,6 @@ public class WynntilsModFabric implements ClientModInitializer {
         WynntilsMod.init(
                 new WynntilsMod.Provider() {
                     @Override
-                    public String getModVersion() {
-                        Optional<ModContainer> wynntilsMod =
-                                FabricLoader.getInstance().getModContainer("wynntils");
-                        if (wynntilsMod.isEmpty()) {
-                            throw new RuntimeException("Where is my Wynntils?");
-                        }
-
-                        return wynntilsMod.get().getMetadata().getVersion().getFriendlyString();
-                    }
-
-                    @Override
                     public void registerStartTickEvent(Consumer<Minecraft> listener) {
                         ClientTickEvents.START_CLIENT_TICK.register(listener::accept);
                     }
@@ -38,6 +27,16 @@ public class WynntilsModFabric implements ClientModInitializer {
                     public void registerEndTickEvent(Consumer<Minecraft> listener) {
                         ClientTickEvents.END_CLIENT_TICK.register(listener::accept);
                     }
-                });
+                },
+                getModVersion());
+    }
+
+    public String getModVersion() {
+        Optional<ModContainer> wynntilsMod = FabricLoader.getInstance().getModContainer("wynntils");
+        if (wynntilsMod.isEmpty()) {
+            throw new RuntimeException("Where is my Wynntils?");
+        }
+
+        return wynntilsMod.get().getMetadata().getVersion().getFriendlyString();
     }
 }

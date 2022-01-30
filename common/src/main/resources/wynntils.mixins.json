@@ -9,6 +9,7 @@
     "ClientPacketListenerMixin",
     "ConnectionMixin",
     "ConnectScreenMixin",
+    "CrashReportMixin",
     "KeyMappingMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",

@@ -8,6 +8,8 @@ import com.wynntils.features.*;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.KeyBindTestFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.mc.utils.CrashReportManager;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class FeatureRegistry {
     }
 
     public static void init() {
+        addCrashCallback();
+
         // debug
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new KeyBindTestFeature());
@@ -38,5 +42,22 @@ public class FeatureRegistry {
         registerFeature(new ItemGuessFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+    }
+
+    private static void addCrashCallback() {
+        CrashReportManager.registerCrashContext(
+                () -> {
+                    List<String> result = new ArrayList<>();
+
+                    for (Feature feature : FEATURES) {
+                        if (feature.isEnabled()) {
+                            result.add("\t" + feature.getClass().getSimpleName());
+                        }
+                    }
+
+                    if (!result.isEmpty()) result.add(0, "Loaded Features:");
+
+                    return result;
+                });
     }
 }

@@ -19,7 +19,6 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,10 +48,6 @@ public class EventFactory {
 
     public static void onScreenOpened(Screen screen) {
         post(new ScreenOpenedEvent(screen));
-    }
-
-    public static void onOptionsInit(Options options) {
-        post(new OptionsInitEvent(options));
     }
 
     public static void onWebSetup() {

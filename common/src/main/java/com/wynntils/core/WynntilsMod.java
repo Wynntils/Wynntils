@@ -6,10 +6,12 @@ package com.wynntils.core;
 
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +22,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 /** The common implementation of Wynntils */
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
+    public static String MOD_VERSION;
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
     public static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
@@ -32,7 +35,7 @@ public class WynntilsMod {
         return EVENT_BUS;
     }
 
-    public static void init(Provider provider) {
+    public static void init(Provider provider, String modVersion) {
         // TODO find out if dev environ
         // Reference.developmentEnvironment = ((boolean)
         // Launch.blackboard.get("fml.deobfuscatedEnvironment"))
@@ -44,11 +47,14 @@ public class WynntilsMod {
         WebManager.init();
         KeyManager.init();
 
+        addCrashCallbacks();
+
         ModelLoader.init();
         FeatureRegistry.init();
 
         Reference.LOGGER.info("Wynntils initialized");
-        parseVersion(provider.getModVersion());
+        MOD_VERSION = modVersion;
+        parseVersion(modVersion);
     }
 
     public static void parseVersion(String versionString) {
@@ -70,6 +76,12 @@ public class WynntilsMod {
         }
     }
 
+    private static void addCrashCallbacks() {
+        CrashReportManager.registerCrashContext(() -> List.of("Version: " + MOD_VERSION));
+        CrashReportManager.registerCrashContext(
+                () -> List.of("In Development: " + (developmentEnvironment ? "Yes" : "No")));
+    }
+
     private static Provider provider;
 
     public static Provider getProvider() {
@@ -77,8 +89,6 @@ public class WynntilsMod {
     }
 
     public interface Provider {
-        String getModVersion();
-
         void registerStartTickEvent(Consumer<Minecraft> listener);
 
         void registerEndTickEvent(Consumer<Minecraft> listener);
