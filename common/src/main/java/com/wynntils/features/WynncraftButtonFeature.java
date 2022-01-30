@@ -68,15 +68,10 @@ public class WynncraftButtonFeature extends Feature {
                     this.height - 6,
                     0,
                     0,
-                    1,
-                    1,
-                    1,
-                    1);
-            // The reason uWidth/vHeight and textureWidth/textureHeight are 1 is since minecraft
-            // uses fractions
-            // for uv, so using 1 is equivalent to using 64 for all of them. Even though 64 is
-            // technically correct, 1
-            // is more optimized
+                    64,
+                    64,
+                    64,
+                    64);
         }
 
         public static void onPress(Button button) {

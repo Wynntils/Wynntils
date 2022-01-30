@@ -48,6 +48,7 @@ public class ServerIcon {
         // set it later
         if (allowStale
                 && Minecraft.getInstance().getTextureManager().getTexture(destination) != null) {
+            serverIconLocation = destination;
             onDone();
             return;
         }
@@ -127,8 +128,11 @@ public class ServerIcon {
         Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
-        Minecraft.getInstance()
-                .getTextureManager()
-                .register((serverIconLocation = destination), new DynamicTexture(nativeImage));
+        synchronized (this) {
+            serverIconLocation = destination;
+            Minecraft.getInstance()
+                    .getTextureManager()
+                    .register(destination, new DynamicTexture(nativeImage));
+        }
     }
 }
