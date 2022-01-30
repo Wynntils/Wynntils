@@ -53,7 +53,6 @@ public class WynntilsMod {
 
         Reference.LOGGER.info("Wynntils initialized");
         parseVersion(modVersion);
-        throw new RuntimeException("E");
     }
 
     public static void parseVersion(String versionString) {
