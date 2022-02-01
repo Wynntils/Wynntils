@@ -87,19 +87,22 @@ shadowJar {
     classifier "dev-shadow"
 }
 
-task applyEventBus(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "com.wynntils.eventbustransformer.Main"
-    args shadowJar.archiveFile.get().getAsFile().getAbsolutePath()
-    workingDir = "${buildDir}"
-}
-
-applyEventBus {
+task applyEventBus(type: Jar) {
+    inputs.file shadowJar.archiveFile
+    classifier "transformed-eventbus"
     dependsOn shadowJar
+    doLast {
+      javaexec {
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = "com.wynntils.eventbustransformer.Main"
+        args(shadowJar.archiveFile.get(), archiveFile.get())
+        workingDir = "${buildDir}"
+      }
+    }
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    input.set applyEventBus.archiveFile
     dependsOn applyEventBus
     classifier null
 }
