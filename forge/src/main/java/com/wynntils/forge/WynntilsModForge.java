@@ -6,6 +6,9 @@ package com.wynntils.forge;
 
 import com.wynntils.core.WynntilsMod;
 import java.util.function.Consumer;
+
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -15,32 +18,18 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
-        // if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) return;
-        // Stops it from running on integrated server for single player, probably unnecessary for
-        // most cases
-        WynntilsMod.init(
-                new WynntilsMod.Provider() {
-                    @Override
-                    public void registerStartTickEvent(Consumer<Minecraft> listener) {
-                        MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
-                                e -> {
-                                    if (e.phase == TickEvent.Phase.START) {
-                                        listener.accept(Minecraft.getInstance());
-                                    }
-                                });
-                    }
+        MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
+                e -> {
+                    //Convert to common form
+                    ClientTickEvent.Phase phase = switch (e.phase) {
+                        case START -> ClientTickEvent.Phase.START;
+                        case END -> ClientTickEvent.Phase.END;
+                    };
 
-                    @Override
-                    public void registerEndTickEvent(Consumer<Minecraft> listener) {
-                        MinecraftForge.EVENT_BUS.<TickEvent.ClientTickEvent>addListener(
-                                e -> {
-                                    if (e.phase == TickEvent.Phase.END) {
-                                        listener.accept(Minecraft.getInstance());
-                                    }
-                                });
-                    }
-                },
-                getModVersion());
+                    WynntilsMod.getEventBus().post(new ClientTickEvent(phase));
+                });
+
+        WynntilsMod.init(getModVersion());
     }
 
     // Only works on init time

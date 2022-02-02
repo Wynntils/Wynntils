@@ -34,14 +34,12 @@ public class WynntilsMod {
         return EVENT_BUS;
     }
 
-    public static void init(Provider provider, String modVersion) {
+    public static void init(String modVersion) {
         // TODO find out if dev environ
         // Reference.developmentEnvironment = ((boolean)
         // Launch.blackboard.get("fml.deobfuscatedEnvironment"))
         // || (System.getProperty("wynntils.development") != null &&
         // System.getProperty("wynntils.development").equals("true"));
-
-        WynntilsMod.provider = provider;
 
         WebManager.init();
         KeyManager.init();
@@ -77,17 +75,5 @@ public class WynntilsMod {
     private static void addCrashCallbacks() {
         CrashReportManager.registerCrashContext(
                 () -> List.of("In Development: " + (developmentEnvironment ? "Yes" : "No")));
-    }
-
-    private static Provider provider;
-
-    public static Provider getProvider() {
-        return provider;
-    }
-
-    public interface Provider {
-        void registerStartTickEvent(Consumer<Minecraft> listener);
-
-        void registerEndTickEvent(Consumer<Minecraft> listener);
     }
 }

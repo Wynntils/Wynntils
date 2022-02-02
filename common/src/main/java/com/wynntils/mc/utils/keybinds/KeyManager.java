@@ -6,19 +6,28 @@ package com.wynntils.mc.utils.keybinds;
 
 import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public class KeyManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
     public static void init() {
-        WynntilsMod.getProvider().registerEndTickEvent(client -> triggerKeybinds());
+        WynntilsMod.getEventBus().register(KeyManager.class);
+    }
+
+    @SubscribeEvent
+    public void onTick(ClientTickEvent e) {
+        if (e.getTickPhase() == ClientTickEvent.Phase.END) {
+            triggerKeybinds();
+        }
     }
 
     public static void registerKeybinding(KeyHolder toAdd) {

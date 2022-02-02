@@ -16,19 +16,8 @@ import net.minecraft.client.Minecraft;
 public class WynntilsModFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        WynntilsMod.init(
-                new WynntilsMod.Provider() {
-                    @Override
-                    public void registerStartTickEvent(Consumer<Minecraft> listener) {
-                        ClientTickEvents.START_CLIENT_TICK.register(listener::accept);
-                    }
-
-                    @Override
-                    public void registerEndTickEvent(Consumer<Minecraft> listener) {
-                        ClientTickEvents.END_CLIENT_TICK.register(listener::accept);
-                    }
-                },
-                getModVersion());
+        //TODO fabric tick event
+        WynntilsMod.init(getModVersion());
     }
 
     public String getModVersion() {
