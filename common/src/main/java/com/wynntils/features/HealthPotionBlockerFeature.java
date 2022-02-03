@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.ItemMatchers;
+import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +24,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class HealthPotionBlockerFeature extends Feature {
     @SubscribeEvent
     public void onPotionUse(PacketEvent<ServerboundUseItemPacket> e) {
+        if (!WynnUtils.onWorld()) return;
+
         ItemStack stack = McUtils.inventory().getCarried();
 
         if (!ItemMatchers.isHealingPotion(stack)) return;

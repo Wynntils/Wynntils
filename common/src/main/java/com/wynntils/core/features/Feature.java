@@ -60,7 +60,7 @@ public abstract class Feature {
      *
      * <p>Returns whether the feature was successfully activated
      */
-    public boolean enable() {
+    public final boolean enable() {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
@@ -76,10 +76,11 @@ public abstract class Feature {
     }
 
     /**
-     * Called to try and enable the apis the feature is dependent on Returns if feature can be
-     * safely activated
+     * Called to try and enable the apis the feature is dependent on
+     *
+     * <p>Returns if feature can be safely activated
      */
-    public boolean loadAPIs(boolean async) {
+    public final boolean loadAPIs(boolean async) {
         if (!apis.isEmpty()) {
             if (!WebManager.isSetup()) return false;
 
@@ -94,17 +95,17 @@ public abstract class Feature {
     }
 
     /** Called to try and enable a feature's keybinds */
-    public void loadKeybinds() {
+    public final void loadKeybinds() {
         keybinds.forEach(k -> KeyManager.registerKeybinding(k.getKeyHolder()));
     }
 
     /** Called to try and disable a feature's keybinds */
-    public void unloadKeybinds() {
+    public final void unloadKeybinds() {
         keybinds.forEach(k -> KeyManager.unregisterKeybind(k.getKeyHolder()));
     }
 
     /** Called for a feature's deactivation */
-    public void disable() {
+    public final void disable() {
         if (!enabled)
             throw new IllegalStateException(
                     "Feature can not be disabled as it already is disabled");
@@ -118,12 +119,12 @@ public abstract class Feature {
     }
 
     /** Returns whether a feature is api dependent */
-    public boolean isApiDependent() {
+    public final boolean isApiDependent() {
         return !apis.isEmpty();
     }
 
     /** Whether a feature is enabled */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 

@@ -12,10 +12,8 @@ import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -40,6 +38,7 @@ public class WynntilsMod {
         // Launch.blackboard.get("fml.deobfuscatedEnvironment"))
         // || (System.getProperty("wynntils.development") != null &&
         // System.getProperty("wynntils.development").equals("true"));
+        parseVersion(modVersion);
 
         WebManager.init();
         KeyManager.init();
@@ -48,9 +47,6 @@ public class WynntilsMod {
 
         ModelLoader.init();
         FeatureRegistry.init();
-
-        Reference.LOGGER.info("Wynntils initialized");
-        parseVersion(modVersion);
     }
 
     public static void parseVersion(String versionString) {

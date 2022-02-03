@@ -5,6 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.Reference;
 import com.wynntils.core.features.*;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -56,15 +57,20 @@ public class ItemGuessFeature extends Feature {
 
         ItemUtils.addMarker(stack, "itemGuesses");
 
+        generateGuesses(stack);
+    }
+
+    private static void generateGuesses(ItemStack stack) {
         String name =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(stack.getDisplayName().getString()));
         String itemType = name.split(" ", 3)[1];
-        String levelRange = null;
+        if (itemType == null) return;
 
         ListTag lore = ItemUtils.getLoreTagElseEmpty(stack);
-
         if (lore.isEmpty()) return;
+
+        String levelRange = null;
 
         for (Tag lineTag : lore) {
             String line = lineTag.getAsString();
@@ -74,12 +80,18 @@ public class ItemGuessFeature extends Feature {
             }
         }
 
-        if (itemType == null || levelRange == null) return;
+        if (levelRange == null) return;
 
         ItemGuessProfile igp = WebManager.getItemGuessesProvider().getValue().get(levelRange);
         if (igp == null) return;
 
-        Map<ItemTier, List<String>> rarityMap = igp.getItems().get(ItemType.valueOf(itemType));
+        Map<ItemTier, List<String>> rarityMap;
+        try {
+            rarityMap = igp.getItems().get(ItemType.valueOf(itemType));
+        } catch (IllegalArgumentException exception) { // itemType is invalid
+            Reference.LOGGER.warn(String.format("ItemType was invalid for itemType: %s", itemType));
+            return;
+        }
         if (rarityMap == null) return;
 
         ItemTier tier = ItemTier.fromComponent(stack.getDisplayName());
