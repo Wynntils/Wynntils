@@ -16,6 +16,7 @@
     "OptionsMixin",
     "ScoreboardMixin",
     "ScreenMixin",
+    "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
   ],
   "mixins": [

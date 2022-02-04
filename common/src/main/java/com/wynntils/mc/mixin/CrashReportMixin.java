@@ -5,6 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.utils.CrashReportManager;
+import java.util.List;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import org.spongepowered.asm.mixin.Final;
@@ -16,14 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
-    @Shadow @Final private CrashReportCategory systemDetails;
+    @Shadow @Final private List<CrashReportCategory> details;
 
-    @Inject(at = @At("RETURN"), method = "initDetails")
+    @Inject(at = @At("HEAD"), method = "getDetails(Ljava/lang/StringBuilder;)V")
     private void addWynntilsDetails(CallbackInfo info) {
-        String details = CrashReportManager.generateInfo();
-
-        if (!details.isEmpty()) {
-            systemDetails.setDetail("Wynntils", details);
-        }
+        details.add(CrashReportManager.generateDetails());
     }
 }

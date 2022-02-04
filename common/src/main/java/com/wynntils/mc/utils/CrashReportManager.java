@@ -6,6 +6,7 @@ package com.wynntils.mc.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.CrashReportCategory;
 
 public class CrashReportManager {
     private static final List<ICrashContext> crashContexts = new ArrayList<>();
@@ -14,23 +15,25 @@ public class CrashReportManager {
         crashContexts.add(context);
     }
 
-    public static String generateInfo() {
-        StringBuilder result = new StringBuilder();
+    public static CrashReportCategory generateDetails() {
+        CrashReportCategory wynntilsCategory = new CrashReportCategory("Wynntils");
 
         for (ICrashContext crashContext : crashContexts) {
-            List<String> infos = crashContext.generate();
 
-            for (String info : infos) {
-                if (info != null && !info.isEmpty()) {
-                    result.append("\n\t\t").append(info);
-                }
+            Object infos = crashContext.generate();
+
+            if (infos != null) {
+                wynntilsCategory.setDetail(crashContext.name(), crashContext.generate());
             }
         }
 
-        return result.toString();
+        return wynntilsCategory;
     }
 
     public interface ICrashContext {
-        List<String> generate();
+        String name();
+
+        /** Return null to not add */
+        Object generate();
     }
 }
