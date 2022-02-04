@@ -33,7 +33,7 @@
     "wynntils.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.16.5"
+    "minecraft": ">=${mc_version}"
   },
   "suggests": {
     "flamingo": "*"
