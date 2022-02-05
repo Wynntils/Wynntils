@@ -32,6 +32,6 @@ public class McUtils {
     }
 
     public static Inventory inventory() {
-        return Minecraft.getInstance().player.inventory;
+        return Minecraft.getInstance().player.getInventory();
     }
 }
