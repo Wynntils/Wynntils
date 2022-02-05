@@ -9,33 +9,32 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Supplier;
-
 import net.minecraft.nbt.*;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
-    public static final TagType<StringTag> TYPE = new TagType<>() {
-        public StringTag load(DataInput input, int depth, NbtAccounter accounter) throws IOException {
-            accounter.accountBits(288L);
-            String string = input.readUTF();
-            accounter.accountBits(16L * string.length());
-            return StringTag.valueOf(string);
-        }
+    public static final TagType<StringTag> TYPE =
+            new TagType<>() {
+                public StringTag load(DataInput input, int depth, NbtAccounter accounter)
+                        throws IOException {
+                    accounter.accountBits(288L);
+                    String string = input.readUTF();
+                    accounter.accountBits(16L * string.length());
+                    return StringTag.valueOf(string);
+                }
 
-        public String getName() {
-            return "STRING";
-        }
+                public String getName() {
+                    return "STRING";
+                }
 
-        public String getPrettyName() {
-            return "TAG_String";
-        }
+                public String getPrettyName() {
+                    return "TAG_String";
+                }
 
-        public boolean isValue() {
-            return true;
-        }
-    };
+                public boolean isValue() {
+                    return true;
+                }
+            };
     private static final StringTag EMPTY = StringTag.valueOf("");
     private final Supplier<String> data;
 
@@ -94,7 +93,7 @@ public class DynamicTag implements Tag {
         StringBuilder stringBuilder = new StringBuilder(" ");
         char c = 0;
 
-        for(int i = 0; i < text.length(); ++i) {
+        for (int i = 0; i < text.length(); ++i) {
             char d = text.charAt(i);
             if (d == '\\') {
                 stringBuilder.append('\\');

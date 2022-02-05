@@ -4,8 +4,6 @@
  */
 package com.wynntils.features;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -57,7 +55,8 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(
+                @NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
             serverIcon.bind();
@@ -79,8 +78,12 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         public static void onPress(Button button) {
-            if (button instanceof WynncraftButton wynncraftButton) { //TODO is check necessary
-                ConnectScreen.startConnecting(wynncraftButton.backScreen, Minecraft.getInstance(), ServerAddress.parseString(wynncraftButton.serverData.ip), wynncraftButton.serverData);
+            if (button instanceof WynncraftButton wynncraftButton) { // TODO is check necessary
+                ConnectScreen.startConnecting(
+                        wynncraftButton.backScreen,
+                        Minecraft.getInstance(),
+                        ServerAddress.parseString(wynncraftButton.serverData.ip),
+                        wynncraftButton.serverData);
             }
         }
     }
