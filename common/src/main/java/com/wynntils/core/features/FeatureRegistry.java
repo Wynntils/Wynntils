@@ -15,7 +15,6 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -68,33 +67,45 @@ public class FeatureRegistry {
 
     private static void addCrashCallbacks() {
         CrashReportManager.registerCrashContext(
-                () -> {
-                    List<String> result = new ArrayList<>();
-
-                    for (Feature feature : FEATURES) {
-                        if (feature.isEnabled()) {
-                            result.add("\t" + feature.getClass().getName());
-                        }
+                new CrashReportManager.ICrashContext() {
+                    @Override
+                    public String name() {
+                        return "Loaded Features";
                     }
 
-                    if (!result.isEmpty()) result.add(0, "Loaded Features:");
+                    @Override
+                    public Object generate() {
+                        StringBuilder result = new StringBuilder();
 
-                    return result;
+                        for (Feature feature : FEATURES) {
+                            if (feature.isEnabled()) {
+                                result.append("\n\t\t").append(feature.getClass().getName());
+                            }
+                        }
+
+                        return result.toString();
+                    }
                 });
 
         CrashReportManager.registerCrashContext(
-                () -> {
-                    List<String> result = new ArrayList<>();
-
-                    for (Overlay feature : OVERLAYS) {
-                        if (feature.isEnabled()) {
-                            result.add("\t" + feature.getClass().getName());
-                        }
+                new CrashReportManager.ICrashContext() {
+                    @Override
+                    public String name() {
+                        return "Loaded Overlays";
                     }
 
-                    if (!result.isEmpty()) result.add(0, "Loaded Overlays:");
+                    @Override
+                    public Object generate() {
+                        StringBuilder result = new StringBuilder();
 
-                    return result;
+                        for (Overlay overlay : OVERLAYS) {
+                            if (overlay.isEnabled()) {
+                                result.append("\n\t\t").append(overlay.getClass().getName());
+                            }
+                        }
+
+                        return result.toString();
+                    }
                 });
     }
 

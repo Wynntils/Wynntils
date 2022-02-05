@@ -95,11 +95,8 @@ class Version {
         System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?: "DEV"
     }
 
-    String toVersion() {
-        "${major}.${minor}.${patch}"
-    }
-
-    String toString(Object mcVersion) {
-        "${major}.${minor}.${patch}+${build}.MC${mcVersion}"
+    //If someone can find a way to access the mcVersion without using it as a param please do
+    String toString(Object minecraft_version) {
+        "${major}.${minor}.${patch}+${build}.MC${minecraft_version}"
     }
 }

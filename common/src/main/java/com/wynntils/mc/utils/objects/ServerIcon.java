@@ -77,7 +77,7 @@ public class ServerIcon {
      * else unknown server texture
      */
     public synchronized void bind() {
-        Minecraft.getInstance().getTextureManager().bind(serverIconLocation);
+        Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation).bind();
     }
 
     /** Returns the {@link AbstractTexture} form of the icon */

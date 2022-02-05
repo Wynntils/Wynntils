@@ -13,25 +13,20 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
-    @Inject(
-            method =
-                    "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;",
-            at = @At("HEAD"))
+    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
     private void handleInventoryMouseClickPre(
             int containerId,
-            int slotNum,
-            int buttonNum,
+            int slotId,
+            int mouseButton,
             ClickType clickType,
             Player player,
-            CallbackInfoReturnable<ItemStack> cir) {
-        ItemStack itemStack = player.containerMenu.getSlot(slotNum).getItem();
+            CallbackInfo ci) {
+        ItemStack itemStack = player.containerMenu.getSlot(slotId).getItem();
         WynntilsMod.getEventBus()
-                .post(
-                        new ContainerClickEvent(
-                                containerId, slotNum, itemStack, clickType, buttonNum));
+                .post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId));
     }
 }

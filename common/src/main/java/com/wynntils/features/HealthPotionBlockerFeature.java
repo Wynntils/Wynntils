@@ -26,7 +26,7 @@ public class HealthPotionBlockerFeature extends Feature {
     public void onPotionUse(PacketEvent<ServerboundUseItemPacket> e) {
         if (!WynnUtils.onWorld()) return;
 
-        ItemStack stack = McUtils.inventory().getCarried();
+        ItemStack stack = McUtils.inventory().getSelected();
 
         if (!ItemMatchers.isHealingPotion(stack)) return;
 

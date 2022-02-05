@@ -4,7 +4,6 @@
  */
 package com.wynntils.features;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -18,8 +17,11 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 @FeatureInfo(
         stability = Stability.INVARIABLE,
@@ -53,11 +55,12 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(
+                @NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
             serverIcon.bind();
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
             // Insets the icon by 3
             blit(
@@ -75,13 +78,12 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         public static void onPress(Button button) {
-            if (button instanceof WynncraftButton wynncraftButton) {
-                Minecraft.getInstance()
-                        .setScreen(
-                                new ConnectScreen(
-                                        wynncraftButton.backScreen,
-                                        Minecraft.getInstance(),
-                                        wynncraftButton.serverData));
+            if (button instanceof WynncraftButton wynncraftButton) { // TODO is check necessary
+                ConnectScreen.startConnecting(
+                        wynncraftButton.backScreen,
+                        Minecraft.getInstance(),
+                        ServerAddress.parseString(wynncraftButton.serverData.ip),
+                        wynncraftButton.serverData);
             }
         }
     }

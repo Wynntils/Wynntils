@@ -11,7 +11,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.BusBuilder;
@@ -70,6 +69,16 @@ public class WynntilsMod {
 
     private static void addCrashCallbacks() {
         CrashReportManager.registerCrashContext(
-                () -> List.of("In Development: " + (developmentEnvironment ? "Yes" : "No")));
+                new CrashReportManager.ICrashContext() {
+                    @Override
+                    public String name() {
+                        return "In Development";
+                    }
+
+                    @Override
+                    public Object generate() {
+                        return developmentEnvironment ? "Yes" : "No";
+                    }
+                });
     }
 }
