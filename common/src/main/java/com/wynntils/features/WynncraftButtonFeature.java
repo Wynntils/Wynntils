@@ -22,7 +22,6 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
 
 @FeatureInfo(
         stability = Stability.INVARIABLE,
@@ -47,12 +46,11 @@ public class WynncraftButtonFeature extends Feature {
         private final ServerData serverData;
         private final ServerIcon serverIcon;
 
-        //TODO tooltip
+        // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
             super(x, y, 20, 20, new TranslatableComponent(""), WynncraftButton::onPress);
             this.serverData = serverData;
             this.backScreen = backScreen;
-
 
             this.serverIcon = new ServerIcon(serverData, true);
         }

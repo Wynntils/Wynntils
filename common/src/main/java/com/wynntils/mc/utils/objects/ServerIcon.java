@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.Validate;
@@ -47,7 +46,8 @@ public class ServerIcon {
         // ServerData#pinged here and
         // set it later
         if (allowStale
-                && Minecraft.getInstance().getTextureManager().getTexture(destination, null) != null) {
+                && Minecraft.getInstance().getTextureManager().getTexture(destination, null)
+                        != null) {
             serverIconLocation = destination;
             onDone();
             return;
