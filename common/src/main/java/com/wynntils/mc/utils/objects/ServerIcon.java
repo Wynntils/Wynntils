@@ -47,7 +47,7 @@ public class ServerIcon {
         // ServerData#pinged here and
         // set it later
         if (allowStale
-                && Minecraft.getInstance().getTextureManager().getTexture(destination) != null) {
+                && Minecraft.getInstance().getTextureManager().getTexture(destination, null) != null) {
             serverIconLocation = destination;
             onDone();
             return;
@@ -70,19 +70,6 @@ public class ServerIcon {
 
     public ServerIcon(ServerData server, boolean allowStale) {
         this(server, allowStale, null);
-    }
-
-    /**
-     * Binds the icon to the {@link net.minecraft.client.renderer.texture.TextureManager} if found,
-     * else unknown server texture
-     */
-    public synchronized void bind() {
-        Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation).bind();
-    }
-
-    /** Returns the {@link AbstractTexture} form of the icon */
-    public synchronized AbstractTexture getServerIcon() {
-        return Minecraft.getInstance().getTextureManager().getTexture(serverIconLocation);
     }
 
     /** Returns whether getting the icon has succeeded. */

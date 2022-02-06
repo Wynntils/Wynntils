@@ -4,6 +4,7 @@
  */
 package com.wynntils.features;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -46,10 +47,12 @@ public class WynncraftButtonFeature extends Feature {
         private final ServerData serverData;
         private final ServerIcon serverIcon;
 
+        //TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
             super(x, y, 20, 20, new TranslatableComponent(""), WynncraftButton::onPress);
             this.serverData = serverData;
             this.backScreen = backScreen;
+
 
             this.serverIcon = new ServerIcon(serverData, true);
         }
@@ -59,8 +62,7 @@ public class WynncraftButtonFeature extends Feature {
                 @NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
-            serverIcon.bind();
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
             // Insets the icon by 3
             blit(
