@@ -5,18 +5,20 @@ buildscript {
         }
 
         /*
-        This implements the forge eventbus transformers, through the 2 following ways
+        This implements transformers to apply net.minecraftforge.eventbus.EventSubclassTransformer
+        through the 2 following ways
 
         Architectury fabric transformer
-        - Transforms relevant classes at runtime
-        - Reason for dependencies implementation
-        - class EventBusTransform in repo
+        - Transforms relevant classes in dev environment at runtime
+        - Reason for the configuration runtimeOnly
+        - class EventBusTransform in dependency
 
         GradleTask applyEventBus
-        - Transforms relevant classes after shadowing jar
-        - Reason for buildscript classpath
+        - Transforms relevant classes after shadowing jar for use in final jar
+        - Reason for being in buildscript classpath
         - class Main in repo
          */
+
         dependencies {
             classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
         }
@@ -31,10 +33,7 @@ import com.wynntils.eventbustransformer.EventBusTransform
 
 architectury {
     platformSetupLoomIde()
-    fabric()
-            {
-                it.add(EventBusTransform.class)
-            }
+    fabric() { it.add(EventBusTransform.class) }
 }
 
 configurations {
@@ -64,7 +63,8 @@ dependencies {
         exclude group: 'org.apache.logging.log4j'
         exclude group: 'cpw.mods', module: 'modlauncher'
     }
-    implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+    // The only transformer needs to be available for the dev env at runtime
+    runtimeOnly "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
 }
 
 processResources {
