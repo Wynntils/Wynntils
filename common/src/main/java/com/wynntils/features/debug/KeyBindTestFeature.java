@@ -7,8 +7,11 @@ package com.wynntils.features.debug;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.TextComponent;
 
 public class KeyBindTestFeature extends DebugFeature {
@@ -26,14 +29,11 @@ public class KeyBindTestFeature extends DebugFeature {
                                 "WynntilsTest",
                                 false,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent(
-                                                            Minecraft.getInstance()
-                                                                    .getSplashManager()
-                                                                    .getSplash()),
-                                                    null);
+                                    McUtils.sendMessageToClient(
+                                            new TextComponent(
+                                                    Minecraft.getInstance()
+                                                            .getSplashManager()
+                                                            .getSplash()));
                                 }));
         keybinds.add(
                 () ->
@@ -43,14 +43,18 @@ public class KeyBindTestFeature extends DebugFeature {
                                 "WynntilsTest",
                                 true,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent(
-                                                            Minecraft.getInstance()
-                                                                    .getSplashManager()
-                                                                    .getSplash()),
-                                                    null);
+                                    for (AbstractClientPlayer player :
+                                            McUtils.mc().level.players()) {
+                                        McUtils.sendMessageToClient(
+                                                new TextComponent(
+                                                        String.format(
+                                                                "\"%s\" has team \"%s\" with name"
+                                                                        + " \"%s\"",
+                                                                player.getScoreboardName(),
+                                                                player.getTeam().toString(),
+                                                                ComponentUtils.fromComponent(
+                                                                        player.getDisplayName()))));
+                                    }
                                 }));
     }
 }

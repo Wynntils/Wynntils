@@ -4,9 +4,11 @@
  */
 package com.wynntils.mc.utils;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -33,5 +35,9 @@ public class McUtils {
 
     public static Inventory inventory() {
         return Minecraft.getInstance().player.getInventory();
+    }
+
+    public static void sendMessageToClient(Component component) {
+        Minecraft.getInstance().player.sendMessage(component, Util.NIL_UUID);
     }
 }
