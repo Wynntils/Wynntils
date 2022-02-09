@@ -41,6 +41,7 @@ configurations {
     common
     // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     shadowCommon
+    implementation.extendsFrom shadowImplementation
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
@@ -58,7 +59,11 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    implementation "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
+    shadowImplementation("net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}") {
+        exclude group: 'org.ow2.asm'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'cpw.mods', module: 'modlauncher'
+    }
     implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
 }
 
@@ -81,7 +86,7 @@ jar {
 }
 
 shadowJar {
-    configurations = [project.configurations.shadowCommon]
+    configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
     classifier "dev-shadow"
 }
 
