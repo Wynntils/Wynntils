@@ -10,13 +10,11 @@ buildscript {
 
         Architectury fabric transformer
         - Transforms relevant classes in dev environment at runtime
-        - Reason for the configuration runtimeOnly
-        - class EventBusTransform in dependency
+        - class EventBusTransform in com.github.coehlrich:EventBusTransformer dependency
 
         GradleTask applyEventBus
         - Transforms relevant classes after shadowing jar for use in final jar
-        - Reason for being in buildscript classpath
-        - class Main in repo
+        - class Main in com.github.coehlrich:EventBusTransformer dependency
          */
 
         dependencies {
@@ -63,8 +61,10 @@ dependencies {
         exclude group: 'org.apache.logging.log4j'
         exclude group: 'cpw.mods', module: 'modlauncher'
     }
-    // The only transformer needs to be available for the dev env at runtime
-    runtimeOnly "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+
+    // EventBusTransform needs to only be available for the dev env at runtime and
+    // does not need to be shadowed
+    runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.1"
 }
 
 processResources {
