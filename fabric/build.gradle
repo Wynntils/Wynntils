@@ -20,7 +20,7 @@ buildscript {
          */
 
         dependencies {
-            classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+            classpath "com.github.coehlrich:EventBusTransformer:1.0.1"
         }
     }
 }
