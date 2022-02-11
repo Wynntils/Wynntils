@@ -14,26 +14,26 @@ import net.minecraftforge.eventbus.api.Event;
 public class LivingEntityRenderTranslucentCheckEvent extends Event {
     private boolean translucent;
     private final LivingEntity entity;
-    private float translucense;
+    private float translucence;
 
     public LivingEntityRenderTranslucentCheckEvent(
-            boolean translucent, LivingEntity entity, float translucense) {
+            boolean translucent, LivingEntity entity, float translucence) {
         this.translucent = translucent;
         this.entity = entity;
-        this.translucense = translucense;
+        this.translucence = translucence;
     }
 
     public LivingEntity getEntity() {
         return entity;
     }
 
-    public float getTranslucense() {
-        return translucense;
+    public float getTranslucence() {
+        return translucence;
     }
 
-    public void setTranslucense(float translucense) {
-        this.translucense = translucense;
-        this.translucent = translucense == 1f;
+    public void setTranslucence(float translucence) {
+        this.translucence = translucence;
+        this.translucent = translucence == 1f;
     }
 
     public boolean isTranslucent() {

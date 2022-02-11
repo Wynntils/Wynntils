@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityRendererMixin {
     // Can't find an impl without saving args
     LivingEntity capturedEntity;
-    float overrideTranslucense;
+    float overrideTranslucence;
 
     @Inject(
             method =
@@ -40,20 +40,14 @@ public class LivingEntityRendererMixin {
     @ModifyVariable(
             method =
                     "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            slice =
-                    @Slice(
-                            from =
-                                    @At(
-                                            value = "INVOKE",
-                                            target =
-                                                    "Lnet/minecraft/world/entity/LivingEntity;isInvisibleTo(Lnet/minecraft/world/entity/player/Player;)Z")),
             at = @At("STORE"),
-            ordinal = 0)
-    public boolean onTranslucentCheck(boolean bl2) throws Exception {
+            ordinal = 1)
+    public boolean onTranslucentCheck(boolean bl2) {
         LivingEntityRenderTranslucentCheckEvent event =
                 new LivingEntityRenderTranslucentCheckEvent(bl2, capturedEntity, bl2 ? 0.15f : 1f);
         WynntilsMod.getEventBus().post(event);
-        overrideTranslucense = event.getTranslucense();
+
+        overrideTranslucence = event.getTranslucence();
         return event.isTranslucent();
     }
 
@@ -76,6 +70,6 @@ public class LivingEntityRendererMixin {
             float b,
             float a) {
         instance.renderToBuffer(
-                poseStack, consumer, packedLight, packetOverlay, r, g, b, overrideTranslucense);
+                poseStack, consumer, packedLight, packetOverlay, r, g, b, overrideTranslucence);
     }
 }

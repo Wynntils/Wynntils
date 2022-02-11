@@ -10,9 +10,11 @@ import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.scores.Team;
 
 public class KeyBindTestFeature extends DebugFeature {
     @Override
@@ -38,7 +40,7 @@ public class KeyBindTestFeature extends DebugFeature {
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                "Get Info",
+                                "Get Player Info",
                                 InputConstants.UNKNOWN.getValue(),
                                 "WynntilsTest",
                                 true,
@@ -51,7 +53,10 @@ public class KeyBindTestFeature extends DebugFeature {
                                                                 "\"%s\" has team \"%s\" with name"
                                                                         + " \"%s\"",
                                                                 player.getScoreboardName(),
-                                                                player.getTeam().getName(),
+                                                                Optional.ofNullable(
+                                                                                player.getTeam())
+                                                                        .map(Team::getName)
+                                                                        .orElse("n/a"),
                                                                 ComponentUtils.fromComponent(
                                                                         player.getDisplayName()))));
                                     }

@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.ItemMatchers;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ public class HealthPotionBlockerFeature extends Feature {
 
         ItemStack stack = McUtils.inventory().getSelected();
 
-        if (!ItemMatchers.isHealingPotion(stack)) return;
+        if (!WynnItemMatchers.isHealingPotion(stack)) return;
 
         // Could it be better to parse it from the health bar or health
         // TODO find out which one is better

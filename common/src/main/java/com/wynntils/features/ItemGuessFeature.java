@@ -17,7 +17,7 @@ import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.objects.ItemTier;
 import com.wynntils.wc.objects.ItemType;
-import com.wynntils.wc.utils.ItemMatchers;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class ItemGuessFeature extends Feature {
         ItemStack stack = hoveredSlot.getItem();
 
         if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
-        if (!ItemMatchers.isUnidentified(stack)) return;
+        if (!WynnItemMatchers.isUnidentified(stack)) return;
 
         ItemUtils.addMarker(stack, "itemGuesses");
 
