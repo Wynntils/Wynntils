@@ -18,7 +18,7 @@ buildscript {
         - class Main in repo
          */
         dependencies {
-            classpath "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+            classpath "com.github.coehlrich:EventBusTransformer:1.0.1"
         }
     }
 }
@@ -64,7 +64,7 @@ dependencies {
         exclude group: 'org.apache.logging.log4j'
         exclude group: 'cpw.mods', module: 'modlauncher'
     }
-    implementation "com.github.coehlrich:EventBusTransformer:main-SNAPSHOT"
+    implementation "com.github.coehlrich:EventBusTransformer:1.0.1"
 }
 
 processResources {
