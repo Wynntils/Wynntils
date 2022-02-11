@@ -31,8 +31,8 @@ public class PlayerGhostTransparencyFeature extends Feature {
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e)
             throws ExecutionException {
-        if (e.getEntity() instanceof RemotePlayer remotePlayer) {
-            if (isGhost.get(remotePlayer)) {}
-        }
+        // if (e.getEntity() instanceof RemotePlayer remotePlayer) {
+        //     //if (isGhost.get(remotePlayer)) {}
+        // }
     }
 }

@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin {
-
     // Can't find an impl without saving args
     LivingEntity capturedEntity;
     float overrideTranslucense;
@@ -49,12 +48,10 @@ public class LivingEntityRendererMixin {
                                             target =
                                                     "Lnet/minecraft/world/entity/LivingEntity;isInvisibleTo(Lnet/minecraft/world/entity/player/Player;)Z")),
             at = @At("STORE"),
-            ordinal = 0,
-            index = 16,
-            name = "bl2")
-    public boolean onTranslucentCheck(boolean bl2) {
+            ordinal = 0)
+    public boolean onTranslucentCheck(boolean bl2) throws Exception {
         LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(bl2, capturedEntity, bl2 ? 0.15f : 1);
+                new LivingEntityRenderTranslucentCheckEvent(bl2, capturedEntity, bl2 ? 0.15f : 1f);
         WynntilsMod.getEventBus().post(event);
         overrideTranslucense = event.getTranslucense();
         return event.isTranslucent();

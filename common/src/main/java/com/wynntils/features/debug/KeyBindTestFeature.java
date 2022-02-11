@@ -38,7 +38,7 @@ public class KeyBindTestFeature extends DebugFeature {
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                "Add Sticky Splash Text",
+                                "Get Info",
                                 InputConstants.UNKNOWN.getValue(),
                                 "WynntilsTest",
                                 true,
@@ -51,7 +51,7 @@ public class KeyBindTestFeature extends DebugFeature {
                                                                 "\"%s\" has team \"%s\" with name"
                                                                         + " \"%s\"",
                                                                 player.getScoreboardName(),
-                                                                player.getTeam().toString(),
+                                                                player.getTeam().getName(),
                                                                 ComponentUtils.fromComponent(
                                                                         player.getDisplayName()))));
                                     }

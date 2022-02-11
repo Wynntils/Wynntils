@@ -39,9 +39,4 @@ public class LivingEntityRenderTranslucentCheckEvent extends Event {
     public boolean isTranslucent() {
         return translucent;
     }
-
-    @Override
-    public boolean isCancelable() {
-        return true;
-    }
 }
