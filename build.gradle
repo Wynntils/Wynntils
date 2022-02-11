@@ -97,6 +97,6 @@ class Version {
 
     //If someone can find a way to access the mcVersion without using it as a param please do
     String toString(Object minecraft_version) {
-        "${major}.${minor}.${patch}+${build}.MC${minecraft_version}"
+        "${major}.${minor}.${patch}+${this.build}.MC${minecraft_version}"
     }
 }
