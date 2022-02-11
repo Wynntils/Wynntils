@@ -19,8 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CrashReportMixin {
     @Shadow @Final private List<CrashReportCategory> details;
 
-    @Inject(at = @At("HEAD"), method = "getDetails(Ljava/lang/StringBuilder;)V")
-    private void addWynntilsDetails(CallbackInfo info) {
+    @Inject(
+            at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"),
+            method = "getDetails(Ljava/lang/StringBuilder;)V")
+    private void addWynntilsDetails(StringBuilder builder, CallbackInfo ci) {
         details.add(CrashReportManager.generateDetails());
     }
 }

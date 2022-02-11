@@ -26,7 +26,7 @@ public abstract class MinecraftMixin {
         WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.START));
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At("RETURN"))
     public void onTickPost(CallbackInfo ci) {
         WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }

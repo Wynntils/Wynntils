@@ -7,9 +7,14 @@ package com.wynntils.features.debug;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.scores.Team;
 
 public class KeyBindTestFeature extends DebugFeature {
     @Override
@@ -26,31 +31,35 @@ public class KeyBindTestFeature extends DebugFeature {
                                 "WynntilsTest",
                                 false,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent(
-                                                            Minecraft.getInstance()
-                                                                    .getSplashManager()
-                                                                    .getSplash()),
-                                                    null);
+                                    McUtils.sendMessageToClient(
+                                            new TextComponent(
+                                                    Minecraft.getInstance()
+                                                            .getSplashManager()
+                                                            .getSplash()));
                                 }));
         keybinds.add(
                 () ->
                         new KeyHolder(
-                                "Add Sticky Splash Text",
+                                "Get Player Info",
                                 InputConstants.UNKNOWN.getValue(),
                                 "WynntilsTest",
                                 true,
                                 () -> {
-                                    Minecraft.getInstance()
-                                            .player
-                                            .sendMessage(
-                                                    new TextComponent(
-                                                            Minecraft.getInstance()
-                                                                    .getSplashManager()
-                                                                    .getSplash()),
-                                                    null);
+                                    for (AbstractClientPlayer player :
+                                            McUtils.mc().level.players()) {
+                                        McUtils.sendMessageToClient(
+                                                new TextComponent(
+                                                        String.format(
+                                                                "\"%s\" has team \"%s\" with name"
+                                                                        + " \"%s\"",
+                                                                player.getScoreboardName(),
+                                                                Optional.ofNullable(
+                                                                                player.getTeam())
+                                                                        .map(Team::getName)
+                                                                        .orElse("n/a"),
+                                                                ComponentUtils.fromComponent(
+                                                                        player.getDisplayName()))));
+                                    }
                                 }));
     }
 }

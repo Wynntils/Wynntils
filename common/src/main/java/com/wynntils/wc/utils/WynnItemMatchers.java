@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
-public class ItemMatchers {
+public class WynnItemMatchers {
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
                 && (stack.getItem() == Items.NETHER_STAR || stack.getItem() == Items.SNOW)

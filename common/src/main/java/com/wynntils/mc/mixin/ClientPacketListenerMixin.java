@@ -10,7 +10,6 @@ import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -87,18 +86,6 @@ public abstract class ClientPacketListenerMixin {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
                 && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "handleAddPlayer(Lnet/minecraft/network/protocol/game/ClientboundAddPlayerPacket;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void handleAddPlayerPre(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
-        // Work around bug in Wynncraft that causes NPEs in Vanilla
-        if (getPlayerInfo(packet.getPlayerId()) == null) {
             ci.cancel();
         }
     }

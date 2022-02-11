@@ -24,7 +24,7 @@ public class KeyManager {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent e) {
+    public static void onTick(ClientTickEvent e) {
         if (e.getTickPhase() == ClientTickEvent.Phase.END) {
             triggerKeybinds();
         }

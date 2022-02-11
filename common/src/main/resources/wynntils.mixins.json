@@ -11,6 +11,7 @@
     "ConnectScreenMixin",
     "CrashReportMixin",
     "KeyMappingMixin",
+    "LivingEntityRendererMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "OptionsMixin",

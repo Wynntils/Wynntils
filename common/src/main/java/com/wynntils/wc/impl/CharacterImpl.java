@@ -109,7 +109,7 @@ public class CharacterImpl implements Character {
                 MutableComponent component = Component.Serializer.fromJson(s);
                 if (component == null) continue;
                 String loreStr = ComponentUtils.fromComponent(component);
-                System.out.println("Lore: " + loreStr);
+                // System.out.println("Lore: " + loreStr);
             }
 
             return new CharacterInfoImpl(null, false, 0, UUID.randomUUID());

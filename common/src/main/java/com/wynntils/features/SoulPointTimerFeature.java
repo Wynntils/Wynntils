@@ -12,8 +12,8 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.objects.DynamicTag;
-import com.wynntils.wc.utils.InventoryData;
-import com.wynntils.wc.utils.ItemMatchers;
+import com.wynntils.wc.utils.WynnInventoryData;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
@@ -37,7 +37,7 @@ public class SoulPointTimerFeature extends Feature {
         ItemStack stack = hoveredSlot.getItem();
 
         if (ItemUtils.hasMarker(stack, "soulpoints")) return;
-        if (!ItemMatchers.isSoulPoint(stack)) return;
+        if (!WynnItemMatchers.isSoulPoint(stack)) return;
 
         ListTag lore = ItemUtils.getLoreTag(stack);
 
@@ -51,7 +51,7 @@ public class SoulPointTimerFeature extends Feature {
                 new DynamicTag(
                         () -> {
                             int rawSecondsUntilSoulPoint =
-                                    InventoryData.getTicksTillNextSoulPoint() / 20;
+                                    WynnInventoryData.getTicksTillNextSoulPoint() / 20;
                             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
                             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
