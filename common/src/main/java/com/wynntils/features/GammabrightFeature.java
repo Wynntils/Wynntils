@@ -4,7 +4,6 @@
  */
 package com.wynntils.features;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -12,6 +11,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
+import com.wynntils.mc.utils.keybinds.KeyManager;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(
@@ -21,27 +21,30 @@ import org.lwjgl.glfw.GLFW;
 public class GammabrightFeature extends Feature {
     private double lastGamma = 1f;
 
-    @Override
-    public void init(
-            ImmutableList.Builder<WebProviderSupplier> apis,
-            ImmutableList.Builder<KeySupplier> keybinds,
-            ImmutableList.Builder<Condition> conditions) {
-        keybinds.add(
-                () ->
-                        new KeyHolder(
-                                "Gammabright",
-                                GLFW.GLFW_KEY_G,
-                                "Wynntils",
-                                true,
-                                () -> {
-                                    double currentGamma = McUtils.mc().options.gamma;
-                                    if (currentGamma < 1000) {
-                                        lastGamma = currentGamma;
-                                        McUtils.mc().options.gamma = 1000d;
-                                        return;
-                                    }
+    private final KeyHolder gammabrightKeybind =
+            new KeyHolder(
+                    "Gammabright",
+                    GLFW.GLFW_KEY_G,
+                    "Wynntils",
+                    true,
+                    () -> {
+                        double currentGamma = McUtils.mc().options.gamma;
+                        if (currentGamma < 1000) {
+                            lastGamma = currentGamma;
+                            McUtils.mc().options.gamma = 1000d;
+                            return;
+                        }
 
-                                    McUtils.mc().options.gamma = lastGamma;
-                                }));
+                        McUtils.mc().options.gamma = lastGamma;
+                    });
+
+    @Override
+    protected void onEnable() {
+        KeyManager.registerKeybind(gammabrightKeybind);
+    }
+
+    @Override
+    protected void onDisable() {
+        KeyManager.unregisterKeybind(gammabrightKeybind);
     }
 }

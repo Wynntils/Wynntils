@@ -37,11 +37,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ItemGuessFeature extends Feature {
 
     @Override
-    public void init(
-            ImmutableList.Builder<WebProviderSupplier> apis,
-            ImmutableList.Builder<KeySupplier> keybinds,
-            ImmutableList.Builder<Condition> conditions) {
-        apis.add(WebManager::getItemGuessesProvider);
+    public void init(ImmutableList.Builder<Condition> conditions) {
+        conditions.add(new WebCondition(WebManager::isItemGuessesLoaded));
     }
 
     @SubscribeEvent
@@ -84,7 +81,7 @@ public class ItemGuessFeature extends Feature {
 
         if (levelRange == null) return;
 
-        ItemGuessProfile igp = WebManager.getItemGuessesProvider().getValue().get(levelRange);
+        ItemGuessProfile igp = WebManager.getItemGuesses().get(levelRange);
         if (igp == null) return;
 
         Map<ItemTier, List<String>> rarityMap;

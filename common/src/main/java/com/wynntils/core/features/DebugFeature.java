@@ -18,10 +18,7 @@ import com.wynntils.core.features.properties.Stability;
         performance = PerformanceImpact.MEDIUM)
 public abstract class DebugFeature extends Feature {
     @Override
-    protected void init(
-            ImmutableList.Builder<WebProviderSupplier> apis,
-            ImmutableList.Builder<KeySupplier> keybinds,
-            ImmutableList.Builder<Condition> conditions) {
+    protected void init(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
     }
 

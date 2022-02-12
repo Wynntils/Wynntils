@@ -9,13 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.EventFactory;
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.HashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,45 +26,37 @@ public class WebManager {
 
     public static @Nullable WebReader apiUrls = null;
 
-    private static final SingleStaticProvider<HashMap<String, ItemGuessProfile>>
-            itemGuessesProvider;
+    private static final HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
 
     public static void init() {
         tryReloadApiUrls(false);
     }
 
-    static {
-        itemGuessesProvider =
-                new SingleStaticProvider<>() {
-                    @Override
-                    protected Request getRequest() {
-                        return new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
-                                .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
-                                .handleJsonObject(
-                                        json -> {
-                                            Type type =
-                                                    new TypeToken<
-                                                            HashMap<
-                                                                    String,
-                                                                    ItemGuessProfile>>() {}.getType();
+    private static void loadItemGuesses() {
+        handler.addRequest(
+                new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+                        .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
+                        .handleJsonObject(
+                                json -> {
+                                    Type type =
+                                            new TypeToken<
+                                                    HashMap<
+                                                            String,
+                                                            ItemGuessProfile>>() {}.getType();
 
-                                            GsonBuilder gsonBuilder = new GsonBuilder();
-                                            gsonBuilder.registerTypeHierarchyAdapter(
-                                                    HashMap.class,
-                                                    new ItemGuessProfile.ItemGuessDeserializer());
-                                            Gson gson = gsonBuilder.create();
+                                    GsonBuilder gsonBuilder = new GsonBuilder();
+                                    gsonBuilder.registerTypeHierarchyAdapter(
+                                            HashMap.class,
+                                            new ItemGuessProfile.ItemGuessDeserializer());
+                                    Gson gson = gsonBuilder.create();
 
-                                            value = gson.fromJson(json, type);
-                                            return true;
-                                        })
-                                .useCacheAsBackup()
-                                .onError(
-                                        () -> {
-                                            value = new HashMap<>();
-                                        })
-                                .build();
-                    }
-                };
+                                    itemGuesses.putAll(gson.fromJson(json, type));
+
+                                    markFlag(0);
+                                    return true;
+                                })
+                        .useCacheAsBackup()
+                        .build());
     }
 
     private static void tryReloadApiUrls(boolean async) {
@@ -79,6 +69,7 @@ public class WebManager {
                                         apiUrls = reader;
                                         if (!setup) {
                                             setup = true;
+                                            load();
                                             EventFactory.onWebSetup();
                                         }
                                         return true;
@@ -89,47 +80,31 @@ public class WebManager {
         }
     }
 
-    public static void loadMarked(boolean async) {
-        boolean toLoad = false;
+    public static void load() {
+        loadItemGuesses();
 
-        for (StaticProvider provider : Arrays.asList(itemGuessesProvider)) {
-            if (provider.shouldLoad == LoadingPhase.TO_LOAD) {
-                handler.addRequest(provider.getRequest());
-                provider.shouldLoad = LoadingPhase.LOADED;
-                toLoad = true;
-            }
-        }
-
-        if (toLoad) handler.dispatch(async);
+        handler.dispatch(false);
     }
 
-    public static SingleStaticProvider<HashMap<String, ItemGuessProfile>> getItemGuessesProvider() {
-        return itemGuessesProvider;
+    public static boolean isItemGuessesLoaded() {
+        return hasFlag(0);
     }
 
-    public abstract static class StaticProvider {
-        protected LoadingPhase shouldLoad = LoadingPhase.UNLOADED;
-
-        public void markToLoad() {
-            if (shouldLoad == LoadingPhase.UNLOADED) shouldLoad = LoadingPhase.TO_LOAD;
-        }
-
-        protected abstract Request getRequest();
-    }
-
-    public abstract static class SingleStaticProvider<T> extends StaticProvider {
-        protected T value;
-
-        public void markToLoad() {
-            if (shouldLoad == LoadingPhase.UNLOADED) shouldLoad = LoadingPhase.TO_LOAD;
-        }
-
-        public T getValue() {
-            return value;
-        }
+    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
+        return itemGuesses;
     }
 
     public static boolean isSetup() {
         return setup;
+    }
+
+    private static long flag = 0L;
+
+    private static boolean hasFlag(int i) {
+        return (flag & (1L << i)) == 1;
+    }
+
+    private static void markFlag(int i) {
+        flag |= (1L << i);
     }
 }
