@@ -9,10 +9,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
-import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,17 +25,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
     @SubscribeEvent
-    public void onPotionUse(PacketEvent<ServerboundUseItemPacket> e) {
+    public void onPotionUse(PacketSentEvent<ServerboundUseItemPacket> e) {
         if (!WynnUtils.onWorld()) return;
 
         ItemStack stack = McUtils.inventory().getSelected();
 
+        // TODO check for crafting potion
         if (!WynnItemMatchers.isHealingPotion(stack)) return;
 
-        // Could it be better to parse it from the health bar or health
-        // TODO find out which one is better
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);
+            McUtils.sendMessageToClient(
+                    new TextComponent(ChatFormatting.DARK_RED + "You are already at full health!"));
         }
     }
 }

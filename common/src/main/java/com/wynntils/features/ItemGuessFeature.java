@@ -14,6 +14,7 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.objects.ItemTier;
 import com.wynntils.wc.objects.ItemType;
@@ -53,9 +54,10 @@ public class ItemGuessFeature extends Feature {
         ItemStack stack = hoveredSlot.getItem();
 
         if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
-        if (!WynnItemMatchers.isUnidentified(stack)) return;
 
         ItemUtils.addMarker(stack, "itemGuesses");
+
+        if (!WynnItemMatchers.isUnidentified(stack)) return;
 
         generateGuesses(stack);
     }
@@ -63,8 +65,8 @@ public class ItemGuessFeature extends Feature {
     private static void generateGuesses(ItemStack stack) {
         String name =
                 WynnUtils.normalizeBadString(
-                        ChatFormatting.stripFormatting(stack.getDisplayName().getString()));
-        String itemType = name.split(" ", 3)[1];
+                        ChatFormatting.stripFormatting(stack.getHoverName().getString()));
+        String itemType = name.split(" ", 2)[1];
         if (itemType == null) return;
 
         ListTag lore = ItemUtils.getLoreTagElseEmpty(stack);
@@ -72,10 +74,10 @@ public class ItemGuessFeature extends Feature {
 
         String levelRange = null;
 
-        for (Tag lineTag : lore) {
-            String line = lineTag.getAsString();
-            if (line.contains("Lv. Range")) {
-                levelRange = ChatFormatting.stripFormatting(line).replace("- Lv. Range: ", "");
+        for (Tag tag : lore) {
+            String line = ComponentUtils.getUnformatted(tag.getAsString());
+            if (line != null && line.contains("Lv. Range")) {
+                levelRange = line.replace("- Lv. Range: ", "");
                 break;
             }
         }
@@ -94,7 +96,7 @@ public class ItemGuessFeature extends Feature {
         }
         if (rarityMap == null) return;
 
-        ItemTier tier = ItemTier.fromComponent(stack.getDisplayName());
+        ItemTier tier = ItemTier.fromComponent(stack.getHoverName());
         if (tier == null) return;
 
         List<String> items = rarityMap.get(tier);

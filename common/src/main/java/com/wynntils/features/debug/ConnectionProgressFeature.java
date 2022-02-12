@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.debug;
 
+import com.wynntils.core.Reference;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
@@ -13,15 +14,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ConnectionProgressFeature extends DebugFeature {
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
-        System.out.println("Connection confirmed");
+        Reference.LOGGER.info("Connection confirmed");
     }
 
     @SubscribeEvent
     public void onStateChange(WorldStateEvent e) {
         if (e.getNewState() == State.WORLD) {
-            System.out.println("Entering world " + e.getWorldName());
+            Reference.LOGGER.info("Entering world " + e.getWorldName());
         } else if (e.getOldState() == State.WORLD) {
-            System.out.println("Leaving world");
+            Reference.LOGGER.info("Leaving world");
         }
         String msg =
                 switch (e.getNewState()) {
@@ -33,7 +34,7 @@ public class ConnectionProgressFeature extends DebugFeature {
                 };
 
         if (msg != null) {
-            System.out.println("WorldState change: " + msg);
+            Reference.LOGGER.info("WorldState change: " + msg);
         }
     }
 }

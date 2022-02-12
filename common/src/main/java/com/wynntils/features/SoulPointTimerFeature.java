@@ -36,7 +36,10 @@ public class SoulPointTimerFeature extends Feature {
 
         ItemStack stack = hoveredSlot.getItem();
 
-        if (ItemUtils.hasMarker(stack, "soulpoints")) return;
+        if (ItemUtils.hasMarker(stack, "soulpoint")) return;
+
+        ItemUtils.addMarker(stack, "soulpoint");
+
         if (!WynnItemMatchers.isSoulPoint(stack)) return;
 
         ListTag lore = ItemUtils.getLoreTag(stack);
@@ -64,7 +67,6 @@ public class SoulPointTimerFeature extends Feature {
                                             + String.format("%02d", secondsUntilSoulPoint));
                         }));
 
-        ItemUtils.addMarker(stack, "soulpoint");
         ItemUtils.replaceLore(stack, lore);
     }
 }

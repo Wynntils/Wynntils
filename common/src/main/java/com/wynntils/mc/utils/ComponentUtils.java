@@ -8,15 +8,17 @@ import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
     public static String getUnformatted(Component msg) {
         return msg.getString();
     }
 
-    public static String fromComponent(Component component) {
+    public static String getFormatted(Component component) {
         StringBuilder result = new StringBuilder();
         Style oldStyle = Style.EMPTY;
 
@@ -44,11 +46,29 @@ public class ComponentUtils {
                     if (style.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
                     if (style.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
 
+                    result.append(string);
+
                     return Optional.empty(); // dont break
                 },
                 Style.EMPTY);
 
         return result.toString();
+    }
+
+    @Nullable
+    public static String getFormatted(String loreString) {
+        MutableComponent component = Component.Serializer.fromJson(loreString);
+        if (component == null) return null;
+
+        return ComponentUtils.getFormatted(component);
+    }
+
+    @Nullable
+    public static String getUnformatted(String loreString) {
+        MutableComponent component = Component.Serializer.fromJson(loreString);
+        if (component == null) return null;
+
+        return component.getString();
     }
 
     private static StringBuilder getToAdd(Style oldStyle, Style newStyle) {
