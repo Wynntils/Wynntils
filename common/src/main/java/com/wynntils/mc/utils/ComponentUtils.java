@@ -14,10 +14,6 @@ import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
-    public static String getUnformatted(Component msg) {
-        return msg.getString();
-    }
-
     public static String getFormatted(Component component) {
         StringBuilder result = new StringBuilder();
         Style oldStyle = Style.EMPTY;
@@ -53,6 +49,10 @@ public class ComponentUtils {
                 Style.EMPTY);
 
         return result.toString();
+    }
+
+    public static String getUnformatted(Component msg) {
+        return msg.getString();
     }
 
     @Nullable
