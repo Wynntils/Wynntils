@@ -17,7 +17,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
     /**
-     * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link ComponentUtils}
+     * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
+     * ComponentUtils}
      *
      * @return an {@link List} containing all item lore
      */
