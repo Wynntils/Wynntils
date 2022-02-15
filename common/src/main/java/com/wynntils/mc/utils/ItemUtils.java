@@ -17,7 +17,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
     /**
-     * Get the lore from an item
+     * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
+     * ComponentUtils}
      *
      * @return an {@link List} containing all item lore
      */
@@ -28,7 +29,7 @@ public class ItemUtils {
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(loreTag.getString(i));
+            lore.add(ComponentUtils.getFormatted(loreTag.getString(i)));
         }
 
         return lore;

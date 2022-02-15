@@ -4,12 +4,9 @@
  */
 package com.wynntils.wc.objects;
 
-import com.wynntils.mc.utils.ComponentUtils;
 import java.util.Arrays;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
 
 public enum ItemTier {
     Normal(ChatFormatting.WHITE),
@@ -17,7 +14,7 @@ public enum ItemTier {
     Rare(ChatFormatting.LIGHT_PURPLE),
     Set(ChatFormatting.GREEN),
     Fabled(ChatFormatting.RED),
-    Legendary(ChatFormatting.BLUE),
+    Legendary(ChatFormatting.AQUA),
     Mythic(ChatFormatting.DARK_PURPLE),
     Crafted(ChatFormatting.DARK_AQUA);
 
@@ -32,10 +29,13 @@ public enum ItemTier {
     }
 
     public static ItemTier fromComponent(Component component) {
-        TextColor color = component.getStyle().getColor();
-        if (color == null) return null;
-        Optional<ChatFormatting> formatting = ComponentUtils.getChatFormatting(color);
-        return formatting.map(ItemTier::fromChatFormatting).orElse(null);
+        String name = component.getString();
+
+        if (name.charAt(0) == '§') {
+            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
+        }
+
+        return null;
     }
 
     public static ItemTier fromChatFormatting(ChatFormatting formatting) {

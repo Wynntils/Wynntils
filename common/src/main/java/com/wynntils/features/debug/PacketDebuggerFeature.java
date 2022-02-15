@@ -6,6 +6,7 @@ package com.wynntils.features.debug;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import com.wynntils.core.Reference;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
@@ -64,7 +65,7 @@ public class PacketDebuggerFeature extends DebugFeature {
 
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        System.out.println("SENT packet: " + describePacket(packet));
+        Reference.LOGGER.info("SENT packet: " + describePacket(packet));
     }
 
     @SubscribeEvent
@@ -75,6 +76,6 @@ public class PacketDebuggerFeature extends DebugFeature {
 
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        System.out.println("RECV packet: " + describePacket(packet));
+        Reference.LOGGER.info("RECV packet: " + describePacket(packet));
     }
 }

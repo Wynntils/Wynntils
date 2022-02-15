@@ -57,7 +57,7 @@ public class KeyBindTestFeature extends DebugFeature {
                                                                                 player.getTeam())
                                                                         .map(Team::getName)
                                                                         .orElse("n/a"),
-                                                                ComponentUtils.fromComponent(
+                                                                ComponentUtils.getFormatted(
                                                                         player.getDisplayName()))));
                                     }
                                 }));

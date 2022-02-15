@@ -60,7 +60,7 @@ public class DynamicTag implements Tag {
     }
 
     public String toString() {
-        return Tag.super.getAsString();
+        return this.data.get();
     }
 
     public StringTag copy() {

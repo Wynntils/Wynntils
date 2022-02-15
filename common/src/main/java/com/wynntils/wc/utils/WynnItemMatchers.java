@@ -17,12 +17,14 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHealingPotion(ItemStack stack) {
+        System.out.println(stack.getHoverName());
+
         return !stack.isEmpty()
                 && stack.getItem() == Items.POTION
-                && (!stack.getDisplayName()
+                && (stack.getHoverName()
                                 .getString()
                                 .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                        && !stack.getDisplayName()
+                        || stack.getHoverName()
                                 .getString()
                                 .contains(ChatFormatting.RED + "Potion of Healing"));
     }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.impl;
 
+import com.wynntils.core.Reference;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
@@ -14,8 +15,6 @@ import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,7 +38,7 @@ public class CharacterImpl implements Character {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
-            System.out.println("In character selection menu");
+            Reference.LOGGER.info("In character selection menu");
         }
     }
 
@@ -57,7 +56,7 @@ public class CharacterImpl implements Character {
             inCharacterSelection = false;
         }
         if (e.getNewState() == State.CHARACTER_SELECTION) {
-            System.out.println("Preparing for character selection");
+            Reference.LOGGER.info("Preparing for character selection");
         }
     }
 
@@ -65,7 +64,7 @@ public class CharacterImpl implements Character {
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             currentCharacter = CharacterInfoImpl.parseCharacter(e.getItemStack());
-            System.out.println("Selected character " + currentCharacter);
+            Reference.LOGGER.info("Selected character " + currentCharacter);
         }
     }
 
@@ -105,11 +104,7 @@ public class CharacterImpl implements Character {
         public static CharacterInfo parseCharacter(ItemStack itemStack) {
             List<String> lore = ItemUtils.getLore(itemStack);
             for (String s : lore) {
-
-                MutableComponent component = Component.Serializer.fromJson(s);
-                if (component == null) continue;
-                String loreStr = ComponentUtils.fromComponent(component);
-                // System.out.println("Lore: " + loreStr);
+                // Reference.LOGGER.info("Lore: " + s);
             }
 
             return new CharacterInfoImpl(null, false, 0, UUID.randomUUID());

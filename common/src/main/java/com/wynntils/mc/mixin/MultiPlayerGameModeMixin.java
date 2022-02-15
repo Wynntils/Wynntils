@@ -25,7 +25,14 @@ public abstract class MultiPlayerGameModeMixin {
             ClickType clickType,
             Player player,
             CallbackInfo ci) {
-        ItemStack itemStack = player.containerMenu.getSlot(slotId).getItem();
+
+        ItemStack itemStack;
+        if (slotId >= 0) {
+            itemStack = player.containerMenu.getSlot(slotId).getItem();
+        } else {
+            itemStack = ItemStack.EMPTY;
+        }
+
         WynntilsMod.getEventBus()
                 .post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId));
     }

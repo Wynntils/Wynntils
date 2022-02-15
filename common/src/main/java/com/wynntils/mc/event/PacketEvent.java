@@ -29,11 +29,21 @@ public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
         public PacketSentEvent(T packet) {
             super(packet);
         }
+
+        @Override
+        public boolean isCancelable() {
+            return true;
+        }
     }
 
     public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> {
         public PacketReceivedEvent(T packet) {
             super(packet);
+        }
+
+        @Override
+        public boolean isCancelable() {
+            return true;
         }
     }
 }
