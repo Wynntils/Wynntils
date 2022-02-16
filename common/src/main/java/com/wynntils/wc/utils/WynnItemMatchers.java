@@ -24,18 +24,13 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHealingPotion(ItemStack stack) {
-        return isConsumable(stack)
-                && (stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                        || stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.RED + "Potion of Healing")
-                        || isCraftedHealingPotion(stack));
-    }
-
-    public static boolean isCraftedHealingPotion(ItemStack stack) {
         if (!isConsumable(stack)) return false;
+        if (stack.getHoverName()
+                        .getString()
+                        .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
+                || stack.getHoverName()
+                        .getString()
+                        .contains(ChatFormatting.RED + "Potion of Healing")) return true;
 
         boolean isCraftedPotion = false;
         boolean hasHealEffect = false;
@@ -52,7 +47,7 @@ public class WynnItemMatchers {
             }
         }
 
-        return hasHealEffect && isCraftedPotion;
+        return isCraftedPotion && hasHealEffect;
     }
 
     public static boolean isConsumable(ItemStack stack) {
