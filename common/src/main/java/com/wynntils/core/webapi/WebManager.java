@@ -11,7 +11,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
-import com.wynntils.mc.EventFactory;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -43,8 +42,7 @@ public class WebManager {
                                                 new TypeToken<
                                                         HashMap<
                                                                 String,
-                                                                ItemGuessProfile>>() {
-                                                }.getType();
+                                                                ItemGuessProfile>>() {}.getType();
 
                                         GsonBuilder gsonBuilder = new GsonBuilder();
                                         gsonBuilder.registerTypeHierarchyAdapter(
@@ -62,7 +60,7 @@ public class WebManager {
 
             handler.dispatch(false);
 
-            //Check for success
+            // Check for success
             return isItemGuessesLoaded();
         }
 

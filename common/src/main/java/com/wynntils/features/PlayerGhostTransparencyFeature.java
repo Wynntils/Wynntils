@@ -13,9 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerGhostTransparencyFeature extends Feature {
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {
-
-    }
+    protected void init(ImmutableList.Builder<Condition> conditions) {}
 
     @Override
     protected boolean onEnable() {
@@ -23,9 +21,7 @@ public class PlayerGhostTransparencyFeature extends Feature {
     }
 
     @Override
-    protected void onDisable() {
-
-    }
+    protected void onDisable() {}
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {

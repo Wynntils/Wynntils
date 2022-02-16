@@ -47,9 +47,7 @@ public class ItemGuessFeature extends Feature {
     }
 
     @Override
-    protected void onDisable() {
-
-    }
+    protected void onDisable() {}
 
     @SubscribeEvent
     public void onInventoryRender(InventoryRenderEvent e) {

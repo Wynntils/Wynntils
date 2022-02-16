@@ -8,10 +8,6 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -39,27 +35,22 @@ public abstract class Feature {
         }
     }
 
-    /**
-     * Called on init of Feature
-     */
+    /** Called on init of Feature */
     protected abstract void init(ImmutableList.Builder<Condition> conditions);
 
     /**
      * Called on enabling of Feature
      *
-     * Return false to cancel enabling, return true to continue. Note that if a feature's enable is cancelled
-     * it isn't called again by the conditions and must be done so manually, likely by the user.
+     * <p>Return false to cancel enabling, return true to continue. Note that if a feature's enable
+     * is cancelled it isn't called again by the conditions and must be done so manually, likely by
+     * the user.
      */
     protected abstract boolean onEnable();
 
-    /**
-     * Called on disabling of Feature
-     */
+    /** Called on disabling of Feature */
     protected abstract void onDisable();
 
-    /**
-     * Called to activate a feature
-     */
+    /** Called to activate a feature */
     public final void enable() {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
