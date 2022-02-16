@@ -21,8 +21,6 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHealingPotion(ItemStack stack) {
-        System.out.println(stack.getHoverName());
-
         return !stack.isEmpty()
                 && stack.getItem() == Items.POTION
                 && (stack.getHoverName()
@@ -34,8 +32,6 @@ public class WynnItemMatchers {
     }
 
     public static boolean isCraftedHealingPotion(ItemStack stack) {
-        System.out.println(stack.getHoverName());
-
         if (stack.isEmpty() || stack.getItem() != Items.POTION) return false;
 
         boolean isCraftedPotion = false;
