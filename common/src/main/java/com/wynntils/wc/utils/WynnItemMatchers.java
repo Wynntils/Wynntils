@@ -12,8 +12,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
+    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
                 && (stack.getItem() == Items.NETHER_STAR || stack.getItem() == Items.SNOW)
@@ -21,8 +26,7 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHealingPotion(ItemStack stack) {
-        return !stack.isEmpty()
-                && stack.getItem() == Items.POTION
+        return isConsumable(stack)
                 && (stack.getHoverName()
                                 .getString()
                                 .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
@@ -32,7 +36,7 @@ public class WynnItemMatchers {
     }
 
     public static boolean isCraftedHealingPotion(ItemStack stack) {
-        if (stack.isEmpty() || stack.getItem() != Items.POTION) return false;
+        if (!isConsumable(stack)) return false;
 
         boolean isCraftedPotion = false;
         boolean hasHealEffect = false;
@@ -50,6 +54,12 @@ public class WynnItemMatchers {
         }
 
         return hasHealEffect && isCraftedPotion;
+    }
+
+    public static boolean isConsumable(ItemStack stack) {
+        if (stack.isEmpty() || (stack.getItem() != Items.POTION && stack.getItem() != Items.DIAMOND_AXE)) return false;
+
+        return CONSUMABLE_PATTERN.matcher(ComponentUtils.getUnformatted(stack.getHoverName())).matches();
     }
 
     public static boolean isUnidentified(ItemStack stack) {
