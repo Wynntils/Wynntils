@@ -25,14 +25,13 @@ public class WynnItemMatchers {
 
     public static boolean isHealingPotion(ItemStack stack) {
         return isConsumable(stack)
-                        && (stack.getHoverName()
-                                        .getString()
-                                        .contains(
-                                                ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                                || stack.getHoverName()
-                                        .getString()
-                                        .contains(ChatFormatting.RED + "Potion of Healing"))
-                || isCraftedHealingPotion(stack);
+                && (stack.getHoverName()
+                                .getString()
+                                .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
+                        || stack.getHoverName()
+                                .getString()
+                                .contains(ChatFormatting.RED + "Potion of Healing")
+                        || isCraftedHealingPotion(stack));
     }
 
     public static boolean isCraftedHealingPotion(ItemStack stack) {
@@ -61,9 +60,9 @@ public class WynnItemMatchers {
                 || (stack.getItem() != Items.POTION && stack.getItem() != Items.DIAMOND_AXE))
             return false;
 
-        return CONSUMABLE_PATTERN
-                .matcher(ComponentUtils.getUnformatted(stack.getHoverName()))
-                .matches();
+        String name = stack.getHoverName().getString();
+        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
+        return CONSUMABLE_PATTERN.matcher(strippedName).matches();
     }
 
     public static boolean isUnidentified(ItemStack stack) {
