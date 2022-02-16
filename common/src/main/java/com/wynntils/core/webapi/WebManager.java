@@ -32,34 +32,44 @@ public class WebManager {
         tryReloadApiUrls(false);
     }
 
-    private static void loadItemGuesses() {
-        handler.addRequest(
-                new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
-                        .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
-                        .handleJsonObject(
-                                json -> {
-                                    Type type =
-                                            new TypeToken<
-                                                    HashMap<
-                                                            String,
-                                                            ItemGuessProfile>>() {}.getType();
+    public static boolean tryLoadItemGuesses() {
+        if (!isItemGuessesLoaded()) {
+            handler.addRequest(
+                    new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+                            .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
+                            .handleJsonObject(
+                                    json -> {
+                                        Type type =
+                                                new TypeToken<
+                                                        HashMap<
+                                                                String,
+                                                                ItemGuessProfile>>() {
+                                                }.getType();
 
-                                    GsonBuilder gsonBuilder = new GsonBuilder();
-                                    gsonBuilder.registerTypeHierarchyAdapter(
-                                            HashMap.class,
-                                            new ItemGuessProfile.ItemGuessDeserializer());
-                                    Gson gson = gsonBuilder.create();
+                                        GsonBuilder gsonBuilder = new GsonBuilder();
+                                        gsonBuilder.registerTypeHierarchyAdapter(
+                                                HashMap.class,
+                                                new ItemGuessProfile.ItemGuessDeserializer());
+                                        Gson gson = gsonBuilder.create();
 
-                                    itemGuesses.putAll(gson.fromJson(json, type));
+                                        itemGuesses.putAll(gson.fromJson(json, type));
 
-                                    markFlag(0);
-                                    return true;
-                                })
-                        .useCacheAsBackup()
-                        .build());
+                                        markFlag(0);
+                                        return true;
+                                    })
+                            .useCacheAsBackup()
+                            .build());
+
+            handler.dispatch(false);
+
+            //Check for success
+            return isItemGuessesLoaded();
+        }
+
+        return true;
     }
 
-    private static void tryReloadApiUrls(boolean async) {
+    private static boolean tryReloadApiUrls(boolean async) {
         if (apiUrls == null) {
             handler.addRequest(
                     new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
@@ -69,21 +79,16 @@ public class WebManager {
                                         apiUrls = reader;
                                         if (!setup) {
                                             setup = true;
-                                            load();
-                                            EventFactory.onWebSetup();
                                         }
                                         return true;
                                     })
                             .build());
 
             handler.dispatch(async);
+            return setup;
         }
-    }
 
-    public static void load() {
-        loadItemGuesses();
-
-        handler.dispatch(false);
+        return true;
     }
 
     public static boolean isItemGuessesLoaded() {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -39,8 +40,14 @@ public class GammabrightFeature extends Feature {
                     });
 
     @Override
-    protected void onEnable() {
+    protected void init(ImmutableList.Builder<Condition> conditions) {
+
+    }
+
+    @Override
+    protected boolean onEnable() {
         KeyManager.registerKeybind(gammabrightKeybind);
+        return true;
     }
 
     @Override

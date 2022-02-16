@@ -61,8 +61,9 @@ public class KeyBindTestFeature extends DebugFeature {
     }
 
     @Override
-    protected void onEnable() {
+    protected boolean onEnable() {
         keybinds.forEach(KeyManager::registerKeybind);
+        return true;
     }
 
     @Override

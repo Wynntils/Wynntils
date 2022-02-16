@@ -39,29 +39,34 @@ public abstract class Feature {
         }
     }
 
-    protected void init(ImmutableList.Builder<Condition> conditions) {
-        // Override this
-    }
+    /**
+     * Called on init of Feature
+     */
+    protected abstract void init(ImmutableList.Builder<Condition> conditions);
 
-    protected void onEnable() {
-        // Override this
-    }
+    /**
+     * Called on enabling of Feature
+     *
+     * Return false to cancel enabling, return true to continue. Note that if a feature's enable is cancelled
+     * it isn't called again by the conditions and must be done so manually, likely by the user.
+     */
+    protected abstract boolean onEnable();
 
-    protected void onDisable() {
-        // Override this
-    }
+    /**
+     * Called on disabling of Feature
+     */
+    protected abstract void onDisable();
 
     /**
      * Called to activate a feature
-     *
-     * <p>Returns whether the feature was successfully activated
      */
     public final void enable() {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        WynntilsMod.getEventBus().register(this);
-        onEnable();
+        if (!onEnable()) {
+            return;
+        }
 
         enabled = true;
     }
@@ -72,7 +77,6 @@ public abstract class Feature {
             throw new IllegalStateException(
                     "Feature can not be disabled as it already is disabled");
 
-        WynntilsMod.getEventBus().unregister(this);
         onDisable();
 
         enabled = false;
@@ -100,20 +104,12 @@ public abstract class Feature {
         }
     }
 
-    public class WebCondition extends Condition {
-        private List<Supplier<Boolean>> apis;
-
-        public WebCondition(List<Supplier<Boolean>> apis) {
-            this.apis = apis;
-        }
-
-        public WebCondition(Supplier<Boolean> api) {
-            this.apis = Collections.singletonList(api);
-        }
+    public class WebLoadedCondition extends Condition {
 
         @Override
         public void init() {
-            if (WebManager.isSetup() && checkLoaded()) {
+            if (WebManager.isSetup()) {
+                setSatisfied(true);
                 return;
             }
 
@@ -121,28 +117,9 @@ public abstract class Feature {
         }
 
         @SubscribeEvent
-        public void onApiLoad(WebSetupEvent e) {
-            checkLoaded();
-        }
-
-        private boolean checkLoaded() {
-            List<Supplier<Boolean>> newList = new ArrayList<>();
-
-            for (Supplier<Boolean> api : apis) {
-                if (!api.get()) {
-                    newList.add(api);
-                }
-            }
-
-            apis = newList;
-
-            if (newList.isEmpty()) {
-                setSatisfied(true);
-                WynntilsMod.getEventBus().unregister(this);
-                return true;
-            }
-
-            return false;
+        public void onWebSetup(WebSetupEvent e) {
+            setSatisfied(true);
+            WynntilsMod.getEventBus().unregister(this);
         }
     }
 
