@@ -30,8 +30,7 @@ public class HealthPotionBlockerFeature extends Feature {
 
         ItemStack stack = McUtils.inventory().getSelected();
 
-        if (!WynnItemMatchers.isHealingPotion(stack)
-                && !WynnItemMatchers.isCraftedHealingPotion(stack)) return;
+        if (!WynnItemMatchers.isHealingPotion(stack)) return;
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);

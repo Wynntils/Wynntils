@@ -30,7 +30,8 @@ public class WynnItemMatchers {
                                 .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
                         || stack.getHoverName()
                                 .getString()
-                                .contains(ChatFormatting.RED + "Potion of Healing"));
+                                .contains(ChatFormatting.RED + "Potion of Healing"))
+                        || isCraftedHealingPotion(stack);
     }
 
     public static boolean isCraftedHealingPotion(ItemStack stack) {
