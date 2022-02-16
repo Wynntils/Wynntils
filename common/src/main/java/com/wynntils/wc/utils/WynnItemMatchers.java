@@ -25,13 +25,14 @@ public class WynnItemMatchers {
 
     public static boolean isHealingPotion(ItemStack stack) {
         return isConsumable(stack)
-                && (stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                        || stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.RED + "Potion of Healing"))
-                        || isCraftedHealingPotion(stack);
+                        && (stack.getHoverName()
+                                        .getString()
+                                        .contains(
+                                                ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
+                                || stack.getHoverName()
+                                        .getString()
+                                        .contains(ChatFormatting.RED + "Potion of Healing"))
+                || isCraftedHealingPotion(stack);
     }
 
     public static boolean isCraftedHealingPotion(ItemStack stack) {
