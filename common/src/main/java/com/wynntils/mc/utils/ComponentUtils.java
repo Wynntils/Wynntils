@@ -7,44 +7,26 @@ package com.wynntils.mc.utils;
 import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
     public static String getFormatted(Component component) {
         StringBuilder result = new StringBuilder();
-        Style oldStyle = Style.EMPTY;
 
         component.visit(
-                (style, string) -> {
-                    if (!oldStyle.isEmpty()) {
-                        StringBuilder different =
-                                getToAdd(oldStyle, style); // Try to get difference to add
-                        if (different != null) {
-                            result.append(different);
-                            return Optional.empty();
-                        }
+                new FormattedText.StyledContentConsumer<>() {
+                    Style oldStyle = Style.EMPTY;
 
-                        result.append(ChatFormatting.RESET);
+                    @Override
+                    public Optional<Object> accept(Style style, String string) {
+                        handleStyleDifference(oldStyle, style, result);
+                        result.append(string);
+
+                        oldStyle = style;
+
+                        return Optional.empty();
                     }
-
-                    if (style.getColor() != null) {
-                        Optional<ChatFormatting> color = getChatFormatting(style.getColor());
-                        color.ifPresent(result::append);
-                    }
-
-                    if (style.isBold()) result.append(ChatFormatting.BOLD);
-                    if (style.isItalic()) result.append(ChatFormatting.ITALIC);
-                    if (style.isUnderlined()) result.append(ChatFormatting.UNDERLINE);
-                    if (style.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
-                    if (style.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
-
-                    result.append(string);
-
-                    return Optional.empty(); // dont break
                 },
                 Style.EMPTY);
 
@@ -71,15 +53,55 @@ public class ComponentUtils {
         return component.getString();
     }
 
-    private static StringBuilder getToAdd(Style oldStyle, Style newStyle) {
+    /**
+     * This method handles the fact that the style likely has changed between 2 components
+     *
+     * <p>It tries to first generate a constructive way of adding color codes to get from the old
+     * style to the new style. If that does not succeed, it instead resets the format and adds the
+     * color codes of the new style
+     */
+    private static void handleStyleDifference(
+            Style oldStyle, Style newStyle, StringBuilder result) {
+        if (oldStyle.equals(newStyle)) return;
+
+        if (!oldStyle.isEmpty()) {
+            StringBuilder different = tryConstructDifference(oldStyle, newStyle);
+
+            if (different != null) {
+                result.append(different);
+                return;
+            }
+        }
+
+        result.append(ChatFormatting.RESET);
+
+        if (newStyle.getColor() != null) {
+            Optional<ChatFormatting> color = getChatFormatting(newStyle.getColor());
+            color.ifPresent(result::append);
+        }
+
+        if (newStyle.isBold()) result.append(ChatFormatting.BOLD);
+        if (newStyle.isItalic()) result.append(ChatFormatting.ITALIC);
+        if (newStyle.isUnderlined()) result.append(ChatFormatting.UNDERLINE);
+        if (newStyle.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
+        if (newStyle.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
+    }
+
+    private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
+        StringBuilder add = new StringBuilder();
+
         int oldColorInt =
                 Optional.ofNullable(oldStyle.getColor()).map(TextColor::getValue).orElse(-1);
         int newColorInt =
                 Optional.ofNullable(newStyle.getColor()).map(TextColor::getValue).orElse(-1);
 
-        StringBuilder add = new StringBuilder();
-
-        if (oldColorInt != newColorInt) return null;
+        if (oldColorInt == -1) {
+            if (newColorInt != -1) {
+                add.append(getChatFormatting(newStyle.getColor()));
+            }
+        } else if (oldColorInt != newColorInt) {
+            return null;
+        }
 
         if (oldStyle.isBold() && !newStyle.isBold()) return null;
         if (!oldStyle.isBold() && newStyle.isBold()) add.append(ChatFormatting.BOLD);
