@@ -19,7 +19,7 @@ public class IdentificationOrderer {
     public IdentificationOrderer(
             Map<String, Integer> idOrders,
             ArrayList<String> groupRanges,
-            ArrayList<String> inveverted) {}
+            ArrayList<String> inverted) {}
 
     /**
      * @param id the identification "short" name. Ex: rawMainAttackNeutralDamage
