@@ -17,14 +17,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * <p>Ex: Soul Point Timer
  */
 public abstract class Feature {
-    protected final ImmutableList<Condition> conditions;
+    private ImmutableList<Condition> conditions;
 
     protected boolean enabled = false;
 
-    public Feature() {
+    public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
-        init(conditions);
+        onInit(conditions);
 
         this.conditions = conditions.build();
 
@@ -36,7 +36,7 @@ public abstract class Feature {
     }
 
     /** Called on init of Feature */
-    protected abstract void init(ImmutableList.Builder<Condition> conditions);
+    protected abstract void onInit(ImmutableList.Builder<Condition> conditions);
 
     /**
      * Called on enabling of Feature

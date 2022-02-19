@@ -48,7 +48,7 @@ public class ItemStatInfoFeature extends Feature {
             "%percentage% -- - -- %percentage%"; // Used when uses presses SHIFT on lore.
 
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
     }
 
