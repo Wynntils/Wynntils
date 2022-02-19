@@ -30,7 +30,7 @@ public class KeyManager {
         }
     }
 
-    public static void registerKeybinding(KeyHolder toAdd) {
+    public static void registerKeybind(KeyHolder toAdd) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add " + toAdd + " since the name already exists");

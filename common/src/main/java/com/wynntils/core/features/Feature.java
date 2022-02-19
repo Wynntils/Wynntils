@@ -8,8 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
-import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -22,23 +21,11 @@ public abstract class Feature {
 
     protected boolean enabled = false;
 
-    /** List of web providers to mark for loading */
-    protected final ImmutableList<WebProviderSupplier> apis;
-
-    /** List of keybinds to load */
-    protected final ImmutableList<KeySupplier> keybinds;
-
     public Feature() {
-        ImmutableList.Builder<WebProviderSupplier> apis = new ImmutableList.Builder<>();
-        ImmutableList.Builder<KeySupplier> keybinds = new ImmutableList.Builder<>();
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-        init(apis, keybinds, conditions);
-        this.apis = apis.build();
-        if (!this.apis.isEmpty()) { // Requires web to be loaded
-            conditions.add(new WebLoadedCondition());
-        }
 
-        this.keybinds = keybinds.build();
+        init(conditions);
+
         this.conditions = conditions.build();
 
         if (this.conditions.isEmpty()) {
@@ -48,60 +35,31 @@ public abstract class Feature {
         }
     }
 
-    protected void init(
-            ImmutableList.Builder<WebProviderSupplier> apis,
-            ImmutableList.Builder<KeySupplier> keybinds,
-            ImmutableList.Builder<Condition> conditions) {
-        // Override this
-    }
+    /** Called on init of Feature */
+    protected abstract void init(ImmutableList.Builder<Condition> conditions);
 
     /**
-     * Called to activate a feature
+     * Called on enabling of Feature
      *
-     * <p>Returns whether the feature was successfully activated
+     * <p>Return false to cancel enabling, return true to continue. Note that if a feature's enable
+     * is cancelled it isn't called again by the conditions and must be done so manually, likely by
+     * the user.
      */
-    public final boolean enable() {
+    protected abstract boolean onEnable();
+
+    /** Called on disabling of Feature */
+    protected abstract void onDisable();
+
+    /** Called to activate a feature */
+    public final void enable() {
         if (enabled)
             throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        if (!loadAPIs(false)) return false;
-
-        WynntilsMod.getEventBus().register(this);
-        WynntilsMod.getEventBus().register(this.getClass());
-
-        loadKeybinds();
-
-        enabled = true;
-        return true;
-    }
-
-    /**
-     * Called to try and enable the apis the feature is dependent on
-     *
-     * <p>Returns if feature can be safely activated
-     */
-    public final boolean loadAPIs(boolean async) {
-        if (!apis.isEmpty()) {
-            if (!WebManager.isSetup()) return false;
-
-            for (WebProviderSupplier apiSupplier : apis) {
-                apiSupplier.getProvider().markToLoad();
-            }
-
-            WebManager.loadMarked(async);
+        if (!onEnable()) {
+            return;
         }
 
-        return true;
-    }
-
-    /** Called to try and enable a feature's keybinds */
-    public final void loadKeybinds() {
-        keybinds.forEach(k -> KeyManager.registerKeybinding(k.getKeyHolder()));
-    }
-
-    /** Called to try and disable a feature's keybinds */
-    public final void unloadKeybinds() {
-        keybinds.forEach(k -> KeyManager.unregisterKeybind(k.getKeyHolder()));
+        enabled = true;
     }
 
     /** Called for a feature's deactivation */
@@ -110,17 +68,9 @@ public abstract class Feature {
             throw new IllegalStateException(
                     "Feature can not be disabled as it already is disabled");
 
-        unloadKeybinds();
-
-        WynntilsMod.getEventBus().unregister(this);
-        WynntilsMod.getEventBus().unregister(this.getClass());
+        onDisable();
 
         enabled = false;
-    }
-
-    /** Returns whether a feature is api dependent */
-    public final boolean isApiDependent() {
-        return !apis.isEmpty();
     }
 
     /** Whether a feature is enabled */
@@ -146,6 +96,7 @@ public abstract class Feature {
     }
 
     public class WebLoadedCondition extends Condition {
+
         @Override
         public void init() {
             if (WebManager.isSetup()) {
@@ -153,11 +104,13 @@ public abstract class Feature {
                 return;
             }
 
-            WynntilsMod.getEventBus()
-                    .<WebSetupEvent>addListener(
-                            e -> {
-                                setSatisfied(true);
-                            });
+            WynntilsMod.getEventBus().register(this);
+        }
+
+        @SubscribeEvent
+        public void onWebSetup(WebSetupEvent e) {
+            setSatisfied(true);
+            WynntilsMod.getEventBus().unregister(this);
         }
     }
 
@@ -174,15 +127,5 @@ public abstract class Feature {
             this.satisfied = satisfied;
             checkConditions();
         }
-    }
-
-    @FunctionalInterface
-    public interface KeySupplier {
-        KeyHolder getKeyHolder();
-    }
-
-    @FunctionalInterface
-    public interface WebProviderSupplier {
-        WebManager.StaticProvider getProvider();
     }
 }

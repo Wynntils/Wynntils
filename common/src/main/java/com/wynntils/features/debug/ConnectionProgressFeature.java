@@ -5,6 +5,7 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
@@ -12,6 +13,17 @@ import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {
+    @Override
+    protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
+        return true;
+    }
+
+    @Override
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
+
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         Reference.LOGGER.info("Connection confirmed");
