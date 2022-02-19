@@ -4,8 +4,10 @@
  */
 package com.wynntils.features;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -28,9 +30,22 @@ import org.jetbrains.annotations.NotNull;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
+    @Override
+    protected void init(ImmutableList.Builder<Condition> conditions) {}
+
+    @Override
+    protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
+        return true;
+    }
+
+    @Override
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
 
     @SubscribeEvent
-    public static void onTitleScreenInit(TitleScreenInitEvent e) {
+    public void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         WynncraftButton wynncraftButton =
                 new WynncraftButton(

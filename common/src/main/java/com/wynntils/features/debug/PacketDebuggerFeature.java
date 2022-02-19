@@ -4,9 +4,8 @@
  */
 package com.wynntils.features.debug;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
-
 import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
@@ -16,6 +15,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PacketDebuggerFeature extends DebugFeature {
     public static final boolean DEBUG_PACKETS = false;
@@ -52,8 +52,19 @@ public class PacketDebuggerFeature extends DebugFeature {
                     ServerboundMovePlayerPacket.PosRot.class,
                     ServerboundMovePlayerPacket.Rot.class);
 
+    @Override
+    protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
+        return true;
+    }
+
+    @Override
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
+
     private String describePacket(Packet<?> packet) {
-        return ReflectionToStringBuilder.toString(packet, SHORT_PREFIX_STYLE)
+        return ReflectionToStringBuilder.toString(packet, ToStringStyle.SHORT_PREFIX_STYLE)
                 .replaceFirst("net\\.minecraft\\.network\\.protocol\\..*\\.", "");
     }
 

@@ -37,15 +37,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ItemGuessFeature extends Feature {
 
     @Override
-    public void init(
-            ImmutableList.Builder<WebProviderSupplier> apis,
-            ImmutableList.Builder<KeySupplier> keybinds,
-            ImmutableList.Builder<Condition> conditions) {
-        apis.add(WebManager::getItemGuessesProvider);
+    public void init(ImmutableList.Builder<Condition> conditions) {
+        conditions.add(new WebLoadedCondition());
     }
 
+    @Override
+    protected boolean onEnable() {
+        return WebManager.tryLoadItemGuesses();
+    }
+
+    @Override
+    protected void onDisable() {}
+
     @SubscribeEvent
-    public static void onInventoryRender(InventoryRenderEvent e) {
+    public void onInventoryRender(InventoryRenderEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         Slot hoveredSlot = e.getHoveredSlot();
@@ -84,7 +89,7 @@ public class ItemGuessFeature extends Feature {
 
         if (levelRange == null) return;
 
-        ItemGuessProfile igp = WebManager.getItemGuessesProvider().getValue().get(levelRange);
+        ItemGuessProfile igp = WebManager.getItemGuesses().get(levelRange);
         if (igp == null) return;
 
         Map<ItemTier, List<String>> rarityMap;

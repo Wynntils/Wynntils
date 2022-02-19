@@ -4,6 +4,8 @@
  */
 package com.wynntils.features;
 
+import com.google.common.collect.ImmutableList;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -27,8 +29,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.MEDIUM)
 public class SoulPointTimerFeature extends Feature {
+    @Override
+    protected void init(ImmutableList.Builder<Condition> conditions) {}
+
+    @Override
+    protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
+        return true;
+    }
+
+    @Override
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
+
     @SubscribeEvent
-    public static void onInventoryRender(InventoryRenderEvent e) {
+    public void onInventoryRender(InventoryRenderEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         Slot hoveredSlot = e.getHoveredSlot();
