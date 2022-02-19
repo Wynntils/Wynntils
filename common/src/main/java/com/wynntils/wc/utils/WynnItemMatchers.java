@@ -4,12 +4,19 @@
  */
 package com.wynntils.wc.utils;
 
+import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
+    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
                 && (stack.getItem() == Items.NETHER_STAR || stack.getItem() == Items.SNOW)
@@ -17,16 +24,40 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHealingPotion(ItemStack stack) {
-        System.out.println(stack.getHoverName());
+        if (!isConsumable(stack)) return false;
+        if (stack.getHoverName()
+                        .getString()
+                        .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
+                || stack.getHoverName()
+                        .getString()
+                        .contains(ChatFormatting.RED + "Potion of Healing")) return true;
 
-        return !stack.isEmpty()
-                && stack.getItem() == Items.POTION
-                && (stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                        || stack.getHoverName()
-                                .getString()
-                                .contains(ChatFormatting.RED + "Potion of Healing"));
+        boolean isCraftedPotion = false;
+        boolean hasHealEffect = false;
+        ListTag lore = ItemUtils.getLoreTagElseEmpty(stack);
+        for (Tag tag : lore) {
+            String unformattedLoreLine = ComponentUtils.getUnformatted(tag.getAsString());
+
+            if (unformattedLoreLine == null) continue;
+
+            if (unformattedLoreLine.equals("Crafted Potion")) {
+                isCraftedPotion = true;
+            } else if (unformattedLoreLine.startsWith("- Heal:")) {
+                hasHealEffect = true;
+            }
+        }
+
+        return isCraftedPotion && hasHealEffect;
+    }
+
+    public static boolean isConsumable(ItemStack stack) {
+        if (stack.isEmpty()
+                || (stack.getItem() != Items.POTION && stack.getItem() != Items.DIAMOND_AXE))
+            return false;
+
+        String name = stack.getHoverName().getString();
+        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
+        return CONSUMABLE_PATTERN.matcher(strippedName).matches();
     }
 
     public static boolean isUnidentified(ItemStack stack) {

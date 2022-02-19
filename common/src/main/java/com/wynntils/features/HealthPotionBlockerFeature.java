@@ -46,7 +46,6 @@ public class HealthPotionBlockerFeature extends Feature {
 
         ItemStack stack = McUtils.inventory().getSelected();
 
-        // TODO check for crafting potion
         if (!WynnItemMatchers.isHealingPotion(stack)) return;
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
