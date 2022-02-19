@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.components.Widget;
 
+/** Handles providing of configs */
 public class ConfigProviders {
     private static final List<ConfigProvider<?>> providers = new ArrayList<>();
 

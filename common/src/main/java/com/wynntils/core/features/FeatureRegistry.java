@@ -61,6 +61,8 @@ public class FeatureRegistry {
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
 
+        FEATURES.forEach(Feature::init);
+
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
         addCrashCallbacks();

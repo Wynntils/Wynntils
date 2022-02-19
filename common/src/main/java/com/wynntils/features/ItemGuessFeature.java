@@ -37,7 +37,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ItemGuessFeature extends Feature {
 
     @Override
-    public void init(ImmutableList.Builder<Condition> conditions) {
+    public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
     }
 
