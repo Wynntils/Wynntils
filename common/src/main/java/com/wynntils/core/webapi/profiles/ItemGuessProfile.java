@@ -6,8 +6,8 @@ package com.wynntils.core.webapi.profiles;
 
 import com.google.gson.*;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.objects.ItemTier;
-import com.wynntils.wc.objects.ItemType;
+import com.wynntils.wc.objects.items.ItemTier;
+import com.wynntils.wc.objects.items.ItemType;
 import java.lang.reflect.Type;
 import java.util.*;
 
