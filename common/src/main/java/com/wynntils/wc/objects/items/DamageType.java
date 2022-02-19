@@ -4,9 +4,8 @@
  */
 package com.wynntils.wc.objects.items;
 
-import java.util.regex.Pattern;
-
 import com.google.gson.annotations.SerializedName;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {

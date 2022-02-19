@@ -4,9 +4,8 @@
  */
 package com.wynntils.wc.objects.items;
 
-import java.util.Arrays;
-
 import com.google.gson.annotations.SerializedName;
+import java.util.Arrays;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
