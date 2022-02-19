@@ -60,6 +60,8 @@ public class FeatureRegistry {
 
         FEATURES.forEach(Feature::init);
 
+        FEATURES.forEach(Feature::init);
+
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
         addCrashCallbacks();
