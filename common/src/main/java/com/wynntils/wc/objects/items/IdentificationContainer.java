@@ -133,7 +133,7 @@ public class IdentificationContainer {
         double higherRawRollBound = (currentValue * 100 + 50) / ((double) baseValue);
 
         if (baseValue > 0) {
-            // We can furthet bound the possible rolls using the star count
+            // We can further bound the possible rolls using the star count
             int starMin;
             int starMax;
 
