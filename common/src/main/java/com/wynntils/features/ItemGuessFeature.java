@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -123,13 +122,12 @@ public class ItemGuessFeature extends Feature {
         }
 
         lore.add(
-                StringTag.valueOf(
-                        ItemUtils.toLoreForm(
-                                ChatFormatting.GREEN
-                                        + "- "
-                                        + ChatFormatting.GRAY
-                                        + "Possibilities: "
-                                        + itemNamesAndCosts)));
+                ItemUtils.toLoreStringTag(
+                        ChatFormatting.GREEN
+                                + "- "
+                                + ChatFormatting.GRAY
+                                + "Possibilities: "
+                                + itemNamesAndCosts));
 
         ItemUtils.replaceLore(stack, lore);
     }

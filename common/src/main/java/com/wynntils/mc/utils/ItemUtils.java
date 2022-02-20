@@ -105,14 +105,19 @@ public class ItemUtils {
         return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
     }
 
+    /** Converts a string to a usable lore tag */
+    public static StringTag toLoreStringTag(String toConvert) {
+        return StringTag.valueOf(toLoreString(toConvert));
+    }
+
     /**
-     * Converts a string to an acceptable lore tag
+     * Converts a string to a usable lore string
      *
      * <p>See {@link net.minecraft.network.chat.Component.Serializer#deserialize(JsonElement, Type,
      * JsonDeserializationContext)}
      */
-    public static StringTag toLoreForm(String toConvert) {
-        return StringTag.valueOf("\"" + (toConvert).replace("\"", "\\\"") + "\"");
+    public static String toLoreString(String toConvert) {
+        return "\"" + (toConvert).replace("\"", "\\\"") + "\"";
     }
 
     /**
@@ -121,7 +126,7 @@ public class ItemUtils {
      * <p>See {@link net.minecraft.network.chat.Component.Serializer#deserialize(JsonElement, Type,
      * JsonDeserializationContext)}
      */
-    public static StringTag toLoreForm(Component toConvert) {
+    public static StringTag toLoreStringTag(Component toConvert) {
         return StringTag.valueOf(Component.Serializer.toJson(toConvert));
     }
 }

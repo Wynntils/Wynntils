@@ -112,7 +112,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
         // FIXME: Fix "Spell Name Cost" (For example: Totem Cost is recognized as NEW)
         if (!profile.getLongNameStatusMap().containsKey(statusName)) {
             newLoreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-            return ItemUtils.toLoreForm(newLoreLine);
+            return ItemUtils.toLoreStringTag(newLoreLine);
         }
 
         IdentificationContainer idContainer = profile.getLongNameStatusMap().get(statusName);
@@ -123,7 +123,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
 
         if (!idContainer.isValidValue(statValue)) {
             newLoreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-            return ItemUtils.toLoreForm(newLoreLine);
+            return ItemUtils.toLoreStringTag(newLoreLine);
         }
 
         float percentage =
@@ -132,7 +132,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
 
         newLoreLine.append(
                 new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color));
-        return ItemUtils.toLoreForm(newLoreLine);
+        return ItemUtils.toLoreStringTag(newLoreLine);
     }
 
     private static final TreeMap<Float, TextColor> colorMap =

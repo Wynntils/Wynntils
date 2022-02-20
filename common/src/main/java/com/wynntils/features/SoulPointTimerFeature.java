@@ -65,7 +65,7 @@ public class SoulPointTimerFeature extends Feature {
                                 int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
                                 int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-                                return ItemUtils.toLoreForm(
+                                return ItemUtils.toLoreString(
                                         ChatFormatting.AQUA
                                                 + "Time until next soul point: "
                                                 + ChatFormatting.WHITE
