@@ -89,7 +89,6 @@ public class WebManager {
                             .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                             .handleJsonObject(
                                     json -> {
-                                        System.out.println("Got json");
                                         translatedReferences =
                                                 gson.fromJson(
                                                         json.getAsJsonObject(
@@ -141,6 +140,8 @@ public class WebManager {
                                         }
 
                                         citems.values().forEach(ItemProfile::registerIdTypes);
+                                        citems.values()
+                                                .forEach(ItemProfile::calculateLongNameStatusMap);
 
                                         directItems = citems.values();
                                         items = citems;

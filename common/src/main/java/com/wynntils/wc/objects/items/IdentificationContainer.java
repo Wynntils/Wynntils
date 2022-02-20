@@ -185,6 +185,6 @@ public class IdentificationContainer {
      * @return true if this is a valid value (If false, the API is probably wrong)
      */
     public boolean isValidValue(int currentValue) {
-        return currentValue > max || currentValue < min;
+        return currentValue <= max && currentValue >= min;
     }
 }

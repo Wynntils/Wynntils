@@ -28,6 +28,8 @@ public class ItemProfile {
     String restriction;
     String lore;
 
+    transient Map<String, IdentificationContainer> longNameStatusMap = new HashMap<>();
+
     transient List<MajorIdentification> majorIdentifications = new ArrayList<>();
 
     transient Map<DamageType, Integer> parsedAvgDamages = null;
@@ -168,5 +170,17 @@ public class ItemProfile {
         for (String id : majorIds) {
             if (idMap.containsKey(id)) majorIdentifications.add(idMap.get(id));
         }
+    }
+
+    public void calculateLongNameStatusMap() {
+        if (longNameStatusMap == null) longNameStatusMap = new HashMap<>();
+        statuses.forEach(
+                (s, identificationContainer) ->
+                        longNameStatusMap.put(
+                                IdentificationContainer.getAsLongName(s), identificationContainer));
+    }
+
+    public Map<String, IdentificationContainer> getLongNameStatusMap() {
+        return longNameStatusMap;
     }
 }
