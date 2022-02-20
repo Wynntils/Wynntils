@@ -76,8 +76,7 @@ public class ComponentUtils {
         result.append(ChatFormatting.RESET);
 
         if (newStyle.getColor() != null) {
-            Optional<ChatFormatting> color = getChatFormatting(newStyle.getColor());
-            color.ifPresent(result::append);
+            getChatFormatting(newStyle.getColor()).ifPresent(result::append);
         }
 
         if (newStyle.isBold()) result.append(ChatFormatting.BOLD);
@@ -97,7 +96,7 @@ public class ComponentUtils {
 
         if (oldColorInt == -1) {
             if (newColorInt != -1) {
-                add.append(getChatFormatting(newStyle.getColor()));
+                getChatFormatting(newColorInt).ifPresent(add::append);
             }
         } else if (oldColorInt != newColorInt) {
             return null;
@@ -125,8 +124,12 @@ public class ComponentUtils {
     }
 
     public static Optional<ChatFormatting> getChatFormatting(TextColor textColor) {
+        return getChatFormatting(textColor.getValue());
+    }
+
+    public static Optional<ChatFormatting> getChatFormatting(int textColor) {
         return Arrays.stream(ChatFormatting.values())
-                .filter(c -> c.isColor() && textColor.getValue() == c.getColor())
+                .filter(c -> c.isColor() && textColor == c.getColor())
                 .findFirst();
     }
 }
