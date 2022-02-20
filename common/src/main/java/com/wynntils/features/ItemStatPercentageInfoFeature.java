@@ -79,9 +79,14 @@ public class ItemStatPercentageInfoFeature extends Feature {
                 continue;
             }
 
+            if (endOfStatuses) {
+                newLore.add(lore.get(i));
+                continue;
+            }
+
             Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
 
-            if (statusMatcher.matches() && !endOfStatuses) {
+            if (statusMatcher.matches()) {
                 String newLoreLine = formattedLoreLine;
                 int statValue = Integer.parseInt(statusMatcher.group(1) + statusMatcher.group(2));
                 String statusName = statusMatcher.group(4);
@@ -97,7 +102,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
                         profile.getLongNameStatusMap().get(statusName);
 
                 if (idContainer.hasConstantValue()) {
-                    newLore.add(StringTag.valueOf(ItemUtils.toLoreForm(newLoreLine)));
+                    newLore.add(lore.get(i));
                     continue;
                 }
 
@@ -115,7 +120,6 @@ public class ItemStatPercentageInfoFeature extends Feature {
                 newLore.add(StringTag.valueOf(ItemUtils.toLoreForm(newLoreLine)));
                 continue;
             }
-
             newLore.add(lore.get(i));
         }
 
