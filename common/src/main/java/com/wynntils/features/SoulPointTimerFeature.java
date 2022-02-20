@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
-import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.objects.DynamicTag;
 import com.wynntils.wc.utils.WynnInventoryData;
@@ -20,7 +20,6 @@ import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -44,45 +43,38 @@ public class SoulPointTimerFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onInventoryRender(InventoryRenderEvent e) {
+    public void onInventoryRender(ItemsReceivedEvent e) {
         if (!WynnUtils.onWorld()) return;
 
-        Slot hoveredSlot = e.getHoveredSlot();
-        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
+        for (ItemStack stack : e.getItems()) {
+            if (!WynnItemMatchers.isSoulPoint(stack)) continue;
 
-        ItemStack stack = hoveredSlot.getItem();
+            ListTag lore = ItemUtils.getLoreTag(stack);
 
-        if (ItemUtils.hasMarker(stack, "soulpoint")) return;
+            if (lore == null) {
+                lore = new ListTag();
+            } else {
+                lore.add(StringTag.valueOf("")); // Equivalent to adding ""
+            }
 
-        ItemUtils.addMarker(stack, "soulpoint");
+            lore.add(
+                    new DynamicTag(
+                            () -> {
+                                int rawSecondsUntilSoulPoint =
+                                        WynnInventoryData.getTicksTillNextSoulPoint() / 20;
+                                int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
+                                int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-        if (!WynnItemMatchers.isSoulPoint(stack)) return;
+                                return ItemUtils.toLoreForm(
+                                        ChatFormatting.AQUA
+                                                + "Time until next soul point: "
+                                                + ChatFormatting.WHITE
+                                                + minutesUntilSoulPoint
+                                                + ":"
+                                                + String.format("%02d", secondsUntilSoulPoint));
+                            }));
 
-        ListTag lore = ItemUtils.getLoreTag(stack);
-
-        if (lore == null) {
-            lore = new ListTag();
-        } else {
-            lore.add(StringTag.valueOf("")); // Equivalent to adding "'
+            ItemUtils.replaceLore(stack, lore);
         }
-
-        lore.add(
-                new DynamicTag(
-                        () -> {
-                            int rawSecondsUntilSoulPoint =
-                                    WynnInventoryData.getTicksTillNextSoulPoint() / 20;
-                            int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
-                            int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
-
-                            return ItemUtils.toLoreForm(
-                                    ChatFormatting.AQUA
-                                            + "Time until next soul point: "
-                                            + ChatFormatting.WHITE
-                                            + minutesUntilSoulPoint
-                                            + ":"
-                                            + String.format("%02d", secondsUntilSoulPoint));
-                        }));
-
-        ItemUtils.replaceLore(stack, lore);
     }
 }

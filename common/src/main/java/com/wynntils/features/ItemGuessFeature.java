@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.objects.items.ItemTier;
@@ -26,7 +26,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -50,21 +49,14 @@ public class ItemGuessFeature extends Feature {
     protected void onDisable() {}
 
     @SubscribeEvent
-    public void onInventoryRender(InventoryRenderEvent e) {
+    public void onInventoryRender(ItemsReceivedEvent e) {
         if (!WynnUtils.onWorld()) return;
 
-        Slot hoveredSlot = e.getHoveredSlot();
-        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
+        for (ItemStack stack : e.getItems()) {
+            if (!WynnItemMatchers.isUnidentified(stack)) return;
 
-        ItemStack stack = hoveredSlot.getItem();
-
-        if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
-
-        ItemUtils.addMarker(stack, "itemGuesses");
-
-        if (!WynnItemMatchers.isUnidentified(stack)) return;
-
-        generateGuesses(stack);
+            generateGuesses(stack);
+        }
     }
 
     private static void generateGuesses(ItemStack stack) {
