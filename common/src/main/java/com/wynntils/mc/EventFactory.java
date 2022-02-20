@@ -29,6 +29,7 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -91,6 +92,11 @@ public class EventFactory {
 
     public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
         // TODO: Not implemented yet
+    }
+
+    public static void onItemTooltipRender(
+            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+        post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
     }
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
