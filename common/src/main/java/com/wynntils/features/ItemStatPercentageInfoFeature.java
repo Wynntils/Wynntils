@@ -11,16 +11,22 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.objects.items.IdentificationContainer;
 import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemStatPercentageInfoFeature extends Feature {
     private static final Pattern ITEM_STATUS_PATTERN =
@@ -48,11 +54,6 @@ public class ItemStatPercentageInfoFeature extends Feature {
     }
 
     private void replaceLore(ItemStack itemStack) {
-        // FIXME: Check if CTRL or SHIFT is pressed and replace lore accordingly
-        replaceLorePercentage(itemStack);
-    }
-
-    private void replaceLorePercentage(ItemStack itemStack) {
         String itemName =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(itemStack.getHoverName().getString()));
@@ -68,78 +69,106 @@ public class ItemStatPercentageInfoFeature extends Feature {
         boolean endOfStatuses = false;
 
         for (int i = 0; i < lore.size(); i++) {
-            String formattedLoreLine =
-                    WynnUtils.normalizeBadString(ComponentUtils.getFormatted(lore.getString(i)));
             String unformattedLoreLine =
                     WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(lore.getString(i)));
 
-            if (formattedLoreLine.equals(ChatFormatting.GREEN + "Set Bonus:")) {
+            if (unformattedLoreLine.equals("Set Bonus:")) {
                 endOfStatuses = true;
-                newLore.add(lore.get(i));
-                continue;
             }
 
-            if (endOfStatuses) {
-                newLore.add(lore.get(i));
-                continue;
+            if (!endOfStatuses) {
+                // FIXME: Check if CTRL or SHIFT is pressed and replace lore accordingly
+                StringTag newTag = generateNewTag(profile, unformattedLoreLine);
+
+                if (newTag != null) {
+                    newLore.add(newTag);
+                    continue;
+                }
             }
 
-            Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
-
-            if (statusMatcher.matches()) {
-                String newLoreLine = formattedLoreLine;
-                int statValue = Integer.parseInt(statusMatcher.group(1) + statusMatcher.group(2));
-                String statusName = statusMatcher.group(4);
-
-                // FIXME: Fix "Spell Name Cost" (For example: Totem Cost is recognized as NEW)
-                if (!profile.getLongNameStatusMap().containsKey(statusName)) {
-                    newLoreLine += " " + ChatFormatting.GOLD + "[NEW]";
-                    newLore.add(StringTag.valueOf(ItemUtils.toLoreForm(newLoreLine)));
-                    continue;
-                }
-
-                IdentificationContainer idContainer =
-                        profile.getLongNameStatusMap().get(statusName);
-
-                if (idContainer.hasConstantValue()) {
-                    newLore.add(lore.get(i));
-                    continue;
-                }
-
-                if (!idContainer.isValidValue(statValue)) {
-                    newLoreLine += " " + ChatFormatting.GOLD + "[NEW]";
-                    newLore.add(StringTag.valueOf(ItemUtils.toLoreForm(newLoreLine)));
-                    continue;
-                }
-
-                float percentage =
-                        mapStatInRange(statValue, idContainer.getMin(), idContainer.getMax()) * 100;
-                ChatFormatting color = getPercentageColor(percentage);
-
-                newLoreLine += " " + color + "[" + String.format("%.1f", percentage) + "%]";
-                newLore.add(StringTag.valueOf(ItemUtils.toLoreForm(newLoreLine)));
-                continue;
-            }
             newLore.add(lore.get(i));
         }
 
         ItemUtils.replaceLore(itemStack, newLore);
     }
 
-    private ChatFormatting getPercentageColor(float percentage) {
-        if (percentage < 30f) {
-            return ChatFormatting.RED;
-        } else if (percentage < 80f) {
-            return ChatFormatting.YELLOW;
-        } else if (percentage < 96f) {
-            return ChatFormatting.GREEN;
-        } else {
-            return ChatFormatting.AQUA;
+    @Nullable
+    private StringTag generateNewTag(ItemProfile profile, String unformattedLoreLine) {
+        Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
+
+        if (!statusMatcher.matches()) {
+            return null;
         }
+
+        MutableComponent newLoreLine = Component.Serializer.fromJson(unformattedLoreLine);
+
+        if (newLoreLine == null) {
+            return null;
+        }
+
+        int statValue = Integer.parseInt(statusMatcher.group(1) + statusMatcher.group(2));
+        String statusName = statusMatcher.group(4);
+
+        // FIXME: Fix "Spell Name Cost" (For example: Totem Cost is recognized as NEW)
+        if (!profile.getLongNameStatusMap().containsKey(statusName)) {
+            newLoreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
+            return ItemUtils.toLoreForm(newLoreLine);
+        }
+
+        IdentificationContainer idContainer = profile.getLongNameStatusMap().get(statusName);
+
+        if (idContainer.hasConstantValue()) {
+            return null; // unchanged
+        }
+
+        if (!idContainer.isValidValue(statValue)) {
+            newLoreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
+            return ItemUtils.toLoreForm(newLoreLine);
+        }
+
+        float percentage =
+                MathUtils.inverselerp(idContainer.getMin(), idContainer.getMax(), statValue) * 100;
+        Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
+
+        newLoreLine.append(
+                new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color));
+        return ItemUtils.toLoreForm(newLoreLine);
     }
 
-    // Maps stat into a 0 to 1 range
-    private float mapStatInRange(float stat, float minRoll, float maxRoll) {
-        return ((stat - minRoll) / (maxRoll - minRoll));
+    private static final TreeMap<Float, TextColor> colorMap =
+            new TreeMap<>() {
+                {
+                    put(15f, TextColor.fromLegacyFormat(ChatFormatting.RED));
+                    put(55f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+                    put(88f, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
+                    put(98f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+                }
+            };
+
+    private TextColor getPercentageColor(float percentage) {
+        Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
+        Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
+
+        // Boundary conditions
+        if (lowerEntry == null) {
+            return higherEntry.getValue();
+        } else if (higherEntry == null) {
+            return lowerEntry.getValue();
+        }
+
+        if (Objects.equals(lowerEntry.getValue(), higherEntry.getValue())) {
+            return lowerEntry.getValue();
+        }
+
+        float t = MathUtils.inverselerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
+
+        int lowerColor = lowerEntry.getValue().getValue();
+        int higherColor = lowerEntry.getValue().getValue();
+
+        int r = (int) MathUtils.lerp((lowerColor >> 16) & 0xff, (higherColor >> 16) & 0xff, t);
+        int g = (int) MathUtils.lerp((lowerColor >> 8) & 0xff, (higherColor >> 8) & 0xff, t);
+        int b = (int) MathUtils.lerp(lowerColor & 0xff, higherColor & 0xff, t);
+
+        return TextColor.fromRgb((r << 16) | (g << 8) | b);
     }
 }
