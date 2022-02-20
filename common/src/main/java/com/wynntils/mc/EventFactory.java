@@ -28,6 +28,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -143,12 +144,7 @@ public class EventFactory {
         post(new MenuClosedEvent());
     }
 
-    public static void onContainerContent(ClientboundContainerSetContentPacket packet) {
-        post(
-                new ItemsReceivedEvent(
-                        packet.getContainerId(),
-                        packet.getStateId(),
-                        packet.getItems(),
-                        packet.getCarriedItem()));
+    public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
+        post(new ItemsReceivedEvent(container, items));
     }
 }

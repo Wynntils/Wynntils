@@ -5,37 +5,25 @@
 package com.wynntils.mc.event;
 
 import java.util.List;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
-/** Fired for Container Content events */
+/** Fired when items are received */
 public class ItemsReceivedEvent extends Event {
-    private final int containerId;
-    private final int stateId;
+    private final AbstractContainerMenu container;
     private final List<ItemStack> items;
-    private final ItemStack carriedItem;
 
-    public ItemsReceivedEvent(
-            int containerId, int stateId, List<ItemStack> items, ItemStack carriedItem) {
-        this.containerId = containerId;
-        this.stateId = stateId;
+    public ItemsReceivedEvent(AbstractContainerMenu container, List<ItemStack> items) {
+        this.container = container;
         this.items = items;
-        this.carriedItem = carriedItem;
     }
 
-    public int getContainerId() {
-        return containerId;
-    }
-
-    public int getStateId() {
-        return stateId;
+    public AbstractContainerMenu getContainer() {
+        return container;
     }
 
     public List<ItemStack> getItems() {
         return items;
-    }
-
-    public ItemStack getCarriedItem() {
-        return carriedItem;
     }
 }
