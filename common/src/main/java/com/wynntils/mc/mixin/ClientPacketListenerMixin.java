@@ -10,13 +10,7 @@ import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
-import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
-import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -74,6 +68,15 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         EventFactory.onContainerClose(packet);
+    }
+
+    @Inject(
+            method =
+                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
+            at = @At("RETURN"))
+    public void handleContainerContent(
+            ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+        EventFactory.onContainerContent(packet);
     }
 
     @Inject(

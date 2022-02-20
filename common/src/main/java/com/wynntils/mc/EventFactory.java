@@ -136,4 +136,13 @@ public class EventFactory {
     public static void onContainerClose(ClientboundContainerClosePacket packet) {
         post(new MenuClosedEvent());
     }
+
+    public static void onContainerContent(ClientboundContainerSetContentPacket packet) {
+        post(
+                new ItemsReceivedEvent(
+                        packet.getContainerId(),
+                        packet.getStateId(),
+                        packet.getItems(),
+                        packet.getCarriedItem()));
+    }
 }
