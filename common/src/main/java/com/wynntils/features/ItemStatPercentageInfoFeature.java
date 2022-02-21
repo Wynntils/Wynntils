@@ -190,7 +190,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
                 }
 
                 float percentage =
-                        MathUtils.inverselerp(idContainer.getMin(), idContainer.getMax(), statValue)
+                        MathUtils.inverseLerp(idContainer.getMin(), idContainer.getMax(), statValue)
                                 * 100;
                 Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
 
@@ -267,7 +267,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
             return lowerEntry.getValue();
         }
 
-        float t = MathUtils.inverselerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
+        float t = MathUtils.inverseLerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
 
         int lowerColor = lowerEntry.getValue().getValue();
         int higherColor = lowerEntry.getValue().getValue();
