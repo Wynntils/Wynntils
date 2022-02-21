@@ -7,6 +7,7 @@ package com.wynntils.wc.objects.items;
 import com.wynntils.core.Reference;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -186,5 +187,19 @@ public class IdentificationContainer {
      */
     public boolean isValidValue(int currentValue) {
         return currentValue <= max && currentValue >= min;
+    }
+
+    public static String toShortIdName(String longIdName, boolean raw) {
+        String[] splitName = longIdName.split(" ");
+        StringBuilder result = new StringBuilder(raw ? "raw" : "");
+        for (String r : splitName) {
+            if (r.startsWith("[")) continue; // ignore ids
+            result.append(Character.toUpperCase(r.charAt(0)))
+                    .append(r.substring(1).toLowerCase(Locale.ROOT));
+        }
+
+        if (result.length() == 0) return "";
+        result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
+        return result.toString();
     }
 }

@@ -140,8 +140,6 @@ public class WebManager {
                                         }
 
                                         citems.values().forEach(ItemProfile::registerIdTypes);
-                                        citems.values()
-                                                .forEach(ItemProfile::calculateLongNameStatusMap);
 
                                         directItems = citems.values();
                                         items = citems;

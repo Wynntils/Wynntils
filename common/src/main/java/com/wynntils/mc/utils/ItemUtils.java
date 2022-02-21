@@ -100,6 +100,12 @@ public class ItemUtils {
         tag.putBoolean(id, true);
     }
 
+    /** Removes a boolean to an item's nbt as a marker */
+    public static void removeMarker(ItemStack stack, String id) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putBoolean(id, false);
+    }
+
     /** Checks if a boolean to an item's nbt as a marker */
     public static boolean hasMarker(ItemStack stack, String id) {
         return stack.hasTag() && stack.getTag().contains(id) && stack.getTag().getBoolean(id);
