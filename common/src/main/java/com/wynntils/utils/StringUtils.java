@@ -29,6 +29,7 @@ public class StringUtils {
     }
 
     public static String capitalizeFirst(String input) {
+        if (input.length() == 0) return "";
         return Character.toUpperCase(input.charAt(0)) + input.substring(1);
     }
 }

@@ -160,6 +160,7 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
+        //TODO generify this to use string instead of 2 booleans
         if (ItemUtils.hasMarker(itemStack, "loreMainForm") && !alternativeForm) return;
         if (ItemUtils.hasMarker(itemStack, "loreAlternativeForm") && alternativeForm) return;
 
@@ -196,7 +197,7 @@ public class ItemStatInfoFeature extends Feature {
         CompoundTag ids = new CompoundTag();
         CompoundTag stars = new CompoundTag();
 
-        if (!tag.contains("wynntilsIds")) {
+        if (!tag.contains("wynntilsIds")) { //generate ids if not there
             tag.putString("wynntilsItemName", itemName);
             tag.putString("wynntilsItemNameFormatted", itemStack.getHoverName().getString());
             for (int i = 0; i < lore.size(); i++) {
@@ -228,7 +229,7 @@ public class ItemStatInfoFeature extends Feature {
                         idName = spell.getGenericName() + " Cost";
                     }
 
-                    String shortIdName = IdentificationContainer.toShortIdName(idName, isRaw);
+                    String shortIdName = IdentificationContainer.getAsShortName(idName, isRaw);
                     if (starCount != 0) {
                         stars.putInt(shortIdName, starCount);
                     }
@@ -248,8 +249,9 @@ public class ItemStatInfoFeature extends Feature {
 
         int indexOfIdStart = -1;
 
-        int idStart = lore.size(); // make sure the condition does not happen
-        int idEnd = 0; // make sure the condition does not happen
+        int idStart = Integer.MAX_VALUE; // make sure the condition does not happen
+        int idEnd = -1; // make sure the condition does not happen
+
         if (tag.contains("wynntilsIdStart") && tag.contains("wynntilsIdEnd")) {
             idStart = tag.getInt("wynntilsIdStart");
             idEnd = tag.getInt("wynntilsIdEnd");
@@ -258,8 +260,9 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         for (int i = 0; i < lore.size(); i++) {
-            if (idStart <= i && idEnd > i) // Skip old lore lines
-            continue;
+            if (idStart <= i && idEnd > i) { // Skip old lore lines
+                continue;
+            }
 
             MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(i));
 
@@ -273,7 +276,7 @@ public class ItemStatInfoFeature extends Feature {
                 endOfStatuses = true;
             }
 
-            if (endOfStatuses) {
+            if (endOfStatuses) { //No need to change
                 newLore.add(lore.get(i));
                 continue;
             }
@@ -318,18 +321,10 @@ public class ItemStatInfoFeature extends Feature {
                 longName = spell.forOtherClass(ClassType.None).getName() + " Spell Cost";
             }
 
-            if (isInverted) {
-                if (statValue < 0) {
-                    loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
-                } else {
-                    loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
-                }
+            if (isInverted ^ (statValue > 0)) {
+                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
             } else {
-                if (statValue < 0) {
-                    loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
-                } else {
-                    loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
-                }
+                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
             }
 
             // Add stars
@@ -338,7 +333,7 @@ public class ItemStatInfoFeature extends Feature {
                         new TextComponent("***".substring(3 - stars.getInt(idName)))
                                 .withStyle(ChatFormatting.DARK_GREEN));
 
-            loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GRAY));
+            loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GREEN));
 
             if (idContainer == null) { // id not in api
                 loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
@@ -480,13 +475,11 @@ public class ItemStatInfoFeature extends Feature {
                 {
                     put(15f, TextColor.fromLegacyFormat(ChatFormatting.RED));
                     put(55f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-                    put(88f, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
+                    put(88f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
                     put(98f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
                 }
             };
 
-    // FIXME: All values appear as gray rgb(170, 170, 170) instead of green when rolls are around
-    // 90%
     private static TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
@@ -520,7 +513,7 @@ public class ItemStatInfoFeature extends Feature {
         } else if (percentage < 80f) {
             return TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
         } else if (percentage < 96f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.GRAY);
+            return TextColor.fromLegacyFormat(ChatFormatting.GREEN);
         } else {
             return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
         }

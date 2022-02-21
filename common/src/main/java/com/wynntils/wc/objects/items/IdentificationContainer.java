@@ -70,21 +70,6 @@ public class IdentificationContainer {
         return isFixed || min == max;
     }
 
-    public static String getAsLongName(String shortName) {
-        if (shortName.startsWith("raw")) {
-            shortName = shortName.substring(3);
-            shortName = Character.toLowerCase(shortName.charAt(0)) + shortName.substring(1);
-        }
-
-        StringBuilder nameBuilder = new StringBuilder();
-        for (char c : shortName.toCharArray()) {
-            if (Character.isUpperCase(c)) nameBuilder.append(" ").append(c);
-            else nameBuilder.append(c);
-        }
-
-        return StringUtils.capitalizeFirst(nameBuilder.toString()).replaceAll("\\bXp\\b", "XP");
-    }
-
     public static IdentificationModifier getTypeFromName(String name) {
         return typeMap.get(name);
     }
@@ -189,17 +174,31 @@ public class IdentificationContainer {
         return currentValue <= max && currentValue >= min;
     }
 
-    public static String toShortIdName(String longIdName, boolean raw) {
+    public static String getAsLongName(String shortName) {
+        if (shortName.startsWith("raw")) {
+            shortName = shortName.substring(3);
+            shortName = Character.toLowerCase(shortName.charAt(0)) + shortName.substring(1);
+        }
+
+        StringBuilder nameBuilder = new StringBuilder();
+        for (char c : shortName.toCharArray()) {
+            if (Character.isUpperCase(c)) nameBuilder.append(" ").append(c);
+            else nameBuilder.append(c);
+        }
+
+        return StringUtils.capitalizeFirst(nameBuilder.toString()).replaceAll("\\bXp\\b", "XP");
+    }
+
+    public static String getAsShortName(String longIdName, boolean raw) {
         String[] splitName = longIdName.split(" ");
         StringBuilder result = new StringBuilder(raw ? "raw" : "");
         for (String r : splitName) {
+            //TODO check if this check is necessary
             if (r.startsWith("[")) continue; // ignore ids
             result.append(Character.toUpperCase(r.charAt(0)))
                     .append(r.substring(1).toLowerCase(Locale.ROOT));
         }
 
-        if (result.length() == 0) return "";
-        result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
-        return result.toString();
+        return StringUtils.capitalizeFirst(result.toString()).replaceAll("\\bXP\\b", "Xp");
     }
 }
