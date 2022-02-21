@@ -48,8 +48,8 @@ public class ItemGuessFeature extends Feature {
     protected void onDisable() {}
 
     @SubscribeEvent
-    public void onInventoryRender(ItemsReceivedEvent e) {
-        if (!WynnUtils.onWorld()) return;
+    public void onItemsReceived(ItemsReceivedEvent e) {
+        if (!WynnUtils.onServer()) return;
 
         for (ItemStack stack : e.getItems()) {
             if (!WynnItemMatchers.isUnidentified(stack)) return;
