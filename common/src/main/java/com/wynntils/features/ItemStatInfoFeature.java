@@ -160,7 +160,7 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
-        //TODO generify this to use string instead of 2 booleans
+        // TODO generify this to use string instead of 2 booleans
         if (ItemUtils.hasMarker(itemStack, "loreMainForm") && !alternativeForm) return;
         if (ItemUtils.hasMarker(itemStack, "loreAlternativeForm") && alternativeForm) return;
 
@@ -197,7 +197,7 @@ public class ItemStatInfoFeature extends Feature {
         CompoundTag ids = new CompoundTag();
         CompoundTag stars = new CompoundTag();
 
-        if (!tag.contains("wynntilsIds")) { //generate ids if not there
+        if (!tag.contains("wynntilsIds")) { // generate ids if not there
             tag.putString("wynntilsItemName", itemName);
             tag.putString("wynntilsItemNameFormatted", itemStack.getHoverName().getString());
             for (int i = 0; i < lore.size(); i++) {
@@ -276,7 +276,7 @@ public class ItemStatInfoFeature extends Feature {
                 endOfStatuses = true;
             }
 
-            if (endOfStatuses) { //No need to change
+            if (endOfStatuses) { // No need to change
                 newLore.add(lore.get(i));
                 continue;
             }
@@ -314,9 +314,9 @@ public class ItemStatInfoFeature extends Feature {
                             .withStyle(Style.EMPTY);
 
             String longName = IdentificationContainer.getAsLongName(idName);
-            SpellType spell = SpellType.fromName(longName);
 
             // FIXME: Use actual class spell names (needs current class detection implementation)
+            SpellType spell = SpellType.fromName(longName);
             if (spell != null) {
                 longName = spell.forOtherClass(ClassType.None).getName() + " Spell Cost";
             }
@@ -364,6 +364,7 @@ public class ItemStatInfoFeature extends Feature {
             Set<String> infoVariables = infoVariableMap.keySet();
 
             // TODO: Check edge cases with this formatting implementations
+            // TODO: generify implementation to separate class
             while (loreAdditionIndex < loreAdditions.length()) {
                 boolean startedWithVariable = false;
                 for (String infoVariable : infoVariables) {

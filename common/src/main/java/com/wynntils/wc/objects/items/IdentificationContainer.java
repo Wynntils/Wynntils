@@ -193,7 +193,7 @@ public class IdentificationContainer {
         String[] splitName = longIdName.split(" ");
         StringBuilder result = new StringBuilder(raw ? "raw" : "");
         for (String r : splitName) {
-            //TODO check if this check is necessary
+            // TODO check if this check is necessary
             if (r.startsWith("[")) continue; // ignore ids
             result.append(Character.toUpperCase(r.charAt(0)))
                     .append(r.substring(1).toLowerCase(Locale.ROOT));
