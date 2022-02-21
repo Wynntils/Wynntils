@@ -60,7 +60,7 @@ public class FeatureRegistry {
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new ItemStatPercentageInfoFeature());
+        registerFeature(new ItemStatInfoFeature());
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 

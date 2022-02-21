@@ -10,15 +10,16 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ItemToolTipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.objects.items.IdentificationContainer;
 import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -28,10 +29,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
-public class ItemStatPercentageInfoFeature extends Feature {
+public class ItemStatInfoFeature extends Feature {
     private static final Pattern ITEM_STATUS_PATTERN =
             Pattern.compile("([+\\-])(\\d+)(%|\\stier|/3s|/4s|/5s|)\\*{0,3}\\s(.+)");
+
+    // TODO: Replace these with configs
+    // Possible variables: %percentage% %minmax% %reidchance%
+    private static final String MAIN_FORMAT_STRING = "%percentage%";
+    private static final String ALTERNATIVE_FORMAT_STRING =
+            "%percentage% -- - -- %percentage%"; // Used when uses presses SHIFT on lore.
+
+    private static final Map<String, BiFunction<IdentificationContainer, Integer, MutableComponent>>
+            infoVariableMap =
+                    new HashMap<>() {
+                        {
+                            put(
+                                    "%percentage%",
+                                    ItemStatInfoFeature::getPercentageTextComponent);
+                        }
+                    };
 
     @Override
     protected void init(ImmutableList.Builder<Condition> conditions) {
@@ -57,11 +75,18 @@ public class ItemStatPercentageInfoFeature extends Feature {
         if (ItemUtils.hasMarker(e.getStack(), "isPerfect")) {
             MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD);
 
-            String name = "Perfect " + e.getStack().getHoverName().getString();
+            String name =
+                    "Perfect "
+                            + WynnUtils.normalizeBadString(
+                                    ChatFormatting.stripFormatting(
+                                            ComponentUtils.getUnformatted(
+                                                    e.getStack().getHoverName())));
 
             for (int i = 0; i < name.length(); i++) {
                 long time = System.currentTimeMillis();
                 float z = 2000.0F;
+                // FIXME: I don't think this functions properly, colors are not getting updated real
+                // time (I assume that was the intention)
                 Style color =
                         Style.EMPTY.withColor(
                                 Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
@@ -70,7 +95,8 @@ public class ItemStatPercentageInfoFeature extends Feature {
             }
 
             e.setHoveredName(newName);
-        } else if (ItemUtils.hasMarker(e.getStack(), "isDefective")) {
+        } else if (ItemUtils.hasMarker(
+                e.getStack(), "isDefective")) { // FIXME: Current implementation seems buggy?
             MutableComponent newName =
                     new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
 
@@ -78,7 +104,12 @@ public class ItemStatPercentageInfoFeature extends Feature {
                     0.08f; // UtilitiesConfig.Identifications.INSTANCE.defectiveObfuscationAmount /
             // 100;
 
-            String name = "Defective " + e.getStack().getHoverName().getString();
+            String name =
+                    "Defective "
+                            + WynnUtils.normalizeBadString(
+                                    ChatFormatting.stripFormatting(
+                                            ComponentUtils.getUnformatted(
+                                                    e.getStack().getHoverName())));
 
             boolean obfuscated = Math.random() < obfuscationChance;
             StringBuilder current = new StringBuilder();
@@ -118,15 +149,21 @@ public class ItemStatPercentageInfoFeature extends Feature {
     public void onItemToolTipRender(ItemTooltipRenderEvent e) {
         ItemStack itemStack = e.getItemStack();
 
-        replaceLore(itemStack);
+        replaceLore(
+                itemStack,
+                GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
+                        == 1);
     }
 
-    private void replaceLore(ItemStack itemStack) {
+    private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
         String itemName =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(itemStack.getHoverName().getString()));
 
         if (!WebManager.getItemsMap().containsKey(itemName)) return;
+
+        if (ItemUtils.hasMarker(itemStack, "loreMainForm") && !alternativeForm) return;
+        if (ItemUtils.hasMarker(itemStack, "loreAlternativeForm") && alternativeForm) return;
 
         ItemProfile profile = WebManager.getItemsMap().get(itemName);
 
@@ -155,7 +192,6 @@ public class ItemStatPercentageInfoFeature extends Feature {
             }
 
             if (!endOfStatuses) {
-                // FIXME: Check if CTRL or SHIFT is pressed and replace lore accordingly
                 Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
 
                 if (!statusMatcher.matches()) {
@@ -172,6 +208,7 @@ public class ItemStatPercentageInfoFeature extends Feature {
                     loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
                     newLore.add(ItemUtils.toLoreStringTag(loreLine));
                     hasNew = true;
+                    continue;
                 }
 
                 IdentificationContainer idContainer =
@@ -192,13 +229,45 @@ public class ItemStatPercentageInfoFeature extends Feature {
                 float percentage =
                         MathUtils.inverseLerp(idContainer.getMin(), idContainer.getMax(), statValue)
                                 * 100;
-                Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
 
-                loreLine.append(
-                        new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color));
+                // Fixed space between stat and info formatter
+                loreLine.append(" ");
+
+                String loreAdditions =
+                        alternativeForm ? ALTERNATIVE_FORMAT_STRING : MAIN_FORMAT_STRING;
+                int loreAdditionIndex = 0;
+
+                Set<String> infoVariables = infoVariableMap.keySet();
+
+                while (loreAdditionIndex < loreAdditions.length()) {
+                    boolean startedWithVariable = false;
+                    for (String infoVariable : infoVariables) {
+                        if (!loreAdditions.startsWith(infoVariable, loreAdditionIndex)) {
+                            continue;
+                        }
+                        loreAdditionIndex += infoVariable.length();
+                        startedWithVariable = true;
+                        loreLine.append(
+                                infoVariableMap.get(infoVariable).apply(idContainer, statValue));
+                    }
+
+                    if (startedWithVariable) continue;
+
+                    int indexOfNextVariable = loreAdditions.indexOf('%', loreAdditionIndex);
+                    if (indexOfNextVariable == -1) {
+                        loreLine.append(loreAdditions.substring(loreAdditionIndex));
+                        break;
+                    } else {
+                        loreLine.append(
+                                loreAdditions.substring(
+                                        loreAdditionIndex, indexOfNextVariable - 1));
+                        loreAdditionIndex = indexOfNextVariable;
+                    }
+                }
+
                 newLore.add(ItemUtils.toLoreStringTag(loreLine));
 
-                percentTotal += Math.max(Math.min(percentage, 1), 0);
+                percentTotal += Math.max(Math.min(percentage, 100), 0);
                 idAmount++;
 
                 continue;
@@ -210,7 +279,9 @@ public class ItemStatPercentageInfoFeature extends Feature {
         if (hasNew) {
             TextComponent newName = new TextComponent("");
 
-            newName.append(itemStack.getHoverName());
+            newName.append(
+                    WynnUtils.normalizeBadString(
+                            ComponentUtils.getUnformatted(itemStack.getHoverName())));
             newName.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
             itemStack.setHoverName(newName);
@@ -220,18 +291,20 @@ public class ItemStatPercentageInfoFeature extends Feature {
             // check for item perfection or 0% items, else put %
             if (!ItemUtils.hasMarker(itemStack, "isPerfect")
                     && !ItemUtils.hasMarker(itemStack, "isDefective")) {
-                if (averagePercentage >= 1d) {
+                if (averagePercentage >= 100d) {
                     ItemUtils.addMarker(itemStack, "isPerfect");
                 } else if (averagePercentage == 0) {
                     ItemUtils.addMarker(itemStack, "isDefective");
                 } else {
                     TextComponent newName = new TextComponent("");
 
-                    newName.append(itemStack.getHoverName());
+                    newName.append(
+                            WynnUtils.normalizeBadString(
+                                    ComponentUtils.getUnformatted(itemStack.getHoverName())));
                     Style color = Style.EMPTY.withColor(getPercentageColor(averagePercentage));
 
                     newName.append(
-                            new TextComponent(String.format("[%.1f%%]", averagePercentage))
+                            new TextComponent(String.format(" [%.1f%%]", averagePercentage))
                                     .withStyle(color));
 
                     itemStack.setHoverName(newName);
@@ -239,7 +312,22 @@ public class ItemStatPercentageInfoFeature extends Feature {
             }
         }
 
+        if (alternativeForm) ItemUtils.addMarker(itemStack, "loreAlternativeForm");
+        else ItemUtils.addMarker(itemStack, "loreMainForm");
+
         ItemUtils.replaceLore(itemStack, newLore);
+    }
+
+    private static MutableComponent getPercentageTextComponent(
+            IdentificationContainer identificationContainer, int statValue) {
+        float percentage =
+                MathUtils.inverseLerp(
+                                identificationContainer.getMin(),
+                                identificationContainer.getMax(),
+                                statValue)
+                        * 100;
+        Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
+        return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
     }
 
     private static final TreeMap<Float, TextColor> colorMap =
@@ -252,7 +340,9 @@ public class ItemStatPercentageInfoFeature extends Feature {
                 }
             };
 
-    private TextColor getPercentageColor(float percentage) {
+    // FIXME: All values appear as gray rgb(170, 170, 170) instead of green when rolls are around
+    // 90%
+    private static TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
 
