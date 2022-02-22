@@ -37,7 +37,7 @@ public class Formatter {
 
             String toMatch = format.substring(indexStartOfNextVariable, indexEndOfNextVariable);
 
-            for (String infoVariable : infoVariableMap.keySet()) {
+            for (String infoVariable : infoVariables) {
                 if (!toMatch.equals(infoVariable)) {
                     continue;
                 }

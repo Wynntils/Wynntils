@@ -83,6 +83,7 @@ public class ItemStatInfoFeature extends Feature {
                 float z = 2000.0F;
                 // FIXME: I don't think this functions properly, colors are not getting updated real
                 // time (I assume that was the intention)
+
                 Style color =
                         Style.EMPTY.withColor(
                                 Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
@@ -301,10 +302,12 @@ public class ItemStatInfoFeature extends Feature {
                 loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
             }
 
+            int starsCount = stars.getInt(idName);
+
             // Add stars
             if (stars.contains(idName)) // TODO: Add a config option whether to show id stars or not
             loreLine.append(
-                        new TextComponent("***".substring(3 - stars.getInt(idName)))
+                        new TextComponent("***".substring(3 - starsCount))
                                 .withStyle(ChatFormatting.DARK_GREEN));
 
             loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GREEN));
@@ -325,15 +328,33 @@ public class ItemStatInfoFeature extends Feature {
 
             loreLine.append(" ");
 
-            float percentage =
-                    MathUtils.inverseLerp(idContainer.getMin(), idContainer.getMax(), statValue)
-                            * 100;
+            int min = idContainer.getMin();
+            int max = idContainer.getMax();
+            float percentage = MathUtils.inverseLerp(min, max, statValue) * 100;
 
             String loreFormat = alternativeForm ? ALTERNATIVE_FORMAT_STRING : MAIN_FORMAT_STRING;
 
             Map<String, Component> infoVariables = new HashMap<>();
 
+            IdentificationContainer.ReidentificationChances chances =
+                    idContainer.getChances(statValue, isInverted, starsCount);
+
             infoVariables.put("percentage", getPercentageTextComponent(percentage));
+
+            // TODO add escaped chars like old impl for special chars
+            infoVariables.put(
+                    "chance_perfect",
+                    new TextComponent(
+                            String.format("\u2605%.1f%%", idContainer.getPerfectChance())));
+            infoVariables.put(
+                    "chance_increase",
+                    new TextComponent(String.format("\u21E7%.0f%%", chances.increase())));
+            infoVariables.put(
+                    "chance_decrease",
+                    new TextComponent(String.format("\u21E9%.0f%%", chances.decrease())));
+
+            infoVariables.put("min", new TextComponent(String.valueOf(min)));
+            infoVariables.put("max", new TextComponent(String.valueOf(max)));
 
             // TODO: Check edge cases with this formatting implementations
             Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
