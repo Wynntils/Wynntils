@@ -44,7 +44,7 @@ public class ItemStatInfoFeature extends Feature {
     // TODO: Replace these with configs
     private static final String MAIN_FORMAT_STRING = "%percentage%";
     private static final String ALTERNATIVE_FORMAT_STRING =
-            "%percentage% -- - -- %percentage%"; // Used when uses presses SHIFT on lore.
+            "%percentage% %chance_perfect% %chance_increase% %chance_decrease% [%min%,%max%]"; // Used when uses presses SHIFT on lore.
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
@@ -258,7 +258,7 @@ public class ItemStatInfoFeature extends Feature {
 
             // filter out old replacement
             for (int i = 0; i < lore.size(); i++) {
-                if (idStart <= i && i <= idEnd) {
+                if (idStart <= i && i < idEnd) {
                     continue;
                 }
 
@@ -359,7 +359,6 @@ public class ItemStatInfoFeature extends Feature {
 
             percentTotal += percentage;
             idAmount++;
-            actualIdAmount++;
 
             newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
         }
