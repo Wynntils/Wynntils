@@ -310,7 +310,7 @@ public class ItemStatInfoFeature extends Feature {
                         new TextComponent("***".substring(3 - starsCount))
                                 .withStyle(ChatFormatting.DARK_GREEN));
 
-            loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GREEN));
+            loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GRAY));
 
             actualIdAmount++;
 
