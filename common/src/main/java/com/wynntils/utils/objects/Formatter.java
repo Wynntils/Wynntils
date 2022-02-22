@@ -19,13 +19,14 @@ public class Formatter {
         Set<String> infoVariables = infoVariableMap.keySet();
 
         int index = 0;
+        // TODO: Can we get away with less calculations since we now have asymmetric delimiters?
         while (index < format.length()) {
-            int indexStartOfNextVariable = format.indexOf('%', index);
+            int indexStartOfNextVariable = format.indexOf('{', index);
             if (indexStartOfNextVariable == -1) {
                 break;
             }
 
-            int indexEndOfNextVariable = format.indexOf('%', indexStartOfNextVariable + 1);
+            int indexEndOfNextVariable = format.indexOf('}', indexStartOfNextVariable + 1);
             if (indexEndOfNextVariable == -1) {
                 break;
             }
@@ -41,7 +42,7 @@ public class Formatter {
                     continue;
                 }
 
-                index = indexEndOfNextVariable + 1; // skip ending %
+                index = indexEndOfNextVariable + 1; // skip ending }
                 consumer.accept(infoVariableMap.get(infoVariable));
                 break;
             }

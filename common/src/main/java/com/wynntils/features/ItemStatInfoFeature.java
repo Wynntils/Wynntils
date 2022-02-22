@@ -42,11 +42,11 @@ public class ItemStatInfoFeature extends Feature {
                             + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     // TODO: Replace these with configs
-    private static final String MAIN_FORMAT_STRING = "%percentage%";
+    private static final String MAIN_FORMAT_STRING = "{percentage}";
     private static final String ALTERNATIVE_FORMAT_STRING =
-            "%percentage% %chance_perfect%"
-                    + " %chance_increase% %chance_decrease%"
-                    + " [%min%,%max%]"; // Used when user presses SHIFT on lore.
+            "{percentage} {chance_perfect}"
+                    + " {chance_increase} {chance_decrease}"
+                    + " [{min},{max}]"; // Used when user presses SHIFT on lore.
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
