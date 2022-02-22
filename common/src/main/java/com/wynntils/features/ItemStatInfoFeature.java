@@ -152,7 +152,6 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
-        // TODO generify this to use string instead of 2 booleans
         CompoundTag tag = itemStack.getOrCreateTag();
 
         if (tag.contains("loreForm")) {
@@ -195,7 +194,6 @@ public class ItemStatInfoFeature extends Feature {
         CompoundTag stars = new CompoundTag();
 
         int idStart = -1; // make sure the condition does not happen
-        int idEnd = -1; // make sure the condition does not happen
 
         if (!tag.contains("wynntilsIds")) { // generate ids if not there
             tag.putString("wynntilsItemName", itemName);
@@ -256,7 +254,7 @@ public class ItemStatInfoFeature extends Feature {
 
             // Added later
             idStart = tag.getInt("wynntilsIdStart");
-            idEnd = tag.getInt("wynntilsIdEnd");
+            int idEnd = tag.getInt("wynntilsIdEnd");
 
             // filter out old replacement
             for (int i = 0; i < lore.size(); i++) {

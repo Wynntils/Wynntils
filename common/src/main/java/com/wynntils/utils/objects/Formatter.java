@@ -26,7 +26,9 @@ public class Formatter {
                 break;
             }
 
-            consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable - 1)));
+            if (index != indexStartOfNextVariable) {
+                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
+            }
 
             int indexEndOfNextVariable = format.indexOf('%', index);
             if (indexEndOfNextVariable == -1) {
@@ -40,7 +42,7 @@ public class Formatter {
                     continue;
                 }
 
-                index = indexEndOfNextVariable; // skip ending %
+                index = indexEndOfNextVariable + 1; // skip ending %
                 consumer.accept(infoVariableMap.get(infoVariable));
                 break;
             }
