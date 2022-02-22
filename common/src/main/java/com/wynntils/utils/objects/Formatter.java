@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 public class Formatter {
 
-    // TODO: Check edge cases with this formatting implementations
     public static <T> void doFormat(
             String format,
             Consumer<T> consumer,
@@ -26,16 +25,16 @@ public class Formatter {
                 break;
             }
 
-            if (index != indexStartOfNextVariable) {
-                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
-            }
-
-            int indexEndOfNextVariable = format.indexOf('%', index);
+            int indexEndOfNextVariable = format.indexOf('%', indexStartOfNextVariable + 1);
             if (indexEndOfNextVariable == -1) {
                 break;
             }
 
-            String toMatch = format.substring(indexStartOfNextVariable, indexEndOfNextVariable);
+            if (index != indexStartOfNextVariable) { // update none done too
+                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
+            }
+
+            String toMatch = format.substring(indexStartOfNextVariable + 1, indexEndOfNextVariable);
 
             for (String infoVariable : infoVariables) {
                 if (!toMatch.equals(infoVariable)) {

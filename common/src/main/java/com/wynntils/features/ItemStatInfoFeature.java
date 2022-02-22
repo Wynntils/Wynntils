@@ -356,7 +356,6 @@ public class ItemStatInfoFeature extends Feature {
             infoVariables.put("min", new TextComponent(String.valueOf(min)));
             infoVariables.put("max", new TextComponent(String.valueOf(max)));
 
-            // TODO: Check edge cases with this formatting implementations
             Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
 
             percentTotal += percentage;
