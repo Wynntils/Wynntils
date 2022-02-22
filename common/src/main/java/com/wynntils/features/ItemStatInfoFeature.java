@@ -42,7 +42,6 @@ public class ItemStatInfoFeature extends Feature {
                             + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     // TODO: Replace these with configs
-    // Possible variables: %percentage% %minmax% %reidchance%
     private static final String MAIN_FORMAT_STRING = "%percentage%";
     private static final String ALTERNATIVE_FORMAT_STRING =
             "%percentage% -- - -- %percentage%"; // Used when uses presses SHIFT on lore.
