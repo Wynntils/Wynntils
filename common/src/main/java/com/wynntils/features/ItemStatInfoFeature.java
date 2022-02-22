@@ -383,10 +383,10 @@ public class ItemStatInfoFeature extends Feature {
                             String.format("\u2605%.2f%%", idContainer.getPerfectChance() * 100)));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format("\u21E7%.0f%%", chances.increase() * 100)));
+                    new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100)));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format("\u21E9%.0f%%", chances.decrease() * 100)));
+                    new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100)));
 
             infoVariables.put("min", new TextComponent(String.valueOf(min)));
             infoVariables.put("max", new TextComponent(String.valueOf(max)));
