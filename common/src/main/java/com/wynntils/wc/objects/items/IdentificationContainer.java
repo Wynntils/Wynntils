@@ -170,8 +170,8 @@ public class IdentificationContainer {
      * @param currentValue Current value of this identification
      * @return true if this is a valid value (If false, the API is probably wrong)
      */
-    public boolean isValidValue(int currentValue) {
-        return currentValue <= max && currentValue >= min;
+    public boolean isInvalidValue(int currentValue) {
+        return currentValue > max || currentValue < min;
     }
 
     public static String getAsLongName(String shortName) {

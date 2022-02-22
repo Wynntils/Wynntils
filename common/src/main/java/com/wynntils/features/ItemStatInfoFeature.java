@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.objects.Formatter;
 import com.wynntils.wc.objects.ClassType;
 import com.wynntils.wc.objects.SpellType;
 import com.wynntils.wc.objects.items.IdentificationContainer;
@@ -23,7 +24,6 @@ import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -46,14 +46,6 @@ public class ItemStatInfoFeature extends Feature {
     private static final String MAIN_FORMAT_STRING = "%percentage%";
     private static final String ALTERNATIVE_FORMAT_STRING =
             "%percentage% -- - -- %percentage%"; // Used when uses presses SHIFT on lore.
-
-    private static final Map<String, BiFunction<IdentificationContainer, Integer, MutableComponent>>
-            infoVariableMap =
-                    new HashMap<>() {
-                        {
-                            put("%percentage%", ItemStatInfoFeature::getPercentageTextComponent);
-                        }
-                    };
 
     @Override
     protected void init(ImmutableList.Builder<Condition> conditions) {
@@ -161,14 +153,19 @@ public class ItemStatInfoFeature extends Feature {
 
     private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
         // TODO generify this to use string instead of 2 booleans
-        if (ItemUtils.hasMarker(itemStack, "loreMainForm") && !alternativeForm) return;
-        if (ItemUtils.hasMarker(itemStack, "loreAlternativeForm") && alternativeForm) return;
+        CompoundTag tag = itemStack.getOrCreateTag();
+
+        if (tag.contains("loreForm")) {
+            String loreForm = tag.getString("loreForm");
+
+            if (loreForm.equals("fail")) return;
+            if (loreForm.equals("main") && !alternativeForm) return;
+            if (loreForm.equals("alternative") && alternativeForm) return;
+        }
 
         String itemName =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(itemStack.getHoverName().getString()));
-
-        CompoundTag tag = itemStack.getOrCreateTag();
 
         if (tag.contains("wynntilsItemName"))
             itemName = tag.getString("wynntilsItemName"); // Reset item name to avoid problems
@@ -197,6 +194,9 @@ public class ItemStatInfoFeature extends Feature {
         CompoundTag ids = new CompoundTag();
         CompoundTag stars = new CompoundTag();
 
+        int idStart = -1; // make sure the condition does not happen
+        int idEnd = -1; // make sure the condition does not happen
+
         if (!tag.contains("wynntilsIds")) { // generate ids if not there
             tag.putString("wynntilsItemName", itemName);
             tag.putString("wynntilsItemNameFormatted", itemStack.getHoverName().getString());
@@ -218,80 +218,55 @@ public class ItemStatInfoFeature extends Feature {
                 }
 
                 Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
-
-                if (statusMatcher.find()) {
-                    String idName = statusMatcher.group("ID");
-                    boolean isRaw = statusMatcher.group("Suffix") == null;
-                    int starCount = statusMatcher.group("Stars").length();
-
-                    SpellType spell = SpellType.fromName(idName);
-                    if (spell != null) {
-                        idName = spell.getGenericName() + " Cost";
-                    }
-
-                    String shortIdName = IdentificationContainer.getAsShortName(idName, isRaw);
-                    if (starCount != 0) {
-                        stars.putInt(shortIdName, starCount);
-                    }
-
-                    ids.putInt(shortIdName, Integer.parseInt(statusMatcher.group("Value")));
+                if (!statusMatcher.find()) {
+                    newLore.add(lore.get(i));
+                    continue;
                 }
+
+                if (idStart == -1) {
+                    idStart = i;
+                }
+
+                String idName = statusMatcher.group("ID");
+                boolean isRaw = statusMatcher.group("Suffix") == null;
+                int starCount = statusMatcher.group("Stars").length();
+
+                SpellType spell = SpellType.fromName(idName);
+                if (spell != null) {
+                    idName = spell.getGenericName() + " Cost";
+                }
+
+                String shortIdName = IdentificationContainer.getAsShortName(idName, isRaw);
+                if (starCount != 0) {
+                    stars.putInt(shortIdName, starCount);
+                }
+
+                ids.putInt(shortIdName, Integer.parseInt(statusMatcher.group("Value")));
             }
 
-            endOfStatuses = false;
+            if (idStart == -1 || ids.isEmpty()) {
+                tag.putString("loreForm", "fail");
+            }
 
             tag.put("wynntilsIds", ids);
             tag.put("wynntilsStars", stars);
         } else {
             ids = tag.getCompound("wynntilsIds");
             stars = tag.getCompound("wynntilsStars");
-        }
 
-        int indexOfIdStart = -1;
-
-        int idStart = Integer.MAX_VALUE; // make sure the condition does not happen
-        int idEnd = -1; // make sure the condition does not happen
-
-        if (tag.contains("wynntilsIdStart") && tag.contains("wynntilsIdEnd")) {
+            // Added later
             idStart = tag.getInt("wynntilsIdStart");
             idEnd = tag.getInt("wynntilsIdEnd");
 
-            indexOfIdStart = idStart;
-        }
+            // filter out old replacement
+            for (int i = 0; i < lore.size(); i++) {
+                if (idStart <= i && i <= idEnd) {
+                    continue;
+                }
 
-        for (int i = 0; i < lore.size(); i++) {
-            if (idStart <= i && idEnd > i) { // Skip old lore lines
-                continue;
-            }
-
-            MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(i));
-
-            if (loreLine == null) {
-                continue;
-            }
-
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
-
-            if (unformattedLoreLine.equals("Set Bonus:")) {
-                endOfStatuses = true;
-            }
-
-            if (endOfStatuses) { // No need to change
                 newLore.add(lore.get(i));
-                continue;
             }
-
-            Matcher statusMatcher = ITEM_STATUS_PATTERN.matcher(unformattedLoreLine);
-
-            if (!statusMatcher.matches()) {
-                newLore.add(lore.get(i));
-                continue;
-            }
-
-            if (indexOfIdStart == -1) indexOfIdStart = i;
         }
-
-        if (indexOfIdStart == -1) return;
 
         // Insert generated lore
         for (String idName : ids.getAllKeys()) {
@@ -303,6 +278,7 @@ public class ItemStatInfoFeature extends Feature {
                     idContainer != null
                             ? idContainer.getType()
                             : IdentificationContainer.getTypeFromName(idName);
+
             if (type == null) continue; // not a valid id
 
             boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(idName);
@@ -335,80 +311,43 @@ public class ItemStatInfoFeature extends Feature {
 
             loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GREEN));
 
-            if (idContainer == null) { // id not in api
+            actualIdAmount++;
+
+            if (idContainer == null || idContainer.isInvalidValue(statValue)) { // id not in api
                 loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-                newLore.add(indexOfIdStart, ItemUtils.toLoreStringTag(loreLine));
-                actualIdAmount++;
+                newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
                 hasNew = true;
                 continue;
             }
 
             if (idContainer.hasConstantValue()) {
-                if (idContainer.getBaseValue() != statValue) {
-                    loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-                    newLore.add(indexOfIdStart, ItemUtils.toLoreStringTag(loreLine));
-                    actualIdAmount++;
-                    hasNew = true;
-                    continue;
-                }
-                newLore.add(indexOfIdStart, ItemUtils.toLoreStringTag(loreLine));
-                actualIdAmount++;
+                newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
                 continue;
             }
 
             loreLine.append(" ");
 
-            String loreAdditions = alternativeForm ? ALTERNATIVE_FORMAT_STRING : MAIN_FORMAT_STRING;
-            int loreAdditionIndex = 0;
-
-            Set<String> infoVariables = infoVariableMap.keySet();
-
-            // TODO: Check edge cases with this formatting implementations
-            // TODO: generify implementation to separate class
-            while (loreAdditionIndex < loreAdditions.length()) {
-                boolean startedWithVariable = false;
-                for (String infoVariable : infoVariables) {
-                    if (!loreAdditions.startsWith(infoVariable, loreAdditionIndex)) {
-                        continue;
-                    }
-                    loreAdditionIndex += infoVariable.length();
-                    startedWithVariable = true;
-                    loreLine.append(
-                            infoVariableMap.get(infoVariable).apply(idContainer, statValue));
-                }
-
-                if (startedWithVariable) continue;
-
-                int indexOfNextVariable = loreAdditions.indexOf('%', loreAdditionIndex);
-                if (indexOfNextVariable == -1) {
-                    loreLine.append(loreAdditions.substring(loreAdditionIndex));
-                    break;
-                } else {
-                    loreLine.append(
-                            loreAdditions.substring(loreAdditionIndex, indexOfNextVariable - 1));
-                    loreAdditionIndex = indexOfNextVariable;
-                }
-            }
-
-            if (!idContainer.isValidValue(statValue)) {
-                loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-                newLore.add(ItemUtils.toLoreStringTag(loreLine));
-                actualIdAmount++;
-                hasNew = true;
-                continue;
-            }
-
             float percentage =
                     MathUtils.inverseLerp(idContainer.getMin(), idContainer.getMax(), statValue)
                             * 100;
+
+            String loreFormat = alternativeForm ? ALTERNATIVE_FORMAT_STRING : MAIN_FORMAT_STRING;
+
+            Map<String, Component> infoVariables = new HashMap<>();
+
+            infoVariables.put("percentage", getPercentageTextComponent(percentage));
+
+            // TODO: Check edge cases with this formatting implementations
+            Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
 
             percentTotal += percentage;
             idAmount++;
             actualIdAmount++;
 
-            newLore.add(indexOfIdStart, ItemUtils.toLoreStringTag(loreLine));
+            newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
         }
 
+        // Generate new name
         if (hasNew) {
             TextComponent newName = new TextComponent("");
 
@@ -445,28 +384,20 @@ public class ItemStatInfoFeature extends Feature {
             }
         }
 
-        tag.putInt("wynntilsIdStart", indexOfIdStart);
-        tag.putInt("wynntilsIdEnd", indexOfIdStart + actualIdAmount);
+        tag.putInt("wynntilsIdStart", idStart);
+        tag.putInt("wynntilsIdEnd", idStart + actualIdAmount);
 
         if (alternativeForm) {
-            ItemUtils.addMarker(itemStack, "loreAlternativeForm");
-            ItemUtils.removeMarker(itemStack, "loreMainForm");
+            tag.putString("loreForm", "alternative");
         } else {
-            ItemUtils.addMarker(itemStack, "loreMainForm");
-            ItemUtils.removeMarker(itemStack, "loreAlternativeForm");
+            tag.putString("loreForm", "main");
         }
 
         ItemUtils.replaceLore(itemStack, newLore);
     }
 
-    private static MutableComponent getPercentageTextComponent(
-            IdentificationContainer identificationContainer, int statValue) {
-        float percentage =
-                MathUtils.inverseLerp(
-                                identificationContainer.getMin(),
-                                identificationContainer.getMax(),
-                                statValue)
-                        * 100;
+    private static MutableComponent getPercentageTextComponent(float percentage) {
+
         Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
         return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
     }
