@@ -44,7 +44,9 @@ public class ItemStatInfoFeature extends Feature {
     // TODO: Replace these with configs
     private static final String MAIN_FORMAT_STRING = "%percentage%";
     private static final String ALTERNATIVE_FORMAT_STRING =
-            "%percentage% %chance_perfect% %chance_increase% %chance_decrease% [%min%,%max%]"; // Used when uses presses SHIFT on lore.
+            "%percentage% %chance_perfect%"
+                    + " %chance_increase% %chance_decrease%"
+                    + " [%min%,%max%]"; // Used when user presses SHIFT on lore.
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
@@ -84,8 +86,11 @@ public class ItemStatInfoFeature extends Feature {
                 // time (I assume that was the intention)
 
                 Style color =
-                        Style.EMPTY.withColor(
-                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
+                        Style.EMPTY
+                                .withColor(
+                                        Color.HSBtoRGB(
+                                                ((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F))
+                                .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
@@ -116,7 +121,10 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(ChatFormatting.OBFUSCATED));
+                                    .withStyle(
+                                            Style.EMPTY
+                                                    .withColor(ChatFormatting.OBFUSCATED)
+                                                    .withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
@@ -132,7 +140,11 @@ public class ItemStatInfoFeature extends Feature {
 
             if (obfuscated) {
                 newName.append(
-                        new TextComponent(current.toString()).withStyle(ChatFormatting.OBFUSCATED));
+                        new TextComponent(current.toString())
+                                .withStyle(
+                                        Style.EMPTY
+                                                .withColor(ChatFormatting.OBFUSCATED)
+                                                .withItalic(false)));
             } else {
                 newName.append(new TextComponent(current.toString()));
             }
@@ -281,11 +293,9 @@ public class ItemStatInfoFeature extends Feature {
 
             boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(idName);
 
-            // FIXME: These added lores are always italic for some reason
             MutableComponent loreLine =
                     new TextComponent(
-                                    (statValue > 0 ? "+" : "") + statValue + type.getInGame(idName))
-                            .withStyle(Style.EMPTY);
+                            (statValue > 0 ? "+" : "") + statValue + type.getInGame(idName));
 
             String longName = IdentificationContainer.getAsLongName(idName);
 
@@ -296,9 +306,9 @@ public class ItemStatInfoFeature extends Feature {
             }
 
             if (isInverted ^ (statValue > 0)) {
-                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false));
             } else {
-                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
+                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false));
             }
 
             int starsCount = stars.getInt(idName);
@@ -344,13 +354,13 @@ public class ItemStatInfoFeature extends Feature {
             infoVariables.put(
                     "chance_perfect",
                     new TextComponent(
-                            String.format("\u2605%.1f%%", idContainer.getPerfectChance())));
+                            String.format("\u2605%.2f%%", idContainer.getPerfectChance() * 100)));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format("\u21E7%.0f%%", chances.increase())));
+                    new TextComponent(String.format("\u21E7%.0f%%", chances.increase() * 100)));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format("\u21E9%.0f%%", chances.decrease())));
+                    new TextComponent(String.format("\u21E9%.0f%%", chances.decrease() * 100)));
 
             infoVariables.put("min", new TextComponent(String.valueOf(min)));
             infoVariables.put("max", new TextComponent(String.valueOf(max)));
@@ -370,7 +380,10 @@ public class ItemStatInfoFeature extends Feature {
             newName.append(
                     WynnUtils.normalizeBadString(
                             ComponentUtils.getUnformatted(itemStack.getHoverName())));
-            newName.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
+            newName.append(
+                    new TextComponent(" [NEW]")
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.GOLD).withItalic(false)));
 
             itemStack.setHoverName(newName);
         } else if (idAmount > 0) {
@@ -389,7 +402,10 @@ public class ItemStatInfoFeature extends Feature {
                     newName.append(
                             WynnUtils.normalizeBadString(
                                     ComponentUtils.getUnformatted(itemStack.getHoverName())));
-                    Style color = Style.EMPTY.withColor(getPercentageColor(averagePercentage));
+                    Style color =
+                            Style.EMPTY
+                                    .withColor(getPercentageColor(averagePercentage))
+                                    .withItalic(false);
 
                     newName.append(
                             new TextComponent(String.format(" [%.1f%%]", averagePercentage))
