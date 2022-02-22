@@ -197,6 +197,7 @@ public class IdentificationContainer {
                     .append(r.substring(1).toLowerCase(Locale.ROOT));
         }
 
-        return StringUtils.uncapitalizeFirst(StringUtils.capitalizeFirst(result.toString()).replaceAll("\\bXP\\b", "Xp"));
+        return StringUtils.uncapitalizeFirst(
+                StringUtils.capitalizeFirst(result.toString()).replaceAll("\\bXP\\b", "Xp"));
     }
 }
