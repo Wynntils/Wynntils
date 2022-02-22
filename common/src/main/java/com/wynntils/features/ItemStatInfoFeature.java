@@ -263,11 +263,11 @@ public class ItemStatInfoFeature extends Feature {
 
             ListTag newLoreTmp = new ListTag(); // Used to remove duplicate blank lines
 
-            if (newLore.size() > 0)
-                newLoreTmp.add(newLore.get(0));
+            if (newLore.size() > 0) newLoreTmp.add(newLore.get(0));
 
             for (int i = 1; i < newLore.size(); i++) {
-                MutableComponent loreLine1 = Component.Serializer.fromJson(newLore.getString(i - 1));
+                MutableComponent loreLine1 =
+                        Component.Serializer.fromJson(newLore.getString(i - 1));
                 MutableComponent loreLine2 = Component.Serializer.fromJson(newLore.getString(i));
 
                 if (loreLine1 == null || loreLine2 == null) {
@@ -277,8 +277,7 @@ public class ItemStatInfoFeature extends Feature {
                 String unformattedLoreLine1 = WynnUtils.normalizeBadString(loreLine1.getString());
                 String unformattedLoreLine2 = WynnUtils.normalizeBadString(loreLine2.getString());
 
-                if (unformattedLoreLine1.isBlank() && unformattedLoreLine2.isBlank())
-                    continue;
+                if (unformattedLoreLine1.isBlank() && unformattedLoreLine2.isBlank()) continue;
 
                 newLoreTmp.add(newLore.get(i));
             }
@@ -303,8 +302,7 @@ public class ItemStatInfoFeature extends Feature {
             }
         }
 
-        if (ids.isEmpty())
-            return;
+        if (ids.isEmpty()) return;
 
         // Insert generated lore
         for (String idName : ids.getAllKeys()) {
