@@ -256,6 +256,7 @@ public class ItemStatInfoFeature extends Feature {
 
             if (idStart == -1 || ids.isEmpty()) {
                 tag.putString("loreForm", "fail");
+                return;
             }
 
             tag.put("wynntilsIds", ids);
@@ -407,14 +408,10 @@ public class ItemStatInfoFeature extends Feature {
                     newName.append(
                             WynnUtils.normalizeBadString(
                                     ComponentUtils.getUnformatted(itemStack.getHoverName())));
-                    Style color =
-                            Style.EMPTY
-                                    .withColor(getPercentageColor(averagePercentage))
-                                    .withItalic(false);
 
-                    newName.append(
-                            new TextComponent(String.format(" [%.1f%%]", averagePercentage))
-                                    .withStyle(color));
+                    newName.append(new TextComponent(" "));
+
+                    newName.append(getPercentageTextComponent(averagePercentage));
 
                     itemStack.setHoverName(newName);
                 }
@@ -460,14 +457,14 @@ public class ItemStatInfoFeature extends Feature {
             return lowerEntry.getValue();
         }
 
-        if (Objects.equals(lowerEntry.getValue(), higherEntry.getValue())) {
+        if (Objects.equals(lowerEntry.getKey(), higherEntry.getKey())) {
             return lowerEntry.getValue();
         }
 
         float t = MathUtils.inverseLerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
 
         int lowerColor = lowerEntry.getValue().getValue();
-        int higherColor = lowerEntry.getValue().getValue();
+        int higherColor = higherEntry.getValue().getValue();
 
         int r = (int) MathUtils.lerp((lowerColor >> 16) & 0xff, (higherColor >> 16) & 0xff, t);
         int g = (int) MathUtils.lerp((lowerColor >> 8) & 0xff, (higherColor >> 8) & 0xff, t);
