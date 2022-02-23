@@ -431,8 +431,7 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private static MutableComponent getPercentageTextComponent(float percentage) {
-
-        Style color = Style.EMPTY.withColor(getPercentageColor(percentage));
+        Style color = Style.EMPTY.withColor(getPercentageColor(percentage)).withItalic(false);
         return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
     }
 
