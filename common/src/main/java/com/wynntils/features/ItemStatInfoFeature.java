@@ -396,10 +396,7 @@ public class ItemStatInfoFeature extends Feature {
         // UtilitiesConfig.Identifications.INSTANCE.groupIdentifications
         List<StringTag> orderedIds = IdentificationOrderer.INSTANCE.order(idMap, true);
 
-        for (StringTag stringTag : orderedIds) {
-            newLore.add(idStart, stringTag);
-            idStart++; // Maintain order
-        }
+        newLore.addAll(idStart, orderedIds);
 
         // Generate new name
         if (hasNew) {
@@ -467,6 +464,8 @@ public class ItemStatInfoFeature extends Feature {
                 }
             };
 
+    // TODO way to choose between lerp and flat color
+    // TODO maybe even different easing types
     private static TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
