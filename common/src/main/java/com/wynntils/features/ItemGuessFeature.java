@@ -6,6 +6,7 @@ package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.*;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -13,7 +14,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.mc.event.ItemsReceivedEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.objects.items.ItemTier;
@@ -41,6 +42,7 @@ public class ItemGuessFeature extends Feature {
 
     @Override
     protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
         return WebManager.tryLoadItemGuesses();
     }
 
@@ -48,17 +50,17 @@ public class ItemGuessFeature extends Feature {
     protected void onDisable() {}
 
     @SubscribeEvent
-    public void onItemsReceived(ItemsReceivedEvent e) {
+    public void onItemTooltipRender(ItemTooltipRenderEvent e) {
         if (!WynnUtils.onServer()) return;
 
-        for (ItemStack stack : e.getItems()) {
-            if (!WynnItemMatchers.isUnidentified(stack)) return;
+        if (!WynnItemMatchers.isUnidentified(e.getItemStack())) return;
 
-            generateGuesses(stack);
-        }
+        generateGuesses(e.getItemStack());
     }
 
     private static void generateGuesses(ItemStack stack) {
+        if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
+
         String name =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(stack.getHoverName().getString()));
@@ -128,6 +130,8 @@ public class ItemGuessFeature extends Feature {
                                 + ChatFormatting.GRAY
                                 + "Possibilities: "
                                 + itemNamesAndCosts));
+
+        ItemUtils.addMarker(stack, "itemGuesses");
 
         ItemUtils.replaceLore(stack, lore);
     }
