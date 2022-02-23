@@ -349,7 +349,13 @@ public class ItemStatInfoFeature extends Feature {
 
             int min = idContainer.getMin();
             int max = idContainer.getMax();
-            float percentage = MathUtils.inverseLerp(min, max, statValue) * 100;
+            float percentage;
+
+            if (isInverted) {
+                percentage = MathUtils.inverseLerp(max, min, statValue) * 100;
+            } else {
+                percentage = MathUtils.inverseLerp(min, max, statValue) * 100;
+            }
 
             String loreFormat = alternativeForm ? ALTERNATIVE_FORMAT_STRING : MAIN_FORMAT_STRING;
 
