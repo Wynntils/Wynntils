@@ -442,10 +442,10 @@ public class ItemStatInfoFeature extends Feature {
     private static final TreeMap<Float, TextColor> colorMap =
             new TreeMap<>() {
                 {
-                    put(15f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-                    put(55f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-                    put(88f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-                    put(98f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+                    put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
+                    put(30f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+                    put(80f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+                    put(96f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
                 }
             };
 
