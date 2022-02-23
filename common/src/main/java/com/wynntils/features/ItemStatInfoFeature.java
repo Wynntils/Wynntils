@@ -261,28 +261,7 @@ public class ItemStatInfoFeature extends Feature {
             tag.put("wynntilsIds", ids);
             tag.put("wynntilsStars", stars);
 
-            ListTag newLoreTmp = new ListTag(); // Used to remove duplicate blank lines
-
-            if (newLore.size() > 0) newLoreTmp.add(newLore.get(0));
-
-            for (int i = 1; i < newLore.size(); i++) {
-                MutableComponent loreLine1 =
-                        Component.Serializer.fromJson(newLore.getString(i - 1));
-                MutableComponent loreLine2 = Component.Serializer.fromJson(newLore.getString(i));
-
-                if (loreLine1 == null || loreLine2 == null) {
-                    continue;
-                }
-
-                String unformattedLoreLine1 = WynnUtils.normalizeBadString(loreLine1.getString());
-                String unformattedLoreLine2 = WynnUtils.normalizeBadString(loreLine2.getString());
-
-                if (unformattedLoreLine1.isBlank() && unformattedLoreLine2.isBlank()) continue;
-
-                newLoreTmp.add(newLore.get(i));
-            }
-
-            newLore = newLoreTmp;
+            newLore = stripDuplicateBlank(newLore);
             newLore.add(idStart, ItemUtils.toLoreStringTag(new TextComponent("")));
         } else {
             ids = tag.getCompound("wynntilsIds");
@@ -507,5 +486,53 @@ public class ItemStatInfoFeature extends Feature {
         } else {
             return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
         }
+    }
+
+    private ListTag stripDuplicateBlank(ListTag lore) {
+        ListTag newLore = new ListTag(); // Used to remove duplicate blank lines
+
+        boolean oldBlank = false;
+        int index = 0;
+
+        while (index < lore.size()) { // find first blank
+            MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(index));
+
+            if (loreLine == null) {
+                continue;
+            }
+
+            String line = WynnUtils.normalizeBadString(loreLine.getString());
+
+            newLore.add(lore.get(index));
+
+            if (line.isEmpty()) {
+                oldBlank = true;
+                break;
+            }
+        }
+
+        if (!oldBlank) {
+            return newLore;
+        }
+
+        while (index < lore.size()) {
+            MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(index));
+
+            if (loreLine == null) {
+                continue; // null lore - do not add
+            }
+
+            String line = WynnUtils.normalizeBadString(loreLine.getString());
+
+            if (oldBlank && line.isEmpty()) {
+                continue; // both blank - do not add; oldBlank still true
+            }
+
+            oldBlank = line.isEmpty();
+
+            newLore.add(lore.get(index));
+        }
+
+        return newLore;
     }
 }
