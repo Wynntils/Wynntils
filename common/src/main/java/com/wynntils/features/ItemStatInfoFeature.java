@@ -494,10 +494,11 @@ public class ItemStatInfoFeature extends Feature {
         boolean oldBlank = false;
         int index = 0;
 
-        while (index < lore.size()) { // find first blank
+        for (; index < lore.size(); index++) { // find first blank
             MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(index));
 
             if (loreLine == null) {
+                index++;
                 continue;
             }
 
@@ -515,7 +516,7 @@ public class ItemStatInfoFeature extends Feature {
             return newLore;
         }
 
-        while (index < lore.size()) {
+        for (; index < lore.size(); index++) {
             MutableComponent loreLine = Component.Serializer.fromJson(lore.getString(index));
 
             if (loreLine == null) {
