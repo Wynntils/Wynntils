@@ -4,7 +4,10 @@
  */
 package com.wynntils.wc.utils;
 
+import com.wynntils.mc.utils.ItemUtils;
 import java.util.*;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.TextComponent;
 
 public class IdentificationOrderer {
 
@@ -54,12 +57,12 @@ public class IdentificationOrderer {
      * @param groups if ids should be grouped
      * @return a list with the ordered lore
      */
-    public List<String> order(Map<String, String> holder, boolean groups) {
-        List<String> result = new ArrayList<>();
+    public List<StringTag> order(Map<String, StringTag> holder, boolean groups) {
+        List<StringTag> result = new ArrayList<>();
         if (holder.isEmpty()) return result;
 
         // order based on the priority first
-        List<Map.Entry<String, String>> ordered =
+        List<Map.Entry<String, StringTag>> ordered =
                 holder.entrySet().stream()
                         .sorted(Comparator.comparingInt(c -> getOrder(c.getKey())))
                         .toList();
@@ -67,11 +70,14 @@ public class IdentificationOrderer {
         if (groups) {
             int lastGroup =
                     getGroup(ordered.get(0).getKey()); // first key group to avoid wrong spaces
-            for (Map.Entry<String, String> keys : ordered) {
+            for (Map.Entry<String, StringTag> keys : ordered) {
                 int currentGroup = getGroup(keys.getKey()); // next key group
 
                 if (currentGroup != lastGroup)
-                    result.add(" "); // adds a space before if the group is different
+                    result.add(
+                            ItemUtils.toLoreStringTag(
+                                    new TextComponent(
+                                            " "))); // adds a space before if the group is different
 
                 result.add(keys.getValue());
                 lastGroup = currentGroup;

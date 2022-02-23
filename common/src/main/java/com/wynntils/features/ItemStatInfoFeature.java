@@ -24,6 +24,7 @@ import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -284,6 +285,8 @@ public class ItemStatInfoFeature extends Feature {
 
         if (ids.isEmpty()) return;
 
+        Map<String, StringTag> idMap = new HashMap<>();
+
         // Insert generated lore
         for (String idName : ids.getAllKeys()) {
             int statValue = ids.getInt(idName);
@@ -335,13 +338,13 @@ public class ItemStatInfoFeature extends Feature {
 
             if (idContainer == null || idContainer.isInvalidValue(statValue)) { // id not in api
                 loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-                newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
+                idMap.put(idName, ItemUtils.toLoreStringTag(loreLine));
                 hasNew = true;
                 continue;
             }
 
             if (idContainer.hasConstantValue()) {
-                newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
+                idMap.put(idName, ItemUtils.toLoreStringTag(loreLine));
                 continue;
             }
 
@@ -386,7 +389,16 @@ public class ItemStatInfoFeature extends Feature {
             percentTotal += percentage;
             idAmount++;
 
-            newLore.add(idStart, ItemUtils.toLoreStringTag(loreLine));
+            idMap.put(idName, ItemUtils.toLoreStringTag(loreLine));
+        }
+
+        // TODO: UtilitiesConfig.Identifications.INSTANCE.reorderIdentifications and
+        // UtilitiesConfig.Identifications.INSTANCE.groupIdentifications
+        List<StringTag> orderedIds = IdentificationOrderer.INSTANCE.order(idMap, true);
+
+        for (StringTag stringTag : orderedIds) {
+            newLore.add(idStart, stringTag);
+            idStart++; // Maintain order
         }
 
         // Generate new name
