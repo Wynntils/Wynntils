@@ -76,8 +76,10 @@ public class IdentificationContainer {
 
     public record ReidentificationChances(double decrease, double remain, double increase) {
 
-        private ReidentificationChances flip() {
-            return new ReidentificationChances(increase, remain, decrease);
+        private ReidentificationChances flipIf(boolean flip) {
+            if (flip) return new ReidentificationChances(increase, remain, decrease);
+
+            return this;
         }
     }
 
@@ -87,26 +89,22 @@ public class IdentificationContainer {
      *
      * @param currentValue The current value of this identification
      * @param isInverted If true, `decrease` will be the chance to go up (become better) and vice
-     *     versa with `increase`.
+     *     versa with `increase`. Likewise, the stars are accounted as inverted
      * @return A {@link ReidentificationChances} of the result (All from 0 to 1)
      */
     public strictfp ReidentificationChances getChances(
             int currentValue, boolean isInverted, int starCount) {
-        if (isInverted) {
-            return getChances(currentValue, false, starCount).flip();
-        }
-
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
         // that some items that have had its stats shifted from positive to negative to
         // break the bounds
         if (currentValue > max) {
-            return new ReidentificationChances(1d, 0d, 0d);
+            return new ReidentificationChances(1d, 0d, 0d).flipIf(isInverted);
         } else if (currentValue < min) {
-            return new ReidentificationChances(0d, 0d, 1d);
+            return new ReidentificationChances(0d, 0d, 1d).flipIf(isInverted);
         }
 
         if (hasConstantValue()) {
-            return new ReidentificationChances(0d, 1d, 0d);
+            return new ReidentificationChances(0d, 1d, 0d).flipIf(isInverted);
         }
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
@@ -125,16 +123,31 @@ public class IdentificationContainer {
 
             switch (starCount) {
                 case 0:
-                    starMin = 30;
-                    starMax = 100;
+                    if (isInverted) {
+                        starMin = 60;
+                        starMax = 130;
+                    } else {
+                        starMin = 30;
+                        starMax = 100;
+                    }
                     break;
                 case 1:
-                    starMin = 101;
-                    starMax = 124;
+                    if (isInverted) {
+                        starMin = 59;
+                        starMax = 36;
+                    } else {
+                        starMin = 101;
+                        starMax = 124;
+                    }
                     break;
                 case 2:
-                    starMin = 125;
-                    starMax = 129;
+                    if (isInverted) {
+                        starMin = 31;
+                        starMax = 35;
+                    } else {
+                        starMin = 125;
+                        starMax = 129;
+                    }
                     break;
                 case 3:
                     return new ReidentificationChances(100 / 101d, 1 / 101d, 0d);
@@ -150,14 +163,16 @@ public class IdentificationContainer {
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d);
+            return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d)
+                    .flipIf(isInverted);
         } else {
             double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
             double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 80);
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d);
+            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d)
+                    .flipIf(isInverted);
         }
     }
 
