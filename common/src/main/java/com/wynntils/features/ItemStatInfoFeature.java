@@ -299,9 +299,19 @@ public class ItemStatInfoFeature extends Feature {
 
             boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(idName);
 
-            MutableComponent loreLine =
+            MutableComponent loreLine = new TextComponent("");
+            loreLine.setStyle(Style.EMPTY.withItalic(false));
+
+            MutableComponent statInfo =
                     new TextComponent(
                             (statValue > 0 ? "+" : "") + statValue + type.getInGame(idName));
+            statInfo.setStyle(
+                    Style.EMPTY.withColor(
+                            isInverted ^ (statValue > 0)
+                                    ? ChatFormatting.GREEN
+                                    : ChatFormatting.RED));
+
+            loreLine.append(statInfo);
 
             String longName = IdentificationContainer.getAsLongName(idName);
 
@@ -309,12 +319,6 @@ public class ItemStatInfoFeature extends Feature {
             SpellType spell = SpellType.fromName(longName);
             if (spell != null) {
                 longName = spell.forOtherClass(ClassType.None).getName() + " Spell Cost";
-            }
-
-            if (isInverted ^ (statValue > 0)) {
-                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false));
-            } else {
-                loreLine.setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false));
             }
 
             int starsCount = stars.getInt(idName);
