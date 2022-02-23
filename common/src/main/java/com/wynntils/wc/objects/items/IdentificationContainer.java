@@ -133,8 +133,8 @@ public class IdentificationContainer {
                     break;
                 case 1:
                     if (isInverted) {
-                        starMin = 59;
-                        starMax = 36;
+                        starMin = 36;
+                        starMax = 59;
                     } else {
                         starMin = 101;
                         starMax = 124;
