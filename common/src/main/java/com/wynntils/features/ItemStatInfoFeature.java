@@ -97,7 +97,8 @@ public class ItemStatInfoFeature extends Feature {
          * Avaritia Repo: https://github.com/Morpheus1101/Avaritia
          */
         if (ItemUtils.hasMarker(e.getStack(), "isPerfect")) {
-            MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD);
+            MutableComponent newName =
+                    new TextComponent("").withStyle(Style.EMPTY.withBold(true).withItalic(false));
 
             String name =
                     "Perfect "
@@ -110,11 +111,8 @@ public class ItemStatInfoFeature extends Feature {
             for (int i = 0; i < name.length(); i++) {
                 float z = 2000.0F;
                 Style color =
-                        Style.EMPTY
-                                .withColor(
-                                        Color.HSBtoRGB(
-                                                ((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F))
-                                .withItalic(false);
+                        Style.EMPTY.withColor(
+                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
@@ -122,8 +120,12 @@ public class ItemStatInfoFeature extends Feature {
             e.setHoveredName(newName);
         } else if (ItemUtils.hasMarker(e.getStack(), "isDefective")) {
             MutableComponent newName =
-                    new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
-            newName.setStyle(newName.getStyle().withItalic(false));
+                    new TextComponent("")
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.DARK_RED)
+                                            .withBold(true)
+                                            .withItalic(false));
 
             String name =
                     "Defective "
@@ -141,14 +143,12 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
+                                    .withStyle(ChatFormatting.OBFUSCATED));
                     current = new StringBuilder();
 
                     obfuscated = true;
                 } else if (Math.random() > obfuscationChance && obfuscated) {
-                    newName.append(
-                            new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withItalic(false)));
+                    newName.append(new TextComponent(current.toString()));
                     current = new StringBuilder();
 
                     obfuscated = false;
@@ -159,12 +159,9 @@ public class ItemStatInfoFeature extends Feature {
 
             if (obfuscated) {
                 newName.append(
-                        new TextComponent(current.toString())
-                                .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
+                        new TextComponent(current.toString()).withStyle(ChatFormatting.OBFUSCATED));
             } else {
-                newName.append(
-                        new TextComponent(current.toString())
-                                .withStyle(Style.EMPTY.withItalic(false)));
+                newName.append(new TextComponent(current.toString()));
             }
 
             e.setHoveredName(newName);
