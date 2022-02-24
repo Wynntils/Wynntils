@@ -199,8 +199,6 @@ public class ItemStatInfoFeature extends Feature {
         int idAmount =
                 0; // this only counts those ids that are correct and do not have fixed values
 
-        int actualIdAmount = 0;
-
         boolean hasNew = false;
 
         CompoundTag ids = new CompoundTag();
@@ -334,8 +332,6 @@ public class ItemStatInfoFeature extends Feature {
 
             loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GRAY));
 
-            actualIdAmount++;
-
             if (idContainer == null || idContainer.isInvalidValue(statValue)) { // id not in api
                 loreLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
                 idMap.put(idName, ItemUtils.toLoreStringTag(loreLine));
@@ -438,7 +434,7 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         tag.putInt("wynntilsIdStart", idStart);
-        tag.putInt("wynntilsIdEnd", idStart + actualIdAmount);
+        tag.putInt("wynntilsIdEnd", idStart + orderedIds.size());
 
         if (alternativeForm) {
             tag.putString("loreForm", "alternative");
