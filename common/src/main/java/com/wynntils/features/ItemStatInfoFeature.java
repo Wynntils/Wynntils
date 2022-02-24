@@ -70,7 +70,9 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     @Override
-    protected void onDisable() {}
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
 
     @SubscribeEvent
     public void onToolTipHoveredNameEvent(ItemToolTipHoveredNameEvent e) {

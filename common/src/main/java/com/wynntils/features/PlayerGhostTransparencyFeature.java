@@ -23,7 +23,9 @@ public class PlayerGhostTransparencyFeature extends Feature {
     }
 
     @Override
-    protected void onDisable() {}
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
