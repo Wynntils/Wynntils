@@ -11,26 +11,31 @@ import net.minecraft.network.chat.Component;
 
 public enum ItemTier {
     @SerializedName("NORMAL")
-    Normal(ChatFormatting.WHITE),
+    Normal(ChatFormatting.WHITE, -1, 0),
     @SerializedName("UNIQUE")
-    Unique(ChatFormatting.YELLOW),
+    Unique(ChatFormatting.YELLOW, 3, 0.5f),
     @SerializedName("RARE")
-    Rare(ChatFormatting.LIGHT_PURPLE),
+    Rare(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
     @SerializedName("SET")
-    Set(ChatFormatting.GREEN),
+    Set(ChatFormatting.GREEN, 8, 1.2f),
     @SerializedName("FABLED")
-    Fabled(ChatFormatting.RED),
+    Fabled(ChatFormatting.RED, 12, 4.5f),
     @SerializedName("LEGENDARY")
-    Legendary(ChatFormatting.AQUA),
+    Legendary(ChatFormatting.AQUA, 16, 8.0f),
     @SerializedName("MYTHIC")
-    Mythic(ChatFormatting.DARK_PURPLE),
+    Mythic(ChatFormatting.DARK_PURPLE, 90, 18.0f),
     @SerializedName("CRAFTED")
-    Crafted(ChatFormatting.DARK_AQUA);
+    Crafted(ChatFormatting.DARK_AQUA, -1, 0);
 
-    final ChatFormatting chatFormatting;
+    private final ChatFormatting chatFormatting;
+    private final int baseCost;
+    private final float costMultiplier;
 
-    ItemTier(ChatFormatting chatFormatting) {
+
+    ItemTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
         this.chatFormatting = chatFormatting;
+        this.baseCost = baseCost;
+        this.costMultiplier = costMultiplier;
     }
 
     public ChatFormatting getChatFormatting() {
@@ -53,4 +58,9 @@ public enum ItemTier {
                 .findFirst()
                 .orElse(null);
     }
+
+    public int getItemIdentificationCost(int level) {
+        return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
+    }
+
 }

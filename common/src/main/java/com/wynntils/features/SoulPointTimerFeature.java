@@ -43,7 +43,7 @@ public class SoulPointTimerFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onInventoryRender(ItemsReceivedEvent e) {
+    public void onItemsReceived(ItemsReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
 
         for (ItemStack stack : e.getItems()) {
