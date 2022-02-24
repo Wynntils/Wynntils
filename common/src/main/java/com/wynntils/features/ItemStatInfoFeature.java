@@ -398,7 +398,7 @@ public class ItemStatInfoFeature extends Feature {
         Collection<StringTag> orderedIds; // use collection for map
 
         if (reorderIdentifications) {
-            orderedIds = IdentificationOrderer.INSTANCE.order(idMap, true);
+            orderedIds = IdentificationOrderer.INSTANCE.order(idMap, groupIdentifications);
         } else {
             orderedIds = idMap.values();
         }
