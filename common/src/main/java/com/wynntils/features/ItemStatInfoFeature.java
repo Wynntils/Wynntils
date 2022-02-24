@@ -24,7 +24,6 @@ import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -48,6 +47,16 @@ public class ItemStatInfoFeature extends Feature {
             "{percentage} {chance_perfect}"
                     + " {chance_increase} {chance_decrease}"
                     + " [{min},{max}]"; // Used when user presses SHIFT on lore.
+
+    private static final boolean showStars = true;
+    private static final boolean colorLerp = true;
+
+    private static final boolean perfect = true;
+    private static final boolean defective = true;
+    private static final float obfuscationChance = 0.08f;
+
+    private static final boolean reorderIdentifications = true;
+    private static final boolean groupIdentifications = true;
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
@@ -101,10 +110,6 @@ public class ItemStatInfoFeature extends Feature {
                 e.getStack(), "isDefective")) { // FIXME: Current implementation seems buggy?
             MutableComponent newName =
                     new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
-
-            float obfuscationChance =
-                    0.08f; // UtilitiesConfig.Identifications.INSTANCE.defectiveObfuscationAmount /
-            // 100;
 
             String name =
                     "Defective "
@@ -283,7 +288,7 @@ public class ItemStatInfoFeature extends Feature {
 
         if (ids.isEmpty()) return;
 
-        Map<String, StringTag> idMap = new HashMap<>();
+        Map<String, StringTag> idMap = new LinkedHashMap<>();
 
         // Insert generated lore
         for (String idName : ids.getAllKeys()) {
@@ -325,8 +330,8 @@ public class ItemStatInfoFeature extends Feature {
             int starsCount = stars.getInt(idName);
 
             // Add stars
-            if (stars.contains(idName)) // TODO: Add a config option whether to show id stars or not
-            loreLine.append(
+            if (showStars && stars.contains(idName))
+                loreLine.append(
                         new TextComponent("***".substring(3 - starsCount))
                                 .withStyle(ChatFormatting.DARK_GREEN));
 
@@ -388,9 +393,13 @@ public class ItemStatInfoFeature extends Feature {
             idMap.put(idName, ItemUtils.toLoreStringTag(loreLine));
         }
 
-        // TODO: UtilitiesConfig.Identifications.INSTANCE.reorderIdentifications and
-        // UtilitiesConfig.Identifications.INSTANCE.groupIdentifications
-        List<StringTag> orderedIds = IdentificationOrderer.INSTANCE.order(idMap, true);
+        Collection<StringTag> orderedIds; // use collection for map
+
+        if (reorderIdentifications) {
+            orderedIds = IdentificationOrderer.INSTANCE.order(idMap, true);
+        } else {
+            orderedIds = idMap.values();
+        }
 
         newLore.addAll(idStart, orderedIds);
 
@@ -413,9 +422,9 @@ public class ItemStatInfoFeature extends Feature {
             // check for item perfection or 0% items, else put %
             if (!ItemUtils.hasMarker(itemStack, "isPerfect")
                     && !ItemUtils.hasMarker(itemStack, "isDefective")) {
-                if (averagePercentage >= 100d) {
+                if (averagePercentage >= 100d && perfect) {
                     ItemUtils.addMarker(itemStack, "isPerfect");
-                } else if (averagePercentage == 0) {
+                } else if (averagePercentage == 0 && defective) {
                     ItemUtils.addMarker(itemStack, "isDefective");
                 } else {
                     TextComponent newName = new TextComponent("");
@@ -446,7 +455,13 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private static MutableComponent getPercentageTextComponent(float percentage) {
-        Style color = Style.EMPTY.withColor(getPercentageColor(percentage)).withItalic(false);
+        Style color =
+                Style.EMPTY
+                        .withColor(
+                                colorLerp
+                                        ? getPercentageColor(percentage)
+                                        : getFlatPercentageColor(percentage))
+                        .withItalic(false);
         return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
     }
 
@@ -460,8 +475,6 @@ public class ItemStatInfoFeature extends Feature {
                 }
             };
 
-    // TODO way to choose between lerp and flat color
-    // TODO maybe even different easing types
     private static TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
@@ -489,7 +502,7 @@ public class ItemStatInfoFeature extends Feature {
         return TextColor.fromRgb((r << 16) | (g << 8) | b);
     }
 
-    private TextColor getFlatPercentageColor(float percentage) {
+    private static TextColor getFlatPercentageColor(float percentage) {
         if (percentage < 30f) {
             return TextColor.fromLegacyFormat(ChatFormatting.RED);
         } else if (percentage < 80f) {
