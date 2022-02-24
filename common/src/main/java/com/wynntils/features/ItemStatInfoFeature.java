@@ -113,8 +113,7 @@ public class ItemStatInfoFeature extends Feature {
                         Style.EMPTY
                                 .withColor(
                                         Color.HSBtoRGB(
-                                                (((time % 100000) + i * cycle / 7) % cycle)
-                                                        / (float) cycle,
+                                                ((time + i * cycle / 7) % cycle) / (float) cycle,
                                                 0.8F,
                                                 0.8F))
                                 .withItalic(false);
