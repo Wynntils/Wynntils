@@ -108,12 +108,15 @@ public class ItemStatInfoFeature extends Feature {
 
             long time = System.currentTimeMillis();
             for (int i = 0; i < name.length(); i++) {
-                float z = 2000.0F;
+                int cycle = 1000;
                 Style color =
                         Style.EMPTY
                                 .withColor(
                                         Color.HSBtoRGB(
-                                                ((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F))
+                                                (((time % 100000) + i * cycle / 7) % cycle)
+                                                        / (float) cycle,
+                                                0.8F,
+                                                0.8F))
                                 .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
