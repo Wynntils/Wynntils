@@ -123,6 +123,7 @@ public class ItemStatInfoFeature extends Feature {
         } else if (ItemUtils.hasMarker(e.getStack(), "isDefective")) {
             MutableComponent newName =
                     new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
+            newName.setStyle(newName.getStyle().withItalic(false));
 
             String name =
                     "Defective "
@@ -148,7 +149,9 @@ public class ItemStatInfoFeature extends Feature {
 
                     obfuscated = true;
                 } else if (Math.random() > obfuscationChance && obfuscated) {
-                    newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+                    newName.append(
+                            new TextComponent(current.toString())
+                                    .withStyle(Style.EMPTY.withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = false;
@@ -159,9 +162,15 @@ public class ItemStatInfoFeature extends Feature {
 
             if (obfuscated) {
                 newName.append(
-                        new TextComponent(current.toString()).withStyle(ChatFormatting.OBFUSCATED));
+                        new TextComponent(current.toString())
+                                .withStyle(
+                                        Style.EMPTY
+                                                .withColor(ChatFormatting.OBFUSCATED)
+                                                .withItalic(false)));
             } else {
-                newName.append(new TextComponent(current.toString()));
+                newName.append(
+                        new TextComponent(current.toString())
+                                .withStyle(Style.EMPTY.withItalic(false)));
             }
 
             e.setHoveredName(newName);
