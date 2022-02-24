@@ -7,6 +7,10 @@ package com.wynntils.features;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.features.properties.GameplayImpact;
+import com.wynntils.core.features.properties.PerformanceImpact;
+import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ItemToolTipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -35,6 +39,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+@FeatureInfo(
+        stability = Stability.STABLE,
+        gameplay = GameplayImpact.LARGE,
+        performance = PerformanceImpact.SMALL)
 public class ItemStatInfoFeature extends Feature {
     private static final Pattern ITEM_STATUS_PATTERN =
             Pattern.compile(
