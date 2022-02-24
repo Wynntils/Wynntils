@@ -15,6 +15,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemUtils {
@@ -133,6 +134,15 @@ public class ItemUtils {
      * JsonDeserializationContext)}
      */
     public static StringTag toLoreStringTag(Component toConvert) {
+        // When italic is not set manually, it is null, but Minecraft still makes the text italic.
+        // To prevent setting it to false manually every time, we can do this to force it being
+        // non-italic by default.
+        if (!toConvert.getStyle().isItalic()) {
+            MutableComponent mutableComponent = (MutableComponent) toConvert;
+            mutableComponent.setStyle(mutableComponent.getStyle().withItalic(false));
+            return StringTag.valueOf(Component.Serializer.toJson(mutableComponent));
+        }
+
         return StringTag.valueOf(Component.Serializer.toJson(toConvert));
     }
 }

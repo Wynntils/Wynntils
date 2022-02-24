@@ -105,11 +105,8 @@ public class ItemStatInfoFeature extends Feature {
                 // time (I assume that was the intention)
 
                 Style color =
-                        Style.EMPTY
-                                .withColor(
-                                        Color.HSBtoRGB(
-                                                ((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F))
-                                .withItalic(false);
+                        Style.EMPTY.withColor(
+                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
@@ -136,10 +133,7 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(
-                                            Style.EMPTY
-                                                    .withColor(ChatFormatting.OBFUSCATED)
-                                                    .withItalic(false)));
+                                    .withStyle(ChatFormatting.OBFUSCATED));
                     current = new StringBuilder();
 
                     obfuscated = true;
@@ -155,11 +149,7 @@ public class ItemStatInfoFeature extends Feature {
 
             if (obfuscated) {
                 newName.append(
-                        new TextComponent(current.toString())
-                                .withStyle(
-                                        Style.EMPTY
-                                                .withColor(ChatFormatting.OBFUSCATED)
-                                                .withItalic(false)));
+                        new TextComponent(current.toString()).withStyle(ChatFormatting.OBFUSCATED));
             } else {
                 newName.append(new TextComponent(current.toString()));
             }
@@ -335,7 +325,6 @@ public class ItemStatInfoFeature extends Feature {
             boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(idName);
 
             MutableComponent loreLine = new TextComponent("");
-            loreLine.setStyle(Style.EMPTY.withItalic(false));
 
             MutableComponent statInfo =
                     new TextComponent(
@@ -405,33 +394,20 @@ public class ItemStatInfoFeature extends Feature {
                     new TextComponent(
                                     String.format(
                                             "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
-                            .withStyle(
-                                    Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
+                            .withStyle(ChatFormatting.AQUA));
             infoVariables.put(
                     "chance_increase",
                     new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100))
-                            .withStyle(
-                                    Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false)));
+                            .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
                     new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100))
-                            .withStyle(
-                                    Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false)));
+                            .withStyle(ChatFormatting.RED));
 
             infoVariables.put(
-                    "min",
-                    new TextComponent(String.valueOf(min))
-                            .withStyle(
-                                    Style.EMPTY
-                                            .withColor(ChatFormatting.YELLOW)
-                                            .withItalic(false)));
+                    "min", new TextComponent(String.valueOf(min)).withStyle(ChatFormatting.YELLOW));
             infoVariables.put(
-                    "max",
-                    new TextComponent(String.valueOf(max))
-                            .withStyle(
-                                    Style.EMPTY
-                                            .withColor(ChatFormatting.YELLOW)
-                                            .withItalic(false)));
+                    "max", new TextComponent(String.valueOf(max)).withStyle(ChatFormatting.YELLOW));
 
             Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
 
@@ -458,10 +434,7 @@ public class ItemStatInfoFeature extends Feature {
             newName.append(
                     WynnUtils.normalizeBadString(
                             ComponentUtils.getUnformatted(itemStack.getHoverName())));
-            newName.append(
-                    new TextComponent(" [NEW]")
-                            .withStyle(
-                                    Style.EMPTY.withColor(ChatFormatting.GOLD).withItalic(false)));
+            newName.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
             itemStack.setHoverName(newName);
         } else if (idAmount > 0) {
