@@ -68,7 +68,8 @@ public class ItemStatInfoFeature extends Feature {
 
     private static final boolean perfect = true;
     private static final boolean defective = true;
-    private static final float obfuscationChance = 0.08f;
+    private static final float obfuscationChanceStart = 0.08f;
+    private static final float obfuscationChanceEnd = 0.04f;
 
     private static final boolean reorderIdentifications = true;
     private static final boolean groupIdentifications = true;
@@ -134,23 +135,29 @@ public class ItemStatInfoFeature extends Feature {
                                             ComponentUtils.getUnformatted(
                                                     e.getStack().getHoverName())));
 
-            boolean obfuscated = Math.random() < obfuscationChance;
+            boolean obfuscated = Math.random() < obfuscationChanceStart;
             StringBuilder current = new StringBuilder();
 
             for (int i = 0; i < name.length() - 1; i++) {
                 current.append(name.charAt(i));
 
-                if (Math.random() < obfuscationChance && !obfuscated) {
-                    newName.append(
-                            new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
-                    current = new StringBuilder();
+                float chance =
+                        MathUtils.lerp(
+                                obfuscationChanceStart,
+                                obfuscationChanceEnd,
+                                (i + 1) / (float) (name.length() - 1));
 
-                    obfuscated = true;
-                } else if (Math.random() > obfuscationChance && obfuscated) {
+                if (!obfuscated && Math.random() < chance) {
                     newName.append(
                             new TextComponent(current.toString())
                                     .withStyle(Style.EMPTY.withItalic(false)));
+                    current = new StringBuilder();
+
+                    obfuscated = true;
+                } else if (obfuscated && Math.random() > chance) {
+                    newName.append(
+                            new TextComponent(current.toString())
+                                    .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = false;
