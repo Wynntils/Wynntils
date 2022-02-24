@@ -141,10 +141,7 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(
-                                            Style.EMPTY
-                                                    .withColor(ChatFormatting.OBFUSCATED)
-                                                    .withItalic(false)));
+                                    .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
@@ -163,10 +160,7 @@ public class ItemStatInfoFeature extends Feature {
             if (obfuscated) {
                 newName.append(
                         new TextComponent(current.toString())
-                                .withStyle(
-                                        Style.EMPTY
-                                                .withColor(ChatFormatting.OBFUSCATED)
-                                                .withItalic(false)));
+                                .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
             } else {
                 newName.append(
                         new TextComponent(current.toString())
