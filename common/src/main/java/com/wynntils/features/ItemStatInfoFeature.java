@@ -46,7 +46,14 @@ public class ItemStatInfoFeature extends Feature {
     private static final String ALTERNATIVE_FORMAT_STRING =
             "{percentage} {chance_perfect}"
                     + " {chance_increase} {chance_decrease}"
-                    + " [{min},{max}]"; // Used when user presses SHIFT on lore.
+                    + ChatFormatting.YELLOW
+                    + " ["
+                    + "{min}"
+                    + ChatFormatting.YELLOW
+                    + ", "
+                    + "{max}"
+                    + ChatFormatting.YELLOW
+                    + "]"; // Used when user presses SHIFT on lore.
 
     private static final boolean showStars = true;
     private static final boolean colorLerp = true;
@@ -376,16 +383,35 @@ public class ItemStatInfoFeature extends Feature {
             infoVariables.put(
                     "chance_perfect",
                     new TextComponent(
-                            String.format("\u2605%.2f%%", idContainer.getPerfectChance() * 100)));
+                                    String.format(
+                                            "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100)));
+                    new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100))
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false)));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100)));
+                    new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100))
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false)));
 
-            infoVariables.put("min", new TextComponent(String.valueOf(min)));
-            infoVariables.put("max", new TextComponent(String.valueOf(max)));
+            infoVariables.put(
+                    "min",
+                    new TextComponent(String.valueOf(min))
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.YELLOW)
+                                            .withItalic(false)));
+            infoVariables.put(
+                    "max",
+                    new TextComponent(String.valueOf(max))
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.YELLOW)
+                                            .withItalic(false)));
 
             Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
 
