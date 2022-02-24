@@ -106,8 +106,8 @@ public class ItemStatInfoFeature extends Feature {
                                             ComponentUtils.getUnformatted(
                                                     e.getStack().getHoverName())));
 
+            long time = System.currentTimeMillis();
             for (int i = 0; i < name.length(); i++) {
-                long time = System.currentTimeMillis();
                 float z = 2000.0F;
                 // FIXME: I don't think this functions properly, colors are not getting updated real
                 // time (I assume that was the intention)
