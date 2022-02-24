@@ -60,7 +60,7 @@ public class ItemGuessFeature extends Feature {
         if (!WynnUtils.onServer()) return;
 
         for (ItemStack stack : e.getItems()) {
-            if (!WynnItemMatchers.isUnidentified(stack)) return;
+            if (!WynnItemMatchers.isUnidentified(stack)) continue;
 
             generateGuesses(stack);
         }
