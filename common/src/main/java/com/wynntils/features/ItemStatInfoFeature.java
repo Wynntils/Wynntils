@@ -148,7 +148,7 @@ public class ItemStatInfoFeature extends Feature {
 
                     obfuscated = true;
                 } else if (Math.random() > obfuscationChance && obfuscated) {
-                    newName.append(new TextComponent(current.toString()));
+                    newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = false;
