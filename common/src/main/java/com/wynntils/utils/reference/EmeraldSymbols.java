@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.reference;
 
 public class EmeraldSymbols {
@@ -13,5 +17,4 @@ public class EmeraldSymbols {
     public static final String EMERALDS = (E_STRING).intern();
     public static final String BLOCKS = (E_STRING + B_STRING).intern();
     public static final String LE = (L_STRING + E_STRING).intern();
-
 }

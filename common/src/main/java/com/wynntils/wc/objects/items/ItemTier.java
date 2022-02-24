@@ -31,7 +31,6 @@ public enum ItemTier {
     private final int baseCost;
     private final float costMultiplier;
 
-
     ItemTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
         this.chatFormatting = chatFormatting;
         this.baseCost = baseCost;
@@ -62,5 +61,4 @@ public enum ItemTier {
     public int getItemIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
     }
-
 }

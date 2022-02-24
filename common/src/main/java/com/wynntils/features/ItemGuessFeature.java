@@ -14,9 +14,11 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.reference.EmeraldSymbols;
+import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.objects.items.ItemTier;
 import com.wynntils.wc.objects.items.ItemType;
 import com.wynntils.wc.utils.WynnItemMatchers;
@@ -35,6 +37,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         stability = Stability.STABLE)
 public class ItemGuessFeature extends Feature {
 
+    private static final boolean showGuessesPrice = true;
+
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -47,15 +51,19 @@ public class ItemGuessFeature extends Feature {
     }
 
     @Override
-    protected void onDisable() {}
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
 
     @SubscribeEvent
-    public void onItemTooltipRender(ItemTooltipRenderEvent e) {
+    public void onItemsReceived(ItemsReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
 
-        if (!WynnItemMatchers.isUnidentified(e.getItemStack())) return;
+        for (ItemStack stack : e.getItems()) {
+            if (!WynnItemMatchers.isUnidentified(stack)) return;
 
-        generateGuesses(e.getItemStack());
+            generateGuesses(stack);
+        }
     }
 
     private static void generateGuesses(ItemStack stack) {
@@ -102,20 +110,26 @@ public class ItemGuessFeature extends Feature {
 
         StringBuilder itemNamesAndCosts = new StringBuilder();
         for (String possibleItem : items) {
-            // ItemProfile itemProfile = WebManager.getItems().get(possibleItem);
+            ItemProfile itemProfile = WebManager.getItemsMap().get(possibleItem);
 
             String itemDescription = tier.getChatFormatting() + possibleItem;
 
             //        (UtilitiesConfig.INSTANCE.favoriteItems.contains(possibleItem) ? UNDERLINE :
             // "") + possibleItem; // underline favs
-            /*
-            if (UtilitiesConfig.Identifications.INSTANCE.showGuessesPrice && itemProfile != null) {
+            if (showGuessesPrice && itemProfile != null) {
                 int level = itemProfile.getRequirements().getLevel();
                 int itemCost = tier.getItemIdentificationCost(level);
-                itemDescription += GRAY + " [" + GREEN + itemCost + " " + EmeraldSymbols.E_STRING + GRAY + "]";
+                itemDescription +=
+                        ChatFormatting.GRAY
+                                + " ["
+                                + ChatFormatting.GREEN
+                                + itemCost
+                                + " "
+                                + EmeraldSymbols.E_STRING
+                                + ChatFormatting.GRAY
+                                + "]";
             }
 
-             */
             if (itemNamesAndCosts.length() > 0) {
                 itemNamesAndCosts.append(ChatFormatting.GRAY).append(", ");
             }
