@@ -200,7 +200,11 @@ public class ItemStatInfoFeature extends Feature {
         if (!WebManager.getItemsMap().containsKey(itemName)) return;
 
         ItemProfile profile = WebManager.getItemsMap().get(itemName);
-        ListTag lore = ItemUtils.getLoreTagElseEmpty(itemStack);
+        ListTag lore =
+                stripDuplicateBlank(
+                        ItemUtils.getLoreTagElseEmpty(
+                                itemStack)); // Strip duplicate blank lines here so they don't cause
+        // trouble later on
 
         ListTag newLore = new ListTag();
 
@@ -274,25 +278,6 @@ public class ItemStatInfoFeature extends Feature {
             tag.put("wynntilsStars", stars);
 
             newLore = stripDuplicateBlank(newLore);
-
-            // Handle Market spacing issue
-            if (lore.size() > 4) {
-                MutableComponent priceLine = Component.Serializer.fromJson(lore.getString(1));
-                MutableComponent shouldBeEmptyLine1 =
-                        Component.Serializer.fromJson(lore.getString(3));
-                MutableComponent shouldBeEmptyLine2 =
-                        Component.Serializer.fromJson(lore.getString(4));
-
-                if (priceLine != null && shouldBeEmptyLine1 != null && shouldBeEmptyLine2 != null) {
-                    if ((WynnUtils.normalizeBadString(priceLine.getString()).equals("Price:")
-                            && WynnUtils.normalizeBadString(shouldBeEmptyLine1.getString())
-                                    .isEmpty()
-                            && WynnUtils.normalizeBadString(shouldBeEmptyLine2.getString())
-                                    .isEmpty())) {
-                        idStart--;
-                    }
-                }
-            }
 
             newLore.add(idStart - 1, ItemUtils.toLoreStringTag(new TextComponent("")));
         } else {
