@@ -109,19 +109,18 @@ public class ItemStatInfoFeature extends Feature {
             long time = System.currentTimeMillis();
             for (int i = 0; i < name.length(); i++) {
                 float z = 2000.0F;
-                // FIXME: I don't think this functions properly, colors are not getting updated real
-                // time (I assume that was the intention)
-
                 Style color =
-                        Style.EMPTY.withColor(
-                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F)).withItalic(false);
+                        Style.EMPTY
+                                .withColor(
+                                        Color.HSBtoRGB(
+                                                ((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F))
+                                .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
 
             e.setHoveredName(newName);
-        } else if (ItemUtils.hasMarker(
-                e.getStack(), "isDefective")) { // FIXME: Current implementation seems buggy?
+        } else if (ItemUtils.hasMarker(e.getStack(), "isDefective")) {
             MutableComponent newName =
                     new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
 
@@ -141,7 +140,10 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withColor(ChatFormatting.OBFUSCATED).withItalic(false)));
+                                    .withStyle(
+                                            Style.EMPTY
+                                                    .withColor(ChatFormatting.OBFUSCATED)
+                                                    .withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
