@@ -114,7 +114,7 @@ public class ItemStatInfoFeature extends Feature {
 
                 Style color =
                         Style.EMPTY.withColor(
-                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F));
+                                Color.HSBtoRGB(((time + i * z / 7F) % (int) z) / z, 0.8F, 0.8F)).withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
@@ -141,7 +141,7 @@ public class ItemStatInfoFeature extends Feature {
                 if (Math.random() < obfuscationChance && !obfuscated) {
                     newName.append(
                             new TextComponent(current.toString())
-                                    .withStyle(ChatFormatting.OBFUSCATED));
+                                    .withStyle(Style.EMPTY.withColor(ChatFormatting.OBFUSCATED).withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
