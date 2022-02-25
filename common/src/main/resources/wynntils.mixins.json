@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8.4",
   "client": [
+    "LocalPlayerMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "ClientPacketListenerMixin",
