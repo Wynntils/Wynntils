@@ -4,23 +4,51 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.CommandDispatcher;
+import com.wynntils.core.commands.ClientCommands;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.UUID;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.*;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
+    @Shadow
+    public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
+
+    @Shadow private CommandDispatcher<SharedSuggestionProvider> commands;
+
+    @SuppressWarnings("unchecked")
+    @Inject(method = "<init>", at = @At("RETURN"))
+    public void onInit(
+            Minecraft minecraft,
+            Screen screen,
+            Connection connection,
+            GameProfile gameProfile,
+            CallbackInfo ci) {
+        ClientCommands.registerCommands((CommandDispatcher<CommandSourceStack>) (Object) commands);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Inject(method = "handleCommands", at = @At("TAIL"))
+    public void onOnCommandTree(ClientboundCommandsPacket packet, CallbackInfo ci) {
+        ClientCommands.registerCommands((CommandDispatcher<CommandSourceStack>) (Object) commands);
+    }
+
     @Inject(
             method =
                     "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
@@ -80,38 +108,6 @@ public abstract class ClientPacketListenerMixin {
         if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
                 && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
             ci.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
-            at = @At("RETURN"))
-    public void handleContainerContent(
-            ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
-        List<ItemStack> items = new ArrayList<>(packet.getItems());
-        items.add(packet.getCarriedItem());
-
-        if (packet.getContainerId() == 0) {
-            EventFactory.onItemsReceived(items, McUtils.inventoryMenu());
-        } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(items, McUtils.containerMenu());
-        }
-    }
-
-    @Inject(
-            method =
-                    "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("RETURN"))
-    public void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        if (packet.getContainerId() == -1
-                || packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(
-                    Collections.singletonList(packet.getItem()), McUtils.containerMenu());
-        } else if (packet.getContainerId() == -2
-                || (packet.getContainerId() == 0 && InventoryMenu.isHotbarSlot(packet.getSlot()))) {
-            EventFactory.onItemsReceived(
-                    Collections.singletonList(packet.getItem()), McUtils.inventoryMenu());
         }
     }
 }
