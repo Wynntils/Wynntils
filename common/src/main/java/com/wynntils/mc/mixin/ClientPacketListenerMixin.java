@@ -27,12 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
-    @Shadow
-    public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
-
     @Shadow private CommandDispatcher<SharedSuggestionProvider> commands;
 
-    @SuppressWarnings("unchecked")
     @Inject(method = "<init>", at = @At("RETURN"))
     public void onInit(
             Minecraft minecraft,
@@ -40,13 +36,12 @@ public abstract class ClientPacketListenerMixin {
             Connection connection,
             GameProfile gameProfile,
             CallbackInfo ci) {
-        ClientCommands.registerCommands((CommandDispatcher<CommandSourceStack>) (Object) commands);
+        commands = ClientCommands.loadCommands(commands);
     }
 
-    @SuppressWarnings("unchecked")
     @Inject(method = "handleCommands", at = @At("TAIL"))
     public void onOnCommandTree(ClientboundCommandsPacket packet, CallbackInfo ci) {
-        ClientCommands.registerCommands((CommandDispatcher<CommandSourceStack>) (Object) commands);
+        commands = ClientCommands.loadCommands(commands);
     }
 
     @Inject(

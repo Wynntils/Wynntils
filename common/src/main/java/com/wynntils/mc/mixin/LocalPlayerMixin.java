@@ -27,10 +27,8 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
             StringReader reader = new StringReader(message);
             reader.skip();
             int cursor = reader.getCursor();
-            String commandName = reader.canRead() ? reader.readUnquotedString() : "";
             reader.setCursor(cursor);
-            if (ClientCommands.isClientSideCommand(commandName)) {
-                ClientCommands.executeCommand(reader, message);
+            if (ClientCommands.executeCommand(reader, message)) {
                 ci.cancel();
             }
         }

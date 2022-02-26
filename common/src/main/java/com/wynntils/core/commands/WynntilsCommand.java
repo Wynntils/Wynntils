@@ -6,11 +6,10 @@ package com.wynntils.core.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
 
-public abstract class Command {
-    public Command() {}
+public abstract class WynntilsCommand {
+    public WynntilsCommand() {}
 
     public abstract void register(CommandDispatcher<CommandSourceStack> dispatcher);
-
-    public abstract void registerName();
 }

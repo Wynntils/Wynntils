@@ -9,13 +9,12 @@ import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.minecraft.commands.Commands.*;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.wynntils.core.commands.ClientCommands;
-import com.wynntils.core.commands.Command;
+import com.wynntils.core.commands.WynntilsCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 
-public class TestCommand extends Command {
+public class TestWynntilsCommand extends WynntilsCommand {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
@@ -46,10 +45,5 @@ public class TestCommand extends Command {
                                                     false);
                                     return 1;
                                 }));
-    }
-
-    @Override
-    public void registerName() {
-        ClientCommands.addClientSideCommand("foo");
     }
 }

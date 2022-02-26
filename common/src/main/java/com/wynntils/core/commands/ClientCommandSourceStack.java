@@ -10,8 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandSourceStack;
 
-public class FakeCommandSource extends CommandSourceStack {
-    public FakeCommandSource(LocalPlayer player) {
+public class ClientCommandSourceStack extends CommandSourceStack {
+    public ClientCommandSourceStack(LocalPlayer player) {
         super(
                 player,
                 player.position(),
