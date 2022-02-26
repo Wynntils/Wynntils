@@ -18,6 +18,8 @@ import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.*;
 
+// Credits to Earthcomputer.
+// Parts of this code originates from https://github.com/Earthcomputer/clientcommands
 public class ClientCommands {
 
     private static final Set<String> clientSideCommands = new HashSet<>();
