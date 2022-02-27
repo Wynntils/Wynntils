@@ -20,21 +20,21 @@ import net.minecraft.network.chat.*;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate
 // from https://github.com/MinecraftForge/MinecraftForge
-public class ClientCommands {
+public class ClientCommandsManager {
 
     static {
-        ClientCommands.registerCommands();
+        ClientCommandsManager.registerCommands();
     }
 
-    private static CommandDispatcher<CommandSourceStack> clientSideCommands;
+    private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
-    public static CommandDispatcher<CommandSourceStack> getClientSideCommands() {
-        return clientSideCommands;
+    public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
+        return clientDispatcher;
     }
 
     public static void registerCommands() {
-        clientSideCommands = new CommandDispatcher<>();
-        new WynntilsCommand().register(clientSideCommands);
+        clientDispatcher = new CommandDispatcher<>();
+        new WynntilsCommand().register(clientDispatcher); // TODO event
     }
 
     public static ClientCommandSourceStack getSource() {
@@ -50,14 +50,14 @@ public class ClientCommands {
 
         if (source == null) return false;
 
-        final ParseResults<CommandSourceStack> parse = clientSideCommands.parse(reader, source);
+        final ParseResults<CommandSourceStack> parse = clientDispatcher.parse(reader, source);
 
         if (!parse.getExceptions().isEmpty() || parse.getContext().getCommand() == null) {
             return false; // let server handle command
         }
 
         try {
-            clientSideCommands.execute(parse);
+            clientDispatcher.execute(parse);
         } catch (CommandRuntimeException e) {
             sendError(new TextComponent(e.getMessage()));
         } catch (CommandSyntaxException e) {
@@ -85,13 +85,13 @@ public class ClientCommands {
                 text.append(
                         new TranslatableComponent("command.context.here")
                                 .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-                ClientCommands.sendError(text);
+                ClientCommandsManager.sendError(text);
             }
         } catch (Exception e) {
             TextComponent error =
                     new TextComponent(
                             e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            ClientCommands.sendError(
+            ClientCommandsManager.sendError(
                     new TranslatableComponent("command.failed")
                             .withStyle(
                                     Style.EMPTY.withHoverEvent(

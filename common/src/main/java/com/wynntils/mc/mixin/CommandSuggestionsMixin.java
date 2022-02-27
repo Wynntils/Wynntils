@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.core.commands.ClientCommands;
+import com.wynntils.core.commands.ClientCommandsManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +26,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class CommandSuggestionsMixin {
 
     @Shadow @Final EditBox input;
+
+    ParseResults<CommandSourceStack> clientParse;
 
     @Redirect(
             method = "updateCommandInfo",
@@ -45,9 +47,7 @@ public class CommandSuggestionsMixin {
         }
 
         CommandDispatcher<CommandSourceStack> clientDispatcher =
-                ClientCommands.getClientSideCommands();
-        ParseResults<CommandSourceStack> clientParse =
-                clientDispatcher.parse(stringReader, ClientCommands.getSource());
+                ClientCommandsManager.getClientDispatcher();
 
         CompletableFuture<Suggestions> clientSuggestions =
                 clientDispatcher.getCompletionSuggestions(clientParse, cursor);
@@ -67,5 +67,23 @@ public class CommandSuggestionsMixin {
                         });
 
         return result;
+    }
+
+    @Redirect(
+            method = "updateCommandInfo",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;"))
+    public ParseResults<SharedSuggestionProvider> redirectParse(
+            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
+            StringReader command,
+            Object source) {
+        CommandDispatcher<CommandSourceStack> clientDispatcher =
+                ClientCommandsManager.getClientDispatcher();
+        clientParse = clientDispatcher.parse(command, ClientCommandsManager.getSource());
+
+        return serverDispatcher.parse(command, (SharedSuggestionProvider) source);
     }
 }
