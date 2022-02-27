@@ -5,7 +5,6 @@
 package com.wynntils.core.webapi.request;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.LoadingPhase;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
 import java.io.File;
