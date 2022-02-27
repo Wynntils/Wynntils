@@ -10,12 +10,9 @@ import com.wynntils.core.commands.ClientCommands;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.*;
@@ -27,23 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
-    @Shadow private CommandDispatcher<SharedSuggestionProvider> commands;
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void onInit(
-            Minecraft minecraft,
-            Screen screen,
-            Connection connection,
-            GameProfile gameProfile,
-            CallbackInfo ci) {
-        commands = ClientCommands.loadCommands(commands);
-    }
-
-    @Inject(method = "handleCommands", at = @At("TAIL"))
-    public void onOnCommandTree(ClientboundCommandsPacket packet, CallbackInfo ci) {
-        commands = ClientCommands.loadCommands(commands);
-    }
-
     @Inject(
             method =
                     "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
