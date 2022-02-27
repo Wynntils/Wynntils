@@ -10,6 +10,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.wynntils.core.commands.WynntilsCommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.managers.CompassManager;
+import com.wynntils.utils.objects.Location;
 import java.util.HashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -80,8 +82,7 @@ public class TerritoryCommand extends WynntilsCommandBase {
                     territoryProfile.getStartZ()
                             + ((territoryProfile.getEndZ() - territoryProfile.getStartZ()) / 2);
 
-            // CompassManager.setCompassLocation(new Location(xMiddle, 0, zMiddle));  // update
-            // compass location TODO: Add compass support
+            CompassManager.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
             MutableComponent territoryComponent =
                     new TextComponent(territoryProfile.getFriendlyName())
