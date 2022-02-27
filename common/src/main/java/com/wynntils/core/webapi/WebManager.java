@@ -268,6 +268,10 @@ public class WebManager {
         return routesMarkedForUse;
     }
 
+    public static HashMap<String, TerritoryProfile> getTerritories() {
+        return territories;
+    }
+
     public static boolean isSetup() {
         return setup;
     }
