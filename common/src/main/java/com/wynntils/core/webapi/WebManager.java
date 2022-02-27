@@ -82,7 +82,6 @@ public class WebManager {
     }
 
     public static boolean setupUserAccount() {
-        tryReloadApiUrls(false);
         account = new WynntilsAccount();
         return account.login();
     }
