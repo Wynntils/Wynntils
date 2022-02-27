@@ -6,6 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.ClientCommands;
 import java.util.ArrayList;
@@ -37,15 +38,16 @@ public class CommandSuggestionsMixin {
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
-        String command;
 
-        if (input.getValue().startsWith("/")) command = input.getValue().substring(1);
-        else command = input.getValue();
+        StringReader stringReader = new StringReader(input.getValue());
+        if (stringReader.canRead() && stringReader.peek() == '/') {
+            stringReader.skip();
+        }
 
         CommandDispatcher<CommandSourceStack> clientDispatcher =
                 ClientCommands.getClientSideCommands();
         ParseResults<CommandSourceStack> clientParse =
-                clientDispatcher.parse(command, ClientCommands.getSource());
+                clientDispatcher.parse(stringReader, ClientCommands.getSource());
 
         CompletableFuture<Suggestions> clientSuggestions =
                 clientDispatcher.getCompletionSuggestions(clientParse, cursor);
@@ -60,7 +62,8 @@ public class CommandSuggestionsMixin {
                             final List<Suggestions> suggestions = new ArrayList<>();
                             suggestions.add(clientSuggestions.join());
                             suggestions.add(serverSuggestions.join());
-                            result.complete(Suggestions.merge(command, suggestions));
+                            result.complete(
+                                    Suggestions.merge(stringReader.getString(), suggestions));
                         });
 
         return result;
