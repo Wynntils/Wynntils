@@ -90,6 +90,9 @@ public class ItemGuessFeature extends Feature {
 
         if (levelRange == null) return;
 
+        if (WebManager.getItemGuesses() == null)
+            return;
+
         ItemGuessProfile igp = WebManager.getItemGuesses().get(levelRange);
         if (igp == null) return;
 
@@ -107,6 +110,9 @@ public class ItemGuessFeature extends Feature {
 
         List<String> items = rarityMap.get(tier);
         if (items == null) return;
+
+        if (WebManager.getItemsMap() == null)
+            return;
 
         StringBuilder itemNamesAndCosts = new StringBuilder();
         for (String possibleItem : items) {

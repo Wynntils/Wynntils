@@ -21,7 +21,31 @@ public class WynntilsCommand extends WynntilsCommandBase {
                         .then(Commands.literal("help").executes(getHelp()))
                         .then(Commands.literal("discord").executes(getDiscordInvite()))
                         .then(Commands.literal("donate").executes(getDonateLink()))
+                        .then(Commands.literal("reloadapi").executes(reloadApi()))
                         .executes(getHelp()));
+    }
+
+    private Command<CommandSourceStack> reloadApi() {
+        return context -> {
+            WebManager.reset();
+
+            boolean success = WebManager.reloadUsedRoutes();
+
+            if (success) {
+                context.getSource()
+                        .sendSuccess(
+                                new TextComponent("Successfully reloaded all used API routes.")
+                                        .withStyle(ChatFormatting.GREEN),
+                                false);
+            } else {
+                context.getSource()
+                        .sendFailure(
+                                new TextComponent("One or more API routes failed to reload")
+                                        .withStyle(ChatFormatting.RED));
+            }
+
+            return 1;
+        };
     }
 
     private Command<CommandSourceStack> getDonateLink() {
@@ -75,9 +99,8 @@ public class WynntilsCommand extends WynntilsCommandBase {
             //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
             // "This shows the changelog of your installed version.");
             //            text.append("\n");
-            //            addCommandDescription(text, "-wynntils", " reloadapi", "This reloads all
-            // API data.");
-            //            text.append("\n");
+            addCommandDescription(text, "-wynntils", " reloadapi", "This reloads all API data.");
+            text.append("\n");
             addCommandDescription(text, "-wynntils", " donate", "This provides our Patreon link.");
             context.getSource().sendSuccess(text, false);
             return 1;

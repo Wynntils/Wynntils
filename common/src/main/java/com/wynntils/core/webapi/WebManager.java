@@ -18,14 +18,15 @@ import com.wynntils.wc.objects.items.MajorIdentification;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
+
+    private static final Set<Supplier<Boolean>> routesMarkedForUse = new HashSet<>();
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
@@ -34,19 +35,47 @@ public class WebManager {
 
     private static final Gson gson = new Gson();
 
-    private static HashMap<String, ItemProfile> items = new HashMap<>();
-    private static Collection<ItemProfile> directItems = new ArrayList<>();
-    private static final HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private static HashMap<String, String> translatedReferences = new HashMap<>();
-    private static HashMap<String, String> internalIdentifications = new HashMap<>();
-    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+    private static @Nullable HashMap<String, ItemProfile> items = null;
+    private static @Nullable Collection<ItemProfile> directItems = null;
+    private static @Nullable HashMap<String, ItemGuessProfile> itemGuesses = null;
+    private static @Nullable HashMap<String, String> translatedReferences = null;
+    private static @Nullable HashMap<String, String> internalIdentifications = null;
+    private static @Nullable HashMap<String, MajorIdentification> majorIds = null;
+    private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
 
     public static void init() {
         tryReloadApiUrls(false);
     }
 
+    public static void reset() {
+        // tryReloadApiUrls
+        apiUrls = null;
+
+        // tryLoadItemGuesses
+        itemGuesses = null;
+
+        // tryLoadItemList
+        items = null;
+        directItems = null;
+        translatedReferences = null;
+        internalIdentifications = null;
+        majorIds = null;
+        materialTypes = null;
+    }
+
+    public static boolean reloadUsedRoutes() {
+        boolean success = tryReloadApiUrls(false);
+
+        for (Supplier<Boolean> entry :
+                WebManager.getRoutesMarkedForUse()) {
+            success &= entry.get();
+        }
+
+        return success;
+    }
+
     public static boolean tryLoadItemGuesses() {
+        routesMarkedForUse.add(WebManager::tryLoadItemGuesses);
         if (!isItemGuessesLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
@@ -65,9 +94,9 @@ public class WebManager {
                                                 new ItemGuessProfile.ItemGuessDeserializer());
                                         Gson gson = gsonBuilder.create();
 
+                                        itemGuesses = new HashMap<>();
                                         itemGuesses.putAll(gson.fromJson(json, type));
 
-                                        markFlag(0);
                                         return true;
                                     })
                             .useCacheAsBackup()
@@ -83,6 +112,7 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemList() {
+        routesMarkedForUse.add(WebManager::tryLoadItemList);
         if (!isItemListLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
@@ -144,7 +174,6 @@ public class WebManager {
                                         directItems = citems.values();
                                         items = citems;
 
-                                        markFlag(1);
                                         return true;
                                     })
                             .useCacheAsBackup()
@@ -159,7 +188,7 @@ public class WebManager {
         return true;
     }
 
-    private static boolean tryReloadApiUrls(boolean async) {
+    public static boolean tryReloadApiUrls(boolean async) {
         if (apiUrls == null) {
             handler.addRequest(
                     new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
@@ -181,57 +210,56 @@ public class WebManager {
         return true;
     }
 
-    public static @Nullable WebReader getApiUrls() {
-        return apiUrls;
-    }
-
     public static boolean isItemGuessesLoaded() {
-        return hasFlag(0);
+        return itemGuesses != null;
     }
 
     public static boolean isItemListLoaded() {
-        return hasFlag(1);
+        return items != null
+                && directItems != null
+                && translatedReferences != null
+                && internalIdentifications != null
+                && majorIds != null
+                && materialTypes != null;
     }
 
-    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
+    public static @Nullable HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
 
-    public static Collection<ItemProfile> getItemsCollection() {
+    public static @Nullable Collection<ItemProfile> getItemsCollection() {
         return directItems;
     }
 
-    public static HashMap<String, ItemProfile> getItemsMap() {
+    public static @Nullable HashMap<String, ItemProfile> getItemsMap() {
         return items;
     }
 
-    public static HashMap<ItemType, String[]> getMaterialTypes() {
+    public static @Nullable HashMap<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
 
-    public static HashMap<String, MajorIdentification> getMajorIds() {
+    public static @Nullable HashMap<String, MajorIdentification> getMajorIds() {
         return majorIds;
     }
 
-    public static HashMap<String, String> getInternalIdentifications() {
+    public static @Nullable HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
 
-    public static HashMap<String, String> getTranslatedReferences() {
+    public static @Nullable HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
+    }
+
+    public static Set<Supplier<Boolean>> getRoutesMarkedForUse() {
+        return routesMarkedForUse;
     }
 
     public static boolean isSetup() {
         return setup;
     }
 
-    private static long flag = 0L;
-
-    private static boolean hasFlag(int i) {
-        return (flag & (1L << i)) == 1;
-    }
-
-    private static void markFlag(int i) {
-        flag |= (1L << i);
+    public static @Nullable WebReader getApiUrls() {
+        return apiUrls;
     }
 }

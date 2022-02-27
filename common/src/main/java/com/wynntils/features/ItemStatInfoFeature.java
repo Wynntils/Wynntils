@@ -211,7 +211,7 @@ public class ItemStatInfoFeature extends Feature {
         if (tag.contains("wynntilsItemNameFormatted"))
             itemStack.setHoverName(new TextComponent(tag.getString("wynntilsItemNameFormatted")));
 
-        if (!WebManager.getItemsMap().containsKey(itemName)) return;
+        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName)) return;
 
         ItemProfile profile = WebManager.getItemsMap().get(itemName);
         ListTag lore =
