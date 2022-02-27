@@ -48,9 +48,9 @@ public class CommandSuggestionsMixin {
                 clientDispatcher.parse(command, ClientCommands.getSource());
 
         CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse);
+                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
         CompletableFuture<Suggestions> serverSuggestions =
-                serverDispatcher.getCompletionSuggestions(serverParse);
+                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
