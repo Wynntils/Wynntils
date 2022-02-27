@@ -18,8 +18,7 @@ public class WynntilsCommand extends WynntilsCommandBase {
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("wynntils")
-                        .then(Commands.literal("help"))
-                        .executes(getHelp())
+                        .then(Commands.literal("help").executes(getHelp()))
                         .then(Commands.literal("discord").executes(getDiscordInvite()))
                         .then(Commands.literal("donate").executes(getDonateLink()))
                         .executes(getHelp()));
