@@ -19,8 +19,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 /** The common implementation of Wynntils */
 public class WynntilsMod {
     public static final String MOD_ID = "wynntils";
-    public static String VERSION = "";
-    public static int BUILD_NUMBER = -1;
     public static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
@@ -59,10 +57,10 @@ public class WynntilsMod {
             Reference.LOGGER.warn("Unable to parse mod version");
         }
 
-        VERSION = result.group(1);
+        Reference.VERSION = result.group(1);
 
         try {
-            BUILD_NUMBER = Integer.parseInt(result.group(2));
+            Reference.BUILD_NUMBER = Integer.parseInt(result.group(2));
         } catch (NumberFormatException ignored) {
         }
     }

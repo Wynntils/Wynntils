@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
@@ -43,8 +44,11 @@ public class WebManager {
     private static @Nullable HashMap<String, MajorIdentification> majorIds = null;
     private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
 
+    private static @Nullable WynntilsAccount account = null;
+
     public static void init() {
         tryReloadApiUrls(false);
+        setupUserAccount();
     }
 
     public static void reset() {
@@ -61,6 +65,9 @@ public class WebManager {
         internalIdentifications = null;
         majorIds = null;
         materialTypes = null;
+
+        // setupUserAccount
+        account = null;
     }
 
     public static boolean reloadUsedRoutes() {
@@ -72,6 +79,12 @@ public class WebManager {
         }
 
         return success;
+    }
+
+    public static boolean setupUserAccount() {
+        tryReloadApiUrls(false);
+        account = new WynntilsAccount();
+        return account.login();
     }
 
     public static boolean tryLoadItemGuesses() {
@@ -261,5 +274,13 @@ public class WebManager {
 
     public static @Nullable WebReader getApiUrls() {
         return apiUrls;
+    }
+
+    public static @Nullable WynntilsAccount getAccount() {
+        return account;
+    }
+
+    public static RequestHandler getHandler() {
+        return handler;
     }
 }

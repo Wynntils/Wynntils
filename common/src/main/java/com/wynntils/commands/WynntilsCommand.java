@@ -29,7 +29,9 @@ public class WynntilsCommand extends WynntilsCommandBase {
         return context -> {
             WebManager.reset();
 
-            boolean success = WebManager.reloadUsedRoutes();
+            boolean success =WebManager.setupUserAccount();
+
+            success &= WebManager.reloadUsedRoutes();
 
             if (success) {
                 context.getSource()
