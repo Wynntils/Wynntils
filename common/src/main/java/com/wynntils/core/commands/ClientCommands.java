@@ -52,7 +52,7 @@ public class ClientCommands {
 
         final ParseResults<CommandSourceStack> parse = clientSideCommands.parse(reader, source);
 
-        if (!parse.getExceptions().isEmpty()) {
+        if (!parse.getExceptions().isEmpty() || parse.getContext().getCommand() == null) {
             return false; // let server handle command
         }
 
