@@ -104,6 +104,13 @@ public class WynntilsCommand extends WynntilsCommandBase {
             addCommandDescription(text, "-wynntils", " reloadapi", "This reloads all API data.");
             text.append("\n");
             addCommandDescription(text, "-wynntils", " donate", "This provides our Patreon link.");
+            text.append("\n");
+            addCommandDescription(
+                    text,
+                    "-",
+                    "token",
+                    "This provides a clickable token for you to create a Wynntils account to manage"
+                            + " your cosmetics.");
             context.getSource().sendSuccess(text, false);
             return 1;
         };
