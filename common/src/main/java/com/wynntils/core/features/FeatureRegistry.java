@@ -60,6 +60,9 @@ public class FeatureRegistry {
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new ItemStatInfoFeature());
+
+        FEATURES.forEach(Feature::init);
 
         FEATURES.forEach(Feature::init);
 
