@@ -8,7 +8,6 @@ import com.wynntils.managers.CompassManager;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.Location;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -84,7 +83,11 @@ public abstract class ClientPacketListenerMixin {
     private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (McUtils.player() == null) {
             // Reset compass
-            CompassManager.setCompassLocation(new Location(packet.getPos()));
+            CompassManager.reset();
+
+            if (McUtils.mc().level != null)
+                McUtils.mc().level.setDefaultSpawnPos(packet.getPos(), 0);
+
             return;
         }
 
