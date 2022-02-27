@@ -111,6 +111,12 @@ public class WynntilsCommand extends WynntilsCommandBase {
                     "token",
                     "This provides a clickable token for you to create a Wynntils account to manage"
                             + " your cosmetics.");
+            text.append("\n");
+            addCommandDescription(
+                    text,
+                    "-",
+                    "territory",
+                    "This makes your compass point towards a specified territory.");
             context.getSource().sendSuccess(text, false);
             return 1;
         };

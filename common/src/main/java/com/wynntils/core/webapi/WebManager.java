@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wc.objects.items.IdentificationContainer;
@@ -44,11 +45,22 @@ public class WebManager {
     private static @Nullable HashMap<String, MajorIdentification> majorIds = null;
     private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
 
+    private static TerritoryUpdateThread territoryUpdateThread;
+    private static HashMap<String, TerritoryProfile> territories = new HashMap<>();
+
     private static @Nullable WynntilsAccount account = null;
 
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        updateTerritories(handler);
+
+        if (isAthenaOnline()) updateTerritoryThreadStatus(true);
+    }
+
+    private static boolean isAthenaOnline() {
+        return (account != null && account.isConnected());
     }
 
     public static void reset() {
@@ -73,8 +85,7 @@ public class WebManager {
     public static boolean reloadUsedRoutes() {
         boolean success = tryReloadApiUrls(false);
 
-        for (Supplier<Boolean> entry :
-                WebManager.getRoutesMarkedForUse()) {
+        for (Supplier<Boolean> entry : WebManager.getRoutesMarkedForUse()) {
             success &= entry.get();
         }
 
@@ -84,6 +95,51 @@ public class WebManager {
     public static boolean setupUserAccount() {
         account = new WynntilsAccount();
         return account.login();
+    }
+
+    public static void updateTerritories(RequestHandler handler) {
+        if (apiUrls == null) return;
+        String url = apiUrls.get("Athena") + "/cache/get/territoryList";
+        handler.addRequest(
+                new RequestBuilder(url, "territory")
+                        .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
+                        .handleJsonObject(
+                                json -> {
+                                    if (!json.has("territories")) return false;
+
+                                    Type type =
+                                            new TypeToken<
+                                                    HashMap<
+                                                            String,
+                                                            TerritoryProfile>>() {}.getType();
+
+                                    GsonBuilder builder = new GsonBuilder();
+                                    builder.registerTypeHierarchyAdapter(
+                                            TerritoryProfile.class,
+                                            new TerritoryProfile.TerritoryDeserializer());
+                                    Gson gson = builder.create();
+
+                                    territories.clear();
+                                    territories.putAll(
+                                            gson.fromJson(json.get("territories"), type));
+                                    return true;
+                                })
+                        .build());
+    }
+
+    public static void updateTerritoryThreadStatus(boolean start) {
+        if (start) {
+            if (territoryUpdateThread == null) {
+                territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
+                territoryUpdateThread.start();
+                return;
+            }
+            return;
+        }
+        if (territoryUpdateThread != null) {
+            territoryUpdateThread.interrupt();
+        }
+        territoryUpdateThread = null;
     }
 
     public static boolean tryLoadItemGuesses() {
