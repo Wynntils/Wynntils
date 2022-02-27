@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.wynntils.commands.TestWynntilsCommand;
+import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -34,7 +34,7 @@ public class ClientCommands {
 
     public static void registerCommands() {
         clientSideCommands = new CommandDispatcher<>();
-        new TestWynntilsCommand().register(clientSideCommands);
+        new WynntilsCommand().register(clientSideCommands);
     }
 
     public static ClientCommandSourceStack getSource() {
