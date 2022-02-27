@@ -37,7 +37,10 @@ public class CommandSuggestionsMixin {
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
-        String command = input.getValue();
+        String command;
+
+        if (input.getValue().startsWith("/")) command = input.getValue().substring(1);
+        else command = input.getValue();
 
         CommandDispatcher<CommandSourceStack> clientDispatcher =
                 ClientCommands.getClientSideCommands();
