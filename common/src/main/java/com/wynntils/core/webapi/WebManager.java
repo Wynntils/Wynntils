@@ -181,6 +181,10 @@ public class WebManager {
         return true;
     }
 
+    public static @Nullable WebReader getApiUrls() {
+        return apiUrls;
+    }
+
     public static boolean isItemGuessesLoaded() {
         return hasFlag(0);
     }
