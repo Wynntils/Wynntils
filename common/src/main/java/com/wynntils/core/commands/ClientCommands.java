@@ -4,35 +4,21 @@
  */
 package com.wynntils.core.commands;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.ArgumentCommandNode;
-import com.mojang.brigadier.tree.CommandNode;
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.commands.TestWynntilsCommand;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.network.chat.*;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 // Credits to Earthcomputer and Forge
-// Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other parts originate
+// Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
+// parts originate
 // from https://github.com/MinecraftForge/MinecraftForge
 public class ClientCommands {
 
@@ -67,7 +53,7 @@ public class ClientCommands {
         final ParseResults<CommandSourceStack> parse = clientSideCommands.parse(reader, source);
 
         if (!parse.getExceptions().isEmpty()) {
-            return false; //let server handle command
+            return false; // let server handle command
         }
 
         try {
@@ -119,5 +105,4 @@ public class ClientCommands {
     private static void sendError(MutableComponent error) {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
-
 }
