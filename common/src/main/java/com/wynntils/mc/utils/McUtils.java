@@ -10,6 +10,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 
 /**
@@ -31,6 +32,10 @@ public class McUtils {
 
     public static InventoryMenu inventoryMenu() {
         return Minecraft.getInstance().player.inventoryMenu;
+    }
+
+    public static AbstractContainerMenu containerMenu() {
+        return Minecraft.getInstance().player.containerMenu;
     }
 
     public static Inventory inventory() {

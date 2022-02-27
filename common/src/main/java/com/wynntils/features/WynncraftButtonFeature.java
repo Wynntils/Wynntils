@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
         performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     @Override
     protected boolean onEnable() {

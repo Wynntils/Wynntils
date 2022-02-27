@@ -11,8 +11,15 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.wc.objects.items.IdentificationContainer;
+import com.wynntils.wc.objects.items.ItemProfile;
+import com.wynntils.wc.objects.items.ItemType;
+import com.wynntils.wc.objects.items.MajorIdentification;
+import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +32,15 @@ public class WebManager {
 
     public static @Nullable WebReader apiUrls = null;
 
+    private static final Gson gson = new Gson();
+
+    private static HashMap<String, ItemProfile> items = new HashMap<>();
+    private static Collection<ItemProfile> directItems = new ArrayList<>();
     private static final HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
+    private static HashMap<String, String> translatedReferences = new HashMap<>();
+    private static HashMap<String, String> internalIdentifications = new HashMap<>();
+    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
+    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
 
     public static void init() {
         tryReloadApiUrls(false);
@@ -67,6 +82,83 @@ public class WebManager {
         return true;
     }
 
+    public static boolean tryLoadItemList() {
+        if (!isItemListLoaded()) {
+            handler.addRequest(
+                    new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
+                            .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
+                            .handleJsonObject(
+                                    json -> {
+                                        translatedReferences =
+                                                gson.fromJson(
+                                                        json.getAsJsonObject(
+                                                                "translatedReferences"),
+                                                        HashMap.class);
+                                        internalIdentifications =
+                                                gson.fromJson(
+                                                        json.getAsJsonObject(
+                                                                "internalIdentifications"),
+                                                        HashMap.class);
+
+                                        Type majorIdsType =
+                                                new TypeToken<
+                                                        HashMap<
+                                                                String,
+                                                                MajorIdentification>>() {}.getType();
+                                        majorIds =
+                                                gson.fromJson(
+                                                        json.getAsJsonObject(
+                                                                "majorIdentifications"),
+                                                        majorIdsType);
+                                        Type materialTypesType =
+                                                new TypeToken<
+                                                        HashMap<ItemType, String[]>>() {}.getType();
+                                        materialTypes =
+                                                gson.fromJson(
+                                                        json.getAsJsonObject("materialTypes"),
+                                                        materialTypesType);
+
+                                        IdentificationOrderer.INSTANCE =
+                                                gson.fromJson(
+                                                        json.getAsJsonObject("identificationOrder"),
+                                                        IdentificationOrderer.class);
+
+                                        ItemProfile[] gItems =
+                                                gson.fromJson(
+                                                        json.getAsJsonArray("items"),
+                                                        ItemProfile[].class);
+
+                                        HashMap<String, ItemProfile> citems = new HashMap<>();
+                                        for (ItemProfile prof : gItems) {
+                                            prof.getStatuses()
+                                                    .values()
+                                                    .forEach(
+                                                            IdentificationContainer
+                                                                    ::calculateMinMax);
+                                            prof.addMajorIds(majorIds);
+                                            citems.put(prof.getDisplayName(), prof);
+                                        }
+
+                                        citems.values().forEach(ItemProfile::registerIdTypes);
+
+                                        directItems = citems.values();
+                                        items = citems;
+
+                                        markFlag(1);
+                                        return true;
+                                    })
+                            .useCacheAsBackup()
+                            .build());
+
+            handler.dispatch(false);
+
+            // Check for success
+            return isItemListLoaded();
+        }
+
+        return true;
+    }
+
     private static boolean tryReloadApiUrls(boolean async) {
         if (apiUrls == null) {
             handler.addRequest(
@@ -93,8 +185,36 @@ public class WebManager {
         return hasFlag(0);
     }
 
+    public static boolean isItemListLoaded() {
+        return hasFlag(1);
+    }
+
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
+    }
+
+    public static Collection<ItemProfile> getItemsCollection() {
+        return directItems;
+    }
+
+    public static HashMap<String, ItemProfile> getItemsMap() {
+        return items;
+    }
+
+    public static HashMap<ItemType, String[]> getMaterialTypes() {
+        return materialTypes;
+    }
+
+    public static HashMap<String, MajorIdentification> getMajorIds() {
+        return majorIds;
+    }
+
+    public static HashMap<String, String> getInternalIdentifications() {
+        return internalIdentifications;
+    }
+
+    public static HashMap<String, String> getTranslatedReferences() {
+        return translatedReferences;
     }
 
     public static boolean isSetup() {

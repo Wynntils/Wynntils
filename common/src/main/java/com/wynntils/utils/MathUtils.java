@@ -13,11 +13,11 @@ public class MathUtils {
         return a + (b - a) * t;
     }
 
-    public static float inverselerp(float a, float b, float value) {
+    public static float inverseLerp(float a, float b, float value) {
         return (value - a) / (b - a);
     }
 
-    public static double inverselerp(double a, double b, double value) {
+    public static double inverseLerp(double a, double b, double value) {
         return (value - a) / (b - a);
     }
 }

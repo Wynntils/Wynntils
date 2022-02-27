@@ -4,10 +4,12 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,5 +27,14 @@ public abstract class ScreenMixin {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onScreenCreated(screen, this::addRenderableWidget);
+    }
+
+    @Inject(
+            method =
+                    "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
+            at = @At("HEAD"))
+    private void renderTooltip(
+            PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
+        EventFactory.onItemTooltipRender(poseStack, itemStack, mouseX, mouseY);
     }
 }

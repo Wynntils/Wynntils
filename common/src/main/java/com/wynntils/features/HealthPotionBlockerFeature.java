@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     @Override
     protected boolean onEnable() {

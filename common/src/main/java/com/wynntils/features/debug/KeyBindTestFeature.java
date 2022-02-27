@@ -23,7 +23,7 @@ public class KeyBindTestFeature extends DebugFeature {
     private final List<KeyHolder> keybinds = new ArrayList<>();
 
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
         keybinds.add(
                 new KeyHolder(
                         "Add Splash Text",

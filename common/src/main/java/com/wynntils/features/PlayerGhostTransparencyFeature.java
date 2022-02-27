@@ -5,6 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.wc.utils.WynnPlayerUtils;
@@ -13,15 +14,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerGhostTransparencyFeature extends Feature {
     @Override
-    protected void init(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     @Override
     protected boolean onEnable() {
+        WynntilsMod.getEventBus().register(this);
         return true;
     }
 
     @Override
-    protected void onDisable() {}
+    protected void onDisable() {
+        WynntilsMod.getEventBus().unregister(this);
+    }
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {

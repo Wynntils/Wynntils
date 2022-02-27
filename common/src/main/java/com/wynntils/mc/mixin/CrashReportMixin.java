@@ -5,24 +5,23 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.utils.CrashReportManager;
+import java.util.Iterator;
 import java.util.List;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
-    @Shadow @Final private List<CrashReportCategory> details;
 
-    @Inject(
+    @Redirect(
             at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"),
             method = "getDetails(Ljava/lang/StringBuilder;)V")
-    private void addWynntilsDetails(StringBuilder builder, CallbackInfo ci) {
-        details.add(CrashReportManager.generateDetails());
+    private Iterator<CrashReportCategory> addWynntilsDetails(List<CrashReportCategory> instance) {
+        instance.add(CrashReportManager.generateDetails());
+
+        return instance.iterator();
     }
 }
