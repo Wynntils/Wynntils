@@ -7,6 +7,8 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
@@ -17,15 +19,19 @@ import com.wynntils.wc.objects.items.ItemType;
 import com.wynntils.wc.objects.items.MajorIdentification;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
+    private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
@@ -179,6 +185,41 @@ public class WebManager {
         }
 
         return true;
+    }
+
+    /**
+     * Request all online players to WynnAPI
+     *
+     * @return a {@link HashMap} who the key is the server and the value is an array containing all
+     *     players on it
+     * @throws IOException thrown by URLConnection
+     */
+    public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
+        if (apiUrls == null) return new HashMap<>();
+
+        URLConnection st = new URL(apiUrls.get("OnlinePlayers")).openConnection();
+        st.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
+                        + " Firefox/3.6.2");
+        // st.setRequestProperty("apikey", apiUrls.get("WynnApiKey")); API key rate limits
+        // constantly, perhaps we don't need it?
+        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+
+        JsonObject main =
+                new JsonParser()
+                        .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
+                        .getAsJsonObject();
+        if (!main.has("message")) {
+            main.remove("request");
+
+            Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
+
+            return gson.fromJson(main, type);
+        } else {
+            return new HashMap<>();
+        }
     }
 
     public static @Nullable WebReader getApiUrls() {

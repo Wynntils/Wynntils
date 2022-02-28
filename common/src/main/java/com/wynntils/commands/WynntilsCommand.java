@@ -78,6 +78,12 @@ public class WynntilsCommand extends WynntilsCommandBase {
             //            addCommandDescription(text, "-wynntils", " reloadapi", "This reloads all
             // API data.");
             //            text.append("\n");
+            addCommandDescription(
+                    text,
+                    "-",
+                    "server",
+                    "This lists all online worlds in Wynncraft and the details of each world.");
+            text.append("\n");
             addCommandDescription(text, "-wynntils", " donate", "This provides our Patreon link.");
             context.getSource().sendSuccess(text, false);
             return 1;
