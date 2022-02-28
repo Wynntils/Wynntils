@@ -7,7 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.wynntils.core.commands.WynntilsCommandBase;
+import com.wynntils.mc.utils.commands.WynntilsCommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.managers.CompassManager;

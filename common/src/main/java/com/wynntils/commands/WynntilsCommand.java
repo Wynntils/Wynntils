@@ -4,29 +4,32 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.wynntils.core.commands.WynntilsCommandBase;
+import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.commands.WynntilsCommandBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WynntilsCommand extends WynntilsCommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("wynntils")
-                        .then(Commands.literal("help").executes(getHelp()))
-                        .then(Commands.literal("discord").executes(getDiscordInvite()))
-                        .then(Commands.literal("donate").executes(getDonateLink()))
-                        .then(Commands.literal("reloadapi").executes(reloadApi()))
-                        .executes(getHelp()));
+                        .then(Commands.literal("help").executes(this::help))
+                        .then(Commands.literal("discord").executes(this::discordLink))
+                        .then(Commands.literal("donate").executes(this::donateLink))
+                        .then(Commands.literal("reloadapi").executes(this::reloadApi))
+                        .executes(this::help));
     }
 
-    private Command<CommandSourceStack> reloadApi() {
-        return context -> {
+    private int reloadApi(CommandContext<CommandSourceStack> context) {
             WebManager.reset();
 
             boolean success = WebManager.setupUserAccount();
@@ -47,11 +50,9 @@ public class WynntilsCommand extends WynntilsCommandBase {
             }
 
             return 1;
-        };
     }
 
-    private Command<CommandSourceStack> getDonateLink() {
-        return context -> {
+    private int donateLink(CommandContext<CommandSourceStack> context) {
             MutableComponent c =
                     new TextComponent("You can donate to Wynntils at: ")
                             .withStyle(ChatFormatting.AQUA);
@@ -74,25 +75,23 @@ public class WynntilsCommand extends WynntilsCommandBase {
 
             context.getSource().sendSuccess(c.append(url), false);
             return 1;
-        };
     }
 
-    private Command<CommandSourceStack> getHelp() {
-        return context -> {
+    private int help(CommandContext<CommandSourceStack> context) {
             MutableComponent text =
                     new TextComponent("").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
             text.append("Wynntils' command list: ");
             text.append("\n");
             addCommandDescription(
                     text,
-                    "-wynntils",
-                    " help",
+                    "wynntils",
+                    List.of("help"),
                     "This shows a list of all available commands for Wynntils.");
             text.append("\n");
             addCommandDescription(
                     text,
-                    "-wynntils",
-                    " discord",
+                    "wynntils",
+                    List.of("discord"),
                     "This provides you with an invite to our Discord server.");
             text.append("\n");
             //            addCommandDescription(text, "-wynntils", " version", "This shows the
@@ -101,29 +100,27 @@ public class WynntilsCommand extends WynntilsCommandBase {
             //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
             // "This shows the changelog of your installed version.");
             //            text.append("\n");
-            addCommandDescription(text, "-wynntils", " reloadapi", "This reloads all API data.");
+            addCommandDescription(text, "-wynntils", List.of("reloadapi"), "This reloads all API data.");
             text.append("\n");
-            addCommandDescription(text, "-wynntils", " donate", "This provides our Patreon link.");
+            addCommandDescription(text, "-wynntils", List.of("donate"), "This provides our Patreon link.");
             text.append("\n");
             addCommandDescription(
                     text,
-                    "-",
                     "token",
+                    List.of(),
                     "This provides a clickable token for you to create a Wynntils account to manage"
                             + " your cosmetics.");
             text.append("\n");
             addCommandDescription(
                     text,
-                    "-",
                     "territory",
+                    List.of(),
                     "This makes your compass point towards a specified territory.");
             context.getSource().sendSuccess(text, false);
             return 1;
-        };
     }
 
-    private Command<CommandSourceStack> getDiscordInvite() {
-        return context -> {
+    private int discordLink(CommandContext<CommandSourceStack> context) {
             MutableComponent msg =
                     new TextComponent("You're welcome to join our Discord server at:\n")
                             .withStyle(ChatFormatting.GOLD);
@@ -151,25 +148,36 @@ public class WynntilsCommand extends WynntilsCommandBase {
             }
             context.getSource().sendSuccess(msg.append(link), false);
             return 1;
-        };
     }
 
     private static void addCommandDescription(
-            MutableComponent text, String prefix, String name, String description) {
-        MutableComponent prefixText =
-                new TextComponent(prefix)
-                        .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY));
-        text.append(prefixText);
+            MutableComponent text, String prefix, List<String> suffix, String description) {
+        MutableComponent clickComponent = new TextComponent("");
+        {
+            clickComponent.setStyle(clickComponent.getStyle()
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + prefix + " " + String.join(" ", suffix)))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            new TextComponent("Click here to run this commannd."))));
 
-        MutableComponent nameText =
-                new TextComponent(name).withStyle(Style.EMPTY.withColor(ChatFormatting.RED));
-        text.append(nameText);
+            MutableComponent prefixText =
+                    new TextComponent("-" + prefix)
+                            .withStyle(ChatFormatting.DARK_GRAY);
+            clickComponent.append(prefixText);
 
-        text.append(" ");
+            if (!suffix.isEmpty()) {
+                MutableComponent nameText =
+                        new TextComponent(String.join(" ", suffix)).withStyle(ChatFormatting.GREEN);
+                clickComponent.append(nameText);
+            }
 
-        MutableComponent descriptionText =
-                new TextComponent(description)
-                        .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
-        text.append(descriptionText);
+            clickComponent.append(" ");
+
+            MutableComponent descriptionText =
+                    new TextComponent(description)
+                            .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
+            clickComponent.append(descriptionText);
+        }
+
+        text.append(clickComponent);
     }
 }
