@@ -6,6 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.commands.WynntilsCommandBase;
 import java.util.List;
@@ -23,7 +24,33 @@ public class WynntilsCommand extends WynntilsCommandBase {
                         .then(Commands.literal("discord").executes(this::discordLink))
                         .then(Commands.literal("donate").executes(this::donateLink))
                         .then(Commands.literal("reloadapi").executes(this::reloadApi))
+                        .then(Commands.literal("version").executes(this::version))
                         .executes(this::help));
+    }
+
+    private int version(CommandContext<CommandSourceStack> context) {
+        // TODO: Handle if dev env
+
+        MutableComponent buildText;
+
+        if (Reference.VERSION.isEmpty()) {
+            buildText = new TextComponent("Unknown Version");
+        } else {
+            buildText = new TextComponent("Version " + Reference.VERSION);
+        }
+
+        buildText.append("\n");
+
+        if (Reference.BUILD_NUMBER == -1) {
+            buildText.append(new TextComponent("Unknown Build"));
+        } else {
+            buildText.append(new TextComponent("Build " + Reference.BUILD_NUMBER));
+        }
+
+        buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
+
+        context.getSource().sendSuccess(buildText, false);
+        return 1;
     }
 
     private int reloadApi(CommandContext<CommandSourceStack> context) {
@@ -90,9 +117,12 @@ public class WynntilsCommand extends WynntilsCommandBase {
                 List.of("discord"),
                 "This provides you with an invite to our Discord server.");
         text.append("\n");
-        //            addCommandDescription(text, "-wynntils", " version", "This shows the
-        // installed Wynntils version.");
-        //            text.append("\n");
+        addCommandDescription(
+                text,
+                "-wynntils",
+                List.of(" version"),
+                "This shows the installed Wynntils version.");
+        text.append("\n");
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
