@@ -8,14 +8,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.commands.WynntilsCommandBase;
+import com.wynntils.mc.utils.commands.CommandBase;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.*;
 
-public class WynntilsCommand extends WynntilsCommandBase {
+public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
@@ -104,41 +104,34 @@ public class WynntilsCommand extends WynntilsCommandBase {
         MutableComponent text =
                 new TextComponent("").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         text.append("Wynntils' command list: ");
-        text.append("\n");
         addCommandDescription(
                 text,
                 "wynntils",
                 List.of("help"),
                 "This shows a list of all available commands for Wynntils.");
-        text.append("\n");
         addCommandDescription(
                 text,
                 "wynntils",
                 List.of("discord"),
                 "This provides you with an invite to our Discord server.");
-        text.append("\n");
         addCommandDescription(
                 text,
                 "-wynntils",
                 List.of(" version"),
                 "This shows the installed Wynntils version.");
-        text.append("\n");
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
         addCommandDescription(
                 text, "-wynntils", List.of("reloadapi"), "This reloads all API data.");
-        text.append("\n");
         addCommandDescription(
                 text, "-wynntils", List.of("donate"), "This provides our Patreon link.");
-        text.append("\n");
         addCommandDescription(
                 text,
                 "token",
                 List.of(),
                 "This provides a clickable token for you to create a Wynntils account to manage"
                         + " your cosmetics.");
-        text.append("\n");
         addCommandDescription(
                 text,
                 "territory",
@@ -180,6 +173,8 @@ public class WynntilsCommand extends WynntilsCommandBase {
 
     private static void addCommandDescription(
             MutableComponent text, String prefix, List<String> suffix, String description) {
+        text.append("\n");
+
         MutableComponent clickComponent = new TextComponent("");
         {
             clickComponent.setStyle(
@@ -192,8 +187,7 @@ public class WynntilsCommand extends WynntilsCommandBase {
                             .withHoverEvent(
                                     new HoverEvent(
                                             HoverEvent.Action.SHOW_TEXT,
-                                            new TextComponent(
-                                                    "Click here to run this commannd."))));
+                                            new TextComponent("Click here to run this command."))));
 
             MutableComponent prefixText =
                     new TextComponent("-" + prefix).withStyle(ChatFormatting.DARK_GRAY);

@@ -7,8 +7,8 @@ package com.wynntils.mc.utils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 
-public abstract class WynntilsCommandBase {
-    public WynntilsCommandBase() {}
+public abstract class CommandBase {
+    public CommandBase() {}
 
     public abstract void register(CommandDispatcher<CommandSourceStack> dispatcher);
 }

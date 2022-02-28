@@ -7,13 +7,13 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.commands.WynntilsCommandBase;
+import com.wynntils.mc.utils.commands.CommandBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.*;
 
-public class TokenCommand extends WynntilsCommandBase {
+public class TokenCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("token").executes(this::token));
