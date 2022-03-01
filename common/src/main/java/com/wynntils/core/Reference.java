@@ -10,4 +10,6 @@ import org.apache.logging.log4j.Logger;
 /** TODO */
 public class Reference {
     public static final Logger LOGGER = LogManager.getFormatterLogger(WynntilsMod.MOD_ID);
+    public static String VERSION = "";
+    public static int BUILD_NUMBER = -1;
 }
