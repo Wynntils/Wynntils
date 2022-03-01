@@ -197,15 +197,7 @@ public class WebManager {
     public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
         if (apiUrls == null) return new HashMap<>();
 
-        URLConnection st = new URL(apiUrls.get("OnlinePlayers")).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
-                        + " Firefox/3.6.2");
-        // st.setRequestProperty("apikey", apiUrls.get("WynnApiKey")); API key rate limits
-        // constantly, perhaps we don't need it?
-        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
-        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+        URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
 
         JsonObject main =
                 new JsonParser()
@@ -220,6 +212,19 @@ public class WebManager {
         } else {
             return new HashMap<>();
         }
+    }
+
+    private static URLConnection generateURLRequest(String url) throws IOException {
+        URLConnection st = new URL(url).openConnection();
+        st.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
+                        + " Firefox/3.6.2");
+        if (apiUrls != null) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
+        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+
+        return st;
     }
 
     public static @Nullable WebReader getApiUrls() {
