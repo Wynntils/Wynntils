@@ -4,7 +4,9 @@
  */
 package com.wynntils.wc.utils;
 
+import com.google.common.collect.Lists;
 import com.wynntils.wc.ModelLoader;
+import java.util.List;
 
 public class WynnUtils {
     /**
@@ -30,5 +32,9 @@ public class WynnUtils {
 
     public static boolean onWorld() {
         return ModelLoader.getWorldState().onWorld();
+    }
+
+    public static List<String> getWynnServerTypes() {
+        return Lists.newArrayList("WC", "lobby", "GM", "DEV", "WAR", "HB");
     }
 }
