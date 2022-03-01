@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.WynntilsCommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
@@ -25,47 +26,27 @@ import net.minecraft.network.chat.TextComponent;
 public class ServerCommand extends WynntilsCommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-                Commands.literal("server")
-                        .then(Commands.literal("list").executes(this::serverList))
-                        .then(Commands.literal("ls").executes(this::serverList))
-                        .then(Commands.literal("l").executes(this::serverList))
-                        .then(
-                                Commands.literal("info")
-                                        .then(
-                                                Commands.argument(
-                                                                "server", StringArgumentType.word())
-                                                        .executes(this::serverInfo))
-                                        .executes(this::serverInfoHelp))
-                        .then(
-                                Commands.literal("i")
-                                        .then(
-                                                Commands.argument(
-                                                                "server", StringArgumentType.word())
-                                                        .executes(this::serverInfo))
-                                        .executes(this::serverInfoHelp))
-                        .executes(this::serverHelp));
+        LiteralCommandNode<CommandSourceStack> listNode =
+                Commands.literal("list").executes(this::serverList).build();
 
-        dispatcher.register(
-                Commands.literal("s")
-                        .then(Commands.literal("list").executes(this::serverList))
-                        .then(Commands.literal("ls").executes(this::serverList))
-                        .then(Commands.literal("l").executes(this::serverList))
+        LiteralCommandNode<CommandSourceStack> infoNode =
+                Commands.literal("info")
                         .then(
-                                Commands.literal("info")
-                                        .then(
-                                                Commands.argument(
-                                                                "server", StringArgumentType.word())
-                                                        .executes(this::serverInfo))
-                                        .executes(this::serverInfoHelp))
-                        .then(
-                                Commands.literal("i")
-                                        .then(
-                                                Commands.argument(
-                                                                "server", StringArgumentType.word())
-                                                        .executes(this::serverInfo))
-                                        .executes(this::serverInfoHelp))
-                        .executes(this::serverHelp));
+                                Commands.argument("server", StringArgumentType.word())
+                                        .executes(this::serverInfo))
+                        .executes(this::serverInfoHelp)
+                        .build();
+        LiteralCommandNode<CommandSourceStack> node =
+                dispatcher.register(
+                        Commands.literal("server")
+                                .then(listNode)
+                                .then(Commands.literal("ls").redirect(listNode))
+                                .then(Commands.literal("l").redirect(listNode))
+                                .then(infoNode)
+                                .then(Commands.literal("i").redirect(infoNode))
+                                .executes(this::serverHelp));
+
+        dispatcher.register(Commands.literal("s").redirect(node));
     }
 
     private int serverInfoHelp(CommandContext<CommandSourceStack> context) {
@@ -79,12 +60,15 @@ public class ServerCommand extends WynntilsCommandBase {
     private int serverHelp(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
                 new TextComponent(
-                                "/s <command> [options]\n\n"
-                                        + "commands:\n"
-                                        + "l,ls,list | list available servers\n"
-                                        + "i,info | get info about a server\n\n"
-                                        + "more detailed help:\n"
-                                        + "/s <command> help")
+                                """
+                                /s <command> [options]
+
+                                commands:
+                                l,ls,list | list available servers
+                                i,info | get info about a server
+
+                                more detailed help:
+                                /s <command> help""")
                         .withStyle(ChatFormatting.RED);
 
         context.getSource().sendSuccess(text, false);
