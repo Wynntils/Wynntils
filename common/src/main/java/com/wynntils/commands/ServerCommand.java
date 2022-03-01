@@ -4,7 +4,6 @@
  */
 package com.wynntils.commands;
 
-import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,6 +11,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.WynntilsCommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wc.utils.WynnUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +24,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public class ServerCommand extends WynntilsCommandBase {
-    private final List<String> serverTypes =
-            Lists.newArrayList("WC", "lobby", "GM", "DEV", "WAR", "HB");
-
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> listNode =
@@ -141,7 +138,7 @@ public class ServerCommand extends WynntilsCommandBase {
         MutableComponent message =
                 new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
-        for (String serverType : serverTypes) {
+        for (String serverType : WynnUtils.getWynnServerTypes()) {
             List<String> currentTypeServers =
                     onlinePlayers.keySet().stream()
                             .filter(server -> server.startsWith(serverType))
