@@ -8,8 +8,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.commands.WynntilsCommandBase;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
-public class ServerCommand extends WynntilsCommandBase {
+public class ServerCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> listNode =
