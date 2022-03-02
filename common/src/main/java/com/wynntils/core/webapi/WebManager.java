@@ -117,7 +117,6 @@ public class WebManager {
 
             McUtils.sendMessageToClient(failed);
         }
-
     }
 
     public static void updateTerritories(RequestHandler handler) {

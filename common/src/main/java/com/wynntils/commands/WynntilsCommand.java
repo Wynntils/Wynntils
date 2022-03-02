@@ -57,7 +57,8 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int reload(CommandContext<CommandSourceStack> context) {
-        for (Feature feature : FeatureRegistry.getFeatures()) { // disable all active features before resetting web
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // disable all active features before resetting web
             if (feature.isEnabled()) {
                 feature.disable();
             }
@@ -65,9 +66,10 @@ public class WynntilsCommand extends CommandBase {
 
         WebManager.reset();
 
-        WebManager.setupUserAccount(); //fail message is handled by method already
+        WebManager.setupUserAccount(); // fail message is handled by method already
 
-        for (Feature feature : FeatureRegistry.getFeatures()) { // re-enable all features which should be
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // re-enable all features which should be
             if (feature.canEnable()) {
                 feature.enable();
 
@@ -84,7 +86,8 @@ public class WynntilsCommand extends CommandBase {
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Finished reloading everything!").withStyle(ChatFormatting.GREEN),
+                        new TextComponent("Finished reloading everything!")
+                                .withStyle(ChatFormatting.GREEN),
                         false);
 
         return 1;

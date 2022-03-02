@@ -109,7 +109,7 @@ public class FeatureRegistry {
                 });
     }
 
-    private static class OverlayListener { //TODO create a enum map for overlays instead of this
+    private static class OverlayListener { // TODO create a enum map for overlays instead of this
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {
