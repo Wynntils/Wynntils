@@ -28,6 +28,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.MEDIUM)
 public class SoulPointTimerFeature extends Feature {
+    public SoulPointTimerFeature() {
+        super("Soul Point Timer Feature");
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 

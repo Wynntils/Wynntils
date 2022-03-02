@@ -39,6 +39,10 @@ public class ItemGuessFeature extends Feature {
 
     private static final boolean showGuessesPrice = true;
 
+    public ItemGuessFeature() {
+        super("Item Guess Feature");
+    }
+
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());

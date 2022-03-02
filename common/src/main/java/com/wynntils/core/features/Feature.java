@@ -18,8 +18,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public abstract class Feature {
     private ImmutableList<Condition> conditions;
+    private final String name;
 
     protected boolean enabled = false;
+
+    protected Feature(String name) {
+        this.name = name;
+    }
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -79,7 +84,7 @@ public abstract class Feature {
     }
 
     /** Whether a feature can be enabled */
-    private boolean canEnable() {
+    public boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }
@@ -112,6 +117,10 @@ public abstract class Feature {
             setSatisfied(true);
             WynntilsMod.getEventBus().unregister(this);
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public abstract class Condition {

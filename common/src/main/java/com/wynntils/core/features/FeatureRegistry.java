@@ -36,10 +36,6 @@ public class FeatureRegistry {
         features.forEach(FeatureRegistry::registerFeature);
     }
 
-    public static void registerOverlay(Overlay overlay) {
-        OVERLAYS.add(overlay);
-    }
-
     public static List<Feature> getFeatures() {
         return FEATURES;
     }
@@ -113,7 +109,7 @@ public class FeatureRegistry {
                 });
     }
 
-    private static class OverlayListener {
+    private static class OverlayListener { //TODO create a enum map for overlays instead of this
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {

@@ -15,6 +15,7 @@ import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.objects.items.IdentificationContainer;
 import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.objects.items.ItemType;
@@ -27,7 +28,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Supplier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +40,6 @@ import org.jetbrains.annotations.Nullable;
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
-
-    private static final Set<Supplier<Boolean>> routesMarkedForUse = new HashSet<>();
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
@@ -54,7 +57,7 @@ public class WebManager {
     private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
 
     private static TerritoryUpdateThread territoryUpdateThread;
-    private static HashMap<String, TerritoryProfile> territories = new HashMap<>();
+    private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static @Nullable WynntilsAccount account = null;
 
@@ -90,19 +93,31 @@ public class WebManager {
         account = null;
     }
 
-    public static boolean reloadUsedRoutes() {
-        boolean success = tryReloadApiUrls(false);
+    public static void setupUserAccount() {
+        account = new WynntilsAccount();
+        boolean accountSetup = account.login();
 
-        for (Supplier<Boolean> entry : WebManager.getRoutesMarkedForUse()) {
-            success &= entry.get();
+        if (!accountSetup) {
+            MutableComponent failed = new TextComponent("");
+            failed.append(
+                    new TextComponent(
+                                    "Welps! Trying to connect and set up the Wynntils Account with"
+                                        + " your data has failed. Most notably, configs will not be"
+                                        + " loaded. To try this action again, run")
+                            .withStyle(ChatFormatting.GREEN));
+            failed.append(
+                    new TextComponent("/wynntils reload")
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.AQUA)
+                                            .withClickEvent(
+                                                    new ClickEvent(
+                                                            ClickEvent.Action.RUN_COMMAND,
+                                                            "/wynntils reload"))));
+
+            McUtils.sendMessageToClient(failed);
         }
 
-        return success;
-    }
-
-    public static boolean setupUserAccount() {
-        account = new WynntilsAccount();
-        return account.login();
     }
 
     public static void updateTerritories(RequestHandler handler) {
@@ -151,7 +166,6 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemGuesses() {
-        routesMarkedForUse.add(WebManager::tryLoadItemGuesses);
         if (!isItemGuessesLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
@@ -188,7 +202,6 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemList() {
-        routesMarkedForUse.add(WebManager::tryLoadItemList);
         if (!isItemListLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
@@ -365,10 +378,6 @@ public class WebManager {
 
     public static @Nullable HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
-    }
-
-    public static Set<Supplier<Boolean>> getRoutesMarkedForUse() {
-        return routesMarkedForUse;
     }
 
     public static HashMap<String, TerritoryProfile> getTerritories() {

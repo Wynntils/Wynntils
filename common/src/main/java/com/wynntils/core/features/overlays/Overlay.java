@@ -26,6 +26,7 @@ public abstract class Overlay
             OverlayGrowFrom growthX,
             OverlayGrowFrom growthY,
             RenderEvent.ElementType... hookElements) {
+        super(displayName);
         this.displayName = displayName;
         this.staticSize = new Point(sizeX, sizeY);
         this.visible = visible;

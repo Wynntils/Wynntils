@@ -20,6 +20,10 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.scores.Team;
 
 public class KeyBindTestFeature extends DebugFeature {
+    public KeyBindTestFeature() {
+        super("Keybind Test Feature");
+    }
+
     private final List<KeyHolder> keybinds = new ArrayList<>();
 
     @Override
