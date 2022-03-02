@@ -2,13 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.commands;
+package com.wynntils.mc.utils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.wynntils.commands.ServerCommand;
+import com.wynntils.commands.TerritoryCommand;
+import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.ChatFormatting;
@@ -37,6 +39,8 @@ public class ClientCommandsManager {
         clientDispatcher = new CommandDispatcher<>();
         new WynntilsCommand().register(clientDispatcher); // TODO event
         new ServerCommand().register(clientDispatcher);
+        new TokenCommand().register(clientDispatcher);
+        new TerritoryCommand().register(clientDispatcher);
     }
 
     public static ClientCommandSourceStack getSource() {

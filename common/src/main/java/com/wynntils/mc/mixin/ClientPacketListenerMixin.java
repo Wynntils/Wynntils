@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.managers.CompassManager;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
@@ -74,6 +75,24 @@ public abstract class ClientPacketListenerMixin {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
                 && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
+    private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
+        if (McUtils.player() == null) {
+            // Reset compass
+            CompassManager.reset();
+
+            if (McUtils.mc().level != null)
+                McUtils.mc().level.setDefaultSpawnPos(packet.getPos(), 0);
+
+            return;
+        }
+
+        // Cancel the event to force the compass to not change
+        if (CompassManager.getCompassLocation() != null) {
             ci.cancel();
         }
     }
