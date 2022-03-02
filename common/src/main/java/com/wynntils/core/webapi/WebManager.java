@@ -27,9 +27,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import org.apache.commons.io.IOUtils;
-import java.util.*;
 import java.util.function.Supplier;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
