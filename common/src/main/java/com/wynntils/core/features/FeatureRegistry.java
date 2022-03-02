@@ -15,7 +15,6 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
@@ -114,13 +113,15 @@ public class FeatureRegistry {
 
     private static class OverlayListener {
         private final List<Overlay> overlays = new LinkedList<>();
-        private final EnumMap<RenderEvent.ElementType, List<Overlay>> overlaysMap = new EnumMap<>(RenderEvent.ElementType.class);
+        private final EnumMap<RenderEvent.ElementType, List<Overlay>> overlaysMap =
+                new EnumMap<>(RenderEvent.ElementType.class);
 
         public void register(Overlay overlay) {
             overlays.add(overlay);
 
             for (RenderEvent.ElementType type : overlay.hookElements) {
-                List<Overlay> overlayList = overlaysMap.computeIfAbsent(type, k -> new ArrayList<>());
+                List<Overlay> overlayList =
+                        overlaysMap.computeIfAbsent(type, k -> new ArrayList<>());
                 overlayList.add(overlay);
             }
         }
@@ -174,8 +175,7 @@ public class FeatureRegistry {
 
             if (overlayList != null) {
                 for (Overlay overlay : overlayList) {
-                    if (!overlay.visible)
-                    if (!overlay.isEnabled()) continue;
+                    if (!overlay.visible) if (!overlay.isEnabled()) continue;
 
                     McUtils.mc().getProfiler().push(overlay.displayName);
                     overlay.render(e);
