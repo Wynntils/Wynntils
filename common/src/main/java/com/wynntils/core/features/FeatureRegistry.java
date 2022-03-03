@@ -23,15 +23,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
-    private static final List<Feature> features = new LinkedList<>();
-    private static final OverlayListener overlayListener = new OverlayListener();
+    private static final List<Feature> FEATURES = new LinkedList<>();
+    private static final OverlayListener OVERLAY_LISTENER = new OverlayListener();
 
     public static void registerFeature(Feature feature) {
         if (feature instanceof Overlay overlay) {
-            overlayListener.register(overlay);
+            OVERLAY_LISTENER.register(overlay);
         }
 
-        features.add(feature);
+        FEATURES.add(feature);
     }
 
     public static void registerFeatures(List<Feature> features) {
@@ -39,11 +39,11 @@ public class FeatureRegistry {
     }
 
     public static List<Feature> getFeatures() {
-        return features;
+        return FEATURES;
     }
 
     public static List<Overlay> getOverlays() {
-        return overlayListener.overlays;
+        return OVERLAY_LISTENER.overlays;
     }
 
     public static void init() {
@@ -60,7 +60,7 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
 
-        features.forEach(Feature::init);
+        FEATURES.forEach(Feature::init);
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
