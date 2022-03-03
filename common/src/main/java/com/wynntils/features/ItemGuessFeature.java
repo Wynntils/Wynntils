@@ -39,8 +39,8 @@ public class ItemGuessFeature extends Feature {
 
     private static final boolean showGuessesPrice = true;
 
-    public ItemGuessFeature() {
-        super("Item Guess Feature");
+    public String getName() {
+        return "Item Guess Feature";
     }
 
     @Override

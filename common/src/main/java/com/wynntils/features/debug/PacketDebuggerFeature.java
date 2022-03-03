@@ -18,8 +18,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PacketDebuggerFeature extends DebugFeature {
-    public PacketDebuggerFeature() {
-        super("Packet Debugger Feature");
+    public String getName() {
+        return "Packet Debugger Feature";
     }
 
     public static final boolean DEBUG_PACKETS = false;

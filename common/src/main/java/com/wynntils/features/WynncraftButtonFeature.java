@@ -30,8 +30,8 @@ import org.jetbrains.annotations.NotNull;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
-    public WynncraftButtonFeature() {
-        super("Wynncraft Button Feature");
+    public String getName() {
+        return "Wynncraft Button Feature";
     }
 
     @Override

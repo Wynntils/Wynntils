@@ -26,8 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
-    public HealthPotionBlockerFeature() {
-        super("Health Potion Blocker Feature");
+    public String getName() {
+        return "Health Potion Blocker Feature";
     }
 
     @Override

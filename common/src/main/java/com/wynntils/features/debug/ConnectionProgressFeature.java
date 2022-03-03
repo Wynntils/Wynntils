@@ -13,8 +13,8 @@ import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {
-    public ConnectionProgressFeature() {
-        super("Connection Progress Feature");
+    public String getName() {
+        return "Connection Progress Feature";
     }
 
     @Override

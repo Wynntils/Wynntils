@@ -74,8 +74,8 @@ public class ItemStatInfoFeature extends Feature {
     private static final boolean reorderIdentifications = true;
     private static final boolean groupIdentifications = true;
 
-    public ItemStatInfoFeature() {
-        super("Item Statistics Info Feature");
+    public String getName() {
+        return "Item Statistics Info Feature";
     }
 
     @Override

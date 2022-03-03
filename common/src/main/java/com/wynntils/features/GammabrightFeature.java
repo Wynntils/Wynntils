@@ -39,8 +39,8 @@ public class GammabrightFeature extends Feature {
                         McUtils.mc().options.gamma = lastGamma;
                     });
 
-    public GammabrightFeature() {
-        super("Gammabright Keybind Feature");
+    public String getName() {
+        return "Gammabright Keybind Feature";
     }
 
     @Override

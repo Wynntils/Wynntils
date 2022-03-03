@@ -18,13 +18,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public abstract class Feature {
     private ImmutableList<Condition> conditions;
-    private final String name;
 
     protected boolean enabled = false;
-
-    protected Feature(String name) {
-        this.name = name;
-    }
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -119,9 +114,8 @@ public abstract class Feature {
         }
     }
 
-    public String getName() {
-        return name;
-    }
+    /** Gets the name of a feature */
+    public abstract String getName();
 
     public abstract class Condition {
         boolean satisfied = false;

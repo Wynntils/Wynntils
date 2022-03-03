@@ -13,8 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerGhostTransparencyFeature extends Feature {
-    public PlayerGhostTransparencyFeature() {
-        super("Transparent Player Ghost Feature");
+    public String getName() {
+        return "Transparent Player Ghost Feature";
     }
 
     @Override
