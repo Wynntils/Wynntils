@@ -6,9 +6,9 @@ package com.wynntils.core;
 
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.mc.utils.managers.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.mc.utils.managers.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
 import java.util.regex.Matcher;

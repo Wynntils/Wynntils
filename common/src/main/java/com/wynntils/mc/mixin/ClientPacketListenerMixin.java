@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.managers.CompassManager;
+import com.wynntils.mc.utils.managers.CompassManager;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;

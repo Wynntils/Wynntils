@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils.commands;
+package com.wynntils.mc.utils.managers;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -12,6 +12,7 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.mc.utils.commands.ClientCommandSourceStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandRuntimeException;

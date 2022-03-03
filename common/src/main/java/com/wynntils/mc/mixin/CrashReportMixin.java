@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.mc.utils.managers.CrashReportManager;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.CrashReport;

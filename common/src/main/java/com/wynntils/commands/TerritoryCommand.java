@@ -9,7 +9,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.managers.CompassManager;
+import com.wynntils.mc.utils.managers.CompassManager;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.objects.Location;
 import java.util.HashMap;

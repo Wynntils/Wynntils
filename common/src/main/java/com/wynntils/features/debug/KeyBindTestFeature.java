@@ -10,7 +10,7 @@ import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.mc.utils.managers.KeyManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

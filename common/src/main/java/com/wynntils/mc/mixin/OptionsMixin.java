@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.mc.utils.managers.KeyManager;
 import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;

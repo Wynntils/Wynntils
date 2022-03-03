@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.mc.utils.managers.KeyManager;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(

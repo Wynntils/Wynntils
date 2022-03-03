@@ -12,7 +12,7 @@ import com.wynntils.features.debug.KeyBindTestFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.mc.utils.managers.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.LinkedList;
