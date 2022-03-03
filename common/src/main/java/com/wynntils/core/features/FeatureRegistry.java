@@ -139,7 +139,7 @@ public class FeatureRegistry {
                     }
 
                     if (contained && overlay.visible) {
-                        McUtils.mc().getProfiler().push(overlay.displayName);
+                        McUtils.mc().getProfiler().push(overlay.getName());
                         overlay.render(e);
                         McUtils.mc().getProfiler().pop();
                     }
@@ -165,7 +165,7 @@ public class FeatureRegistry {
                     if (overlay.hookElements.length != 0) {
                         for (RenderEvent.ElementType type : overlay.hookElements) {
                             if (e.getType() == type) {
-                                McUtils.mc().getProfiler().push(overlay.displayName);
+                                McUtils.mc().getProfiler().push(overlay.getName());
                                 overlay.render(e);
                                 McUtils.mc().getProfiler().pop();
                                 break;

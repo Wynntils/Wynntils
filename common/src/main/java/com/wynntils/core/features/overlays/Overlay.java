@@ -31,11 +31,11 @@ public abstract class Overlay
         this.growthY = growthY;
     }
 
-    public void render(RenderEvent.Pre e) {}
+    public abstract void render(RenderEvent.Pre e);
 
-    public void render(RenderEvent.Post e) {}
+    public abstract void render(RenderEvent.Post e);
 
-    public void tick() {}
+    public abstract void tick();
 
     public enum OverlayGrowFrom {
         LEFT,
