@@ -79,7 +79,7 @@ public abstract class Feature {
     }
 
     /** Whether a feature can be enabled */
-    private boolean canEnable() {
+    public boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }
@@ -113,6 +113,9 @@ public abstract class Feature {
             WynntilsMod.getEventBus().unregister(this);
         }
     }
+
+    /** Gets the name of a feature */
+    public abstract String getName();
 
     public abstract class Condition {
         boolean satisfied = false;

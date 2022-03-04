@@ -74,6 +74,10 @@ public class ItemStatInfoFeature extends Feature {
     private static final boolean reorderIdentifications = true;
     private static final boolean groupIdentifications = true;
 
+    public String getName() {
+        return "Item Statistics Info Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());

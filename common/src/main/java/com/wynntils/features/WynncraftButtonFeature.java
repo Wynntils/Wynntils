@@ -30,6 +30,10 @@ import org.jetbrains.annotations.NotNull;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
+    public String getName() {
+        return "Wynncraft Button Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 

@@ -7,7 +7,10 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.Reference;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -23,7 +26,7 @@ public class WynntilsCommand extends CommandBase {
                         .then(Commands.literal("help").executes(this::help))
                         .then(Commands.literal("discord").executes(this::discordLink))
                         .then(Commands.literal("donate").executes(this::donateLink))
-                        .then(Commands.literal("reloadapi").executes(this::reloadApi))
+                        .then(Commands.literal("reload").executes(this::reload))
                         .then(Commands.literal("version").executes(this::version))
                         .executes(this::help));
     }
@@ -53,25 +56,39 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
-    private int reloadApi(CommandContext<CommandSourceStack> context) {
+    private int reload(CommandContext<CommandSourceStack> context) {
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // disable all active features before resetting web
+            if (feature.isEnabled()) {
+                feature.disable();
+            }
+        }
+
         WebManager.reset();
 
-        boolean success = WebManager.setupUserAccount();
+        WebManager.setupUserAccount(); // fail message is handled by method already
 
-        success &= WebManager.reloadUsedRoutes();
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // re-enable all features which should be
+            if (feature.canEnable()) {
+                feature.enable();
 
-        if (success) {
-            context.getSource()
-                    .sendSuccess(
-                            new TextComponent("Successfully reloaded all used API routes.")
-                                    .withStyle(ChatFormatting.GREEN),
-                            false);
-        } else {
-            context.getSource()
-                    .sendFailure(
-                            new TextComponent("One or more API routes failed to reload")
-                                    .withStyle(ChatFormatting.RED));
+                if (!feature.isEnabled()) {
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Failed to reload ")
+                                    .withStyle(ChatFormatting.GREEN)
+                                    .append(
+                                            new TextComponent(feature.getName())
+                                                    .withStyle(ChatFormatting.AQUA)));
+                }
+            }
         }
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent("Finished reloading everything!")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
         return 1;
     }
@@ -182,7 +199,7 @@ public class WynntilsCommand extends CommandBase {
                             .getStyle()
                             .withClickEvent(
                                     new ClickEvent(
-                                            ClickEvent.Action.SUGGEST_COMMAND,
+                                            ClickEvent.Action.RUN_COMMAND,
                                             "/" + prefix + " " + String.join(" ", suffix)))
                             .withHoverEvent(
                                     new HoverEvent(

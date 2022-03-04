@@ -36,10 +36,6 @@ public class FeatureRegistry {
         features.forEach(FeatureRegistry::registerFeature);
     }
 
-    public static void registerOverlay(Overlay overlay) {
-        OVERLAYS.add(overlay);
-    }
-
     public static List<Feature> getFeatures() {
         return FEATURES;
     }
@@ -83,7 +79,7 @@ public class FeatureRegistry {
 
                         for (Feature feature : FEATURES) {
                             if (feature.isEnabled()) {
-                                result.append("\n\t\t").append(feature.getClass().getName());
+                                result.append("\n\t\t").append(feature.getName());
                             }
                         }
 
@@ -104,7 +100,7 @@ public class FeatureRegistry {
 
                         for (Overlay overlay : OVERLAYS) {
                             if (overlay.isEnabled()) {
-                                result.append("\n\t\t").append(overlay.getClass().getName());
+                                result.append("\n\t\t").append(overlay.getName());
                             }
                         }
 
@@ -113,7 +109,7 @@ public class FeatureRegistry {
                 });
     }
 
-    private static class OverlayListener {
+    private static class OverlayListener { // TODO create a enum map for overlays instead of this
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {
@@ -143,7 +139,7 @@ public class FeatureRegistry {
                     }
 
                     if (contained && overlay.visible) {
-                        McUtils.mc().getProfiler().push(overlay.displayName);
+                        McUtils.mc().getProfiler().push(overlay.getName());
                         overlay.render(e);
                         McUtils.mc().getProfiler().pop();
                     }
@@ -169,7 +165,7 @@ public class FeatureRegistry {
                     if (overlay.hookElements.length != 0) {
                         for (RenderEvent.ElementType type : overlay.hookElements) {
                             if (e.getType() == type) {
-                                McUtils.mc().getProfiler().push(overlay.displayName);
+                                McUtils.mc().getProfiler().push(overlay.getName());
                                 overlay.render(e);
                                 McUtils.mc().getProfiler().pop();
                                 break;

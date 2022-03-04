@@ -13,6 +13,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerGhostTransparencyFeature extends Feature {
+    public String getName() {
+        return "Transparent Player Ghost Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 

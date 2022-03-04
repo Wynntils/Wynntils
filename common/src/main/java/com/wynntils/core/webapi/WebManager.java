@@ -7,28 +7,39 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.objects.items.IdentificationContainer;
 import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.objects.items.ItemType;
 import com.wynntils.wc.objects.items.MajorIdentification;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Supplier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
 public class WebManager {
     public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
-
-    private static final Set<Supplier<Boolean>> routesMarkedForUse = new HashSet<>();
+    private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
@@ -46,7 +57,7 @@ public class WebManager {
     private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
 
     private static TerritoryUpdateThread territoryUpdateThread;
-    private static HashMap<String, TerritoryProfile> territories = new HashMap<>();
+    private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static @Nullable WynntilsAccount account = null;
 
@@ -82,19 +93,30 @@ public class WebManager {
         account = null;
     }
 
-    public static boolean reloadUsedRoutes() {
-        boolean success = tryReloadApiUrls(false);
-
-        for (Supplier<Boolean> entry : WebManager.getRoutesMarkedForUse()) {
-            success &= entry.get();
-        }
-
-        return success;
-    }
-
-    public static boolean setupUserAccount() {
+    public static void setupUserAccount() {
         account = new WynntilsAccount();
-        return account.login();
+        boolean accountSetup = account.login();
+
+        if (!accountSetup) {
+            MutableComponent failed = new TextComponent("");
+            failed.append(
+                    new TextComponent(
+                                    "Welps! Trying to connect and set up the Wynntils Account with"
+                                        + " your data has failed. Most notably, configs will not be"
+                                        + " loaded. To try this action again, run")
+                            .withStyle(ChatFormatting.GREEN));
+            failed.append(
+                    new TextComponent("/wynntils reload")
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.AQUA)
+                                            .withClickEvent(
+                                                    new ClickEvent(
+                                                            ClickEvent.Action.RUN_COMMAND,
+                                                            "/wynntils reload"))));
+
+            McUtils.sendMessageToClient(failed);
+        }
     }
 
     public static void updateTerritories(RequestHandler handler) {
@@ -143,7 +165,6 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemGuesses() {
-        routesMarkedForUse.add(WebManager::tryLoadItemGuesses);
         if (!isItemGuessesLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
@@ -180,7 +201,6 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemList() {
-        routesMarkedForUse.add(WebManager::tryLoadItemList);
         if (!isItemListLoaded()) {
             handler.addRequest(
                     new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
@@ -278,6 +298,46 @@ public class WebManager {
         return true;
     }
 
+    /**
+     * Request all online players to WynnAPI
+     *
+     * @return a {@link HashMap} who the key is the server and the value is an array containing all
+     *     players on it
+     * @throws IOException thrown by URLConnection
+     */
+    public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
+        if (apiUrls == null) return new HashMap<>();
+
+        URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
+
+        JsonObject main =
+                new JsonParser()
+                        .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
+                        .getAsJsonObject();
+        if (!main.has("message")) {
+            main.remove("request");
+
+            Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
+
+            return gson.fromJson(main, type);
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    private static URLConnection generateURLRequest(String url) throws IOException {
+        URLConnection st = new URL(url).openConnection();
+        st.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
+                        + " Firefox/3.6.2");
+        if (apiUrls != null) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
+        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+
+        return st;
+    }
+
     public static boolean isItemGuessesLoaded() {
         return itemGuesses != null;
     }
@@ -317,10 +377,6 @@ public class WebManager {
 
     public static @Nullable HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
-    }
-
-    public static Set<Supplier<Boolean>> getRoutesMarkedForUse() {
-        return routesMarkedForUse;
     }
 
     public static HashMap<String, TerritoryProfile> getTerritories() {
