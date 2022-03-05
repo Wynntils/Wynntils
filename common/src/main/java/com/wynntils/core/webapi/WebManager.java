@@ -64,11 +64,9 @@ public class WebManager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
-
-        if (isAthenaOnline()) updateTerritoryThreadStatus(true);
     }
 
-    private static boolean isAthenaOnline() {
+    public static boolean isLoggedIn() {
         return (account != null && account.isConnected());
     }
 
@@ -101,13 +99,12 @@ public class WebManager {
         boolean accountSetup = account.login();
 
         if (!accountSetup) {
-            MutableComponent failed = new TextComponent("");
-            failed.append(
+            MutableComponent failed =
                     new TextComponent(
                                     "Welps! Trying to connect and set up the Wynntils Account with"
                                         + " your data has failed. Most notably, configs will not be"
                                         + " loaded. To try this action again, run ")
-                            .withStyle(ChatFormatting.GREEN));
+                            .withStyle(ChatFormatting.GREEN);
             failed.append(
                     new TextComponent("/wynntils reload")
                             .withStyle(

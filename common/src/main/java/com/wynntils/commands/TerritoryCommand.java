@@ -24,7 +24,6 @@ import net.minecraft.network.chat.TextComponent;
 public class TerritoryCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-
         dispatcher.register(
                 Commands.literal("territory")
                         .then(
@@ -85,6 +84,17 @@ public class TerritoryCommand extends CommandBase {
 
         CompassManager.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
+        MutableComponent separator =
+                new TextComponent("-----------------------------------------------------")
+                        .withStyle(
+                                Style.EMPTY
+                                        .withColor(ChatFormatting.DARK_GRAY)
+                                        .withStrikethrough(true));
+
+        MutableComponent finalMessage = new TextComponent("");
+
+        finalMessage.append(separator);
+
         MutableComponent territoryComponent =
                 new TextComponent(territoryProfile.getFriendlyName())
                         .withStyle(
@@ -99,24 +109,18 @@ public class TerritoryCommand extends CommandBase {
                                 new TextComponent(" (" + xMiddle + ", " + zMiddle + ")")
                                         .withStyle(ChatFormatting.GREEN));
 
+
+        finalMessage.append("\n").append(success);
+
         MutableComponent warn =
                 new TextComponent(
-                                "\n"
-                                        + "Note that this command redirects your"
-                                        + " compass to the middle of said territory.")
+                        "Note that this command redirects your"
+                                + " compass to the middle of said territory.")
                         .withStyle(ChatFormatting.AQUA);
-        success.append(warn);
 
-        MutableComponent separator =
-                new TextComponent("-----------------------------------------------------")
-                        .withStyle(
-                                Style.EMPTY
-                                        .withColor(ChatFormatting.DARK_GRAY)
-                                        .withStrikethrough(true));
+        finalMessage.append("\n").append(warn);
 
-        MutableComponent finalMessage = new TextComponent("");
-
-        finalMessage.append(separator).append("\n").append(success).append("\n").append(separator);
+        finalMessage.append("\n").append(separator);
 
         context.getSource().sendSuccess(finalMessage, false);
 

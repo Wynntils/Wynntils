@@ -119,8 +119,8 @@ public class WynntilsCommand extends CommandBase {
 
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
-                new TextComponent("").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
-        text.append("Wynntils' command list: ");
+                new TextComponent("Wynntils' command list: ")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         addCommandDescription(
                 text,
                 "wynntils",
@@ -139,10 +139,9 @@ public class WynntilsCommand extends CommandBase {
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
+        addCommandDescription(text, "wynntils", List.of("reloadapi"), "This reloads all API data.");
         addCommandDescription(
-                text, "-wynntils", List.of("reloadapi"), "This reloads all API data.");
-        addCommandDescription(
-                text, "-wynntils", List.of("donate"), "This provides our Patreon link.");
+                text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,
                 "token",

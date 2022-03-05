@@ -21,8 +21,8 @@ import net.minecraft.network.chat.*;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
-// parts originate
-// from https://github.com/MinecraftForge/MinecraftForge
+// parts originate from https://github.com/MinecraftForge/MinecraftForge
+// Kudos to both of the above
 public class ClientCommandManager {
 
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
