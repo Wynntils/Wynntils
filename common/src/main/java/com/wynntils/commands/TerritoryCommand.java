@@ -109,13 +109,12 @@ public class TerritoryCommand extends CommandBase {
                                 new TextComponent(" (" + xMiddle + ", " + zMiddle + ")")
                                         .withStyle(ChatFormatting.GREEN));
 
-
         finalMessage.append("\n").append(success);
 
         MutableComponent warn =
                 new TextComponent(
-                        "Note that this command redirects your"
-                                + " compass to the middle of said territory.")
+                                "Note that this command redirects your"
+                                        + " compass to the middle of said territory.")
                         .withStyle(ChatFormatting.AQUA);
 
         finalMessage.append("\n").append(warn);

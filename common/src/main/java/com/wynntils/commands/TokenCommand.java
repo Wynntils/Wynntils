@@ -16,9 +16,7 @@ import net.minecraft.network.chat.*;
 public class TokenCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-                Commands.literal("token")
-                        .executes(this::token));
+        dispatcher.register(Commands.literal("token").executes(this::token));
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
@@ -52,8 +50,9 @@ public class TokenCommand extends CommandBase {
 
             MutableComponent failed =
                     new TextComponent(
-                            "Either setting up your Wynntils account or accessing the token"
-                                    + " failed. To try to set up the Wynntils account again, run ")
+                                    "Either setting up your Wynntils account or accessing the token"
+                                        + " failed. To try to set up the Wynntils account again,"
+                                        + " run ")
                             .withStyle(ChatFormatting.GREEN);
             failed.append(
                     new TextComponent("/wynntils reload")
