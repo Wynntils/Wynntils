@@ -24,17 +24,24 @@ import net.minecraft.network.chat.TextComponent;
 public class TerritoryCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
 
         dispatcher.register(
                 Commands.literal("territory")
                         .then(
                                 Commands.argument("territory", StringArgumentType.greedyString())
                                         .suggests(
-                                                (context, builder) ->
-                                                        SharedSuggestionProvider.suggest(
-                                                                territories.keySet().stream(),
-                                                                builder))
+                                                (context, builder) -> {
+                                                    if (!WebManager.isTerritoryListLoaded()
+                                                            && !WebManager.tryLoadTerritories()) {
+                                                        return null;
+                                                    }
+
+                                                    HashMap<String, TerritoryProfile> territories =
+                                                            WebManager.getTerritories();
+
+                                                    return SharedSuggestionProvider.suggest(
+                                                            territories.keySet().stream(), builder);
+                                                })
                                         .executes(this::territory))
                         .executes(this::help));
     }
@@ -50,11 +57,7 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        String territoryArg = context.getArgument("territory", String.class);
-
-        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
-
-        if (territories == null) {
+        if (!WebManager.isTerritoryListLoaded() && !WebManager.tryLoadTerritories()) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Can't access territory data")
@@ -62,8 +65,16 @@ public class TerritoryCommand extends CommandBase {
             return 1;
         }
 
+        String territoryArg = context.getArgument("territory", String.class);
+
+        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
+
         if (!territories.containsKey(territoryArg)) {
-            context.getSource().sendFailure(helpComponent());
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent(
+                                            "Can't access territory " + "\"" + territoryArg + "\"")
+                                    .withStyle(ChatFormatting.RED));
             return 1;
         }
 

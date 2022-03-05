@@ -51,7 +51,7 @@ public class ItemGuessFeature extends Feature {
     @Override
     protected boolean onEnable() {
         WynntilsMod.getEventBus().register(this);
-        return WebManager.tryLoadItemGuesses();
+        return WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
     }
 
     @Override
