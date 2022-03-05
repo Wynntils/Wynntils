@@ -95,6 +95,8 @@ public class WebManager {
     }
 
     public static void setupUserAccount() {
+        if (account != null && account.isConnected()) return;
+
         account = new WynntilsAccount();
         boolean accountSetup = account.login();
 
@@ -124,7 +126,7 @@ public class WebManager {
     }
 
     public static boolean tryLoadTerritories(RequestHandler handler) {
-        if (apiUrls == null) return false;
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         String url = apiUrls.get("Athena") + "/cache/get/territoryList";
         handler.addRequest(
                 new RequestBuilder(url, "territory")
@@ -152,6 +154,8 @@ public class WebManager {
                                 })
                         .build());
 
+        handler.dispatch(false);
+
         return isTerritoryListLoaded();
     }
 
@@ -172,6 +176,7 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemGuesses() {
+        if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
         handler.addRequest(
                 new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                         .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
@@ -204,6 +209,7 @@ public class WebManager {
     }
 
     public static boolean tryLoadItemList() {
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         handler.addRequest(
                 new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                         .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
@@ -296,7 +302,7 @@ public class WebManager {
      * @throws IOException thrown by URLConnection
      */
     public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
-        if (apiUrls == null) return new HashMap<>();
+        if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
 
@@ -321,7 +327,7 @@ public class WebManager {
                 "User-Agent",
                 "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
                         + " Firefox/3.6.2");
-        if (apiUrls != null) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
+        if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 

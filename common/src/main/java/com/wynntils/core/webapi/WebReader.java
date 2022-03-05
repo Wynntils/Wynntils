@@ -95,6 +95,10 @@ public class WebReader {
         return values.getOrDefault(key, null);
     }
 
+    public boolean hasKey(String key) {
+        return values.containsKey(key);
+    }
+
     public List<String> getList(String key) {
         return lists.getOrDefault(key, new ArrayList<>());
     }
