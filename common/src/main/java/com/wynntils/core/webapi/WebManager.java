@@ -85,9 +85,6 @@ public class WebManager {
         majorIds = null;
         materialTypes = null;
 
-        // setupUserAccount
-        account = null;
-
         // tryLoadTerritories
         territories.clear();
 
@@ -95,7 +92,7 @@ public class WebManager {
     }
 
     public static void setupUserAccount() {
-        if (account != null && account.isConnected()) return;
+        if (isLoggedIn()) return;
 
         account = new WynntilsAccount();
         boolean accountSetup = account.login();
@@ -291,6 +288,7 @@ public class WebManager {
                         .build());
 
         handler.dispatch(async);
+
         return setup;
     }
 

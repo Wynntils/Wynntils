@@ -54,8 +54,10 @@ public class ClientCommandManager {
 
         final ParseResults<CommandSourceStack> parse = clientDispatcher.parse(reader, source);
 
-        if (!parse.getExceptions().isEmpty() || parse.getContext().getCommand() == null) {
-            return false; // let server handle command
+        if (!parse.getExceptions().isEmpty()
+                || (parse.getContext().getCommand() == null
+                        && parse.getContext().getChild() == null)) {
+            return false; // can't parse - let server handle command
         }
 
         try {

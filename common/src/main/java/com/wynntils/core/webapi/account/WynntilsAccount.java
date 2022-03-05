@@ -51,7 +51,8 @@ public class WynntilsAccount {
     }
 
     public boolean login() {
-        if (WebManager.getApiUrls() == null) return false;
+        if (WebManager.getApiUrls() == null || !WebManager.getApiUrls().hasKey("Athena"))
+            return false;
 
         RequestHandler handler = WebManager.getHandler();
 
