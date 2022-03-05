@@ -26,6 +26,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
+    public String getName() {
+        return "Health Potion Blocker Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 

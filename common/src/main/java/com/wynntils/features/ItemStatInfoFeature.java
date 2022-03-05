@@ -74,6 +74,10 @@ public class ItemStatInfoFeature extends Feature {
     private static final boolean reorderIdentifications = true;
     private static final boolean groupIdentifications = true;
 
+    public String getName() {
+        return "Item Statistics Info Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -211,7 +215,8 @@ public class ItemStatInfoFeature extends Feature {
         if (tag.contains("wynntilsItemNameFormatted"))
             itemStack.setHoverName(new TextComponent(tag.getString("wynntilsItemNameFormatted")));
 
-        if (!WebManager.getItemsMap().containsKey(itemName)) return;
+        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName))
+            return;
 
         ItemProfile profile = WebManager.getItemsMap().get(itemName);
         ListTag lore =

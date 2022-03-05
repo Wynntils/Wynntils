@@ -39,6 +39,10 @@ public class ItemGuessFeature extends Feature {
 
     private static final boolean showGuessesPrice = true;
 
+    public String getName() {
+        return "Item Guess Feature";
+    }
+
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -90,6 +94,8 @@ public class ItemGuessFeature extends Feature {
 
         if (levelRange == null) return;
 
+        if (WebManager.getItemGuesses() == null) return;
+
         ItemGuessProfile igp = WebManager.getItemGuesses().get(levelRange);
         if (igp == null) return;
 
@@ -107,6 +113,8 @@ public class ItemGuessFeature extends Feature {
 
         List<String> items = rarityMap.get(tier);
         if (items == null) return;
+
+        if (WebManager.getItemsMap() == null) return;
 
         StringBuilder itemNamesAndCosts = new StringBuilder();
         for (String possibleItem : items) {

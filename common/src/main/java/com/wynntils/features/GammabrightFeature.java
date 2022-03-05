@@ -39,6 +39,10 @@ public class GammabrightFeature extends Feature {
                         McUtils.mc().options.gamma = lastGamma;
                     });
 
+    public String getName() {
+        return "Gammabright Keybind Feature";
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 

@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi.request;
 
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.LoadingPhase;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
 import java.io.File;
@@ -65,7 +65,7 @@ public class Request {
         HttpURLConnection st = (HttpURLConnection) new URL(url).openConnection();
         st.setRequestProperty(
                 "User-Agent",
-                "WynntilsClient v" + WynntilsMod.VERSION + "/B" + WynntilsMod.BUILD_NUMBER);
+                "WynntilsClient v" + Reference.VERSION + "/B" + Reference.BUILD_NUMBER);
         if (!headers.isEmpty()) headers.forEach(st::addRequestProperty);
 
         st.setConnectTimeout(timeout);

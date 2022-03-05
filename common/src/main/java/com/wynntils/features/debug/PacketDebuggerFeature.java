@@ -18,6 +18,10 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PacketDebuggerFeature extends DebugFeature {
+    public String getName() {
+        return "Packet Debugger Feature";
+    }
+
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */

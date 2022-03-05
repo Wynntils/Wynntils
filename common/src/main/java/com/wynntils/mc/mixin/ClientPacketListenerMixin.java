@@ -4,16 +4,12 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.managers.CompassManager;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.*;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -83,35 +79,21 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(
-            method =
-                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
-            at = @At("RETURN"))
-    public void handleContainerContent(
-            ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
-        List<ItemStack> items = new ArrayList<>(packet.getItems());
-        items.add(packet.getCarriedItem());
+    @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
+    private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
+        if (McUtils.player() == null) {
+            // Reset compass
+            CompassManager.reset();
 
-        if (packet.getContainerId() == 0) {
-            EventFactory.onItemsReceived(items, McUtils.inventoryMenu());
-        } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(items, McUtils.containerMenu());
+            if (McUtils.mc().level != null)
+                McUtils.mc().level.setDefaultSpawnPos(packet.getPos(), 0);
+
+            return;
         }
-    }
 
-    @Inject(
-            method =
-                    "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("RETURN"))
-    public void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        if (packet.getContainerId() == -1
-                || packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(
-                    Collections.singletonList(packet.getItem()), McUtils.containerMenu());
-        } else if (packet.getContainerId() == -2
-                || (packet.getContainerId() == 0 && InventoryMenu.isHotbarSlot(packet.getSlot()))) {
-            EventFactory.onItemsReceived(
-                    Collections.singletonList(packet.getItem()), McUtils.inventoryMenu());
+        // Cancel the event to force the compass to not change
+        if (CompassManager.getCompassLocation() != null) {
+            ci.cancel();
         }
     }
 }
