@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.managers.CompassManager;
@@ -32,7 +33,7 @@ public class TerritoryCommand extends CommandBase {
                                                 (context, builder) -> {
                                                     if (!WebManager.isTerritoryListLoaded()
                                                             && !WebManager.tryLoadTerritories()) {
-                                                        return null;
+                                                        return Suggestions.empty();
                                                     }
 
                                                     HashMap<String, TerritoryProfile> territories =
