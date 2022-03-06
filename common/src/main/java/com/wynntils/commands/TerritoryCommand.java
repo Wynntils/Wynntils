@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.managers.CompassManager;
+import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.objects.Location;
 import java.util.HashMap;
@@ -73,7 +73,10 @@ public class TerritoryCommand extends CommandBase {
             context.getSource()
                     .sendFailure(
                             new TextComponent(
-                                            "Can't access territory " + "\"" + territoryArg + "\"")
+                                            "Can't access territory "
+                                                    + "\""
+                                                    + territoryArg
+                                                    + "\". There likely is a typo.")
                                     .withStyle(ChatFormatting.RED));
             return 1;
         }

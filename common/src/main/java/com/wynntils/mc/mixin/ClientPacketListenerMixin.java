@@ -4,9 +4,9 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.managers.CompassManager;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
+import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.*;
