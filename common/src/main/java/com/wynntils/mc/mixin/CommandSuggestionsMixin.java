@@ -35,7 +35,8 @@ public class CommandSuggestionsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lcom/mojang/brigadier/CommandDispatcher;getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;"))
+                                    "Lcom/mojang/brigadier/CommandDispatcher;getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;",
+                            remap = false))
     public CompletableFuture<Suggestions> redirectSuggestions(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
@@ -75,7 +76,8 @@ public class CommandSuggestionsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;"))
+                                    "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;",
+                            remap = false))
     public ParseResults<SharedSuggestionProvider> redirectParse(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             StringReader command,

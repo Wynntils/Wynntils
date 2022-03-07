@@ -257,7 +257,7 @@ public class RequestHandler {
         try {
             st = req.establishConnection();
             if (st.getResponseCode() != 200) {
-                Reference.LOGGER.warn("Invalid response code for requesst");
+                Reference.LOGGER.warn("Invalid response code for request");
                 st.disconnect();
                 return false;
             }

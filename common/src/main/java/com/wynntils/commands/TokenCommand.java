@@ -21,8 +21,8 @@ public class TokenCommand extends CommandBase {
 
     private int token(CommandContext<CommandSourceStack> context) {
         if (WebManager.getAccount() != null && WebManager.getAccount().getToken() != null) {
-            MutableComponent text = new TextComponent("").withStyle(ChatFormatting.AQUA);
-            text.append("Wynntils Token ");
+            MutableComponent text =
+                    new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
 
             MutableComponent token =
                     new TextComponent(WebManager.getAccount().getToken())
@@ -46,14 +46,26 @@ public class TokenCommand extends CommandBase {
             text.append(token);
 
             context.getSource().sendSuccess(text, false);
-            return 1;
+        } else {
+
+            MutableComponent failed =
+                    new TextComponent(
+                                    "Either setting up your Wynntils account or accessing the token"
+                                        + " failed. To try to set up the Wynntils account again,"
+                                        + " run ")
+                            .withStyle(ChatFormatting.GREEN);
+            failed.append(
+                    new TextComponent("/wynntils reload")
+                            .withStyle(
+                                    Style.EMPTY
+                                            .withColor(ChatFormatting.AQUA)
+                                            .withClickEvent(
+                                                    new ClickEvent(
+                                                            ClickEvent.Action.RUN_COMMAND,
+                                                            "/wynntils reload"))));
+            context.getSource().sendFailure(failed);
         }
 
-        MutableComponent text =
-                new TextComponent("Error when getting token, try restarting your client")
-                        .withStyle(ChatFormatting.RED);
-
-        context.getSource().sendFailure(text);
         return 1;
     }
 }

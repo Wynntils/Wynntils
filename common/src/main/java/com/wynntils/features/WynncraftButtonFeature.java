@@ -51,6 +51,8 @@ public class WynncraftButtonFeature extends Feature {
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
+        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+
         WynncraftButton wynncraftButton =
                 new WynncraftButton(
                         e.getTitleScreen(),

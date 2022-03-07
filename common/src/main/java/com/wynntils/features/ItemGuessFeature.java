@@ -51,7 +51,7 @@ public class ItemGuessFeature extends Feature {
     @Override
     protected boolean onEnable() {
         WynntilsMod.getEventBus().register(this);
-        return WebManager.tryLoadItemGuesses();
+        return WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
     }
 
     @Override
@@ -71,8 +71,6 @@ public class ItemGuessFeature extends Feature {
     }
 
     private static void generateGuesses(ItemStack stack) {
-        if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
-
         String name =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(stack.getHoverName().getString()));
@@ -152,8 +150,6 @@ public class ItemGuessFeature extends Feature {
                                 + ChatFormatting.GRAY
                                 + "Possibilities: "
                                 + itemNamesAndCosts));
-
-        ItemUtils.addMarker(stack, "itemGuesses");
 
         ItemUtils.replaceLore(stack, lore);
     }

@@ -19,15 +19,15 @@ public class TerritoryUpdateThread extends Thread {
         try {
             Thread.sleep(30000);
             while (!isInterrupted()) {
-                WebManager.updateTerritories(handler);
+                WebManager.tryLoadTerritories(handler);
                 handler.dispatch();
 
                 // TODO: Add events
-
                 Thread.sleep(30000);
             }
         } catch (InterruptedException ignored) {
         }
+
         Reference.LOGGER.info("Terminating territory update thread.");
     }
 }
