@@ -16,7 +16,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,7 +55,8 @@ public class HealthPotionBlockerFeature extends Feature {
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);
             McUtils.sendMessageToClient(
-                    new TextComponent(ChatFormatting.DARK_RED + "You are already at full health!"));
+                    new TranslatableComponent("feature.wynntils.potionBlocker.healthFull")
+                            .withStyle(ChatFormatting.RED));
         }
     }
 }
