@@ -9,46 +9,44 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
-public class LivingEntityRendererMixin {
+public abstract class LivingEntityRendererMixin {
+    @Shadow
+    @Nullable
+    protected abstract RenderType getRenderType(
+            LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
+
     // Can't find an impl without saving args
-    LivingEntity capturedEntity;
     float overrideTranslucence;
 
-    @Inject(
+    @Redirect(
             method =
                     "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("HEAD"))
-    public void onRender(
-            LivingEntity entity,
-            float entityYaw,
-            float partialTicks,
-            PoseStack matrixStack,
-            MultiBufferSource buffer,
-            int packedLight,
-            CallbackInfo ci) {
-        capturedEntity = entity;
-    }
-
-    @ModifyVariable(
-            method =
-                    "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("STORE"),
-            ordinal = 1)
-    public boolean onTranslucentCheck(boolean bl2) {
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
+    public RenderType onTranslucentCheck(
+            LivingEntityRenderer<?, ?> instance,
+            LivingEntity livingEntity,
+            boolean bl,
+            boolean bl2,
+            boolean bl3) {
         LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(bl2, capturedEntity, bl2 ? 0.15f : 1f);
+                new LivingEntityRenderTranslucentCheckEvent(bl2, livingEntity, bl2 ? 0.15f : 1f);
         WynntilsMod.getEventBus().post(event);
 
         overrideTranslucence = event.getTranslucence();
-        return event.isTranslucent();
+        return getRenderType(livingEntity, bl, event.isTranslucent(), bl3);
     }
 
     @Redirect(
