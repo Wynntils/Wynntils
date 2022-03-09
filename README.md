@@ -20,7 +20,7 @@ Pull Request
 Setup the Workspace
 ========
 To set up the workspace, just import the project as a gradle project into your IDE
-<br> To build the mod just call the ``buildDependents`` and the artifact should be generated in `build/libs`.
+<br> To build the mod just call the ``buildDependents`` and the artifacts should be generated in `fabric/build/libs` and `forge/build/libs`. There are a lot of jars there, but the mod jars are the ones without a dashed suffix at the end.
 
 <i>TODO Run Configurations and Authenticating</i>
 
