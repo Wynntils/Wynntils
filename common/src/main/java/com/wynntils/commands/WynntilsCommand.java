@@ -66,7 +66,7 @@ public class WynntilsCommand extends CommandBase {
 
         WebManager.reset();
 
-        WebManager.setupUserAccount(); // fail message is handled by method already
+        WebManager.init(); // reloads api urls as well as web manager
 
         for (Feature feature :
                 FeatureRegistry.getFeatures()) { // re-enable all features which should be
@@ -80,13 +80,20 @@ public class WynntilsCommand extends CommandBase {
                                     .append(
                                             new TextComponent(feature.getName())
                                                     .withStyle(ChatFormatting.AQUA)));
+                } else {
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Reloaded ")
+                                    .withStyle(ChatFormatting.GREEN)
+                                    .append(
+                                            new TextComponent(feature.getName())
+                                                    .withStyle(ChatFormatting.AQUA)));
                 }
             }
         }
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Finished reloading everything!")
+                        new TextComponent("Finished reloading everything")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -119,8 +126,8 @@ public class WynntilsCommand extends CommandBase {
 
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
-                new TextComponent("").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
-        text.append("Wynntils' command list: ");
+                new TextComponent("Wynntils' command list: ")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         addCommandDescription(
                 text,
                 "wynntils",
@@ -139,10 +146,9 @@ public class WynntilsCommand extends CommandBase {
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
+        addCommandDescription(text, "wynntils", List.of("reload"), "This reloads all API data.");
         addCommandDescription(
-                text, "-wynntils", List.of("reloadapi"), "This reloads all API data.");
-        addCommandDescription(
-                text, "-wynntils", List.of("donate"), "This provides our Patreon link.");
+                text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,
                 "token",
@@ -192,6 +198,12 @@ public class WynntilsCommand extends CommandBase {
             MutableComponent text, String prefix, List<String> suffix, String description) {
         text.append("\n");
 
+        StringBuilder suffixString = new StringBuilder("");
+
+        for (String argument : suffix) {
+            suffixString.append(" ").append(argument);
+        }
+
         MutableComponent clickComponent = new TextComponent("");
         {
             clickComponent.setStyle(
@@ -200,7 +212,7 @@ public class WynntilsCommand extends CommandBase {
                             .withClickEvent(
                                     new ClickEvent(
                                             ClickEvent.Action.RUN_COMMAND,
-                                            "/" + prefix + " " + String.join(" ", suffix)))
+                                            "/" + prefix + suffixString))
                             .withHoverEvent(
                                     new HoverEvent(
                                             HoverEvent.Action.SHOW_TEXT,
@@ -212,7 +224,7 @@ public class WynntilsCommand extends CommandBase {
 
             if (!suffix.isEmpty()) {
                 MutableComponent nameText =
-                        new TextComponent(String.join(" ", suffix)).withStyle(ChatFormatting.GREEN);
+                        new TextComponent(suffixString.toString()).withStyle(ChatFormatting.GREEN);
                 clickComponent.append(nameText);
             }
 

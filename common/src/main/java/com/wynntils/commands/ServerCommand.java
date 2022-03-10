@@ -36,6 +36,7 @@ public class ServerCommand extends CommandBase {
                                         .executes(this::serverInfo))
                         .executes(this::serverInfoHelp)
                         .build();
+
         LiteralCommandNode<CommandSourceStack> node =
                 dispatcher.register(
                         Commands.literal("server")

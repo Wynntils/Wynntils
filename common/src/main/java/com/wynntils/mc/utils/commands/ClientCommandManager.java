@@ -21,8 +21,8 @@ import net.minecraft.network.chat.*;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
-// parts originate
-// from https://github.com/MinecraftForge/MinecraftForge
+// parts originate from https://github.com/MinecraftForge/MinecraftForge
+// Kudos to both of the above
 public class ClientCommandManager {
 
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
@@ -54,8 +54,10 @@ public class ClientCommandManager {
 
         final ParseResults<CommandSourceStack> parse = clientDispatcher.parse(reader, source);
 
-        if (!parse.getExceptions().isEmpty() || parse.getContext().getCommand() == null) {
-            return false; // let server handle command
+        if (!parse.getExceptions().isEmpty()
+                || (parse.getContext().getCommand() == null
+                        && parse.getContext().getChild() == null)) {
+            return false; // can't parse - let server handle command
         }
 
         try {

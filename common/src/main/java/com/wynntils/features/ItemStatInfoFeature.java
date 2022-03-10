@@ -86,7 +86,7 @@ public class ItemStatInfoFeature extends Feature {
     @Override
     protected boolean onEnable() {
         WynntilsMod.getEventBus().register(this);
-        return WebManager.tryLoadItemList();
+        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
 
     @Override
