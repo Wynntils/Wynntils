@@ -41,9 +41,9 @@ public class FeatureRegistry {
     }
 
     public static <T> T getFeature(Class<T> clazz) {
-        return (T) FEATURES.stream().filter(f -> f.getClass().equals(clazz)).findFirst().orElse(null);
+        return (T)
+                FEATURES.stream().filter(f -> f.getClass().equals(clazz)).findFirst().orElse(null);
     }
-
 
     public static List<Overlay> getOverlays() {
         return OVERLAYS;
