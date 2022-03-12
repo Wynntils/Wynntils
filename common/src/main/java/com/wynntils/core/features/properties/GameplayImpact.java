@@ -9,8 +9,18 @@ package com.wynntils.core.features.properties;
  * would have a larger impact than a smaller feature like blocking health pots. Subjective.
  */
 public enum GameplayImpact {
-    SMALL,
-    MEDIUM,
-    LARGE,
-    EXTREME
+    SMALL("Small"),
+    MEDIUM("Medium"),
+    LARGE("Large"),
+    EXTREME("Extreme");
+
+    private final String displayName;
+
+    GameplayImpact(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

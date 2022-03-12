@@ -9,26 +9,20 @@ import com.wynntils.core.config.ui.ConfigBooleanWidget;
 import com.wynntils.core.config.ui.base.ConfigWidget;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import java.util.function.Function;
 
 /** Handles providing of configs */
 public class ConfigProviders {
     private static final List<ConfigProvider<?>> providers = new ArrayList<>();
 
     static {
-        addProvider(
-                new ConfigProvider<>(Boolean.class) {
-                    @Override
-                    public ConfigWidget<Boolean> generate(ConfigField<Boolean> field) {
-                        return new ConfigBooleanWidget(field);
-                    }
-                });
+        addProvider(Boolean.class, ConfigBooleanWidget::new);
     }
 
-    public static Widget generate(ConfigField<?> o) {
+    public static <T> ConfigWidget<T> generate(ConfigField<T> o) {
         for (ConfigProvider<?> provider : providers) {
             if (provider.canGenerate(o)) {
-                return tryGenerate(o, provider);
+                return (ConfigWidget<T>) tryGenerate(o, provider);
             }
         }
 
@@ -36,11 +30,23 @@ public class ConfigProviders {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Widget tryGenerate(Object o, ConfigProvider<T> provider) {
+    private static <T> ConfigWidget<?> tryGenerate(Object o, ConfigProvider<T> provider) {
         return provider.generate((ConfigField<T>) o);
     }
 
+    public static <K, V extends ConfigWidget<K>> void addProvider(
+            Class<K> key, Function<ConfigField<K>, V> value) {
+        addProvider(
+                new ConfigProvider<>(key) {
+                    @Override
+                    public V generate(ConfigField<K> field) {
+                        return value.apply(field);
+                    }
+                });
+    }
+
     public static void addProvider(ConfigProvider<?> toAdd) {
+
         for (int i = 0; i < providers.size(); i++) {
             if (providers.get(i).getClazz().isAssignableFrom(toAdd.getClazz())) {
                 providers.add(i, toAdd);

@@ -13,6 +13,16 @@ public abstract class ConfigButtonWidget<T> extends ConfigWidget<T> {
     protected int width;
     protected int height;
 
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
     public ConfigButtonWidget(ConfigField<T> field, int width, int height) {
         super(field);
 

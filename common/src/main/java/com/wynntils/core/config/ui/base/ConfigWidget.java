@@ -30,6 +30,15 @@ public abstract class ConfigWidget<T> extends GuiComponent
         field.setFieldValue(value);
     }
 
+    public abstract int getHeight();
+
+    public abstract int getWidth();
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
     @Override
     public NarrationPriority narrationPriority() {
         return NarrationPriority.NONE;

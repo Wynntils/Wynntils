@@ -9,8 +9,18 @@ package com.wynntils.core.features.properties;
  * performance impact than a Wynncraft Button. Subjective.
  */
 public enum PerformanceImpact {
-    SMALL,
-    MEDIUM,
-    LARGE,
-    EXTREME
+    SMALL("Small"),
+    MEDIUM("Medium"),
+    LARGE("Large"),
+    EXTREME("Extreme");
+
+    private final String displayName;
+
+    PerformanceImpact(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

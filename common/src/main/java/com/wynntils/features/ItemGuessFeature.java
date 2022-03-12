@@ -7,6 +7,8 @@ package com.wynntils.features;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.Configurable;
+import com.wynntils.core.config.annotations.Setting;
 import com.wynntils.core.features.*;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -35,8 +37,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
         performance = PerformanceImpact.SMALL,
         gameplay = GameplayImpact.LARGE,
         stability = Stability.STABLE)
-public class ItemGuessFeature extends Feature {
+public class ItemGuessFeature extends Feature implements Configurable {
 
+    @Setting(name = "Show Guess Price", description = "Should the price of guesses be shown?")
     private static final boolean showGuessesPrice = true;
 
     public String getName() {

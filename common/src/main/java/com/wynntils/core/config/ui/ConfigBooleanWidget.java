@@ -14,8 +14,8 @@ public class ConfigBooleanWidget extends ConfigButtonWidget<Boolean> {
     private String text;
     private boolean enabled;
 
-    private static final int buttonColor = ColorUtils.generateColor(134, 194, 50, 1);
-    private static final int textColor = ColorUtils.generateColor(134, 194, 50, 1);
+    private static final int buttonColor = ColorUtils.generateColor(134, 194, 50, 255);
+    private static final int textColor = ColorUtils.generateColor(0, 0, 0, 255);
 
     public ConfigBooleanWidget(ConfigField<Boolean> field) {
         super(field, 100, 100);

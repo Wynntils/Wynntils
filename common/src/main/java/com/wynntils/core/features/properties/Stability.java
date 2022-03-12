@@ -9,8 +9,18 @@ package com.wynntils.core.features.properties;
  * judgements. Subjective.
  */
 public enum Stability {
-    EXPERIMENTAL,
-    UNSTABLE,
-    STABLE,
-    INVARIABLE
+    EXPERIMENTAL("Experimental"),
+    UNSTABLE("Unstable"),
+    STABLE("Stable"),
+    INVARIABLE("Invariable");
+
+    private final String displayName;
+
+    Stability(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }
