@@ -22,36 +22,36 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 
 public class ConfigScreen extends Screen {
-    VariableListWidget entries;
+    // VariableListWidget entries;
 
     public ConfigScreen(Configurable config) {
         super(new TextComponent("Config"));
 
         List<ConfigField<?>> configFields = ConfigReflection.getConfigFields(config);
 
-        entries = new VariableListWidget(width / 10, height / 10, width * 4 / 5, height * 4 / 5);
+        // entries = new VariableListWidget(width / 10, height / 10, width * 4 / 5, height * 4 / 5);
 
         if (config instanceof Feature feature) {}
 
-        int y = 0;
-
+        /*
         for (ConfigField<?> field : configFields) {
             Entry<?> entry = new Entry<>(field, width * 4 / 5);
             entries.addEntry(entry);
-            y += entry.getHeight();
         }
+         */
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return entries.mouseScrolled(mouseX, mouseY, delta);
+        return false;
+        // return entries.mouseScrolled(mouseX, mouseY, delta);
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         fill(poseStack, 0, 0, 10, 10, 0);
 
-        entries.render(poseStack, mouseX, mouseY, partialTick);
+        // entries.render(poseStack, mouseX, mouseY, partialTick);
     }
 
     public static class HeaderEntry implements VariableListWidget.ListEntry {

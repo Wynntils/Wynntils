@@ -26,7 +26,7 @@ public class ConfigProviders {
             }
         }
 
-        throw new IllegalStateException("No providers for object " + o);
+        throw new IllegalStateException("No providers for object " + o.getFieldValue().getClass());
     }
 
     @SuppressWarnings("unchecked")
@@ -46,7 +46,6 @@ public class ConfigProviders {
     }
 
     public static void addProvider(ConfigProvider<?> toAdd) {
-
         for (int i = 0; i < providers.size(); i++) {
             if (providers.get(i).getClazz().isAssignableFrom(toAdd.getClazz())) {
                 providers.add(i, toAdd);
@@ -65,7 +64,7 @@ public class ConfigProviders {
         }
 
         public boolean canGenerate(ConfigField<?> field) {
-            return clazz.isInstance(field.getFieldValue().getClass());
+            return clazz.isInstance(field.getFieldValue());
         }
 
         public Class<T> getClazz() {

@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.wynntils.core.config.ui.ConfigScreen;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.features.ItemGuessFeature;
+import com.wynntils.mc.utils.Delay;
 import com.wynntils.mc.utils.commands.CommandBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
@@ -21,16 +22,16 @@ public class ConfigCommand extends CommandBase {
                 Commands.literal("config")
                         .executes(
                                 s -> {
-                                    try {
-                                        Thread.sleep(1);
-                                        Minecraft.getInstance()
-                                                .setScreen(
-                                                        new ConfigScreen(
-                                                                FeatureRegistry.getFeature(
-                                                                        ItemGuessFeature.class)));
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
+                                    new Delay(
+                                            () ->
+                                                    Minecraft.getInstance()
+                                                            .setScreen(
+                                                                    new ConfigScreen(
+                                                                            FeatureRegistry
+                                                                                    .getFeature(
+                                                                                            ItemGuessFeature
+                                                                                                    .class))),
+                                            1);
 
                                     return 1;
                                 }));

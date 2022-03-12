@@ -276,8 +276,11 @@ public class VariableListWidget extends AbstractContainerEventHandler
         matrixStack.pushPose();
         matrixStack.translate(x0, y0 - scrollAmount, 0);
 
-        int lower = entriesMap.floorKey((int) (y0 + scrollAmount));
-        int higher = entriesMap.floorKey((int) (y1 + scrollAmount));
+        // Unboxing throws an exception so this is required
+        int lower = Objects.requireNonNullElse(entriesMap.floorKey((int) (y0 + scrollAmount)), 0);
+        int higher =
+                Objects.requireNonNullElse(
+                        entriesMap.floorKey((int) (y1 + scrollAmount)), entriesMap.size() - 1);
 
         int i = 0;
 
