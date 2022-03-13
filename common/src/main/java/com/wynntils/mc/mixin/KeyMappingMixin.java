@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyMapping.class)
 public class KeyMappingMixin {
-    @Shadow @Final private static Map<String, Integer> CATEGORY_SORT_ORDER;
+    @Shadow
+    @Final
+    private static Map<String, Integer> CATEGORY_SORT_ORDER;
 
     @Inject(
-            method =
-                    "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
+            method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
-    public void initPost(
-            String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
+    public void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
         if (CATEGORY_SORT_ORDER.containsKey(category)) return;
 
         int max = 0;

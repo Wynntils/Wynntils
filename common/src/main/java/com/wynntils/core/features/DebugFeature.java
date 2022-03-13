@@ -12,10 +12,7 @@ import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 
 /** Feature for debugging */
-@FeatureInfo(
-        stability = Stability.UNSTABLE,
-        gameplay = GameplayImpact.MEDIUM,
-        performance = PerformanceImpact.MEDIUM)
+@FeatureInfo(stability = Stability.UNSTABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
 public abstract class DebugFeature extends Feature {
 
     @Override

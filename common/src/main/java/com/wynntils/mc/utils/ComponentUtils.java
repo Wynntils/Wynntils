@@ -60,8 +60,7 @@ public class ComponentUtils {
      * style to the new style. If that does not succeed, it instead resets the format and adds the
      * color codes of the new style
      */
-    private static void handleStyleDifference(
-            Style oldStyle, Style newStyle, StringBuilder result) {
+    private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
         if (oldStyle.equals(newStyle)) return;
 
         if (!oldStyle.isEmpty()) {
@@ -89,10 +88,12 @@ public class ComponentUtils {
     private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
         StringBuilder add = new StringBuilder();
 
-        int oldColorInt =
-                Optional.ofNullable(oldStyle.getColor()).map(TextColor::getValue).orElse(-1);
-        int newColorInt =
-                Optional.ofNullable(newStyle.getColor()).map(TextColor::getValue).orElse(-1);
+        int oldColorInt = Optional.ofNullable(oldStyle.getColor())
+                .map(TextColor::getValue)
+                .orElse(-1);
+        int newColorInt = Optional.ofNullable(newStyle.getColor())
+                .map(TextColor::getValue)
+                .orElse(-1);
 
         if (oldColorInt == -1) {
             if (newColorInt != -1) {
@@ -109,16 +110,13 @@ public class ComponentUtils {
         if (!oldStyle.isItalic() && newStyle.isItalic()) add.append(ChatFormatting.ITALIC);
 
         if (oldStyle.isUnderlined() && !newStyle.isUnderlined()) return null;
-        if (!oldStyle.isUnderlined() && newStyle.isUnderlined())
-            add.append(ChatFormatting.UNDERLINE);
+        if (!oldStyle.isUnderlined() && newStyle.isUnderlined()) add.append(ChatFormatting.UNDERLINE);
 
         if (oldStyle.isStrikethrough() && !newStyle.isStrikethrough()) return null;
-        if (!oldStyle.isStrikethrough() && newStyle.isStrikethrough())
-            add.append(ChatFormatting.STRIKETHROUGH);
+        if (!oldStyle.isStrikethrough() && newStyle.isStrikethrough()) add.append(ChatFormatting.STRIKETHROUGH);
 
         if (oldStyle.isObfuscated() && !newStyle.isObfuscated()) return null;
-        if (!oldStyle.isObfuscated() && newStyle.isObfuscated())
-            add.append(ChatFormatting.OBFUSCATED);
+        if (!oldStyle.isObfuscated() && newStyle.isObfuscated()) add.append(ChatFormatting.OBFUSCATED);
 
         return add;
     }

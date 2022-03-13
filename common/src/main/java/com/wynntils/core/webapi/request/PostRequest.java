@@ -29,17 +29,7 @@ public class PostRequest extends Request {
             Predicate<byte[]> cacheValidator,
             int timeout,
             ThrowingConsumer<HttpURLConnection, IOException> writer) {
-        super(
-                url,
-                id,
-                parallelGroup,
-                handler,
-                useCacheAsBackup,
-                onError,
-                headers,
-                cacheFile,
-                cacheValidator,
-                timeout);
+        super(url, id, parallelGroup, handler, useCacheAsBackup, onError, headers, cacheFile, cacheValidator, timeout);
         this.writer = writer;
     }
 

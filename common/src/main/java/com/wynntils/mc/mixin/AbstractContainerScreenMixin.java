@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
-    @Shadow protected Slot hoveredSlot;
+    @Shadow
+    protected Slot hoveredSlot;
 
     private AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -32,11 +33,9 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
-    private void renderPost(
-            PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
+    private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        EventFactory.onInventoryRender(
-                screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+        EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 }

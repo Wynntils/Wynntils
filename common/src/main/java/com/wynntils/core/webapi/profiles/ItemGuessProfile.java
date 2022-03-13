@@ -32,8 +32,7 @@ public class ItemGuessProfile {
 
         @Override
         public HashMap<String, ItemGuessProfile> deserialize(
-                JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
+                JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
             HashMap<String, ItemGuessProfile> hashMap = new HashMap<>();
             for (Map.Entry<String, JsonElement> itemGuesses : jsonObject.entrySet()) {

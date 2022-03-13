@@ -19,12 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MultiPlayerGameModeMixin {
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
     private void handleInventoryMouseClickPre(
-            int containerId,
-            int slotId,
-            int mouseButton,
-            ClickType clickType,
-            Player player,
-            CallbackInfo ci) {
+            int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
 
         ItemStack itemStack;
         if (slotId >= 0) {
@@ -33,7 +28,6 @@ public abstract class MultiPlayerGameModeMixin {
             itemStack = ItemStack.EMPTY;
         }
 
-        WynntilsMod.getEventBus()
-                .post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId));
+        WynntilsMod.getEventBus().post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId));
     }
 }

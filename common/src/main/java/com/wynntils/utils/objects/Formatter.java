@@ -12,10 +12,7 @@ import java.util.function.Function;
 public class Formatter {
 
     public static <T> void doFormat(
-            String format,
-            Consumer<T> consumer,
-            Function<String, T> mapper,
-            Map<String, T> infoVariableMap) {
+            String format, Consumer<T> consumer, Function<String, T> mapper, Map<String, T> infoVariableMap) {
         Set<String> infoVariables = infoVariableMap.keySet();
 
         int index = 0;

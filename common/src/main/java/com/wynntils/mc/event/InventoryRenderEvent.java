@@ -19,12 +19,7 @@ public class InventoryRenderEvent extends Event {
     private final Slot hoveredSlot;
 
     public InventoryRenderEvent(
-            Screen screen,
-            PoseStack poseStack,
-            int mouseX,
-            int mouseY,
-            float partialTicks,
-            Slot hoveredSlot) {
+            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
         this.screen = screen;
         this.poseStack = poseStack;
         this.mouseX = mouseX;

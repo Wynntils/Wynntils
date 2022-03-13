@@ -28,40 +28,19 @@ public class KeyBindTestFeature extends DebugFeature {
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        keybinds.add(
-                new KeyHolder(
-                        "Add Splash Text",
-                        InputConstants.UNKNOWN.getValue(),
-                        "WynntilsTest",
-                        false,
-                        () -> {
-                            McUtils.sendMessageToClient(
-                                    new TextComponent(
-                                            Minecraft.getInstance()
-                                                    .getSplashManager()
-                                                    .getSplash()));
-                        }));
-        keybinds.add(
-                new KeyHolder(
-                        "Get Player Info",
-                        InputConstants.UNKNOWN.getValue(),
-                        "WynntilsTest",
-                        true,
-                        () -> {
-                            for (AbstractClientPlayer player : McUtils.mc().level.players()) {
-                                McUtils.sendMessageToClient(
-                                        new TextComponent(
-                                                String.format(
-                                                        "\"%s\" has team \"%s\" with name"
-                                                                + " \"%s\"",
-                                                        player.getScoreboardName(),
-                                                        Optional.ofNullable(player.getTeam())
-                                                                .map(Team::getName)
-                                                                .orElse("n/a"),
-                                                        ComponentUtils.getFormatted(
-                                                                player.getDisplayName()))));
-                            }
-                        }));
+        keybinds.add(new KeyHolder("Add Splash Text", InputConstants.UNKNOWN.getValue(), "WynntilsTest", false, () -> {
+            McUtils.sendMessageToClient(
+                    new TextComponent(Minecraft.getInstance().getSplashManager().getSplash()));
+        }));
+        keybinds.add(new KeyHolder("Get Player Info", InputConstants.UNKNOWN.getValue(), "WynntilsTest", true, () -> {
+            for (AbstractClientPlayer player : McUtils.mc().level.players()) {
+                McUtils.sendMessageToClient(new TextComponent(String.format(
+                        "\"%s\" has team \"%s\" with name" + " \"%s\"",
+                        player.getScoreboardName(),
+                        Optional.ofNullable(player.getTeam()).map(Team::getName).orElse("n/a"),
+                        ComponentUtils.getFormatted(player.getDisplayName()))));
+            }
+        }));
     }
 
     @Override

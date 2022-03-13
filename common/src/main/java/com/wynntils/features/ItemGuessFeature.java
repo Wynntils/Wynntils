@@ -31,10 +31,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(
-        performance = PerformanceImpact.SMALL,
-        gameplay = GameplayImpact.LARGE,
-        stability = Stability.STABLE)
+@FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.LARGE, stability = Stability.STABLE)
 public class ItemGuessFeature extends Feature {
 
     private static final boolean showGuessesPrice = true;
@@ -71,9 +68,8 @@ public class ItemGuessFeature extends Feature {
     }
 
     private static void generateGuesses(ItemStack stack) {
-        String name =
-                WynnUtils.normalizeBadString(
-                        ChatFormatting.stripFormatting(stack.getHoverName().getString()));
+        String name = WynnUtils.normalizeBadString(
+                ChatFormatting.stripFormatting(stack.getHoverName().getString()));
         String itemType = name.split(" ", 2)[1];
         if (itemType == null) return;
 
@@ -125,15 +121,8 @@ public class ItemGuessFeature extends Feature {
             if (showGuessesPrice && itemProfile != null) {
                 int level = itemProfile.getRequirements().getLevel();
                 int itemCost = tier.getItemIdentificationCost(level);
-                itemDescription +=
-                        ChatFormatting.GRAY
-                                + " ["
-                                + ChatFormatting.GREEN
-                                + itemCost
-                                + " "
-                                + EmeraldSymbols.E_STRING
-                                + ChatFormatting.GRAY
-                                + "]";
+                itemDescription += ChatFormatting.GRAY + " [" + ChatFormatting.GREEN + itemCost + " "
+                        + EmeraldSymbols.E_STRING + ChatFormatting.GRAY + "]";
             }
 
             if (itemNamesAndCosts.length() > 0) {
@@ -143,13 +132,8 @@ public class ItemGuessFeature extends Feature {
             itemNamesAndCosts.append(itemDescription);
         }
 
-        lore.add(
-                ItemUtils.toLoreStringTag(
-                        ChatFormatting.GREEN
-                                + "- "
-                                + ChatFormatting.GRAY
-                                + "Possibilities: "
-                                + itemNamesAndCosts));
+        lore.add(ItemUtils.toLoreStringTag(
+                ChatFormatting.GREEN + "- " + ChatFormatting.GRAY + "Possibilities: " + itemNamesAndCosts));
 
         ItemUtils.replaceLore(stack, lore);
     }

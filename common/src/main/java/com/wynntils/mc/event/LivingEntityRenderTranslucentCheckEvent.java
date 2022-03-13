@@ -16,8 +16,7 @@ public class LivingEntityRenderTranslucentCheckEvent extends Event {
     private final LivingEntity entity;
     private float translucence;
 
-    public LivingEntityRenderTranslucentCheckEvent(
-            boolean translucent, LivingEntity entity, float translucence) {
+    public LivingEntityRenderTranslucentCheckEvent(boolean translucent, LivingEntity entity, float translucence) {
         this.translucent = translucent;
         this.entity = entity;
         this.translucence = translucence;

@@ -30,11 +30,9 @@ public abstract class ScreenMixin {
     }
 
     @Inject(
-            method =
-                    "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("HEAD"))
-    private void renderTooltip(
-            PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
+    private void renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
         EventFactory.onItemTooltipRender(poseStack, itemStack, mouseX, mouseY);
     }
 }

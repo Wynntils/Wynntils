@@ -8,8 +8,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
 import java.awt.*;
 
-public abstract class Overlay
-        extends Feature { // extends ScreenRenderer implements SettingsHolder {
+public abstract class Overlay extends Feature { // extends ScreenRenderer implements SettingsHolder {
 
     public transient Point staticSize;
     public transient boolean visible;
