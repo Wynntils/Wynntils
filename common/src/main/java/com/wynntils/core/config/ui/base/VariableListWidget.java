@@ -6,10 +6,8 @@ package com.wynntils.core.config.ui.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.wynntils.utils.ColorUtils;
 import java.util.*;
 import net.fabricmc.api.EnvType;
@@ -30,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class VariableListWidget extends AbstractContainerEventHandler
         implements Widget, NarratableEntry {
-    private static final int backgroundColor = ColorUtils.generateColor(134, 194, 50, 100);
+    private static final int backgroundColor = ColorUtils.generateColor(48, 8, 112, 10);
 
     private final TreeMap<Integer, ListEntry> entriesMap = new TreeMap<>();
     private final List<ListEntry> entries = new ArrayList<>();
@@ -43,13 +41,13 @@ public class VariableListWidget extends AbstractContainerEventHandler
     private double scrollAmount;
     private boolean scrolling;
 
-    private int focusedIndex;
-
     private ListEntry hovered;
 
     private int scrollHeight;
 
     private int maxPosition;
+
+    private int focusedY;
 
     public VariableListWidget(int x, int y, int width, int height) {
         this.width = width;
@@ -69,12 +67,14 @@ public class VariableListWidget extends AbstractContainerEventHandler
             maxPosition += entry.getHeight();
         }
 
-        maxPosition = Math.max(0, maxPosition - (this.y1 - this.y0 - 4));
+        maxPosition = Math.max(0, maxPosition - (height - 4));
+
+        scrollAmount = Mth.clamp(scrollHeight, 0, maxPosition);
 
         if (maxPosition != 0) {
             scrollHeight =
                     Mth.clamp(
-                            (int) ((float) ((this.height) * (this.height)) / (float) maxPosition),
+                            (int) ((float) ((height) * (height)) / (float) maxPosition),
                             32,
                             height - 8);
         } else {
@@ -104,7 +104,7 @@ public class VariableListWidget extends AbstractContainerEventHandler
     }
 
     public int addEntry(ListEntry entry) {
-        this.entriesMap.put(Integer.MAX_VALUE, entry);
+        this.entries.add(entry);
         refresh();
 
         return this.entriesMap.size() - 1;
@@ -132,6 +132,7 @@ public class VariableListWidget extends AbstractContainerEventHandler
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
+
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         if (isMouseOver(mouseX, mouseY)) {
@@ -140,54 +141,41 @@ public class VariableListWidget extends AbstractContainerEventHandler
             hovered = hoveredEntry != null ? hoveredEntry.getValue() : null;
         }
 
-        fill(poseStack, x0, y0, x1, y1, backgroundColor);
+        fill(poseStack, x0, y0, x1, y1, ColorUtils.generateColor(0, 0, 0, 255));
+        fill(poseStack, x0 + 1, y0 + 1, x1 - 1, y1 - 1, backgroundColor);
 
-        renderList(poseStack, mouseX, mouseY, partialTick);
+        // renderList(poseStack, mouseX, mouseY, partialTick);
 
         if (maxPosition > 0) {
             RenderSystem.disableTexture();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            int n = (int) (scrollAmount * (y1 - y0 - scrollHeight) / maxPosition + y0);
-            if (n < y0) {
-                n = y0;
-            }
+            int n = (int) Math.max((scrollAmount * (height - scrollHeight) / maxPosition), 0) + y0;
 
-            bufferBuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            bufferBuilder.vertex(x1, y1, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.vertex(x1 + 6, y1, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.vertex(x1 + 6, y0, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.vertex(x1, y0, 0.0D).color(0, 0, 0, 255).endVertex();
+            fill(poseStack, x1, y0, x1 + 6, y1, ColorUtils.generateColor(0, 0, 0, 255));
 
-            bufferBuilder
-                    .vertex(x1, (n + scrollHeight), 0.0D)
-                    .color(128, 128, 128, 255)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(x1 + 6, (n + scrollHeight), 0.0D)
-                    .color(128, 128, 128, 255)
-                    .endVertex();
-            bufferBuilder.vertex(x1 + 6, n, 0.0D).color(128, 128, 128, 255).endVertex();
-            bufferBuilder.vertex(x1, n, 0.0D).color(128, 128, 128, 255).endVertex();
+            fill(
+                    poseStack,
+                    x1,
+                    n + scrollHeight,
+                    x1 + 6,
+                    n,
+                    ColorUtils.generateColor(0, 0, 0, 255));
 
-            bufferBuilder
-                    .vertex(x1, (n + scrollHeight - 1), 0.0D)
-                    .color(192, 192, 192, 255)
-                    .endVertex();
-            bufferBuilder
-                    .vertex((x1 + 6 - 1), (n + scrollHeight - 1), 0.0D)
-                    .color(192, 192, 192, 255)
-                    .endVertex();
-            bufferBuilder.vertex((x1 + 6 - 1), n, 0.0D).color(192, 192, 192, 255).endVertex();
-            bufferBuilder.vertex(x1, n, 0.0D).color(192, 192, 192, 255).endVertex();
-            tesselator.end();
+            fill(
+                    poseStack,
+                    x1,
+                    n,
+                    x1 + 5,
+                    n + scrollHeight - 1,
+                    ColorUtils.generateColor(0, 0, 0, 255));
         }
 
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 
-    private void scroll(int scroll) {
-        setScrollAmount(scrollAmount + (double) scroll);
+    private void scroll(double scroll) {
+        setScrollAmount(scrollAmount + scroll);
     }
 
     public double getScrollAmount() {
@@ -202,51 +190,50 @@ public class VariableListWidget extends AbstractContainerEventHandler
         return maxPosition;
     }
 
-    public void updateScrollingState(double mouseX, double mouseY, int button) {
-        scrolling = button == 0 && mouseX >= (double) x1 && mouseX < (double) (x1 + 6);
-    }
-
     @Override
     public List<? extends GuiEventListener> children() {
         return entries;
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        updateScrollingState(mouseX, mouseY, button);
-        if (!isMouseOver(mouseX, mouseY)) {
-            return false;
+        if (button == 0
+                && mouseX >= (double) x1
+                && mouseX < (double) (x1 + 6)
+                && maxPosition == 0) {
+            scrolling = true;
+            return true;
         } else {
-            Map.Entry<Integer, ListEntry> entry =
-                    entriesMap.ceilingEntry((int) (mouseY + scrollAmount));
-            if (entry != null) {
-                if (entry.getValue().mouseClicked(mouseX, mouseY, button)) {
-                    setFocused(entry.getValue());
-                    focusedIndex = entry.getKey();
-                    setDragging(true);
-                    return true;
-                }
-            }
+            scrolling = false;
 
-            return scrolling;
+            if (!isMouseOver(mouseX, mouseY)) {
+                return false;
+            } else {
+                Map.Entry<Integer, ListEntry> entry =
+                        entriesMap.ceilingEntry((int) (mouseY + scrollAmount));
+                if (entry != null) {
+                    setFocused(entry.getValue());
+                    focusedY = entry.getKey();
+                    setDragging(true);
+                    return entry.getValue().mouseClicked(mouseX, mouseY - entry.getKey(), button);
+                }
+
+                return false;
+            }
         }
     }
 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (getFocused() != null) {
-            getFocused().mouseReleased(mouseX, mouseY - focusedIndex, button);
-        }
-
-        setFocused(null);
         setDragging(false);
 
-        return false;
+        return getFocused() != null
+                && getFocused().mouseReleased(mouseX, mouseY - focusedY, button);
     }
 
     public boolean mouseDragged(
             double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
             return true;
-        } else if (button == 0 && scrolling) {
+        } else if (button == 0 && scrolling && maxPosition != 0) {
             if (mouseY < y0) {
                 setScrollAmount(0.0D);
             } else if (mouseY > y1) {
@@ -254,22 +241,22 @@ public class VariableListWidget extends AbstractContainerEventHandler
             } else {
                 double d = Math.max(1, maxPosition);
                 double e = Math.max(1, d / (double) (height - scrollHeight));
-                setScrollAmount(scrollAmount + dragY * e);
+                scroll(dragY * e);
             }
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        this.setScrollAmount(scrollAmount - delta * 10D);
+        scroll(-delta * 10D);
         return true;
     }
 
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseY >= y0 && mouseY <= y1 && mouseX >= x0 && mouseX <= x1;
+        return mouseY >= y0 && mouseY <= y1 && mouseX >= x0 && mouseX <= x1 + 6;
     }
 
     public void renderList(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -297,7 +284,7 @@ public class VariableListWidget extends AbstractContainerEventHandler
                     .render(
                             matrixStack,
                             mouseX,
-                            mouseY,
+                            mouseY - entry.getKey(),
                             Objects.equals(hovered, entry.getValue()),
                             partialTicks);
             matrixStack.popPose();
@@ -311,7 +298,7 @@ public class VariableListWidget extends AbstractContainerEventHandler
     }
 
     public NarrationPriority narrationPriority() {
-        if (this.isFocused()) {
+        if (isFocused()) {
             return NarrationPriority.FOCUSED;
         } else {
             return this.hovered != null ? NarrationPriority.HOVERED : NarrationPriority.NONE;
@@ -321,11 +308,11 @@ public class VariableListWidget extends AbstractContainerEventHandler
     @Nullable
     public ListEntry remove(int index) {
         ListEntry entry = entriesMap.get(index);
-        return this.removeEntry(entry) ? entry : null;
+        return removeEntry(entry) ? entry : null;
     }
 
     public boolean removeEntry(ListEntry entry) {
-        boolean bl = this.entries.remove(entry);
+        boolean bl = entries.remove(entry);
         if (bl) {
             refresh();
         }
@@ -335,7 +322,7 @@ public class VariableListWidget extends AbstractContainerEventHandler
 
     @Nullable
     public ListEntry getHovered() {
-        return this.hovered;
+        return hovered;
     }
 
     @Override

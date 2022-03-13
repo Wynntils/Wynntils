@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.config.ui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigProviders;
 import com.wynntils.core.config.Configurable;
@@ -19,50 +20,60 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 
 public class ConfigScreen extends Screen {
-    // VariableListWidget entries;
+    private final Configurable config;
+    private VariableListWidget entries;
 
     public ConfigScreen(Configurable config) {
         super(new TextComponent("Config"));
+        this.config = config;
+    }
 
+    @Override
+    protected void init() {
         List<ConfigField<?>> configFields = ConfigReflection.getConfigFields(config);
 
-        // entries = new VariableListWidget(width / 10, height / 10, width * 4 / 5, height * 4 / 5);
+        int listWidth = width * 4 / 5;
 
-        if (config instanceof Feature feature) {}
+        entries = new VariableListWidget(width / 10, height / 10, listWidth, height * 4 / 5);
 
-        /*
+        if (config instanceof Feature feature) { // TODO generify
+            entries.addEntry(new HeaderEntry(feature, listWidth));
+        }
+
         for (ConfigField<?> field : configFields) {
-            Entry<?> entry = new Entry<>(field, width * 4 / 5);
+            Entry<?> entry = new Entry<>(field, listWidth);
             entries.addEntry(entry);
         }
-         */
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return false;
-        // return entries.mouseScrolled(mouseX, mouseY, delta);
+        return entries.mouseScrolled(mouseX, mouseY, delta);
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        fill(poseStack, 0, 0, 10, 10, 0);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
-        // entries.render(poseStack, mouseX, mouseY, partialTick);
+        fill(poseStack, 0, 0, 50, 50, ColorUtils.generateColor(0, 0, 0, 10));
+        fill(poseStack, 5, 5, 45, 45, ColorUtils.generateColor(255, 0, 0, 20));
+
+        entries.render(poseStack, mouseX, mouseY, partialTick);
     }
 
     public static class HeaderEntry implements VariableListWidget.ListEntry {
         private static final int textColor = ColorUtils.generateColor(0, 0, 0, 0);
 
-        private final List<String> infos = new ArrayList<>();
+        private final List<String> info = new ArrayList<>();
 
         private final int width;
 
         public HeaderEntry(Feature feature, int width) {
-            infos.add("Name:  " + feature.getName());
+            info.add("Name:  " + feature.getName());
 
             for (Class<?> clazz = feature.getClass();
                     Feature.class.isAssignableFrom(clazz);
@@ -70,9 +81,9 @@ public class ConfigScreen extends Screen {
                 FeatureInfo featureInfo = clazz.getAnnotation(FeatureInfo.class);
 
                 if (featureInfo != null) {
-                    infos.add("Stability: " + featureInfo.stability());
-                    infos.add("Gameplay Impact: " + featureInfo.gameplay());
-                    infos.add("Performance Impact: " + featureInfo.performance());
+                    info.add("Stability: " + featureInfo.stability());
+                    info.add("Gameplay Impact: " + featureInfo.gameplay());
+                    info.add("Performance Impact: " + featureInfo.performance());
                 }
             }
 
@@ -88,14 +99,14 @@ public class ConfigScreen extends Screen {
                 float partialTick) {
             int currentY = 0;
 
-            for (String info : infos) {
+            for (String info : info) {
                 drawString(poseStack, McUtils.mc().font, info, 0, currentY, textColor);
                 currentY += 10;
             }
         }
 
         public int getHeight() {
-            return infos.size() * 10;
+            return info.size() * 10;
         }
 
         public int getWidth() {

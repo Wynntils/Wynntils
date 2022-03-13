@@ -24,6 +24,7 @@ public abstract class CrashReportMixin {
             method = "getDetails(Ljava/lang/StringBuilder;)V")
     private void addWynntilsDetails(StringBuilder builder, CallbackInfo ci) {
         CrashReportCategory crashReportCategory = CrashReportManager.generateDetails();
+
         crashReportCategory.getDetails(builder);
         builder.append("\n\n");
     }
