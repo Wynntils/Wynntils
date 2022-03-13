@@ -8,33 +8,64 @@ import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.gui.components.LerpingBossEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.world.BossEvent;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BossHealthOverlay.class)
 public abstract class BossHealthOverlayMixin {
     @Final @Shadow Map<UUID, LerpingBossEvent> events;
 
-    @Inject(
-            method = "update(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
-        // TODO inject into operation somehow
-        /*
-        // Work around bug in Wynncraft that causes NPEs in Vanilla
-        Operation operation = packet.getOperation();
-        if (operation != Operation.ADD && operation != Operation.REMOVE) {
-            if (!events.containsKey(packet.getId())) {
-                ci.cancel();
+    @Redirect(
+            method = "update",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;dispatch(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket$Handler;)V"))
+    private void updatePre(ClientboundBossEventPacket packet, ClientboundBossEventPacket.Handler handler) {
+        packet.dispatch(new ClientboundBossEventPacket.Handler() {
+            public void add(UUID id, Component name, float progress, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
+                events.put(id, new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog));
             }
-        }
 
-         */
+            public void remove(UUID id) {
+                events.remove(id);
+            }
+
+            public void updateProgress(UUID id, float progress) {
+                if (!events.containsKey(id))
+                    return;
+                ((LerpingBossEvent)events.get(id)).setProgress(progress);
+            }
+
+            public void updateName(UUID id, Component name) {
+                if (!events.containsKey(id))
+                    return;
+                ((LerpingBossEvent)events.get(id)).setName(name);
+            }
+
+            public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
+                if (!events.containsKey(id))
+                    return;
+                LerpingBossEvent lerpingBossEvent = (LerpingBossEvent)events.get(id);
+                lerpingBossEvent.setColor(color);
+                lerpingBossEvent.setOverlay(overlay);
+            }
+
+            public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
+                if (!events.containsKey(id))
+                    return;
+                LerpingBossEvent lerpingBossEvent = (LerpingBossEvent)events.get(id);
+                lerpingBossEvent.setDarkenScreen(darkenScreen);
+                lerpingBossEvent.setPlayBossMusic(playMusic);
+                lerpingBossEvent.setCreateWorldFog(createWorldFog);
+            }
+        });
     }
 }
