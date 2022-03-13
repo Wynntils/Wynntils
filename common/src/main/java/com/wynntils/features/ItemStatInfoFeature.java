@@ -405,15 +405,21 @@ public class ItemStatInfoFeature extends Feature {
                     "chance_perfect",
                     new TextComponent(
                                     String.format(
-                                            "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
+                                            Locale.ROOT,
+                                            "\u2605%.2f%%",
+                                            idContainer.getPerfectChance() * 100))
                             .withStyle(ChatFormatting.AQUA));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100))
+                    new TextComponent(
+                                    String.format(
+                                            Locale.ROOT, "\u21E7%.1f%%", chances.increase() * 100))
                             .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100))
+                    new TextComponent(
+                                    String.format(
+                                            Locale.ROOT, "\u21E9%.1f%%", chances.decrease() * 100))
                             .withStyle(ChatFormatting.RED));
 
             infoVariables.put(
@@ -495,7 +501,8 @@ public class ItemStatInfoFeature extends Feature {
                                         ? getPercentageColor(percentage)
                                         : getFlatPercentageColor(percentage))
                         .withItalic(false);
-        return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
+        return new TextComponent(String.format(Locale.ROOT, "[%.1f%%]", percentage))
+                .withStyle(color);
     }
 
     private static final TreeMap<Float, TextColor> colorMap =
