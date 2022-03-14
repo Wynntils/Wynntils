@@ -4,12 +4,12 @@
  */
 package com.wynntils.core;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** TODO */
 public class Reference {
-    public static final Logger LOGGER = LogManager.getFormatterLogger(WynntilsMod.MOD_ID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(WynntilsMod.MOD_ID);
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
 }
