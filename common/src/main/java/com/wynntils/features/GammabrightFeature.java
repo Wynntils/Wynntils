@@ -13,6 +13,8 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(
@@ -39,8 +41,9 @@ public class GammabrightFeature extends Feature {
                         McUtils.mc().options.gamma = lastGamma;
                     });
 
-    public String getName() {
-        return "Gammabright Keybind Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.gammabright.name");
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.utils.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -115,7 +117,11 @@ public abstract class Feature {
     }
 
     /** Gets the name of a feature */
-    public abstract String getName();
+    public String getName() {
+        return ComponentUtils.getFormatted(getNameComponent());
+    }
+
+    public abstract MutableComponent getNameComponent();
 
     public abstract class Condition {
         boolean satisfied = false;
