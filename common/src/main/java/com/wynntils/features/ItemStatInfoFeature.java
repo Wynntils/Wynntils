@@ -18,6 +18,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Utils;
 import com.wynntils.utils.objects.Formatter;
 import com.wynntils.wc.objects.ClassType;
 import com.wynntils.wc.objects.SpellType;
@@ -405,7 +406,7 @@ public class ItemStatInfoFeature extends Feature {
                     "chance_perfect",
                     new TextComponent(
                                     String.format(
-                                            Locale.ROOT,
+                                            Utils.getGameLocale(),
                                             "\u2605%.2f%%",
                                             idContainer.getPerfectChance() * 100))
                             .withStyle(ChatFormatting.AQUA));
@@ -413,13 +414,17 @@ public class ItemStatInfoFeature extends Feature {
                     "chance_increase",
                     new TextComponent(
                                     String.format(
-                                            Locale.ROOT, "\u21E7%.1f%%", chances.increase() * 100))
+                                            Utils.getGameLocale(),
+                                            "\u21E7%.1f%%",
+                                            chances.increase() * 100))
                             .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
                     new TextComponent(
                                     String.format(
-                                            Locale.ROOT, "\u21E9%.1f%%", chances.decrease() * 100))
+                                            Utils.getGameLocale(),
+                                            "\u21E9%.1f%%",
+                                            chances.decrease() * 100))
                             .withStyle(ChatFormatting.RED));
 
             infoVariables.put(
@@ -501,7 +506,7 @@ public class ItemStatInfoFeature extends Feature {
                                         ? getPercentageColor(percentage)
                                         : getFlatPercentageColor(percentage))
                         .withItalic(false);
-        return new TextComponent(String.format(Locale.ROOT, "[%.1f%%]", percentage))
+        return new TextComponent(String.format(Utils.getGameLocale(), "[%.1f%%]", percentage))
                 .withStyle(color);
     }
 
