@@ -14,6 +14,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.overlays.BankOverlay;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class FeatureRegistry {
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
+
+        //Overlays
+        registerFeature(new BankOverlay());
 
         FEATURES.forEach(Feature::init);
 
