@@ -23,6 +23,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
@@ -45,6 +46,8 @@ public class EventFactory {
             post(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen gameMenuScreen) {
             post(new GameMenuInitEvent(gameMenuScreen, addButton));
+        } else if (screen instanceof ContainerScreen containerScreen) {
+            post(new ContainerScreenInitEvent(containerScreen, addButton));
         }
     }
 
