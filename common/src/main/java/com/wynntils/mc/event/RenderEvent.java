@@ -4,25 +4,34 @@
  */
 package com.wynntils.mc.event;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class RenderEvent extends Event {
     private final ElementType type;
+    private final PoseStack stack;
 
-    public RenderEvent(ElementType type) {
+    public RenderEvent(ElementType type, PoseStack stack) {
         this.type = type;
+        this.stack = stack;
     }
 
     public ElementType getType() {
         return type;
     }
 
-    public enum ElementType {}
+    public PoseStack getStack() {
+        return stack;
+    }
+
+    public enum ElementType {
+        EXPERIENCE;
+    }
 
     public static class Pre extends RenderEvent {
 
-        public Pre(ElementType type) {
-            super(type);
+        public Pre(ElementType type, PoseStack stack) {
+            super(type, stack);
         }
 
         @Override
@@ -33,8 +42,8 @@ public abstract class RenderEvent extends Event {
 
     public static class Post extends RenderEvent {
 
-        public Post(ElementType type) {
-            super(type);
+        public Post(ElementType type, PoseStack stack) {
+            super(type, stack);
         }
     }
 }

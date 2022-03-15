@@ -11,6 +11,7 @@
     "CommandSuggestionsMixin",
     "ConnectScreenMixin",
     "CrashReportMixin",
+    "GuiMixin",
     "ItemStackMixin",
     "KeyMappingMixin",
     "LivingEntityRendererMixin",

@@ -14,6 +14,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.overlays.GammaOverlay;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -42,11 +43,30 @@ public class FeatureRegistry {
         return FEATURES;
     }
 
+    public static void enableOverlay(Overlay overlay) {
+        OVERLAY_LISTENER.enable(overlay);
+    }
+
+    public static void disableOverlay(Overlay overlay) {
+        OVERLAY_LISTENER.disable(overlay);
+    }
+
     public static List<Overlay> getOverlays() {
         return OVERLAY_LISTENER.overlays;
     }
 
     public static void init() {
+        registerAll();
+
+        FEATURES.forEach(Feature::init);
+
+        WynntilsMod.getEventBus().register(OverlayListener.class);
+
+        addCrashCallbacks();
+    }
+
+    private static void registerAll() {
+        // features
         // debug
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new KeyBindTestFeature());
@@ -60,11 +80,8 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
 
-        FEATURES.forEach(Feature::init);
-
-        WynntilsMod.getEventBus().register(OverlayListener.class);
-
-        addCrashCallbacks();
+        // overlays
+        registerFeature(new GammaOverlay());
     }
 
     private static void addCrashCallbacks() {
@@ -118,11 +135,24 @@ public class FeatureRegistry {
 
         public void register(Overlay overlay) {
             overlays.add(overlay);
+        }
+
+        public void enable(Overlay overlay) {
+            assert overlays.contains(overlay) : "Can not enable unregistered overlay";
 
             for (RenderEvent.ElementType type : overlay.hookElements) {
                 List<Overlay> overlayList =
                         overlaysMap.computeIfAbsent(type, k -> new ArrayList<>());
                 overlayList.add(overlay);
+            }
+        }
+
+        public void disable(Overlay overlay) {
+            assert overlays.contains(overlay) : "Can not disable unregistered overlay";
+
+            for (RenderEvent.ElementType type : overlay.hookElements) {
+                List<Overlay> overlayList = overlaysMap.get(type);
+                overlayList.remove(overlay);
             }
         }
 
@@ -148,16 +178,20 @@ public class FeatureRegistry {
 
             List<Overlay> overlayList = overlaysMap.get(e.getType());
 
+            boolean cancelled = false;
+
             if (overlayList != null) {
                 for (Overlay overlay : overlayList) {
                     if (!overlay.visible) continue;
                     if (!overlay.isEnabled()) continue;
 
-                    McUtils.mc().getProfiler().push(overlay.displayName);
-                    overlay.render(e);
+                    McUtils.mc().getProfiler().push(overlay.getName());
+                    cancelled |= overlay.render(e);
                     McUtils.mc().getProfiler().pop();
                 }
             }
+
+            e.setCanceled(cancelled);
 
             McUtils.mc().getProfiler().pop();
 
@@ -177,7 +211,7 @@ public class FeatureRegistry {
                 for (Overlay overlay : overlayList) {
                     if (!overlay.visible) if (!overlay.isEnabled()) continue;
 
-                    McUtils.mc().getProfiler().push(overlay.displayName);
+                    McUtils.mc().getProfiler().push(overlay.getName());
                     overlay.render(e);
                     McUtils.mc().getProfiler().pop();
                 }
