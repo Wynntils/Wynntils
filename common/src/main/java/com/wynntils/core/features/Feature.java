@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.utils.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -79,7 +81,7 @@ public abstract class Feature {
     }
 
     /** Whether a feature can be enabled */
-    private boolean canEnable() {
+    public boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }
@@ -113,6 +115,13 @@ public abstract class Feature {
             WynntilsMod.getEventBus().unregister(this);
         }
     }
+
+    /** Gets the name of a feature */
+    public String getName() {
+        return ComponentUtils.getFormatted(getNameComponent());
+    }
+
+    public abstract MutableComponent getNameComponent();
 
     public abstract class Condition {
         boolean satisfied = false;

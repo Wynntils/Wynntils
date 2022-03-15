@@ -8,6 +8,7 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.mc.utils.commands.ClientCommandManager;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
@@ -38,6 +39,8 @@ public class WynntilsMod {
         parseVersion(modVersion);
 
         WebManager.init();
+
+        ClientCommandManager.init();
         KeyManager.init();
 
         addCrashCallbacks();

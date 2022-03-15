@@ -81,7 +81,7 @@ public class FeatureRegistry {
 
                         for (Feature feature : getFeatures()) {
                             if (feature.isEnabled()) {
-                                result.append("\n\t\t").append(feature.getClass().getName());
+                                result.append("\n\t\t").append(feature.getName());
                             }
                         }
 
@@ -102,7 +102,7 @@ public class FeatureRegistry {
 
                         for (Overlay overlay : getOverlays()) {
                             if (overlay.isEnabled()) {
-                                result.append("\n\t\t").append(overlay.getClass().getName());
+                                result.append("\n\t\t").append(overlay.getName());
                             }
                         }
 

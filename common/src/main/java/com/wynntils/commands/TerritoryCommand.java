@@ -7,9 +7,10 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.managers.CompassManager;
+import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.objects.Location;
 import java.util.HashMap;
@@ -24,17 +25,23 @@ import net.minecraft.network.chat.TextComponent;
 public class TerritoryCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
-
         dispatcher.register(
                 Commands.literal("territory")
                         .then(
                                 Commands.argument("territory", StringArgumentType.greedyString())
                                         .suggests(
-                                                (context, builder) ->
-                                                        SharedSuggestionProvider.suggest(
-                                                                territories.keySet().stream(),
-                                                                builder))
+                                                (context, builder) -> {
+                                                    if (!WebManager.isTerritoryListLoaded()
+                                                            && !WebManager.tryLoadTerritories()) {
+                                                        return Suggestions.empty();
+                                                    }
+
+                                                    HashMap<String, TerritoryProfile> territories =
+                                                            WebManager.getTerritories();
+
+                                                    return SharedSuggestionProvider.suggest(
+                                                            territories.keySet().stream(), builder);
+                                                })
                                         .executes(this::territory))
                         .executes(this::help));
     }
@@ -50,11 +57,7 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        String territoryArg = context.getArgument("territory", String.class);
-
-        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
-
-        if (territories == null) {
+        if (!WebManager.isTerritoryListLoaded() && !WebManager.tryLoadTerritories()) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Can't access territory data")
@@ -62,8 +65,19 @@ public class TerritoryCommand extends CommandBase {
             return 1;
         }
 
+        String territoryArg = context.getArgument("territory", String.class);
+
+        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
+
         if (!territories.containsKey(territoryArg)) {
-            context.getSource().sendFailure(helpComponent());
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent(
+                                            "Can't access territory "
+                                                    + "\""
+                                                    + territoryArg
+                                                    + "\". There likely is a typo.")
+                                    .withStyle(ChatFormatting.RED));
             return 1;
         }
 
@@ -73,6 +87,17 @@ public class TerritoryCommand extends CommandBase {
         int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;
 
         CompassManager.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
+
+        MutableComponent separator =
+                new TextComponent("-----------------------------------------------------")
+                        .withStyle(
+                                Style.EMPTY
+                                        .withColor(ChatFormatting.DARK_GRAY)
+                                        .withStrikethrough(true));
+
+        MutableComponent finalMessage = new TextComponent("");
+
+        finalMessage.append(separator);
 
         MutableComponent territoryComponent =
                 new TextComponent(territoryProfile.getFriendlyName())
@@ -88,24 +113,17 @@ public class TerritoryCommand extends CommandBase {
                                 new TextComponent(" (" + xMiddle + ", " + zMiddle + ")")
                                         .withStyle(ChatFormatting.GREEN));
 
+        finalMessage.append("\n").append(success);
+
         MutableComponent warn =
                 new TextComponent(
-                                "\n"
-                                        + "Note that this command redirects your"
+                                "Note that this command redirects your"
                                         + " compass to the middle of said territory.")
                         .withStyle(ChatFormatting.AQUA);
-        success.append(warn);
 
-        MutableComponent separator =
-                new TextComponent("-----------------------------------------------------")
-                        .withStyle(
-                                Style.EMPTY
-                                        .withColor(ChatFormatting.DARK_GRAY)
-                                        .withStrikethrough(true));
+        finalMessage.append("\n").append(warn);
 
-        MutableComponent finalMessage = new TextComponent("");
-
-        finalMessage.append(separator).append("\n").append(success).append("\n").append(separator);
+        finalMessage.append("\n").append(separator);
 
         context.getSource().sendSuccess(finalMessage, false);
 

@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
@@ -44,9 +45,16 @@ public class WynncraftButtonFeature extends Feature {
         WynntilsMod.getEventBus().unregister(this);
     }
 
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.wynncraftButton.name");
+    }
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
+        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+
         WynncraftButton wynncraftButton =
                 new WynncraftButton(
                         e.getTitleScreen(),

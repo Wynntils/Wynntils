@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
@@ -20,13 +21,9 @@ import net.minecraft.network.chat.*;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
-// parts originate
-// from https://github.com/MinecraftForge/MinecraftForge
-public class ClientCommandsManager {
-
-    static {
-        ClientCommandsManager.registerCommands();
-    }
+// parts originate from https://github.com/MinecraftForge/MinecraftForge
+// Kudos to both of the above
+public class ClientCommandManager {
 
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
@@ -34,9 +31,10 @@ public class ClientCommandsManager {
         return clientDispatcher;
     }
 
-    public static void registerCommands() {
+    public static void init() {
         clientDispatcher = new CommandDispatcher<>();
         new WynntilsCommand().register(clientDispatcher); // TODO event
+        new ServerCommand().register(clientDispatcher);
         new TokenCommand().register(clientDispatcher);
         new TerritoryCommand().register(clientDispatcher);
     }
@@ -56,8 +54,10 @@ public class ClientCommandsManager {
 
         final ParseResults<CommandSourceStack> parse = clientDispatcher.parse(reader, source);
 
-        if (!parse.getExceptions().isEmpty() || parse.getContext().getCommand() == null) {
-            return false; // let server handle command
+        if (!parse.getExceptions().isEmpty()
+                || (parse.getContext().getCommand() == null
+                        && parse.getContext().getChild() == null)) {
+            return false; // can't parse - let server handle command
         }
 
         try {
@@ -89,13 +89,13 @@ public class ClientCommandsManager {
                 text.append(
                         new TranslatableComponent("command.context.here")
                                 .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-                ClientCommandsManager.sendError(text);
+                ClientCommandManager.sendError(text);
             }
         } catch (Exception e) {
             TextComponent error =
                     new TextComponent(
                             e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            ClientCommandsManager.sendError(
+            ClientCommandManager.sendError(
                     new TranslatableComponent("command.failed")
                             .withStyle(
                                     Style.EMPTY.withHoverEvent(

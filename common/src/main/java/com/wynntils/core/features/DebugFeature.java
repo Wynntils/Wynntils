@@ -17,6 +17,7 @@ import com.wynntils.core.features.properties.Stability;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.MEDIUM)
 public abstract class DebugFeature extends Feature {
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());

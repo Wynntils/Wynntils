@@ -6,7 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.StringReader;
-import com.wynntils.mc.utils.commands.ClientCommandsManager;
+import com.wynntils.mc.utils.commands.ClientCommandManager;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,7 +26,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         if (message.startsWith("/")) {
             StringReader reader = new StringReader(message);
             reader.skip();
-            if (ClientCommandsManager.executeCommand(reader, message)) {
+            if (ClientCommandManager.executeCommand(reader, message)) {
                 ci.cancel();
             }
         }

@@ -18,6 +18,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Utils;
 import com.wynntils.utils.objects.Formatter;
 import com.wynntils.wc.objects.ClassType;
 import com.wynntils.wc.objects.SpellType;
@@ -82,12 +83,17 @@ public class ItemStatInfoFeature extends Feature {
     @Override
     protected boolean onEnable() {
         WynntilsMod.getEventBus().register(this);
-        return WebManager.tryLoadItemList();
+        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
 
     @Override
     protected void onDisable() {
         WynntilsMod.getEventBus().unregister(this);
+    }
+
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.itemStatInfo.name");
     }
 
     @SubscribeEvent
@@ -401,15 +407,25 @@ public class ItemStatInfoFeature extends Feature {
                     "chance_perfect",
                     new TextComponent(
                                     String.format(
-                                            "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
+                                            Utils.getGameLocale(),
+                                            "\u2605%.2f%%",
+                                            idContainer.getPerfectChance() * 100))
                             .withStyle(ChatFormatting.AQUA));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format("\u21E7%.1f%%", chances.increase() * 100))
+                    new TextComponent(
+                                    String.format(
+                                            Utils.getGameLocale(),
+                                            "\u21E7%.1f%%",
+                                            chances.increase() * 100))
                             .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format("\u21E9%.1f%%", chances.decrease() * 100))
+                    new TextComponent(
+                                    String.format(
+                                            Utils.getGameLocale(),
+                                            "\u21E9%.1f%%",
+                                            chances.decrease() * 100))
                             .withStyle(ChatFormatting.RED));
 
             infoVariables.put(
@@ -491,7 +507,8 @@ public class ItemStatInfoFeature extends Feature {
                                         ? getPercentageColor(percentage)
                                         : getFlatPercentageColor(percentage))
                         .withItalic(false);
-        return new TextComponent(String.format("[%.1f%%]", percentage)).withStyle(color);
+        return new TextComponent(String.format(Utils.getGameLocale(), "[%.1f%%]", percentage))
+                .withStyle(color);
     }
 
     private static final TreeMap<Float, TextColor> colorMap =

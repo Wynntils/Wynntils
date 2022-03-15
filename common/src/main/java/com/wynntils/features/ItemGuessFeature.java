@@ -28,6 +28,8 @@ import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -40,6 +42,11 @@ public class ItemGuessFeature extends Feature {
     private static final boolean showGuessesPrice = true;
 
     @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.itemGuess.name");
+    }
+
+    @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
     }
@@ -47,7 +54,7 @@ public class ItemGuessFeature extends Feature {
     @Override
     protected boolean onEnable() {
         WynntilsMod.getEventBus().register(this);
-        return WebManager.tryLoadItemGuesses();
+        return WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
     }
 
     @Override
@@ -67,8 +74,6 @@ public class ItemGuessFeature extends Feature {
     }
 
     private static void generateGuesses(ItemStack stack) {
-        if (ItemUtils.hasMarker(stack, "itemGuesses")) return;
-
         String name =
                 WynnUtils.normalizeBadString(
                         ChatFormatting.stripFormatting(stack.getHoverName().getString()));
@@ -143,13 +148,8 @@ public class ItemGuessFeature extends Feature {
 
         lore.add(
                 ItemUtils.toLoreStringTag(
-                        ChatFormatting.GREEN
-                                + "- "
-                                + ChatFormatting.GRAY
-                                + "Possibilities: "
-                                + itemNamesAndCosts));
-
-        ItemUtils.addMarker(stack, "itemGuesses");
+                        new TranslatableComponent(
+                                "feature.wynntils.itemGuess.possibilities", itemNamesAndCosts)));
 
         ItemUtils.replaceLore(stack, lore);
     }

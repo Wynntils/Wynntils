@@ -50,11 +50,9 @@ public class WynntilsAccount {
         encodedConfigs.remove(name);
     }
 
-    int connectionAttempts = 0;
-
     public boolean login() {
-        if (WebManager.getApiUrls() == null || connectionAttempts >= 4) return false;
-        connectionAttempts++;
+        if (WebManager.getApiUrls() == null || !WebManager.getApiUrls().hasKey("Athena"))
+            return false;
 
         RequestHandler handler = WebManager.getHandler();
 
@@ -75,7 +73,6 @@ public class WynntilsAccount {
                                                     json.get("publicKeyIn").getAsString());
                                     return true;
                                 })
-                        .onError(this::login)
                         .build();
 
         handler.addAndDispatch(getPublicKey);
@@ -120,7 +117,6 @@ public class WynntilsAccount {
                                     Reference.LOGGER.info("Successfully connected to Athena!");
                                     return true;
                                 })
-                        .onError(this::login)
                         .build();
 
         handler.addAndDispatch(responseEncryption);

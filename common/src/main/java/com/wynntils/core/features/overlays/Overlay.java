@@ -11,7 +11,6 @@ import java.awt.*;
 public abstract class Overlay
         extends Feature { // extends ScreenRenderer implements SettingsHolder {
 
-    public transient String displayName;
     public transient Point staticSize;
     public transient boolean visible;
     public transient OverlayGrowFrom growthX;
@@ -19,14 +18,12 @@ public abstract class Overlay
     public transient RenderEvent.ElementType[] hookElements;
 
     public Overlay(
-            String displayName,
             int sizeX,
             int sizeY,
             boolean visible,
             OverlayGrowFrom growthX,
             OverlayGrowFrom growthY,
             RenderEvent.ElementType... hookElements) {
-        this.displayName = displayName;
         this.staticSize = new Point(sizeX, sizeY);
         this.visible = visible;
         this.hookElements = hookElements;
@@ -34,11 +31,11 @@ public abstract class Overlay
         this.growthY = growthY;
     }
 
-    public void render(RenderEvent.Pre e) {}
+    public abstract void render(RenderEvent.Pre e);
 
-    public void render(RenderEvent.Post e) {}
+    public abstract void render(RenderEvent.Post e);
 
-    public void tick() {}
+    public abstract void tick();
 
     public enum OverlayGrowFrom {
         LEFT,

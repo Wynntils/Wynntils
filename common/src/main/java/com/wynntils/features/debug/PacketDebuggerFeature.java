@@ -11,6 +11,8 @@ import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +20,11 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PacketDebuggerFeature extends DebugFeature {
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("featureDebug.wynntils.packetDebugger.name");
+    }
+
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */

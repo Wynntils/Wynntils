@@ -7,7 +7,10 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.Reference;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -23,7 +26,7 @@ public class WynntilsCommand extends CommandBase {
                         .then(Commands.literal("help").executes(this::help))
                         .then(Commands.literal("discord").executes(this::discordLink))
                         .then(Commands.literal("donate").executes(this::donateLink))
-                        .then(Commands.literal("reloadapi").executes(this::reloadApi))
+                        .then(Commands.literal("reload").executes(this::reload))
                         .then(Commands.literal("version").executes(this::version))
                         .executes(this::help));
     }
@@ -53,25 +56,46 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
-    private int reloadApi(CommandContext<CommandSourceStack> context) {
+    private int reload(CommandContext<CommandSourceStack> context) {
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // disable all active features before resetting web
+            if (feature.isEnabled()) {
+                feature.disable();
+            }
+        }
+
         WebManager.reset();
 
-        boolean success = WebManager.setupUserAccount();
+        WebManager.init(); // reloads api urls as well as web manager
 
-        success &= WebManager.reloadUsedRoutes();
+        for (Feature feature :
+                FeatureRegistry.getFeatures()) { // re-enable all features which should be
+            if (feature.canEnable()) {
+                feature.enable();
 
-        if (success) {
-            context.getSource()
-                    .sendSuccess(
-                            new TextComponent("Successfully reloaded all used API routes.")
-                                    .withStyle(ChatFormatting.GREEN),
-                            false);
-        } else {
-            context.getSource()
-                    .sendFailure(
-                            new TextComponent("One or more API routes failed to reload")
-                                    .withStyle(ChatFormatting.RED));
+                if (!feature.isEnabled()) {
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Failed to reload ")
+                                    .withStyle(ChatFormatting.GREEN)
+                                    .append(
+                                            new TextComponent(feature.getName())
+                                                    .withStyle(ChatFormatting.AQUA)));
+                } else {
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Reloaded ")
+                                    .withStyle(ChatFormatting.GREEN)
+                                    .append(
+                                            new TextComponent(feature.getName())
+                                                    .withStyle(ChatFormatting.AQUA)));
+                }
+            }
         }
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent("Finished reloading everything")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
         return 1;
     }
@@ -102,8 +126,8 @@ public class WynntilsCommand extends CommandBase {
 
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
-                new TextComponent("").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
-        text.append("Wynntils' command list: ");
+                new TextComponent("Wynntils' command list: ")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         addCommandDescription(
                 text,
                 "wynntils",
@@ -122,10 +146,9 @@ public class WynntilsCommand extends CommandBase {
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
+        addCommandDescription(text, "wynntils", List.of("reload"), "This reloads all API data.");
         addCommandDescription(
-                text, "-wynntils", List.of("reloadapi"), "This reloads all API data.");
-        addCommandDescription(
-                text, "-wynntils", List.of("donate"), "This provides our Patreon link.");
+                text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,
                 "token",
@@ -175,6 +198,12 @@ public class WynntilsCommand extends CommandBase {
             MutableComponent text, String prefix, List<String> suffix, String description) {
         text.append("\n");
 
+        StringBuilder suffixString = new StringBuilder("");
+
+        for (String argument : suffix) {
+            suffixString.append(" ").append(argument);
+        }
+
         MutableComponent clickComponent = new TextComponent("");
         {
             clickComponent.setStyle(
@@ -182,8 +211,8 @@ public class WynntilsCommand extends CommandBase {
                             .getStyle()
                             .withClickEvent(
                                     new ClickEvent(
-                                            ClickEvent.Action.SUGGEST_COMMAND,
-                                            "/" + prefix + " " + String.join(" ", suffix)))
+                                            ClickEvent.Action.RUN_COMMAND,
+                                            "/" + prefix + suffixString))
                             .withHoverEvent(
                                     new HoverEvent(
                                             HoverEvent.Action.SHOW_TEXT,
@@ -195,7 +224,7 @@ public class WynntilsCommand extends CommandBase {
 
             if (!suffix.isEmpty()) {
                 MutableComponent nameText =
-                        new TextComponent(String.join(" ", suffix)).withStyle(ChatFormatting.GREEN);
+                        new TextComponent(suffixString.toString()).withStyle(ChatFormatting.GREEN);
                 clickComponent.append(nameText);
             }
 
