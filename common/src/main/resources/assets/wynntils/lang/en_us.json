@@ -10,5 +10,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
-  "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"
+  "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature",
+  "overlays.wynntils.bankOverlay.name": "Bank Overlay"
 }

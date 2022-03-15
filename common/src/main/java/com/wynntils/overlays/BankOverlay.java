@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BankOverlay extends Overlay {
@@ -49,8 +51,8 @@ public class BankOverlay extends Overlay {
     }
 
     @Override
-    public String getName() {
-        return "Bank Overlay";
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("overlays.wynntils.bankOverlay.name");
     }
 
     @SubscribeEvent
