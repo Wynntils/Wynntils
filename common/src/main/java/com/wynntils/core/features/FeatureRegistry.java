@@ -59,7 +59,7 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
 
-        //Overlays
+        // Overlays
         registerFeature(new BankOverlay());
 
         FEATURES.forEach(Feature::init);

@@ -1,25 +1,30 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.overlays;
 
-import com.wynntils.core.Reference;
-import com.wynntils.core.features.overlays.Overlay;
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.mc.event.ContainerScreenInitEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import java.awt.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.awt.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class BankOverlay extends Overlay {
-    private static final Pattern PAGE_PATTERN = Pattern.compile("\\[Pg\\. ([0-9]*)\\] [a-z_A-Z0-9 ]+'s? Bank");
-    private static final Pattern PAGE_CUSTOM_NAME_PATTERN = Pattern.compile("\\[Pg\\. ([0-9]*)\\] ([a-z_A-Z0-9 ]+)");
+    private static final Pattern PAGE_PATTERN =
+            Pattern.compile("\\[Pg\\. ([0-9]*)\\] [a-z_A-Z0-9 ]+'s? Bank");
+    private static final Pattern PAGE_CUSTOM_NAME_PATTERN =
+            Pattern.compile("\\[Pg\\. ([0-9]*)\\] ([a-z_A-Z0-9 ]+)");
 
     private Screen matchingScreen = null;
 
@@ -52,7 +57,8 @@ public class BankOverlay extends Overlay {
     public void onContainerScreenInit(ContainerScreenInitEvent event) {
         ContainerScreen container = event.getContainerScreen();
 
-        String containerTitle = ChatFormatting.stripFormatting(ComponentUtils.getUnformatted(container.getTitle()));
+        String containerTitle =
+                ChatFormatting.stripFormatting(ComponentUtils.getUnformatted(container.getTitle()));
 
         if (containerTitle == null) {
             matchingScreen = null;
@@ -64,8 +70,7 @@ public class BankOverlay extends Overlay {
 
         if (pageMatcher.matches()) {
             isBank = true;
-        }
-        else {
+        } else {
             Matcher customPageMatcher = PAGE_CUSTOM_NAME_PATTERN.matcher(containerTitle);
             isBank = customPageMatcher.matches();
         }
@@ -81,26 +86,22 @@ public class BankOverlay extends Overlay {
 
     @Override
     public void render(RenderEvent.Pre e) {
-        if (matchingScreen == null || matchingScreen != McUtils.mc().screen)
-            return;
+        if (matchingScreen == null || matchingScreen != McUtils.mc().screen) return;
 
         Reference.LOGGER.info("Log pre bank render");
     }
 
     @Override
     public void render(RenderEvent.Post e) {
-        if (matchingScreen == null || matchingScreen != McUtils.mc().screen)
-            return;
+        if (matchingScreen == null || matchingScreen != McUtils.mc().screen) return;
 
         Reference.LOGGER.info("Log post bank render");
     }
 
     @Override
     public void tick() {
-        if (matchingScreen == null || matchingScreen != McUtils.mc().screen)
-            return;
+        if (matchingScreen == null || matchingScreen != McUtils.mc().screen) return;
 
         Reference.LOGGER.info("Log tick bank render");
     }
 }
-
