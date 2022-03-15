@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
@@ -30,10 +31,6 @@ import org.jetbrains.annotations.NotNull;
         gameplay = GameplayImpact.MEDIUM,
         performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
-    public String getName() {
-        return "Wynncraft Button Feature";
-    }
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
@@ -46,6 +43,11 @@ public class WynncraftButtonFeature extends Feature {
     @Override
     protected void onDisable() {
         WynntilsMod.getEventBus().unregister(this);
+    }
+
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.wynncraftButton.name");
     }
 
     @SubscribeEvent

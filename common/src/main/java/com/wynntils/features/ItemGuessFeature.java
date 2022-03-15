@@ -28,6 +28,8 @@ import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -39,8 +41,9 @@ public class ItemGuessFeature extends Feature {
 
     private static final boolean showGuessesPrice = true;
 
-    public String getName() {
-        return "Item Guess Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.itemGuess.name");
     }
 
     @Override
@@ -145,11 +148,8 @@ public class ItemGuessFeature extends Feature {
 
         lore.add(
                 ItemUtils.toLoreStringTag(
-                        ChatFormatting.GREEN
-                                + "- "
-                                + ChatFormatting.GRAY
-                                + "Possibilities: "
-                                + itemNamesAndCosts));
+                        new TranslatableComponent(
+                                "feature.wynntils.itemGuess.possibilities", itemNamesAndCosts)));
 
         ItemUtils.replaceLore(stack, lore);
     }
