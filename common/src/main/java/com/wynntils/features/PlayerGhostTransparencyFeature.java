@@ -9,12 +9,15 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.wc.utils.WynnPlayerUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerGhostTransparencyFeature extends Feature {
-    public String getName() {
-        return "Transparent Player Ghost Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.playerGhostTransparency.name");
     }
 
     @Override

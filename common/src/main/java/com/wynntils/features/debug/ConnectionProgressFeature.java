@@ -10,11 +10,14 @@ import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState.State;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {
-    public String getName() {
-        return "Connection Progress Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("featureDebug.wynntils.connectionProgress.name");
     }
 
     @Override
