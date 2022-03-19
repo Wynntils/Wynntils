@@ -142,4 +142,12 @@ public class EventFactory {
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
         post(new ItemsReceivedEvent(container, items));
     }
+
+    public static void onRenderPre(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        post(new RenderEvent.Pre(null, poseStack, mouseX, mouseY, partialTick));
+    }
+
+    public static void onRenderPost(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        post(new RenderEvent.Post(null, poseStack, mouseX, mouseY, partialTick));
+    }
 }
