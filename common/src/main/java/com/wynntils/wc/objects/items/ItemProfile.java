@@ -5,7 +5,6 @@
 package com.wynntils.wc.objects.items;
 
 import com.wynntils.wc.objects.ClassType;
-
 import java.util.*;
 
 public class ItemProfile {

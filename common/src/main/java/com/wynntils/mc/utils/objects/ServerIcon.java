@@ -7,15 +7,14 @@ package com.wynntils.mc.utils.objects;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.Reference;
+import java.io.IOException;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.Validate;
-
-import java.io.IOException;
-import java.util.function.Consumer;
 
 /** Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods */
 public class ServerIcon {

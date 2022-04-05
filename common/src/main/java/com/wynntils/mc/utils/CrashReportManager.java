@@ -4,10 +4,9 @@
  */
 package com.wynntils.mc.utils;
 
-import net.minecraft.CrashReportCategory;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.CrashReportCategory;
 
 public class CrashReportManager {
     private static final List<ICrashContext> crashContexts = new ArrayList<>();

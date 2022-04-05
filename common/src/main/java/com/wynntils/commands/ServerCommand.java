@@ -12,17 +12,16 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 
 public class ServerCommand extends CommandBase {
     @Override

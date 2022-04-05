@@ -4,11 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
-
-import java.util.function.Consumer;
 
 /** Fired on initalization of {@link TitleScreen} */
 public class TitleScreenInitEvent extends Event {

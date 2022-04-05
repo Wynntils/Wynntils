@@ -8,6 +8,9 @@ import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.McUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -16,10 +19,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {

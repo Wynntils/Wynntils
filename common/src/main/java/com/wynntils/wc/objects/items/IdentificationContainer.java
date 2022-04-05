@@ -6,7 +6,6 @@ package com.wynntils.wc.objects.items;
 
 import com.wynntils.core.Reference;
 import com.wynntils.utils.StringUtils;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

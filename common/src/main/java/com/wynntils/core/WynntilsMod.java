@@ -11,12 +11,11 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.ClientCommandManager;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
-import net.minecraftforge.eventbus.api.BusBuilder;
-import net.minecraftforge.eventbus.api.IEventBus;
-
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.BusBuilder;
+import net.minecraftforge.eventbus.api.IEventBus;
 
 /** The common implementation of Wynntils */
 public class WynntilsMod {

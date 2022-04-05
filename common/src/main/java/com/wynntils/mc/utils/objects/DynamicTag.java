@@ -4,14 +4,13 @@
  */
 package com.wynntils.mc.utils.objects;
 
-import net.minecraft.nbt.*;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Supplier;
+import net.minecraft.nbt.*;
+import org.jetbrains.annotations.NotNull;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
@@ -25,19 +24,16 @@ public class DynamicTag implements Tag {
 
         // FIXME: Implement these
         @Override
-        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor) throws IOException {
+        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor)
+                throws IOException {
             return null;
         }
 
         @Override
-        public void skip(DataInput dataInput, int i) throws IOException {
-
-        }
+        public void skip(DataInput dataInput, int i) throws IOException {}
 
         @Override
-        public void skip(DataInput dataInput) throws IOException {
-
-        }
+        public void skip(DataInput dataInput) throws IOException {}
 
         public String getName() {
             return "STRING";
@@ -104,7 +100,6 @@ public class DynamicTag implements Tag {
     public void accept(TagVisitor visitor) {
         visitor.visitString(StringTag.valueOf(this.data.get()));
     }
-
 
     // FIXME: Implement
     @Override

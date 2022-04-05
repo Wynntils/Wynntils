@@ -5,9 +5,6 @@
 package com.wynntils.core.webapi;
 
 import com.wynntils.utils.StringUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
@@ -18,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Class that parses a String into a specific format of "[Key] = Value"

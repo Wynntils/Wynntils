@@ -8,13 +8,12 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /** Registers and handles keybinds */
 public class KeyManager {

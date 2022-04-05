@@ -12,12 +12,11 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.*;
-
-import java.util.List;
 
 public class WynntilsCommand extends CommandBase {
     @Override

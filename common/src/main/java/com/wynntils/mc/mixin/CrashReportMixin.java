@@ -5,14 +5,13 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.utils.CrashReportManager;
+import java.util.Iterator;
+import java.util.List;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import java.util.Iterator;
-import java.util.List;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {

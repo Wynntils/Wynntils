@@ -13,6 +13,7 @@ import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.utils.objects.Location;
+import java.util.HashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,8 +21,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-
-import java.util.HashMap;
 
 public class TerritoryCommand extends CommandBase {
     @Override

@@ -12,7 +12,6 @@ import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebReader;
 import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;

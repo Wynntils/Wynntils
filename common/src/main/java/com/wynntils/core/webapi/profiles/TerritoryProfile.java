@@ -5,7 +5,6 @@
 package com.wynntils.core.webapi.profiles;
 
 import com.google.gson.*;
-
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

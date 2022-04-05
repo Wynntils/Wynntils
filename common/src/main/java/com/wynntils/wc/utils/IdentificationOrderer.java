@@ -5,10 +5,9 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.mc.utils.ItemUtils;
+import java.util.*;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.TextComponent;
-
-import java.util.*;
 
 public class IdentificationOrderer {
 

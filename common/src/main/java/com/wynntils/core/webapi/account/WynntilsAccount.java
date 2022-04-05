@@ -14,15 +14,14 @@ import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.MD5Verification;
-import net.minecraft.util.Crypt;
-import org.apache.commons.codec.binary.Hex;
-
-import javax.crypto.SecretKey;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import javax.crypto.SecretKey;
+import net.minecraft.util.Crypt;
+import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
 

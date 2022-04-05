@@ -4,10 +4,9 @@
  */
 package com.wynntils.wc.utils;
 
+import java.util.regex.Pattern;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Team;
-
-import java.util.regex.Pattern;
 
 public class WynnPlayerUtils {
     private static final Pattern PLAYER_GHOST_REGEX = Pattern.compile("_\\d+");

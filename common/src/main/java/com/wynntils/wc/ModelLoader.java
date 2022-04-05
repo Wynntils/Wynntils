@@ -9,7 +9,6 @@ import com.wynntils.wc.impl.CharacterImpl;
 import com.wynntils.wc.impl.WorldStateImpl;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
-
 import java.util.Arrays;
 
 public abstract class ModelLoader {

@@ -23,6 +23,8 @@ import com.wynntils.wc.objects.items.ItemTier;
 import com.wynntils.wc.objects.items.ItemType;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -30,9 +32,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.List;
-import java.util.Map;
 
 @FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.LARGE, stability = Stability.STABLE)
 public class ItemGuessFeature extends Feature {

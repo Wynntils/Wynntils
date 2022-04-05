@@ -5,9 +5,8 @@
 package com.wynntils.wc.objects.items;
 
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.ChatFormatting;
-
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     @SerializedName("NEUTRAL")

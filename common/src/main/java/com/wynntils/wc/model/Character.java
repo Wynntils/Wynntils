@@ -5,7 +5,6 @@
 package com.wynntils.wc.model;
 
 import com.wynntils.wc.Model;
-
 import java.util.UUID;
 
 public interface Character extends Model {
