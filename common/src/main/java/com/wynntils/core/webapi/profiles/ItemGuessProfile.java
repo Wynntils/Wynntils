@@ -9,7 +9,9 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.objects.items.ItemTier;
 import com.wynntils.wc.objects.items.ItemType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemGuessProfile {
 
