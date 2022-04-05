@@ -6,6 +6,7 @@ package com.wynntils.wc.utils;
 
 import com.google.common.collect.Lists;
 import com.wynntils.wc.ModelLoader;
+
 import java.util.List;
 
 public class WynnUtils {

@@ -6,10 +6,6 @@ package com.wynntils.mc.utils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import java.lang.reflect.Type;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -17,6 +13,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
+
+import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemUtils {
     /**

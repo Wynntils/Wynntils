@@ -5,9 +5,10 @@
 package com.wynntils.wc.objects.items;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Arrays;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+
+import java.util.Arrays;
 
 public enum ItemTier {
     @SerializedName("NORMAL")

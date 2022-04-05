@@ -22,10 +22,7 @@ import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(
-        stability = Stability.STABLE,
-        gameplay = GameplayImpact.MEDIUM,
-        performance = PerformanceImpact.MEDIUM)
+@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
     @Override
     public MutableComponent getNameComponent() {
@@ -56,9 +53,8 @@ public class HealthPotionBlockerFeature extends Feature {
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);
-            McUtils.sendMessageToClient(
-                    new TranslatableComponent("feature.wynntils.potionBlocker.healthFull")
-                            .withStyle(ChatFormatting.RED));
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.potionBlocker.healthFull")
+                    .withStyle(ChatFormatting.RED));
         }
     }
 }

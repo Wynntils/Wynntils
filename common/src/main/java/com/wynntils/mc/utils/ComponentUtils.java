@@ -4,11 +4,12 @@
  */
 package com.wynntils.mc.utils;
 
-import java.util.Arrays;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class ComponentUtils {
     public static String getFormatted(Component component) {

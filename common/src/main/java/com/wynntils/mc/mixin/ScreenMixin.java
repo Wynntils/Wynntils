@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow
-    protected abstract <T extends GuiEventListener & Widget & NarratableEntry>
-            T addRenderableWidget(T widget);
+    protected abstract <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget);
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {

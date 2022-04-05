@@ -4,10 +4,11 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.List;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 /** Fired when items are received */
 public class ItemsReceivedEvent extends Event {

@@ -4,10 +4,11 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.function.Consumer;
 
 /** Fired on initalization of {@link PauseScreen} */
 public class GameMenuInitEvent extends Event {

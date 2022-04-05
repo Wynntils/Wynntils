@@ -8,17 +8,21 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.*;
+import com.wynntils.core.webapi.request.PostRequestBuilder;
+import com.wynntils.core.webapi.request.Request;
+import com.wynntils.core.webapi.request.RequestBuilder;
+import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.MD5Verification;
+import net.minecraft.util.Crypt;
+import org.apache.commons.codec.binary.Hex;
+
+import javax.crypto.SecretKey;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import javax.crypto.SecretKey;
-import net.minecraft.util.Crypt;
-import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
 

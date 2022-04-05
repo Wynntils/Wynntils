@@ -7,6 +7,7 @@ package com.wynntils.core.webapi.request;
 import com.google.gson.JsonElement;
 import com.wynntils.core.webapi.request.multipart.IMultipartFormPart;
 import com.wynntils.utils.objects.ThrowingConsumer;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;

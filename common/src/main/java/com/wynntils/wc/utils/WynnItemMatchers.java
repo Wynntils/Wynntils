@@ -6,12 +6,13 @@ package com.wynntils.wc.utils;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+import java.util.regex.Pattern;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {

@@ -15,9 +15,10 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {

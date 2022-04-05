@@ -21,13 +21,6 @@ import com.wynntils.wc.objects.items.ItemProfile;
 import com.wynntils.wc.objects.items.ItemType;
 import com.wynntils.wc.objects.items.MajorIdentification;
 import com.wynntils.wc.utils.IdentificationOrderer;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,6 +28,14 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /** Provides and loads web content on demand */
 public class WebManager {

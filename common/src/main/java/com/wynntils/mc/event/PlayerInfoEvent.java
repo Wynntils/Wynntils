@@ -4,9 +4,10 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.UUID;
 
 /** Fires for changes in player info in scoreboard */
 public abstract class PlayerInfoEvent extends Event {

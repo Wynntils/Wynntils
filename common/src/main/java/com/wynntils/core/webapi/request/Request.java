@@ -7,6 +7,7 @@ package com.wynntils.core.webapi.request;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.LoadingPhase;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
