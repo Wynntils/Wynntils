@@ -5,6 +5,7 @@
 package com.wynntils.mc.utils.objects;
 
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,6 +21,22 @@ public class DynamicTag implements Tag {
             String string = input.readUTF();
             accounter.accountBits(16L * string.length());
             return StringTag.valueOf(string);
+        }
+
+        // FIXME: Implement these
+        @Override
+        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor) throws IOException {
+            return null;
+        }
+
+        @Override
+        public void skip(DataInput dataInput, int i) throws IOException {
+
+        }
+
+        @Override
+        public void skip(DataInput dataInput) throws IOException {
+
         }
 
         public String getName() {
@@ -86,6 +103,18 @@ public class DynamicTag implements Tag {
 
     public void accept(TagVisitor visitor) {
         visitor.visitString(StringTag.valueOf(this.data.get()));
+    }
+
+
+    // FIXME: Implement
+    @Override
+    public StreamTagVisitor.ValueResult accept(@NotNull StreamTagVisitor streamTagVisitor) {
+        return null;
+    }
+
+    @Override
+    public void acceptAsRoot(@NotNull StreamTagVisitor streamTagVisitor) {
+        Tag.super.acceptAsRoot(streamTagVisitor);
     }
 
     public static String quoteAndEscape(String text) {
