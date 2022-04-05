@@ -11,7 +11,10 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
-        WynntilsMod.init(
-                ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString());
+        WynntilsMod.init(ModLoadingContext.get()
+                .getActiveContainer()
+                .getModInfo()
+                .getVersion()
+                .toString());
     }
 }

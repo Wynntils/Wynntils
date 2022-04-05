@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "0.10.0-SNAPSHOT" apply false
-    id "com.diffplug.spotless" version "6.0.5"
+    id "com.diffplug.spotless" version "6.3.0"
 }
 
 architectury {
@@ -70,7 +70,7 @@ allprojects {
             // define the steps to apply to Java source code
             importOrder()
             removeUnusedImports()
-            googleJavaFormat(rootProject.google_java_format_version).aosp().reflowLongStrings()
+            palantirJavaFormat('2.17.0')
             licenseHeader '/*\n' +
                     ' * Copyright © Wynntils $YEAR.\n' +
                     ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +

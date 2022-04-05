@@ -8,8 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ItemInfoContainer {
-    private static final Pattern COLOR_PATTERN =
-            Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
+    private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
     String material;
     ItemType type;
@@ -17,8 +16,7 @@ public class ItemInfoContainer {
     ItemDropType dropType;
     String armorColor = null;
 
-    public ItemInfoContainer(
-            String material, ItemType type, String set, ItemDropType dropType, String armorColor) {}
+    public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {}
 
     public ItemDropType getDropType() {
         return dropType;

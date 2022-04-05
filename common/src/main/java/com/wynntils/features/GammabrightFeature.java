@@ -17,29 +17,20 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(
-        stability = Stability.INVARIABLE,
-        gameplay = GameplayImpact.LARGE,
-        performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
 public class GammabrightFeature extends Feature {
     private double lastGamma = 1f;
 
-    private final KeyHolder gammabrightKeybind =
-            new KeyHolder(
-                    "Gammabright",
-                    GLFW.GLFW_KEY_G,
-                    "Wynntils",
-                    true,
-                    () -> {
-                        double currentGamma = McUtils.mc().options.gamma;
-                        if (currentGamma < 1000) {
-                            lastGamma = currentGamma;
-                            McUtils.mc().options.gamma = 1000d;
-                            return;
-                        }
+    private final KeyHolder gammabrightKeybind = new KeyHolder("Gammabright", GLFW.GLFW_KEY_G, "Wynntils", true, () -> {
+        double currentGamma = McUtils.mc().options.gamma;
+        if (currentGamma < 1000) {
+            lastGamma = currentGamma;
+            McUtils.mc().options.gamma = 1000d;
+            return;
+        }
 
-                        McUtils.mc().options.gamma = lastGamma;
-                    });
+        McUtils.mc().options.gamma = lastGamma;
+    });
 
     @Override
     public MutableComponent getNameComponent() {

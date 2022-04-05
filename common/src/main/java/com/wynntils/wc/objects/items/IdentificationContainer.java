@@ -92,8 +92,7 @@ public class IdentificationContainer {
      *     versa with `increase`. Likewise, the stars are accounted as inverted
      * @return A {@link ReidentificationChances} of the result (All from 0 to 1)
      */
-    public strictfp ReidentificationChances getChances(
-            int currentValue, boolean isInverted, int starCount) {
+    public strictfp ReidentificationChances getChances(int currentValue, boolean isInverted, int starCount) {
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
         // that some items that have had its stats shifted from positive to negative to
         // break the bounds
@@ -163,16 +162,14 @@ public class IdentificationContainer {
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d)
-                    .flipIf(isInverted);
+            return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d).flipIf(isInverted);
         } else {
             double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
             double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 80);
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d)
-                    .flipIf(isInverted);
+            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d).flipIf(isInverted);
         }
     }
 

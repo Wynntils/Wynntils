@@ -113,12 +113,6 @@ public class Location extends Vector3d {
     }
 
     public String toString() {
-        return "["
-                + (int) Math.round(this.x)
-                + ", "
-                + (int) Math.round(this.y)
-                + ", "
-                + (int) Math.round(this.z)
-                + "]";
+        return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
     }
 }

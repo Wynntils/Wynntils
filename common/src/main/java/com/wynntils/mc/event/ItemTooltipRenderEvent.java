@@ -14,8 +14,7 @@ public class ItemTooltipRenderEvent extends Event {
     private final int mouseX;
     private final int mouseY;
 
-    public ItemTooltipRenderEvent(
-            PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+    public ItemTooltipRenderEvent(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
         this.poseStack = poseStack;
         this.itemStack = itemStack;
         this.mouseX = mouseX;

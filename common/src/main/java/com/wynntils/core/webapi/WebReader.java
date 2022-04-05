@@ -9,7 +9,10 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
@@ -21,8 +24,7 @@ import org.apache.commons.io.IOUtils;
  * <p>Ex: https://api.wynntils.com/webapi provides such a format
  */
 public class WebReader {
-    private static final Pattern LINE_MATCHER =
-            Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");
+    private static final Pattern LINE_MATCHER = Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");
 
     private Map<String, String> values;
     private Map<String, List<String>> lists;
@@ -60,8 +62,7 @@ public class WebReader {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty(
                 "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
-                        + " Firefox/3.6.2");
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316" + " Firefox/3.6.2");
 
         if (!parseData(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))) {
             throw new Exception("Invalid WebReader result");

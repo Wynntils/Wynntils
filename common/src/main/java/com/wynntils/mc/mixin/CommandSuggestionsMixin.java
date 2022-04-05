@@ -25,7 +25,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(CommandSuggestions.class)
 public class CommandSuggestionsMixin {
 
-    @Shadow @Final EditBox input;
+    @Shadow
+    @Final
+    EditBox input;
 
     ParseResults<CommandSourceStack> clientParse;
 
@@ -47,8 +49,7 @@ public class CommandSuggestionsMixin {
             stringReader.skip();
         }
 
-        CommandDispatcher<CommandSourceStack> clientDispatcher =
-                ClientCommandManager.getClientDispatcher();
+        CommandDispatcher<CommandSourceStack> clientDispatcher = ClientCommandManager.getClientDispatcher();
 
         CompletableFuture<Suggestions> clientSuggestions =
                 clientDispatcher.getCompletionSuggestions(clientParse, cursor);
@@ -57,15 +58,12 @@ public class CommandSuggestionsMixin {
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
-        CompletableFuture.allOf(clientSuggestions, serverSuggestions)
-                .thenRun(
-                        () -> {
-                            final List<Suggestions> suggestions = new ArrayList<>();
-                            suggestions.add(clientSuggestions.join());
-                            suggestions.add(serverSuggestions.join());
-                            result.complete(
-                                    Suggestions.merge(stringReader.getString(), suggestions));
-                        });
+        CompletableFuture.allOf(clientSuggestions, serverSuggestions).thenRun(() -> {
+            final List<Suggestions> suggestions = new ArrayList<>();
+            suggestions.add(clientSuggestions.join());
+            suggestions.add(serverSuggestions.join());
+            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
+        });
 
         return result;
     }
@@ -79,11 +77,8 @@ public class CommandSuggestionsMixin {
                                     "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;",
                             remap = false))
     public ParseResults<SharedSuggestionProvider> redirectParse(
-            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
-            StringReader command,
-            Object source) {
-        CommandDispatcher<CommandSourceStack> clientDispatcher =
-                ClientCommandManager.getClientDispatcher();
+            CommandDispatcher<SharedSuggestionProvider> serverDispatcher, StringReader command, Object source) {
+        CommandDispatcher<CommandSourceStack> clientDispatcher = ClientCommandManager.getClientDispatcher();
         clientParse = clientDispatcher.parse(command, ClientCommandManager.getSource());
 
         return serverDispatcher.parse(command, (SharedSuggestionProvider) source);

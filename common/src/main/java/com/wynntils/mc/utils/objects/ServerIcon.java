@@ -27,6 +27,7 @@ public class ServerIcon {
     static {
         FALLBACK = new ResourceLocation("textures/misc/unknown_server.png");
     }
+
     /**
      * @param server {@link ServerData} of server
      * @param allowStale flag whether if an already existing icon should be used
@@ -39,15 +40,12 @@ public class ServerIcon {
 
         // Try default
         ResourceLocation destination =
-                new ResourceLocation(
-                        "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
+                new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
         // set it later
-        if (allowStale
-                && Minecraft.getInstance().getTextureManager().getTexture(destination, null)
-                        != null) {
+        if (allowStale && Minecraft.getInstance().getTextureManager().getTexture(destination, null) != null) {
             serverIconLocation = destination;
             onDone();
             return;
@@ -55,12 +53,10 @@ public class ServerIcon {
 
         try {
             ServerStatusPinger pinger = new ServerStatusPinger();
-            pinger.pingServer(
-                    server,
-                    () -> {
-                        loadServerIcon(destination);
-                        onDone();
-                    });
+            pinger.pingServer(server, () -> {
+                loadServerIcon(destination);
+                onDone();
+            });
         } catch (Exception e) {
             e.printStackTrace();
             Reference.LOGGER.warn("Failed to ping server");
@@ -117,9 +113,7 @@ public class ServerIcon {
 
         synchronized (this) {
             serverIconLocation = destination;
-            Minecraft.getInstance()
-                    .getTextureManager()
-                    .register(destination, new DynamicTexture(nativeImage));
+            Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
         }
     }
 }

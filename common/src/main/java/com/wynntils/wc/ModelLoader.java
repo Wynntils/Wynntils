@@ -26,11 +26,9 @@ public abstract class ModelLoader {
     }
 
     public static void init() {
-        Arrays.stream(MODELS)
-                .forEach(
-                        model -> {
-                            WynntilsMod.getEventBus().register(model);
-                            WynntilsMod.getEventBus().register(model.getClass());
-                        });
+        Arrays.stream(MODELS).forEach(model -> {
+            WynntilsMod.getEventBus().register(model);
+            WynntilsMod.getEventBus().register(model.getClass());
+        });
     }
 }

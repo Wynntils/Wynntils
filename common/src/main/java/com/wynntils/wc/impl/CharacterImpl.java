@@ -112,16 +112,8 @@ public class CharacterImpl implements Character {
 
         @Override
         public String toString() {
-            return "CharacterInfoImpl["
-                    + "classType="
-                    + classType
-                    + ", reskinned="
-                    + reskinned
-                    + ", level="
-                    + level
-                    + ", id="
-                    + id
-                    + ']';
+            return "CharacterInfoImpl[classType=" + classType + ", reskinned=" + reskinned + ", level=" + level
+                    + ", id=" + id + ']';
         }
     }
 }

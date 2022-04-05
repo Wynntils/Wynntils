@@ -23,12 +23,7 @@ public class KeyHolder {
      * @param onPress {@link Runnable} ran on button press
      */
     public KeyHolder(
-            String name,
-            int keyCode,
-            String category,
-            InputConstants.Type type,
-            boolean firstPress,
-            Runnable onPress) {
+            String name, int keyCode, String category, InputConstants.Type type, boolean firstPress, Runnable onPress) {
         this.firstPress = firstPress;
         this.keybind = new KeyMapping(name, type, keyCode, category);
         this.onPress = onPress;
@@ -38,8 +33,7 @@ public class KeyHolder {
      * Same as {@link this#KeyHolder(String, int, String, InputConstants.Type, boolean, Runnable)}
      * but Type is of {@link InputConstants.Type}'s KEYSYM
      */
-    public KeyHolder(
-            String name, int keyCode, String category, boolean firstPress, Runnable onPress) {
+    public KeyHolder(String name, int keyCode, String category, boolean firstPress, Runnable onPress) {
         this(name, keyCode, category, InputConstants.Type.KEYSYM, firstPress, onPress);
     }
 

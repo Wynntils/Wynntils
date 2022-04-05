@@ -9,7 +9,9 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.objects.items.ItemTier;
 import com.wynntils.wc.objects.items.ItemType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemGuessProfile {
 
@@ -32,8 +34,7 @@ public class ItemGuessProfile {
 
         @Override
         public HashMap<String, ItemGuessProfile> deserialize(
-                JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
+                JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
             HashMap<String, ItemGuessProfile> hashMap = new HashMap<>();
             for (Map.Entry<String, JsonElement> itemGuesses : jsonObject.entrySet()) {

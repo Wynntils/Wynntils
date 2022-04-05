@@ -98,21 +98,14 @@ public class WebManager {
         boolean accountSetup = account.login();
 
         if (!accountSetup) {
-            MutableComponent failed =
-                    new TextComponent(
-                                    "Welps! Trying to connect and set up the Wynntils Account with"
-                                        + " your data has failed. Most notably, configs will not be"
-                                        + " loaded. To try this action again, run ")
-                            .withStyle(ChatFormatting.GREEN);
-            failed.append(
-                    new TextComponent("/wynntils reload")
-                            .withStyle(
-                                    Style.EMPTY
-                                            .withColor(ChatFormatting.AQUA)
-                                            .withClickEvent(
-                                                    new ClickEvent(
-                                                            ClickEvent.Action.RUN_COMMAND,
-                                                            "/wynntils reload"))));
+            MutableComponent failed = new TextComponent(
+                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
+                                    + "Most notably, configs will not be loaded. To try this action again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(new TextComponent("/wynntils reload")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
 
             McUtils.sendMessageToClient(failed);
         }
@@ -125,31 +118,23 @@ public class WebManager {
     public static boolean tryLoadTerritories(RequestHandler handler) {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         String url = apiUrls.get("Athena") + "/cache/get/territoryList";
-        handler.addRequest(
-                new RequestBuilder(url, "territory")
-                        .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
-                        .handleJsonObject(
-                                json -> {
-                                    if (!json.has("territories")) return false;
+        handler.addRequest(new RequestBuilder(url, "territory")
+                .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
+                .handleJsonObject(json -> {
+                    if (!json.has("territories")) return false;
 
-                                    Type type =
-                                            new TypeToken<
-                                                    HashMap<
-                                                            String,
-                                                            TerritoryProfile>>() {}.getType();
+                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
 
-                                    GsonBuilder builder = new GsonBuilder();
-                                    builder.registerTypeHierarchyAdapter(
-                                            TerritoryProfile.class,
-                                            new TerritoryProfile.TerritoryDeserializer());
-                                    Gson gson = builder.create();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeHierarchyAdapter(
+                            TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
+                    Gson gson = builder.create();
 
-                                    territories.clear();
-                                    territories.putAll(
-                                            gson.fromJson(json.get("territories"), type));
-                                    return true;
-                                })
-                        .build());
+                    territories.clear();
+                    territories.putAll(gson.fromJson(json.get("territories"), type));
+                    return true;
+                })
+                .build());
 
         handler.dispatch(false);
 
@@ -174,30 +159,23 @@ public class WebManager {
 
     public static boolean tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
-        handler.addRequest(
-                new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
-                        .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
-                        .handleJsonObject(
-                                json -> {
-                                    Type type =
-                                            new TypeToken<
-                                                    HashMap<
-                                                            String,
-                                                            ItemGuessProfile>>() {}.getType();
+        handler.addRequest(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+                .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
+                .handleJsonObject(json -> {
+                    Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
-                                    GsonBuilder gsonBuilder = new GsonBuilder();
-                                    gsonBuilder.registerTypeHierarchyAdapter(
-                                            HashMap.class,
-                                            new ItemGuessProfile.ItemGuessDeserializer());
-                                    Gson gson = gsonBuilder.create();
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeHierarchyAdapter(
+                            HashMap.class, new ItemGuessProfile.ItemGuessDeserializer());
+                    Gson gson = gsonBuilder.create();
 
-                                    itemGuesses = new HashMap<>();
-                                    itemGuesses.putAll(gson.fromJson(json, type));
+                    itemGuesses = new HashMap<>();
+                    itemGuesses.putAll(gson.fromJson(json, type));
 
-                                    return true;
-                                })
-                        .useCacheAsBackup()
-                        .build());
+                    return true;
+                })
+                .useCacheAsBackup()
+                .build());
 
         handler.dispatch(false);
 
@@ -207,65 +185,39 @@ public class WebManager {
 
     public static boolean tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
-        handler.addRequest(
-                new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
-                        .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
-                        .handleJsonObject(
-                                json -> {
-                                    translatedReferences =
-                                            gson.fromJson(
-                                                    json.getAsJsonObject("translatedReferences"),
-                                                    HashMap.class);
-                                    internalIdentifications =
-                                            gson.fromJson(
-                                                    json.getAsJsonObject("internalIdentifications"),
-                                                    HashMap.class);
+        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
+                .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
+                .handleJsonObject(json -> {
+                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), HashMap.class);
+                    internalIdentifications =
+                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), HashMap.class);
 
-                                    Type majorIdsType =
-                                            new TypeToken<
-                                                    HashMap<
-                                                            String,
-                                                            MajorIdentification>>() {}.getType();
-                                    majorIds =
-                                            gson.fromJson(
-                                                    json.getAsJsonObject("majorIdentifications"),
-                                                    majorIdsType);
-                                    Type materialTypesType =
-                                            new TypeToken<
-                                                    HashMap<ItemType, String[]>>() {}.getType();
-                                    materialTypes =
-                                            gson.fromJson(
-                                                    json.getAsJsonObject("materialTypes"),
-                                                    materialTypesType);
+                    Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
+                    majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+                    Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
+                    materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
-                                    IdentificationOrderer.INSTANCE =
-                                            gson.fromJson(
-                                                    json.getAsJsonObject("identificationOrder"),
-                                                    IdentificationOrderer.class);
+                    IdentificationOrderer.INSTANCE =
+                            gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-                                    ItemProfile[] gItems =
-                                            gson.fromJson(
-                                                    json.getAsJsonArray("items"),
-                                                    ItemProfile[].class);
+                    ItemProfile[] gItems = gson.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
 
-                                    HashMap<String, ItemProfile> citems = new HashMap<>();
-                                    for (ItemProfile prof : gItems) {
-                                        prof.getStatuses()
-                                                .values()
-                                                .forEach(IdentificationContainer::calculateMinMax);
-                                        prof.addMajorIds(majorIds);
-                                        citems.put(prof.getDisplayName(), prof);
-                                    }
+                    HashMap<String, ItemProfile> citems = new HashMap<>();
+                    for (ItemProfile prof : gItems) {
+                        prof.getStatuses().values().forEach(IdentificationContainer::calculateMinMax);
+                        prof.addMajorIds(majorIds);
+                        citems.put(prof.getDisplayName(), prof);
+                    }
 
-                                    citems.values().forEach(ItemProfile::registerIdTypes);
+                    citems.values().forEach(ItemProfile::registerIdTypes);
 
-                                    directItems = citems.values();
-                                    items = citems;
+                    directItems = citems.values();
+                    items = citems;
 
-                                    return true;
-                                })
-                        .useCacheAsBackup()
-                        .build());
+                    return true;
+                })
+                .useCacheAsBackup()
+                .build());
 
         handler.dispatch(false);
 
@@ -274,18 +226,16 @@ public class WebManager {
     }
 
     public static boolean tryReloadApiUrls(boolean async) {
-        handler.addRequest(
-                new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
-                        .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
-                        .handleWebReader(
-                                reader -> {
-                                    apiUrls = reader;
-                                    if (!setup) {
-                                        setup = true;
-                                    }
-                                    return true;
-                                })
-                        .build());
+        handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
+                .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
+                .handleWebReader(reader -> {
+                    apiUrls = reader;
+                    if (!setup) {
+                        setup = true;
+                    }
+                    return true;
+                })
+                .build());
 
         handler.dispatch(async);
 
@@ -304,10 +254,9 @@ public class WebManager {
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
 
-        JsonObject main =
-                new JsonParser()
-                        .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
-                        .getAsJsonObject();
+        JsonObject main = new JsonParser()
+                .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
+                .getAsJsonObject();
         if (!main.has("message")) {
             main.remove("request");
 
@@ -323,10 +272,8 @@ public class WebManager {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty(
                 "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316"
-                        + " Firefox/3.6.2");
-        if (apiUrls != null && apiUrls.hasKey("WynnApiKey"))
-            st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316" + " Firefox/3.6.2");
+        if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 

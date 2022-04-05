@@ -20,9 +20,7 @@ public class IdentificationOrderer {
     transient Map<Integer, Integer> organizedGroups = null;
 
     public IdentificationOrderer(
-            Map<String, Integer> idOrders,
-            ArrayList<String> groupRanges,
-            ArrayList<String> inverted) {}
+            Map<String, Integer> idOrders, ArrayList<String> groupRanges, ArrayList<String> inverted) {}
 
     /**
      * @param id the identification "short" name. Ex: rawMainAttackNeutralDamage
@@ -62,22 +60,18 @@ public class IdentificationOrderer {
         if (holder.isEmpty()) return result;
 
         // order based on the priority first
-        List<Map.Entry<String, StringTag>> ordered =
-                holder.entrySet().stream()
-                        .sorted(Comparator.comparingInt(c -> getOrder(c.getKey())))
-                        .toList();
+        List<Map.Entry<String, StringTag>> ordered = holder.entrySet().stream()
+                .sorted(Comparator.comparingInt(c -> getOrder(c.getKey())))
+                .toList();
 
         if (groups) {
-            int lastGroup =
-                    getGroup(ordered.get(0).getKey()); // first key group to avoid wrong spaces
+            int lastGroup = getGroup(ordered.get(0).getKey()); // first key group to avoid wrong spaces
             for (Map.Entry<String, StringTag> keys : ordered) {
                 int currentGroup = getGroup(keys.getKey()); // next key group
 
                 if (currentGroup != lastGroup)
-                    result.add(
-                            ItemUtils.toLoreStringTag(
-                                    new TextComponent(
-                                            " "))); // adds a space before if the group is different
+                    result.add(ItemUtils.toLoreStringTag(
+                            new TextComponent(" "))); // adds a space before if the group is different
 
                 result.add(keys.getValue());
                 lastGroup = currentGroup;

@@ -29,48 +29,41 @@ public class ServerCommand extends CommandBase {
         LiteralCommandNode<CommandSourceStack> listNode =
                 Commands.literal("list").executes(this::serverList).build();
 
-        LiteralCommandNode<CommandSourceStack> infoNode =
-                Commands.literal("info")
-                        .then(
-                                Commands.argument("server", StringArgumentType.word())
-                                        .executes(this::serverInfo))
-                        .executes(this::serverInfoHelp)
-                        .build();
+        LiteralCommandNode<CommandSourceStack> infoNode = Commands.literal("info")
+                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .executes(this::serverInfoHelp)
+                .build();
 
-        LiteralCommandNode<CommandSourceStack> node =
-                dispatcher.register(
-                        Commands.literal("server")
-                                .then(listNode)
-                                .then(Commands.literal("ls").redirect(listNode))
-                                .then(Commands.literal("l").redirect(listNode))
-                                .then(infoNode)
-                                .then(Commands.literal("i").redirect(infoNode))
-                                .executes(this::serverHelp));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("server")
+                .then(listNode)
+                .then(Commands.literal("ls").redirect(listNode))
+                .then(Commands.literal("l").redirect(listNode))
+                .then(infoNode)
+                .then(Commands.literal("i").redirect(infoNode))
+                .executes(this::serverHelp));
 
         dispatcher.register(Commands.literal("s").redirect(node));
     }
 
     private int serverInfoHelp(CommandContext<CommandSourceStack> context) {
         context.getSource()
-                .sendFailure(
-                        new TextComponent("Usage: /s i,info <server> | Example: \"/s i WC1\"")
-                                .withStyle(ChatFormatting.RED));
+                .sendFailure(new TextComponent("Usage: /s i,info <server> | Example: \"/s i WC1\"")
+                        .withStyle(ChatFormatting.RED));
         return 1;
     }
 
     private int serverHelp(CommandContext<CommandSourceStack> context) {
-        MutableComponent text =
-                new TextComponent(
-                                """
-                                /s <command> [options]
+        MutableComponent text = new TextComponent(
+                        """
+                /s <command> [options]
 
-                                commands:
-                                l,ls,list | list available servers
-                                i,info | get info about a server
+                commands:
+                l,ls,list | list available servers
+                i,info | get info about a server
 
-                                more detailed help:
-                                /s <command> help""")
-                        .withStyle(ChatFormatting.RED);
+                more detailed help:
+                /s <command> help""")
+                .withStyle(ChatFormatting.RED);
 
         context.getSource().sendSuccess(text, false);
 
@@ -84,8 +77,7 @@ public class ServerCommand extends CommandBase {
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
-                            new TextComponent("Failed to get server data from API.")
-                                    .withStyle(ChatFormatting.RED));
+                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
@@ -100,23 +92,18 @@ public class ServerCommand extends CommandBase {
         }
 
         if (!onlinePlayers.containsKey(server)) {
-            context.getSource()
-                    .sendFailure(
-                            new TextComponent(server + " not found.")
-                                    .withStyle(ChatFormatting.RED));
+            context.getSource().sendFailure(new TextComponent(server + " not found.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
         List<String> players = onlinePlayers.get(server);
-        MutableComponent message =
-                new TextComponent("Online players on " + server + ": " + players.size() + "\n")
-                        .withStyle(ChatFormatting.DARK_AQUA);
+        MutableComponent message = new TextComponent("Online players on " + server + ": " + players.size() + "\n")
+                .withStyle(ChatFormatting.DARK_AQUA);
 
         if (players.size() == 0) {
             message.append(new TextComponent("No players!").withStyle(ChatFormatting.AQUA));
         } else {
-            message.append(
-                    new TextComponent(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
+            message.append(new TextComponent(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
         }
 
         context.getSource().sendSuccess(message, false);
@@ -131,44 +118,32 @@ public class ServerCommand extends CommandBase {
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
-                            new TextComponent("Failed to get server data from API.")
-                                    .withStyle(ChatFormatting.RED));
+                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        MutableComponent message =
-                new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
+        MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
         for (String serverType : WynnUtils.getWynnServerTypes()) {
-            List<String> currentTypeServers =
-                    onlinePlayers.keySet().stream()
-                            .filter(server -> server.startsWith(serverType))
-                            .sorted(
-                                    (o1, o2) -> {
-                                        int number1 =
-                                                Integer.parseInt(o1.substring(serverType.length()));
-                                        int number2 =
-                                                Integer.parseInt(o2.substring(serverType.length()));
+            List<String> currentTypeServers = onlinePlayers.keySet().stream()
+                    .filter(server -> server.startsWith(serverType))
+                    .sorted((o1, o2) -> {
+                        int number1 = Integer.parseInt(o1.substring(serverType.length()));
+                        int number2 = Integer.parseInt(o2.substring(serverType.length()));
 
-                                        return number1 - number2;
-                                    })
-                            .toList();
+                        return number1 - number2;
+                    })
+                    .toList();
 
             if (currentTypeServers.isEmpty()) continue;
 
             message.append("\n");
 
-            message.append(
-                    new TextComponent(
-                                    StringUtils.capitalizeFirst(serverType)
-                                            + " ("
-                                            + currentTypeServers.size()
-                                            + "):\n")
-                            .withStyle(ChatFormatting.GOLD));
+            message.append(new TextComponent(
+                            StringUtils.capitalizeFirst(serverType) + " (" + currentTypeServers.size() + "):\n")
+                    .withStyle(ChatFormatting.GOLD));
 
-            message.append(
-                    new TextComponent(String.join(", ", currentTypeServers))
-                            .withStyle(ChatFormatting.AQUA));
+            message.append(new TextComponent(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
         }
 
         context.getSource().sendSuccess(message, false);

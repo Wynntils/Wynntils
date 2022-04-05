@@ -19,8 +19,7 @@ public class CompassManager {
     public static void setCompassLocation(Location compassLocation) {
         CompassManager.compassLocation = compassLocation;
 
-        if (McUtils.mc().level != null)
-            McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+        if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
     }
 
     public static void reset() {

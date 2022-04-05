@@ -43,8 +43,7 @@ public class ItemUtils {
         if (item.isEmpty()) return new ListTag();
         CompoundTag display = item.getTagElement("display");
 
-        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore"))
-            return new ListTag();
+        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore")) return new ListTag();
         Tag loreBase = display.get("Lore");
 
         if (loreBase.getType() != ListTag.TYPE) return new ListTag();
@@ -56,8 +55,7 @@ public class ItemUtils {
         if (item.isEmpty()) return null;
         CompoundTag display = item.getTagElement("display");
 
-        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore"))
-            return null;
+        if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore")) return null;
         Tag loreBase = display.get("Lore");
 
         if (loreBase.getType() != ListTag.TYPE) return null;
