@@ -15,11 +15,15 @@ import com.wynntils.mc.utils.McUtils;
 import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.utils.rendering.RenderUtils;
+import com.wynntils.utils.rendering.colors.CommonColors;
+import com.wynntils.utils.rendering.colors.CustomColor;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BankOverlay extends Overlay {
@@ -28,7 +32,7 @@ public class BankOverlay extends Overlay {
     private static final Pattern PAGE_CUSTOM_NAME_PATTERN =
             Pattern.compile("\\[Pg\\. ([0-9]*)\\] ([a-z_A-Z0-9 ]+)");
 
-    private Screen matchingScreen = null;
+    private ContainerScreen matchingScreen = null;
 
     public BankOverlay() {
         super(0, 0, true, OverlayGrowFrom.CENTER, OverlayGrowFrom.CENTER);
@@ -87,13 +91,17 @@ public class BankOverlay extends Overlay {
     }
 
     @Override
+    @SubscribeEvent
     public void render(RenderEvent.Pre e) {
         if (matchingScreen == null || matchingScreen != McUtils.mc().screen) return;
+
+        Slot slot = matchingScreen.getMenu().slots.get(0);
 
         Reference.LOGGER.info("Log pre bank render");
     }
 
     @Override
+    @SubscribeEvent
     public void render(RenderEvent.Post e) {
         if (matchingScreen == null || matchingScreen != McUtils.mc().screen) return;
 
