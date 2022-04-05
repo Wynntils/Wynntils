@@ -16,12 +16,15 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.scores.Team;
 
 public class KeyBindTestFeature extends DebugFeature {
-    public String getName() {
-        return "Keybind Test Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("featureDebug.wynntils.keyBindTest.name");
     }
 
     private final List<KeyHolder> keybinds = new ArrayList<>();

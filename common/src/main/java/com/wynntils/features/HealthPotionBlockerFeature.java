@@ -16,15 +16,20 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
+@FeatureInfo(
+        stability = Stability.STABLE,
+        gameplay = GameplayImpact.MEDIUM,
+        performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends Feature {
-    public String getName() {
-        return "Health Potion Blocker Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.potionBlocker.name");
     }
 
     @Override
@@ -51,7 +56,9 @@ public class HealthPotionBlockerFeature extends Feature {
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);
-            McUtils.sendMessageToClient(new TextComponent(ChatFormatting.DARK_RED + "You are already at full health!"));
+            McUtils.sendMessageToClient(
+                    new TranslatableComponent("feature.wynntils.potionBlocker.healthFull")
+                            .withStyle(ChatFormatting.RED));
         }
     }
 }
