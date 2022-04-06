@@ -34,14 +34,16 @@ public abstract class ScreenMixin {
     @Shadow
     private List<Widget> renderables;
 
+    // Making this public is required for the mixin, use this with caution anywhere else
     public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {
-        renderables.add((Widget) widget);
+        renderables.add(widget);
         return addWidget(widget);
     }
 
+    // Making this public is required for the mixin, use this with caution anywhere else
     public <T extends GuiEventListener & NarratableEntry> T addWidget(T listener) {
         children.add(listener);
-        narratables.add((NarratableEntry) listener);
+        narratables.add(listener);
         return listener;
     }
 
