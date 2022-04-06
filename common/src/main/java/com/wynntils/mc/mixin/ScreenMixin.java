@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ScreenMixin {
     @Final
     @Shadow
+
     private List<GuiEventListener> children;
 
     @Final
