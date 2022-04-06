@@ -92,7 +92,7 @@ public class IdentificationContainer {
      *     versa with `increase`. Likewise, the stars are accounted as inverted
      * @return A {@link ReidentificationChances} of the result (All from 0 to 1)
      */
-    public strictfp ReidentificationChances getChances(int currentValue, boolean isInverted, int starCount) {
+    public ReidentificationChances getChances(int currentValue, boolean isInverted, int starCount) {
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
         // that some items that have had its stats shifted from positive to negative to
         // break the bounds
@@ -174,7 +174,7 @@ public class IdentificationContainer {
     }
 
     /** @return The chance for this identification to become perfect (From 0 to 1) */
-    public strictfp double getPerfectChance() {
+    public double getPerfectChance() {
         return 1 / (baseValue > 0 ? 101d : 61d);
     }
 
