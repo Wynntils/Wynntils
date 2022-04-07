@@ -11,7 +11,6 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,11 +35,11 @@ public abstract class BossHealthOverlayMixin {
 
         packet.dispatch(new ClientboundBossEventPacket.Handler() {
             public void add(
-                    @NotNull UUID id,
-                    @NotNull Component name,
+                    UUID id,
+                    Component name,
                     float progress,
-                    BossEvent.@NotNull BossBarColor color,
-                    BossEvent.@NotNull BossBarOverlay overlay,
+                    BossEvent.BossBarColor color,
+                    BossEvent.BossBarOverlay overlay,
                     boolean darkenScreen,
                     boolean playMusic,
                     boolean createWorldFog) {
@@ -50,24 +49,24 @@ public abstract class BossHealthOverlayMixin {
                                 id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog));
             }
 
-            public void remove(@NotNull UUID id) {
+            public void remove(UUID id) {
                 bossEvents.remove(id);
             }
 
-            public void updateProgress(@NotNull UUID id, float progress) {
+            public void updateProgress(UUID id, float progress) {
                 if (!bossEvents.containsKey(id)) return;
                 (bossEvents.get(id)).setProgress(progress);
             }
 
-            public void updateName(@NotNull UUID id, @NotNull Component name) {
+            public void updateName(UUID id, Component name) {
                 if (!bossEvents.containsKey(id)) return;
                 (bossEvents.get(id)).setName(name);
             }
 
             public void updateStyle(
-                    @NotNull UUID id,
-                    BossEvent.@NotNull BossBarColor color,
-                    BossEvent.@NotNull BossBarOverlay overlay) {
+                    UUID id,
+                    BossEvent.BossBarColor color,
+                    BossEvent.BossBarOverlay overlay) {
                 if (!bossEvents.containsKey(id)) return;
                 LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setColor(color);
@@ -75,7 +74,7 @@ public abstract class BossHealthOverlayMixin {
             }
 
             public void updateProperties(
-                    @NotNull UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
+                    UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
                 if (!bossEvents.containsKey(id)) return;
                 LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setDarkenScreen(darkenScreen);
