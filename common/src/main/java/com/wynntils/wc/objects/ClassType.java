@@ -31,8 +31,7 @@ public enum ClassType {
 
     public static ClassType fromName(String className) {
         for (ClassType type : values()) {
-            if (className.equalsIgnoreCase(type.name)
-                    || className.equalsIgnoreCase(type.reskinnedName)) {
+            if (className.equalsIgnoreCase(type.name) || className.equalsIgnoreCase(type.reskinnedName)) {
                 return type;
             }
         }

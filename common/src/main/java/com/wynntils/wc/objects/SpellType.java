@@ -36,19 +36,18 @@ public enum SpellType {
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", "4th Spell", 0, 0);
 
-    static final int[][] MANA_REDUCTION_LEVELS =
-            new int[][] {
-                {},
-                {68},
-                {41, 105},
-                {29, 68, 129},
-                {23, 51, 89, 147},
-                {19, 41, 68, 105},
-                {16, 34, 55, 82, 118},
-                {14, 29, 47, 68, 94, 129},
-                {12, 26, 41, 58, 79, 105, 139},
-                {11, 23, 36, 51, 68, 89, 114, 147}
-            };
+    static final int[][] MANA_REDUCTION_LEVELS = new int[][] {
+        {},
+        {68},
+        {41, 105},
+        {29, 68, 129},
+        {23, 51, 89, 147},
+        {19, 41, 68, 105},
+        {16, 34, 55, 82, 118},
+        {14, 29, 47, 68, 94, 129},
+        {12, 26, 41, 58, 79, 105, 139},
+        {11, 23, 36, 51, 68, 89, 114, 147}
+    };
 
     private ClassType classType;
     private int spellNumber;
@@ -138,8 +137,7 @@ public enum SpellType {
 
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
-            if (name.matches("^" + spellType.name + "\\b.*")
-                    || name.matches("^" + spellType.reskinnedName + "\\b.*")) {
+            if (name.matches("^" + spellType.name + "\\b.*") || name.matches("^" + spellType.reskinnedName + "\\b.*")) {
                 return spellType;
             }
         }

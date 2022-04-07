@@ -28,36 +28,35 @@ public class PacketDebuggerFeature extends DebugFeature {
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */
-    private static final List<Class<? extends Packet<?>>> IGNORE_LIST =
-            Arrays.asList(
-                    // General
-                    ServerboundKeepAlivePacket.class,
-                    ClientboundKeepAlivePacket.class,
-                    ClientboundSetTimePacket.class,
-                    ClientboundUpdateAdvancementsPacket.class,
-                    ClientboundUpdateAttributesPacket.class,
-                    ClientboundLevelParticlesPacket.class,
-                    ClientboundPlayerInfoPacket.class,
-                    ClientboundSetEquipmentPacket.class,
-                    // Chunks
-                    ClientboundForgetLevelChunkPacket.class,
-                    ClientboundLevelChunkPacket.class,
-                    ClientboundLightUpdatePacket.class,
-                    ClientboundSetChunkCacheCenterPacket.class,
-                    // Entities
-                    ClientboundAddEntityPacket.class,
-                    ClientboundAddMobPacket.class,
-                    ClientboundMoveEntityPacket.Pos.class,
-                    ClientboundMoveEntityPacket.PosRot.class,
-                    ClientboundMoveEntityPacket.Rot.class,
-                    ClientboundRotateHeadPacket.class,
-                    ClientboundSetEntityDataPacket.class,
-                    ClientboundSetEntityMotionPacket.class,
-                    ClientboundTeleportEntityPacket.class,
-                    // Client movement
-                    ServerboundMovePlayerPacket.Pos.class,
-                    ServerboundMovePlayerPacket.PosRot.class,
-                    ServerboundMovePlayerPacket.Rot.class);
+    private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
+            // General
+            ServerboundKeepAlivePacket.class,
+            ClientboundKeepAlivePacket.class,
+            ClientboundSetTimePacket.class,
+            ClientboundUpdateAdvancementsPacket.class,
+            ClientboundUpdateAttributesPacket.class,
+            ClientboundLevelParticlesPacket.class,
+            ClientboundPlayerInfoPacket.class,
+            ClientboundSetEquipmentPacket.class,
+            // Chunks
+            ClientboundForgetLevelChunkPacket.class,
+            ClientboundLevelChunkPacket.class,
+            ClientboundLightUpdatePacket.class,
+            ClientboundSetChunkCacheCenterPacket.class,
+            // Entities
+            ClientboundAddEntityPacket.class,
+            ClientboundAddMobPacket.class,
+            ClientboundMoveEntityPacket.Pos.class,
+            ClientboundMoveEntityPacket.PosRot.class,
+            ClientboundMoveEntityPacket.Rot.class,
+            ClientboundRotateHeadPacket.class,
+            ClientboundSetEntityDataPacket.class,
+            ClientboundSetEntityMotionPacket.class,
+            ClientboundTeleportEntityPacket.class,
+            // Client movement
+            ServerboundMovePlayerPacket.Pos.class,
+            ServerboundMovePlayerPacket.PosRot.class,
+            ServerboundMovePlayerPacket.Rot.class);
 
     @Override
     protected boolean onEnable() {

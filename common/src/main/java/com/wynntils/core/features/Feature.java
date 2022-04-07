@@ -54,8 +54,7 @@ public abstract class Feature {
 
     /** Called to activate a feature */
     public final void enable() {
-        if (enabled)
-            throw new IllegalStateException("Feature can not be enabled as it already is enabled");
+        if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
         if (!onEnable()) {
             return;
@@ -66,9 +65,7 @@ public abstract class Feature {
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (!enabled)
-            throw new IllegalStateException(
-                    "Feature can not be disabled as it already is disabled");
+        if (!enabled) throw new IllegalStateException("Feature can not be disabled as it already is disabled");
 
         onDisable();
 
@@ -98,7 +95,6 @@ public abstract class Feature {
     }
 
     public class WebLoadedCondition extends Condition {
-
         @Override
         public void init() {
             if (WebManager.isSetup()) {

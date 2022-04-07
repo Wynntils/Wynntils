@@ -33,14 +33,13 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /** Sets the writer to one that just writes the given bytes */
     public PostRequestBuilder postBytes(byte[] data, String contentType) {
-        return setWriter(
-                conn -> {
-                    conn.addRequestProperty("Content-Type", contentType);
-                    conn.addRequestProperty("Content-Length", Integer.toString(data.length));
-                    OutputStream o = conn.getOutputStream();
-                    o.write(data);
-                    o.flush();
-                });
+        return setWriter(conn -> {
+            conn.addRequestProperty("Content-Type", contentType);
+            conn.addRequestProperty("Content-Length", Integer.toString(data.length));
+            OutputStream o = conn.getOutputStream();
+            o.write(data);
+            o.flush();
+        });
     }
 
     /** Sets the write to a json string from a json element */
@@ -53,36 +52,34 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /** Sets the writer to one that writes multipart/form-data. */
     public PostRequestBuilder postMultipart(Iterable<? extends IMultipartFormPart> parts) {
-        return setWriter(
-                conn -> {
-                    String boundary = "----" + UUID.randomUUID().toString();
-                    conn.addRequestProperty(
-                            "Content-Type", "multipart/form-data; boundary=" + boundary);
-                    boundary = "--" + boundary;
-                    byte[] boundaryBytes = ("\r\n" + boundary).getBytes(StandardCharsets.US_ASCII);
-                    int length = 0;
-                    int count = 0;
-                    for (IMultipartFormPart f : parts) {
-                        length += f.getLength();
-                        ++count;
-                    }
+        return setWriter(conn -> {
+            String boundary = "----" + UUID.randomUUID().toString();
+            conn.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            boundary = "--" + boundary;
+            byte[] boundaryBytes = ("\r\n" + boundary).getBytes(StandardCharsets.US_ASCII);
+            int length = 0;
+            int count = 0;
+            for (IMultipartFormPart f : parts) {
+                length += f.getLength();
+                ++count;
+            }
 
-                    int totalLength =
-                            // Boundary above and below every file (Except -4 the first and last
-                            // \r\n, and +2 for "--" at the end)
-                            (boundaryBytes.length + 2) * (count + 1) - 2 + length;
-                    conn.addRequestProperty("Content-Length", Integer.toString(totalLength));
+            int totalLength =
+                    // Boundary above and below every file (Except -4 the first and last
+                    // \r\n, and +2 for "--" at the end)
+                    (boundaryBytes.length + 2) * (count + 1) - 2 + length;
+            conn.addRequestProperty("Content-Length", Integer.toString(totalLength));
 
-                    OutputStream o = conn.getOutputStream();
-                    o.write(boundary.getBytes(StandardCharsets.US_ASCII));
-                    for (IMultipartFormPart f : parts) {
-                        o.write(newline);
-                        f.write(o);
-                        o.write(boundaryBytes);
-                    }
-                    o.write(multipartEnd);
-                    o.flush();
-                });
+            OutputStream o = conn.getOutputStream();
+            o.write(boundary.getBytes(StandardCharsets.US_ASCII));
+            for (IMultipartFormPart f : parts) {
+                o.write(newline);
+                f.write(o);
+                o.write(boundaryBytes);
+            }
+            o.write(multipartEnd);
+            o.flush();
+        });
     }
 
     /**
@@ -93,11 +90,10 @@ public class PostRequestBuilder extends RequestBuilder {
      */
     public PostRequestBuilder setBefore(ThrowingConsumer<HttpURLConnection, IOException> writer) {
         ThrowingConsumer<HttpURLConnection, IOException> previous = this.writer;
-        this.writer =
-                conn -> {
-                    writer.accept(conn);
-                    previous.accept(conn);
-                };
+        this.writer = conn -> {
+            writer.accept(conn);
+            previous.accept(conn);
+        };
         return this;
     }
 

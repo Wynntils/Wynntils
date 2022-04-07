@@ -23,8 +23,7 @@ public abstract class ItemStackMixin {
                             target =
                                     "Lnet/minecraft/world/item/ItemStack;getHoverName()Lnet/minecraft/network/chat/Component;"))
     public Component redirectGetHoveredName(ItemStack instance) {
-        ItemToolTipHoveredNameEvent event =
-                new ItemToolTipHoveredNameEvent(instance.getHoverName(), instance);
+        ItemToolTipHoveredNameEvent event = new ItemToolTipHoveredNameEvent(instance.getHoverName(), instance);
         WynntilsMod.getEventBus().post(event);
         return event.getHoveredName();
     }

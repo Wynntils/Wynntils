@@ -18,8 +18,7 @@ public abstract class ScoreboardMixin {
     public abstract PlayerTeam getPlayersTeam(String username);
 
     @Inject(
-            method =
-                    "removePlayerFromTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)V",
+            method = "removePlayerFromTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)V",
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {

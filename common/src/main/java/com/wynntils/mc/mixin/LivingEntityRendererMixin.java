@@ -15,14 +15,14 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
     @Shadow
     @Nullable
-    protected abstract RenderType getRenderType(
-            LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
+    protected abstract RenderType getRenderType(LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
 
     // Can't find an impl without saving args
     float overrideTranslucence;
@@ -36,11 +36,7 @@ public abstract class LivingEntityRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
     public RenderType onTranslucentCheck(
-            LivingEntityRenderer<?, ?> instance,
-            LivingEntity livingEntity,
-            boolean bl,
-            boolean bl2,
-            boolean bl3) {
+            LivingEntityRenderer<?, ?> instance, LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3) {
         LivingEntityRenderTranslucentCheckEvent event =
                 new LivingEntityRenderTranslucentCheckEvent(bl2, livingEntity, bl2 ? 0.15f : 1f);
         WynntilsMod.getEventBus().post(event);
@@ -67,7 +63,6 @@ public abstract class LivingEntityRendererMixin {
             float g,
             float b,
             float a) {
-        instance.renderToBuffer(
-                poseStack, consumer, packedLight, packetOverlay, r, g, b, overrideTranslucence);
+        instance.renderToBuffer(poseStack, consumer, packedLight, packetOverlay, r, g, b, overrideTranslucence);
     }
 }

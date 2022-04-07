@@ -13,28 +13,26 @@ import net.minecraft.nbt.*;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
-    public static final TagType<StringTag> TYPE =
-            new TagType<>() {
-                public StringTag load(DataInput input, int depth, NbtAccounter accounter)
-                        throws IOException {
-                    accounter.accountBits(288L);
-                    String string = input.readUTF();
-                    accounter.accountBits(16L * string.length());
-                    return StringTag.valueOf(string);
-                }
+    public static final TagType<StringTag> TYPE = new TagType<>() {
+        public StringTag load(DataInput input, int depth, NbtAccounter accounter) throws IOException {
+            accounter.accountBits(288L);
+            String string = input.readUTF();
+            accounter.accountBits(16L * string.length());
+            return StringTag.valueOf(string);
+        }
 
-                public String getName() {
-                    return "STRING";
-                }
+        public String getName() {
+            return "STRING";
+        }
 
-                public String getPrettyName() {
-                    return "TAG_String";
-                }
+        public String getPrettyName() {
+            return "TAG_String";
+        }
 
-                public boolean isValue() {
-                    return true;
-                }
-            };
+        public boolean isValue() {
+            return true;
+        }
+    };
     private static final StringTag EMPTY = StringTag.valueOf("");
     private final Supplier<String> data;
 

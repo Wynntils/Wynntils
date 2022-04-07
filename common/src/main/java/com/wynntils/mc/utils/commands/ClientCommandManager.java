@@ -68,38 +68,27 @@ public class ClientCommandManager {
             sendError(new TextComponent(e.getRawMessage().getString()));
             if (e.getInput() != null && e.getCursor() >= 0) {
                 int cursor = Math.min(e.getCursor(), e.getInput().length());
-                MutableComponent text =
-                        new TextComponent("")
-                                .withStyle(
-                                        Style.EMPTY
-                                                .withColor(ChatFormatting.GRAY)
-                                                .withClickEvent(
-                                                        new ClickEvent(
-                                                                ClickEvent.Action.SUGGEST_COMMAND,
-                                                                command)));
+                MutableComponent text = new TextComponent("")
+                        .withStyle(Style.EMPTY
+                                .withColor(ChatFormatting.GRAY)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command)));
                 if (cursor > 10) text.append("...");
 
                 text.append(e.getInput().substring(Math.max(0, cursor - 10), cursor));
                 if (cursor < e.getInput().length()) {
-                    text.append(
-                            new TextComponent(e.getInput().substring(cursor))
-                                    .withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE));
+                    text.append(new TextComponent(e.getInput().substring(cursor))
+                            .withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE));
                 }
 
-                text.append(
-                        new TranslatableComponent("command.context.here")
-                                .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+                text.append(new TranslatableComponent("command.context.here")
+                        .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
                 ClientCommandManager.sendError(text);
             }
         } catch (Exception e) {
             TextComponent error =
-                    new TextComponent(
-                            e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            ClientCommandManager.sendError(
-                    new TranslatableComponent("command.failed")
-                            .withStyle(
-                                    Style.EMPTY.withHoverEvent(
-                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
+                    new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
+            ClientCommandManager.sendError(new TranslatableComponent("command.failed")
+                    .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
             e.printStackTrace();
         }
 

@@ -21,48 +21,32 @@ public class TokenCommand extends CommandBase {
 
     private int token(CommandContext<CommandSourceStack> context) {
         if (WebManager.getAccount() != null && WebManager.getAccount().getToken() != null) {
-            MutableComponent text =
-                    new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
+            MutableComponent text = new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
 
-            MutableComponent token =
-                    new TextComponent(WebManager.getAccount().getToken())
-                            .withStyle(
-                                    Style.EMPTY
-                                            .withHoverEvent(
-                                                    new HoverEvent(
-                                                            HoverEvent.Action.SHOW_TEXT,
-                                                            new TextComponent(
-                                                                    "Click me to register an"
-                                                                            + " account.")))
-                                            .withClickEvent(
-                                                    (new ClickEvent(
-                                                            ClickEvent.Action.OPEN_URL,
-                                                            "https://account.wynntils.com/register.php?token="
-                                                                    + WebManager.getAccount()
-                                                                            .getToken())))
-                                            .withColor(ChatFormatting.DARK_AQUA)
-                                            .withUnderlined(true));
+            MutableComponent token = new TextComponent(WebManager.getAccount().getToken())
+                    .withStyle(Style.EMPTY
+                            .withHoverEvent(new HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT,
+                                    new TextComponent("Click me to register an" + " account.")))
+                            .withClickEvent((new ClickEvent(
+                                    ClickEvent.Action.OPEN_URL,
+                                    "https://account.wynntils.com/register.php?token="
+                                            + WebManager.getAccount().getToken())))
+                            .withColor(ChatFormatting.DARK_AQUA)
+                            .withUnderlined(true));
 
             text.append(token);
 
             context.getSource().sendSuccess(text, false);
         } else {
 
-            MutableComponent failed =
-                    new TextComponent(
-                                    "Either setting up your Wynntils account or accessing the token"
-                                        + " failed. To try to set up the Wynntils account again,"
-                                        + " run ")
-                            .withStyle(ChatFormatting.GREEN);
-            failed.append(
-                    new TextComponent("/wynntils reload")
-                            .withStyle(
-                                    Style.EMPTY
-                                            .withColor(ChatFormatting.AQUA)
-                                            .withClickEvent(
-                                                    new ClickEvent(
-                                                            ClickEvent.Action.RUN_COMMAND,
-                                                            "/wynntils reload"))));
+            MutableComponent failed = new TextComponent(
+                            "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(new TextComponent("/wynntils reload")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
             context.getSource().sendFailure(failed);
         }
 

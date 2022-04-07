@@ -63,9 +63,7 @@ public class Request {
 
     public HttpURLConnection establishConnection() throws IOException {
         HttpURLConnection st = (HttpURLConnection) new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "WynntilsClient v" + Reference.VERSION + "/B" + Reference.BUILD_NUMBER);
+        st.setRequestProperty("User-Agent", "WynntilsClient v" + Reference.VERSION + "/B" + Reference.BUILD_NUMBER);
         if (!headers.isEmpty()) headers.forEach(st::addRequestProperty);
 
         st.setConnectTimeout(timeout);

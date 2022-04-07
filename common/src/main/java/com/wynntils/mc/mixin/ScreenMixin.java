@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow
-    protected abstract <T extends GuiEventListener & Widget & NarratableEntry>
-            T addRenderableWidget(T widget);
+    protected abstract <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget);
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
@@ -32,11 +31,9 @@ public abstract class ScreenMixin {
     }
 
     @Inject(
-            method =
-                    "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("HEAD"))
-    private void renderTooltip(
-            PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
+    private void renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
         EventFactory.onItemTooltipRender(poseStack, itemStack, mouseX, mouseY);
     }
 }

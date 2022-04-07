@@ -8,7 +8,10 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.*;
+import com.wynntils.core.webapi.request.PostRequestBuilder;
+import com.wynntils.core.webapi.request.Request;
+import com.wynntils.core.webapi.request.RequestBuilder;
+import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.MD5Verification;
 import java.math.BigInteger;
@@ -22,9 +25,8 @@ import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
 
-    private static final ScheduledExecutorService service =
-            Executors.newSingleThreadScheduledExecutor(
-                    new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
+    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
+            new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
 
     String token;
     boolean ready = false;
@@ -51,29 +53,22 @@ public class WynntilsAccount {
     }
 
     public boolean login() {
-        if (WebManager.getApiUrls() == null || !WebManager.getApiUrls().hasKey("Athena"))
-            return false;
+        if (WebManager.getApiUrls() == null || !WebManager.getApiUrls().hasKey("Athena")) return false;
 
         RequestHandler handler = WebManager.getHandler();
 
         String baseUrl = WebManager.getApiUrls().get("Athena");
-        String[] secretKey =
-                new String[1]; // it's an array for the lambda below be able to set it's value
+        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set it's value
 
         // generating secret key
 
-        Request getPublicKey =
-                new RequestBuilder(baseUrl + "/auth/getPublicKey", "getPublicKey")
-                        .handleJsonObject(
-                                json -> {
-                                    if (!json.has("publicKeyIn")) return false;
-
-                                    secretKey[0] =
-                                            parseAndJoinPublicKey(
-                                                    json.get("publicKeyIn").getAsString());
-                                    return true;
-                                })
-                        .build();
+        Request getPublicKey = new RequestBuilder(baseUrl + "/auth/getPublicKey", "getPublicKey")
+                .handleJsonObject(json -> {
+                    if (!json.has("publicKeyIn")) return false;
+                    secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
+                    return true;
+                })
+                .build();
 
         handler.addAndDispatch(getPublicKey);
 
@@ -84,40 +79,25 @@ public class WynntilsAccount {
         authParams.addProperty("key", secretKey[0]);
         authParams.addProperty("version", "A" + Reference.VERSION + "_" + Reference.BUILD_NUMBER);
 
-        Request responseEncryption =
-                new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
-                        .postJsonElement(authParams)
-                        .handleJsonObject(
-                                json -> {
-                                    if (!json.has("authToken")) return false;
-
-                                    token = json.get("authToken").getAsString();
-
-                                    // md5 hashes
-                                    JsonObject hashes = json.getAsJsonObject("hashes");
-                                    hashes.entrySet()
-                                            .forEach(
-                                                    (k) ->
-                                                            md5Verifications.put(
-                                                                    k.getKey(),
-                                                                    k.getValue().getAsString()));
-
-                                    // configurations
-                                    JsonObject configFiles = json.getAsJsonObject("configFiles");
-                                    configFiles
-                                            .entrySet()
-                                            .forEach(
-                                                    (k) ->
-                                                            encodedConfigs.put(
-                                                                    k.getKey(),
-                                                                    k.getValue().getAsString()));
-
-                                    ready = true;
-
-                                    Reference.LOGGER.info("Successfully connected to Athena!");
-                                    return true;
-                                })
-                        .build();
+        Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
+                .postJsonElement(authParams)
+                .handleJsonObject(json -> {
+                    if (!json.has("authToken")) return false;
+                    token = json.get("authToken").getAsString(); /* md5 hashes*/
+                    JsonObject hashes = json.getAsJsonObject("hashes");
+                    hashes.entrySet()
+                            .forEach((k) -> md5Verifications.put(
+                                    k.getKey(), k.getValue().getAsString())); /* configurations*/
+                    JsonObject configFiles = json.getAsJsonObject("configFiles");
+                    configFiles
+                            .entrySet()
+                            .forEach((k) ->
+                                    encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
+                    ready = true;
+                    Reference.LOGGER.info("Successfully connected to Athena!");
+                    return true;
+                })
+                .build();
 
         handler.addAndDispatch(responseEncryption);
 

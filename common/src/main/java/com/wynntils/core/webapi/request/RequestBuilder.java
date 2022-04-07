@@ -88,8 +88,7 @@ public class RequestBuilder {
         return handleString(handler, StandardCharsets.UTF_8);
     }
 
-    public RequestBuilder handleString(
-            ThrowingBiPredicate<URLConnection, String, IOException> handler) {
+    public RequestBuilder handleString(ThrowingBiPredicate<URLConnection, String, IOException> handler) {
         return handleString(handler, StandardCharsets.UTF_8);
     }
 
@@ -98,8 +97,7 @@ public class RequestBuilder {
         return handleString(s -> handler.test(new JsonParser().parse(s)));
     }
 
-    public RequestBuilder handleJson(
-            ThrowingBiPredicate<URLConnection, JsonElement, IOException> handler) {
+    public RequestBuilder handleJson(ThrowingBiPredicate<URLConnection, JsonElement, IOException> handler) {
         return handleString((conn, s) -> handler.test(conn, new JsonParser().parse(s)));
     }
 
@@ -111,8 +109,7 @@ public class RequestBuilder {
         return handleJson(j -> j.isJsonObject() && handler.test(j.getAsJsonObject()));
     }
 
-    public RequestBuilder handleJsonObject(
-            ThrowingBiPredicate<URLConnection, JsonObject, IOException> handler) {
+    public RequestBuilder handleJsonObject(ThrowingBiPredicate<URLConnection, JsonObject, IOException> handler) {
         return handleJson((conn, j) -> j.isJsonObject() && handler.test(conn, j.getAsJsonObject()));
     }
 
@@ -124,8 +121,7 @@ public class RequestBuilder {
         return handleJson(j -> j.isJsonArray() && handler.test(j.getAsJsonArray()));
     }
 
-    public RequestBuilder handleJsonArray(
-            ThrowingBiPredicate<URLConnection, JsonArray, IOException> handler) {
+    public RequestBuilder handleJsonArray(ThrowingBiPredicate<URLConnection, JsonArray, IOException> handler) {
         return handleJson((conn, j) -> j.isJsonArray() && handler.test(conn, j.getAsJsonArray()));
     }
 
@@ -134,12 +130,11 @@ public class RequestBuilder {
      * WebReader#fromString(String) WebReader}
      */
     public RequestBuilder handleWebReader(Predicate<WebReader> handler) {
-        return handleString(
-                s -> {
-                    WebReader reader = WebReader.fromString(s);
-                    if (reader == null) return false;
-                    return handler.test(reader);
-                });
+        return handleString(s -> {
+            WebReader reader = WebReader.fromString(s);
+            if (reader == null) return false;
+            return handler.test(reader);
+        });
     }
 
     /**
@@ -159,16 +154,15 @@ public class RequestBuilder {
      * web request as normal.
      */
     public RequestBuilder cacheValidator(Predicate<byte[]> validator) {
-        this.cacheValidator =
-                data -> {
-                    try {
-                        return validator.test(data);
-                    } catch (Exception e) {
-                        Reference.LOGGER.warn("Unable to validate cache");
-                        e.printStackTrace();
-                        return false;
-                    }
-                };
+        this.cacheValidator = data -> {
+            try {
+                return validator.test(data);
+            } catch (Exception e) {
+                Reference.LOGGER.warn("Unable to validate cache");
+                e.printStackTrace();
+                return false;
+            }
+        };
         return this;
     }
 
@@ -192,25 +186,19 @@ public class RequestBuilder {
 
     /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside of a thread). */
     public RequestBuilder cacheMD5Validator(Supplier<String> expectedHashSupplier) {
-        return cacheValidator(
-                data -> {
-                    String expectedHash = expectedHashSupplier.get();
-                    if (!MD5Verification.isMd5Digest(expectedHash)) return false;
-                    MD5Verification verification = new MD5Verification(data);
-                    if (verification.getMd5() == null) return false;
-                    boolean passed = verification.equals(expectedHash);
-                    if (!passed) {
-                        // TODO
-                        Reference.LOGGER.warn(
-                                this.id
-                                        + ": MD5 verification failed. Expected: \""
-                                        + expectedHash
-                                        + "\"; Got: \""
-                                        + verification.getMd5()
-                                        + "\"");
-                    }
-                    return passed;
-                });
+        return cacheValidator(data -> {
+            String expectedHash = expectedHashSupplier.get();
+            if (!MD5Verification.isMd5Digest(expectedHash)) return false;
+            MD5Verification verification = new MD5Verification(data);
+            if (verification.getMd5() == null) return false;
+            boolean passed = verification.equals(expectedHash);
+            if (!passed) {
+                // TODO
+                Reference.LOGGER.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""
+                        + verification.getMd5() + "\"");
+            }
+            return passed;
+        });
     }
 
     /** Called whenever a result could not be loaded */

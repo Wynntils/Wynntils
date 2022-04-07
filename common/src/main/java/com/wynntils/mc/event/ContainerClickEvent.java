@@ -16,8 +16,7 @@ public class ContainerClickEvent extends Event {
     private final ClickType clickType;
     private final int buttonNum;
 
-    public ContainerClickEvent(
-            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
+    public ContainerClickEvent(int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
         this.containerId = containerId;
         this.slotNum = slotNum;
         this.itemStack = itemStack;

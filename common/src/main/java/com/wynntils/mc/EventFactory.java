@@ -57,15 +57,8 @@ public class EventFactory {
     }
 
     public static void onInventoryRender(
-            Screen screen,
-            PoseStack poseStack,
-            int mouseX,
-            int mouseY,
-            float partialTicks,
-            Slot hoveredSlot) {
-        post(
-                new InventoryRenderEvent(
-                        screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
+            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+        post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
     public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
@@ -95,8 +88,7 @@ public class EventFactory {
         // TODO: Not implemented yet
     }
 
-    public static void onItemTooltipRender(
-            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+    public static void onItemTooltipRender(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
         post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
     }
 

@@ -95,8 +95,7 @@ public class ItemProfile {
                 parsedAvgDamages.put(
                         DamageType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)),
                         Math.round(
-                                (Integer.parseInt(dmgStr.substring(0, n))
-                                                + Integer.parseInt(dmgStr.substring(n + 1)))
+                                (Integer.parseInt(dmgStr.substring(0, n)) + Integer.parseInt(dmgStr.substring(n + 1)))
                                         / 2f));
             }
         }
@@ -117,8 +116,7 @@ public class ItemProfile {
                 parsedHealth = entry.getValue();
                 continue;
             }
-            parsedDefenses.put(
-                    DamageType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)), entry.getValue());
+            parsedDefenses.put(DamageType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)), entry.getValue());
         }
 
         if (parsedHealth != Integer.MIN_VALUE) return;
@@ -153,10 +151,9 @@ public class ItemProfile {
 
     public String getLore() {
         if (lore != null && !replacedLore) {
-            lore =
-                    lore.replace("\\[", "[")
-                            .replace("\\]", "]")
-                            .replace("[Community Event Winner] ", "[Community Event Winner]\n");
+            lore = lore.replace("\\[", "[")
+                    .replace("\\]", "]")
+                    .replace("[Community Event Winner] ", "[Community Event Winner]\n");
             replacedLore = true;
         }
         return lore;
