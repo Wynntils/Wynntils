@@ -32,7 +32,7 @@ public abstract class BossHealthOverlayMixin {
                             target =
                                     "Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;dispatch(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket$Handler;)V"))
     private void updatePre(ClientboundBossEventPacket packet, ClientboundBossEventPacket.Handler handler) {
-        Map<UUID, LerpingBossEvent> _events = events;
+        Map<UUID, LerpingBossEvent> bossEvents = events;
 
         packet.dispatch(new ClientboundBossEventPacket.Handler() {
             public void add(
@@ -44,40 +44,40 @@ public abstract class BossHealthOverlayMixin {
                     boolean darkenScreen,
                     boolean playMusic,
                     boolean createWorldFog) {
-                _events.put(
+                bossEvents.put(
                         id,
                         new LerpingBossEvent(
                                 id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog));
             }
 
             public void remove(@NotNull UUID id) {
-                _events.remove(id);
+                bossEvents.remove(id);
             }
 
             public void updateProgress(@NotNull UUID id, float progress) {
-                if (!_events.containsKey(id)) return;
-                (_events.get(id)).setProgress(progress);
+                if (!bossEvents.containsKey(id)) return;
+                (bossEvents.get(id)).setProgress(progress);
             }
 
             public void updateName(@NotNull UUID id, @NotNull Component name) {
-                if (!_events.containsKey(id)) return;
-                (_events.get(id)).setName(name);
+                if (!bossEvents.containsKey(id)) return;
+                (bossEvents.get(id)).setName(name);
             }
 
             public void updateStyle(
                     @NotNull UUID id,
                     BossEvent.@NotNull BossBarColor color,
                     BossEvent.@NotNull BossBarOverlay overlay) {
-                if (!_events.containsKey(id)) return;
-                LerpingBossEvent lerpingBossEvent = _events.get(id);
+                if (!bossEvents.containsKey(id)) return;
+                LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setColor(color);
                 lerpingBossEvent.setOverlay(overlay);
             }
 
             public void updateProperties(
                     @NotNull UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
-                if (!_events.containsKey(id)) return;
-                LerpingBossEvent lerpingBossEvent = _events.get(id);
+                if (!bossEvents.containsKey(id)) return;
+                LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setDarkenScreen(darkenScreen);
                 lerpingBossEvent.setPlayBossMusic(playMusic);
                 lerpingBossEvent.setCreateWorldFog(createWorldFog);
