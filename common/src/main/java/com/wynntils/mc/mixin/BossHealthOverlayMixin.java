@@ -55,12 +55,12 @@ public abstract class BossHealthOverlayMixin {
 
             public void updateProgress(UUID id, float progress) {
                 if (!bossEvents.containsKey(id)) return;
-                (bossEvents.get(id)).setProgress(progress);
+                bossEvents.get(id).setProgress(progress);
             }
 
             public void updateName(UUID id, Component name) {
                 if (!bossEvents.containsKey(id)) return;
-                (bossEvents.get(id)).setName(name);
+                bossEvents.get(id).setName(name);
             }
 
             public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
