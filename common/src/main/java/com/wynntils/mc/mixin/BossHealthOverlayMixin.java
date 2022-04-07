@@ -63,18 +63,14 @@ public abstract class BossHealthOverlayMixin {
                 (bossEvents.get(id)).setName(name);
             }
 
-            public void updateStyle(
-                    UUID id,
-                    BossEvent.BossBarColor color,
-                    BossEvent.BossBarOverlay overlay) {
+            public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
                 if (!bossEvents.containsKey(id)) return;
                 LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setColor(color);
                 lerpingBossEvent.setOverlay(overlay);
             }
 
-            public void updateProperties(
-                    UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
+            public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
                 if (!bossEvents.containsKey(id)) return;
                 LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setDarkenScreen(darkenScreen);
