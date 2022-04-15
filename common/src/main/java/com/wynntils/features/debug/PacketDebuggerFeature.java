@@ -11,6 +11,8 @@ import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,43 +20,43 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PacketDebuggerFeature extends DebugFeature {
-    public String getName() {
-        return "Packet Debugger Feature";
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("featureDebug.wynntils.packetDebugger.name");
     }
 
     public static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */
-    private static final List<Class<? extends Packet<?>>> IGNORE_LIST =
-            Arrays.asList(
-                    // General
-                    ServerboundKeepAlivePacket.class,
-                    ClientboundKeepAlivePacket.class,
-                    ClientboundSetTimePacket.class,
-                    ClientboundUpdateAdvancementsPacket.class,
-                    ClientboundUpdateAttributesPacket.class,
-                    ClientboundLevelParticlesPacket.class,
-                    ClientboundPlayerInfoPacket.class,
-                    ClientboundSetEquipmentPacket.class,
-                    // Chunks
-                    ClientboundForgetLevelChunkPacket.class,
-                    ClientboundLevelChunkPacket.class,
-                    ClientboundLightUpdatePacket.class,
-                    ClientboundSetChunkCacheCenterPacket.class,
-                    // Entities
-                    ClientboundAddEntityPacket.class,
-                    ClientboundAddMobPacket.class,
-                    ClientboundMoveEntityPacket.Pos.class,
-                    ClientboundMoveEntityPacket.PosRot.class,
-                    ClientboundMoveEntityPacket.Rot.class,
-                    ClientboundRotateHeadPacket.class,
-                    ClientboundSetEntityDataPacket.class,
-                    ClientboundSetEntityMotionPacket.class,
-                    ClientboundTeleportEntityPacket.class,
-                    // Client movement
-                    ServerboundMovePlayerPacket.Pos.class,
-                    ServerboundMovePlayerPacket.PosRot.class,
-                    ServerboundMovePlayerPacket.Rot.class);
+    private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
+            // General
+            ServerboundKeepAlivePacket.class,
+            ClientboundKeepAlivePacket.class,
+            ClientboundSetTimePacket.class,
+            ClientboundUpdateAdvancementsPacket.class,
+            ClientboundUpdateAttributesPacket.class,
+            ClientboundLevelParticlesPacket.class,
+            ClientboundPlayerInfoPacket.class,
+            ClientboundSetEquipmentPacket.class,
+            // Chunks
+            ClientboundForgetLevelChunkPacket.class,
+            ClientboundLevelChunkPacket.class,
+            ClientboundLightUpdatePacket.class,
+            ClientboundSetChunkCacheCenterPacket.class,
+            // Entities
+            ClientboundAddEntityPacket.class,
+            ClientboundAddMobPacket.class,
+            ClientboundMoveEntityPacket.Pos.class,
+            ClientboundMoveEntityPacket.PosRot.class,
+            ClientboundMoveEntityPacket.Rot.class,
+            ClientboundRotateHeadPacket.class,
+            ClientboundSetEntityDataPacket.class,
+            ClientboundSetEntityMotionPacket.class,
+            ClientboundTeleportEntityPacket.class,
+            // Client movement
+            ServerboundMovePlayerPacket.Pos.class,
+            ServerboundMovePlayerPacket.PosRot.class,
+            ServerboundMovePlayerPacket.Rot.class);
 
     @Override
     protected boolean onEnable() {

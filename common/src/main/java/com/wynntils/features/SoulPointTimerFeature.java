@@ -20,18 +20,13 @@ import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(
-        stability = Stability.STABLE,
-        gameplay = GameplayImpact.MEDIUM,
-        performance = PerformanceImpact.MEDIUM)
+@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
 public class SoulPointTimerFeature extends Feature {
-    public String getName() {
-        return "Soul Point Timer Feature";
-    }
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
@@ -44,6 +39,11 @@ public class SoulPointTimerFeature extends Feature {
     @Override
     protected void onDisable() {
         WynntilsMod.getEventBus().unregister(this);
+    }
+
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.soulPointTimer.name");
     }
 
     @SubscribeEvent
@@ -61,22 +61,15 @@ public class SoulPointTimerFeature extends Feature {
                 lore.add(StringTag.valueOf("")); // Equivalent to adding ""
             }
 
-            lore.add(
-                    new DynamicTag(
-                            () -> {
-                                int rawSecondsUntilSoulPoint =
-                                        WynnInventoryData.getTicksTillNextSoulPoint() / 20;
-                                int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
-                                int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
+            lore.add(new DynamicTag(() -> {
+                int rawSecondsUntilSoulPoint = WynnInventoryData.getTicksTillNextSoulPoint() / 20;
+                int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
+                int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-                                return ItemUtils.toLoreString(
-                                        ChatFormatting.AQUA
-                                                + "Time until next soul point: "
-                                                + ChatFormatting.WHITE
-                                                + minutesUntilSoulPoint
-                                                + ":"
-                                                + String.format("%02d", secondsUntilSoulPoint));
-                            }));
+                return ItemUtils.toLoreString(
+                        ChatFormatting.AQUA + "Time until next soul point: " + ChatFormatting.WHITE
+                                + minutesUntilSoulPoint + ":" + String.format("%02d", secondsUntilSoulPoint));
+            }));
 
             ItemUtils.replaceLore(stack, lore);
         }

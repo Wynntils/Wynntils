@@ -32,8 +32,7 @@ public class KeyManager {
 
     public static void registerKeybind(KeyHolder toAdd) {
         if (hasName(toAdd.getName())) {
-            throw new IllegalStateException(
-                    "Can not add " + toAdd + " since the name already exists");
+            throw new IllegalStateException("Can not add " + toAdd + " since the name already exists");
         }
 
         keyHolders.add(toAdd);
@@ -80,29 +79,27 @@ public class KeyManager {
                 List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
                 newKeyMappings.remove(toAdd.getKeybind());
 
-                ((OptionsAccessor) options)
-                        .setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
+                ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
             }
         }
     }
 
     public static void triggerKeybinds() {
-        keyHolders.forEach(
-                k -> {
-                    if (k.isFirstPress()) {
-                        if (k.getKeybind().consumeClick()) {
-                            k.onPress();
-                        }
+        keyHolders.forEach(k -> {
+            if (k.isFirstPress()) {
+                if (k.getKeybind().consumeClick()) {
+                    k.onPress();
+                }
 
-                        while (k.getKeybind().consumeClick()) {}
+                while (k.getKeybind().consumeClick()) {}
 
-                        return;
-                    }
+                return;
+            }
 
-                    if (k.getKeybind().isDown()) {
-                        k.onPress();
-                    }
-                });
+            if (k.getKeybind().isDown()) {
+                k.onPress();
+            }
+        });
     }
 
     private static boolean hasName(String name) {

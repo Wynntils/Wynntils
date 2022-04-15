@@ -21,19 +21,13 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
-@FeatureInfo(
-        stability = Stability.INVARIABLE,
-        gameplay = GameplayImpact.MEDIUM,
-        performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends Feature {
-    public String getName() {
-        return "Wynncraft Button Feature";
-    }
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
@@ -48,17 +42,21 @@ public class WynncraftButtonFeature extends Feature {
         WynntilsMod.getEventBus().unregister(this);
     }
 
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.wynncraftButton.name");
+    }
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
-        WynncraftButton wynncraftButton =
-                new WynncraftButton(
-                        e.getTitleScreen(),
-                        wynncraftServer,
-                        e.getTitleScreen().width / 2 + 104,
-                        e.getTitleScreen().height / 4 + 48 + 24);
+        WynncraftButton wynncraftButton = new WynncraftButton(
+                e.getTitleScreen(),
+                wynncraftServer,
+                e.getTitleScreen().width / 2 + 104,
+                e.getTitleScreen().height / 4 + 48 + 24);
         e.getAddButton().accept(wynncraftButton);
     }
 
@@ -77,25 +75,13 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderButton(
-                @NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
             // Insets the icon by 3
-            blit(
-                    matrices,
-                    this.x + 3,
-                    this.y + 3,
-                    this.width - 6,
-                    this.height - 6,
-                    0,
-                    0,
-                    64,
-                    64,
-                    64,
-                    64);
+            blit(matrices, this.x + 3, this.y + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
         }
 
         public static void onPress(Button button) {

@@ -32,7 +32,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -40,29 +42,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(
-        stability = Stability.STABLE,
-        gameplay = GameplayImpact.LARGE,
-        performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
 public class ItemStatInfoFeature extends Feature {
     private static final Pattern ITEM_STATUS_PATTERN =
-            Pattern.compile(
-                    "(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
-                            + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
+            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
+                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     // TODO: Replace these with configs
     private static final String MAIN_FORMAT_STRING = "{percentage}";
-    private static final String ALTERNATIVE_FORMAT_STRING =
-            "{percentage} {chance_perfect}"
-                    + " {chance_increase} {chance_decrease}"
-                    + ChatFormatting.YELLOW
-                    + " ["
-                    + "{min}"
-                    + ChatFormatting.YELLOW
-                    + ", "
-                    + "{max}"
-                    + ChatFormatting.YELLOW
-                    + "]"; // Used when user presses SHIFT on lore.
+    private static final String ALTERNATIVE_FORMAT_STRING = "{percentage} {chance_perfect}"
+            + " {chance_increase} {chance_decrease}"
+            + ChatFormatting.YELLOW
+            + " ["
+            + "{min}"
+            + ChatFormatting.YELLOW
+            + ", "
+            + "{max}"
+            + ChatFormatting.YELLOW
+            + "]"; // Used when user presses SHIFT on lore.
 
     private static final boolean showStars = true;
     private static final boolean colorLerp = true;
@@ -74,10 +71,6 @@ public class ItemStatInfoFeature extends Feature {
 
     private static final boolean reorderIdentifications = true;
     private static final boolean groupIdentifications = true;
-
-    public String getName() {
-        return "Item Statistics Info Feature";
-    }
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
@@ -95,6 +88,11 @@ public class ItemStatInfoFeature extends Feature {
         WynntilsMod.getEventBus().unregister(this);
     }
 
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils.itemStatInfo.name");
+    }
+
     @SubscribeEvent
     public void onToolTipHoveredNameEvent(ItemToolTipHoveredNameEvent e) {
         /*
@@ -105,40 +103,28 @@ public class ItemStatInfoFeature extends Feature {
         if (ItemUtils.hasMarker(e.getStack(), "isPerfect")) {
             MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD);
 
-            String name =
-                    "Perfect "
-                            + WynnUtils.normalizeBadString(
-                                    ChatFormatting.stripFormatting(
-                                            ComponentUtils.getUnformatted(
-                                                    e.getStack().getHoverName())));
+            String name = "Perfect "
+                    + WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(
+                            ComponentUtils.getUnformatted(e.getStack().getHoverName())));
 
             long time = System.currentTimeMillis();
             for (int i = 0; i < name.length(); i++) {
                 int cycle = 1000;
-                Style color =
-                        Style.EMPTY
-                                .withColor(
-                                        Color.HSBtoRGB(
-                                                ((time + i * cycle / 7) % cycle) / (float) cycle,
-                                                0.8F,
-                                                0.8F))
-                                .withItalic(false);
+                Style color = Style.EMPTY
+                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7) % cycle) / (float) cycle, 0.8F, 0.8F))
+                        .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
             }
 
             e.setHoveredName(newName);
         } else if (ItemUtils.hasMarker(e.getStack(), "isDefective")) {
-            MutableComponent newName =
-                    new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
+            MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
             newName.setStyle(newName.getStyle().withItalic(false));
 
-            String name =
-                    "Defective "
-                            + WynnUtils.normalizeBadString(
-                                    ChatFormatting.stripFormatting(
-                                            ComponentUtils.getUnformatted(
-                                                    e.getStack().getHoverName())));
+            String name = "Defective "
+                    + WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(
+                            ComponentUtils.getUnformatted(e.getStack().getHoverName())));
 
             boolean obfuscated = Math.random() < obfuscationChanceStart;
             StringBuilder current = new StringBuilder();
@@ -146,23 +132,17 @@ public class ItemStatInfoFeature extends Feature {
             for (int i = 0; i < name.length() - 1; i++) {
                 current.append(name.charAt(i));
 
-                float chance =
-                        MathUtils.lerp(
-                                obfuscationChanceStart,
-                                obfuscationChanceEnd,
-                                (i + 1) / (float) (name.length() - 1));
+                float chance = MathUtils.lerp(
+                        obfuscationChanceStart, obfuscationChanceEnd, (i + 1) / (float) (name.length() - 1));
 
                 if (!obfuscated && Math.random() < chance) {
-                    newName.append(
-                            new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withItalic(false)));
+                    newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
                 } else if (obfuscated && Math.random() > chance) {
-                    newName.append(
-                            new TextComponent(current.toString())
-                                    .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
+                    newName.append(new TextComponent(current.toString())
+                            .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = false;
@@ -172,13 +152,10 @@ public class ItemStatInfoFeature extends Feature {
             current.append(name.charAt(name.length() - 1));
 
             if (obfuscated) {
-                newName.append(
-                        new TextComponent(current.toString())
-                                .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
+                newName.append(new TextComponent(current.toString())
+                        .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
             } else {
-                newName.append(
-                        new TextComponent(current.toString())
-                                .withStyle(Style.EMPTY.withItalic(false)));
+                newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
             }
 
             e.setHoveredName(newName);
@@ -189,10 +166,7 @@ public class ItemStatInfoFeature extends Feature {
     public void onItemToolTipRender(ItemTooltipRenderEvent e) {
         ItemStack itemStack = e.getItemStack();
 
-        replaceLore(
-                itemStack,
-                GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
-                        == 1);
+        replaceLore(itemStack, GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1);
     }
 
     private void replaceLore(ItemStack itemStack, boolean alternativeForm) {
@@ -206,9 +180,8 @@ public class ItemStatInfoFeature extends Feature {
             if (loreForm.equals("alternative") && alternativeForm) return;
         }
 
-        String itemName =
-                WynnUtils.normalizeBadString(
-                        ChatFormatting.stripFormatting(itemStack.getHoverName().getString()));
+        String itemName = WynnUtils.normalizeBadString(
+                ChatFormatting.stripFormatting(itemStack.getHoverName().getString()));
 
         if (tag.contains("wynntilsItemName"))
             itemName = tag.getString("wynntilsItemName"); // Reset item name to avoid problems
@@ -216,14 +189,11 @@ public class ItemStatInfoFeature extends Feature {
         if (tag.contains("wynntilsItemNameFormatted"))
             itemStack.setHoverName(new TextComponent(tag.getString("wynntilsItemNameFormatted")));
 
-        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName))
-            return;
+        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName)) return;
 
         ItemProfile profile = WebManager.getItemsMap().get(itemName);
-        ListTag lore =
-                stripDuplicateBlank(
-                        ItemUtils.getLoreTagElseEmpty(
-                                itemStack)); // Strip duplicate blank lines here so they don't cause
+        ListTag lore = stripDuplicateBlank(
+                ItemUtils.getLoreTagElseEmpty(itemStack)); // Strip duplicate blank lines here so they don't cause
         // trouble later on
 
         ListTag newLore = new ListTag();
@@ -232,8 +202,7 @@ public class ItemStatInfoFeature extends Feature {
         boolean endOfStatuses = false;
 
         float percentTotal = 0;
-        int idAmount =
-                0; // this only counts those ids that are correct and do not have fixed values
+        int idAmount = 0; // this only counts those ids that are correct and do not have fixed values
 
         boolean hasNew = false;
 
@@ -329,9 +298,7 @@ public class ItemStatInfoFeature extends Feature {
             IdentificationContainer idContainer = profile.getStatuses().get(idName);
 
             IdentificationModifier type =
-                    idContainer != null
-                            ? idContainer.getType()
-                            : IdentificationContainer.getTypeFromName(idName);
+                    idContainer != null ? idContainer.getType() : IdentificationContainer.getTypeFromName(idName);
 
             if (type == null) continue; // not a valid id
 
@@ -340,13 +307,9 @@ public class ItemStatInfoFeature extends Feature {
             MutableComponent loreLine = new TextComponent("");
 
             MutableComponent statInfo =
-                    new TextComponent(
-                            (statValue > 0 ? "+" : "") + statValue + type.getInGame(idName));
+                    new TextComponent((statValue > 0 ? "+" : "") + statValue + type.getInGame(idName));
             statInfo.setStyle(
-                    Style.EMPTY.withColor(
-                            isInverted ^ (statValue > 0)
-                                    ? ChatFormatting.GREEN
-                                    : ChatFormatting.RED));
+                    Style.EMPTY.withColor(isInverted ^ (statValue > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
 
             loreLine.append(statInfo);
 
@@ -363,8 +326,7 @@ public class ItemStatInfoFeature extends Feature {
             // Add stars
             if (showStars && stars.contains(idName))
                 loreLine.append(
-                        new TextComponent("***".substring(3 - starsCount))
-                                .withStyle(ChatFormatting.DARK_GREEN));
+                        new TextComponent("***".substring(3 - starsCount)).withStyle(ChatFormatting.DARK_GREEN));
 
             loreLine.append(new TextComponent(" " + longName).withStyle(ChatFormatting.GRAY));
 
@@ -404,33 +366,20 @@ public class ItemStatInfoFeature extends Feature {
             // TODO add escaped chars like old impl for special chars
             infoVariables.put(
                     "chance_perfect",
-                    new TextComponent(
-                                    String.format(
-                                            Utils.getGameLocale(),
-                                            "\u2605%.2f%%",
-                                            idContainer.getPerfectChance() * 100))
+                    new TextComponent(String.format(
+                                    Utils.getGameLocale(), "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
                             .withStyle(ChatFormatting.AQUA));
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(
-                                    String.format(
-                                            Utils.getGameLocale(),
-                                            "\u21E7%.1f%%",
-                                            chances.increase() * 100))
+                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E7%.1f%%", chances.increase() * 100))
                             .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(
-                                    String.format(
-                                            Utils.getGameLocale(),
-                                            "\u21E9%.1f%%",
-                                            chances.decrease() * 100))
+                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E9%.1f%%", chances.decrease() * 100))
                             .withStyle(ChatFormatting.RED));
 
-            infoVariables.put(
-                    "min", new TextComponent(String.valueOf(min)).withStyle(ChatFormatting.YELLOW));
-            infoVariables.put(
-                    "max", new TextComponent(String.valueOf(max)).withStyle(ChatFormatting.YELLOW));
+            infoVariables.put("min", new TextComponent(String.valueOf(min)).withStyle(ChatFormatting.YELLOW));
+            infoVariables.put("max", new TextComponent(String.valueOf(max)).withStyle(ChatFormatting.YELLOW));
 
             Formatter.doFormat(loreFormat, loreLine::append, TextComponent::new, infoVariables);
 
@@ -454,9 +403,7 @@ public class ItemStatInfoFeature extends Feature {
         if (hasNew) {
             TextComponent newName = new TextComponent("");
 
-            newName.append(
-                    WynnUtils.normalizeBadString(
-                            ComponentUtils.getUnformatted(itemStack.getHoverName())));
+            newName.append(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName())));
             newName.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
             itemStack.setHoverName(newName);
@@ -464,8 +411,7 @@ public class ItemStatInfoFeature extends Feature {
             float averagePercentage = percentTotal / (float) idAmount;
 
             // check for item perfection or 0% items, else put %
-            if (!ItemUtils.hasMarker(itemStack, "isPerfect")
-                    && !ItemUtils.hasMarker(itemStack, "isDefective")) {
+            if (!ItemUtils.hasMarker(itemStack, "isPerfect") && !ItemUtils.hasMarker(itemStack, "isDefective")) {
                 if (averagePercentage >= 100d && perfect) {
                     ItemUtils.addMarker(itemStack, "isPerfect");
                 } else if (averagePercentage == 0 && defective) {
@@ -474,8 +420,7 @@ public class ItemStatInfoFeature extends Feature {
                     TextComponent newName = new TextComponent("");
 
                     newName.append(
-                            WynnUtils.normalizeBadString(
-                                    ComponentUtils.getUnformatted(itemStack.getHoverName())));
+                            WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName())));
 
                     newName.append(new TextComponent(" "));
 
@@ -499,26 +444,20 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private static MutableComponent getPercentageTextComponent(float percentage) {
-        Style color =
-                Style.EMPTY
-                        .withColor(
-                                colorLerp
-                                        ? getPercentageColor(percentage)
-                                        : getFlatPercentageColor(percentage))
-                        .withItalic(false);
-        return new TextComponent(String.format(Utils.getGameLocale(), "[%.1f%%]", percentage))
-                .withStyle(color);
+        Style color = Style.EMPTY
+                .withColor(colorLerp ? getPercentageColor(percentage) : getFlatPercentageColor(percentage))
+                .withItalic(false);
+        return new TextComponent(String.format(Utils.getGameLocale(), "[%.1f%%]", percentage)).withStyle(color);
     }
 
-    private static final TreeMap<Float, TextColor> colorMap =
-            new TreeMap<>() {
-                {
-                    put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-                    put(30f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-                    put(80f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-                    put(96f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-                }
-            };
+    private static final TreeMap<Float, TextColor> colorMap = new TreeMap<>() {
+        {
+            put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
+            put(30f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+            put(80f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+            put(96f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+        }
+    };
 
     private static TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);

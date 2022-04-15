@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.utils.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -52,8 +54,7 @@ public abstract class Feature {
 
     /** Called to activate a feature */
     public final void enable() {
-        if (enabled)
-            throw new IllegalStateException("Feature can not be enabled as it already is enabled");
+        if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
         if (!onEnable()) {
             return;
@@ -64,9 +65,7 @@ public abstract class Feature {
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (!enabled)
-            throw new IllegalStateException(
-                    "Feature can not be disabled as it already is disabled");
+        if (!enabled) throw new IllegalStateException("Feature can not be disabled as it already is disabled");
 
         onDisable();
 
@@ -96,7 +95,6 @@ public abstract class Feature {
     }
 
     public class WebLoadedCondition extends Condition {
-
         @Override
         public void init() {
             if (WebManager.isSetup()) {
@@ -115,7 +113,11 @@ public abstract class Feature {
     }
 
     /** Gets the name of a feature */
-    public abstract String getName();
+    public String getName() {
+        return ComponentUtils.getFormatted(getNameComponent());
+    }
+
+    public abstract MutableComponent getNameComponent();
 
     public abstract class Condition {
         boolean satisfied = false;

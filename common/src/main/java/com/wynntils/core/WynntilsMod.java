@@ -50,11 +50,9 @@ public class WynntilsMod {
     }
 
     public static void parseVersion(String versionString) {
-        if (developmentEnvironment)
-            Reference.LOGGER.info("Wynntils running on version " + versionString);
+        if (developmentEnvironment) Reference.LOGGER.info("Wynntils running on version " + versionString);
 
-        Matcher result =
-                Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
+        Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
 
         if (!result.find()) {
             Reference.LOGGER.warn("Unable to parse mod version");
@@ -69,17 +67,16 @@ public class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(
-                new CrashReportManager.ICrashContext() {
-                    @Override
-                    public String name() {
-                        return "In Development";
-                    }
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
+            @Override
+            public String name() {
+                return "In Development";
+            }
 
-                    @Override
-                    public Object generate() {
-                        return developmentEnvironment ? "Yes" : "No";
-                    }
-                });
+            @Override
+            public Object generate() {
+                return developmentEnvironment ? "Yes" : "No";
+            }
+        });
     }
 }

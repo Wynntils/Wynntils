@@ -66,47 +66,45 @@ public class FeatureRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(
-                new CrashReportManager.ICrashContext() {
-                    @Override
-                    public String name() {
-                        return "Loaded Features";
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
+            @Override
+            public String name() {
+                return "Loaded Features";
+            }
+
+            @Override
+            public Object generate() {
+                StringBuilder result = new StringBuilder();
+
+                for (Feature feature : FEATURES) {
+                    if (feature.isEnabled()) {
+                        result.append("\n\t\t").append(feature.getName());
                     }
+                }
 
-                    @Override
-                    public Object generate() {
-                        StringBuilder result = new StringBuilder();
+                return result.toString();
+            }
+        });
 
-                        for (Feature feature : FEATURES) {
-                            if (feature.isEnabled()) {
-                                result.append("\n\t\t").append(feature.getName());
-                            }
-                        }
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
+            @Override
+            public String name() {
+                return "Loaded Overlays";
+            }
 
-                        return result.toString();
+            @Override
+            public Object generate() {
+                StringBuilder result = new StringBuilder();
+
+                for (Overlay overlay : OVERLAYS) {
+                    if (overlay.isEnabled()) {
+                        result.append("\n\t\t").append(overlay.getName());
                     }
-                });
+                }
 
-        CrashReportManager.registerCrashContext(
-                new CrashReportManager.ICrashContext() {
-                    @Override
-                    public String name() {
-                        return "Loaded Overlays";
-                    }
-
-                    @Override
-                    public Object generate() {
-                        StringBuilder result = new StringBuilder();
-
-                        for (Overlay overlay : OVERLAYS) {
-                            if (overlay.isEnabled()) {
-                                result.append("\n\t\t").append(overlay.getName());
-                            }
-                        }
-
-                        return result.toString();
-                    }
-                });
+                return result.toString();
+            }
+        });
     }
 
     private static class OverlayListener { // TODO create a enum map for overlays instead of this

@@ -25,12 +25,8 @@ public class WynnItemMatchers {
 
     public static boolean isHealingPotion(ItemStack stack) {
         if (!isConsumable(stack)) return false;
-        if (stack.getHoverName()
-                        .getString()
-                        .contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                || stack.getHoverName()
-                        .getString()
-                        .contains(ChatFormatting.RED + "Potion of Healing")) return true;
+        if (stack.getHoverName().getString().contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
+                || stack.getHoverName().getString().contains(ChatFormatting.RED + "Potion of Healing")) return true;
 
         boolean isCraftedPotion = false;
         boolean hasHealEffect = false;
@@ -51,9 +47,7 @@ public class WynnItemMatchers {
     }
 
     public static boolean isConsumable(ItemStack stack) {
-        if (stack.isEmpty()
-                || (stack.getItem() != Items.POTION && stack.getItem() != Items.DIAMOND_AXE))
-            return false;
+        if (stack.isEmpty() || (stack.getItem() != Items.POTION && stack.getItem() != Items.DIAMOND_AXE)) return false;
 
         String name = stack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
@@ -61,8 +55,6 @@ public class WynnItemMatchers {
     }
 
     public static boolean isUnidentified(ItemStack stack) {
-        return (stack.getItem() == Items.STONE_SHOVEL
-                && stack.getDamageValue() >= 1
-                && stack.getDamageValue() <= 6);
+        return (stack.getItem() == Items.STONE_SHOVEL && stack.getDamageValue() >= 1 && stack.getDamageValue() <= 6);
     }
 }

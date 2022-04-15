@@ -126,8 +126,7 @@ public class TerritoryProfile {
     public static class TerritoryDeserializer implements JsonDeserializer<TerritoryProfile> {
 
         @Override
-        public TerritoryProfile deserialize(
-                JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public TerritoryProfile deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject territory = json.getAsJsonObject();
             int startX = Integer.MAX_VALUE - 1;
