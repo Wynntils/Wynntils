@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering.colors;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents an ordered set of colors.
@@ -137,7 +140,7 @@ public class ColorSet<T extends CustomColor> {
     }
 
     public T valueOf(CustomColor c) {
-        return fromCode(getCode(c));  // Becomes null if not in the set, and also returns reference to color in set
+        return fromCode(getCode(c)); // Becomes null if not in the set, and also returns reference to color in set
     }
 
     /**
@@ -177,5 +180,4 @@ public class ColorSet<T extends CustomColor> {
         }
         return colors;
     }
-
 }

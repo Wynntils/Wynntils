@@ -1,24 +1,28 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering.colors;
 
 import com.wynntils.utils.MathUtils;
+import java.util.Arrays;
 import net.minecraft.ChatFormatting;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.opengl.GL30;
-
-import java.util.Arrays;
 
 /** CustomColor
  * will represent color or complex colors
  * in a more efficient way than awt's Color or minecraft's color ints.
  */
 public class CustomColor {
-    public float
-            r,  // The RED   value of the color(0.0f -> 1.0f)
-            g,  // The GREEN value of the color(0.0f -> 1.0f)
-            b,  // The BLUE  value of the color(0.0f -> 1.0f)
-            a;  // The ALPHA value of the color(0.0f -> 1.0f)
+    public float r, // The RED   value of the color(0.0f -> 1.0f)
+            g, // The GREEN value of the color(0.0f -> 1.0f)
+            b, // The BLUE  value of the color(0.0f -> 1.0f)
+            a; // The ALPHA value of the color(0.0f -> 1.0f)
 
-    public CustomColor(float r, float g, float b) { this(r, g, b, 1.0f); }
+    public CustomColor(float r, float g, float b) {
+        this(r, g, b, 1.0f);
+    }
 
     public CustomColor(float r, float g, float b, float a) {
         this.r = r;
@@ -36,7 +40,9 @@ public class CustomColor {
 
     public CustomColor() {}
 
-    public CustomColor(CustomColor c) { this(c.r, c.g, c.b, c.a); }
+    public CustomColor(CustomColor c) {
+        this(c.r, c.g, c.b, c.a);
+    }
 
     public static CustomColor fromTextFormatting(ChatFormatting textFormatting) {
         return switch (textFormatting) {
@@ -80,7 +86,8 @@ public class CustomColor {
         if (withoutHash.length() == 6) {
             try {
                 return fromInt(Integer.parseInt(withoutHash, 16), a);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         } else if (withoutHash.length() == 3) {
             // "rgb" -> "rrggbb"
             try {
@@ -89,13 +96,15 @@ public class CustomColor {
                 int g = ((rgb >> 4) & 0xF) * 0x11;
                 int b = (rgb & 0xF) * 0x11;
                 return fromBytes((byte) r, (byte) g, (byte) b, a);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         } else if (withoutHash.length() == 2) {
             // "vv" -> "vvvvvv"
             try {
                 byte v = (byte) Integer.parseInt(withoutHash, 16);
                 return fromBytes(v, v, v, a);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         }
         byte[] hash = DigestUtils.sha1(string);
         return fromBytes(hash[0], hash[1], hash[2], a);
@@ -154,7 +163,7 @@ public class CustomColor {
             }
         }
 
-        return new float[]{ hue, saturation, value, a };
+        return new float[] {hue, saturation, value, a};
     }
 
     /**
@@ -200,13 +209,14 @@ public class CustomColor {
     }
 
     public static CustomColor fromBytes(byte r, byte g, byte b, float a) {
-        return new CustomColor(Byte.toUnsignedInt(r) / 255f, Byte.toUnsignedInt(g) / 255f, Byte.toUnsignedInt(b) / 255f, a);
+        return new CustomColor(
+                Byte.toUnsignedInt(r) / 255f, Byte.toUnsignedInt(g) / 255f, Byte.toUnsignedInt(b) / 255f, a);
     }
 
     /** HeyZeer0: this is = rgba(1,1,1,1) **/
     @Override
     public String toString() {
-        return "rgba(" + r + "," + g + "," + b + "," + a +")";
+        return "rgba(" + r + "," + g + "," + b + "," + a + ")";
     }
 
     @Override
@@ -221,7 +231,7 @@ public class CustomColor {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new float[]{ r, g, b, a });
+        return Arrays.hashCode(new float[] {r, g, b, a});
     }
 
     /* package-private */ static class SetBase extends CustomColor {
@@ -234,11 +244,10 @@ public class CustomColor {
         }
 
         // Prevent setA on global references. Create a copy with `new CustomColor(c)` first.
-        @Override public CustomColor setA(float a) {
+        @Override
+        public CustomColor setA(float a) {
             new UnsupportedOperationException("Cannot set alpha of common color").printStackTrace();
             return this;
         }
     }
-
 }
-

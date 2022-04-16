@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering.colors;
 
 import java.util.HashMap;
@@ -32,17 +36,17 @@ public class CommonColors extends CustomColor.SetBase {
     public static final CommonColors RAINBOW = new CommonColors();
 
     private static final CommonColors[] colors = {
-            BLACK,      RED,     GREEN,  BLUE,
-            YELLOW,     BROWN,   PURPLE, CYAN,
-            LIGHT_GRAY, GRAY,    PINK,   LIGHT_GREEN,
-            LIGHT_BLUE, MAGENTA, ORANGE, WHITE
+        BLACK, RED, GREEN, BLUE,
+        YELLOW, BROWN, PURPLE, CYAN,
+        LIGHT_GRAY, GRAY, PINK, LIGHT_GREEN,
+        LIGHT_BLUE, MAGENTA, ORANGE, WHITE
     };
 
     private static final String[] names = {
-            "BLACK",      "RED",     "GREEN",  "BLUE",
-            "YELLOW",     "BROWN",   "PURPLE", "CYAN",
-            "LIGHT_GRAY", "GRAY",    "PINK",   "LIGHT_GREEN",
-            "LIGHT_BLUE", "MAGENTA", "ORANGE", "WHITE"
+        "BLACK", "RED", "GREEN", "BLUE",
+        "YELLOW", "BROWN", "PURPLE", "CYAN",
+        "LIGHT_GRAY", "GRAY", "PINK", "LIGHT_GREEN",
+        "LIGHT_BLUE", "MAGENTA", "ORANGE", "WHITE"
     };
 
     private static final Map<String, CommonColors> aliases = new HashMap<>();
@@ -53,5 +57,4 @@ public class CommonColors extends CustomColor.SetBase {
     }
 
     public static final ColorSet<CommonColors> set = new ColorSet<>(colors, names, aliases);
-
 }

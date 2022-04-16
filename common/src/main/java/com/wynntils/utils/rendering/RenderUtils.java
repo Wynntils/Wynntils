@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -8,25 +12,23 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import com.wynntils.utils.rendering.colors.CommonColors;
 import com.wynntils.utils.rendering.colors.CustomColor;
+import java.awt.*;
+import java.util.Random;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL30;
 
-import java.awt.*;
-import java.util.Random;
-
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-
 public class RenderUtils {
     private static final Vector3f[] godRaysOffset = new Vector3f[] {
-            new Vector3f(1, 0, 0),
-            new Vector3f(0, 1, 0),
-            new Vector3f(0, 0, 1),
-            new Vector3f(1, 0, 0),
-            new Vector3f(0, 1, 0),
-            new Vector3f(0, 0, 1),
+        new Vector3f(1, 0, 0),
+        new Vector3f(0, 1, 0),
+        new Vector3f(0, 0, 1),
+        new Vector3f(1, 0, 0),
+        new Vector3f(0, 1, 0),
+        new Vector3f(0, 0, 1),
     };
 
-    public static void renderGodRays(PoseStack poseStack, int x, int y, int z, double size, int rays, CustomColor color) {
+    public static void renderGodRays(
+            PoseStack poseStack, int x, int y, int z, double size, int rays, CustomColor color) {
         RenderSystem.assertThread(RenderSystem::isOnGameThread);
 
         float time = System.currentTimeMillis() / 50f;
@@ -37,7 +39,8 @@ public class RenderUtils {
         poseStack.pushPose();
         {
             { // gl setting
-                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+                RenderSystem.blendFunc(
+                        GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
                 RenderSystem.enableBlend();
                 RenderSystem.colorMask(true, true, true, false); // Disable alpha
                 RenderSystem.disableCull();
@@ -46,7 +49,7 @@ public class RenderUtils {
                 RenderSystem.depthMask(false);
             }
 
-            //poseStack.translate(x, y, z);
+            // poseStack.translate(x, y, z);
 
             Matrix4f matrix = poseStack.last().pose();
 
@@ -59,13 +62,14 @@ public class RenderUtils {
             Vector3f rotationAxis = new Vector3f(0, 1, 0);
 
             for (int i = 0; i < rays; i++) {
-//                for (Vector3f vec : godRaysOffset) {
-//                    MatrixMathUtils.rotate((float) Math.PI * 2 * rand.nextFloat() + time / 360, vec, matrix, matrix);
-//                }
-//
+                //                for (Vector3f vec : godRaysOffset) {
+                //                    MatrixMathUtils.rotate((float) Math.PI * 2 * rand.nextFloat() + time / 360, vec,
+                // matrix, matrix);
+                //                }
+                //
                 float r = (1F + rand.nextFloat() * 2.5F) * 2;
-//
-//                MatrixMathUtils.rotate(time / 180f, rotationAxis, matrix, matrix);
+                //
+                //                MatrixMathUtils.rotate(time / 180f, rotationAxis, matrix, matrix);
 
                 a.set(0F, 0.126f * r, 0.5f * r, 1);
                 b.set(0F, -0.126f * r, 0.5f * r, 1);
@@ -92,10 +96,18 @@ public class RenderUtils {
                 BufferBuilder builder = tess.getBuilder();
                 {
                     builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                    builder.vertex(size, size, size).color(red, green, blue, 0.9F).endVertex();
-                    builder.vertex(a.x() * size, a.y() * size, a.z() * size).color(red, green, blue, 0.01F).endVertex();
-                    builder.vertex(c.x() * size, c.y() * size, c.z() * size).color(red, green, blue, 0.01F).endVertex();
-                    builder.vertex(b.x() * size, b.y() * size, b.z() * size).color(red, green, blue, 0.01F).endVertex();
+                    builder.vertex(size, size, size)
+                            .color(red, green, blue, 0.9F)
+                            .endVertex();
+                    builder.vertex(a.x() * size, a.y() * size, a.z() * size)
+                            .color(red, green, blue, 0.01F)
+                            .endVertex();
+                    builder.vertex(c.x() * size, c.y() * size, c.z() * size)
+                            .color(red, green, blue, 0.01F)
+                            .endVertex();
+                    builder.vertex(b.x() * size, b.y() * size, b.z() * size)
+                            .color(red, green, blue, 0.01F)
+                            .endVertex();
                 }
 
                 builder.end();
@@ -114,6 +126,5 @@ public class RenderUtils {
             poseStack.translate(0.0D, 0.0D, 0.0D);
         }
         poseStack.popPose();
-
     }
 }

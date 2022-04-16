@@ -13,8 +13,7 @@ public class ContainerScreenInitEvent extends Event {
     private final ContainerScreen containerScreen;
     private final Consumer<AbstractWidget> addButton;
 
-    public ContainerScreenInitEvent(
-            ContainerScreen containerScreen, Consumer<AbstractWidget> addButton) {
+    public ContainerScreenInitEvent(ContainerScreen containerScreen, Consumer<AbstractWidget> addButton) {
         this.containerScreen = containerScreen;
         this.addButton = addButton;
     }

@@ -15,10 +15,6 @@ import com.wynntils.mc.utils.McUtils;
 import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.rendering.RenderUtils;
-import com.wynntils.utils.rendering.colors.CommonColors;
-import com.wynntils.utils.rendering.colors.CustomColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,10 +23,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BankOverlay extends Overlay {
-    private static final Pattern PAGE_PATTERN =
-            Pattern.compile("\\[Pg\\. ([0-9]*)\\] [a-z_A-Z0-9 ]+'s? Bank");
-    private static final Pattern PAGE_CUSTOM_NAME_PATTERN =
-            Pattern.compile("\\[Pg\\. ([0-9]*)\\] ([a-z_A-Z0-9 ]+)");
+    private static final Pattern PAGE_PATTERN = Pattern.compile("\\[Pg\\. ([0-9]*)\\] [a-z_A-Z0-9 ]+'s? Bank");
+    private static final Pattern PAGE_CUSTOM_NAME_PATTERN = Pattern.compile("\\[Pg\\. ([0-9]*)\\] ([a-z_A-Z0-9 ]+)");
 
     private ContainerScreen matchingScreen = null;
 
@@ -63,8 +57,7 @@ public class BankOverlay extends Overlay {
     public void onContainerScreenInit(ContainerScreenInitEvent event) {
         ContainerScreen container = event.getContainerScreen();
 
-        String containerTitle =
-                ChatFormatting.stripFormatting(ComponentUtils.getUnformatted(container.getTitle()));
+        String containerTitle = ChatFormatting.stripFormatting(ComponentUtils.getUnformatted(container.getTitle()));
 
         if (containerTitle == null) {
             matchingScreen = null;

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering;
 
 import com.mojang.math.Vector3f;
@@ -62,5 +66,4 @@ public class MatrixMathUtils {
 
         return dest;
     }
-
 }

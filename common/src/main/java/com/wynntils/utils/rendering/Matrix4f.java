@@ -1,9 +1,12 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.rendering;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-
 import java.nio.FloatBuffer;
 
 // This is a copy of the Matrix4f class with public fields
@@ -26,8 +29,7 @@ public final class Matrix4f {
     public float m32;
     public float m33;
 
-    public Matrix4f() {
-    }
+    public Matrix4f() {}
 
     public Matrix4f(Matrix4f matrix4f) {
         this.m00 = matrix4f.m00;
@@ -82,19 +84,42 @@ public final class Matrix4f {
         matrix4f.m33 = 0.0F;
         Matrix4f matrix4f2 = this.copy();
         matrix4f2.multiply(matrix4f);
-        return isInteger(matrix4f2.m00 / matrix4f2.m03) && isInteger(matrix4f2.m10 / matrix4f2.m13) && isInteger(matrix4f2.m20 / matrix4f2.m23) && isInteger(matrix4f2.m01 / matrix4f2.m03) && isInteger(matrix4f2.m11 / matrix4f2.m13) && isInteger(matrix4f2.m21 / matrix4f2.m23) && isInteger(matrix4f2.m02 / matrix4f2.m03) && isInteger(matrix4f2.m12 / matrix4f2.m13) && isInteger(matrix4f2.m22 / matrix4f2.m23);
+        return isInteger(matrix4f2.m00 / matrix4f2.m03)
+                && isInteger(matrix4f2.m10 / matrix4f2.m13)
+                && isInteger(matrix4f2.m20 / matrix4f2.m23)
+                && isInteger(matrix4f2.m01 / matrix4f2.m03)
+                && isInteger(matrix4f2.m11 / matrix4f2.m13)
+                && isInteger(matrix4f2.m21 / matrix4f2.m23)
+                && isInteger(matrix4f2.m02 / matrix4f2.m03)
+                && isInteger(matrix4f2.m12 / matrix4f2.m13)
+                && isInteger(matrix4f2.m22 / matrix4f2.m23);
     }
 
     private static boolean isInteger(float f) {
-        return (double)Math.abs(f - (float)Math.round(f)) <= 1.0E-5D;
+        return (double) Math.abs(f - (float) Math.round(f)) <= 1.0E-5D;
     }
 
     public boolean equals(Object object) {
         if (this == object) {
             return true;
         } else if (object != null && this.getClass() == object.getClass()) {
-            Matrix4f matrix4f = (Matrix4f)object;
-            return Float.compare(matrix4f.m00, this.m00) == 0 && Float.compare(matrix4f.m01, this.m01) == 0 && Float.compare(matrix4f.m02, this.m02) == 0 && Float.compare(matrix4f.m03, this.m03) == 0 && Float.compare(matrix4f.m10, this.m10) == 0 && Float.compare(matrix4f.m11, this.m11) == 0 && Float.compare(matrix4f.m12, this.m12) == 0 && Float.compare(matrix4f.m13, this.m13) == 0 && Float.compare(matrix4f.m20, this.m20) == 0 && Float.compare(matrix4f.m21, this.m21) == 0 && Float.compare(matrix4f.m22, this.m22) == 0 && Float.compare(matrix4f.m23, this.m23) == 0 && Float.compare(matrix4f.m30, this.m30) == 0 && Float.compare(matrix4f.m31, this.m31) == 0 && Float.compare(matrix4f.m32, this.m32) == 0 && Float.compare(matrix4f.m33, this.m33) == 0;
+            Matrix4f matrix4f = (Matrix4f) object;
+            return Float.compare(matrix4f.m00, this.m00) == 0
+                    && Float.compare(matrix4f.m01, this.m01) == 0
+                    && Float.compare(matrix4f.m02, this.m02) == 0
+                    && Float.compare(matrix4f.m03, this.m03) == 0
+                    && Float.compare(matrix4f.m10, this.m10) == 0
+                    && Float.compare(matrix4f.m11, this.m11) == 0
+                    && Float.compare(matrix4f.m12, this.m12) == 0
+                    && Float.compare(matrix4f.m13, this.m13) == 0
+                    && Float.compare(matrix4f.m20, this.m20) == 0
+                    && Float.compare(matrix4f.m21, this.m21) == 0
+                    && Float.compare(matrix4f.m22, this.m22) == 0
+                    && Float.compare(matrix4f.m23, this.m23) == 0
+                    && Float.compare(matrix4f.m30, this.m30) == 0
+                    && Float.compare(matrix4f.m31, this.m31) == 0
+                    && Float.compare(matrix4f.m32, this.m32) == 0
+                    && Float.compare(matrix4f.m33, this.m33) == 0;
         } else {
             return false;
         }
@@ -168,7 +193,6 @@ public final class Matrix4f {
         } else {
             this.load(buffer);
         }
-
     }
 
     public void load(Matrix4f other) {
@@ -272,7 +296,6 @@ public final class Matrix4f {
         } else {
             this.store(buffer);
         }
-
     }
 
     public void setIdentity() {
@@ -490,7 +513,7 @@ public final class Matrix4f {
     }
 
     public static Matrix4f perspective(double fov, float aspectRatio, float nearPlane, float farPlane) {
-        float f = (float)(1.0D / Math.tan(fov * 0.01745329238474369D / 2.0D));
+        float f = (float) (1.0D / Math.tan(fov * 0.01745329238474369D / 2.0D));
         Matrix4f matrix4f = new Matrix4f();
         matrix4f.m00 = f / aspectRatio;
         matrix4f.m11 = f;
@@ -565,50 +588,41 @@ public final class Matrix4f {
         matrix4f.m23 = h;
         return matrix4f;
     }
-    
+
     /**
      * Transforms the normal parameter by this Matrix4f and places the value
      * into normalOut.  The fourth element of the normal is assumed to be zero.
      * @param normal   the input normal to be transformed.
      * @param normalOut  the transformed normal
      */
-    public void transform(Vector3f normal, Vector3f normalOut)
-    {
+    public void transform(Vector3f normal, Vector3f normalOut) {
         float x, y;
 
-        x =  m00*normal.x() + m01*normal.y() + m02*normal.z();
-        y =  m10*normal.x() + m11*normal.y() + m12*normal.z();
-        normalOut.set(x, y, m20*normal.x() + m21*normal.y() + m22*normal.z());
+        x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
+        y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
+        normalOut.set(x, y, m20 * normal.x() + m21 * normal.y() + m22 * normal.z());
     }
-
 
     /**
      * Transforms the normal parameter by this transform and places the value
      * back into normal.  The fourth element of the normal is assumed to be zero.
      * @param normal   the input normal to be transformed.
      */
-    public void transform(Vector3f normal)
-    {
+    public void transform(Vector3f normal) {
         float x, y;
 
-        x =  m00*normal.x() + m01*normal.y() + m02*normal.z();
-        y =  m10*normal.x() + m11*normal.y() + m12*normal.z();
-        normal.set(x, y, m20*normal.x() + m21*normal.y() + m22*normal.z());
+        x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
+        y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
+        normal.set(x, y, m20 * normal.x() + m21 * normal.y() + m22 * normal.z());
     }
 
-    public void transform(Vector4f vec)
-    {
+    public void transform(Vector4f vec) {
         float x, y, z;
 
-        x = m00*vec.x() + m01*vec.y()
-                + m02*vec.z() + m03*vec.w();
-        y = m10*vec.x() + m11*vec.y()
-                + m12*vec.z() + m13*vec.w();
-        z = m20*vec.x() + m21*vec.y()
-                + m22*vec.z() + m23*vec.w();
+        x = m00 * vec.x() + m01 * vec.y() + m02 * vec.z() + m03 * vec.w();
+        y = m10 * vec.x() + m11 * vec.y() + m12 * vec.z() + m13 * vec.w();
+        z = m20 * vec.x() + m21 * vec.y() + m22 * vec.z() + m23 * vec.w();
 
-        vec.set(x, y, z, m30*vec.x() + m31*vec.y()
-                + m32*vec.z() + m33*vec.w());
+        vec.set(x, y, z, m30 * vec.x() + m31 * vec.y() + m32 * vec.z() + m33 * vec.w());
     }
 }
-
