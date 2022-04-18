@@ -18,7 +18,7 @@ buildscript {
          */
 
         dependencies {
-            classpath "com.github.coehlrich:EventBusTransformer:1.0.1"
+            classpath "com.github.coehlrich:EventBusTransformer:1.0.2"
         }
     }
 }
@@ -64,7 +64,7 @@ dependencies {
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
-    runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.1"
+    runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.2"
 }
 
 processResources {

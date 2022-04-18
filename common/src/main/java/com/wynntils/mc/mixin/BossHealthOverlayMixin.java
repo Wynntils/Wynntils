@@ -31,6 +31,8 @@ public abstract class BossHealthOverlayMixin {
                             target =
                                     "Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;dispatch(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket$Handler;)V"))
     private void updatePre(ClientboundBossEventPacket packet, ClientboundBossEventPacket.Handler handler) {
+        Map<UUID, LerpingBossEvent> bossEvents = events;
+
         packet.dispatch(new ClientboundBossEventPacket.Handler() {
             public void add(
                     UUID id,
@@ -41,36 +43,36 @@ public abstract class BossHealthOverlayMixin {
                     boolean darkenScreen,
                     boolean playMusic,
                     boolean createWorldFog) {
-                events.put(
+                bossEvents.put(
                         id,
                         new LerpingBossEvent(
                                 id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog));
             }
 
             public void remove(UUID id) {
-                events.remove(id);
+                bossEvents.remove(id);
             }
 
             public void updateProgress(UUID id, float progress) {
-                if (!events.containsKey(id)) return;
-                ((LerpingBossEvent) events.get(id)).setProgress(progress);
+                if (!bossEvents.containsKey(id)) return;
+                bossEvents.get(id).setProgress(progress);
             }
 
             public void updateName(UUID id, Component name) {
-                if (!events.containsKey(id)) return;
-                ((LerpingBossEvent) events.get(id)).setName(name);
+                if (!bossEvents.containsKey(id)) return;
+                bossEvents.get(id).setName(name);
             }
 
             public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
-                if (!events.containsKey(id)) return;
-                LerpingBossEvent lerpingBossEvent = (LerpingBossEvent) events.get(id);
+                if (!bossEvents.containsKey(id)) return;
+                LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setColor(color);
                 lerpingBossEvent.setOverlay(overlay);
             }
 
             public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
-                if (!events.containsKey(id)) return;
-                LerpingBossEvent lerpingBossEvent = (LerpingBossEvent) events.get(id);
+                if (!bossEvents.containsKey(id)) return;
+                LerpingBossEvent lerpingBossEvent = bossEvents.get(id);
                 lerpingBossEvent.setDarkenScreen(darkenScreen);
                 lerpingBossEvent.setPlayBossMusic(playMusic);
                 lerpingBossEvent.setCreateWorldFog(createWorldFog);

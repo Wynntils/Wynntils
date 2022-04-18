@@ -40,7 +40,6 @@ public class PacketDebuggerFeature extends DebugFeature {
             ClientboundSetEquipmentPacket.class,
             // Chunks
             ClientboundForgetLevelChunkPacket.class,
-            ClientboundLevelChunkPacket.class,
             ClientboundLightUpdatePacket.class,
             ClientboundSetChunkCacheCenterPacket.class,
             // Entities
