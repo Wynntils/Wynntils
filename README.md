@@ -11,7 +11,7 @@ About Artemis
 ========
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-This is a preliminary rewrite of <a href="httpss;//github.com/Wynntils/Wynntils"><b>Wynntils</b></a> in 1.18.2 using Architectury, to support both Fabric and Forge.
+This is a preliminary rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** in 1.18.2 using Architectury, to support both Fabric and Forge.
 
 Pull Request
 ========
