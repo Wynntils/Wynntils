@@ -1,0 +1,24 @@
+#!/bin/sh
+# Based on https://medium.com/@mmessell/apply-spotless-formatting-with-git-pre-commit-hook-1c484ea68c34
+# install by running `git config core.hooksPath utils/git-hooks` in your repo root
+
+echo '[git hook] executing gradle spotlessApply before commit'
+
+# Get list of staged files
+stagedFiles=$(git diff --staged --name-only)
+
+# Run spotlessApply with the gradle wrapper
+./gradlew spotlessApply
+
+# Store the last exit code
+RESULT=$?
+
+# Re-add possibly modified files to the git stage area
+for file in $stagedFiles; do
+  if test -f "$file"; then
+    git add $file
+  fi
+done
+
+# Return the './gradlew spotlessApply' exit code
+exit $RESULT

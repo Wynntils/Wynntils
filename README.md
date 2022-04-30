@@ -11,7 +11,7 @@ About Artemis
 ========
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-This is a preliminary rewrite of <a href="httpss;//github.com/Wynntils/Wynntils"><b>Wynntils</b></a> in 1.17.1 using Architectury, to support both Fabric and Forge.
+This is a preliminary rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** in 1.18.2 using Architectury, to support both Fabric and Forge.
 
 Pull Request
 ========
@@ -21,6 +21,8 @@ Setup the Workspace
 ========
 To set up the workspace, just import the project as a gradle project into your IDE
 <br> To build the mod just call the ``buildDependents`` and the artifacts should be generated in `fabric/build/libs` and `forge/build/libs`. There are a lot of jars there, but the mod jars are the ones without a dashed suffix at the end.
+
+The code format is checked by spotless. To make sure your commits pass the spotless check, you can install a git pre-commit hook. The hook is optional to use. If you want to use it, you must tell git to pick up hooks from the directory containing the hook. To do this, run this from your repo root: `git config core.hooksPath utils/git-hooks`.
 
 <i>TODO Run Configurations and Authenticating</i>
 

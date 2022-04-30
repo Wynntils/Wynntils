@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Supplier;
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.NotNull;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
@@ -20,6 +21,19 @@ public class DynamicTag implements Tag {
             accounter.accountBits(16L * string.length());
             return StringTag.valueOf(string);
         }
+
+        // FIXME: Implement these
+        @Override
+        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor)
+                throws IOException {
+            return null;
+        }
+
+        @Override
+        public void skip(DataInput dataInput, int i) throws IOException {}
+
+        @Override
+        public void skip(DataInput dataInput) throws IOException {}
 
         public String getName() {
             return "STRING";
@@ -85,6 +99,17 @@ public class DynamicTag implements Tag {
 
     public void accept(TagVisitor visitor) {
         visitor.visitString(StringTag.valueOf(this.data.get()));
+    }
+
+    // FIXME: Implement
+    @Override
+    public StreamTagVisitor.ValueResult accept(@NotNull StreamTagVisitor streamTagVisitor) {
+        return null;
+    }
+
+    @Override
+    public void acceptAsRoot(@NotNull StreamTagVisitor streamTagVisitor) {
+        Tag.super.acceptAsRoot(streamTagVisitor);
     }
 
     public static String quoteAndEscape(String text) {
