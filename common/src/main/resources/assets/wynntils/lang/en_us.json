@@ -9,6 +9,8 @@
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer Feature",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
   "feature.wynntils.emeraldPouchKeybind.name": "Emerald Pouch Keybind Feature",
+  "feature.wynntils.emeraldPouchKeybind.noPouch": "You do not have an emerald pouch in your inventory.",
+  "feature.wynntils.emeraldPouchKeybind.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
   "feature.wynntils.ingredientPouchKeybind.name": "Ingredient Pouch Keybind Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",

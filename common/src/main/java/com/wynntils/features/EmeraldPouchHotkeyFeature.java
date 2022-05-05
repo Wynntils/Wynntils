@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
@@ -40,7 +41,8 @@ public class EmeraldPouchHotkeyFeature extends Feature {
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.BLOCKS + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
 
-    private final KeyHolder emeraldPouchKeybind = // TODO: implement GameUpdateOverlay messages once that's available
+    // TODO: change sendMessageToClient to GameUpdateOverlay messages once that's available
+    private final KeyHolder emeraldPouchKeybind =
             new KeyHolder("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, () -> {
                 if (!WynnUtils.onWorld()) return;
 
@@ -73,8 +75,9 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                                 pouchStack = emeraldPouches.get(key).a;
                             } else if (emeraldPouches.get(key).b.a
                                     > 0) { // Another pouch has a non-zero balance; notify user
-                                // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You have more than one
-                                // filled emerald pouch in your inventory.");
+                                McUtils.sendMessageToClient(
+                                        new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.multipleFilled")
+                                                .withStyle(ChatFormatting.DARK_RED));
                                 break pouchSwitch;
                             }
                         }
@@ -94,8 +97,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                             slotStack = largest.getValue().a;
                         }
 
-                        // Now, we know we have 1 used pouch and 1+ empty pouches - just open the used one we saved from
-                        // before
+                        // Now, we know we have 1 used and 1+ empty pouches - open the used one we saved from before
                         if (slotNumber == -1) {
                             slotNumber = usedPouch;
                         }
@@ -118,9 +120,9 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                                         ItemStack.EMPTY,
                                         changedSlots));
                     }
-                    case 0 -> System.out.println("No EP found");
-                        // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You do not have an emerald pouch in
-                        // your inventory.");
+                    case 0 -> McUtils.sendMessageToClient(
+                            new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.noPouch")
+                                    .withStyle(ChatFormatting.DARK_RED));
 
                     case 1 -> {
                         int slotNumber = emeraldPouches
