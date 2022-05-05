@@ -12,7 +12,7 @@
     "ConnectScreenMixin",
     "CrashReportMixin",
     "ItemStackMixin",
-    "KeyInputMixin",
+    "KeyboardHandlerMixin",
     "KeyMappingMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
