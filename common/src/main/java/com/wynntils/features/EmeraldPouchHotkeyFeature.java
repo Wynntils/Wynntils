@@ -46,11 +46,10 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                 if (!WynnUtils.onWorld()) return;
 
                 Player player = McUtils.player();
-                Inventory inventory = player.getInventory();
                 HashMap<Integer, Pair<ItemStack, Pair<Integer, Integer>>> emeraldPouches = new HashMap<>() {};
 
-                for (int i = 0; i < inventory.getContainerSize(); i++) {
-                    ItemStack stack = inventory.getItem(i);
+                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                    ItemStack stack = player.getInventory().getItem(i);
                     if (!stack.isEmpty() && WynnItemMatchers.isEmeraldPouch(stack)) {
                         emeraldPouches.put(
                                 i, new Pair<>(stack, new Pair<>(getPouchUsage(stack), getPouchCapacity(stack))));
@@ -104,12 +103,11 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                         if (slotStack == null) {
                             slotStack = pouchStack;
                         }
+                        if (slotNumber < 9) {
+                            // sendPacket uses raw slot numbers, we need to remap the hotbar
+                            slotNumber += 36;
+                        }
                         changedSlots.putIfAbsent(slotNumber, slotStack);
-                        System.out.println("Attempting to send click to " + slotNumber + " "
-                                + player.getInventory()
-                                        .getItem(slotNumber)
-                                        .getDisplayName()
-                                        .getString());
                         McUtils.player()
                                 .connection
                                 .send(new ServerboundContainerClickPacket(
