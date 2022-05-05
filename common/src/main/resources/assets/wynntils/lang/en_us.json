@@ -8,6 +8,7 @@
   "feature.wynntils.playerGhostTransparency.name": "Transparent Player Ghost Feature",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer Feature",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
+  "feature.wynntils.itemScreenshot.name": "Item Screenshot Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
   "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"
