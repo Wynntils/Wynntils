@@ -36,9 +36,10 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class EmeraldPouchHotkeyFeature extends Feature {
 
-    private static final Pattern POUCH_USAGE_PATTERN = Pattern.compile("§6§l(\\d* ?\\d* ?\\d*)" + EmeraldSymbols.E_STRING);
-    private static final Pattern POUCH_CAPACITY_PATTERN = Pattern.compile("\\((\\d+)(" + EmeraldSymbols.BLOCKS + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
-
+    private static final Pattern POUCH_USAGE_PATTERN =
+            Pattern.compile("§6§l(\\d* ?\\d* ?\\d*)" + EmeraldSymbols.E_STRING);
+    private static final Pattern POUCH_CAPACITY_PATTERN =
+            Pattern.compile("\\((\\d+)(" + EmeraldSymbols.BLOCKS + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
 
     private final KeyHolder emeraldPouchKeybind = // TODO: implement GameUpdateOverlay messages once that's available
             new KeyHolder("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, () -> {
@@ -51,7 +52,8 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                 for (int i = 0; i < inventory.getContainerSize(); i++) {
                     ItemStack stack = inventory.getItem(i);
                     if (!stack.isEmpty() && WynnItemMatchers.isEmeraldPouch(stack)) {
-                        emeraldPouches.put(i, new Pair<>(stack, new Pair<>(getPouchUsage(stack), getPouchCapacity(stack))));
+                        emeraldPouches.put(
+                                i, new Pair<>(stack, new Pair<>(getPouchUsage(stack), getPouchCapacity(stack))));
                     }
                 }
                 Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
@@ -84,7 +86,8 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                         // Check to make sure we don't have a bunch of zero balances - if we do, open largest capacity
                         if (!alreadyHasNonEmpty) {
                             Map.Entry<Integer, Pair<ItemStack, Pair<Integer, Integer>>> largest = null;
-                            for (Map.Entry<Integer, Pair<ItemStack, Pair<Integer, Integer>>> entry : emeraldPouches.entrySet()) {
+                            for (Map.Entry<Integer, Pair<ItemStack, Pair<Integer, Integer>>> entry :
+                                    emeraldPouches.entrySet()) {
                                 if (largest == null || entry.getValue().b.b > largest.getValue().b.b) {
                                     largest = entry;
                                 }
@@ -102,7 +105,11 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                             slotStack = pouchStack;
                         }
                         changedSlots.putIfAbsent(slotNumber, slotStack);
-                        System.out.println("Attempting to send click to " + slotNumber + " " + player.getInventory().getItem(slotNumber).getDisplayName().getString());
+                        System.out.println("Attempting to send click to " + slotNumber + " "
+                                + player.getInventory()
+                                        .getItem(slotNumber)
+                                        .getDisplayName()
+                                        .getString());
                         McUtils.player()
                                 .connection
                                 .send(new ServerboundContainerClickPacket(
@@ -123,7 +130,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                                 .entrySet()
                                 .iterator()
                                 .next()
-                                .getKey(); // We can just get the first value in the HashMap since we only have one value
+                                .getKey(); // Just get the first value in the HashMap since we only have one value
 
                         if (slotNumber < 9) {
                             // sendPacket uses raw slot numbers, we need to remap the hotbar
