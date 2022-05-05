@@ -16,13 +16,14 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.utils.objects.Pair;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
@@ -43,27 +44,30 @@ public class EmeraldPouchHotkeyFeature extends Feature {
 
                 Player player = McUtils.player();
                 Inventory inventory = player.getInventory();
-                HashMap<Integer, Integer> emeraldPouches = new HashMap<>() {};
+                HashMap<Integer, Pair<Integer, ItemStack>> emeraldPouches = new HashMap<>() {};
 
                 for (int i = 0; i < inventory.getContainerSize(); i++) {
                     ItemStack stack = inventory.getItem(i);
                     if (!stack.isEmpty() && WynnItemMatchers.isEmeraldPouch(stack)) {
-                        emeraldPouches.put(i, getPouchUsage(stack));
+                        emeraldPouches.put(i, new Pair<>(getPouchUsage(stack), stack));
                     }
                 }
+                Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
 
                 pouchSwitch:
                 switch (emeraldPouches.size()) {
                     default:
                         boolean alreadyHasNonEmpty = false;
                         Integer usedPouch = -1;
+                        ItemStack pouchStack = null;
                         for (Integer key : emeraldPouches.keySet()) {
-                            if (emeraldPouches.get(key) > 0
+                            if (emeraldPouches.get(key).a > 0
                                     && !alreadyHasNonEmpty) { // We've discovered one pouch with a non-zero balance,
                                 // remember this
                                 alreadyHasNonEmpty = true;
                                 usedPouch = key; // Save our pouch slot ID
-                            } else if (emeraldPouches.get(key)
+                                pouchStack = emeraldPouches.get(key).b;
+                            } else if (emeraldPouches.get(key).a
                                     > 0) { // Another pouch has a non-zero balance; notify user
                                 // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You have more than one
                                 // filled emerald pouch in your inventory.");
@@ -71,14 +75,19 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                             }
                         }
 
-                        // At this point, we have either multiple pouches with zero emeralds, or multiple pouches but only one with a non-zero balance
+                        // At this point, we have either multiple pouches with zero emeralds, or multiple pouches but
+                        // only one with a non-zero balance
                         // Check to make sure we don't have a bunch of zero balances - if we do, notify user
                         if (!alreadyHasNonEmpty) {
-                            // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You have more than one empty and no filled emerald pouches in your inventory.");
+                            // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You have more than one empty
+                            // and no filled emerald pouches in your inventory.");
                             break;
                         }
 
-                        // Now, we know we have 1 used pouch and 1+ empty pouches - just open the used one we saved from before
+                        // Now, we know we have 1 used pouch and 1+ empty pouches - just open the used one we saved from
+                        // before
+                        // Make new Int2ObjectMap for this packet
+                        changedSlots.putIfAbsent(usedPouch, pouchStack);
                         McUtils.player()
                                 .connection
                                 .send(new ServerboundContainerClickPacket(
@@ -87,29 +96,37 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                                         usedPouch,
                                         1,
                                         ClickType.PICKUP,
-                                        ItemStack.EMPTY, ));
+                                        ItemStack.EMPTY,
+                                        changedSlots));
                         break;
 
                     case 0:
-                        // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You do not have an emerald pouch in your inventory.");
+                        // GameUpdateOverlay.queueMessage(TextFormatting.DARK_RED + "You do not have an emerald pouch in
+                        // your inventory.");
                         break;
                     case 1:
                         int slotNumber = emeraldPouches
                                 .entrySet()
                                 .iterator()
                                 .next()
-                                .getKey(); // We can just get the first value in the HashMap since we only have one value
+                                .getKey(); // We can just get the first value in the HashMap since we only have one
+                        // value
                         if (slotNumber < 9) {
                             // sendPacket uses raw slot numbers, we need to remap the hotbar
                             slotNumber += 36;
                         }
-                        player.connection.sendPacket(new CPacketClickWindow(
-                                player.inventoryContainer.windowId,
-                                slotNumber,
-                                1,
-                                ClickType.PICKUP,
-                                player.inventory.getStackInSlot(slotNumber),
-                                player.inventoryContainer.getNextTransactionID(player.inventory)));
+                        changedSlots.putIfAbsent(
+                                slotNumber, player.getInventory().getItem(slotNumber));
+                        McUtils.player()
+                                .connection
+                                .send(new ServerboundContainerClickPacket(
+                                        player.inventoryMenu.containerId,
+                                        player.inventoryMenu.getStateId(),
+                                        slotNumber,
+                                        1,
+                                        ClickType.PICKUP,
+                                        ItemStack.EMPTY,
+                                        changedSlots));
                         break;
                 }
             });
