@@ -59,6 +59,6 @@ public class WynnItemMatchers {
     }
 
     public static boolean isEmeraldPouch(ItemStack stack) {
-        return stack.getDisplayName().getString().startsWith("§aEmerald Pouch§2 [Tier");
+        return stack.getDisplayName().getString().startsWith("[§aEmerald Pouch§2 [Tier");
     }
 }
