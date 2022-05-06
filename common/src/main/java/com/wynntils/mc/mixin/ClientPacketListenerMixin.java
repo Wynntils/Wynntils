@@ -121,14 +121,9 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method = "handleAddEntity(Lnet/minecraft/network/protocol/game/ClientboundAddEntityPacket;)V",
+            method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPacket;)V",
             at = @At("RETURN"))
-    public void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
-        EventFactory.onEntityAdded();
+    public void handleSetEntityData(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
+        EventFactory.
     }
-
-    @Inject(
-            method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPAcket;)V",
-            at = @At("RETURN"))
-    public void
 }

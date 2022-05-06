@@ -142,8 +142,5 @@ public class EventFactory {
         post(new ItemsReceivedEvent(container, items));
     }
 
-    public static void onEntityAdded(int data, int id, double LIMIT, double MAGICAL_QUANTIZATION, EntityType<?> type,
-                                     UUID uuid, double x, int xa, int xRot, double y, int ya, int yRot, double z, int za) {
-        post(new )
-    }
+    public static void onEntityDataSet()
 }
