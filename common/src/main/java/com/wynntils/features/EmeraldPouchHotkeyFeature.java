@@ -5,25 +5,21 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
-import com.wynntils.utils.reference.EmeraldSymbols;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wc.utils.parsers.EmeraldPouchParser;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,11 +31,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class EmeraldPouchHotkeyFeature extends Feature {
-
-    private static final Pattern POUCH_USAGE_PATTERN =
-            Pattern.compile("§6§l(\\d* ?\\d* ?\\d*)" + EmeraldSymbols.E_STRING);
-    private static final Pattern POUCH_CAPACITY_PATTERN =
-            Pattern.compile("\\((\\d+)(" + EmeraldSymbols.BLOCKS + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
 
     private static class EmeraldPouch {
         int slotNumber;
@@ -59,11 +50,11 @@ public class EmeraldPouchHotkeyFeature extends Feature {
         }
 
         public int getUsage() {
-            return getPouchUsage(stack);
+            return EmeraldPouchParser.getPouchUsage(stack);
         }
 
         public int getCapacity() {
-            return getPouchCapacity(stack);
+            return EmeraldPouchParser.getPouchCapacity(stack);
         }
     }
 
@@ -152,35 +143,6 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                         ClickType.PICKUP,
                         ItemStack.EMPTY,
                         changedSlots));
-    }
-
-    private static int getPouchUsage(ItemStack stack) { // TODO: move to EmeraldPouchManager or equivalent when created
-        String lore = ItemUtils.getStringLore(stack);
-        Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore);
-        if (!usageMatcher.find()) {
-            if (lore.contains("§7Empty")) {
-                return 0;
-            }
-
-            Reference.LOGGER.error(
-                    "EmeraldPouchHotkeyFeature#getPouchUsage was called on an ItemStack that wasn't an emerald pouch");
-            return -1;
-        }
-        return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
-    }
-
-    private static int getPouchCapacity(ItemStack stack) { // TODO: move to EmeraldPouchManager or equiv when created
-        String lore = ItemUtils.getStringLore(stack);
-        Matcher capacityMatcher = POUCH_CAPACITY_PATTERN.matcher(lore);
-        if (!capacityMatcher.find()) {
-            Reference.LOGGER.error(
-                    "EmeraldPouchHotkeyFeature#getPouchCapacity was called on an ItemStack that wasn't an emerald pouch");
-            return -1;
-        }
-        int capacity = Integer.parseInt(capacityMatcher.group(1)) * 64;
-        if (capacityMatcher.group(2).equals(EmeraldSymbols.LE)) capacity *= 64;
-        if (capacityMatcher.group(2).equals("stx")) capacity *= 4096;
-        return capacity;
     }
 
     @Override
