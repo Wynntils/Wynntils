@@ -5,6 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
@@ -47,19 +48,46 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                 if (!WynnUtils.onWorld()) return;
 
                 Player player = McUtils.player();
-                HashMap<Integer, Pair<ItemStack, Pair<Integer, Integer>>> emeraldPouches = new HashMap<>() {};
+                HashMap<Integer, Pair<ItemStack, Pair<Integer, Integer>>> emeraldPouches = new HashMap<>();
 
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack stack = player.getInventory().getItem(i);
                     if (!stack.isEmpty() && WynnItemMatchers.isEmeraldPouch(stack)) {
-                        emeraldPouches.put(
-                                i, new Pair<>(stack, new Pair<>(getPouchUsage(stack), getPouchCapacity(stack))));
+                        emeraldPouches.put(i, new Pair<>(stack, new Pair<>(getPouchUsage(stack), getPouchCapacity(stack))));
                     }
                 }
                 Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
 
                 pouchSwitch:
                 switch (emeraldPouches.size()) {
+                    case 0 -> McUtils.sendMessageToClient(
+                            new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.noPouch")
+                                    .withStyle(ChatFormatting.DARK_RED));
+
+                    case 1 -> {
+                        int slotNumber = emeraldPouches
+                                .entrySet()
+                                .iterator()
+                                .next()
+                                .getKey(); // Just get the first value in the HashMap since we only have one value
+
+                        if (slotNumber < 9) {
+                            // sendPacket uses raw slot numbers, we need to remap the hotbar
+                            slotNumber += 36;
+                        }
+                        changedSlots.putIfAbsent(
+                                slotNumber, player.getInventory().getItem(slotNumber));
+                        McUtils.player()
+                                .connection
+                                .send(new ServerboundContainerClickPacket(
+                                        player.inventoryMenu.containerId,
+                                        player.inventoryMenu.getStateId(),
+                                        slotNumber,
+                                        1,
+                                        ClickType.PICKUP,
+                                        ItemStack.EMPTY,
+                                        changedSlots));
+                    }
                     default -> {
                         Integer slotNumber = -1;
                         ItemStack slotStack = null;
@@ -120,34 +148,6 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                                         ItemStack.EMPTY,
                                         changedSlots));
                     }
-                    case 0 -> McUtils.sendMessageToClient(
-                            new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.noPouch")
-                                    .withStyle(ChatFormatting.DARK_RED));
-
-                    case 1 -> {
-                        int slotNumber = emeraldPouches
-                                .entrySet()
-                                .iterator()
-                                .next()
-                                .getKey(); // Just get the first value in the HashMap since we only have one value
-
-                        if (slotNumber < 9) {
-                            // sendPacket uses raw slot numbers, we need to remap the hotbar
-                            slotNumber += 36;
-                        }
-                        changedSlots.putIfAbsent(
-                                slotNumber, player.getInventory().getItem(slotNumber));
-                        McUtils.player()
-                                .connection
-                                .send(new ServerboundContainerClickPacket(
-                                        player.inventoryMenu.containerId,
-                                        player.inventoryMenu.getStateId(),
-                                        slotNumber,
-                                        1,
-                                        ClickType.PICKUP,
-                                        ItemStack.EMPTY,
-                                        changedSlots));
-                    }
                 }
             });
 
@@ -159,6 +159,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                 return 0;
             }
 
+            Reference.LOGGER.error("EmeraldPouchHotkeyFeature#getPouchUsage was called on an ItemStack that wasn't an emerald pouch");
             return -1;
         }
         return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
@@ -168,6 +169,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
         String lore = ItemUtils.getStringLore(stack);
         Matcher capacityMatcher = POUCH_CAPACITY_PATTERN.matcher(lore);
         if (!capacityMatcher.find()) {
+            Reference.LOGGER.error("EmeraldPouchHotkeyFeature#getPouchCapacity was called on an ItemStack that wasn't an emerald pouch");
             return -1;
         }
         int capacity = Integer.parseInt(capacityMatcher.group(1)) * 64;

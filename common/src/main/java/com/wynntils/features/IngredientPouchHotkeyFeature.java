@@ -27,11 +27,12 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class IngredientPouchHotkeyFeature extends Feature {
 
+    private final int ingredientPouchSlotNum = 13;
+
     private final KeyHolder ingredientPouchKeybind =
             new KeyHolder("Open Ingredient Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, () -> {
                 if (!WynnUtils.onWorld()) return;
 
-                int ingredientPouchSlotNum = 13;
                 Player player = McUtils.player();
                 Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
 
