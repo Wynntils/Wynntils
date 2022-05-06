@@ -16,7 +16,6 @@ import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import com.wynntils.wc.utils.parsers.EmeraldPouchParser;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +139,11 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                         1,
                         ClickType.PICKUP,
                         ItemStack.EMPTY,
-                        new Int2ObjectOpenHashMap<>() {{put(slotNumber, stack);}}));
+                        new Int2ObjectOpenHashMap<>() {
+                            {
+                                put(slotNumber, stack);
+                            }
+                        }));
     }
 
     @Override
