@@ -18,6 +18,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -28,6 +29,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -138,5 +140,10 @@ public class EventFactory {
 
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
         post(new ItemsReceivedEvent(container, items));
+    }
+
+    public static void onEntityAdded(int data, int id, double LIMIT, double MAGICAL_QUANTIZATION, EntityType<?> type,
+                                     UUID uuid, double x, int xa, int xRot, double y, int ya, int yRot, double z, int za) {
+        post(new )
     }
 }
