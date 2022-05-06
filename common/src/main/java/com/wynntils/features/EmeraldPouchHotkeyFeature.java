@@ -131,8 +131,6 @@ public class EmeraldPouchHotkeyFeature extends Feature {
             });
 
     private static void dispatchRightClick(int slotNumber, ItemStack stack) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.putIfAbsent(slotNumber, stack);
         McUtils.player()
                 .connection
                 .send(new ServerboundContainerClickPacket(
@@ -142,7 +140,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
                         1,
                         ClickType.PICKUP,
                         ItemStack.EMPTY,
-                        changedSlots));
+                        new Int2ObjectOpenHashMap<>() {{put(slotNumber, stack);}}));
     }
 
     @Override
