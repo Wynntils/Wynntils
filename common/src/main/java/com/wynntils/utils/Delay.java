@@ -39,7 +39,7 @@ public class Delay {
     public boolean pause() {
         if (!onPause && isRunning) {
             onPause = true;
-            return true;  // success
+            return true; // success
         }
 
         return false;
@@ -48,7 +48,7 @@ public class Delay {
     public boolean resume() {
         if (onPause && isRunning) {
             onPause = false;
-            return true;  // success
+            return true; // success
         }
 
         return false;
