@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -33,8 +34,8 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class MountHorseHotkeyFeature extends Feature {
 
-    private static final int searchRadius = 7; // Furthest blocks away from which we can interact with a horse
-    private static final int summonAttempts = 6;
+    private static final int searchRadius = 6; // Furthest blocks away from which we can interact with a horse
+    private static final int summonAttempts = 8;
     private static final int summonDelayTicks = 5;
     private static int prevItem = -1;
     private static boolean alreadySetPrevItem = false;
@@ -69,11 +70,11 @@ public class MountHorseHotkeyFeature extends Feature {
 
         // swap to soul points to avoid right click problems
         int prevItem = player.getInventory().selected;
-        player.getInventory().selected = 8;
+        McUtils.player().connection.send(new ServerboundSetCarriedItemPacket(8));
         McUtils.player()
                 .connection
                 .send(ServerboundInteractPacket.createInteractionPacket(horse, false, InteractionHand.MAIN_HAND));
-        player.getInventory().selected = prevItem;
+        McUtils.player().connection.send(new ServerboundSetCarriedItemPacket(prevItem));
     }
 
     private static void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
@@ -90,16 +91,16 @@ public class MountHorseHotkeyFeature extends Feature {
 
         new Delay(
                 () -> {
-                    player.getInventory().selected = horseInventorySlot;
-                    McUtils.player().connection.send(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
-
                     Entity horse = searchForHorseNearby();
                     if (isPlayersHorse(horse)) { // Horse successfully summoned
-                        player.getInventory().selected = prevItem;
+                        McUtils.player().connection.send(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;
-                        new Delay(() -> mountHorse(horse), 1);
+                        mountHorse(horse);
                         return;
                     }
+                    McUtils.player().connection.send(new ServerboundSetCarriedItemPacket(horseInventorySlot));
+                    McUtils.player().connection.send(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
+
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
                 summonDelayTicks);
