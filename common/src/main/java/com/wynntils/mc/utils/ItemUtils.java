@@ -38,6 +38,21 @@ public class ItemUtils {
         return lore;
     }
 
+    /**
+     * Get the lore from an item, combined together into one string.
+     * Relies on {@link #getLore(ItemStack)}. See the aforementioned
+     * for a list format
+     *
+     * @return a {@link String} containing all item lore
+     */
+    public static String getStringLore(ItemStack item) {
+        StringBuilder toReturn = new StringBuilder();
+        for (String x : getLore(item)) {
+            toReturn.append(x);
+        }
+        return toReturn.toString();
+    }
+
     /** Get the lore NBT tag from an item, else return empty */
     public static ListTag getLoreTagElseEmpty(ItemStack item) {
         if (item.isEmpty()) return new ListTag();

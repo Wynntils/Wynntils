@@ -57,4 +57,8 @@ public class WynnItemMatchers {
     public static boolean isUnidentified(ItemStack stack) {
         return (stack.getItem() == Items.STONE_SHOVEL && stack.getDamageValue() >= 1 && stack.getDamageValue() <= 6);
     }
+
+    public static boolean isEmeraldPouch(ItemStack stack) {
+        return stack.getDisplayName().getString().startsWith("[§aEmerald Pouch§2 [Tier");
+    }
 }
