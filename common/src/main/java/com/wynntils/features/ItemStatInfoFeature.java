@@ -300,7 +300,7 @@ public class ItemStatInfoFeature extends Feature {
             IdentificationModifier type =
                     idContainer != null ? idContainer.getType() : IdentificationContainer.getTypeFromName(idName);
 
-            if (type == null) continue; // not a valid id
+            if (type == null || idContainer == null) continue; // not a valid id
 
             boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(idName);
 
@@ -359,7 +359,7 @@ public class ItemStatInfoFeature extends Feature {
             Map<String, Component> infoVariables = new HashMap<>();
 
             IdentificationContainer.ReidentificationChances chances =
-                    idContainer.getChances(statValue, isInverted, starsCount);
+                    idContainer.getChances(statValue, isInverted || idContainer.isNegativeIdentification(), starsCount);
 
             infoVariables.put("percentage", getPercentageTextComponent(percentage));
 

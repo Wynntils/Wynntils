@@ -70,6 +70,10 @@ public class IdentificationContainer {
         return isFixed || min == max;
     }
 
+    public boolean isNegativeIdentification() {
+        return this.baseValue < 0;
+    }
+
     public static IdentificationModifier getTypeFromName(String name) {
         return typeMap.get(name);
     }
