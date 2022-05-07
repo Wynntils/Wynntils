@@ -139,4 +139,8 @@ public class EventFactory {
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
         post(new ItemsReceivedEvent(container, items));
     }
+
+    public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
+        post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
 }

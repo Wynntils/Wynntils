@@ -15,6 +15,6 @@ public class EmeraldSymbols {
     public static final String L_STRING = Character.toString(L).intern();
 
     public static final String EMERALDS = (E_STRING).intern();
-    public static final String BLOCKS = (E_STRING + B_STRING).intern();
+    public static final String EB = (E_STRING + B_STRING).intern();
     public static final String LE = (L_STRING + E_STRING).intern();
 }

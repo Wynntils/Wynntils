@@ -57,6 +57,9 @@ public class FeatureRegistry {
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
+        registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new MountHorseHotkeyFeature());
 
         FEATURES.forEach(Feature::init);
