@@ -142,5 +142,7 @@ public class EventFactory {
         post(new ItemsReceivedEvent(container, items));
     }
 
-    public static void onEntityDataSet()
+    public static void onEntityDataSet(ClientboundSetEntityDataPacket packet) {
+        post(new EntityDataSetEvent(packet.getId(), packet.getUnpackedData()));
+    }
 }

@@ -124,6 +124,6 @@ public abstract class ClientPacketListenerMixin {
             method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPacket;)V",
             at = @At("RETURN"))
     public void handleSetEntityData(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
-        EventFactory.
+        EventFactory.onEntityDataSet(packet);
     }
 }
