@@ -15,6 +15,8 @@ import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.utils.Delay;
 import java.util.List;
+
+import com.wynntils.wc.utils.WynnItemMatchers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -41,8 +43,19 @@ public class MountHorseHotkeyFeature extends Feature {
     private static boolean alreadySetPrevItem = false;
 
     public enum MountHorseStatus {
-        NO_HORSE,
-        ALREADY_RIDING,
+        NO_HORSE("feature.wynntils.mountHorseHotkey.noHorse"),
+        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding"),
+        ;
+
+        private final String tcString;
+
+        MountHorseStatus(String tcString) {
+            this.tcString = tcString;
+        }
+
+        public String getTcString() {
+            return this.tcString;
+        }
     }
 
     private final KeyHolder mountHorseKeybind = new KeyHolder("Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, () -> {
@@ -147,8 +160,7 @@ public class MountHorseHotkeyFeature extends Feature {
         Player player = McUtils.player();
         for (int i = 0; i <= 44; i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() == Items.SADDLE
-                    && stack.getDisplayName().getString().contains("Horse")) {
+            if (WynnItemMatchers.isHorse(stack)) {
                 return i;
             }
         }
@@ -156,14 +168,7 @@ public class MountHorseHotkeyFeature extends Feature {
     }
 
     private static void postHorseErrorMessage(MountHorseStatus status) {
-        switch (status) {
-            case NO_HORSE -> McUtils.sendMessageToClient(
-                    new TranslatableComponent("feature.wynntils.mountHorseHotkey.noHorse")
-                            .withStyle(ChatFormatting.DARK_RED));
-            case ALREADY_RIDING -> McUtils.sendMessageToClient(
-                    new TranslatableComponent("feature.wynntils.mountHorseHotkey.alreadyRiding")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
+        McUtils.sendMessageToClient(new TranslatableComponent(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
     }
 
     @Override
