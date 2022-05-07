@@ -369,21 +369,13 @@ public class ItemStatInfoFeature extends Feature {
                     new TextComponent(String.format(
                                     Utils.getGameLocale(), "\u2605%.2f%%", idContainer.getPerfectChance() * 100))
                             .withStyle(ChatFormatting.AQUA));
-
-            double increaseChance = chances.increase();
-            double decreaseChance = chances.decrease();
-            if (statValue < 0) { // Invert for negative stats
-                increaseChance = chances.decrease();
-                decreaseChance = chances.increase();
-            }
-
             infoVariables.put(
                     "chance_increase",
-                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E7%.1f%%", increaseChance * 100))
+                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E7%.1f%%", chances.increase() * 100))
                             .withStyle(ChatFormatting.GREEN));
             infoVariables.put(
                     "chance_decrease",
-                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E9%.1f%%", decreaseChance * 100))
+                    new TextComponent(String.format(Utils.getGameLocale(), "\u21E9%.1f%%", chances.decrease() * 100))
                             .withStyle(ChatFormatting.RED));
 
             infoVariables.put("min", new TextComponent(String.valueOf(min)).withStyle(ChatFormatting.YELLOW));
