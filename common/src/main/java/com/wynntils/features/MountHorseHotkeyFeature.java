@@ -14,9 +14,8 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.utils.Delay;
-import java.util.List;
-
 import com.wynntils.wc.utils.WynnItemMatchers;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import org.lwjgl.glfw.GLFW;
 

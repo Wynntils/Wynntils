@@ -63,6 +63,7 @@ public class WynnItemMatchers {
     }
 
     public static boolean isHorse(ItemStack stack) {
-        return stack.getItem() == Items.SADDLE && stack.getDisplayName().getString().contains("Horse");
+        return stack.getItem() == Items.SADDLE
+                && stack.getDisplayName().getString().contains("Horse");
     }
 }
