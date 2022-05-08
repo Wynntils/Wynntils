@@ -47,6 +47,8 @@ public class WynntilsMod {
 
         ModelLoader.init();
         FeatureRegistry.init();
+
+        System.setProperty("java.awt.headless", "false");
     }
 
     public static void parseVersion(String versionString) {
