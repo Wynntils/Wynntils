@@ -8,6 +8,8 @@
   "feature.wynntils.playerGhostTransparency.name": "Transparent Player Ghost Feature",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer Feature",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
+  "feature.wynntils.itemScreenshot.name": "Item Screenshot Feature",
+  "feature.wynntils.itemScreenshot.message": "Copied %s to clipboard!",
   "feature.wynntils.emeraldPouchKeybind.name": "Emerald Pouch Keybind Feature",
   "feature.wynntils.emeraldPouchKeybind.noPouch": "You do not have an emerald pouch in your inventory.",
   "feature.wynntils.emeraldPouchKeybind.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
