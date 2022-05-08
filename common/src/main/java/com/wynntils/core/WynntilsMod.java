@@ -48,6 +48,8 @@ public class WynntilsMod {
         ModelLoader.init();
         FeatureRegistry.init();
 
+        // MC will sometimes think it's running headless and refuse to set clipboard contents
+        // making sure this is set to false will fix that
         System.setProperty("java.awt.headless", "false");
     }
 
