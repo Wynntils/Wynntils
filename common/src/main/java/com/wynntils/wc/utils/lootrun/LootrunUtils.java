@@ -25,7 +25,6 @@ import java.util.*;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -51,7 +50,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LootrunUtils {
 
-    public static final File LOOTRUNS = new File(Minecraft.getInstance().gameDirectory, "lootruns");
+    public static final File LOOTRUNS = new File(McUtils.mc().gameDirectory, "lootruns");
 
     private static final List<Integer> COLORS = List.of(
             ChatFormatting.RED.getColor(),
@@ -85,19 +84,18 @@ public class LootrunUtils {
     private static void renderLootrun(RenderLevelLastEvent event, LootrunInstance lootrun, int color) {
         if (lootrun != null) {
             event.getPoseStack().pushPose();
-            Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
+            Camera cam = McUtils.mc().gameRenderer.getMainCamera();
             event.getPoseStack().translate(-cam.getPosition().x, -cam.getPosition().y, -cam.getPosition().z);
-            MultiBufferSource.BufferSource source =
-                    Minecraft.getInstance().renderBuffers().bufferSource();
+            MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
             var points = lootrun.points();
-            int renderDistance = Minecraft.getInstance().options.renderDistance;
-            BlockPos pos = Minecraft.getInstance().gameRenderer.getMainCamera().getBlockPosition();
+            int renderDistance = McUtils.mc().options.renderDistance;
+            BlockPos pos = McUtils.mc().gameRenderer.getMainCamera().getBlockPosition();
             ChunkPos origin = new ChunkPos(pos);
             for (int i = 0; i < renderDistance * renderDistance; i++) {
                 int x = i % renderDistance + origin.x - (renderDistance / 2);
                 int z = i / renderDistance + origin.z - (renderDistance / 2);
                 ChunkPos chunk = new ChunkPos(x, z);
-                if (Minecraft.getInstance().level.hasChunk(chunk.x, chunk.z)) {
+                if (McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
                     long chunkLong = chunk.toLong();
                     if (points.containsKey(chunkLong)) {
                         List<List<Point>> locations = points.get(chunkLong);
@@ -114,7 +112,7 @@ public class LootrunUtils {
                                 boolean pauseDraw = false;
                                 BlockPos blockPos = new BlockPos(loc.vec3());
 
-                                Level level = Minecraft.getInstance().level;
+                                Level level = McUtils.mc().level;
 
                                 if (!blockPos.equals(lastBlockPos)) {
                                     BlockPos minPos =
@@ -216,13 +214,13 @@ public class LootrunUtils {
 
                     if (lootrun.notes().containsKey(chunkLong)) {
                         List<Pair<Vec3, Component>> notes = lootrun.notes().get(chunkLong);
-                        Font font = Minecraft.getInstance().font;
+                        Font font = McUtils.mc().font;
                         for (Pair<Vec3, Component> note : notes) {
                             Vec3 location = note.first();
                             event.getPoseStack().pushPose();
                             event.getPoseStack().translate(location.x, location.y + 2, location.z);
                             event.getPoseStack()
-                                    .mulPose(Minecraft.getInstance()
+                                    .mulPose(McUtils.mc()
                                             .gameRenderer
                                             .getMainCamera()
                                             .rotation());
@@ -354,7 +352,7 @@ public class LootrunUtils {
     public static void recordMovement(ClientTickEvent event) {
         if (event.getTickPhase() == ClientTickEvent.Phase.START) {
             if (recording != null) {
-                LocalPlayer player = Minecraft.getInstance().player;
+                LocalPlayer player = McUtils.mc().player;
                 if (player != null) {
                     Entity root = player.getRootVehicle();
                     Vec3 pos = root.position();
