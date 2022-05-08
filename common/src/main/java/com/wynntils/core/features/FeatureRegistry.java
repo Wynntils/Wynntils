@@ -58,6 +58,9 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemScreenshotFeature());
+        registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new DialogueOptionOverrideFeature());
 
         FEATURES.forEach(Feature::init);
 
