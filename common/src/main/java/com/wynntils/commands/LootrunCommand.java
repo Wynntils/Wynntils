@@ -52,6 +52,7 @@ public class LootrunCommand extends CommandBase {
             try {
                 file = new FileReader(lootrunFile);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
+                LootrunUtils.register();
                 LootrunUtils.uncompiled = readJson(lootrunFile, json);
                 LootrunUtils.lootrun = LootrunUtils.compile(LootrunUtils.uncompiled);
                 BlockPos start = new BlockPos(LootrunUtils.uncompiled.points().get(0));
@@ -69,6 +70,7 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int recordLootrun(CommandContext<CommandSourceStack> context) {
+        LootrunUtils.register();
         if (LootrunUtils.recording == null) {
             LootrunUtils.recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
             LootrunUtils.recordingInformation = new RecordingInformation();
@@ -185,6 +187,9 @@ public class LootrunCommand extends CommandBase {
             context.getSource().sendFailure(new TextComponent("No active or recording lootrun"));
             return 0;
         }
+
+        LootrunUtils.unregister();
+
         LootrunUtils.lootrun = null;
         LootrunUtils.uncompiled = null;
         LootrunUtils.recording = null;
