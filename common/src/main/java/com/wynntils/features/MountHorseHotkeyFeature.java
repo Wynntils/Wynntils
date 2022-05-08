@@ -42,8 +42,7 @@ public class MountHorseHotkeyFeature extends Feature {
 
     public enum MountHorseStatus {
         NO_HORSE("feature.wynntils.mountHorseHotkey.noHorse"),
-        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding"),
-        ;
+        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding");
 
         private final String tcString;
 
