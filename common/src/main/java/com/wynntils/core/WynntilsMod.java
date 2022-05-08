@@ -11,6 +11,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.ClientCommandManager;
 import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
+import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,8 @@ public class WynntilsMod {
 
         ModelLoader.init();
         FeatureRegistry.init();
+
+        LootrunUtils.registerToEventBus();
 
         // MC will sometimes think it's running headless and refuse to set clipboard contents
         // making sure this is set to false will fix that

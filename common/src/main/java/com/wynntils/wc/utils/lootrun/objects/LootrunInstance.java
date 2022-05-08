@@ -5,16 +5,14 @@
 package com.wynntils.wc.utils.lootrun.objects;
 
 import it.unimi.dsi.fastutil.Pair;
-import java.io.File;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
-public record LootrunUncompiled(List<Vec3> points, Set<BlockPos> chests, List<Pair<Vec3, Component>> notes, File file) {
-
-    public LootrunUncompiled(LootrunUncompiled old, File file) {
-        this(old.points, old.chests, old.notes, file);
-    }
-}
+public record LootrunInstance(
+        Long2ObjectMap<List<List<Point>>> points,
+        Long2ObjectMap<Set<BlockPos>> chests,
+        Long2ObjectMap<List<Pair<Vec3, Component>>> notes) {}

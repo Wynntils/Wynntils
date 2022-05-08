@@ -8,10 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.wynntils.commands.ServerCommand;
-import com.wynntils.commands.TerritoryCommand;
-import com.wynntils.commands.TokenCommand;
-import com.wynntils.commands.WynntilsCommand;
+import com.wynntils.commands.*;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -37,6 +34,7 @@ public class ClientCommandManager {
         new ServerCommand().register(clientDispatcher);
         new TokenCommand().register(clientDispatcher);
         new TerritoryCommand().register(clientDispatcher);
+        new LootrunCommand().register(clientDispatcher);
     }
 
     public static ClientCommandSourceStack getSource() {

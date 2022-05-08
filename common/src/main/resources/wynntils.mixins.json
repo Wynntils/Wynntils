@@ -20,7 +20,9 @@
     "MultiPlayerGameModeMixin",
     "OptionsMixin",
     "ScoreboardMixin",
+    "LevelRendererMixin",
     "ScreenMixin",
+    "ServerPlayerGameModeMixin",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
   ],
