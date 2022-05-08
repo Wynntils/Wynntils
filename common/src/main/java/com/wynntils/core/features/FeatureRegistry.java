@@ -61,6 +61,7 @@ public class FeatureRegistry {
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new MountHorseHotkeyFeature());
 
         FEATURES.forEach(Feature::init);
 
