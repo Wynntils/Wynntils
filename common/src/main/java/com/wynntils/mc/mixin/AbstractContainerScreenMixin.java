@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
@@ -37,5 +38,14 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+    }
+
+    @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
+    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        Screen screen = (Screen) (Object) this;
+
+        if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)) {
+            cir.setReturnValue(true);
+        }
     }
 }
