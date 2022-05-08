@@ -92,6 +92,12 @@ public class EventFactory {
         post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
     }
 
+    public static boolean onInventoryKeyPress(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
+        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot);
+        post(event);
+        return event.isCanceled();
+    }
+
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
         String footer = packet.getFooter().getString();
         post(new PlayerInfoFooterChangedEvent(footer));
