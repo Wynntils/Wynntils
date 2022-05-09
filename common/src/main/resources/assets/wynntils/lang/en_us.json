@@ -17,5 +17,14 @@
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
-  "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"
+  "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature",
+  "feature.wynntils.lootrunUtils.recordStart1":"Started recording lootrun. Execute ",
+  "feature.wynntils.lootrunUtils.recordStart2":" to stop recording.",
+  "feature.wynntils.lootrunUtils.recordStop1":"Stopped recording lootrun. Execute ",
+  "feature.wynntils.lootrunUtils.recordStop2":" to delete the lootrun.",
+  "feature.wynntils.lootrunUtils.recordStop3":"Execute ",
+  "feature.wynntils.lootrunUtils.recordStop4":" to save the lootrun.",
+  "feature.wynntils.lootrunUtils.listNoteNoNote": "There are no notes in the current lootrun",
+  "feature.wynntils.lootrunUtils.listNoteHeader": "Lootrun notes: ",
+  "feature.wynntils.lootrunUtils.listClickToDelete": "Click here to delete this note"
 }

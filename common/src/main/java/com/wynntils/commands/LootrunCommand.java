@@ -76,12 +76,12 @@ public class LootrunCommand extends CommandBase {
             LootrunUtils.recordingInformation = new RecordingInformation();
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Started recording lootrun.\nExecute ")
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.recordStart1")
                                     .append(new TextComponent("/lootrun record")
                                             .withStyle(ChatFormatting.UNDERLINE)
                                             .withStyle((style) -> style.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record"))))
-                                    .append(" to stop recording"),
+                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStart2")),
                             false);
         } else {
             LootrunUtils.lootrun = LootrunUtils.recordingCompiled;
@@ -91,20 +91,21 @@ public class LootrunCommand extends CommandBase {
             LootrunUtils.recordingInformation = null;
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Stopped recording lootrun.\n")
-                                    .append(new TextComponent("Execute ")
-                                            .append(new TextComponent("/lootrun clear")
-                                                    .withStyle(ChatFormatting.UNDERLINE)
-                                                    .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                            ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
-                                            .append(" to delete the lootrun.\n")
-                                            .withStyle(ChatFormatting.RED))
-                                    .append(new TextComponent("Execute ")
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop1")
+                                    .append(new TextComponent("/lootrun clear")
+                                            .withStyle(ChatFormatting.UNDERLINE)
+                                            .withStyle((style) -> style.withClickEvent(
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
+                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop2"))
+                                    .withStyle(ChatFormatting.RED)
+                                    .append("\n")
+                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop3")
                                             .append(new TextComponent("/lootrun save <name>")
                                                     .withStyle(ChatFormatting.UNDERLINE)
                                                     .withStyle((style) -> style.withClickEvent(new ClickEvent(
                                                             ClickEvent.Action.SUGGEST_COMMAND, "/lootrun save "))))
-                                            .append(" to save the lootrun.")
+                                            .append(new TranslatableComponent(
+                                                    "feature.wynntils.lootrunUtils.recordStop4"))
                                             .withStyle(ChatFormatting.GREEN)),
                             false);
         }
@@ -133,9 +134,9 @@ public class LootrunCommand extends CommandBase {
         if (current == null) return 0;
 
         if (current.notes().isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("There are no notes in the current lootrun"));
+            context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteNoNote"));
         } else {
-            MutableComponent component = new TextComponent("Lootrun notes:");
+            MutableComponent component = new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteHeader");
             for (Pair<Vec3, Component> note : current.notes()) {
                 BlockPos pos = new BlockPos(note.first());
                 String posString = pos.toShortString();
@@ -144,7 +145,7 @@ public class LootrunCommand extends CommandBase {
                         .append("\n")
                         .append(new TextComponent("[X]").withStyle((style) -> style.withHoverEvent(new HoverEvent(
                                         HoverEvent.Action.SHOW_TEXT,
-                                        new TextComponent("Click here to delete this note")))
+                                        new TranslatableComponent("feature.wynntils.lootrunUtils.listClickToDelete")))
                                 .withClickEvent(new ClickEvent(
                                         ClickEvent.Action.RUN_COMMAND,
                                         "/lootrun note delete " + posString.replace(",", "")))
