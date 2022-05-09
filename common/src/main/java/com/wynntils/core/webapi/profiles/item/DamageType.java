@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.items;
+package com.wynntils.core.webapi.profiles.item;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.regex.Pattern;

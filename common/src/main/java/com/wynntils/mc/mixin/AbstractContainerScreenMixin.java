@@ -6,6 +6,8 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.wc.objects.item.render.RenderedBackground;
+import com.wynntils.wc.objects.item.render.RenderedForeground;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -38,6 +40,24 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+    }
+
+    @Inject(
+            method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
+            at = @At("HEAD"))
+    private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
+        if (slot.getItem() instanceof RenderedBackground) {
+            ((RenderedBackground) slot.getItem()).renderBackground(poseStack, slot);
+        }
+    }
+
+    @Inject(
+            method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
+            at = @At("RETURN"))
+    private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
+        if (slot.getItem() instanceof RenderedForeground) {
+            ((RenderedForeground) slot.getItem()).renderForeground(poseStack, slot);
+        }
     }
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)

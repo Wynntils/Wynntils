@@ -21,6 +21,7 @@
     "OptionsMixin",
     "ScoreboardMixin",
     "ScreenMixin",
+    "SlotMixin",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
   ],

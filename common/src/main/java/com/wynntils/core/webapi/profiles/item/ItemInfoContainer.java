@@ -2,10 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.items;
+package com.wynntils.core.webapi.profiles.item;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class ItemInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
@@ -53,5 +55,10 @@ public class ItemInfoContainer {
         int b = Integer.parseInt(m.group(3));
 
         return (r << 16) + (g << 8) + b;
+    }
+
+    // TODO get this method working
+    public ItemStack asItemStack() {
+        return new ItemStack(Items.DIRT);
     }
 }

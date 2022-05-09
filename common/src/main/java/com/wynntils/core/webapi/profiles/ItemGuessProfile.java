@@ -5,9 +5,9 @@
 package com.wynntils.core.webapi.profiles;
 
 import com.google.gson.*;
+import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.objects.items.ItemTier;
-import com.wynntils.wc.objects.items.ItemType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
