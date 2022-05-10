@@ -49,7 +49,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LootrunUtils {
 
-    public static final File LOOTRUNS = new File(McUtils.mc().gameDirectory, "lootruns");
+    public static final File LOOTRUNS = new File(WynntilsMod.MOD_STORAGE_ROOT, "lootruns");
 
     private static final List<Integer> COLORS = List.of(
             ChatFormatting.RED.getColor(),
