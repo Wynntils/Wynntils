@@ -258,7 +258,9 @@ public class LootrunUtils {
 
         current.notes().add(new ObjectObjectImmutablePair<>(root.position(), text));
         source.sendSuccess(
-                new TextComponent("Added note at " + pos.toShortString() + " with text:\n").append(text), false);
+                new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
+                        .append("\n" + text),
+                false);
         return getEditLootrun(source, true);
     }
 
@@ -284,7 +286,7 @@ public class LootrunUtils {
                 }
             }
         } else {
-            source.sendFailure(new TextComponent("No active or recording lootrun"));
+            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noActiveLootrun"));
         }
         return 1;
     }
@@ -336,10 +338,13 @@ public class LootrunUtils {
             FileWriter writer = new FileWriter(file);
             new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
             writer.close();
-            source.sendSuccess(new TextComponent("Successfully saved lootrun").withStyle(ChatFormatting.GREEN), false);
+            source.sendSuccess(
+                    new TranslatableComponent("feature.wynntils.lootrunUtils.savedLootrun")
+                            .withStyle(ChatFormatting.GREEN),
+                    false);
             return 1;
         } catch (IOException ex) {
-            source.sendFailure(new TextComponent("Error saving lootrun"));
+            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrun"));
             return 0;
         }
     }

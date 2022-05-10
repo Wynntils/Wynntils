@@ -58,8 +58,12 @@ public class LootrunCommand extends CommandBase {
                 BlockPos start = new BlockPos(LootrunUtils.uncompiled.points().get(0));
                 context.getSource()
                         .sendSuccess(
-                                new TextComponent(
-                                        "Start is at " + start.getX() + " " + start.getY() + " " + start.getZ()),
+                                new TranslatableComponent(
+                                                "feature.wynntils.lootrunUtils.lootrunStart",
+                                                start.getX(),
+                                                start.getY(),
+                                                start.getZ())
+                                        .withStyle(ChatFormatting.GREEN),
                                 false);
                 file.close();
             } catch (IOException e) {
@@ -76,12 +80,12 @@ public class LootrunCommand extends CommandBase {
             LootrunUtils.recordingInformation = new RecordingInformation();
             context.getSource()
                     .sendSuccess(
-                            new TranslatableComponent("feature.wynntils.lootrunUtils.recordStart1")
-                                    .append(new TextComponent("/lootrun record")
+                            new TranslatableComponent(
+                                    "feature.wynntils.lootrunUtils.recordStart",
+                                    new TextComponent("/lootrun record")
                                             .withStyle(ChatFormatting.UNDERLINE)
                                             .withStyle((style) -> style.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record"))))
-                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStart2")),
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record")))),
                             false);
         } else {
             LootrunUtils.lootrun = LootrunUtils.recordingCompiled;
@@ -91,21 +95,21 @@ public class LootrunCommand extends CommandBase {
             LootrunUtils.recordingInformation = null;
             context.getSource()
                     .sendSuccess(
-                            new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop1")
-                                    .append(new TextComponent("/lootrun clear")
-                                            .withStyle(ChatFormatting.UNDERLINE)
-                                            .withStyle((style) -> style.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
-                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop2"))
-                                    .withStyle(ChatFormatting.RED)
-                                    .append("\n")
-                                    .append(new TranslatableComponent("feature.wynntils.lootrunUtils.recordStop3")
-                                            .append(new TextComponent("/lootrun save <name>")
+                            new TranslatableComponent(
+                                            "feature.wynntils.lootrunUtils.recordStop1",
+                                            new TextComponent("/lootrun clear")
                                                     .withStyle(ChatFormatting.UNDERLINE)
                                                     .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                            ClickEvent.Action.SUGGEST_COMMAND, "/lootrun save "))))
-                                            .append(new TranslatableComponent(
-                                                    "feature.wynntils.lootrunUtils.recordStop4"))
+                                                            ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
+                                    .withStyle(ChatFormatting.RED)
+                                    .append("\n")
+                                    .append(new TranslatableComponent(
+                                                    "feature.wynntils.lootrunUtils.recordStop2",
+                                                    new TextComponent("/lootrun save <name>")
+                                                            .withStyle(ChatFormatting.UNDERLINE)
+                                                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
+                                                                    ClickEvent.Action.SUGGEST_COMMAND,
+                                                                    "/lootrun save "))))
                                             .withStyle(ChatFormatting.GREEN)),
                             false);
         }
@@ -172,20 +176,21 @@ public class LootrunCommand extends CommandBase {
                 notes.remove(i);
                 context.getSource()
                         .sendSuccess(
-                                new TextComponent("Successfully removed the note at " + posString + " with text ")
-                                        .append(note.second())
+                                new TranslatableComponent(
+                                                "feature.wynntils.lootrunUtils.noteRemovedSuccessfully", note.second())
                                         .withStyle(ChatFormatting.GREEN),
                                 false);
                 return 1;
             }
         }
-        context.getSource().sendFailure(new TextComponent("Unable to find note at " + posString));
+        context.getSource()
+                .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noteUnableToFind", posString));
         return LootrunUtils.getEditLootrun(context.getSource(), true);
     }
 
     private int clearLootrun(CommandContext<CommandSourceStack> context) {
         if (LootrunUtils.lootrun == null && LootrunUtils.recording == null) {
-            context.getSource().sendFailure(new TextComponent("No active or recording lootrun"));
+            context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noActiveLootrun"));
             return 0;
         }
 
@@ -198,7 +203,7 @@ public class LootrunCommand extends CommandBase {
         LootrunUtils.recordingInformation = null;
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Cleared currently active and/or recording lootrun")
+                        new TranslatableComponent("feature.wynntils.lootrunUtils.clearSuccessful")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
         return 1;
@@ -208,16 +213,19 @@ public class LootrunCommand extends CommandBase {
         String name = StringArgumentType.getString(context, "name");
         File file = new File(LootrunUtils.LOOTRUNS, name + ".json");
         if (!file.exists()) {
-            context.getSource().sendFailure(new TextComponent("Lootrun \"" + name + "\" does not exist"));
+            context.getSource()
+                    .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunDoesntExist", name));
         } else if (file.delete()) {
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Lootrun \"" + name + "\" successfully deleted")
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunDeleted", name)
                                     .withStyle(ChatFormatting.GREEN),
                             false);
             return 1;
         } else {
-            context.getSource().sendFailure(new TextComponent("Lootrun \"" + name + "\" could not be deleted"));
+            context.getSource()
+                    .sendFailure(
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunCouldNotBeDeleted", name));
         }
         return 0;
     }
@@ -228,18 +236,20 @@ public class LootrunCommand extends CommandBase {
         File oldFile = new File(LootrunUtils.LOOTRUNS, oldName + ".json");
         File newFile = new File(LootrunUtils.LOOTRUNS, newName + ".json");
         if (!oldFile.exists()) {
-            context.getSource().sendFailure(new TextComponent("Lootrun \"" + oldName + "\" does not exist"));
+            context.getSource()
+                    .sendFailure(
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunDoesntExist", oldName));
         } else if (oldFile.renameTo(newFile)) {
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Lootrun \"" + oldName + "\" successfully renamed to \"" + newName + '"')
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunRenamed", oldName, newName)
                                     .withStyle(ChatFormatting.GREEN),
                             false);
             return 1;
         } else {
             context.getSource()
-                    .sendFailure(new TextComponent(
-                            "Lootrun \"" + oldName + "\" could not be renamed to \"" + newName + '"'));
+                    .sendFailure(new TranslatableComponent(
+                            "feature.wynntils.lootrunUtils.lootrunCouldNotBeRenamed", oldName, newName));
         }
         return 0;
     }
@@ -254,12 +264,13 @@ public class LootrunCommand extends CommandBase {
         if (current.chests().add(pos)) {
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Successfully added chest at " + pos.toShortString())
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.chestAdded", pos.toShortString())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {
             context.getSource()
-                    .sendFailure(new TextComponent("Chest at " + pos.toShortString() + " has already been added"));
+                    .sendFailure(new TranslatableComponent(
+                            "feature.wynntils.lootrunUtils.chestAlreadyAdded", pos.toShortString()));
         }
         return LootrunUtils.getEditLootrun(context.getSource(), true);
     }
@@ -274,12 +285,13 @@ public class LootrunCommand extends CommandBase {
         if (current.chests().remove(pos)) {
             context.getSource()
                     .sendSuccess(
-                            new TextComponent("Successfully removed chest at " + pos.toShortString())
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.chestRemoved", pos.toShortString())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {
             context.getSource()
-                    .sendFailure(new TextComponent("Chest at " + pos.toShortString() + " is not in the lootrun"));
+                    .sendFailure(new TranslatableComponent(
+                            "feature.wynntils.lootrunUtils.chestDoesNotExist", pos.toShortString()));
         }
 
         return LootrunUtils.getEditLootrun(context.getSource(), true);
@@ -287,7 +299,7 @@ public class LootrunCommand extends CommandBase {
 
     private int undoLootrun(CommandContext<CommandSourceStack> context) {
         if (LootrunUtils.recording == null) {
-            context.getSource().sendFailure(new TextComponent("You aren't currently recording a loot run"));
+            context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.notRecording"));
             return 0;
         } else {
             Vec3 position = McUtils.player().position();
@@ -298,10 +310,11 @@ public class LootrunCommand extends CommandBase {
                 if (i == 0) {
                     if (left) {
                         context.getSource()
-                                .sendFailure(new TextComponent("Stand near a previous spot to undo movements"));
+                                .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.undoStandNear"));
                     } else {
                         context.getSource()
-                                .sendFailure(new TextComponent("You haven't moved far enough away to undo movement"));
+                                .sendFailure(
+                                        new TranslatableComponent("feature.wynntils.lootrunUtils.undoNotFarEnough"));
                     }
                     return 0;
                 }
@@ -318,7 +331,8 @@ public class LootrunCommand extends CommandBase {
             }
 
             points.removeAll(removed);
-            context.getSource().sendSuccess(new TextComponent("Successfully undid movements"), false);
+            context.getSource()
+                    .sendSuccess(new TranslatableComponent("feature.wynntils.lootrunUtils.undoSuccessful"), false);
             LootrunUtils.recordingInformation.setDirty(true);
             return removed.size();
         }
