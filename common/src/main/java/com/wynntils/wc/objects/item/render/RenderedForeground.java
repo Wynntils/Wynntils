@@ -8,5 +8,5 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.inventory.Slot;
 
 public interface RenderedForeground {
-    void renderForeground(PoseStack poseStack, Slot slot);
+    void renderForeground(PoseStack poseStack, Slot slot, Slot hovered);
 }

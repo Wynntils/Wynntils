@@ -104,7 +104,7 @@ public class WynnUnidentifiedStack extends WynnItemStack implements RenderedBack
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, Slot slot) {
+    public void renderBackground(PoseStack poseStack, Slot slot, Slot hovered) {
         int color = tier.getChatFormatting().getColor();
         color = 0xFF000000 | color;
 

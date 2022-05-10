@@ -11,12 +11,16 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+    private static final Pattern COSMETIC_PATTERN =
+            Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
 
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
@@ -72,5 +76,12 @@ public class WynnItemMatchers {
         String name = stack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
         return (WebManager.getItemsMap() != null && WebManager.getItemsMap().containsKey(strippedName));
+    }
+
+    public static boolean isCosmetic(ItemStack stack) {
+        for (Component c : stack.getTooltipLines(null, TooltipFlag.Default.NORMAL)) {
+            if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
+        }
+        return false;
     }
 }

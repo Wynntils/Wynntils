@@ -271,7 +271,7 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground, 
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, Slot slot) {
+    public void renderBackground(PoseStack poseStack, Slot slot, Slot hovered) {
         int color = itemProfile.getTier().getChatFormatting().getColor();
         color = 0xFF000000 | color;
 

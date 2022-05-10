@@ -15,6 +15,7 @@
   "feature.wynntils.emeraldPouchKeybind.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
   "feature.wynntils.ingredientPouchKeybind.name": "Ingredient Pouch Keybind Feature",
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override Feature",
+  "feature.wynntils.cosmetichighlight.name": "Cosmetic Highlights Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
   "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"

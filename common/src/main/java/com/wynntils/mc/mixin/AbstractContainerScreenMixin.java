@@ -24,6 +24,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     @Shadow
     protected Slot hoveredSlot;
 
+    private Slot lastHovered;
+
     private AbstractContainerScreenMixin(Component component) {
         super(component);
     }
@@ -40,6 +42,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+        this.lastHovered = this.hoveredSlot;
     }
 
     @Inject(
@@ -47,7 +50,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             at = @At("HEAD"))
     private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
         if (slot.getItem() instanceof RenderedBackground) {
-            ((RenderedBackground) slot.getItem()).renderBackground(poseStack, slot);
+            ((RenderedBackground) slot.getItem()).renderBackground(poseStack, slot, this.lastHovered);
         }
     }
 
@@ -56,14 +59,12 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             at = @At("RETURN"))
     private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
         if (slot.getItem() instanceof RenderedForeground) {
-            ((RenderedForeground) slot.getItem()).renderForeground(poseStack, slot);
+            ((RenderedForeground) slot.getItem()).renderForeground(poseStack, slot, this.lastHovered);
         }
     }
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        Screen screen = (Screen) (Object) this;
-
         if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)) {
             cir.setReturnValue(true);
         }
