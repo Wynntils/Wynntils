@@ -119,7 +119,7 @@ public class LootrunCommand extends CommandBase {
     private int saveLootrun(CommandContext<CommandSourceStack> context) {
         File file = new File(LootrunUtils.LOOTRUNS, StringArgumentType.getString(context, "name") + ".json");
         LootrunUtils.uncompiled = new LootrunUncompiled(LootrunUtils.uncompiled, file);
-        return LootrunUtils.saveLootrun(LootrunUtils.uncompiled, file, context.getSource());
+        return LootrunUtils.saveLootrun(file, context.getSource());
     }
 
     private int addJsonLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

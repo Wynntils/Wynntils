@@ -38,6 +38,7 @@
   "feature.wynntils.lootrunUtils.addedNote": "Added note at %s with text: ",
   "feature.wynntils.lootrunUtils.savedLootrun": "Successfully saved lootrun",
   "feature.wynntils.lootrunUtils.errorSavingLootrun": "Error saving lootrun",
+  "feature.wynntils.lootrunUtils.errorSavingLootrunAlreadyExists": "A lootrun with this name already exists,",
   "feature.wynntils.lootrunUtils.notRecording": "You aren't currently recording a loot run",
   "feature.wynntils.lootrunUtils.undoNotFarEnough": "You haven't moved far enough away to undo movement",
   "feature.wynntils.lootrunUtils.undoStandNear": "Stand near a previous spot to undo movements",

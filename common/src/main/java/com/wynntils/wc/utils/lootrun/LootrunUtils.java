@@ -6,7 +6,6 @@ package com.wynntils.wc.utils.lootrun;
 
 import com.google.gson.*;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -101,7 +100,7 @@ public class LootrunUtils {
             int x = i % renderDistance + origin.x - (renderDistance / 2);
             int z = i / renderDistance + origin.z - (renderDistance / 2);
             ChunkPos chunk = new ChunkPos(x, z);
-            if (McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
+            if (McUtils.mc().level != null && McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
                 long chunkLong = chunk.toLong();
                 if (points.containsKey(chunkLong)) {
                     List<List<Point>> locations = points.get(chunkLong);
@@ -173,10 +172,6 @@ public class LootrunUtils {
                             lastBlockPos = blockPos;
 
                             if (!pauseDraw) {
-                                if (disabled) {
-                                    consumer = source.getBuffer(RenderType.lineStrip());
-                                    disabled = false;
-                                }
                                 Vec3 rawLocation = loc.vec3();
                                 int pathColor = loc.color();
                                 consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
@@ -248,7 +243,7 @@ public class LootrunUtils {
         event.getPoseStack().popPose();
     }
 
-    public static int addNote(CommandSourceStack source, Component text) throws CommandSyntaxException {
+    public static int addNote(CommandSourceStack source, Component text) {
         Entity root = McUtils.player().getRootVehicle();
         BlockPos pos = root.blockPosition();
 
@@ -282,7 +277,7 @@ public class LootrunUtils {
             if (edit) {
                 lootrun = compile(uncompiled);
                 if (uncompiled.file() != null) {
-                    saveLootrun(uncompiled, uncompiled.file(), source);
+                    saveLootrun(uncompiled.file(), source);
                 }
             }
         } else {
@@ -291,9 +286,17 @@ public class LootrunUtils {
         return 1;
     }
 
-    public static int saveLootrun(LootrunUncompiled lootrun, File file, CommandSourceStack source) {
+    public static int saveLootrun(File file, CommandSourceStack source) {
         try {
-            file.createNewFile();
+            boolean result = file.createNewFile();
+
+            if (!result) {
+                source.sendFailure(
+                        new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrunAlreadyExists")
+                                .withStyle(ChatFormatting.RED));
+                return 0;
+            }
+
             JsonObject json = new JsonObject();
             JsonArray points = new JsonArray();
             for (Vec3 point : uncompiled.points()) {
@@ -344,7 +347,8 @@ public class LootrunUtils {
                     false);
             return 1;
         } catch (IOException ex) {
-            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrun"));
+            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrun")
+                    .withStyle(ChatFormatting.RED));
             return 0;
         }
     }
@@ -454,7 +458,9 @@ public class LootrunUtils {
     }
 
     private static Long2ObjectMap<List<List<Point>>> generatePointsByChunk(List<Vec3> raw) {
-        List<Vec3> vec3s = sample(raw, 10f).stream().flatMap(List::stream).toList();
+        float sampleRate = 10f;
+        List<Vec3> vec3s =
+                sample(raw, sampleRate).stream().flatMap(List::stream).toList();
         ChunkPos lastChunkPos = null;
         List<Point> locationsList = new ArrayList<>();
         Iterator<Integer> colorIterator = COLORS.iterator();
@@ -484,7 +490,7 @@ public class LootrunUtils {
                 usedColor = currentColor;
                 usedColor += (0x010000) * (int) (differenceRed * done);
                 usedColor += (0x000100) * (int) (differenceGreen * done);
-                usedColor += (0x000001) * (int) (differenceBlue * done);
+                usedColor += (int) (differenceBlue * done);
             }
 
             locationsList.add(new Point(location, usedColor | 0xff000000));
