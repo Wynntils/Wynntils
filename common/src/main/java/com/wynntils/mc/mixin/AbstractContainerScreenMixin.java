@@ -6,8 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.wc.objects.item.render.RenderedBackground;
-import com.wynntils.wc.objects.item.render.RenderedForeground;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -23,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AbstractContainerScreenMixin extends Screen {
     @Shadow
     protected Slot hoveredSlot;
-
-    private Slot lastHovered;
 
     private AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -42,25 +38,24 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
-        this.lastHovered = this.hoveredSlot;
     }
 
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("HEAD"))
     private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
-        if (slot.getItem() instanceof RenderedBackground) {
-            ((RenderedBackground) slot.getItem()).renderBackground(poseStack, slot, this.lastHovered);
-        }
+        Screen screen = (Screen) (Object) this;
+
+        EventFactory.onSlotRenderPre(screen, slot);
     }
 
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("RETURN"))
     private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
-        if (slot.getItem() instanceof RenderedForeground) {
-            ((RenderedForeground) slot.getItem()).renderForeground(poseStack, slot, this.lastHovered);
-        }
+        Screen screen = (Screen) (Object) this;
+
+        EventFactory.onSlotRenderPost(screen, slot);
     }
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)

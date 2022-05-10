@@ -4,8 +4,8 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import net.minecraft.world.item.ItemStack;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
 
 public interface RenderedHotbarForeground {
-    void renderHotbarForeground(int x, int y, ItemStack stack);
+    void renderHotbarForeground(HotbarSlotRenderEvent e);
 }

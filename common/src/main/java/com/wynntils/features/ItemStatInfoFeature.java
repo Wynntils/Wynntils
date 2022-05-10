@@ -13,9 +13,6 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wc.ItemStackTransformer;
-import com.wynntils.wc.objects.item.WynnGearStack;
-import com.wynntils.wc.utils.WynnItemMatchers;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -44,15 +41,11 @@ public class ItemStatInfoFeature extends Feature {
 
     @Override
     protected boolean onEnable() {
-        boolean loaded = WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
-        if (loaded) ItemStackTransformer.registerTransformer(WynnItemMatchers::isGear, WynnGearStack::new);
-        return loaded;
+        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
 
     @Override
-    protected void onDisable() {
-        ItemStackTransformer.unregisterTransformer(WynnItemMatchers::isGear, WynnGearStack::new);
-    }
+    protected void onDisable() {}
 
     @Override
     public MutableComponent getNameComponent() {

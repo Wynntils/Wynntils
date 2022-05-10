@@ -11,9 +11,6 @@ import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.wc.ItemStackTransformer;
-import com.wynntils.wc.objects.item.WynnUnidentifiedStack;
-import com.wynntils.wc.utils.WynnItemMatchers;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
@@ -34,14 +31,9 @@ public class ItemGuessFeature extends Feature {
 
     @Override
     protected boolean onEnable() {
-        boolean loaded = WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
-        if (loaded)
-            ItemStackTransformer.registerTransformer(WynnItemMatchers::isUnidentified, WynnUnidentifiedStack::new);
-        return loaded;
+        return WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
     }
 
     @Override
-    protected void onDisable() {
-        ItemStackTransformer.unregisterTransformer(WynnItemMatchers::isUnidentified, WynnUnidentifiedStack::new);
-    }
+    protected void onDisable() {}
 }

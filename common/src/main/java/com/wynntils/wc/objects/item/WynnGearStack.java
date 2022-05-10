@@ -8,12 +8,13 @@ import com.mojang.blaze3d.vertex.*;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.RenderUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wc.objects.item.render.RenderedBackground;
-import com.wynntils.wc.objects.item.render.RenderedHotbarBackground;
+import com.wynntils.wc.objects.item.render.HighlightedItem;
+import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
@@ -28,17 +29,18 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-public class WynnGearStack extends WynnItemStack implements RenderedBackground, RenderedHotbarBackground {
+public class WynnGearStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
 
     private ItemProfile itemProfile;
     private boolean isPerfect;
     private boolean isDefective;
     private float overallPercentage;
+
+    Component percentName;
 
     List<ItemIdentificationContainer> identifications;
 
@@ -149,12 +151,10 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground, 
         overallPercentage = -1f;
 
         String originalName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName()));
+        MutableComponent name = new TextComponent(originalName);
 
         if (hasNew) {
-            TextComponent name = new TextComponent(originalName);
             name.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
-
-            setHoverName(name);
         } else if (idAmount > 0) {
             overallPercentage = percentTotal / idAmount;
 
@@ -162,11 +162,10 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground, 
             isPerfect = overallPercentage >= 100d;
             isDefective = overallPercentage == 0;
 
-            TextComponent name = new TextComponent(originalName);
             name.append(ItemStatInfoFeature.getPercentageTextComponent(overallPercentage));
-
-            setHoverName(name);
         }
+
+        percentName = name;
     }
 
     public WynnGearStack(ItemProfile profile) {
@@ -251,7 +250,7 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground, 
         }
 
         // besides special case of perfect/defective, use name already set
-        return super.getHoverName();
+        return percentName != null ? percentName : super.getHoverName();
     }
 
     @Override
@@ -271,19 +270,19 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground, 
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, Slot slot, Slot hovered) {
+    public int getHighlightColor(SlotRenderEvent e) {
         int color = itemProfile.getTier().getChatFormatting().getColor();
         color = 0xFF000000 | color;
 
-        RenderUtils.drawTexturedRectWithColor(RenderUtils.highlight, color, slot.x - 1, slot.y - 1, 18, 18, 256, 256);
+        return color;
     }
 
     @Override
-    public void renderHotbarBackground(int x, int y, ItemStack stack) {
+    public int getHotbarColor(HotbarSlotRenderEvent e) {
         int color = itemProfile.getTier().getChatFormatting().getColor();
         color = 0x80000000 | color;
 
-        RenderUtils.drawRect(color, x, y, 16, 16);
+        return color;
     }
 
     private static List<Component> stripDuplicateBlank(List<Component> lore) {

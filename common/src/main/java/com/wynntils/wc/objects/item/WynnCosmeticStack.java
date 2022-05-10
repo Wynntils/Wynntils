@@ -4,15 +4,12 @@
  */
 package com.wynntils.wc.objects.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.CosmeticHighlightFeature;
-import com.wynntils.mc.utils.RenderUtils;
-import com.wynntils.wc.objects.item.render.RenderedBackground;
+import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.wc.objects.item.render.HighlightedItem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnCosmeticStack extends WynnItemStack implements RenderedBackground {
+public class WynnCosmeticStack extends WynnItemStack implements HighlightedItem {
 
     private ChatFormatting color;
 
@@ -24,17 +21,9 @@ public class WynnCosmeticStack extends WynnItemStack implements RenderedBackgrou
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, Slot slot, Slot hovered) {
+    public int getHighlightColor(SlotRenderEvent e) {
         int highlightColor = color.getColor();
-        if (CosmeticHighlightFeature.highlightDuplicates
-                && hovered != null
-                && hovered != slot
-                && hovered.getItem().getHoverName().equals(getHoverName())) {
-            highlightColor = ChatFormatting.GREEN.getColor();
-        }
-
         highlightColor = 0xFF000000 | highlightColor;
-        RenderUtils.drawTexturedRectWithColor(
-                RenderUtils.highlight, highlightColor, slot.x - 1, slot.y - 1, 18, 18, 256, 256);
+        return highlightColor;
     }
 }

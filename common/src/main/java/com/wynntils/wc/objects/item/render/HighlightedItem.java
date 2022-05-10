@@ -6,6 +6,6 @@ package com.wynntils.wc.objects.item.render;
 
 import com.wynntils.mc.event.SlotRenderEvent;
 
-public interface RenderedBackground {
-    void renderBackground(SlotRenderEvent e);
+public interface HighlightedItem {
+    int getHighlightColor(SlotRenderEvent e);
 }

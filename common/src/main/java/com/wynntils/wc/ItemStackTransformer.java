@@ -4,7 +4,11 @@
  */
 package com.wynntils.wc;
 
+import com.wynntils.wc.objects.item.WynnCosmeticStack;
+import com.wynntils.wc.objects.item.WynnGearStack;
 import com.wynntils.wc.objects.item.WynnItemStack;
+import com.wynntils.wc.objects.item.WynnUnidentifiedStack;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +26,12 @@ public class ItemStackTransformer {
 
     public static void unregisterTransformer(Predicate<ItemStack> pred, Function<ItemStack, WynnItemStack> cons) {
         TRANSFORMERS.remove(pred, cons);
+    }
+
+    public static void init() {
+        registerTransformer(WynnItemMatchers::isGear, WynnGearStack::new);
+        registerTransformer(WynnItemMatchers::isUnidentified, WynnUnidentifiedStack::new);
+        registerTransformer(WynnItemMatchers::isCosmetic, WynnCosmeticStack::new);
     }
 
     public static ItemStack transform(ItemStack stack) {

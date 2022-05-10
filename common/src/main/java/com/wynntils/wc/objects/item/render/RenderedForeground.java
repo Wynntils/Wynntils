@@ -4,9 +4,8 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.inventory.Slot;
+import com.wynntils.mc.event.SlotRenderEvent;
 
 public interface RenderedForeground {
-    void renderForeground(PoseStack poseStack, Slot slot, Slot hovered);
+    void renderForeground(SlotRenderEvent e);
 }

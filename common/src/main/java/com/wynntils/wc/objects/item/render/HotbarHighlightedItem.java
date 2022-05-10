@@ -4,8 +4,8 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
 
-public interface RenderedBackground {
-    void renderBackground(SlotRenderEvent e);
+public interface HotbarHighlightedItem {
+    int getHotbarColor(HotbarSlotRenderEvent e);
 }

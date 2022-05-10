@@ -4,8 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.wc.objects.item.render.RenderedHotbarBackground;
-import com.wynntils.wc.objects.item.render.RenderedHotbarForeground;
+import com.wynntils.mc.EventFactory;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,17 +20,13 @@ public class GuiMixin {
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("HEAD"))
     private void renderSlotPre(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
-        if (stack instanceof RenderedHotbarBackground) {
-            ((RenderedHotbarBackground) stack).renderHotbarBackground(x, y, stack);
-        }
+        EventFactory.onHotbarSlotRenderPre(stack, x, y);
     }
 
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
     private void renderSlotPost(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
-        if (stack instanceof RenderedHotbarForeground) {
-            ((RenderedHotbarForeground) stack).renderHotbarForeground(x, y, stack);
-        }
+        EventFactory.onHotbarSlotRenderPost(stack, x, y);
     }
 }

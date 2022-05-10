@@ -62,7 +62,7 @@ public class FeatureRegistry {
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new MountHorseHotkeyFeature());
-        registerFeature(new CosmeticHighlightFeature());
+        registerFeature(new ItemHighlightFeature());
 
         FEATURES.forEach(Feature::init);
 
