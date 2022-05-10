@@ -4,10 +4,11 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.wynntils.mc.event.SlotRenderEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.Slot;
 
 public interface TextOverlayItem {
-    String getText(SlotRenderEvent e);
+    String getText(Screen screen, Slot slot);
 
-    int getColor(SlotRenderEvent e);
+    int getColor(Screen screen, Slot slot);
 }

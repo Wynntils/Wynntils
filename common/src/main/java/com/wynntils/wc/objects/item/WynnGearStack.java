@@ -8,8 +8,6 @@ import com.mojang.blaze3d.vertex.*;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;
-import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
@@ -24,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
@@ -270,7 +270,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
     }
 
     @Override
-    public int getHighlightColor(SlotRenderEvent e) {
+    public int getHighlightColor(Screen screen, Slot slot) {
         int color = itemProfile.getTier().getChatFormatting().getColor();
         color = 0xFF000000 | color;
 
@@ -278,7 +278,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
     }
 
     @Override
-    public int getHotbarColor(HotbarSlotRenderEvent e) {
+    public int getHotbarColor() {
         int color = itemProfile.getTier().getChatFormatting().getColor();
         color = 0x80000000 | color;
 

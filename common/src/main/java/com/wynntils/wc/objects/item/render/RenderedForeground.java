@@ -4,8 +4,9 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.wynntils.mc.event.SlotRenderEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.Slot;
 
 public interface RenderedForeground {
-    void renderForeground(SlotRenderEvent e);
+    void renderForeground(Screen screen, Slot slot);
 }

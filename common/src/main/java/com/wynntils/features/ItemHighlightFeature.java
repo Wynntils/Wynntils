@@ -46,7 +46,7 @@ public class ItemHighlightFeature extends Feature {
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();
         if (item instanceof HighlightedItem) {
-            int color = ((HighlightedItem) item).getHighlightColor(e);
+            int color = ((HighlightedItem) item).getHighlightColor(e.getScreen(), e.getSlot());
             RenderUtils.drawTexturedRectWithColor(
                     RenderUtils.highlight, color, e.getSlot().x - 1, e.getSlot().y - 1, 18, 18, 256, 256);
         }
@@ -56,7 +56,7 @@ public class ItemHighlightFeature extends Feature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         ItemStack item = e.getStack();
         if (item instanceof HotbarHighlightedItem) {
-            int color = ((HotbarHighlightedItem) item).getHotbarColor(e);
+            int color = ((HotbarHighlightedItem) item).getHotbarColor();
             RenderUtils.drawRect(color, e.getX(), e.getY(), 16, 16);
         }
     }

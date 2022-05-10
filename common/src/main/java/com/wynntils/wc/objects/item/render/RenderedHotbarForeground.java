@@ -4,8 +4,6 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.wynntils.mc.event.HotbarSlotRenderEvent;
-
 public interface RenderedHotbarForeground {
-    void renderHotbarForeground(HotbarSlotRenderEvent e);
+    void renderHotbarForeground();
 }

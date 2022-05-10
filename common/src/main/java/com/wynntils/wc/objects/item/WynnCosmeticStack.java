@@ -4,9 +4,10 @@
  */
 package com.wynntils.wc.objects.item;
 
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.wc.objects.item.render.HighlightedItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class WynnCosmeticStack extends WynnItemStack implements HighlightedItem {
@@ -21,7 +22,7 @@ public class WynnCosmeticStack extends WynnItemStack implements HighlightedItem 
     }
 
     @Override
-    public int getHighlightColor(SlotRenderEvent e) {
+    public int getHighlightColor(Screen screen, Slot slot) {
         int highlightColor = color.getColor();
         highlightColor = 0xFF000000 | highlightColor;
         return highlightColor;

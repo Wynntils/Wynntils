@@ -4,8 +4,9 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-import com.wynntils.mc.event.SlotRenderEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.Slot;
 
 public interface HighlightedItem {
-    int getHighlightColor(SlotRenderEvent e);
+    int getHighlightColor(Screen screen, Slot slot);
 }

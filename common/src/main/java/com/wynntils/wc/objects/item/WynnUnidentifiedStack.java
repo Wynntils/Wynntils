@@ -11,8 +11,6 @@ import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.ItemGuessFeature;
-import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.utils.reference.EmeraldSymbols;
 import com.wynntils.wc.objects.item.render.HighlightedItem;
 import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
@@ -20,11 +18,13 @@ import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -103,7 +103,7 @@ public class WynnUnidentifiedStack extends WynnItemStack implements HighlightedI
     }
 
     @Override
-    public int getHighlightColor(SlotRenderEvent e) {
+    public int getHighlightColor(Screen screen, Slot slot) {
         int color = tier.getChatFormatting().getColor();
         color = 0xFF000000 | color;
 
@@ -111,7 +111,7 @@ public class WynnUnidentifiedStack extends WynnItemStack implements HighlightedI
     }
 
     @Override
-    public int getHotbarColor(HotbarSlotRenderEvent e) {
+    public int getHotbarColor() {
         int color = tier.getChatFormatting().getColor();
         color = 0x80000000 | color;
 
