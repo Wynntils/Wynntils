@@ -106,8 +106,6 @@ public class LootrunUtils {
                     List<List<Point>> locations = points.get(chunkLong);
                     for (List<Point> locationsInRoute : locations) {
                         VertexConsumer consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
-                        // RenderSystem.lineWidth(100f);
-                        // buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
                         Matrix4f last = event.getPoseStack().last().pose();
                         boolean disabled = false;
                         List<Point> toRender = new ArrayList<>();
@@ -475,7 +473,7 @@ public class LootrunUtils {
             int cycle = 10 * cycleDistance;
             int parts = i % cycle;
             float done = (float) parts / (float) cycle;
-            int usedColor = 0;
+            int usedColor;
             if (parts == 0) {
                 currentColor = nextColor;
                 if (!colorIterator.hasNext()) {
