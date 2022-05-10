@@ -5,6 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import java.util.regex.Pattern;
@@ -75,7 +76,10 @@ public class WynnItemMatchers {
     public static boolean isGear(ItemStack stack) {
         String name = stack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
-        return (WebManager.getItemsMap() != null && WebManager.getItemsMap().containsKey(strippedName));
+        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
+        ItemProfile profile = WebManager.getItemsMap().get(strippedName);
+        return (profile != null
+                && name.startsWith(profile.getTier().getChatFormatting().toString()));
     }
 
     public static boolean isCosmetic(ItemStack stack) {
