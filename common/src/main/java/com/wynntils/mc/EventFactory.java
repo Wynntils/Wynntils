@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc;
@@ -92,6 +92,12 @@ public class EventFactory {
         post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
     }
 
+    public static boolean onInventoryKeyPress(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
+        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot);
+        post(event);
+        return event.isCanceled();
+    }
+
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
         String footer = packet.getFooter().getString();
         post(new PlayerInfoFooterChangedEvent(footer));
@@ -138,5 +144,9 @@ public class EventFactory {
 
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
         post(new ItemsReceivedEvent(container, items));
+    }
+
+    public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
+        post(new KeyInputEvent(key, scanCode, action, modifiers));
     }
 }

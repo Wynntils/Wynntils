@@ -29,6 +29,10 @@ plugins {
 
 import com.wynntils.eventbustransformer.EventBusTransform
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
 architectury {
     platformSetupLoomIde()
     fabric() { it.add(EventBusTransform.class) }
@@ -52,6 +56,7 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version));
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
@@ -105,6 +110,7 @@ task applyEventBus(type: Jar) {
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
     classifier null

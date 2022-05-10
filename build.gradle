@@ -13,6 +13,9 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+
+        accessWidenerPath = file("src/main/resources/wynntils.accessWidener")
+
         runs {
             client {
                 // These arguments allow for optional authentication with Mojang servers.
