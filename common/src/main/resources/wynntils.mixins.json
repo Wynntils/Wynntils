@@ -11,6 +11,7 @@
     "ConnectionMixin",
     "ConnectScreenMixin",
     "CrashReportMixin",
+    "GuiMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
     "KeyMappingMixin",

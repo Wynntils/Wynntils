@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wc.objects.item.ItemStackTransformer;
+import com.wynntils.wc.ItemStackTransformer;
 import com.wynntils.wc.objects.item.WynnGearStack;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import java.util.Map;

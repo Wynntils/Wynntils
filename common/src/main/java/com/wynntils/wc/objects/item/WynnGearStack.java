@@ -4,14 +4,16 @@
  */
 package com.wynntils.wc.objects.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.mc.utils.RenderUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.objects.item.render.RenderedBackground;
+import com.wynntils.wc.objects.item.render.RenderedHotbarBackground;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
@@ -31,10 +33,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-public class WynnGearStack extends WynnItemStack implements RenderedBackground {
+public class WynnGearStack extends WynnItemStack implements RenderedBackground, RenderedHotbarBackground {
 
     private ItemProfile itemProfile;
-    private String itemName;
     private boolean isPerfect;
     private boolean isDefective;
     private float overallPercentage;
@@ -46,14 +47,9 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground {
     List<Component> rerollTooltip;
 
     public WynnGearStack(ItemStack stack) {
-        // copy base itemstack data
-        // super(stack.getItem(), stack.getCount());
-        // if (stack.getTag() != null) setTag(stack.getTag());
         super(stack);
 
         // get item profile
-        itemName = WynnUtils.normalizeBadString(
-                ChatFormatting.stripFormatting(getHoverName().getString()));
         if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName)) return;
         itemProfile = WebManager.getItemsMap().get(itemName);
 
@@ -276,7 +272,18 @@ public class WynnGearStack extends WynnItemStack implements RenderedBackground {
 
     @Override
     public void renderBackground(PoseStack poseStack, Slot slot) {
-        // TODO implement item highlights
+        int color = itemProfile.getTier().getChatFormatting().getColor();
+        color = 0xFF000000 | color;
+
+        RenderUtils.drawTexturedRectWithColor(RenderUtils.highlight, color, slot.x - 1, slot.y - 1, 18, 18, 256, 256);
+    }
+
+    @Override
+    public void renderHotbarBackground(int x, int y, ItemStack stack) {
+        int color = itemProfile.getTier().getChatFormatting().getColor();
+        color = 0x80000000 | color;
+
+        RenderUtils.drawRect(color, x, y, 16, 16);
     }
 
     private static List<Component> stripDuplicateBlank(List<Component> lore) {

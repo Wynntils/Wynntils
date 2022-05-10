@@ -2,8 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.item;
+package com.wynntils.wc;
 
+import com.wynntils.wc.objects.item.WynnItemStack;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
