@@ -4,7 +4,6 @@
  */
 package com.wynntils.wc.objects.item;
 
-import com.mojang.blaze3d.vertex.*;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;

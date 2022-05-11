@@ -8,7 +8,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 
 public interface TextOverlayItem {
-    String getText(Screen screen, Slot slot);
+    String getTextOverlay(Screen screen, Slot slot);
 
-    int getColor(Screen screen, Slot slot);
+    int getTextColor(Screen screen, Slot slot);
+
+    int getTextXOffset(Screen screen, Slot slot);
+
+    int getTextYOffset(Screen screen, Slot slot);
 }

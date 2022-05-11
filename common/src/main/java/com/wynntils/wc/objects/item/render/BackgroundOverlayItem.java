@@ -7,6 +7,6 @@ package com.wynntils.wc.objects.item.render;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 
-public interface RenderedBackground {
+public interface BackgroundOverlayItem {
     void renderBackground(Screen screen, Slot slot);
 }

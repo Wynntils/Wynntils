@@ -4,6 +4,6 @@
  */
 package com.wynntils.wc.objects.item.render;
 
-public interface RenderedHotbarForeground {
-    void renderHotbarForeground();
+public interface HotbarBackgroundItem {
+    void renderHotbarBackground();
 }
