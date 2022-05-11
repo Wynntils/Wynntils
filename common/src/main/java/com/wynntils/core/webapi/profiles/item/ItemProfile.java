@@ -17,11 +17,11 @@ public class ItemProfile {
     ItemAttackSpeed attackSpeed = null;
 
     ItemInfoContainer itemInfo;
-    ItemRequirementsContainer requirements;
+    Map<String, String> requirements;
 
     Map<String, String> damageTypes = new HashMap<>();
     Map<String, Integer> defenseTypes = new HashMap<>();
-    Map<String, IdentificationContainer> statuses = new HashMap<>();
+    Map<String, IdentificationProfile> statuses = new HashMap<>();
 
     List<String> majorIds = new ArrayList<>();
 
@@ -30,6 +30,9 @@ public class ItemProfile {
 
     transient List<MajorIdentification> majorIdentifications = new ArrayList<>();
 
+    transient Map<RequirementType, String> parsedRequirements = null;
+
+    transient Map<DamageType, String> parsedDamages = null;
     transient Map<DamageType, Integer> parsedAvgDamages = null;
     transient int parsedHealth = Integer.MIN_VALUE;
     transient Map<DamageType, Integer> parsedDefenses = null;
@@ -42,10 +45,10 @@ public class ItemProfile {
             boolean identified,
             ItemAttackSpeed attackSpeed,
             ItemInfoContainer itemInfo,
-            ItemRequirementsContainer requirements,
+            Map<String, String> requirements,
             Map<String, String> damageTypes,
             Map<String, Integer> defenseTypes,
-            Map<String, IdentificationContainer> statuses,
+            Map<String, IdentificationProfile> statuses,
             ArrayList<String> majorIds,
             String restriction,
             String lore) {}
@@ -78,28 +81,54 @@ public class ItemProfile {
         return itemInfo;
     }
 
-    public ItemRequirementsContainer getRequirements() {
-        return requirements;
+    public void parseRequirements() {
+        if (parsedRequirements != null) return;
+
+        parsedRequirements = new EnumMap<>(RequirementType.class);
+        for (Map.Entry<String, String> entry : requirements.entrySet()) {
+            RequirementType type = RequirementType.valueOf(entry.getKey().toUpperCase(Locale.ROOT));
+            String reqStr = entry.getValue();
+            if (reqStr.equals("0")) continue; // no req, ignore
+            parsedRequirements.put(type, reqStr);
+        }
+        if (getClassNeeded() != null) {
+            parsedRequirements.put(RequirementType.CLASS, getClassNeeded().getDisplayName());
+        }
+    }
+
+    public Map<RequirementType, String> getRequirements() {
+        parseRequirements();
+        return parsedRequirements;
     }
 
     public Map<String, String> getDamageTypes() {
         return damageTypes;
     }
 
-    public Map<DamageType, Integer> getAverageDamages() {
-        if (parsedAvgDamages == null) {
-            parsedAvgDamages = new EnumMap<>(DamageType.class);
-            for (Map.Entry<String, String> entry : damageTypes.entrySet()) {
-                String dmgStr = entry.getValue();
-                int n = dmgStr.indexOf('-');
-                parsedAvgDamages.put(
-                        DamageType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)),
-                        Math.round(
-                                (Integer.parseInt(dmgStr.substring(0, n)) + Integer.parseInt(dmgStr.substring(n + 1)))
-                                        / 2f));
-            }
-        }
+    public void parseDamages() {
+        if (parsedDamages != null) return;
 
+        parsedDamages = new EnumMap<>(DamageType.class);
+        parsedAvgDamages = new EnumMap<>(DamageType.class);
+        for (Map.Entry<String, String> entry : damageTypes.entrySet()) {
+            String dmgStr = entry.getValue();
+            DamageType type = DamageType.valueOf(entry.getKey().toUpperCase(Locale.ROOT));
+            int n = dmgStr.indexOf('-');
+            int avgDamage = Math.round(
+                    (Integer.parseInt(dmgStr.substring(0, n)) + Integer.parseInt(dmgStr.substring(n + 1))) / 2f);
+
+            parsedDamages.put(type, dmgStr);
+            parsedAvgDamages.put(type, avgDamage);
+        }
+    }
+
+    public Map<DamageType, String> getDamages() {
+        parseDamages();
+        return parsedDamages;
+    }
+
+    public Map<DamageType, Integer> getAverageDamages() {
+        parseDamages();
         return parsedAvgDamages;
     }
 
@@ -133,7 +162,7 @@ public class ItemProfile {
         return parsedDefenses;
     }
 
-    public Map<String, IdentificationContainer> getStatuses() {
+    public Map<String, IdentificationProfile> getStatuses() {
         return statuses;
     }
 
@@ -145,8 +174,18 @@ public class ItemProfile {
         return restriction;
     }
 
+    public boolean hasRequirements() {
+        parseRequirements();
+        return (parsedRequirements.size() > 0);
+    }
+
     public ClassType getClassNeeded() {
-        return getRequirements().getRealClass(this.getItemInfo().getType());
+        return itemInfo.getType().getClassReq();
+    }
+
+    public int getLevelRequirement() {
+        if (!requirements.containsKey("level")) return 0;
+        return Integer.parseInt(requirements.get("level"));
     }
 
     public String getLore() {

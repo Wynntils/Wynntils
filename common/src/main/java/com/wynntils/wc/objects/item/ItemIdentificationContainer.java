@@ -4,14 +4,17 @@
  */
 package com.wynntils.wc.objects.item;
 
-import com.wynntils.core.webapi.profiles.item.IdentificationContainer;
 import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
+import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.objects.SpellType;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -23,7 +26,7 @@ public class ItemIdentificationContainer {
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     private ItemProfile item;
-    private IdentificationContainer identification;
+    private IdentificationProfile identification;
     private IdentificationModifier modifier;
 
     private String shortIdName;
@@ -39,7 +42,7 @@ public class ItemIdentificationContainer {
 
     public ItemIdentificationContainer(
             ItemProfile item,
-            IdentificationContainer identification,
+            IdentificationProfile identification,
             IdentificationModifier modifier,
             String shortIdName,
             int value,
@@ -68,7 +71,7 @@ public class ItemIdentificationContainer {
         return item;
     }
 
-    public IdentificationContainer getIdentificationContainer() {
+    public IdentificationProfile getIdentificationContainer() {
         return identification;
     }
 
@@ -135,13 +138,13 @@ public class ItemIdentificationContainer {
         if (spell != null) {
             shortIdName = spell.getShortIdName(isRaw);
         } else {
-            shortIdName = IdentificationContainer.getAsShortName(idName, isRaw);
+            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
         }
 
         boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(shortIdName);
-        IdentificationContainer container = item.getStatuses().get(shortIdName);
+        IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         IdentificationModifier type =
-                container != null ? container.getType() : IdentificationContainer.getTypeFromName(shortIdName);
+                idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
 
         MutableComponent percentLine = new TextComponent("");
@@ -158,7 +161,7 @@ public class ItemIdentificationContainer {
 
         percentLine.append(new TextComponent(" " + idName).withStyle(ChatFormatting.GRAY));
 
-        boolean isNew = container == null || container.isInvalidValue(value);
+        boolean isNew = idProfile == null || idProfile.isInvalidValue(value);
 
         if (isNew) percentLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
@@ -166,10 +169,10 @@ public class ItemIdentificationContainer {
         rerollLine = percentLine.copy();
 
         float percentage = -1;
-        if (!isNew && !container.hasConstantValue()) {
+        if (!isNew && !idProfile.hasConstantValue()) {
             // calculate percent/range/reroll chances, append to lines
-            int min = container.getMin();
-            int max = container.getMax();
+            int min = idProfile.getMin();
+            int max = idProfile.getMax();
 
             if (isInverted) {
                 percentage = MathUtils.inverseLerp(max, min, value) * 100;
@@ -177,21 +180,20 @@ public class ItemIdentificationContainer {
                 percentage = MathUtils.inverseLerp(min, max, value) * 100;
             }
 
-            IdentificationContainer.ReidentificationChances chances =
-                    container.getChances(value, isInverted, starCount);
+            IdentificationProfile.ReidentificationChances chances = idProfile.getChances(value, isInverted, starCount);
 
             percentLine.append(ItemStatInfoFeature.getPercentageTextComponent(percentage));
 
             rangeLine.append(ItemStatInfoFeature.getRangeTextComponent(min, max));
 
             rerollLine.append(ItemStatInfoFeature.getRerollChancesComponent(
-                    container.getPerfectChance(), chances.increase(), chances.decrease()));
+                    idProfile.getPerfectChance(), chances.increase(), chances.decrease()));
         }
 
         // create container
         return new ItemIdentificationContainer(
                 item,
-                container,
+                idProfile,
                 type,
                 shortIdName,
                 value,
@@ -202,5 +204,53 @@ public class ItemIdentificationContainer {
                 percentLine,
                 rangeLine,
                 rerollLine);
+    }
+
+    public static List<ItemIdentificationContainer> fromProfile(ItemProfile item) {
+        List<ItemIdentificationContainer> ids = new ArrayList<>();
+
+        for (Map.Entry<String, IdentificationProfile> entry : item.getStatuses().entrySet()) {
+            IdentificationProfile idProfile = entry.getValue();
+            IdentificationModifier type = idProfile.getType();
+            String idName = entry.getKey();
+            MutableComponent line;
+
+            boolean inverted = IdentificationOrderer.INSTANCE.isInverted(idName);
+            if (idProfile.hasConstantValue()) {
+                int value = idProfile.getBaseValue();
+                line = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(idName));
+                line.setStyle(
+                        Style.EMPTY.withColor(inverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+            } else {
+                int min = idProfile.getMin();
+                int max = idProfile.getMax();
+                ChatFormatting mainColor = inverted ^ (min > 0) ? ChatFormatting.GREEN : ChatFormatting.RED;
+                ChatFormatting textColor = inverted ^ (min > 0) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+                line = new TextComponent((min > 0 ? "+" : "") + min).withStyle(mainColor);
+                line.append(new TextComponent(" to ").withStyle(textColor));
+                line.append(
+                        new TextComponent((max > 0 ? "+" : "") + max + type.getInGame(idName)).withStyle(mainColor));
+            }
+
+            line.append(new TextComponent(" " + IdentificationProfile.getAsLongName(idName))
+                    .withStyle(ChatFormatting.GRAY));
+
+            ItemIdentificationContainer id = new ItemIdentificationContainer(
+                    item,
+                    idProfile,
+                    type,
+                    idName,
+                    0,
+                    type == IdentificationModifier.Integer,
+                    0,
+                    -1,
+                    line,
+                    line,
+                    line,
+                    line);
+            ids.add(id);
+        }
+
+        return ids;
     }
 }

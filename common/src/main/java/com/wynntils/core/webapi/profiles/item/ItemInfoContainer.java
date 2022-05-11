@@ -4,8 +4,12 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -59,6 +63,23 @@ public class ItemInfoContainer {
 
     // TODO get this method working
     public ItemStack asItemStack() {
-        return new ItemStack(Items.DIRT);
+        if (material == null) {
+            return new ItemStack(Items.AIR);
+        }
+
+        if (material.matches("(.*\\d.*)")) {
+            String[] split = material.split(":");
+
+            ItemStack stack = new ItemStack(Item.byId(Integer.parseInt(split[0])));
+            if (split.length <= 1) return stack;
+
+            stack.setDamageValue(Integer.parseInt(split[1]));
+            return stack;
+        }
+
+        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
+        if (item.isPresent()) return new ItemStack(item.get());
+
+        return new ItemStack(Items.AIR);
     }
 }

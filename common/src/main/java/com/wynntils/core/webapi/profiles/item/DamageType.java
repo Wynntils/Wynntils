@@ -4,23 +4,18 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.google.gson.annotations.SerializedName;
+import com.wynntils.utils.StringUtils;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {
-    @SerializedName("NEUTRAL")
-    Neutral("❤", ChatFormatting.DARK_RED),
-    @SerializedName("EARTH")
-    Earth("✤", ChatFormatting.DARK_GREEN),
-    @SerializedName("FIRE")
-    Fire("✹", ChatFormatting.RED),
-    @SerializedName("WATER")
-    Water("❉", ChatFormatting.AQUA),
-    @SerializedName("THUNDER")
-    Thunder("✦", ChatFormatting.YELLOW),
-    @SerializedName("AIR")
-    Air("❋", ChatFormatting.WHITE);
+    NEUTRAL("✣", ChatFormatting.GOLD),
+    EARTH("✤", ChatFormatting.DARK_GREEN),
+    FIRE("✹", ChatFormatting.RED),
+    WATER("❉", ChatFormatting.AQUA),
+    THUNDER("✦", ChatFormatting.YELLOW),
+    AIR("❋", ChatFormatting.WHITE);
 
     private final String symbol;
     private final ChatFormatting color;
@@ -53,5 +48,10 @@ public enum DamageType {
         }
 
         return Pattern.compile("-(.*?) ([" + damageTypes + "])");
+    }
+
+    @Override
+    public String toString() {
+        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
     }
 }

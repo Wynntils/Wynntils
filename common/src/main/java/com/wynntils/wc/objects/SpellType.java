@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.objects;
 
-import com.wynntils.core.webapi.profiles.item.IdentificationContainer;
+import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 
 public enum SpellType {
     ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", "Bolt Blizzard", 6, 0),
@@ -168,6 +168,6 @@ public enum SpellType {
     }
 
     public String getShortIdName(boolean isRaw) {
-        return IdentificationContainer.getAsShortName(getGenericName() + " Cost", isRaw);
+        return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
     }
 }

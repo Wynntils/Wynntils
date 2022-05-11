@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Arrays;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public enum ItemTier {
     @SerializedName("NORMAL")
@@ -60,5 +61,9 @@ public enum ItemTier {
 
     public int getItemIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
+    }
+
+    public Component asLore() {
+        return new TextComponent(name() + " Item").withStyle(chatFormatting);
     }
 }

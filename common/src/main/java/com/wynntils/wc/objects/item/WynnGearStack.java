@@ -5,11 +5,15 @@
 package com.wynntils.wc.objects.item;
 
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.profiles.item.DamageType;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.core.webapi.profiles.item.MajorIdentification;
+import com.wynntils.core.webapi.profiles.item.RequirementType;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.objects.item.render.HighlightedItem;
 import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.IdentificationOrderer;
@@ -20,8 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -34,18 +40,21 @@ import org.lwjgl.glfw.GLFW;
 
 public class WynnGearStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
 
+    private static final Component ID_PLACEHOLDER = new TextComponent("ID_PLACEHOLDER");
+
     private ItemProfile itemProfile;
     private boolean isPerfect;
     private boolean isDefective;
     private float overallPercentage;
+    private boolean isGuideStack;
 
-    Component percentName;
+    private Component customName;
 
-    List<ItemIdentificationContainer> identifications;
+    private List<ItemIdentificationContainer> identifications;
 
-    List<Component> percentTooltip;
-    List<Component> rangeTooltip;
-    List<Component> rerollTooltip;
+    private List<Component> percentTooltip;
+    private List<Component> rangeTooltip;
+    private List<Component> rerollTooltip;
 
     public WynnGearStack(ItemStack stack) {
         super(stack);
@@ -57,7 +66,8 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();
 
-        List<Component> lore = stripDuplicateBlank(super.getTooltipLines(null, TooltipFlag.Default.NORMAL));
+        List<Component> lore =
+                ComponentUtils.stripDuplicateBlank(super.getTooltipLines(null, TooltipFlag.Default.NORMAL));
         lore.remove(0); // remove item name
 
         List<Component> baseTooltip = new ArrayList<>();
@@ -66,7 +76,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         float percentTotal = 0;
         boolean hasNew = false;
 
-        int idStart = -1;
+        boolean hasIds = false;
         boolean endOfIDs = false;
         for (int i = 0; i < lore.size(); i++) {
             Component loreLine = lore.get(i);
@@ -85,8 +95,10 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
             }
 
             // if we've reached this point, we have an id
-            if (idStart == -1) {
-                idStart = i;
+            if (!hasIds) {
+                hasIds = true;
+                baseTooltip.add(ID_PLACEHOLDER);
+                baseTooltip.add(new TextComponent(""));
             }
 
             identifications.add(idContainer);
@@ -102,49 +114,10 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         }
 
         if (!identifications.isEmpty()) {
-            baseTooltip = stripDuplicateBlank(baseTooltip);
-            baseTooltip.add(idStart - 1, new TextComponent(""));
+            baseTooltip = ComponentUtils.stripDuplicateBlank(baseTooltip);
         }
 
-        percentTooltip = new ArrayList<>(baseTooltip);
-        rangeTooltip = new ArrayList<>(baseTooltip);
-        rerollTooltip = new ArrayList<>(baseTooltip);
-
-        if (!identifications.isEmpty()) {
-            Map<String, Component> percentMap = identifications.stream()
-                    .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getPercentLoreLine));
-            Map<String, Component> rangeMap = identifications.stream()
-                    .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getRangeLoreLine));
-            Map<String, Component> rerollMap = identifications.stream()
-                    .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getRerollLoreLine));
-
-            Collection<Component> orderedPercents;
-            Collection<Component> orderedRanges;
-            Collection<Component> orderedRerolls;
-
-            if (ItemStatInfoFeature.reorderIdentifications) {
-                orderedPercents = IdentificationOrderer.INSTANCE.orderComponents(
-                        percentMap, ItemStatInfoFeature.groupIdentifications);
-                orderedRanges = IdentificationOrderer.INSTANCE.orderComponents(
-                        rangeMap, ItemStatInfoFeature.groupIdentifications);
-                orderedRerolls = IdentificationOrderer.INSTANCE.orderComponents(
-                        rerollMap, ItemStatInfoFeature.groupIdentifications);
-            } else {
-                orderedPercents = percentMap.values();
-                orderedRanges = rangeMap.values();
-                orderedRerolls = rerollMap.values();
-            }
-
-            percentTooltip.addAll(idStart, orderedPercents);
-            rangeTooltip.addAll(idStart, orderedRanges);
-            rerollTooltip.addAll(idStart, orderedRerolls);
-        }
+        constructTooltips(baseTooltip);
 
         // overall percent & name
         overallPercentage = -1f;
@@ -164,12 +137,27 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
             name.append(ItemStatInfoFeature.getPercentageTextComponent(overallPercentage));
         }
 
-        percentName = name;
+        customName = name;
     }
 
     public WynnGearStack(ItemProfile profile) {
         super(profile.getItemInfo().asItemStack());
-        // TODO guide stack impl
+
+        itemProfile = profile;
+        isGuideStack = true;
+
+        CompoundTag tag = this.getOrCreateTag();
+        tag.putBoolean("Unbreakable", true);
+        if (itemProfile.getItemInfo().isArmorColorValid())
+            tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
+        this.setTag(tag);
+
+        customName = new TextComponent(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
+
+        List<Component> baseTooltip = constructBaseTooltip();
+        identifications = ItemIdentificationContainer.fromProfile(itemProfile);
+        constructTooltips(baseTooltip);
     }
 
     public ItemProfile getItemProfile() {
@@ -182,6 +170,8 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
 
     @Override
     public Component getHoverName() {
+        if (isGuideStack) return customName;
+
         /*
          * This math was originally based off Avaritia code.
          * Special thanks for Morpheus1101 and SpitefulFox
@@ -249,13 +239,18 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         }
 
         // besides special case of perfect/defective, use name already set
-        return percentName != null ? percentName : super.getHoverName();
+        return customName != null ? customName : super.getHoverName();
     }
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
+
+        if (isGuideStack) {
+            tooltip.addAll(rangeTooltip);
+            return tooltip;
+        }
 
         if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {
             tooltip.addAll(rangeTooltip);
@@ -284,43 +279,140 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         return color;
     }
 
-    private static List<Component> stripDuplicateBlank(List<Component> lore) {
-        List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
+    private void constructTooltips(List<Component> baseTooltip) {
+        int idIndex = baseTooltip.indexOf(ID_PLACEHOLDER);
+        baseTooltip.remove(ID_PLACEHOLDER);
 
-        boolean oldBlank = false;
-        int index = 0;
+        percentTooltip = new ArrayList<>(baseTooltip);
+        rangeTooltip = new ArrayList<>(baseTooltip);
+        rerollTooltip = new ArrayList<>(baseTooltip);
 
-        for (; index < lore.size(); index++) { // find first blank
-            Component loreLine = lore.get(index);
+        if (!identifications.isEmpty() && idIndex != -1) {
+            Map<String, Component> percentMap = identifications.stream()
+                    .collect(Collectors.toMap(
+                            ItemIdentificationContainer::getShortIdName,
+                            ItemIdentificationContainer::getPercentLoreLine));
+            Map<String, Component> rangeMap = identifications.stream()
+                    .collect(Collectors.toMap(
+                            ItemIdentificationContainer::getShortIdName,
+                            ItemIdentificationContainer::getRangeLoreLine));
+            Map<String, Component> rerollMap = identifications.stream()
+                    .collect(Collectors.toMap(
+                            ItemIdentificationContainer::getShortIdName,
+                            ItemIdentificationContainer::getRerollLoreLine));
 
-            String line = WynnUtils.normalizeBadString(loreLine.getString());
+            Collection<Component> orderedPercents;
+            Collection<Component> orderedRanges;
+            Collection<Component> orderedRerolls;
 
-            newLore.add(loreLine);
+            if (ItemStatInfoFeature.reorderIdentifications || isGuideStack) {
+                orderedPercents = IdentificationOrderer.INSTANCE.orderComponents(
+                        percentMap, ItemStatInfoFeature.groupIdentifications);
+                orderedRanges = IdentificationOrderer.INSTANCE.orderComponents(
+                        rangeMap, ItemStatInfoFeature.groupIdentifications);
+                orderedRerolls = IdentificationOrderer.INSTANCE.orderComponents(
+                        rerollMap, ItemStatInfoFeature.groupIdentifications);
+            } else {
+                orderedPercents = percentMap.values();
+                orderedRanges = rangeMap.values();
+                orderedRerolls = rerollMap.values();
+            }
 
-            if (line.isEmpty()) {
-                oldBlank = true;
-                break;
+            percentTooltip.addAll(idIndex, orderedPercents);
+            rangeTooltip.addAll(idIndex, orderedRanges);
+            rerollTooltip.addAll(idIndex, orderedRerolls);
+        }
+    }
+
+    private List<Component> constructBaseTooltip() {
+        List<Component> baseTooltip = new ArrayList<>();
+
+        // attack speed
+        if (itemProfile.getAttackSpeed() != null)
+            baseTooltip.add(new TextComponent(itemProfile.getAttackSpeed().asLore()));
+
+        baseTooltip.add(new TextComponent(""));
+
+        // elemental damages
+        if (itemProfile.getDamageTypes().size() > 0) {
+            Map<DamageType, String> damages = itemProfile.getDamages();
+            for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
+                DamageType type = entry.getKey();
+                MutableComponent damage = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
+                damage.append(new TextComponent(" Damage: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                baseTooltip.add(damage);
+            }
+
+            baseTooltip.add(new TextComponent(""));
+        }
+
+        // elemental defenses
+        if (itemProfile.getDefenseTypes().size() > 0) {
+            int health = itemProfile.getHealth();
+            if (health != 0) {
+                MutableComponent healthComp =
+                        new TextComponent("❤ Health: " + health).withStyle(ChatFormatting.DARK_RED);
+                baseTooltip.add(healthComp);
+            }
+
+            Map<DamageType, Integer> defenses = itemProfile.getElementalDefenses();
+            for (Map.Entry<DamageType, Integer> entry : defenses.entrySet()) {
+                DamageType type = entry.getKey();
+                MutableComponent defense = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
+                defense.append(new TextComponent(" Defence: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                baseTooltip.add(defense);
+            }
+
+            baseTooltip.add(new TextComponent(""));
+        }
+
+        // requirements
+        if (itemProfile.hasRequirements()) {
+            Map<RequirementType, String> requirements = itemProfile.getRequirements();
+            for (Map.Entry<RequirementType, String> entry : requirements.entrySet()) {
+                RequirementType type = entry.getKey();
+                MutableComponent requirement = new TextComponent("✔ ").withStyle(ChatFormatting.GREEN);
+                requirement.append(new TextComponent(type.asLore() + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                baseTooltip.add(requirement);
+            }
+
+            baseTooltip.add(new TextComponent(""));
+        }
+
+        // ids
+        if (itemProfile.getStatuses().size() > 0) {
+            baseTooltip.add(ID_PLACEHOLDER);
+            baseTooltip.add(new TextComponent(""));
+        }
+
+        // major ids
+        if (itemProfile.getMajorIds() != null && itemProfile.getMajorIds().size() > 0) {
+            for (MajorIdentification majorId : itemProfile.getMajorIds()) {
+                Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
+                        .forEach(c -> baseTooltip.add(new TextComponent(c).withStyle(ChatFormatting.DARK_AQUA)));
+            }
+            baseTooltip.add(new TextComponent(""));
+        }
+
+        // powder slots
+        if (itemProfile.getPowderAmount() > 0) {
+            if (isGuideStack) {
+                baseTooltip.add(new TextComponent("[" + itemProfile.getPowderAmount() + " Powder Slots]")
+                        .withStyle(ChatFormatting.GRAY));
+            } else {
+                // TODO implement powder count
             }
         }
 
-        if (!oldBlank) {
-            return newLore;
+        // tier
+        baseTooltip.add(itemProfile.getTier().asLore());
+
+        // untradable
+        if (itemProfile.getRestriction() != null) {
+            baseTooltip.add(new TextComponent(StringUtils.capitalizeFirst(itemProfile.getRestriction() + " Item"))
+                    .withStyle(ChatFormatting.RED));
         }
 
-        for (; index < lore.size(); index++) {
-            Component loreLine = lore.get(index);
-
-            String line = WynnUtils.normalizeBadString(loreLine.getString());
-
-            if (oldBlank && line.isEmpty()) {
-                continue; // both blank - do not add; oldBlank still true
-            }
-
-            oldBlank = line.isEmpty();
-
-            newLore.add(loreLine);
-        }
-
-        return newLore;
+        return baseTooltip;
     }
 }

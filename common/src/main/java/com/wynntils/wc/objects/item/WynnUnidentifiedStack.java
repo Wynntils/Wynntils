@@ -79,7 +79,7 @@ public class WynnUnidentifiedStack extends WynnItemStack implements HighlightedI
 
             ItemProfile itemProfile = WebManager.getItemsMap().get(item);
             if (ItemGuessFeature.showGuessesPrice && itemProfile != null) {
-                int level = itemProfile.getRequirements().getLevel();
+                int level = itemProfile.getLevelRequirement();
                 int itemCost = tier.getItemIdentificationCost(level);
                 itemDesc.append(new TextComponent(" [")
                         .append(new TextComponent(itemCost + " " + EmeraldSymbols.E_STRING)
