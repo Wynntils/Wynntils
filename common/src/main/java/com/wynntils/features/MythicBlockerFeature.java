@@ -48,7 +48,9 @@ public class MythicBlockerFeature extends Feature {
         if (!WynnUtils.onWorld() || !McUtils.mc().options.keyInventory.matches(e.getKeyCode(), e.getScanCode())) return;
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?>)) return;
         String title = McUtils.mc().screen.getTitle().getString();
-        if (!title.startsWith("Loot Chest") && !title.startsWith("Daily Rewards") && !title.contains("Objective Rewards")) return;
+        if (!title.startsWith("Loot Chest")
+                && !title.startsWith("Daily Rewards")
+                && !title.contains("Objective Rewards")) return;
 
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) McUtils.mc().screen;
         for (int i = 0; i < 27; i++) {
