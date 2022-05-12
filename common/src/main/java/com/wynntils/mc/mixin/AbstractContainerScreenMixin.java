@@ -40,10 +40,26 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         EventFactory.onInventoryRender(screen, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 
-    @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
-    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+            method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
+            at = @At("HEAD"))
+    private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
+        EventFactory.onSlotRenderPre(screen, slot);
+    }
+
+    @Inject(
+            method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
+            at = @At("RETURN"))
+    private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
+        Screen screen = (Screen) (Object) this;
+
+        EventFactory.onSlotRenderPost(screen, slot);
+    }
+
+    @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
+    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)) {
             cir.setReturnValue(true);
         }

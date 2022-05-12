@@ -92,6 +92,22 @@ public class EventFactory {
         post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
     }
 
+    public static void onSlotRenderPre(Screen screen, Slot slot) {
+        post(new SlotRenderEvent.Pre(screen, slot));
+    }
+
+    public static void onSlotRenderPost(Screen screen, Slot slot) {
+        post(new SlotRenderEvent.Post(screen, slot));
+    }
+
+    public static void onHotbarSlotRenderPre(ItemStack stack, int x, int y) {
+        post(new HotbarSlotRenderEvent.Pre(stack, x, y));
+    }
+
+    public static void onHotbarSlotRenderPost(ItemStack stack, int x, int y) {
+        post(new HotbarSlotRenderEvent.Post(stack, x, y));
+    }
+
     public static boolean onInventoryKeyPress(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
         InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot);
         post(event);

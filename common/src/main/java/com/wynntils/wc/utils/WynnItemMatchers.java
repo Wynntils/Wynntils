@@ -4,18 +4,24 @@
  */
 package com.wynntils.wc.utils;
 
+import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+    private static final Pattern COSMETIC_PATTERN =
+            Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
 
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
@@ -65,5 +71,21 @@ public class WynnItemMatchers {
     public static boolean isHorse(ItemStack stack) {
         return stack.getItem() == Items.SADDLE
                 && stack.getDisplayName().getString().contains("Horse");
+    }
+
+    public static boolean isGear(ItemStack stack) {
+        String name = stack.getHoverName().getString();
+        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
+        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
+        ItemProfile profile = WebManager.getItemsMap().get(strippedName);
+        return (profile != null
+                && name.startsWith(profile.getTier().getChatFormatting().toString()));
+    }
+
+    public static boolean isCosmetic(ItemStack stack) {
+        for (Component c : stack.getTooltipLines(null, TooltipFlag.Default.NORMAL)) {
+            if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
+        }
+        return false;
     }
 }
