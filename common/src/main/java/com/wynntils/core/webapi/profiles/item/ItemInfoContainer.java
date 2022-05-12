@@ -2,10 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.items;
+package com.wynntils.core.webapi.profiles.item;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class ItemInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
@@ -53,5 +59,27 @@ public class ItemInfoContainer {
         int b = Integer.parseInt(m.group(3));
 
         return (r << 16) + (g << 8) + b;
+    }
+
+    // TODO get this method working
+    public ItemStack asItemStack() {
+        if (material == null) {
+            return new ItemStack(Items.AIR);
+        }
+
+        if (material.matches("(.*\\d.*)")) {
+            String[] split = material.split(":");
+
+            ItemStack stack = new ItemStack(Item.byId(Integer.parseInt(split[0])));
+            if (split.length <= 1) return stack;
+
+            stack.setDamageValue(Integer.parseInt(split[1]));
+            return stack;
+        }
+
+        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
+        if (item.isPresent()) return new ItemStack(item.get());
+
+        return new ItemStack(Items.AIR);
     }
 }

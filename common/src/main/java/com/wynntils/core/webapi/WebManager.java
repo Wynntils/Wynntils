@@ -13,13 +13,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
+import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.core.webapi.profiles.item.ItemType;
+import com.wynntils.core.webapi.profiles.item.MajorIdentification;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.objects.items.IdentificationContainer;
-import com.wynntils.wc.objects.items.ItemProfile;
-import com.wynntils.wc.objects.items.ItemType;
-import com.wynntils.wc.objects.items.MajorIdentification;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
 import java.io.IOException;
@@ -204,7 +204,7 @@ public class WebManager {
 
                     HashMap<String, ItemProfile> citems = new HashMap<>();
                     for (ItemProfile prof : gItems) {
-                        prof.getStatuses().values().forEach(IdentificationContainer::calculateMinMax);
+                        prof.getStatuses().values().forEach(IdentificationProfile::calculateMinMax);
                         prof.addMajorIds(majorIds);
                         citems.put(prof.getDisplayName(), prof);
                     }

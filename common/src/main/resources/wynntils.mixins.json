@@ -11,6 +11,7 @@
     "ConnectionMixin",
     "ConnectScreenMixin",
     "CrashReportMixin",
+    "GuiMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
     "KeyMappingMixin",
@@ -23,6 +24,7 @@
     "LevelRendererMixin",
     "ScreenMixin",
     "ServerPlayerGameModeMixin",
+    "SlotMixin",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
   ],

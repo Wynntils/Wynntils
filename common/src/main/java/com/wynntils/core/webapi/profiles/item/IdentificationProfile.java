@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.items;
+package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.core.Reference;
 import com.wynntils.utils.StringUtils;
@@ -14,7 +14,7 @@ import java.util.Map;
  * This code is largely based off info provided in
  * https://forums.wynncraft.com/threads/how-identifications-are-calculated.128923/
  */
-public class IdentificationContainer {
+public class IdentificationProfile {
 
     private static final Map<String, IdentificationModifier> typeMap = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class IdentificationContainer {
 
     private transient int min, max;
 
-    public IdentificationContainer(IdentificationModifier type, int baseValue, boolean isFixed) {
+    public IdentificationProfile(IdentificationModifier type, int baseValue, boolean isFixed) {
         this.type = type;
         this.baseValue = baseValue;
         this.isFixed = isFixed;
