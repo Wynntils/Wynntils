@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 16
+          java-version: 17
           cache: "gradle"
 
       - name: Format with spotless
