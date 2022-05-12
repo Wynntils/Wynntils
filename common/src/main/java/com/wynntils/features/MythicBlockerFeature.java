@@ -54,9 +54,8 @@ public class MythicBlockerFeature extends Feature {
         for (int i = 0; i < 27; i++) {
             ItemStack stack = screen.getMenu().getItems().get(i);
             if (stack.getDisplayName().getString().startsWith("[" + ChatFormatting.DARK_PURPLE)) {
-                McUtils.sendMessageToClient(
-                        new TranslatableComponent("feature.wynntils.mythicBlocker.closingBlocked")
-                                .withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.mythicBlocker.closingBlocked")
+                        .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;
             }
