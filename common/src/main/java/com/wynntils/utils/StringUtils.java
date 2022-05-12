@@ -4,9 +4,11 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.Font;
 
 public class StringUtils {
     /**
@@ -36,5 +38,31 @@ public class StringUtils {
     public static String uncapitalizeFirst(String input) {
         if (input.length() == 0) return "";
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
+    }
+
+    public static String[] wrapTextBySize(String s, int maxPixels) {
+        Font font = McUtils.mc().font;
+        int spaceSize = font.width(" ");
+
+        String[] stringArray = s.split(" ");
+        StringBuilder result = new StringBuilder();
+        int length = 0;
+
+        for (String string : stringArray) {
+            String[] lines = string.split("\\\\n", -1);
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                if (i > 0 || length + font.width(line) >= maxPixels) {
+                    result.append('\n');
+                    length = 0;
+                }
+                if (line.length() > 0) {
+                    result.append(line).append(' ');
+                    length += font.width(line) + spaceSize;
+                }
+            }
+        }
+
+        return result.toString().split("\n");
     }
 }

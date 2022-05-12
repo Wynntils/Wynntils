@@ -63,6 +63,7 @@ public class FeatureRegistry {
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new ItemHighlightFeature());
 
         FEATURES.forEach(Feature::init);
 

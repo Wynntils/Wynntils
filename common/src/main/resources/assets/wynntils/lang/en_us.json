@@ -17,6 +17,7 @@
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override Feature",
   "feature.wynntils.mythicBlocker.name": "Mythic Chest Blocker Feature",
   "feature.wynntils.mythicBlocker.closingBlocked": "You cannot close this loot chest while there is a mythic in it!",
+  "feature.wynntils.itemHighlight.name": "Item Highlights Feature",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
   "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"

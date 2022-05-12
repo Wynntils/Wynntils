@@ -4,7 +4,10 @@
  */
 package com.wynntils.mc.utils;
 
+import com.wynntils.wc.utils.WynnUtils;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
@@ -129,5 +132,45 @@ public class ComponentUtils {
         return Arrays.stream(ChatFormatting.values())
                 .filter(c -> c.isColor() && textColor == c.getColor())
                 .findFirst();
+    }
+
+    public static List<Component> stripDuplicateBlank(List<Component> lore) {
+        List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
+
+        boolean oldBlank = false;
+        int index = 0;
+
+        for (; index < lore.size(); index++) { // find first blank
+            Component loreLine = lore.get(index);
+
+            String line = WynnUtils.normalizeBadString(loreLine.getString());
+
+            newLore.add(loreLine);
+
+            if (line.isEmpty()) {
+                oldBlank = true;
+                break;
+            }
+        }
+
+        if (!oldBlank) {
+            return newLore;
+        }
+
+        for (; index < lore.size(); index++) {
+            Component loreLine = lore.get(index);
+
+            String line = WynnUtils.normalizeBadString(loreLine.getString());
+
+            if (oldBlank && line.isEmpty()) {
+                continue; // both blank - do not add; oldBlank still true
+            }
+
+            oldBlank = line.isEmpty();
+
+            newLore.add(loreLine);
+        }
+
+        return newLore;
     }
 }
