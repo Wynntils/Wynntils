@@ -15,8 +15,8 @@
   "feature.wynntils.emeraldPouchKeybind.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
   "feature.wynntils.ingredientPouchKeybind.name": "Ingredient Pouch Keybind Feature",
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override Feature",
-  "feature.wynntils.mythicChestBlocker.name": "Mythic Chest Blocker Feature",
-  "feature.wynntils.mythicChestBlocker.closingBlocked": "You cannot close this loot chest while there is a mythic in it!",
+  "feature.wynntils.mythicBlocker.name": "Mythic Chest Blocker Feature",
+  "feature.wynntils.mythicBlocker.closingBlocked": "You cannot close this loot chest while there is a mythic in it!",
   "featureDebug.wynntils.connectionProgress.name": "Connection Progress Feature",
   "featureDebug.wynntils.keyBindTest.name": "Connection Progress Feature",
   "featureDebug.wynntils.packetDebugger.name": "Packet Debugger Feature"

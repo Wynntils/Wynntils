@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
-public class MythicChestBlockerFeature extends Feature {
+public class MythicBlockerFeature extends Feature {
 
     @Override
     public MutableComponent getNameComponent() {
@@ -47,14 +47,15 @@ public class MythicChestBlockerFeature extends Feature {
     public void onChestCloseAttempt(InventoryKeyPressEvent e) {
         if (!WynnUtils.onWorld() || !McUtils.mc().options.keyInventory.matches(e.getKeyCode(), e.getScanCode())) return;
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?>)) return;
-        if (!McUtils.mc().screen.getTitle().getString().startsWith("Loot Chest")) return;
+        String title = McUtils.mc().screen.getTitle().getString();
+        if (!title.startsWith("Loot Chest") && !title.startsWith("Daily Rewards")) return;
 
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) McUtils.mc().screen;
         for (int i = 0; i < 27; i++) {
             ItemStack stack = screen.getMenu().getItems().get(i);
             if (stack.getDisplayName().getString().startsWith("[" + ChatFormatting.DARK_PURPLE)) {
                 McUtils.sendMessageToClient(
-                        new TranslatableComponent("feature.wynntils.mythicChestBlocker.closingBlocked")
+                        new TranslatableComponent("feature.wynntils.mythicBlocker.closingBlocked")
                                 .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;
