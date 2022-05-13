@@ -1,8 +1,4 @@
 {
-  "required": true,
-  "package": "com.wynntils.mc.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "minVersion": "0.8.5",
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
@@ -27,9 +23,12 @@
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
   ],
-  "mixins": [
-  ],
+  "compatibilityLevel": "JAVA_17",
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "minVersion": "0.8.5",
+  "mixins": [],
+  "package": "com.wynntils.mc.mixin",
+  "required": true
 }

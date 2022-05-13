@@ -1,41 +1,31 @@
 {
-  "schemaVersion": 1,
-  "id": "wynntils",
-  "version": "${version}",
-  "name": "Wynntils",
-  "description": "The best Wynncraft mod you'll probably find!",
   "authors": [
-    "Scyu_",
-    "HeyZeer0",
-    "EHTYCSCYTHE",
-    "SHsuperCM",
-    "coehlrich",
-    "_Bedo_",
-    "HighCrit",
-    "Reticality",
-    "mag_icus",
-    "P0ke",
-    "Incompleteusern"
+    "Team Wynntils"
   ],
   "contact": {
     "homepage": "https://wynntils.com",
     "sources": "https://github.com/magicus/WynnArchi"
   },
-  "license": "GNU AGPL 3",
-  "icon": "assets/wynntils/logo.png",
-  "environment": "*",
+  "depends": {
+    "minecraft": ">=1.18.2"
+  },
+  "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
     "client": [
       "com.wynntils.fabric.WynntilsModFabric"
     ]
   },
+  "environment": "*",
+  "icon": "assets/wynntils/logo.png",
+  "id": "wynntils",
+  "license": "GNU AGPL 3",
   "mixins": [
     "wynntils.mixins.json"
   ],
-  "depends": {
-    "minecraft": ">=1.18.2"
-  },
+  "name": "Wynntils",
+  "schemaVersion": 1,
   "suggests": {
     "flamingo": "*"
-  }
+  },
+  "version": "${version}"
 }
