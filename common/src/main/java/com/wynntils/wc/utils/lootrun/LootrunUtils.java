@@ -144,7 +144,6 @@ public class LootrunUtils {
                                 for (BlockPos blockInArea : blocks) {
                                     BlockState blockStateInArea = level.getBlockState(blockInArea);
                                     if (blockStateInArea.is(Blocks.BARRIER)) {
-                                        // System.out.println("barrier");
                                         barrier = true;
                                     } else if (blockStateInArea.getCollisionShape(level, blockInArea) != null) {
                                         validBlock = true;
@@ -193,7 +192,6 @@ public class LootrunUtils {
                                         .color(pathColor)
                                         .normal(0, 0, 1)
                                         .endVertex();
-                                // GLX._renderCrosshair(color, pauseDraw, disabled, disable);
                             } else if (!disabled) {
                                 source.endBatch();
                                 disabled = true;
