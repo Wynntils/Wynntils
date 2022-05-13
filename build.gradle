@@ -79,9 +79,18 @@ allprojects {
                     ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
                     ' */'
         }
+        json {
+            target 'src/**/*.json'
+            gson()
+                    .indentWithSpaces(2)
+                    .sortByKeys()
+                    .version('2.8.1')
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
         format 'misc', {
             // define the files to apply `misc` to
-            target '*.gradle', '*.md', '.gitignore', '*.properties', "*.json"
+            target '*.gradle', '*.md', '.gitignore', '*.properties'
 
             // define the steps to apply to those files
             trimTrailingWhitespace()
