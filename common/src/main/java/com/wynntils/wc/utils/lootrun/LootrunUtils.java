@@ -799,4 +799,12 @@ public class LootrunUtils {
             this.dirty = dirty;
         }
     }
+
+    public record LootrunUncompiled(
+            List<Vec3> points, Set<BlockPos> chests, List<Pair<Vec3, Component>> notes, File file) {
+
+        public LootrunUncompiled(LootrunUncompiled old, File file) {
+            this(old.points, old.chests, old.notes, file);
+        }
+    }
 }
