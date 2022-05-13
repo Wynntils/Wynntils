@@ -30,9 +30,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
@@ -63,18 +61,36 @@ public class LootrunUtils {
     private static final int ACTIVE_COLOR = ChatFormatting.AQUA.getColor();
     private static final int RECORDING_COLOR = 0xff0000;
 
-    public static LootrunInstance lootrun = null;
-    public static LootrunUncompiled uncompiled = null;
-    public static LootrunInstance recordingCompiled = null;
-    public static LootrunUncompiled recording = null;
+    private static LootrunState state = LootrunState.DISABLED;
 
-    public static RecordingInformation recordingInformation = null;
+    private static LootrunInstance lootrun = null;
+    private static LootrunUncompiled uncompiled = null;
+    private static LootrunInstance recordingCompiled = null;
+    private static LootrunUncompiled recording = null;
 
-    public static void register() {
+    private static RecordingInformation recordingInformation = null;
+
+    public static LootrunUncompiled getUncompiled() {
+        return uncompiled;
+    }
+
+    public static void registerToEventBus() {
         WynntilsMod.getEventBus().register(LootrunUtils.class);
     }
 
-    public static void unregister() {
+    public static LootrunState getState() {
+        return state;
+    }
+
+    public static LootrunUncompiled getRecording() {
+        return recording;
+    }
+
+    public static RecordingInformation getRecordingInformation() {
+        return recordingInformation;
+    }
+
+    public static void unregisterFromEventBus() {
         WynntilsMod.getEventBus().register(LootrunUtils.class);
     }
 
@@ -241,20 +257,15 @@ public class LootrunUtils {
         event.getPoseStack().popPose();
     }
 
-    public static int addNote(CommandSourceStack source, Component text) {
+    public static int addNote(Component text) {
         Entity root = McUtils.player().getRootVehicle();
-        BlockPos pos = root.blockPosition();
 
         LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return 0;
 
         current.notes().add(new ObjectObjectImmutablePair<>(root.position(), text));
-        source.sendSuccess(
-                new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
-                        .append("\n" + text),
-                false);
-        return getEditLootrun(source, true);
+        return recompileLootrun(true);
     }
 
     @Nullable
@@ -266,33 +277,36 @@ public class LootrunUtils {
         return instance;
     }
 
-    public static int getEditLootrun(CommandSourceStack source, boolean edit) {
+    public static int recompileLootrun(boolean saveToFile) {
         if (recording != null) {
-            if (edit) {
-                recordingInformation.setDirty(true);
-            }
+            recordingInformation.setDirty(true);
         } else if (uncompiled != null) {
-            if (edit) {
-                lootrun = compile(uncompiled);
-                if (uncompiled.file() != null) {
-                    saveLootrun(uncompiled.file(), source);
+            lootrun = compile(uncompiled);
+            if (saveToFile && uncompiled.file() != null) {
+                LootrunSaveResult lootrunSaveResult =
+                        saveLootrun(uncompiled.file().getName());
+                switch (lootrunSaveResult) {
+                    case SAVED -> {
+                        return 1;
+                    }
+                    case ERROR_SAVING, ERROR_ALREADY_EXISTS -> {
+                        return 0;
+                    }
                 }
             }
-        } else {
-            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noActiveLootrun"));
         }
         return 1;
     }
 
-    public static int saveLootrun(File file, CommandSourceStack source) {
+    public static LootrunSaveResult saveLootrun(String name) {
         try {
+            File file = new File(LootrunUtils.LOOTRUNS, name + ".json");
+            LootrunUtils.uncompiled = new LootrunUncompiled(LootrunUtils.uncompiled, file);
+
             boolean result = file.createNewFile();
 
             if (!result) {
-                source.sendFailure(
-                        new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrunAlreadyExists")
-                                .withStyle(ChatFormatting.RED));
-                return 0;
+                return LootrunSaveResult.ERROR_ALREADY_EXISTS;
             }
 
             JsonObject json = new JsonObject();
@@ -339,15 +353,9 @@ public class LootrunUtils {
             FileWriter writer = new FileWriter(file);
             new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
             writer.close();
-            source.sendSuccess(
-                    new TranslatableComponent("feature.wynntils.lootrunUtils.savedLootrun")
-                            .withStyle(ChatFormatting.GREEN),
-                    false);
-            return 1;
+            return LootrunSaveResult.SAVED;
         } catch (IOException ex) {
-            source.sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrun")
-                    .withStyle(ChatFormatting.RED));
-            return 0;
+            return LootrunSaveResult.ERROR_SAVING;
         }
     }
 
@@ -536,7 +544,105 @@ public class LootrunUtils {
         return result;
     }
 
+    public static LootrunUncompiled readJson(File file, JsonObject json) {
+        JsonArray points = json.getAsJsonArray("points");
+        List<Vec3> pointsList = new ArrayList<>();
+        for (JsonElement element : points) {
+            JsonObject pointJson = element.getAsJsonObject();
+            Vec3 location = new Vec3(
+                    pointJson.get("x").getAsDouble(),
+                    pointJson.get("y").getAsDouble(),
+                    pointJson.get("z").getAsDouble());
+            pointsList.add(location);
+        }
+        JsonArray chestsJson = json.getAsJsonArray("chests");
+        Set<BlockPos> chests = new HashSet<>();
+        if (chestsJson != null) {
+            for (JsonElement element : chestsJson) {
+                JsonObject chestJson = element.getAsJsonObject();
+                BlockPos pos = new BlockPos(
+                        chestJson.get("x").getAsInt(),
+                        chestJson.get("y").getAsInt(),
+                        chestJson.get("z").getAsInt());
+                chests.add(pos);
+            }
+        }
+        JsonArray notesJson = json.getAsJsonArray("notes");
+        List<Pair<Vec3, Component>> notes = new ArrayList<>();
+        if (notesJson != null) {
+            for (JsonElement element : notesJson) {
+                JsonObject noteJson = element.getAsJsonObject();
+                JsonObject positionJson = noteJson.getAsJsonObject("location");
+                Vec3 position = new Vec3(
+                        positionJson.get("x").getAsDouble(),
+                        positionJson.get("y").getAsDouble(),
+                        positionJson.get("z").getAsDouble());
+                Component component = Component.Serializer.fromJson(noteJson.get("note"));
+                Pair<Vec3, Component> note = new ObjectObjectImmutablePair<>(position, component);
+                notes.add(note);
+            }
+        }
+        return new LootrunUncompiled(pointsList, chests, notes, file);
+    }
+
+    public static void clearCurrentLootrun() {
+        unregisterFromEventBus();
+        lootrun = null;
+        uncompiled = null;
+        recording = null;
+        recordingCompiled = null;
+        recordingInformation = null;
+    }
+
+    public static void stopRecording() {
+        state = LootrunState.LOADED;
+        lootrun = recordingCompiled;
+        uncompiled = recording;
+        recording = null;
+        recordingCompiled = null;
+        recordingInformation = null;
+    }
+
+    public static void startRecording() {
+        recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
+        recordingInformation = new RecordingInformation();
+        registerToEventBus();
+    }
+
+    public static boolean tryLoadFile(String fileName) {
+        String lootrun = fileName + ".json";
+        File lootrunFile = new File(LootrunUtils.LOOTRUNS, lootrun);
+        if (lootrunFile.exists()) {
+            FileReader file;
+            try {
+                file = new FileReader(lootrunFile);
+                JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
+                LootrunUtils.registerToEventBus();
+                LootrunUtils.uncompiled = LootrunUtils.readJson(lootrunFile, json);
+                LootrunUtils.lootrun = LootrunUtils.compile(LootrunUtils.uncompiled);
+                file.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
     static {
-        LootrunUtils.LOOTRUNS.mkdirs();
+        LOOTRUNS.mkdirs();
+    }
+
+    public enum LootrunSaveResult {
+        SAVED,
+        ERROR_SAVING,
+        ERROR_ALREADY_EXISTS
+    }
+
+    public enum LootrunState {
+        RECORDING, // Lootrun is being recorded
+        LOADED, // Lootrun is loaded and displayed
+        DISABLED // No lootrun paths are rendered or loaded
     }
 }

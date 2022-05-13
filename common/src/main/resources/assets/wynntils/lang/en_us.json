@@ -30,6 +30,7 @@
   "feature.wynntils.lootrunUtils.lootrunDoesntExist": "Lootrun \"%s\" does not exist.",
   "feature.wynntils.lootrunUtils.lootrunCouldNotBeDeleted": "Lootrun \"%s\" could not be deleted.",
   "feature.wynntils.lootrunUtils.lootrunCouldNotBeRenamed": "Lootrun \"%s\" could not be renamed to \"%s\".",
+  "feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded": "Lootrun \"%s\" could not be loaded.",
   "feature.wynntils.lootrunUtils.lootrunDeleted": "Lootrun \"%s\" successfully deleted.",
   "feature.wynntils.lootrunUtils.lootrunRenamed": "Lootrun \"%s\" successfully renamed to \"%s\".",
   "feature.wynntils.lootrunUtils.chestAdded": "Successfully added chest at %s.",

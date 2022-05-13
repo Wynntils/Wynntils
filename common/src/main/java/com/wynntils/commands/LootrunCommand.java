@@ -4,10 +4,6 @@
  */
 package com.wynntils.commands;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -18,12 +14,8 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import com.wynntils.wc.utils.lootrun.objects.LootrunUncompiled;
-import com.wynntils.wc.utils.lootrun.objects.RecordingInformation;
 import it.unimi.dsi.fastutil.Pair;
-import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -35,6 +27,7 @@ import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 public class LootrunCommand extends CommandBase {
@@ -46,39 +39,33 @@ public class LootrunCommand extends CommandBase {
                     suggestions);
 
     private int loadLootrun(CommandContext<CommandSourceStack> context) {
-        String lootrun = StringArgumentType.getString(context, "lootrun") + ".json";
-        File lootrunFile = new File(LootrunUtils.LOOTRUNS, lootrun);
-        if (lootrunFile.exists()) {
-            FileReader file;
-            try {
-                file = new FileReader(lootrunFile);
-                JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
-                LootrunUtils.register();
-                LootrunUtils.uncompiled = readJson(lootrunFile, json);
-                LootrunUtils.lootrun = LootrunUtils.compile(LootrunUtils.uncompiled);
-                BlockPos start = new BlockPos(LootrunUtils.uncompiled.points().get(0));
-                context.getSource()
-                        .sendSuccess(
-                                new TranslatableComponent(
-                                                "feature.wynntils.lootrunUtils.lootrunStart",
-                                                start.getX(),
-                                                start.getY(),
-                                                start.getZ())
-                                        .withStyle(ChatFormatting.GREEN),
-                                false);
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        String fileName = StringArgumentType.getString(context, "lootrun");
+
+        boolean successful = LootrunUtils.tryLoadFile(fileName);
+
+        if (!successful) {
+            context.getSource()
+                    .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
         }
+
+        BlockPos start = new BlockPos(LootrunUtils.getUncompiled().points().get(0));
+        context.getSource()
+                .sendSuccess(
+                        new TranslatableComponent(
+                                        "feature.wynntils.lootrunUtils.lootrunStart",
+                                        start.getX(),
+                                        start.getY(),
+                                        start.getZ())
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
         return 1;
     }
 
     private int recordLootrun(CommandContext<CommandSourceStack> context) {
-        LootrunUtils.register();
-        if (LootrunUtils.recording == null) {
-            LootrunUtils.recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
-            LootrunUtils.recordingInformation = new RecordingInformation();
+        if (LootrunUtils.getState() != LootrunUtils.LootrunState.RECORDING) {
+            LootrunUtils.startRecording();
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent(
@@ -89,11 +76,7 @@ public class LootrunCommand extends CommandBase {
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record")))),
                             false);
         } else {
-            LootrunUtils.lootrun = LootrunUtils.recordingCompiled;
-            LootrunUtils.uncompiled = LootrunUtils.recording;
-            LootrunUtils.recording = null;
-            LootrunUtils.recordingCompiled = null;
-            LootrunUtils.recordingInformation = null;
+            LootrunUtils.stopRecording();
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent(
@@ -118,19 +101,56 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int saveLootrun(CommandContext<CommandSourceStack> context) {
-        File file = new File(LootrunUtils.LOOTRUNS, StringArgumentType.getString(context, "name") + ".json");
-        LootrunUtils.uncompiled = new LootrunUncompiled(LootrunUtils.uncompiled, file);
-        return LootrunUtils.saveLootrun(file, context.getSource());
+        String name = StringArgumentType.getString(context, "name");
+        LootrunUtils.LootrunSaveResult lootrunSaveResult = LootrunUtils.saveLootrun(name);
+        switch (lootrunSaveResult) {
+            case SAVED -> {
+                context.getSource()
+                        .sendSuccess(
+                                new TranslatableComponent("feature.wynntils.lootrunUtils.savedLootrun")
+                                        .withStyle(ChatFormatting.GREEN),
+                                false);
+                return 1;
+            }
+            case ERROR_SAVING -> {
+                context.getSource()
+                        .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.errorSavingLootrun")
+                                .withStyle(ChatFormatting.RED));
+                return 0;
+            }
+            case ERROR_ALREADY_EXISTS -> {
+                context.getSource()
+                        .sendFailure(new TranslatableComponent(
+                                        "feature.wynntils.lootrunUtils.errorSavingLootrunAlreadyExists")
+                                .withStyle(ChatFormatting.RED));
+                return 0;
+            }
+        }
+        return 0;
     }
 
-    private int addJsonLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private int addJsonLootrunNote(CommandContext<CommandSourceStack> context) {
         Component text = ComponentArgument.getComponent(context, "text");
-        return LootrunUtils.addNote(context.getSource(), text);
+        Entity root = McUtils.player().getRootVehicle();
+        BlockPos pos = root.blockPosition();
+        context.getSource()
+                .sendSuccess(
+                        new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
+                                .append("\n" + text),
+                        false);
+        return LootrunUtils.addNote(text);
     }
 
-    private int addTextLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private int addTextLootrunNote(CommandContext<CommandSourceStack> context) {
         Component text = new TextComponent(StringArgumentType.getString(context, "text"));
-        return LootrunUtils.addNote(context.getSource(), text);
+        Entity root = McUtils.player().getRootVehicle();
+        BlockPos pos = root.blockPosition();
+        context.getSource()
+                .sendSuccess(
+                        new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
+                                .append("\n" + text),
+                        false);
+        return LootrunUtils.addNote(text);
     }
 
     private int listLootrunNote(CommandContext<CommandSourceStack> context) {
@@ -160,7 +180,7 @@ public class LootrunCommand extends CommandBase {
             }
             context.getSource().sendSuccess(component, false);
         }
-        return LootrunUtils.getEditLootrun(context.getSource(), false);
+        return 1;
     }
 
     private int deleteLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -186,22 +206,17 @@ public class LootrunCommand extends CommandBase {
         }
         context.getSource()
                 .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noteUnableToFind", posString));
-        return LootrunUtils.getEditLootrun(context.getSource(), true);
+        return LootrunUtils.recompileLootrun(true);
     }
 
     private int clearLootrun(CommandContext<CommandSourceStack> context) {
-        if (LootrunUtils.lootrun == null && LootrunUtils.recording == null) {
+        if (LootrunUtils.getState() == LootrunUtils.LootrunState.DISABLED) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noActiveLootrun"));
             return 0;
         }
 
-        LootrunUtils.unregister();
+        LootrunUtils.clearCurrentLootrun();
 
-        LootrunUtils.lootrun = null;
-        LootrunUtils.uncompiled = null;
-        LootrunUtils.recording = null;
-        LootrunUtils.recordingCompiled = null;
-        LootrunUtils.recordingInformation = null;
         context.getSource()
                 .sendSuccess(
                         new TranslatableComponent("feature.wynntils.lootrunUtils.clearSuccessful")
@@ -273,7 +288,7 @@ public class LootrunCommand extends CommandBase {
                     .sendFailure(new TranslatableComponent(
                             "feature.wynntils.lootrunUtils.chestAlreadyAdded", pos.toShortString()));
         }
-        return LootrunUtils.getEditLootrun(context.getSource(), true);
+        return LootrunUtils.recompileLootrun(true);
     }
 
     private int removeChest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -295,16 +310,16 @@ public class LootrunCommand extends CommandBase {
                             "feature.wynntils.lootrunUtils.chestDoesNotExist", pos.toShortString()));
         }
 
-        return LootrunUtils.getEditLootrun(context.getSource(), true);
+        return LootrunUtils.recompileLootrun(true);
     }
 
     private int undoLootrun(CommandContext<CommandSourceStack> context) {
-        if (LootrunUtils.recording == null) {
+        if (LootrunUtils.getState() != LootrunUtils.LootrunState.RECORDING) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.notRecording"));
             return 0;
         } else {
             Vec3 position = McUtils.player().position();
-            List<Vec3> points = LootrunUtils.recording.points();
+            List<Vec3> points = LootrunUtils.getRecording().points();
             List<Vec3> removed = new ArrayList<>();
             boolean left = false;
             for (int i = points.size() - 1; i >= 0; i--) {
@@ -334,7 +349,7 @@ public class LootrunCommand extends CommandBase {
             points.removeAll(removed);
             context.getSource()
                     .sendSuccess(new TranslatableComponent("feature.wynntils.lootrunUtils.undoSuccessful"), false);
-            LootrunUtils.recordingInformation.setDirty(true);
+            LootrunUtils.getRecordingInformation().setDirty(true);
             return removed.size();
         }
     }
@@ -385,46 +400,5 @@ public class LootrunCommand extends CommandBase {
                 .then(Commands.literal("folder").executes(this::folderLootrun)));
 
         dispatcher.register(Commands.literal("lr").redirect(node));
-    }
-
-    private static LootrunUncompiled readJson(File file, JsonObject json) {
-        JsonArray points = json.getAsJsonArray("points");
-        List<Vec3> pointsList = new ArrayList<>();
-        for (JsonElement element : points) {
-            JsonObject pointJson = element.getAsJsonObject();
-            Vec3 location = new Vec3(
-                    pointJson.get("x").getAsDouble(),
-                    pointJson.get("y").getAsDouble(),
-                    pointJson.get("z").getAsDouble());
-            pointsList.add(location);
-        }
-        JsonArray chestsJson = json.getAsJsonArray("chests");
-        Set<BlockPos> chests = new HashSet<>();
-        if (chestsJson != null) {
-            for (JsonElement element : chestsJson) {
-                JsonObject chestJson = element.getAsJsonObject();
-                BlockPos pos = new BlockPos(
-                        chestJson.get("x").getAsInt(),
-                        chestJson.get("y").getAsInt(),
-                        chestJson.get("z").getAsInt());
-                chests.add(pos);
-            }
-        }
-        JsonArray notesJson = json.getAsJsonArray("notes");
-        List<Pair<Vec3, Component>> notes = new ArrayList<>();
-        if (notesJson != null) {
-            for (JsonElement element : notesJson) {
-                JsonObject noteJson = element.getAsJsonObject();
-                JsonObject positionJson = noteJson.getAsJsonObject("location");
-                Vec3 position = new Vec3(
-                        positionJson.get("x").getAsDouble(),
-                        positionJson.get("y").getAsDouble(),
-                        positionJson.get("z").getAsDouble());
-                Component component = Component.Serializer.fromJson(noteJson.get("note"));
-                Pair<Vec3, Component> note = new ObjectObjectImmutablePair<>(position, component);
-                notes.add(note);
-            }
-        }
-        return new LootrunUncompiled(pointsList, chests, notes, file);
     }
 }
