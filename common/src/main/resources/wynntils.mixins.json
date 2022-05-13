@@ -23,7 +23,6 @@
     "ScoreboardMixin",
     "LevelRendererMixin",
     "ScreenMixin",
-    "ServerPlayerGameModeMixin",
     "SlotMixin",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.OptionsAccessor"
