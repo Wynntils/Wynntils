@@ -585,6 +585,7 @@ public class LootrunUtils {
 
     public static void clearCurrentLootrun() {
         unregisterFromEventBus();
+        state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
         recording = null;
