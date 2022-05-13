@@ -5,6 +5,7 @@
 package com.wynntils.wc.utils.lootrun;
 
 import com.google.gson.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
@@ -104,155 +105,200 @@ public class LootrunUtils {
         if (lootrun == null) {
             return;
         }
+
         event.getPoseStack().pushPose();
-        Camera cam = McUtils.mc().gameRenderer.getMainCamera();
-        event.getPoseStack().translate(-cam.getPosition().x, -cam.getPosition().y, -cam.getPosition().z);
+
+        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+
+        event.getPoseStack().translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
+
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
         int renderDistance = McUtils.mc().options.renderDistance;
         BlockPos pos = McUtils.mc().gameRenderer.getMainCamera().getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
-        for (int i = 0; i < renderDistance * renderDistance; i++) {
+
+        for (int i = 0; i < Math.pow(renderDistance, 2); i++) {
             int x = i % renderDistance + origin.x - (renderDistance / 2);
             int z = i / renderDistance + origin.z - (renderDistance / 2);
             ChunkPos chunk = new ChunkPos(x, z);
-            if (McUtils.mc().level != null && McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
-                long chunkLong = chunk.toLong();
-                if (points.containsKey(chunkLong)) {
-                    List<List<ColoredPoint>> locations = points.get(chunkLong);
-                    for (List<ColoredPoint> locationsInRoute : locations) {
-                        VertexConsumer consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
-                        Matrix4f last = event.getPoseStack().last().pose();
-                        boolean disabled = false;
-                        List<ColoredPoint> toRender = new ArrayList<>();
-                        boolean disable = false;
-                        BlockPos lastBlockPos = null;
-                        for (ColoredPoint loc : locationsInRoute) {
-                            boolean pauseDraw = false;
-                            BlockPos blockPos = new BlockPos(loc.vec3());
+            if (McUtils.mc().level == null || !McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
+                continue;
+            }
 
-                            Level level = McUtils.mc().level;
+            long chunkLong = chunk.toLong();
 
-                            if (!blockPos.equals(lastBlockPos)) {
-                                BlockPos minPos =
-                                        new BlockPos(loc.vec3().x() - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
-                                BlockPos maxPos =
-                                        new BlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
-                                Iterable<BlockPos> blocks = BlockPos.betweenClosed(minPos, maxPos);
-                                boolean barrier = false;
-                                boolean validBlock = false;
-                                for (BlockPos blockInArea : blocks) {
-                                    BlockState blockStateInArea = level.getBlockState(blockInArea);
-                                    if (blockStateInArea.is(Blocks.BARRIER)) {
-                                        barrier = true;
-                                    } else if (blockStateInArea.getCollisionShape(level, blockInArea) != null) {
-                                        validBlock = true;
-                                    }
-                                }
+            if (points.containsKey(chunkLong)) {
+                renderPoints(event.getPoseStack(), source, points, chunkLong);
+            }
 
-                                if (validBlock) {
-                                    disable = false;
-                                    if (disabled) {
-                                        consumer = source.getBuffer(RenderType.lineStrip());
-                                        disabled = false;
-                                    }
-                                    for (ColoredPoint location : toRender) {
-                                        Vec3 rawLocation = location.vec3();
-                                        int pathColor = location.color();
-                                        consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
-                                                        rawLocation.z)
-                                                .color(pathColor)
-                                                .normal(0, 0, 1)
-                                                .endVertex();
-                                    }
-                                    toRender.clear();
-                                } else if (barrier) {
-                                    disable = true;
-                                    pauseDraw = true;
-                                    toRender.clear();
-                                } else if (disable) {
-                                    pauseDraw = true;
-                                } else {
-                                    toRender.add(loc);
-                                    continue;
-                                }
-                            } else if (disable) {
-                                pauseDraw = true;
-                            } else if (!toRender.isEmpty()) {
-                                toRender.add(loc);
-                            }
+            if (lootrun.chests().containsKey(chunkLong)) {
+                renderChests(event.getPoseStack(), lootrun, color, source, chunkLong);
+            }
 
-                            lastBlockPos = blockPos;
-
-                            if (!pauseDraw) {
-                                Vec3 rawLocation = loc.vec3();
-                                int pathColor = loc.color();
-                                consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
-                                                rawLocation.z)
-                                        .color(pathColor)
-                                        .normal(0, 0, 1)
-                                        .endVertex();
-                            } else if (!disabled) {
-                                source.endBatch();
-                                disabled = true;
-                            }
-                        }
-                        if (!disabled) {
-                            for (ColoredPoint location : toRender) {
-                                Vec3 rawLocation = location.vec3();
-                                int pathColor = location.color();
-                                consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
-                                                rawLocation.z)
-                                        .color(pathColor)
-                                        .normal(0, 0, 1)
-                                        .endVertex();
-                            }
-                            source.endBatch();
-                        }
-                    }
-                }
-
-                if (lootrun.chests().containsKey(chunkLong)) {
-                    VertexConsumer consumer = source.getBuffer(RenderType.lines());
-                    Set<BlockPos> chests = lootrun.chests().get(chunkLong);
-                    float red = ((float) FastColor.ARGB32.red(color)) / 255;
-                    float green = ((float) FastColor.ARGB32.green(color)) / 255;
-                    float blue = ((float) FastColor.ARGB32.blue(color)) / 255;
-                    for (BlockPos chest : chests) {
-                        LevelRenderer.renderLineBox(
-                                event.getPoseStack(), consumer, new AABB(chest), red, green, blue, 1f);
-                    }
-                    source.endBatch();
-                }
-
-                if (lootrun.notes().containsKey(chunkLong)) {
-                    List<Pair<Vec3, Component>> notes = lootrun.notes().get(chunkLong);
-                    Font font = McUtils.mc().font;
-                    for (Pair<Vec3, Component> note : notes) {
-                        Vec3 location = note.first();
-                        event.getPoseStack().pushPose();
-                        event.getPoseStack().translate(location.x, location.y + 2, location.z);
-                        event.getPoseStack()
-                                .mulPose(McUtils.mc()
-                                        .gameRenderer
-                                        .getMainCamera()
-                                        .rotation());
-                        event.getPoseStack().scale(-0.025f, -0.025f, 0.025f);
-                        Matrix4f pose = event.getPoseStack().last().pose();
-                        List<FormattedCharSequence> lines = font.split(note.right(), 200);
-                        int offsetY = -(font.lineHeight * lines.size()) / 2;
-                        for (FormattedCharSequence line : lines) {
-                            int offsetX = -font.width(line) / 2;
-                            font.drawInBatch(
-                                    line, offsetX, offsetY, color, false, pose, source, false, 0x80000000, 0xf000f0);
-                            offsetY += font.lineHeight + 2;
-                        }
-                        event.getPoseStack().popPose();
-                    }
-                }
+            if (lootrun.notes().containsKey(chunkLong)) {
+                renderNotes(event.getPoseStack(), lootrun, color, source, chunkLong);
             }
         }
+
         event.getPoseStack().popPose();
+    }
+
+    private static void renderNotes(
+            PoseStack poseStack,
+            LootrunInstance lootrun,
+            int color,
+            MultiBufferSource.BufferSource source,
+            long chunkLong) {
+        List<Pair<Vec3, Component>> notes = lootrun.notes().get(chunkLong);
+
+        Font font = McUtils.mc().font;
+
+        for (Pair<Vec3, Component> note : notes) {
+            Vec3 location = note.first();
+            poseStack.pushPose();
+            poseStack.translate(location.x, location.y + 2, location.z);
+            poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
+            poseStack.scale(-0.025f, -0.025f, 0.025f);
+            Matrix4f pose = poseStack.last().pose();
+            List<FormattedCharSequence> lines = font.split(note.right(), 200);
+            int offsetY = -(font.lineHeight * lines.size()) / 2;
+            for (FormattedCharSequence line : lines) {
+                int offsetX = -font.width(line) / 2;
+                font.drawInBatch(line, offsetX, offsetY, color, false, pose, source, false, 0x80000000, 0xf000f0);
+                offsetY += font.lineHeight + 2;
+            }
+            poseStack.popPose();
+        }
+    }
+
+    private static void renderChests(
+            PoseStack poseStack,
+            LootrunInstance lootrun,
+            int color,
+            MultiBufferSource.BufferSource source,
+            long chunkLong) {
+        VertexConsumer consumer = source.getBuffer(RenderType.lines());
+        Set<BlockPos> chests = lootrun.chests().get(chunkLong);
+
+        float red = ((float) FastColor.ARGB32.red(color)) / 255;
+        float green = ((float) FastColor.ARGB32.green(color)) / 255;
+        float blue = ((float) FastColor.ARGB32.blue(color)) / 255;
+
+        for (BlockPos chest : chests) {
+            LevelRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+        }
+
+        source.endBatch();
+    }
+
+    private static void renderPoints(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource source,
+            Long2ObjectMap<List<List<ColoredPoint>>> points,
+            long chunkLong) {
+        List<List<ColoredPoint>> locations = points.get(chunkLong);
+
+        Level level = McUtils.mc().level;
+        if (level == null) return;
+
+        for (List<ColoredPoint> locationsInRoute : locations) {
+            VertexConsumer consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
+            Matrix4f lastMatrix = poseStack.last().pose();
+            boolean sourceBatchEnded = false;
+
+            List<ColoredPoint> toRender = new ArrayList<>();
+
+            boolean disablePoint = false;
+            BlockPos lastBlockPos = null;
+
+            for (ColoredPoint point : locationsInRoute) {
+                boolean pauseDraw = false;
+                BlockPos blockPos = new BlockPos(point.vec3());
+
+                if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
+                    if (disablePoint) {
+                        pauseDraw = true;
+                    } else if (!toRender.isEmpty()) {
+                        toRender.add(point);
+                    }
+                } else {
+                    Iterable<BlockPos> blocks = getBlocksForPoint(point);
+
+                    boolean barrierInArea = false;
+                    boolean validBlock = false;
+
+                    for (BlockPos blockInArea : blocks) {
+                        BlockState blockStateInArea = level.getBlockState(blockInArea);
+                        if (blockStateInArea.is(Blocks.BARRIER)) {
+                            barrierInArea = true;
+                        } else if (blockStateInArea.getCollisionShape(level, blockInArea) != null) {
+                            validBlock = true;
+                            break;
+                        }
+                    }
+
+                    if (validBlock) {
+                        disablePoint = false;
+                        if (sourceBatchEnded) {
+                            consumer = source.getBuffer(RenderType.lineStrip());
+                            sourceBatchEnded = false;
+                        }
+                        for (ColoredPoint location : toRender) {
+                            Vec3 rawLocation = location.vec3();
+                            int pathColor = location.color();
+                            consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float)
+                                            rawLocation.z)
+                                    .color(pathColor)
+                                    .normal(0, 0, 1)
+                                    .endVertex();
+                        }
+                        toRender.clear();
+                    } else if (barrierInArea) {
+                        disablePoint = true;
+                        pauseDraw = true;
+                        toRender.clear();
+                    } else if (disablePoint) {
+                        pauseDraw = true;
+                    } else {
+                        toRender.add(point);
+                        continue;
+                    }
+                }
+
+                lastBlockPos = blockPos;
+
+                if (!pauseDraw) {
+                    Vec3 rawLocation = point.vec3();
+                    int pathColor = point.color();
+                    consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
+                            .color(pathColor)
+                            .normal(0, 0, 1)
+                            .endVertex();
+                } else if (!sourceBatchEnded) {
+                    source.endBatch();
+                    sourceBatchEnded = true;
+                }
+            }
+            if (!sourceBatchEnded) {
+                for (ColoredPoint location : toRender) {
+                    Vec3 rawLocation = location.vec3();
+                    int pathColor = location.color();
+                    consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
+                            .color(pathColor)
+                            .normal(0, 0, 1)
+                            .endVertex();
+                }
+                source.endBatch();
+            }
+        }
+    }
+
+    private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
+        BlockPos minPos = new BlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
+        BlockPos maxPos = new BlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
+
+        return BlockPos.betweenClosed(minPos, maxPos);
     }
 
     public static int addNote(Component text) {
