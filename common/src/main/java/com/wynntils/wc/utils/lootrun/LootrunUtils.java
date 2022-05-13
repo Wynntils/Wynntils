@@ -119,15 +119,15 @@ public class LootrunUtils {
             if (McUtils.mc().level != null && McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
                 long chunkLong = chunk.toLong();
                 if (points.containsKey(chunkLong)) {
-                    List<List<Point>> locations = points.get(chunkLong);
-                    for (List<Point> locationsInRoute : locations) {
+                    List<List<ColoredPoint>> locations = points.get(chunkLong);
+                    for (List<ColoredPoint> locationsInRoute : locations) {
                         VertexConsumer consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
                         Matrix4f last = event.getPoseStack().last().pose();
                         boolean disabled = false;
-                        List<Point> toRender = new ArrayList<>();
+                        List<ColoredPoint> toRender = new ArrayList<>();
                         boolean disable = false;
                         BlockPos lastBlockPos = null;
-                        for (Point loc : locationsInRoute) {
+                        for (ColoredPoint loc : locationsInRoute) {
                             boolean pauseDraw = false;
                             BlockPos blockPos = new BlockPos(loc.vec3());
 
@@ -157,7 +157,7 @@ public class LootrunUtils {
                                         consumer = source.getBuffer(RenderType.lineStrip());
                                         disabled = false;
                                     }
-                                    for (Point location : toRender) {
+                                    for (ColoredPoint location : toRender) {
                                         Vec3 rawLocation = location.vec3();
                                         int pathColor = location.color();
                                         consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
@@ -200,7 +200,7 @@ public class LootrunUtils {
                             }
                         }
                         if (!disabled) {
-                            for (Point location : toRender) {
+                            for (ColoredPoint location : toRender) {
                                 Vec3 rawLocation = location.vec3();
                                 int pathColor = location.color();
                                 consumer.vertex(last, (float) rawLocation.x, (float) rawLocation.y, (float)
@@ -405,7 +405,7 @@ public class LootrunUtils {
     }
 
     public static LootrunInstance compile(LootrunUncompiled uncompiled) {
-        Long2ObjectMap<List<List<Point>>> points = generatePointsByChunk(uncompiled.points());
+        Long2ObjectMap<List<List<ColoredPoint>>> points = generatePointsByChunk(uncompiled.points());
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Pair<Vec3, Component>>> notes = getNotes(uncompiled.notes());
 
@@ -463,12 +463,12 @@ public class LootrunUtils {
         return result;
     }
 
-    private static Long2ObjectMap<List<List<Point>>> generatePointsByChunk(List<Vec3> raw) {
+    private static Long2ObjectMap<List<List<ColoredPoint>>> generatePointsByChunk(List<Vec3> raw) {
         float sampleRate = 10f;
         List<Vec3> vec3s =
                 sample(raw, sampleRate).stream().flatMap(List::stream).toList();
         ChunkPos lastChunkPos = null;
-        List<Point> locationsList = new ArrayList<>();
+        List<ColoredPoint> locationsList = new ArrayList<>();
         Iterator<Integer> colorIterator = COLORS.iterator();
         Integer currentColor = null;
         Integer nextColor = colorIterator.next();
@@ -499,10 +499,10 @@ public class LootrunUtils {
                 usedColor += (int) (differenceBlue * done);
             }
 
-            locationsList.add(new Point(location, usedColor | 0xff000000));
+            locationsList.add(new ColoredPoint(location, usedColor | 0xff000000));
         }
-        List<Point> lastLocationList = null;
-        Long2ObjectMap<List<List<Point>>> sampleByChunk = new Long2ObjectOpenHashMap<>();
+        List<ColoredPoint> lastLocationList = null;
+        Long2ObjectMap<List<List<ColoredPoint>>> sampleByChunk = new Long2ObjectOpenHashMap<>();
         for (int i = 0; i < locationsList.size(); i++) {
             Vec3 location = locationsList.get(i).vec3();
             ChunkPos currentChunkPos = new ChunkPos(Mth.fastFloor(location.x()) >> 4, Mth.fastFloor(location.z()) >> 4);
@@ -644,5 +644,42 @@ public class LootrunUtils {
         RECORDING, // Lootrun is being recorded
         LOADED, // Lootrun is loaded and displayed
         DISABLED // No lootrun paths are rendered or loaded
+    }
+
+    public record LootrunInstance(
+            Long2ObjectMap<List<List<ColoredPoint>>> points,
+            Long2ObjectMap<Set<BlockPos>> chests,
+            Long2ObjectMap<List<Pair<Vec3, Component>>> notes) {}
+
+    public record ColoredPoint(Vec3 vec3, int color) {}
+
+    public static class RecordingInformation {
+        private Vec3 lastLocation;
+        private BlockPos lastChest;
+        private boolean dirty;
+
+        public Vec3 getLastLocation() {
+            return lastLocation;
+        }
+
+        public void setLastLocation(Vec3 lastLocation) {
+            this.lastLocation = lastLocation;
+        }
+
+        public BlockPos getLastChest() {
+            return lastChest;
+        }
+
+        public void setLastChest(BlockPos lastChest) {
+            this.lastChest = lastChest;
+        }
+
+        public boolean isDirty() {
+            return dirty;
+        }
+
+        public void setDirty(boolean dirty) {
+            this.dirty = dirty;
+        }
     }
 }
