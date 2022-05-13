@@ -13,7 +13,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
-import com.wynntils.wc.utils.lootrun.objects.LootrunUncompiled;
 import it.unimi.dsi.fastutil.Pair;
 import java.io.File;
 import java.util.*;
@@ -154,15 +153,12 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int listLootrunNote(CommandContext<CommandSourceStack> context) {
-        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
-
-        if (current == null) return 0;
-
-        if (current.notes().isEmpty()) {
+        List<Pair<Vec3, Component>> notes = LootrunUtils.getCurrentNotes();
+        if (notes.isEmpty()) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteNoNote"));
         } else {
             MutableComponent component = new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteHeader");
-            for (Pair<Vec3, Component> note : current.notes()) {
+            for (Pair<Vec3, Component> note : notes) {
                 BlockPos pos = new BlockPos(note.first());
                 String posString = pos.toShortString();
 
@@ -184,28 +180,23 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int deleteLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
-
-        if (current == null) return 0;
-
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
-        String posString = pos.toShortString();
-        List<Pair<Vec3, Component>> notes = current.notes();
-        for (int i = 0; i < notes.size(); i++) {
-            Pair<Vec3, Component> note = notes.get(i);
-            if (pos.equals(new BlockPos(note.first()))) {
-                notes.remove(i);
-                context.getSource()
-                        .sendSuccess(
-                                new TranslatableComponent(
-                                                "feature.wynntils.lootrunUtils.noteRemovedSuccessfully", note.second())
-                                        .withStyle(ChatFormatting.GREEN),
-                                false);
-                return 1;
-            }
+        var removedNote = LootrunUtils.deleteNoteAt(pos);
+
+        if (removedNote != null) {
+            context.getSource()
+                    .sendSuccess(
+                            new TranslatableComponent(
+                                            "feature.wynntils.lootrunUtils.noteRemovedSuccessfully",
+                                            removedNote.second())
+                                    .withStyle(ChatFormatting.GREEN),
+                            false);
+        } else {
+            String posString = pos.toShortString();
+            context.getSource()
+                    .sendFailure(
+                            new TranslatableComponent("feature.wynntils.lootrunUtils.noteUnableToFind", posString));
         }
-        context.getSource()
-                .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noteUnableToFind", posString));
         return LootrunUtils.recompileLootrun(true);
     }
 
@@ -273,11 +264,9 @@ public class LootrunCommand extends CommandBase {
     private int addChest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
 
-        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
+        boolean successful = LootrunUtils.addChest(pos);
 
-        if (current == null) return 0;
-
-        if (current.chests().add(pos)) {
+        if (successful) {
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent("feature.wynntils.lootrunUtils.chestAdded", pos.toShortString())
@@ -288,17 +277,16 @@ public class LootrunCommand extends CommandBase {
                     .sendFailure(new TranslatableComponent(
                             "feature.wynntils.lootrunUtils.chestAlreadyAdded", pos.toShortString()));
         }
+
         return LootrunUtils.recompileLootrun(true);
     }
 
     private int removeChest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
 
-        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
+        boolean successful = LootrunUtils.removeChest(pos);
 
-        if (current == null) return 0;
-
-        if (current.chests().remove(pos)) {
+        if (successful) {
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent("feature.wynntils.lootrunUtils.chestRemoved", pos.toShortString())
@@ -316,42 +304,30 @@ public class LootrunCommand extends CommandBase {
     private int undoLootrun(CommandContext<CommandSourceStack> context) {
         if (LootrunUtils.getState() != LootrunUtils.LootrunState.RECORDING) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.notRecording"));
-            return 0;
         } else {
-            Vec3 position = McUtils.player().position();
-            List<Vec3> points = LootrunUtils.getRecording().points();
-            List<Vec3> removed = new ArrayList<>();
-            boolean left = false;
-            for (int i = points.size() - 1; i >= 0; i--) {
-                if (i == 0) {
-                    if (left) {
-                        context.getSource()
-                                .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.undoStandNear"));
-                    } else {
-                        context.getSource()
-                                .sendFailure(
-                                        new TranslatableComponent("feature.wynntils.lootrunUtils.undoNotFarEnough"));
-                    }
+            LootrunUtils.LootrunUndoResult lootrunUndoResult = LootrunUtils.tryUndo();
+            switch (lootrunUndoResult) {
+                case SUCCESSFUL -> {
+                    context.getSource()
+                            .sendSuccess(
+                                    new TranslatableComponent("feature.wynntils.lootrunUtils.undoSuccessful"), false);
+                    return 1;
+                }
+                case ERROR_STAND_NEAR_POINT -> {
+                    context.getSource()
+                            .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.undoStandNear"));
                     return 0;
                 }
-
-                if (points.get(i).distanceToSqr(position) < 4) {
-                    if (left) {
-                        break;
-                    }
-                } else {
-                    left = true;
+                case ERROR_NOT_FAR_ENOUGH -> {
+                    context.getSource()
+                            .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.undoNotFarEnough"));
+                    return 0;
                 }
-
-                removed.add(points.get(i));
             }
 
-            points.removeAll(removed);
-            context.getSource()
-                    .sendSuccess(new TranslatableComponent("feature.wynntils.lootrunUtils.undoSuccessful"), false);
             LootrunUtils.getRecordingInformation().setDirty(true);
-            return removed.size();
         }
+        return 0;
     }
 
     private int folderLootrun(CommandContext<CommandSourceStack> context) {

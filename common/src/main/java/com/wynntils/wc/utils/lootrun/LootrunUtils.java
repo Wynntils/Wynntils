@@ -675,14 +675,86 @@ public class LootrunUtils {
         return false;
     }
 
+    public static LootrunUndoResult tryUndo() {
+        Vec3 position = McUtils.player().position();
+        List<Vec3> points = LootrunUtils.getRecording().points();
+        List<Vec3> removed = new ArrayList<>();
+        boolean left = false;
+        for (int i = points.size() - 1; i >= 0; i--) {
+            if (i == 0) {
+                if (left) {
+                    return LootrunUndoResult.ERROR_STAND_NEAR_POINT;
+                } else {
+                    return LootrunUndoResult.ERROR_NOT_FAR_ENOUGH;
+                }
+            }
+
+            if (points.get(i).distanceToSqr(position) < 4) {
+                if (left) {
+                    break;
+                }
+            } else {
+                left = true;
+            }
+
+            removed.add(points.get(i));
+        }
+
+        points.removeAll(removed);
+        return LootrunUndoResult.SUCCESSFUL;
+    }
+
     static {
         LOOTRUNS.mkdirs();
+    }
+
+    public static boolean addChest(BlockPos pos) {
+        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
+        if (current == null) return false;
+        return current.chests().add(pos);
+    }
+
+    public static boolean removeChest(BlockPos pos) {
+        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
+
+        if (current == null) return false;
+
+        return current.chests().remove(pos);
+    }
+
+    public static Pair<Vec3, Component> deleteNoteAt(BlockPos pos) {
+        LootrunUncompiled current = LootrunUtils.getActiveLootrun();
+
+        if (current == null) return null;
+
+        List<Pair<Vec3, Component>> notes = current.notes();
+        for (int i = 0; i < notes.size(); i++) {
+            Pair<Vec3, Component> note = notes.get(i);
+            if (pos.equals(new BlockPos(note.first()))) {
+                return notes.remove(i);
+            }
+        }
+        return null;
+    }
+
+    public static List<Pair<Vec3, Component>> getCurrentNotes() {
+        LootrunUncompiled activeLootrun = getActiveLootrun();
+
+        if (activeLootrun != null) return activeLootrun.notes();
+
+        return new ArrayList<>();
     }
 
     public enum LootrunSaveResult {
         SAVED,
         ERROR_SAVING,
         ERROR_ALREADY_EXISTS
+    }
+
+    public enum LootrunUndoResult {
+        SUCCESSFUL,
+        ERROR_STAND_NEAR_POINT,
+        ERROR_NOT_FAR_ENOUGH
     }
 
     public enum LootrunState {
