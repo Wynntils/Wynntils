@@ -28,7 +28,7 @@ public class LevelRendererMixin {
     private Minecraft minecraft;
 
     @Inject(at = @At("TAIL"), method = "renderLevel")
-    public void renderLevel(
+    public void renderLevelPost(
             PoseStack poseStack,
             float partialTick,
             long finishNanoTime,

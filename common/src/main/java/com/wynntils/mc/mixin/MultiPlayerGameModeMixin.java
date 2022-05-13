@@ -39,7 +39,7 @@ public abstract class MultiPlayerGameModeMixin {
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"))
-    private void useItemOn(
+    private void useItemOnPre(
             LocalPlayer player,
             ClientLevel level,
             InteractionHand hand,
