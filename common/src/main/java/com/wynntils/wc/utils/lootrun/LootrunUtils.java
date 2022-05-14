@@ -71,6 +71,10 @@ public class LootrunUtils {
 
     private static final LootrunFeature lootrunFeatureInstance = new LootrunFeature();
 
+    static {
+        LOOTRUNS.mkdirs();
+    }
+
     public static LootrunState getState() {
         return state;
     }
@@ -649,10 +653,6 @@ public class LootrunUtils {
         points.removeAll(removed);
         recordingInformation.setDirty(true);
         return LootrunUndoResult.SUCCESSFUL;
-    }
-
-    static {
-        LOOTRUNS.mkdirs();
     }
 
     public static boolean addChest(BlockPos pos) {
