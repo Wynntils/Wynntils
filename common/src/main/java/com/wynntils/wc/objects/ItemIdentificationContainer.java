@@ -2,14 +2,13 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.item;
+package com.wynntils.wc.objects;
 
 import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wc.objects.SpellType;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
@@ -20,107 +19,28 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 
-public class ItemIdentificationContainer {
+public record ItemIdentificationContainer(
+        ItemProfile item,
+        IdentificationProfile identification,
+        IdentificationModifier modifier,
+        String shortIdName,
+        int value,
+        int stars,
+        float percent,
+        Component rawLoreLine,
+        Component percentLoreLine,
+        Component rangeLoreLine,
+        Component rerollLoreLine) {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
-
-    private ItemProfile item;
-    private IdentificationProfile identification;
-    private IdentificationModifier modifier;
-
-    private String shortIdName;
-    private int value;
-    private boolean isRaw;
-    private int stars;
-    private float percent;
-
-    private Component rawLoreLine;
-    private Component percentLoreLine;
-    private Component rangeLoreLine;
-    private Component rerollLoreLine;
-
-    public ItemIdentificationContainer(
-            ItemProfile item,
-            IdentificationProfile identification,
-            IdentificationModifier modifier,
-            String shortIdName,
-            int value,
-            boolean isRaw,
-            int stars,
-            float percent,
-            Component rawLoreLine,
-            Component percentLoreLine,
-            Component rangeLoreLine,
-            Component rerollLoreLine) {
-        this.item = item;
-        this.identification = identification;
-        this.modifier = modifier;
-        this.shortIdName = shortIdName;
-        this.value = value;
-        this.isRaw = isRaw;
-        this.stars = stars;
-        this.percent = percent;
-        this.rawLoreLine = rawLoreLine;
-        this.percentLoreLine = percentLoreLine;
-        this.rangeLoreLine = rangeLoreLine;
-        this.rerollLoreLine = rerollLoreLine;
-    }
-
-    public ItemProfile getItem() {
-        return item;
-    }
-
-    public IdentificationProfile getIdentificationContainer() {
-        return identification;
-    }
-
-    public IdentificationModifier getIdentificationModifier() {
-        return modifier;
-    }
 
     public boolean isNew() {
         return (identification == null || identification.isInvalidValue(value));
     }
 
     public boolean isFixed() {
-        return (isNew() ? false : identification.hasConstantValue());
-    }
-
-    public String getShortIdName() {
-        return shortIdName;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public boolean isRaw() {
-        return isRaw;
-    }
-
-    public int getStarCount() {
-        return stars;
-    }
-
-    public float getPercent() {
-        return percent;
-    }
-
-    public Component getRawLoreLine() {
-        return rawLoreLine;
-    }
-
-    public Component getPercentLoreLine() {
-        return percentLoreLine;
-    }
-
-    public Component getRangeLoreLine() {
-        return rangeLoreLine;
-    }
-
-    public Component getRerollLoreLine() {
-        return rerollLoreLine;
+        return !isNew() && identification.hasConstantValue();
     }
 
     public static ItemIdentificationContainer fromLore(Component lore, ItemProfile item) {
@@ -197,7 +117,6 @@ public class ItemIdentificationContainer {
                 type,
                 shortIdName,
                 value,
-                isRaw,
                 starCount,
                 percentage,
                 lore,
@@ -235,19 +154,8 @@ public class ItemIdentificationContainer {
             line.append(new TextComponent(" " + IdentificationProfile.getAsLongName(idName))
                     .withStyle(ChatFormatting.GRAY));
 
-            ItemIdentificationContainer id = new ItemIdentificationContainer(
-                    item,
-                    idProfile,
-                    type,
-                    idName,
-                    0,
-                    type == IdentificationModifier.Integer,
-                    0,
-                    -1,
-                    line,
-                    line,
-                    line,
-                    line);
+            ItemIdentificationContainer id =
+                    new ItemIdentificationContainer(item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
             ids.add(id);
         }
 

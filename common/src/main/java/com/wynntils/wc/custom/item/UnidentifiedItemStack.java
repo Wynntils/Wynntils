@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.item;
+package com.wynntils.wc.custom.item;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.webapi.WebManager;
@@ -12,8 +12,8 @@ import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.ItemGuessFeature;
 import com.wynntils.utils.reference.EmeraldSymbols;
-import com.wynntils.wc.objects.item.render.HighlightedItem;
-import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.custom.item.render.HighlightedItem;
+import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +28,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynnUnidentifiedStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
+public class UnidentifiedItemStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
 
     private ItemGuessProfile guessProfile;
     private ItemTier tier;
 
     private List<Component> tooltip;
 
-    public WynnUnidentifiedStack(ItemStack stack) {
+    public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
 
         tooltip = super.getTooltipLines(null, TooltipFlag.Default.NORMAL);

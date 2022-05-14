@@ -17,6 +17,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 @FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.LARGE, stability = Stability.STABLE)
 public class ItemGuessFeature extends Feature {
 
+    // TODO replace with config
     public static final boolean showGuessesPrice = true;
 
     @Override

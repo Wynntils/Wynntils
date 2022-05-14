@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc;
+package com.wynntils.wc.custom;
 
-import com.wynntils.wc.objects.item.WynnCosmeticStack;
-import com.wynntils.wc.objects.item.WynnGearStack;
-import com.wynntils.wc.objects.item.WynnItemStack;
-import com.wynntils.wc.objects.item.WynnUnidentifiedStack;
+import com.wynntils.wc.custom.item.CosmeticItemStack;
+import com.wynntils.wc.custom.item.GearItemStack;
+import com.wynntils.wc.custom.item.UnidentifiedItemStack;
+import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
@@ -29,13 +29,13 @@ public class ItemStackTransformer {
     }
 
     public static void init() {
-        registerTransformer(WynnItemMatchers::isGear, WynnGearStack::new);
-        registerTransformer(WynnItemMatchers::isUnidentified, WynnUnidentifiedStack::new);
-        registerTransformer(WynnItemMatchers::isCosmetic, WynnCosmeticStack::new);
+        registerTransformer(WynnItemMatchers::isGear, GearItemStack::new);
+        registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
+        registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
     }
 
     public static ItemStack transform(ItemStack stack) {
-        if (!WynnUtils.onWorld()) return stack;
+        if (!WynnUtils.onServer()) return stack;
 
         for (Map.Entry<Predicate<ItemStack>, Function<ItemStack, WynnItemStack>> e : TRANSFORMERS.entrySet()) {
             if (e.getKey().test(stack)) return e.getValue().apply(stack);

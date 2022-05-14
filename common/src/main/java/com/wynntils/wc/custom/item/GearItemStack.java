@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.objects.item;
+package com.wynntils.wc.custom.item;
 
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.DamageType;
@@ -14,8 +14,9 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.objects.item.render.HighlightedItem;
-import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.custom.item.render.HighlightedItem;
+import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.objects.ItemIdentificationContainer;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.*;
@@ -38,7 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-public class WynnGearStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
+public class GearItemStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
 
     private static final Component ID_PLACEHOLDER = new TextComponent("ID_PLACEHOLDER");
 
@@ -56,7 +57,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
     private List<Component> rangeTooltip;
     private List<Component> rerollTooltip;
 
-    public WynnGearStack(ItemStack stack) {
+    public GearItemStack(ItemStack stack) {
         super(stack);
 
         // get item profile
@@ -105,7 +106,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
 
             if (!idContainer.isNew() && !idContainer.isFixed()) {
                 idAmount++;
-                percentTotal += idContainer.getPercent();
+                percentTotal += idContainer.percent();
             }
 
             if (idContainer.isNew()) {
@@ -140,7 +141,7 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         customName = name;
     }
 
-    public WynnGearStack(ItemProfile profile) {
+    public GearItemStack(ItemProfile profile) {
         super(profile.getItemInfo().asItemStack());
 
         itemProfile = profile;
@@ -290,16 +291,13 @@ public class WynnGearStack extends WynnItemStack implements HighlightedItem, Hot
         if (!identifications.isEmpty() && idIndex != -1) {
             Map<String, Component> percentMap = identifications.stream()
                     .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getPercentLoreLine));
+                            ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::percentLoreLine));
             Map<String, Component> rangeMap = identifications.stream()
                     .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getRangeLoreLine));
+                            ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rangeLoreLine));
             Map<String, Component> rerollMap = identifications.stream()
                     .collect(Collectors.toMap(
-                            ItemIdentificationContainer::getShortIdName,
-                            ItemIdentificationContainer::getRerollLoreLine));
+                            ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rerollLoreLine));
 
             Collection<Component> orderedPercents;
             Collection<Component> orderedRanges;

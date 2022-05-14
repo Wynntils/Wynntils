@@ -14,8 +14,8 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.RenderUtils;
-import com.wynntils.wc.objects.item.render.HighlightedItem;
-import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.custom.item.render.HighlightedItem;
+import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +45,8 @@ public class ItemHighlightFeature extends Feature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();
-        if (item instanceof HighlightedItem) {
-            int color = ((HighlightedItem) item).getHighlightColor(e.getScreen(), e.getSlot());
+        if (item instanceof HighlightedItem highlighted) {
+            int color = highlighted.getHighlightColor(e.getScreen(), e.getSlot());
             RenderUtils.drawTexturedRectWithColor(
                     RenderUtils.highlight, color, e.getSlot().x - 1, e.getSlot().y - 1, 18, 18, 256, 256);
         }
@@ -55,8 +55,8 @@ public class ItemHighlightFeature extends Feature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         ItemStack item = e.getStack();
-        if (item instanceof HotbarHighlightedItem) {
-            int color = ((HotbarHighlightedItem) item).getHotbarColor();
+        if (item instanceof HotbarHighlightedItem highlighted) {
+            int color = highlighted.getHotbarColor();
             RenderUtils.drawRect(color, e.getX(), e.getY(), 16, 16);
         }
     }
