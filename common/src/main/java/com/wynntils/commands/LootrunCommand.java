@@ -4,6 +4,9 @@
  */
 package com.wynntils.commands;
 
+import static net.minecraft.commands.Commands.*;
+import static net.minecraft.commands.Commands.literal;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -20,7 +23,6 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
@@ -336,44 +338,43 @@ public class LootrunCommand extends CommandBase {
 
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("lootrun")
-                .then(Commands.literal("load")
-                        .then(Commands.argument("lootrun", StringArgumentType.string())
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(literal("lootrun")
+                .then(literal("load")
+                        .then(argument("lootrun", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
                                 .executes(this::loadLootrun)))
-                .then(Commands.literal("record").executes(this::recordLootrun))
-                .then(Commands.literal("save")
-                        .then(Commands.argument("name", StringArgumentType.string())
-                                .executes(this::saveLootrun)))
-                .then(Commands.literal("note")
-                        .then(Commands.literal("add")
-                                .then(Commands.literal("json")
-                                        .then(Commands.argument("text", ComponentArgument.textComponent())
+                .then(literal("record").executes(this::recordLootrun))
+                .then(literal("save")
+                        .then(argument("name", StringArgumentType.string()).executes(this::saveLootrun)))
+                .then(literal("note")
+                        .then(literal("add")
+                                .then(literal("json")
+                                        .then(argument("text", ComponentArgument.textComponent())
                                                 .executes(this::addJsonLootrunNote)))
-                                .then(Commands.literal("text")
-                                        .then(Commands.argument("text", StringArgumentType.greedyString())
+                                .then(literal("text")
+                                        .then(argument("text", StringArgumentType.greedyString())
                                                 .executes(this::addTextLootrunNote))))
-                        .then(Commands.literal("list").executes(this::listLootrunNote))
-                        .then(Commands.literal("delete")
-                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                        .then(literal("list").executes(this::listLootrunNote))
+                        .then(literal("delete")
+                                .then(argument("pos", BlockPosArgument.blockPos())
                                         .executes(this::deleteLootrunNote))))
-                .then(Commands.literal("clear").executes(this::clearLootrun))
-                .then(Commands.literal("delete")
-                        .then(Commands.argument("name", StringArgumentType.string())
+                .then(literal("clear").executes(this::clearLootrun))
+                .then(literal("delete")
+                        .then(argument("name", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
                                 .executes(this::deleteLootrun)))
-                .then(Commands.literal("rename")
-                        .then(Commands.argument("old", StringArgumentType.string())
+                .then(literal("rename")
+                        .then(argument("old", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
-                                .then(Commands.argument("new", StringArgumentType.string())
+                                .then(argument("new", StringArgumentType.string())
                                         .executes(this::renameLootrun))))
-                .then(Commands.literal("chest")
-                        .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                                .then(Commands.literal("add").executes(this::addChest)))
-                        .then(Commands.literal("remove").executes(this::removeChest)))
-                .then(Commands.literal("undo").executes(this::undoLootrun))
-                .then(Commands.literal("folder").executes(this::folderLootrun)));
+                .then(literal("chest")
+                        .then(argument("pos", BlockPosArgument.blockPos())
+                                .then(literal("add").executes(this::addChest)))
+                        .then(literal("remove").executes(this::removeChest)))
+                .then(literal("undo").executes(this::undoLootrun))
+                .then(literal("folder").executes(this::folderLootrun)));
 
-        dispatcher.register(Commands.literal("lr").redirect(node));
+        dispatcher.register(literal("lr").redirect(node));
     }
 }
