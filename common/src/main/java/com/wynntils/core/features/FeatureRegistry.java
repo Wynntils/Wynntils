@@ -32,6 +32,15 @@ public class FeatureRegistry {
         FEATURES.add(feature);
     }
 
+    public static void unregisterFeature(Feature feature) {
+        if (feature instanceof Overlay overlay) {
+            OVERLAYS.remove(overlay);
+        }
+
+        FEATURES.remove(feature);
+        WynntilsMod.getEventBus().unregister(feature);
+    }
+
     public static void registerFeatures(List<Feature> features) {
         features.forEach(FeatureRegistry::registerFeature);
     }

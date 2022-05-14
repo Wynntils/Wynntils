@@ -9,10 +9,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ClientTickEvent;
-import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.RenderLevelLastEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.lootrun.objects.*;
 import it.unimi.dsi.fastutil.Pair;
@@ -26,7 +25,6 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -71,12 +69,10 @@ public class LootrunUtils {
 
     private static RecordingInformation recordingInformation = null;
 
+    private static final LootrunFeature lootrunFeatureInstance = new LootrunFeature();
+
     public static LootrunUncompiled getUncompiled() {
         return uncompiled;
-    }
-
-    public static void registerToEventBus() {
-        WynntilsMod.getEventBus().register(LootrunUtils.class);
     }
 
     public static LootrunState getState() {
@@ -91,8 +87,12 @@ public class LootrunUtils {
         return recordingInformation;
     }
 
+    public static void registerToEventBus() {
+        FeatureRegistry.registerFeature(lootrunFeatureInstance);
+    }
+
     public static void unregisterFromEventBus() {
-        WynntilsMod.getEventBus().register(LootrunUtils.class);
+        FeatureRegistry.unregisterFeature(lootrunFeatureInstance);
     }
 
     @SubscribeEvent
@@ -403,51 +403,6 @@ public class LootrunUtils {
         }
     }
 
-    @SubscribeEvent
-    public static void recordMovement(ClientTickEvent event) {
-        if (event.getTickPhase() == ClientTickEvent.Phase.START) {
-            if (recording != null) {
-                LocalPlayer player = McUtils.mc().player;
-                if (player != null) {
-                    Entity root = player.getRootVehicle();
-                    Vec3 pos = root.position();
-                    if (recordingInformation.getLastLocation() == null
-                            || pos.distanceToSqr(recordingInformation.getLastLocation()) >= 4d) {
-                        recording.points().add(pos);
-                        recordingInformation.setLastLocation(pos);
-                        recordingInformation.setDirty(true);
-                    }
-
-                    if (recordingInformation.isDirty()) {
-                        recordingCompiled = compile(recording);
-                        recordingInformation.setDirty(false);
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (recordingInformation != null) {
-            BlockState block = event.getWorld().getBlockState(event.getPos());
-            if (block.is(Blocks.CHEST)) {
-                recordingInformation.setLastChest(event.getPos());
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onOpen(ScreenOpenedEvent event) {
-        if (event.getScreen() instanceof ContainerScreen screen && recordingInformation != null) {
-            if (screen.getTitle().getString().contains("Loot Chest ") && recordingInformation.getLastChest() != null) {
-                recording.chests().add(recordingInformation.getLastChest());
-                recordingInformation.setDirty(true);
-            }
-            recordingInformation.setLastChest(null);
-        }
-    }
-
     public static LootrunInstance compile(LootrunUncompiled uncompiled) {
         Long2ObjectMap<List<List<ColoredPoint>>> points = generatePointsByChunk(uncompiled.points());
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
@@ -640,6 +595,7 @@ public class LootrunUtils {
     }
 
     public static void stopRecording() {
+        // At this point, we already have LootrunFeature registed to the event bus
         state = LootrunState.LOADED;
         lootrun = recordingCompiled;
         uncompiled = recording;
@@ -649,6 +605,7 @@ public class LootrunUtils {
     }
 
     public static void startRecording() {
+        state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
         registerToEventBus();
@@ -656,15 +613,16 @@ public class LootrunUtils {
 
     public static boolean tryLoadFile(String fileName) {
         String lootrun = fileName + ".json";
-        File lootrunFile = new File(LootrunUtils.LOOTRUNS, lootrun);
+        File lootrunFile = new File(LOOTRUNS, lootrun);
         if (lootrunFile.exists()) {
             FileReader file;
             try {
                 file = new FileReader(lootrunFile);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
-                LootrunUtils.registerToEventBus();
-                LootrunUtils.uncompiled = LootrunUtils.readJson(lootrunFile, json);
-                LootrunUtils.lootrun = LootrunUtils.compile(LootrunUtils.uncompiled);
+                uncompiled = readJson(lootrunFile, json);
+                LootrunUtils.lootrun = compile(uncompiled);
+                state = LootrunState.LOADED;
+                registerToEventBus();
                 file.close();
                 return true;
             } catch (IOException e) {
@@ -743,6 +701,51 @@ public class LootrunUtils {
         if (activeLootrun != null) return activeLootrun.notes();
 
         return new ArrayList<>();
+    }
+
+    public static void setLastChestIfRecording(BlockPos pos) {
+        if (state != LootrunState.RECORDING) {
+            return;
+        }
+
+        recordingInformation.setLastChest(pos);
+    }
+
+    public static void addChestIfRecording() {
+        if (state != LootrunState.RECORDING) {
+            return;
+        }
+
+        if (recordingInformation.lastChest == null) {
+            return;
+        }
+
+        recording.chests().add(recordingInformation.getLastChest());
+        recordingInformation.setDirty(true);
+        recordingInformation.setLastChest(null);
+    }
+
+    public static void recordMovementIfRecording() {
+        if (state != LootrunState.RECORDING) {
+            return;
+        }
+
+        LocalPlayer player = McUtils.mc().player;
+        if (player != null) {
+            Entity root = player.getRootVehicle();
+            Vec3 pos = root.position();
+            if (recordingInformation.getLastLocation() == null
+                    || pos.distanceToSqr(recordingInformation.getLastLocation()) >= 4d) {
+                recording.points().add(pos);
+                recordingInformation.setLastLocation(pos);
+                recordingInformation.setDirty(true);
+            }
+
+            if (recordingInformation.isDirty()) {
+                recordingCompiled = compile(recording);
+                recordingInformation.setDirty(false);
+            }
+        }
     }
 
     public enum LootrunSaveResult {
