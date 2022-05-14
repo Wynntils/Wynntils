@@ -34,6 +34,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpd
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -184,5 +185,10 @@ public class EventFactory {
     public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
         PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
         post(event);
+    }
+
+    public static void onContainerClickEvent(
+            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
+        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
 }

@@ -4,9 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.ContainerClickEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -35,7 +33,7 @@ public abstract class MultiPlayerGameModeMixin {
             itemStack = ItemStack.EMPTY;
         }
 
-        WynntilsMod.getEventBus().post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId));
+        EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId);
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"))
