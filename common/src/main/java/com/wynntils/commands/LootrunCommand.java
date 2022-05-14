@@ -103,7 +103,12 @@ public class LootrunCommand extends CommandBase {
 
     private int saveLootrun(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
-        LootrunUtils.LootrunSaveResult lootrunSaveResult = LootrunUtils.saveLootrun(name);
+        LootrunUtils.LootrunSaveResult lootrunSaveResult = LootrunUtils.trySaveCurrentLootrun(name);
+
+        if (lootrunSaveResult == null) {
+            return 0;
+        }
+
         switch (lootrunSaveResult) {
             case SAVED -> {
                 context.getSource()

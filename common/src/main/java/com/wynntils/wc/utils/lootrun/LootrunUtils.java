@@ -318,7 +318,7 @@ public class LootrunUtils {
             lootrun = compile(uncompiled);
             if (saveToFile && uncompiled.file() != null) {
                 LootrunSaveResult lootrunSaveResult =
-                        saveLootrun(uncompiled.file().getName());
+                        trySaveCurrentLootrun(uncompiled.file().getName());
                 switch (lootrunSaveResult) {
                     case SAVED -> {
                         return 1;
@@ -330,67 +330,6 @@ public class LootrunUtils {
             }
         }
         return 1;
-    }
-
-    public static LootrunSaveResult saveLootrun(String name) {
-        try {
-            File file = new File(LootrunUtils.LOOTRUNS, name + ".json");
-            LootrunUtils.uncompiled = new LootrunUncompiled(LootrunUtils.uncompiled, file);
-
-            boolean result = file.createNewFile();
-
-            if (!result) {
-                return LootrunSaveResult.ERROR_ALREADY_EXISTS;
-            }
-
-            JsonObject json = new JsonObject();
-            JsonArray points = new JsonArray();
-            for (Vec3 point : uncompiled.points()) {
-                JsonObject pointJson = new JsonObject();
-                pointJson.addProperty("x", point.x);
-                pointJson.addProperty("y", point.y);
-                pointJson.addProperty("z", point.z);
-                points.add(pointJson);
-            }
-            json.add("points", points);
-
-            JsonArray chests = new JsonArray();
-            for (BlockPos chest : uncompiled.chests()) {
-                JsonObject chestJson = new JsonObject();
-                chestJson.addProperty("x", chest.getX());
-                chestJson.addProperty("y", chest.getY());
-                chestJson.addProperty("z", chest.getZ());
-                chests.add(chestJson);
-            }
-            json.add("chests", chests);
-
-            JsonArray notes = new JsonArray();
-            for (Note note : uncompiled.notes()) {
-                JsonObject noteJson = new JsonObject();
-                JsonObject locationJson = new JsonObject();
-
-                Vec3 location = note.position();
-                locationJson.addProperty("x", location.x);
-                locationJson.addProperty("y", location.y);
-                locationJson.addProperty("z", location.z);
-                noteJson.add("position", locationJson);
-
-                noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
-                notes.add(noteJson);
-            }
-            json.add("notes", notes);
-
-            json.addProperty(
-                    "date",
-                    DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
-                            .format(new Date()));
-            FileWriter writer = new FileWriter(file);
-            new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
-            writer.close();
-            return LootrunSaveResult.SAVED;
-        } catch (IOException ex) {
-            return LootrunSaveResult.ERROR_SAVING;
-        }
     }
 
     public static LootrunInstance compile(LootrunUncompiled uncompiled) {
@@ -746,6 +685,16 @@ public class LootrunUtils {
         return activeLootrun.points.get(0);
     }
 
+    public static LootrunSaveResult trySaveCurrentLootrun(String name) {
+        LootrunUncompiled activeLootrun = getActiveLootrun();
+
+        if (activeLootrun == null) {
+            return null;
+        }
+
+        return activeLootrun.saveLootrun(name);
+    }
+
     public enum LootrunSaveResult {
         SAVED,
         ERROR_SAVING,
@@ -805,6 +754,67 @@ public class LootrunUtils {
 
         public LootrunUncompiled(LootrunUncompiled old, File file) {
             this(old.points, old.chests, old.notes, file);
+        }
+
+        public LootrunSaveResult saveLootrun(String name) {
+            try {
+                File file = new File(LootrunUtils.LOOTRUNS, name + ".json");
+                LootrunUtils.uncompiled = new LootrunUncompiled(this, file);
+
+                boolean result = file.createNewFile();
+
+                if (!result) {
+                    return LootrunSaveResult.ERROR_ALREADY_EXISTS;
+                }
+
+                JsonObject json = new JsonObject();
+                JsonArray points = new JsonArray();
+                for (Vec3 point : this.points()) {
+                    JsonObject pointJson = new JsonObject();
+                    pointJson.addProperty("x", point.x);
+                    pointJson.addProperty("y", point.y);
+                    pointJson.addProperty("z", point.z);
+                    points.add(pointJson);
+                }
+                json.add("points", points);
+
+                JsonArray chests = new JsonArray();
+                for (BlockPos chest : this.chests()) {
+                    JsonObject chestJson = new JsonObject();
+                    chestJson.addProperty("x", chest.getX());
+                    chestJson.addProperty("y", chest.getY());
+                    chestJson.addProperty("z", chest.getZ());
+                    chests.add(chestJson);
+                }
+                json.add("chests", chests);
+
+                JsonArray notes = new JsonArray();
+                for (Note note : this.notes()) {
+                    JsonObject noteJson = new JsonObject();
+                    JsonObject locationJson = new JsonObject();
+
+                    Vec3 location = note.position();
+                    locationJson.addProperty("x", location.x);
+                    locationJson.addProperty("y", location.y);
+                    locationJson.addProperty("z", location.z);
+                    noteJson.add("position", locationJson);
+
+                    noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
+                    notes.add(noteJson);
+                }
+                json.add("notes", notes);
+
+                json.addProperty(
+                        "date",
+                        DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
+                                .format(new Date()));
+                FileWriter writer = new FileWriter(file);
+                new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
+                writer.close();
+                return LootrunSaveResult.SAVED;
+            } catch (IOException ex) {
+                return LootrunSaveResult.ERROR_SAVING;
+            }
         }
     }
 
