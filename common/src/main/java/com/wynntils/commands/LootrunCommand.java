@@ -16,7 +16,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
-import it.unimi.dsi.fastutil.Pair;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
@@ -156,13 +155,13 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int listLootrunNote(CommandContext<CommandSourceStack> context) {
-        List<Pair<Vec3, Component>> notes = LootrunUtils.getCurrentNotes();
+        List<LootrunUtils.Note> notes = LootrunUtils.getCurrentNotes();
         if (notes.isEmpty()) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteNoNote"));
         } else {
             MutableComponent component = new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteHeader");
-            for (Pair<Vec3, Component> note : notes) {
-                BlockPos pos = new BlockPos(note.first());
+            for (LootrunUtils.Note note : notes) {
+                BlockPos pos = new BlockPos(note.position());
                 String posString = pos.toShortString();
 
                 component
@@ -175,7 +174,7 @@ public class LootrunCommand extends CommandBase {
                                         "/lootrun note delete " + posString.replace(",", "")))
                                 .withColor(ChatFormatting.RED)))
                         .append(" " + posString + ": ")
-                        .append(note.second());
+                        .append(note.component());
             }
             context.getSource().sendSuccess(component, false);
         }
@@ -191,7 +190,7 @@ public class LootrunCommand extends CommandBase {
                     .sendSuccess(
                             new TranslatableComponent(
                                             "feature.wynntils.lootrunUtils.noteRemovedSuccessfully",
-                                            removedNote.second())
+                                            removedNote.component())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {

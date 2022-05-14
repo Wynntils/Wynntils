@@ -13,10 +13,8 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.lootrun.objects.*;
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
@@ -142,18 +140,18 @@ public class LootrunUtils {
             int color,
             MultiBufferSource.BufferSource source,
             long chunkLong) {
-        List<Pair<Vec3, Component>> notes = lootrun.notes().get(chunkLong);
+        List<Note> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
 
-        for (Pair<Vec3, Component> note : notes) {
-            Vec3 location = note.first();
+        for (Note note : notes) {
+            Vec3 location = note.position();
             poseStack.pushPose();
             poseStack.translate(location.x, location.y + 2, location.z);
             poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
             poseStack.scale(-0.025f, -0.025f, 0.025f);
             Matrix4f pose = poseStack.last().pose();
-            List<FormattedCharSequence> lines = font.split(note.right(), 200);
+            List<FormattedCharSequence> lines = font.split(note.component(), 200);
             int offsetY = -(font.lineHeight * lines.size()) / 2;
             for (FormattedCharSequence line : lines) {
                 int offsetX = -font.width(line) / 2;
@@ -300,7 +298,7 @@ public class LootrunUtils {
 
         if (current == null) return 0;
 
-        current.notes().add(new ObjectObjectImmutablePair<>(root.position(), text));
+        current.notes().add(new Note(root.position(), text));
         return recompileLootrun(true);
     }
 
@@ -367,17 +365,17 @@ public class LootrunUtils {
             json.add("chests", chests);
 
             JsonArray notes = new JsonArray();
-            for (Pair<Vec3, Component> note : uncompiled.notes()) {
+            for (Note note : uncompiled.notes()) {
                 JsonObject noteJson = new JsonObject();
                 JsonObject locationJson = new JsonObject();
 
-                Vec3 location = note.first();
+                Vec3 location = note.position();
                 locationJson.addProperty("x", location.x);
                 locationJson.addProperty("y", location.y);
                 locationJson.addProperty("z", location.z);
-                noteJson.add("location", locationJson);
+                noteJson.add("position", locationJson);
 
-                noteJson.add("note", Component.Serializer.toJsonTree(note.second()));
+                noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
                 notes.add(noteJson);
             }
             json.add("notes", notes);
@@ -398,7 +396,7 @@ public class LootrunUtils {
     public static LootrunInstance compile(LootrunUncompiled uncompiled) {
         Long2ObjectMap<List<List<ColoredPoint>>> points = generatePointsByChunk(uncompiled.points());
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
-        Long2ObjectMap<List<Pair<Vec3, Component>>> notes = getNotes(uncompiled.notes());
+        Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
         return new LootrunInstance(points, chests, notes);
     }
@@ -524,12 +522,11 @@ public class LootrunUtils {
         return result;
     }
 
-    private static Long2ObjectMap<List<Pair<Vec3, Component>>> getNotes(List<Pair<Vec3, Component>> notes) {
-        Long2ObjectMap<List<Pair<Vec3, Component>>> result = new Long2ObjectOpenHashMap<>();
-        for (Pair<Vec3, Component> note : notes) {
-            ChunkPos chunk = new ChunkPos(new BlockPos(note.first()));
-            List<Pair<Vec3, Component>> notesChunk =
-                    result.computeIfAbsent(chunk.toLong(), (chunkPos) -> new ArrayList<>());
+    private static Long2ObjectMap<List<Note>> getNotes(List<Note> notes) {
+        Long2ObjectMap<List<Note>> result = new Long2ObjectOpenHashMap<>();
+        for (Note note : notes) {
+            ChunkPos chunk = new ChunkPos(new BlockPos(note.position()));
+            List<Note> notesChunk = result.computeIfAbsent(chunk.toLong(), (chunkPos) -> new ArrayList<>());
             notesChunk.add(note);
         }
         return result;
@@ -559,17 +556,17 @@ public class LootrunUtils {
             }
         }
         JsonArray notesJson = json.getAsJsonArray("notes");
-        List<Pair<Vec3, Component>> notes = new ArrayList<>();
+        List<Note> notes = new ArrayList<>();
         if (notesJson != null) {
             for (JsonElement element : notesJson) {
                 JsonObject noteJson = element.getAsJsonObject();
-                JsonObject positionJson = noteJson.getAsJsonObject("location");
+                JsonObject positionJson = noteJson.getAsJsonObject("position");
                 Vec3 position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
                         positionJson.get("z").getAsDouble());
                 Component component = Component.Serializer.fromJson(noteJson.get("note"));
-                Pair<Vec3, Component> note = new ObjectObjectImmutablePair<>(position, component);
+                Note note = new Note(position, component);
                 notes.add(note);
             }
         }
@@ -669,22 +666,22 @@ public class LootrunUtils {
         return current.chests().remove(pos);
     }
 
-    public static Pair<Vec3, Component> deleteNoteAt(BlockPos pos) {
+    public static Note deleteNoteAt(BlockPos pos) {
         LootrunUncompiled current = LootrunUtils.getActiveLootrun();
 
         if (current == null) return null;
 
-        List<Pair<Vec3, Component>> notes = current.notes();
+        List<Note> notes = current.notes();
         for (int i = 0; i < notes.size(); i++) {
-            Pair<Vec3, Component> note = notes.get(i);
-            if (pos.equals(new BlockPos(note.first()))) {
+            Note note = notes.get(i);
+            if (pos.equals(new BlockPos(note.position()))) {
                 return notes.remove(i);
             }
         }
         return null;
     }
 
-    public static List<Pair<Vec3, Component>> getCurrentNotes() {
+    public static List<Note> getCurrentNotes() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun != null) return activeLootrun.notes();
@@ -770,7 +767,7 @@ public class LootrunUtils {
     public record LootrunInstance(
             Long2ObjectMap<List<List<ColoredPoint>>> points,
             Long2ObjectMap<Set<BlockPos>> chests,
-            Long2ObjectMap<List<Pair<Vec3, Component>>> notes) {}
+            Long2ObjectMap<List<Note>> notes) {}
 
     public record ColoredPoint(Vec3 vec3, int color) {}
 
@@ -804,11 +801,12 @@ public class LootrunUtils {
         }
     }
 
-    public record LootrunUncompiled(
-            List<Vec3> points, Set<BlockPos> chests, List<Pair<Vec3, Component>> notes, File file) {
+    public record LootrunUncompiled(List<Vec3> points, Set<BlockPos> chests, List<Note> notes, File file) {
 
         public LootrunUncompiled(LootrunUncompiled old, File file) {
             this(old.points, old.chests, old.notes, file);
         }
     }
+
+    public record Note(Vec3 position, Component component) {}
 }
