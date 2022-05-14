@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -98,6 +99,12 @@ public class LootrunUtils {
             return;
         }
 
+        ClientLevel level = McUtils.mc().level;
+
+        if (level == null) {
+            return;
+        }
+
         event.getPoseStack().pushPose();
 
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
@@ -114,7 +121,7 @@ public class LootrunUtils {
             int x = i % renderDistance + origin.x - (renderDistance / 2);
             int z = i / renderDistance + origin.z - (renderDistance / 2);
             ChunkPos chunk = new ChunkPos(x, z);
-            if (McUtils.mc().level == null || !McUtils.mc().level.hasChunk(chunk.x, chunk.z)) {
+            if (!level.hasChunk(chunk.x, chunk.z)) {
                 continue;
             }
 
