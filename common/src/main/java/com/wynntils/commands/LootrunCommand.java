@@ -41,15 +41,16 @@ public class LootrunCommand extends CommandBase {
         String fileName = StringArgumentType.getString(context, "lootrun");
 
         boolean successful = LootrunUtils.tryLoadFile(fileName);
+        Vec3 startingPoint = LootrunUtils.getStartingPoint();
 
-        if (!successful) {
+        if (!successful || startingPoint == null) {
             context.getSource()
                     .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        BlockPos start = new BlockPos(LootrunUtils.getUncompiled().points().get(0));
+        BlockPos start = new BlockPos(startingPoint);
         context.getSource()
                 .sendSuccess(
                         new TranslatableComponent(
@@ -324,8 +325,6 @@ public class LootrunCommand extends CommandBase {
                     return 0;
                 }
             }
-
-            LootrunUtils.getRecordingInformation().setDirty(true);
         }
         return 0;
     }

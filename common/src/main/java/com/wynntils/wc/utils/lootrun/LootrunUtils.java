@@ -71,20 +71,8 @@ public class LootrunUtils {
 
     private static final LootrunFeature lootrunFeatureInstance = new LootrunFeature();
 
-    public static LootrunUncompiled getUncompiled() {
-        return uncompiled;
-    }
-
     public static LootrunState getState() {
         return state;
-    }
-
-    public static LootrunUncompiled getRecording() {
-        return recording;
-    }
-
-    public static RecordingInformation getRecordingInformation() {
-        return recordingInformation;
     }
 
     public static void registerToEventBus() {
@@ -635,7 +623,7 @@ public class LootrunUtils {
 
     public static LootrunUndoResult tryUndo() {
         Vec3 position = McUtils.player().position();
-        List<Vec3> points = LootrunUtils.getRecording().points();
+        List<Vec3> points = recording.points();
         List<Vec3> removed = new ArrayList<>();
         boolean left = false;
         for (int i = points.size() - 1; i >= 0; i--) {
@@ -659,6 +647,7 @@ public class LootrunUtils {
         }
 
         points.removeAll(removed);
+        recordingInformation.setDirty(true);
         return LootrunUndoResult.SUCCESSFUL;
     }
 
@@ -746,6 +735,18 @@ public class LootrunUtils {
                 recordingInformation.setDirty(false);
             }
         }
+    }
+
+    public static Vec3 getStartingPoint() {
+        LootrunUncompiled activeLootrun = getActiveLootrun();
+
+        if (activeLootrun == null) {
+            return null;
+        }
+
+        if (activeLootrun.points == null || activeLootrun.points.size() == 0) return null;
+
+        return activeLootrun.points.get(0);
     }
 
     public enum LootrunSaveResult {
