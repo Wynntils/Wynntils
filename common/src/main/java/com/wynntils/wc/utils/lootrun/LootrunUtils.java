@@ -11,7 +11,6 @@ import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.lootrun.objects.*;
 import it.unimi.dsi.fastutil.Pair;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LootrunUtils {
 
@@ -70,31 +68,24 @@ public class LootrunUtils {
 
     private static RecordingInformation recordingInformation = null;
 
-    private static final LootrunFeature lootrunFeatureInstance = new LootrunFeature();
-
-    static {
-        LOOTRUNS.mkdirs();
-    }
-
     public static LootrunState getState() {
         return state;
     }
 
-    public static void registerToEventBus() {
-        FeatureRegistry.registerFeature(lootrunFeatureInstance);
+    public static void enableFeature() {
+        FeatureRegistry.getFeatures().get(LootrunFeature.class).tryEnable();
     }
 
-    public static void unregisterFromEventBus() {
-        FeatureRegistry.unregisterFeature(lootrunFeatureInstance);
+    public static void disableFeature() {
+        FeatureRegistry.getFeatures().get(LootrunFeature.class).tryDisable();
     }
 
-    @SubscribeEvent
-    public static void render(RenderLevelLastEvent event) {
-        renderLootrun(event, lootrun, ACTIVE_COLOR);
-        renderLootrun(event, recordingCompiled, RECORDING_COLOR);
+    public static void render(PoseStack poseStack) {
+        renderLootrun(poseStack, lootrun, ACTIVE_COLOR);
+        renderLootrun(poseStack, recordingCompiled, RECORDING_COLOR);
     }
 
-    private static void renderLootrun(RenderLevelLastEvent event, LootrunInstance lootrun, int color) {
+    private static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
         if (lootrun == null) {
             return;
         }
@@ -105,11 +96,11 @@ public class LootrunUtils {
             return;
         }
 
-        event.getPoseStack().pushPose();
+        poseStack.pushPose();
 
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
 
-        event.getPoseStack().translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
+        poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
@@ -117,30 +108,32 @@ public class LootrunUtils {
         BlockPos pos = McUtils.mc().gameRenderer.getMainCamera().getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
-        for (int i = 0; i < Math.pow(renderDistance, 2); i++) {
-            int x = i % renderDistance + origin.x - (renderDistance / 2);
-            int z = i / renderDistance + origin.z - (renderDistance / 2);
-            ChunkPos chunk = new ChunkPos(x, z);
-            if (!level.hasChunk(chunk.x, chunk.z)) {
-                continue;
-            }
+        for (int i = 0; i <= renderDistance; i++) {
+            for (int j = 0; j <= renderDistance; j++) {
+                int x = j + origin.x - (renderDistance / 2);
+                int z = i + origin.z - (renderDistance / 2);
+                ChunkPos chunk = new ChunkPos(x, z);
+                if (!level.hasChunk(chunk.x, chunk.z)) {
+                    continue;
+                }
 
-            long chunkLong = chunk.toLong();
+                long chunkLong = chunk.toLong();
 
-            if (points.containsKey(chunkLong)) {
-                renderPoints(event.getPoseStack(), source, points, chunkLong);
-            }
+                if (points.containsKey(chunkLong)) {
+                    renderPoints(poseStack, source, points, chunkLong);
+                }
 
-            if (lootrun.chests().containsKey(chunkLong)) {
-                renderChests(event.getPoseStack(), lootrun, color, source, chunkLong);
-            }
+                if (lootrun.chests().containsKey(chunkLong)) {
+                    renderChests(poseStack, lootrun, color, source, chunkLong);
+                }
 
-            if (lootrun.notes().containsKey(chunkLong)) {
-                renderNotes(event.getPoseStack(), lootrun, color, source, chunkLong);
+                if (lootrun.notes().containsKey(chunkLong)) {
+                    renderNotes(poseStack, lootrun, color, source, chunkLong);
+                }
             }
         }
 
-        event.getPoseStack().popPose();
+        poseStack.popPose();
     }
 
     private static void renderNotes(
@@ -584,7 +577,7 @@ public class LootrunUtils {
     }
 
     public static void clearCurrentLootrun() {
-        unregisterFromEventBus();
+        disableFeature();
         state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
@@ -607,7 +600,7 @@ public class LootrunUtils {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
-        registerToEventBus();
+        enableFeature();
     }
 
     public static boolean tryLoadFile(String fileName) {
@@ -621,7 +614,7 @@ public class LootrunUtils {
                 uncompiled = readJson(lootrunFile, json);
                 LootrunUtils.lootrun = compile(uncompiled);
                 state = LootrunState.LOADED;
-                registerToEventBus();
+                enableFeature();
                 file.close();
                 return true;
             } catch (IOException e) {

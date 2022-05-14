@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -18,10 +19,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// This feature does not need to be enabled by default, it will get enabled by LootrunUtils
 public class LootrunFeature extends Feature {
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+        LootrunUtils.LOOTRUNS.mkdirs();
+    }
 
     @Override
     protected boolean onEnable() {
@@ -40,14 +42,14 @@ public class LootrunFeature extends Feature {
     }
 
     @SubscribeEvent
-    public static void recordMovement(ClientTickEvent event) {
+    public void recordMovement(ClientTickEvent event) {
         if (event.getTickPhase() == ClientTickEvent.Phase.START) {
             LootrunUtils.recordMovementIfRecording();
         }
     }
 
     @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         BlockState block = event.getWorld().getBlockState(event.getPos());
         if (block.is(Blocks.CHEST)) {
             LootrunUtils.setLastChestIfRecording(event.getPos());
@@ -55,11 +57,16 @@ public class LootrunFeature extends Feature {
     }
 
     @SubscribeEvent
-    public static void onOpen(ScreenOpenedEvent event) {
+    public void onOpen(ScreenOpenedEvent event) {
         if (event.getScreen() instanceof ContainerScreen screen) {
             if (screen.getTitle().getString().contains("Loot Chest ")) {
                 LootrunUtils.addChestIfRecording();
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderLastLevel(RenderLevelLastEvent event) {
+        LootrunUtils.render(event.getPoseStack());
     }
 }

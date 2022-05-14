@@ -15,41 +15,33 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
-    private static final List<Feature> FEATURES = new LinkedList<>();
-    private static final List<Overlay> OVERLAYS = new LinkedList<>();
+    private static final Map<Class<? extends Feature>, Feature> FEATURES = new HashMap<>();
+    private static final Map<Class<? extends Overlay>, Overlay> OVERLAYS = new HashMap<>();
 
     public static void registerFeature(Feature feature) {
         if (feature instanceof Overlay overlay) {
-            OVERLAYS.add(overlay);
+            OVERLAYS.put(overlay.getClass(), overlay);
         }
 
-        FEATURES.add(feature);
-    }
-
-    public static void unregisterFeature(Feature feature) {
-        if (feature instanceof Overlay overlay) {
-            OVERLAYS.remove(overlay);
-        }
-
-        FEATURES.remove(feature);
-        WynntilsMod.getEventBus().unregister(feature);
+        FEATURES.put(feature.getClass(), feature);
     }
 
     public static void registerFeatures(List<Feature> features) {
         features.forEach(FeatureRegistry::registerFeature);
     }
 
-    public static List<Feature> getFeatures() {
+    public static Map<Class<? extends Feature>, Feature> getFeatures() {
         return FEATURES;
     }
 
-    public static List<Overlay> getOverlays() {
+    public static Map<Class<? extends Overlay>, Overlay> getOverlays() {
         return OVERLAYS;
     }
 
@@ -72,8 +64,11 @@ public class FeatureRegistry {
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new ItemHighlightFeature());
+        registerFeature(new LootrunFeature());
 
-        FEATURES.forEach(Feature::init);
+        FEATURES.values().forEach(Feature::init);
+
+        FEATURES.get(LootrunFeature.class).disable(); // TODO: Make it an option to not enable a feature on init
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
@@ -91,7 +86,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES) {
+                for (Feature feature : FEATURES.values()) {
                     if (feature.isEnabled()) {
                         result.append("\n\t\t").append(feature.getName());
                     }
@@ -111,7 +106,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Overlay overlay : OVERLAYS) {
+                for (Overlay overlay : OVERLAYS.values()) {
                     if (overlay.isEnabled()) {
                         result.append("\n\t\t").append(overlay.getName());
                     }
@@ -126,7 +121,7 @@ public class FeatureRegistry {
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-                for (Overlay overlay : OVERLAYS) {
+                for (Overlay overlay : OVERLAYS.values()) {
                     overlay.tick();
                 }
             }
@@ -138,7 +133,7 @@ public class FeatureRegistry {
             return;
 
             McUtils.mc().getProfiler().push("preRenOverlay");
-            for (Overlay overlay : OVERLAYS) {
+            for (Overlay overlay : OVERLAYS.values()) {
                 if (!overlay.visible) continue;
                 // if (!overlay.active) continue;
 
@@ -171,7 +166,7 @@ public class FeatureRegistry {
 
             McUtils.mc().getProfiler().push("postRenOverlay");
 
-            for (Overlay overlay : OVERLAYS) {
+            for (Overlay overlay : OVERLAYS.values()) {
                 if (!overlay.visible)
                     // if (!overlay.active) continue;
 
