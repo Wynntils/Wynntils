@@ -215,7 +215,7 @@ public class LootrunUtils {
                     if (blockValidness == BlockValidness.VALID) {
                         pauseDraw = false;
                         if (sourceBatchEnded) {
-                            consumer = source.getBuffer(RenderType.lineStrip());
+                            consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
                             sourceBatchEnded = false;
                         }
                         renderQueuedPoints(consumer, lastMatrix, toRender);
