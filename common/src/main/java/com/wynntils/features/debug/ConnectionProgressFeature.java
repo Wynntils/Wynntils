@@ -1,34 +1,20 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2021-2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.DebugFeatureBase;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState.State;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ConnectionProgressFeature extends DebugFeature {
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("featureDebug.wynntils.connectionProgress.name");
-    }
+public class ConnectionProgressFeature extends DebugFeatureBase {
 
-    @Override
-    protected boolean onEnable() {
-        WynntilsMod.getEventBus().register(this);
-        return true;
-    }
-
-    @Override
-    protected void onDisable() {
-        WynntilsMod.getEventBus().unregister(this);
+    public ConnectionProgressFeature() {
+        setupEventListener();
     }
 
     @SubscribeEvent
