@@ -332,43 +332,47 @@ public class LootrunUtils {
     }
 
     public static LootrunInstance compile(LootrunUncompiled uncompiled) {
-        Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.points());
+        Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path());
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
         return new LootrunInstance(points, chests, notes);
     }
 
-    private static List<List<Vec3>> sample(List<Vec3> raw, float sampleRate) {
-        List<List<Vec3>> vec3s = new ArrayList<>();
-        List<Vec3> currentVec3s = new ArrayList<>();
+    private static List<Path> sample(Path raw, float sampleRate) {
+        List<Path> vec3s = new ArrayList<>();
+        Path currentVec3s = new Path(new ArrayList<>());
         vec3s.add(currentVec3s);
-        for (Vec3 element : raw) {
-            if (!currentVec3s.isEmpty()
-                    && currentVec3s.get(currentVec3s.size() - 1).distanceTo(element) >= 32) {
-                currentVec3s = new ArrayList<>();
+        for (Vec3 element : raw.points()) {
+            if (!currentVec3s.points().isEmpty()
+                    && currentVec3s
+                                    .points()
+                                    .get(currentVec3s.points().size() - 1)
+                                    .distanceTo(element)
+                            >= 32) {
+                currentVec3s = new Path(new ArrayList<>());
                 vec3s.add(currentVec3s);
             }
-            currentVec3s.add(element);
+            currentVec3s.points().add(element);
         }
 
-        List<List<Vec3>> result = new ArrayList<>();
-        for (List<Vec3> current : vec3s) {
+        List<Path> result = new ArrayList<>();
+        for (Path current : vec3s) {
             float distance = 0f;
             CubicSpline.Builder<Float> builderX = CubicSpline.builder((value) -> value);
             CubicSpline.Builder<Float> builderY = CubicSpline.builder((value) -> value);
             CubicSpline.Builder<Float> builderZ = CubicSpline.builder((value) -> value);
-            for (int i = 0; i < current.size(); i++) {
-                Vec3 vec3 = current.get(i);
+            for (int i = 0; i < current.points().size(); i++) {
+                Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
-                    distance += current.get(i - 1).distanceTo(vec3);
+                    distance += current.points().get(i - 1).distanceTo(vec3);
                 }
 
                 float slopeX = 0f;
                 float slopeY = 0f;
                 float slopeZ = 0f;
-                if (i < current.size() - 1) {
-                    Vec3 next = current.get(i + 1);
+                if (i < current.points().size() - 1) {
+                    Vec3 next = current.points().get(i + 1);
                     slopeX = (float) ((next.x - vec3.x) / vec3.distanceTo(next));
                     slopeY = (float) ((next.y - vec3.y) / vec3.distanceTo(next));
                     slopeZ = (float) ((next.z - vec3.z) / vec3.distanceTo(next));
@@ -381,19 +385,20 @@ public class LootrunUtils {
             CubicSpline<Float> splineY = builderY.build();
             CubicSpline<Float> splineZ = builderZ.build();
 
-            List<Vec3> newResult = new ArrayList<>();
+            Path newResult = new Path(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {
-                newResult.add(new Vec3(splineX.apply(i), splineY.apply(i), splineZ.apply(i)));
+                newResult.points().add(new Vec3(splineX.apply(i), splineY.apply(i), splineZ.apply(i)));
             }
             result.add(newResult);
         }
         return result;
     }
 
-    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(List<Vec3> raw) {
+    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw) {
         float sampleRate = 10f;
-        List<Vec3> vec3s =
-                sample(raw, sampleRate).stream().flatMap(List::stream).toList();
+        List<List<Vec3>> sampled =
+                sample(raw, sampleRate).stream().map(Path::points).toList();
+        List<Vec3> vec3s = sampled.stream().flatMap(List::stream).toList();
         ChunkPos lastChunkPos = null;
         ColoredPath locationsList = new ColoredPath(new ArrayList<>());
         Iterator<Integer> colorIterator = COLORS.iterator();
@@ -472,14 +477,14 @@ public class LootrunUtils {
 
     public static LootrunUncompiled readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
-        List<Vec3> pointsList = new ArrayList<>();
+        Path pointsList = new Path(new ArrayList<>());
         for (JsonElement element : points) {
             JsonObject pointJson = element.getAsJsonObject();
             Vec3 location = new Vec3(
                     pointJson.get("x").getAsDouble(),
                     pointJson.get("y").getAsDouble(),
                     pointJson.get("z").getAsDouble());
-            pointsList.add(location);
+            pointsList.points().add(location);
         }
         JsonArray chestsJson = json.getAsJsonArray("chests");
         Set<BlockPos> chests = new HashSet<>();
@@ -533,7 +538,7 @@ public class LootrunUtils {
 
     public static void startRecording() {
         state = LootrunState.RECORDING;
-        recording = new LootrunUncompiled(new ArrayList<>(), new HashSet<>(), new ArrayList<>(), null);
+        recording = new LootrunUncompiled(new Path(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
         enableFeature();
     }
@@ -562,10 +567,10 @@ public class LootrunUtils {
 
     public static LootrunUndoResult tryUndo() {
         Vec3 position = McUtils.player().position();
-        List<Vec3> points = recording.points();
-        List<Vec3> removed = new ArrayList<>();
+        Path points = recording.path();
+        Path removed = new Path(new ArrayList<>());
         boolean left = false;
-        for (int i = points.size() - 1; i >= 0; i--) {
+        for (int i = points.points().size() - 1; i >= 0; i--) {
             if (i == 0) {
                 if (left) {
                     return LootrunUndoResult.ERROR_STAND_NEAR_POINT;
@@ -574,7 +579,7 @@ public class LootrunUtils {
                 }
             }
 
-            if (points.get(i).distanceToSqr(position) < 4) {
+            if (points.points().get(i).distanceToSqr(position) < 4) {
                 if (left) {
                     break;
                 }
@@ -582,10 +587,10 @@ public class LootrunUtils {
                 left = true;
             }
 
-            removed.add(points.get(i));
+            removed.points().add(points.points().get(i));
         }
 
-        points.removeAll(removed);
+        points.points().removeAll(removed.points());
         recordingInformation.setDirty(true);
         return LootrunUndoResult.SUCCESSFUL;
     }
@@ -660,7 +665,7 @@ public class LootrunUtils {
             Vec3 pos = root.position();
             if (recordingInformation.getLastLocation() == null
                     || pos.distanceToSqr(recordingInformation.getLastLocation()) >= 4d) {
-                recording.points().add(pos);
+                recording.path().points().add(pos);
                 recordingInformation.setLastLocation(pos);
                 recordingInformation.setDirty(true);
             }
@@ -679,9 +684,9 @@ public class LootrunUtils {
             return null;
         }
 
-        if (activeLootrun.points == null || activeLootrun.points.size() == 0) return null;
+        if (activeLootrun.path == null || activeLootrun.path.points().size() == 0) return null;
 
-        return activeLootrun.points.get(0);
+        return activeLootrun.path.points().get(0);
     }
 
     public static LootrunSaveResult trySaveCurrentLootrun(String name) {
@@ -755,10 +760,10 @@ public class LootrunUtils {
         }
     }
 
-    public record LootrunUncompiled(List<Vec3> points, Set<BlockPos> chests, List<Note> notes, File file) {
+    public record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
 
         public LootrunUncompiled(LootrunUncompiled old, File file) {
-            this(old.points, old.chests, old.notes, file);
+            this(old.path, old.chests, old.notes, file);
         }
 
         public LootrunSaveResult saveLootrun(String name) {
@@ -774,7 +779,7 @@ public class LootrunUtils {
 
                 JsonObject json = new JsonObject();
                 JsonArray points = new JsonArray();
-                for (Vec3 point : this.points()) {
+                for (Vec3 point : this.path().points()) {
                     JsonObject pointJson = new JsonObject();
                     pointJson.addProperty("x", point.x);
                     pointJson.addProperty("y", point.y);
@@ -826,4 +831,6 @@ public class LootrunUtils {
     public record Note(Vec3 position, Component component) {}
 
     public record ColoredPath(List<ColoredPoint> points) {}
+
+    public record Path(List<Vec3> points) {}
 }
