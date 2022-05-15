@@ -33,7 +33,8 @@ public class SoulPointTimerFeature extends FeatureBase {
     public void onItemsReceived(ItemsReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
 
-        ItemStack soulPointStack = getSoulPointStack(e.getItems());
+        // The event can get called even with a container without the Soul Points item
+        ItemStack soulPointStack = findSoulPointStack(e.getItems());
         if (soulPointStack == null) return;
 
         ListTag lore = ItemUtils.getLoreTag(soulPointStack);
@@ -56,7 +57,7 @@ public class SoulPointTimerFeature extends FeatureBase {
         ItemUtils.replaceLore(soulPointStack, lore);
     }
 
-    private static ItemStack getSoulPointStack(List<ItemStack> items) {
+    private static ItemStack findSoulPointStack(List<ItemStack> items) {
         return items.stream().filter(WynnItemMatchers::isSoulPoint).findFirst().orElse(null);
     }
 }
