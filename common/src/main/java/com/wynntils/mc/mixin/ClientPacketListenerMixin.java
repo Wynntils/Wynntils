@@ -77,7 +77,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
-    private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
+    private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (McUtils.player() == null) {
             // Reset compass
             CompassManager.reset();
@@ -97,7 +97,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         List<ItemStack> items = new ArrayList<>(packet.getItems());
         items.add(packet.getCarriedItem());
 
@@ -111,7 +111,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (packet.getContainerId() == -1 || packet.getContainerId() == McUtils.containerMenu().containerId) {
             EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.containerMenu());
         } else if (packet.getContainerId() == -2
