@@ -199,37 +199,21 @@ public class LootrunUtils {
 
             List<ColoredPoint> toRender = new ArrayList<>();
 
-            boolean disablePoint = false;
+            boolean pauseDraw = false;
             BlockPos lastBlockPos = null;
 
             for (ColoredPoint point : locationsInRoute) {
-                boolean pauseDraw = false;
                 BlockPos blockPos = new BlockPos(point.vec3());
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
-                    if (disablePoint) {
-                        pauseDraw = true;
-                    } else if (!toRender.isEmpty()) {
+                    if (!toRender.isEmpty()) {
                         toRender.add(point);
                     }
                 } else {
-                    Iterable<BlockPos> blocks = getBlocksForPoint(point);
+                    BlockValidness blockValidness = checkBlockValidness(level, point);
 
-                    boolean barrierInArea = false;
-                    boolean validBlock = false;
-
-                    for (BlockPos blockInArea : blocks) {
-                        BlockState blockStateInArea = level.getBlockState(blockInArea);
-                        if (blockStateInArea.is(Blocks.BARRIER)) {
-                            barrierInArea = true;
-                        } else if (blockStateInArea.getCollisionShape(level, blockInArea) != null) {
-                            validBlock = true;
-                            break;
-                        }
-                    }
-
-                    if (validBlock) {
-                        disablePoint = false;
+                    if (blockValidness == BlockValidness.VALID) {
+                        pauseDraw = false;
                         if (sourceBatchEnded) {
                             consumer = source.getBuffer(RenderType.lineStrip());
                             sourceBatchEnded = false;
@@ -244,13 +228,11 @@ public class LootrunUtils {
                                     .endVertex();
                         }
                         toRender.clear();
-                    } else if (barrierInArea) {
-                        disablePoint = true;
+                    } else if (blockValidness == BlockValidness.HAS_BARRIER) {
                         pauseDraw = true;
                         toRender.clear();
-                    } else if (disablePoint) {
-                        pauseDraw = true;
                     } else {
+                        pauseDraw = false;
                         toRender.add(point);
                         continue;
                     }
@@ -282,6 +264,23 @@ public class LootrunUtils {
                 source.endBatch();
             }
         }
+    }
+
+    private static BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
+        BlockValidness state = BlockValidness.INVALID;
+        Iterable<BlockPos> blocks = getBlocksForPoint(point);
+
+        for (BlockPos blockInArea : blocks) {
+            BlockState blockStateInArea = level.getBlockState(blockInArea);
+            if (blockStateInArea.is(Blocks.BARRIER)) {
+                state = BlockValidness.HAS_BARRIER;
+            } else if (blockStateInArea.getCollisionShape(level, blockInArea) != null) {
+                state = BlockValidness.VALID;
+                return state;
+            }
+        }
+
+        return state;
     }
 
     private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
@@ -711,6 +710,12 @@ public class LootrunUtils {
         RECORDING, // Lootrun is being recorded
         LOADED, // Lootrun is loaded and displayed
         DISABLED // No lootrun paths are rendered or loaded
+    }
+
+    public enum BlockValidness {
+        VALID,
+        HAS_BARRIER,
+        INVALID
     }
 
     public record LootrunInstance(
