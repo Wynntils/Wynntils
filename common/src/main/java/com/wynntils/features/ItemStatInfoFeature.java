@@ -5,7 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -17,10 +17,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
-public class ItemStatInfoFeature extends Feature {
+public class ItemStatInfoFeature extends FeatureBase {
 
     // TODO: Replace these with configs
     public static final boolean showStars = true;
@@ -34,6 +37,8 @@ public class ItemStatInfoFeature extends Feature {
     public static final boolean reorderIdentifications = true;
     public static final boolean groupIdentifications = true;
 
+    public ItemStatInfoFeature() {}
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -46,11 +51,6 @@ public class ItemStatInfoFeature extends Feature {
 
     @Override
     protected void onDisable() {}
-
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.itemStatInfo.name");
-    }
 
     public static MutableComponent getPercentageTextComponent(float percentage) {
         Style color = Style.EMPTY

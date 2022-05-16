@@ -4,15 +4,18 @@
  */
 package com.wynntils.features;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -21,9 +24,9 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.utils.WynnUtils;
-import java.awt.*;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -41,7 +44,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -50,55 +52,43 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class ItemScreenshotFeature extends Feature {
+public class ItemScreenshotFeature extends FeatureBase {
 
-    private static Pattern ITEM_PATTERN = Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
+    private static final Pattern ITEM_PATTERN =
+            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
     private Slot screenshotSlot = null;
 
     private final KeyHolder itemScreenshotKeybind =
             new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});
 
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
-
-    @Override
-    protected boolean onEnable() {
-        WynntilsMod.getEventBus().register(this);
-        KeyManager.registerKeybind(itemScreenshotKeybind);
-        return true;
-    }
-
-    @Override
-    protected void onDisable() {
-        WynntilsMod.getEventBus().unregister(this);
-        KeyManager.unregisterKeybind(itemScreenshotKeybind);
-    }
-
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.itemScreenshot.name");
+    public ItemScreenshotFeature() {
+        setupEventListener();
+        setupKeyHolder(itemScreenshotKeybind);
     }
 
     @SubscribeEvent
     public void onKeyPress(InventoryKeyPressEvent e) {
-        if (itemScreenshotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode()))
+        if (itemScreenshotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
             screenshotSlot = e.getHoveredSlot();
+        }
     }
 
     @SubscribeEvent
     public void render(ItemTooltipRenderEvent e) {
         if (screenshotSlot == null) return;
+
         // has to be called during a render period
         takeScreenshot(screenshotSlot);
         screenshotSlot = null;
     }
 
-    private void takeScreenshot(Slot hoveredSlot) {
+    private static void takeScreenshot(Slot hoveredSlot) {
         if (!WynnUtils.onWorld()) return;
+
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
-
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
+
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = stack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
         removeItemLore(tooltip);
@@ -157,7 +147,7 @@ public class ItemScreenshotFeature extends Feature {
                         .withStyle(ChatFormatting.GREEN));
     }
 
-    private void removeItemLore(List<Component> tooltip) {
+    private static void removeItemLore(List<Component> tooltip) {
         List<Component> toRemove = new ArrayList<>();
         boolean lore = false;
         for (Component c : tooltip) {
@@ -173,7 +163,7 @@ public class ItemScreenshotFeature extends Feature {
         tooltip.removeAll(toRemove);
     }
 
-    private void drawTooltip(List<ClientTooltipComponent> lines, PoseStack poseStack, Font font) {
+    private static void drawTooltip(List<ClientTooltipComponent> lines, PoseStack poseStack, Font font) {
         int tooltipWidth = 0;
         int tooltipHeight = lines.size() == 1 ? -2 : 0;
 
@@ -314,7 +304,7 @@ public class ItemScreenshotFeature extends Feature {
         poseStack.popPose();
     }
 
-    protected static void fillGradient(
+    private static void fillGradient(
             Matrix4f matrix,
             BufferBuilder builder,
             int x1,
