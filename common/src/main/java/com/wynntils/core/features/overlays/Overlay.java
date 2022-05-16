@@ -6,7 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
-import java.awt.*;
+import java.awt.Point;
 
 public abstract class Overlay extends Feature { // extends ScreenRenderer implements SettingsHolder {
 
