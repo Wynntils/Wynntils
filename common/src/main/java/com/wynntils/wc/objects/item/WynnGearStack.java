@@ -18,7 +18,7 @@ import com.wynntils.wc.objects.item.render.HighlightedItem;
 import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import com.wynntils.wc.utils.WynnUtils;
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

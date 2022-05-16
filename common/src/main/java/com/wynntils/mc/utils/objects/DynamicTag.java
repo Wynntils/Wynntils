@@ -9,7 +9,12 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Supplier;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.StreamTagVisitor;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagType;
+import net.minecraft.nbt.TagVisitor;
 import org.jetbrains.annotations.NotNull;
 
 /** A fake StringTag that gives a dynamic value for toString */
