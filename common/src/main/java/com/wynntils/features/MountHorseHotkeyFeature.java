@@ -4,21 +4,18 @@
  */
 package com.wynntils.features;
 
-import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.utils.Delay;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -32,30 +29,23 @@ import net.minecraft.world.phys.AABB;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class MountHorseHotkeyFeature extends Feature {
+public class MountHorseHotkeyFeature extends FeatureBase {
 
-    private static final int searchRadius = 6; // Furthest blocks away from which we can interact with a horse
-    private static final int summonAttempts = 8;
-    private static final int summonDelayTicks = 5;
+    private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
+    private static final int SUMMON_ATTEMPTS = 8;
+    private static final int SUMMON_DELAY_TICKS = 5;
+
     private static int prevItem = -1;
     private static boolean alreadySetPrevItem = false;
 
-    public enum MountHorseStatus {
-        NO_HORSE("feature.wynntils.mountHorseHotkey.noHorse"),
-        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding");
+    private final KeyHolder mountHorseKeybind = new KeyHolder(
+            "Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, MountHorseHotkeyFeature::onMountHorseKeyPress);
 
-        private final String tcString;
-
-        MountHorseStatus(String tcString) {
-            this.tcString = tcString;
-        }
-
-        public String getTcString() {
-            return this.tcString;
-        }
+    public MountHorseHotkeyFeature() {
+        setupKeyHolder(mountHorseKeybind);
     }
 
-    private final KeyHolder mountHorseKeybind = new KeyHolder("Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, () -> {
+    private static void onMountHorseKeyPress() {
         if (McUtils.player().getVehicle() != null) {
             postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);
             return;
@@ -68,11 +58,11 @@ public class MountHorseHotkeyFeature extends Feature {
                 postHorseErrorMessage(MountHorseStatus.NO_HORSE);
                 return;
             }
-            trySummonAndMountHorse(horseInventorySlot, summonAttempts);
+            trySummonAndMountHorse(horseInventorySlot, SUMMON_ATTEMPTS);
         } else { // Horse already exists, mount it
             mountHorse(horse);
         }
-    });
+    }
 
     /** Horse should be nearby when this is called */
     private static void mountHorse(Entity horse) {
@@ -113,7 +103,7 @@ public class MountHorseHotkeyFeature extends Feature {
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
-                summonDelayTicks);
+                SUMMON_DELAY_TICKS);
     }
 
     private static boolean isPlayersHorse(Entity horse) {
@@ -138,12 +128,12 @@ public class MountHorseHotkeyFeature extends Feature {
                 .getEntitiesOfClass(
                         AbstractHorse.class,
                         new AABB(
-                                player.getX() - searchRadius,
-                                player.getY() - searchRadius,
-                                player.getZ() - searchRadius,
-                                player.getX() + searchRadius,
-                                player.getY() + searchRadius,
-                                player.getZ() + searchRadius));
+                                player.getX() - SEARCH_RADIUS,
+                                player.getY() - SEARCH_RADIUS,
+                                player.getZ() - SEARCH_RADIUS,
+                                player.getX() + SEARCH_RADIUS,
+                                player.getY() + SEARCH_RADIUS,
+                                player.getZ() + SEARCH_RADIUS));
 
         for (AbstractHorse h : horses) {
             if (isPlayersHorse(h)) {
@@ -168,22 +158,18 @@ public class MountHorseHotkeyFeature extends Feature {
         McUtils.sendMessageToClient(new TranslatableComponent(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
     }
 
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.mountHorseHotkey.name");
-    }
+    private enum MountHorseStatus {
+        NO_HORSE("feature.wynntils.mountHorseHotkey.noHorse"),
+        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding");
 
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
+        private final String tcString;
 
-    @Override
-    protected boolean onEnable() {
-        KeyManager.registerKeybind(mountHorseKeybind);
-        return true;
-    }
+        MountHorseStatus(String tcString) {
+            this.tcString = tcString;
+        }
 
-    @Override
-    protected void onDisable() {
-        KeyManager.unregisterKeybind(mountHorseKeybind);
+        public String getTcString() {
+            return this.tcString;
+        }
     }
 }
