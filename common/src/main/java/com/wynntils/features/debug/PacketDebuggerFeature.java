@@ -1,18 +1,15 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2021-2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.DebugFeatureBase;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
@@ -37,11 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class PacketDebuggerFeature extends DebugFeature {
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("featureDebug.wynntils.packetDebugger.name");
-    }
+public class PacketDebuggerFeature extends DebugFeatureBase {
 
     public static final boolean DEBUG_PACKETS = false;
 
@@ -75,15 +68,8 @@ public class PacketDebuggerFeature extends DebugFeature {
             ServerboundMovePlayerPacket.PosRot.class,
             ServerboundMovePlayerPacket.Rot.class);
 
-    @Override
-    protected boolean onEnable() {
-        WynntilsMod.getEventBus().register(this);
-        return true;
-    }
-
-    @Override
-    protected void onDisable() {
-        WynntilsMod.getEventBus().unregister(this);
+    public PacketDebuggerFeature() {
+        setupEventListener();
     }
 
     private String describePacket(Packet<?> packet) {
@@ -96,7 +82,6 @@ public class PacketDebuggerFeature extends DebugFeature {
         if (!DEBUG_PACKETS) return;
 
         Packet<?> packet = e.getPacket();
-
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
         Reference.LOGGER.info("SENT packet: " + describePacket(packet));
@@ -107,7 +92,6 @@ public class PacketDebuggerFeature extends DebugFeature {
         if (!DEBUG_PACKETS) return;
 
         Packet<?> packet = e.getPacket();
-
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
         Reference.LOGGER.info("RECV packet: " + describePacket(packet));

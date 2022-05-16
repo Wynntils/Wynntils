@@ -4,9 +4,7 @@
  */
 package com.wynntils.features;
 
-import com.google.common.collect.ImmutableList;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -16,31 +14,16 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
-public class HealthPotionBlockerFeature extends Feature {
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.potionBlocker.name");
-    }
+public class HealthPotionBlockerFeature extends FeatureBase {
 
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
-
-    @Override
-    protected boolean onEnable() {
-        WynntilsMod.getEventBus().register(this);
-        return true;
-    }
-
-    @Override
-    protected void onDisable() {
-        WynntilsMod.getEventBus().unregister(this);
+    public HealthPotionBlockerFeature() {
+        setupEventListener();
     }
 
     @SubscribeEvent
@@ -48,7 +31,6 @@ public class HealthPotionBlockerFeature extends Feature {
         if (!WynnUtils.onWorld()) return;
 
         ItemStack stack = McUtils.inventory().getSelected();
-
         if (!WynnItemMatchers.isHealingPotion(stack)) return;
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {

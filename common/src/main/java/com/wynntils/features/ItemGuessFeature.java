@@ -5,24 +5,19 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.LARGE, stability = Stability.STABLE)
-public class ItemGuessFeature extends Feature {
+public class ItemGuessFeature extends FeatureBase {
+
+    public ItemGuessFeature() {}
 
     public static final boolean showGuessesPrice = true;
-
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.itemGuess.name");
-    }
 
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
