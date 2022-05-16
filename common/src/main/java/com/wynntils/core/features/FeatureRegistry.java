@@ -16,6 +16,7 @@ import com.wynntils.features.ItemHighlightFeature;
 import com.wynntils.features.ItemScreenshotFeature;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.features.MountHorseHotkeyFeature;
+import com.wynntils.features.MythicBlockerFeature;
 import com.wynntils.features.PlayerGhostTransparencyFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
