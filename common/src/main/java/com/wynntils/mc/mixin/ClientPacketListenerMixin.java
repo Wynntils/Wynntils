@@ -12,7 +12,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -77,7 +86,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
-    private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
+    private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (McUtils.player() == null) {
             // Reset compass
             CompassManager.reset();
@@ -97,7 +106,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         List<ItemStack> items = new ArrayList<>(packet.getItems());
         items.add(packet.getCarriedItem());
 
@@ -111,7 +120,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (packet.getContainerId() == -1 || packet.getContainerId() == McUtils.containerMenu().containerId) {
             EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.containerMenu());
         } else if (packet.getContainerId() == -2

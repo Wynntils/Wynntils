@@ -10,10 +10,17 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
-public abstract class DebugFeature extends Feature {
+public abstract class DebugFeatureBase extends FeatureBase {
+
+    @Override
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("featureDebug.wynntils." + getNameCamelCase() + ".name");
+    }
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
