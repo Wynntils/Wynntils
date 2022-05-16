@@ -15,6 +15,7 @@ import com.wynntils.features.ItemGuessFeature;
 import com.wynntils.features.ItemHighlightFeature;
 import com.wynntils.features.ItemScreenshotFeature;
 import com.wynntils.features.ItemStatInfoFeature;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MountHorseHotkeyFeature;
 import com.wynntils.features.PlayerGhostTransparencyFeature;
 import com.wynntils.features.SoulPointTimerFeature;
