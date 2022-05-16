@@ -5,7 +5,11 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.mc.utils.ItemUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;

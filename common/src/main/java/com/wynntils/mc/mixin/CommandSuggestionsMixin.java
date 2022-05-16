@@ -23,8 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CommandSuggestions.class)
-public class CommandSuggestionsMixin {
-
+public abstract class CommandSuggestionsMixin {
     @Shadow
     @Final
     EditBox input;
@@ -39,7 +38,7 @@ public class CommandSuggestionsMixin {
                             target =
                                     "Lcom/mojang/brigadier/CommandDispatcher;getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;",
                             remap = false))
-    public CompletableFuture<Suggestions> redirectSuggestions(
+    private CompletableFuture<Suggestions> redirectSuggestions(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
@@ -76,7 +75,7 @@ public class CommandSuggestionsMixin {
                             target =
                                     "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;",
                             remap = false))
-    public ParseResults<SharedSuggestionProvider> redirectParse(
+    private ParseResults<SharedSuggestionProvider> redirectParse(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher, StringReader command, Object source) {
         CommandDispatcher<CommandSourceStack> clientDispatcher = ClientCommandManager.getClientDispatcher();
         clientParse = clientDispatcher.parse(command, ClientCommandManager.getSource());

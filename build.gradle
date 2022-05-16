@@ -74,6 +74,14 @@ allprojects {
             importOrder()
             removeUnusedImports()
             palantirJavaFormat('2.17.0')
+            trimTrailingWhitespace()
+            endWithNewline()
+            // Custom rule from https://github.com/apache/geode
+            custom 'Refuse wildcard imports', {
+                if (it =~ /\nimport .*\*;/) {
+                    throw new AssertionError("Do not use wildcard imports.  'spotlessApply' cannot resolve this issue.")
+                }
+            }
             licenseHeader '/*\n' +
                     ' * Copyright © Wynntils $YEAR.\n' +
                     ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
