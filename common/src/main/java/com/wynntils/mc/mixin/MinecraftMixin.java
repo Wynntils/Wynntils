@@ -22,12 +22,12 @@ public abstract class MinecraftMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void onTickPre(CallbackInfo ci) {
+    public void tickPre(CallbackInfo ci) {
         WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.START));
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
-    public void onTickPost(CallbackInfo ci) {
+    public void tickPost(CallbackInfo ci) {
         WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
 }

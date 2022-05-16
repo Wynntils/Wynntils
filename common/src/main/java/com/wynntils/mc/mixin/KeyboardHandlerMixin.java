@@ -14,8 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(KeyboardHandler.class)
 public abstract class KeyboardHandlerMixin {
     @Inject(method = "keyPress(JIIII)V", at = @At("RETURN"))
-    private void handleKeyPressPost(
-            long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
+    private void keyPressPost(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
         EventFactory.onKeyInput(key, scanCode, action, modifiers);
     }
 }

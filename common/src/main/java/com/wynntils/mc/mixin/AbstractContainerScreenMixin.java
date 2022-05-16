@@ -59,7 +59,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
-    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void keyPressedPre(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)) {
             cir.setReturnValue(true);
         }
