@@ -35,7 +35,7 @@ public abstract class LivingEntityRendererMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
-    public RenderType onTranslucentCheck(
+    private RenderType onTranslucentCheck(
             LivingEntityRenderer<?, ?> instance, LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3) {
         LivingEntityRenderTranslucentCheckEvent event =
                 new LivingEntityRenderTranslucentCheckEvent(bl2, livingEntity, bl2 ? 0.15f : 1f);

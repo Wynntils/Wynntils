@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyMapping.class)
-public class KeyMappingMixin {
+public abstract class KeyMappingMixin {
     @Shadow
     @Final
     private static Map<String, Integer> CATEGORY_SORT_ORDER;
@@ -23,7 +23,7 @@ public class KeyMappingMixin {
     @Inject(
             method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
-    public void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
+    private void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
         if (CATEGORY_SORT_ORDER.containsKey(category)) return;
 
         int max = 0;
