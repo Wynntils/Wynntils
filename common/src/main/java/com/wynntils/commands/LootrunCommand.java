@@ -4,7 +4,7 @@
  */
 package com.wynntils.commands;
 
-import static net.minecraft.commands.Commands.*;
+import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -17,7 +17,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.commands.CommandBase;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import java.io.File;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -26,7 +26,12 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 

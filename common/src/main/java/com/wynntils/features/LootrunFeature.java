@@ -5,40 +5,26 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureBase;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LootrunFeature extends Feature {
+public class LootrunFeature extends FeatureBase {
+
+    public LootrunFeature() {
+        setupEventListener();
+    }
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         LootrunUtils.LOOTRUNS.mkdirs();
-    }
-
-    @Override
-    protected boolean onEnable() {
-        WynntilsMod.getEventBus().register(this);
-        return true;
-    }
-
-    @Override
-    protected void onDisable() {
-        WynntilsMod.getEventBus().unregister(this);
-    }
-
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils.lootrunFeature.name");
     }
 
     @SubscribeEvent

@@ -4,7 +4,11 @@
  */
 package com.wynntils.wc.utils.lootrun;
 
-import com.google.gson.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -12,12 +16,21 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.lootrun.objects.*;
+import com.wynntils.wc.utils.lootrun.objects.LootrunRenderType;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
