@@ -17,6 +17,7 @@ import com.wynntils.features.ItemScreenshotFeature;
 import com.wynntils.features.ItemStatInfoFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MountHorseHotkeyFeature;
+import com.wynntils.features.MythicBlockerFeature;
 import com.wynntils.features.PlayerGhostTransparencyFeature;
 import com.wynntils.features.SoulPointTimerFeature;
 import com.wynntils.features.WynncraftButtonFeature;
@@ -76,6 +77,7 @@ public class FeatureRegistry {
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new MountHorseHotkeyFeature());
+        registerFeature(new MythicBlockerFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new LootrunFeature());
 
