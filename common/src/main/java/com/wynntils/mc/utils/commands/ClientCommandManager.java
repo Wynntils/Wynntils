@@ -70,11 +70,11 @@ public class ClientCommandManager {
     }
 
     public static CompletableFuture<Suggestions> getCompletionSuggestions(
-        String cmd,
-        CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
-        ParseResults<CommandSourceStack> clientParse,
-        ParseResults<SharedSuggestionProvider> serverParse,
-        int cursor) {
+            String cmd,
+            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
+            ParseResults<CommandSourceStack> clientParse,
+            ParseResults<SharedSuggestionProvider> serverParse,
+            int cursor) {
         StringReader stringReader = new StringReader(cmd);
         if (stringReader.canRead() && stringReader.peek() == '/') {
             stringReader.skip();
@@ -83,9 +83,9 @@ public class ClientCommandManager {
         CommandDispatcher<CommandSourceStack> clientDispatcher = getClientDispatcher();
 
         CompletableFuture<Suggestions> clientSuggestions =
-            clientDispatcher.getCompletionSuggestions(clientParse, cursor);
+                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
         CompletableFuture<Suggestions> serverSuggestions =
-            serverDispatcher.getCompletionSuggestions(serverParse, cursor);
+                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
