@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
@@ -42,6 +43,7 @@ public class ClientCommandManager {
         new ServerCommand().register(clientDispatcher);
         new TokenCommand().register(clientDispatcher);
         new TerritoryCommand().register(clientDispatcher);
+        new LootrunCommand().register(clientDispatcher);
     }
 
     public static ClientCommandSourceStack getSource() {

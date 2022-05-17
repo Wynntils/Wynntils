@@ -72,6 +72,18 @@ public abstract class Feature {
         enabled = false;
     }
 
+    public final void tryEnable() {
+        if (enabled) return;
+
+        enable();
+    }
+
+    public final void tryDisable() {
+        if (!enabled) return;
+
+        disable();
+    }
+
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
         return enabled;

@@ -6,9 +6,11 @@ package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -24,7 +26,9 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -36,6 +40,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -46,9 +52,13 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpd
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -182,5 +192,24 @@ public class EventFactory {
 
     public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
         post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
+
+    public static void onRenderLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano) {
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+    }
+
+    public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
+        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
+        post(event);
+    }
+
+    public static void onContainerClickEvent(
+            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
+        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
 }
