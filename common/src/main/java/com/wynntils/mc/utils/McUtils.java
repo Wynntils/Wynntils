@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -23,26 +24,30 @@ public class McUtils {
     }
 
     public static LocalPlayer player() {
-        return Minecraft.getInstance().player;
+        return McUtils.mc().player;
     }
 
     public static Options options() {
-        return Minecraft.getInstance().options;
+        return McUtils.mc().options;
     }
 
     public static InventoryMenu inventoryMenu() {
-        return Minecraft.getInstance().player.inventoryMenu;
+        return McUtils.mc().player.inventoryMenu;
     }
 
     public static AbstractContainerMenu containerMenu() {
-        return Minecraft.getInstance().player.containerMenu;
+        return McUtils.mc().player.containerMenu;
     }
 
     public static Inventory inventory() {
-        return Minecraft.getInstance().player.getInventory();
+        return McUtils.mc().player.getInventory();
     }
 
     public static void sendMessageToClient(Component component) {
-        Minecraft.getInstance().player.sendMessage(component, Util.NIL_UUID);
+        McUtils.mc().player.sendMessage(component, Util.NIL_UUID);
+    }
+
+    public static void sendPacket(Packet<?> packet) {
+        McUtils.mc().getConnection().send(packet);
     }
 }
