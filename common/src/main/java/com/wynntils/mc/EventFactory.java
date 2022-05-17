@@ -8,6 +8,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.ChatSendMessageEvent;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -31,6 +33,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.WebSetupEvent;
@@ -159,6 +162,12 @@ public class EventFactory {
         post(new ResourcePackEvent());
     }
 
+    public static boolean onSetSpawn(BlockPos spawnPos) {
+        SetSpawnEvent event = new SetSpawnEvent(spawnPos);
+        post(event);
+        return event.isCanceled();
+    }
+
     public static <T extends Packet<?>> boolean onPacketSent(T packet) {
         PacketSentEvent<T> event = new PacketSentEvent<>(packet);
         post(event);
@@ -169,6 +178,14 @@ public class EventFactory {
         PacketReceivedEvent<T> event = new PacketReceivedEvent<>(packet);
         post(event);
         return event.isCanceled();
+    }
+
+    public static void onTickStart() {
+        post(new ClientTickEvent(ClientTickEvent.Phase.START));
+    }
+
+    public static void onTickEnd() {
+        post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
 
     public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {
@@ -192,6 +209,12 @@ public class EventFactory {
 
     public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
         post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
+
+    public static boolean onChatSend(String message) {
+        ChatSendMessageEvent event = new ChatSendMessageEvent(message);
+        post(event);
+        return event.isCanceled();
     }
 
     public static void onRenderLast(

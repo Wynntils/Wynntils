@@ -5,6 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.mc.utils.keybinds.KeyManager;
 import java.util.Map;
 import net.minecraft.client.KeyMapping;
 import org.spongepowered.asm.mixin.Final;
@@ -24,16 +25,6 @@ public abstract class KeyMappingMixin {
             method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
     private void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
-        if (CATEGORY_SORT_ORDER.containsKey(category)) return;
-
-        int max = 0;
-
-        for (int val : CATEGORY_SORT_ORDER.values()) {
-            if (val > max) {
-                max = val;
-            }
-        }
-
-        CATEGORY_SORT_ORDER.put(category, max + 1);
+        KeyManager.initKeyMapping(category, CATEGORY_SORT_ORDER);
     }
 }

@@ -6,7 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
-import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,17 +86,7 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
-        if (McUtils.player() == null) {
-            // Reset compass
-            CompassManager.reset();
-
-            if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(packet.getPos(), 0);
-
-            return;
-        }
-
-        // Cancel the event to force the compass to not change
-        if (CompassManager.getCompassLocation() != null) {
+        if (EventFactory.onSetSpawn(packet.getPos())) {
             ci.cancel();
         }
     }

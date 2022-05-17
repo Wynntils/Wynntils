@@ -9,8 +9,6 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.mc.utils.commands.ClientCommandManager;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
@@ -28,7 +26,7 @@ public abstract class CommandSuggestionsMixin {
     @Final
     EditBox input;
 
-    ParseResults<CommandSourceStack> clientParse;
+    private ParseResults<CommandSourceStack> clientParse;
 
     @Redirect(
             method = "updateCommandInfo",
@@ -42,29 +40,8 @@ public abstract class CommandSuggestionsMixin {
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
-
-        StringReader stringReader = new StringReader(input.getValue());
-        if (stringReader.canRead() && stringReader.peek() == '/') {
-            stringReader.skip();
-        }
-
-        CommandDispatcher<CommandSourceStack> clientDispatcher = ClientCommandManager.getClientDispatcher();
-
-        CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
-        CompletableFuture<Suggestions> serverSuggestions =
-                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
-
-        CompletableFuture<Suggestions> result = new CompletableFuture<>();
-
-        CompletableFuture.allOf(clientSuggestions, serverSuggestions).thenRun(() -> {
-            final List<Suggestions> suggestions = new ArrayList<>();
-            suggestions.add(clientSuggestions.join());
-            suggestions.add(serverSuggestions.join());
-            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
-        });
-
-        return result;
+        return ClientCommandManager.getCompletionSuggestions(
+                input.getValue(), serverDispatcher, clientParse, serverParse, cursor);
     }
 
     @Redirect(
