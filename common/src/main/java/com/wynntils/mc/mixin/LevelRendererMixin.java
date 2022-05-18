@@ -4,10 +4,9 @@
  */
 package com.wynntils.mc.mixin;
 
-import static com.wynntils.mc.EventFactory.onRenderLast;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import com.wynntils.mc.EventFactory;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -38,6 +37,7 @@ public class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        onRenderLast(this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime);
+        EventFactory.onRenderLast(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime);
     }
 }

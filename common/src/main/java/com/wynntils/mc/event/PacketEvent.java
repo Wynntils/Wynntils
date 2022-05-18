@@ -5,6 +5,7 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.network.protocol.Packet;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.GenericEvent;
 
 /**
@@ -25,25 +26,17 @@ public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
         return packet;
     }
 
+    @Cancelable
     public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> {
         public PacketSentEvent(T packet) {
             super(packet);
         }
-
-        @Override
-        public boolean isCancelable() {
-            return true;
-        }
     }
 
+    @Cancelable
     public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> {
         public PacketReceivedEvent(T packet) {
             super(packet);
-        }
-
-        @Override
-        public boolean isCancelable() {
-            return true;
         }
     }
 }
