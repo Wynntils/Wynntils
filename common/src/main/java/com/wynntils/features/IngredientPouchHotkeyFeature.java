@@ -11,9 +11,9 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.keybinds.KeyHolder;
 import com.wynntils.wc.utils.WynnUtils;
 import org.lwjgl.glfw.GLFW;
 

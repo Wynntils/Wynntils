@@ -4,13 +4,13 @@
  */
 package com.wynntils.core;
 
+import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.commands.ClientCommandManager;
-import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ItemStackTransformer;
 import com.wynntils.wc.ModelLoader;
 import java.io.File;
