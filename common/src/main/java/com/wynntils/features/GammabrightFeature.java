@@ -9,8 +9,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
