@@ -10,7 +10,7 @@ import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
 import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import com.wynntils.wc.utils.parsers.EmeraldPouchParser;

@@ -23,7 +23,7 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.Image;
 import java.awt.Toolkit;

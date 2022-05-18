@@ -14,7 +14,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.commands.CommandBase;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
 import java.io.File;
 import java.util.List;

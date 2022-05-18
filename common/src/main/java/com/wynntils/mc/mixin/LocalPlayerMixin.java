@@ -6,7 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.StringReader;
-import com.wynntils.mc.utils.commands.ClientCommandManager;
+import com.wynntils.core.commands.ClientCommandManager;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
