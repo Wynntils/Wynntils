@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.core.keybinds.KeyManager;
 import java.util.Map;
 import net.minecraft.client.KeyMapping;
 import org.spongepowered.asm.mixin.Final;
