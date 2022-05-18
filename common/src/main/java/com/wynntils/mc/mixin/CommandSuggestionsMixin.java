@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.mc.utils.commands.ClientCommandManager;
+import com.wynntils.core.commands.ClientCommandManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
