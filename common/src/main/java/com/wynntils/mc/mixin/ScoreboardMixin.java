@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.features.FixPacketBugsFeature;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +23,6 @@ public abstract class ScoreboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        // Work around bug in Wynncraft that causes NPEs in Vanilla
-        if (this.getPlayersTeam(username) != playerTeam) {
-            ci.cancel();
-        }
+        FixPacketBugsFeature.fixRemovePlayerFromTeam(playerTeam, this.getPlayersTeam(username), ci);
     }
 }

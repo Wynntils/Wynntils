@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.features.DialogueOptionOverrideFeature;
 import com.wynntils.features.EmeraldPouchHotkeyFeature;
+import com.wynntils.features.FixPacketBugsFeature;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.HealthPotionBlockerFeature;
 import com.wynntils.features.IngredientPouchHotkeyFeature;
@@ -61,25 +62,26 @@ public class FeatureRegistry {
 
     public static void init() {
         // debug
-        registerFeature(new PacketDebuggerFeature());
-        registerFeature(new KeyBindTestFeature());
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new KeyBindTestFeature());
+        registerFeature(new PacketDebuggerFeature());
 
-        registerFeature(new WynncraftButtonFeature());
-        registerFeature(new SoulPointTimerFeature());
-        registerFeature(new ItemGuessFeature());
+        registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new FixPacketBugsFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
-        registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new ItemStatInfoFeature());
-        registerFeature(new ItemScreenshotFeature());
-        registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
-        registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new ItemGuessFeature());
+        registerFeature(new ItemHighlightFeature());
+        registerFeature(new ItemScreenshotFeature());
+        registerFeature(new ItemStatInfoFeature());
+        registerFeature(new LootrunFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
-        registerFeature(new ItemHighlightFeature());
-        registerFeature(new LootrunFeature());
+        registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new SoulPointTimerFeature());
+        registerFeature(new WynncraftButtonFeature());
 
         FEATURES.values().forEach(Feature::init);
 
