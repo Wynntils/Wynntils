@@ -12,8 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
 public class EntityUtils {
-
-    public static boolean isPlayersHorse(AbstractHorse horse, Player player) {
+    private static boolean isPlayersHorse(AbstractHorse horse, Player player) {
         if (horse == null) return false;
 
         String playerName = player.getName().getString();
@@ -27,7 +26,8 @@ public class EntityUtils {
                 || horseName.getString().endsWith(customNameSuffix);
     }
 
-    public static AbstractHorse searchForHorseNearby(int searchRadius, Player player) {
+    public static AbstractHorse searchForHorseNearby(int searchRadius) {
+        Player player = McUtils.player();
         List<AbstractHorse> horses = McUtils.mc()
                 .level
                 .getEntitiesOfClass(

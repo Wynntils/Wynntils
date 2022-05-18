@@ -47,7 +47,7 @@ public class MountHorseHotkeyFeature extends FeatureBase {
             return;
         }
 
-        AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS, McUtils.player());
+        AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
         if (horse == null) { // Horse has not spawned, we should do that
             int horseInventorySlot = InventoryUtils.findHorseSlotNum();
             if (horseInventorySlot > 8 || horseInventorySlot == -1) {
@@ -82,7 +82,7 @@ public class MountHorseHotkeyFeature extends FeatureBase {
 
         new Delay(
                 () -> {
-                    AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS, McUtils.player());
+                    AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;
