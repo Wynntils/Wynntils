@@ -10,8 +10,8 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.wc.utils.ContainerUtils;
 import com.wynntils.wc.utils.lootrun.LootrunUtils;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,10 +44,8 @@ public class LootrunFeature extends FeatureBase {
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
-        if (event.getScreen() instanceof ContainerScreen screen) {
-            if (screen.getTitle().getString().contains("Loot Chest ")) {
-                LootrunUtils.addChestIfRecording();
-            }
+        if (ContainerUtils.isLootChest(event.getScreen())) {
+            LootrunUtils.addChestIfRecording();
         }
     }
 
