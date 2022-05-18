@@ -4,10 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class ChatSendMessageEvent extends Event {
-
     private final String message;
 
     public ChatSendMessageEvent(String message) {
@@ -16,10 +17,5 @@ public class ChatSendMessageEvent extends Event {
 
     public String getMessage() {
         return message;
-    }
-
-    @Override
-    public boolean isCancelable() {
-        return true;
     }
 }

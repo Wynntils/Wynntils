@@ -5,8 +5,10 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class SetSpawnEvent extends Event {
     private final BlockPos spawnPos;
 
@@ -16,10 +18,5 @@ public class SetSpawnEvent extends Event {
 
     public BlockPos getSpawnPos() {
         return spawnPos;
-    }
-
-    @Override
-    public boolean isCancelable() {
-        return true;
     }
 }
