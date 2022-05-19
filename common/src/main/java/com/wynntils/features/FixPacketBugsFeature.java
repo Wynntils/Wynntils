@@ -5,7 +5,7 @@
 package com.wynntils.features;
 
 import com.wynntils.core.features.FeatureBase;
-import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Map;
 import java.util.UUID;
@@ -13,13 +13,15 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Handler;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.world.BossEvent.BossBarColor;
 import net.minecraft.world.BossEvent.BossBarOverlay;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class FixPacketBugsFeature extends FeatureBase {
+
+    private static final int METHOD_ADD = 0;
 
     public FixPacketBugsFeature() {
         setupEventListener();
@@ -27,15 +29,15 @@ public class FixPacketBugsFeature extends FeatureBase {
 
     public static void fixBossEventPackage(
             ClientboundBossEventPacket packet, Handler handler, Map<UUID, LerpingBossEvent> bossEvents) {
-
         packet.dispatch(new HandlerWrapper(handler, bossEvents));
     }
 
-    public static void fixSetPlayerTeamPacket(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
+    @SubscribeEvent
+    public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
-        if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
-                && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
-            ci.cancel();
+        if (event.getMethod() != METHOD_ADD
+                && McUtils.mc().level.getScoreboard().getPlayerTeam(event.getTeamName()) == null) {
+            event.setCanceled(true);
         }
     }
 

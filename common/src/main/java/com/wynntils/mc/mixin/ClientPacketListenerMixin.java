@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.features.FixPacketBugsFeature;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -77,7 +76,9 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
-        FixPacketBugsFeature.fixSetPlayerTeamPacket(packet, ci);
+        if (EventFactory.onSetPlayerTeam(packet)) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
