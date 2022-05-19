@@ -25,8 +25,8 @@ public class FixPacketBugsFeature extends FeatureBase {
         setupEventListener();
     }
 
-    public static void fixBossEventPackage(ClientboundBossEventPacket packet, Handler handler,
-        Map<UUID, LerpingBossEvent> bossEvents) {
+    public static void fixBossEventPackage(
+            ClientboundBossEventPacket packet, Handler handler, Map<UUID, LerpingBossEvent> bossEvents) {
 
         packet.dispatch(new HandlerWrapper(handler, bossEvents));
     }
@@ -34,37 +34,38 @@ public class FixPacketBugsFeature extends FeatureBase {
     public static void fixSetPlayerTeamPacket(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
-            && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
+                && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
             ci.cancel();
         }
     }
 
-    public static void fixRemovePlayerFromTeam(PlayerTeam playerTeam, PlayerTeam playerTeamFromUserName, CallbackInfo ci) {
+    public static void fixRemovePlayerFromTeam(
+            PlayerTeam playerTeam, PlayerTeam playerTeamFromUserName, CallbackInfo ci) {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         if (playerTeamFromUserName != playerTeam) {
             ci.cancel();
         }
     }
+
     private static class HandlerWrapper implements Handler {
         private final Handler wrappedHandler;
         private final Map<UUID, LerpingBossEvent> bossEvents;
 
-        HandlerWrapper(Handler wrappedHandler,
-            Map<UUID, LerpingBossEvent> bossEvents) {
+        HandlerWrapper(Handler wrappedHandler, Map<UUID, LerpingBossEvent> bossEvents) {
             this.wrappedHandler = wrappedHandler;
             this.bossEvents = bossEvents;
         }
 
         @Override
         public void add(
-            UUID id,
-            Component name,
-            float progress,
-            BossBarColor color,
-            BossBarOverlay overlay,
-            boolean darkenScreen,
-            boolean playMusic,
-            boolean createWorldFog) {
+                UUID id,
+                Component name,
+                float progress,
+                BossBarColor color,
+                BossBarOverlay overlay,
+                boolean darkenScreen,
+                boolean playMusic,
+                boolean createWorldFog) {
             wrappedHandler.add(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
         }
 
