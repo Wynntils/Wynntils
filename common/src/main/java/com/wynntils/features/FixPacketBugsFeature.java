@@ -10,16 +10,10 @@ import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.Map;
 import java.util.UUID;
-import net.minecraft.client.gui.components.LerpingBossEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Handler;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.OperationType;
-import net.minecraft.world.BossEvent.BossBarColor;
-import net.minecraft.world.BossEvent.BossBarOverlay;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

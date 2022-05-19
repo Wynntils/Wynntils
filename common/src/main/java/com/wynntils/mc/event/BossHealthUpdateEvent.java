@@ -16,8 +16,7 @@ public class BossHealthUpdateEvent extends Event {
     private final ClientboundBossEventPacket packet;
     private final Map<UUID, LerpingBossEvent> bossEvents;
 
-    public BossHealthUpdateEvent(ClientboundBossEventPacket packet,
-        Map<UUID, LerpingBossEvent> bossEvents) {
+    public BossHealthUpdateEvent(ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
         this.packet = packet;
         this.bossEvents = bossEvents;
     }

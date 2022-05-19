@@ -24,12 +24,10 @@ public abstract class BossHealthOverlayMixin {
     Map<UUID, LerpingBossEvent> events;
 
     @Inject(
-            method =
-                    "update(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;)V",
+            method = "update(Lnet/minecraft/network/protocol/game/ClientboundBossEventPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void updatePre(
-        ClientboundBossEventPacket packet, CallbackInfo ci) {
+    private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
         if (EventFactory.onBossHealthUpdate(packet, events)) {
             ci.cancel();
         }

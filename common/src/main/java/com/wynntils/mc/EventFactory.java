@@ -185,7 +185,8 @@ public class EventFactory {
         return event.isCanceled();
     }
 
-    public static boolean onBossHealthUpdate(ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
+    public static boolean onBossHealthUpdate(
+            ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
         BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
         post(event);
         return event.isCanceled();
