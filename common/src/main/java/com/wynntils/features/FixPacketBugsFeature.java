@@ -31,11 +31,12 @@ public class FixPacketBugsFeature extends FeatureBase {
         OperationType type = operation.getType();
         UUID id = ((ClientboundBossEventPacketAccessor) packet).getId();
 
-        if (type == OperationType.ADD || type == OperationType.REMOVE) return;
-        if (event.getBossEvents().containsKey(id)) return;
-
-        // Any other operation than add/remove with invalid id will cause a NPE
-        event.setCanceled(true);
+        if (type != OperationType.ADD
+                && type != OperationType.REMOVE
+                && !event.getBossEvents().containsKey(id)) {
+            // Any other operation than add/remove with invalid id will cause a NPE
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
