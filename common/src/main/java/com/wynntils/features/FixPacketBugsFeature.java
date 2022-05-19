@@ -5,6 +5,7 @@
 package com.wynntils.features;
 
 import com.wynntils.core.features.FeatureBase;
+import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Map;
@@ -17,7 +18,6 @@ import net.minecraft.world.BossEvent.BossBarColor;
 import net.minecraft.world.BossEvent.BossBarOverlay;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class FixPacketBugsFeature extends FeatureBase {
 
@@ -41,11 +41,12 @@ public class FixPacketBugsFeature extends FeatureBase {
         }
     }
 
-    public static void fixRemovePlayerFromTeam(
-            PlayerTeam playerTeam, PlayerTeam playerTeamFromUserName, CallbackInfo ci) {
+    @SubscribeEvent
+    public void onRemovePlayerFromTeam(RemovePlayerFromTeamEvent event) {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
-        if (playerTeamFromUserName != playerTeam) {
-            ci.cancel();
+        PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
+        if (playerTeamFromUserName != event.getPlayerTeam()) {
+            event.setCanceled(true);
         }
     }
 

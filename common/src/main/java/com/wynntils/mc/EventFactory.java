@@ -30,6 +30,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -66,6 +67,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
@@ -168,6 +170,12 @@ public class EventFactory {
     public static boolean onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
         SetPlayerTeamEvent event =
                 new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
         post(event);
         return event.isCanceled();
     }
