@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatSendMessageEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -41,8 +42,11 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -50,6 +54,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -176,6 +181,12 @@ public class EventFactory {
 
     public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
         RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onBossHealthUpdate(ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
+        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
         post(event);
         return event.isCanceled();
     }
