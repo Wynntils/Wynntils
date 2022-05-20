@@ -9,6 +9,13 @@ import com.wynntils.mc.utils.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
+/**
+ * A functionality that Wynntils provides. Functionalities are instance based.
+ *
+ * <p>Use a functionality if you need to work with events, but the events do not correlate directly to any feature.
+ *
+ * <p>Ex: Lootrun Functionality
+ */
 public abstract class Functionality {
     protected static Functionality INSTANCE = null;
 
