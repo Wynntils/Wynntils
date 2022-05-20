@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.OperationType;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FixPacketBugsFeature extends FeatureBase {
@@ -24,7 +25,7 @@ public class FixPacketBugsFeature extends FeatureBase {
         setupEventListener();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBossEventPackageReceived(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
         Operation operation = ((ClientboundBossEventPacketAccessor) packet).getOperation();
@@ -39,7 +40,7 @@ public class FixPacketBugsFeature extends FeatureBase {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (event.getMethod() != METHOD_ADD
@@ -48,7 +49,7 @@ public class FixPacketBugsFeature extends FeatureBase {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRemovePlayerFromTeam(RemovePlayerFromTeamEvent event) {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
