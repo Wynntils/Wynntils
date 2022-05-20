@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatSendMessageEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -30,16 +31,22 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -47,6 +54,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -54,6 +62,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -63,6 +72,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
@@ -160,6 +170,26 @@ public class EventFactory {
 
     public static void onResourcePack(ClientboundResourcePackPacket packet) {
         post(new ResourcePackEvent());
+    }
+
+    public static boolean onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
+        SetPlayerTeamEvent event =
+                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onBossHealthUpdate(
+            ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
+        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
+        post(event);
+        return event.isCanceled();
     }
 
     public static boolean onSetSpawn(BlockPos spawnPos) {
