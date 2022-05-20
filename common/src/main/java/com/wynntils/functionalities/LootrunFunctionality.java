@@ -16,6 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LootrunFunctionality extends FunctionalityBase {
+    public LootrunFunctionality() {
+        LootrunUtils.LOOTRUNS.mkdirs();
+    }
+
     @SubscribeEvent
     public static void recordMovement(ClientTickEvent event) {
         if (event.getTickPhase() == ClientTickEvent.Phase.START) {
