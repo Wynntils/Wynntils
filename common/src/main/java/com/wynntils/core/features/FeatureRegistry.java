@@ -28,33 +28,32 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
-    private static final Map<Class<? extends Feature>, Feature> FEATURES = new HashMap<>();
-    private static final Map<Class<? extends Overlay>, Overlay> OVERLAYS = new HashMap<>();
+    private static final List<Feature> FEATURES = new ArrayList<>();
+    private static final List<Overlay> OVERLAYS = new ArrayList<>();
 
     public static void registerFeature(Feature feature) {
         if (feature instanceof Overlay overlay) {
-            OVERLAYS.put(overlay.getClass(), overlay);
+            OVERLAYS.add(overlay);
         }
 
-        FEATURES.put(feature.getClass(), feature);
+        FEATURES.add(feature);
     }
 
     public static void registerFeatures(List<Feature> features) {
         features.forEach(FeatureRegistry::registerFeature);
     }
 
-    public static Map<Class<? extends Feature>, Feature> getFeatures() {
+    public static List<Feature> getFeatures() {
         return FEATURES;
     }
 
-    public static Map<Class<? extends Overlay>, Overlay> getOverlays() {
+    public static List<Overlay> getOverlays() {
         return OVERLAYS;
     }
 
@@ -79,7 +78,7 @@ public class FeatureRegistry {
         registerFeature(new MythicBlockerFeature());
         registerFeature(new ItemHighlightFeature());
 
-        FEATURES.values().forEach(Feature::init);
+        FEATURES.forEach(Feature::init);
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
@@ -97,7 +96,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES.values()) {
+                for (Feature feature : FEATURES) {
                     if (feature.isEnabled()) {
                         result.append("\n\t\t").append(feature.getName());
                     }
@@ -117,7 +116,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Overlay overlay : OVERLAYS.values()) {
+                for (Overlay overlay : OVERLAYS) {
                     if (overlay.isEnabled()) {
                         result.append("\n\t\t").append(overlay.getName());
                     }
@@ -132,7 +131,7 @@ public class FeatureRegistry {
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-                for (Overlay overlay : OVERLAYS.values()) {
+                for (Overlay overlay : OVERLAYS) {
                     overlay.tick();
                 }
             }
@@ -144,7 +143,7 @@ public class FeatureRegistry {
             return;
 
             McUtils.mc().getProfiler().push("preRenOverlay");
-            for (Overlay overlay : OVERLAYS.values()) {
+            for (Overlay overlay : OVERLAYS) {
                 if (!overlay.visible) continue;
                 // if (!overlay.active) continue;
 
@@ -177,7 +176,7 @@ public class FeatureRegistry {
 
             McUtils.mc().getProfiler().push("postRenOverlay");
 
-            for (Overlay overlay : OVERLAYS.values()) {
+            for (Overlay overlay : OVERLAYS) {
                 if (!overlay.visible)
                     // if (!overlay.active) continue;
 
