@@ -15,7 +15,6 @@ import com.wynntils.features.ItemGuessFeature;
 import com.wynntils.features.ItemHighlightFeature;
 import com.wynntils.features.ItemScreenshotFeature;
 import com.wynntils.features.ItemStatInfoFeature;
-import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MountHorseHotkeyFeature;
 import com.wynntils.features.MythicBlockerFeature;
 import com.wynntils.features.PlayerGhostTransparencyFeature;
@@ -79,11 +78,8 @@ public class FeatureRegistry {
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new ItemHighlightFeature());
-        registerFeature(new LootrunFeature());
 
         FEATURES.values().forEach(Feature::init);
-
-        FEATURES.get(LootrunFeature.class).disable(); // TODO: Make it an option to not enable a feature on init
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 

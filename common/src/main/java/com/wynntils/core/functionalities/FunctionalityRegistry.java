@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.functionalities;
 
+import com.wynntils.functionalities.LootrunFunctionality;
 import com.wynntils.mc.utils.CrashReportManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ public class FunctionalityRegistry {
     private static final List<Functionality> FUNCTIONALITIES = new ArrayList<>();
 
     public static void init() {
+        registerFunctionality(LootrunFunctionality.INSTANCE = new LootrunFunctionality());
+
         addCrashCallbacks();
     }
 

@@ -13,7 +13,7 @@
   "feature.wynntils.itemScreenshot.message": "Copied %s to clipboard!",
   "feature.wynntils.itemScreenshot.name": "Item Screenshot Feature",
   "feature.wynntils.itemStatInfo.name": "Item Statistics Info Feature",
-  "feature.wynntils.lootrunFeature.name": "Lootrun Feature",
+  "feature.wynntils.lootrunFunctionality.name": "Lootrun Feature",
   "feature.wynntils.lootrunUtils.addedNote": "Added note at %s with text: ",
   "feature.wynntils.lootrunUtils.chestAdded": "Successfully added chest at %s.",
   "feature.wynntils.lootrunUtils.chestAlreadyAdded": "Chest at %s has already been added.",
