@@ -6,6 +6,7 @@ package com.wynntils.core;
 
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.functionalities.FunctionalityRegistry;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CompassManager;
@@ -50,6 +51,7 @@ public class WynntilsMod {
 
         ModelLoader.init();
         FeatureRegistry.init();
+        FunctionalityRegistry.init();
 
         ItemStackTransformer.init();
 
