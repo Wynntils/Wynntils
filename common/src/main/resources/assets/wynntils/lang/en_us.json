@@ -44,6 +44,7 @@
   "feature.wynntils.lootrunUtils.undoNotFarEnough": "You haven't moved far enough away to undo movement.",
   "feature.wynntils.lootrunUtils.undoStandNear": "Stand near a previous spot to undo movements.",
   "feature.wynntils.lootrunUtils.undoSuccessful": "Successfully undid movements.",
+  "feature.wynntils.mountHorseHotkey.alreadyRiding": "You are already riding a horse.",
   "feature.wynntils.mythicBlocker.closingBlocked": "You cannot close this loot chest while there is a mythic in it!",
   "feature.wynntils.mythicBlocker.name": "Mythic Chest Blocker Feature",
   "feature.wynntils.playerGhostTransparency.name": "Transparent Player Ghost Feature",
