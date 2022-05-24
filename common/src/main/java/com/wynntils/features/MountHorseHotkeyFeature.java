@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
 import com.wynntils.wc.utils.EntityUtils;
+import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -42,6 +43,8 @@ public class MountHorseHotkeyFeature extends FeatureBase {
     }
 
     private static void onMountHorseKeyPress() {
+        if (!WynnUtils.onWorld()) return;
+
         if (McUtils.player().getVehicle() != null) {
             postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);
             return;
