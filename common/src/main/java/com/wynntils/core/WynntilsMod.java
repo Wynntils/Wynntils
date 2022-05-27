@@ -11,8 +11,6 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.commands.ClientCommandManager;
-import com.wynntils.mc.utils.keybinds.KeyManager;
 import com.wynntils.wc.ModelLoader;
 import com.wynntils.wc.custom.ItemStackTransformer;
 import java.io.File;
