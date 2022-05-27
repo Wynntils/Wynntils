@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
@@ -44,6 +46,9 @@ import org.lwjgl.glfw.GLFW;
 
 public class GearItemStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
 
+    private static final Pattern ITEM_TIER =
+            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
+
     private static final Component ID_PLACEHOLDER = new TextComponent("ID_PLACEHOLDER");
 
     private ItemProfile itemProfile;
@@ -59,6 +64,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
     private List<ItemIdentificationContainer> identifications;
     private List<Powder> powders;
+    private int rerolls;
 
     private List<Component> percentTooltip;
     private List<Component> rangeTooltip;
@@ -90,11 +96,22 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
                 endOfIDs = true;
             }
 
+            if (endOfIDs) continue;
+
             if (unformattedLoreLine.contains("] Powder Slots")) {
                 powders = Powder.findPowders(unformattedLoreLine);
+                baseTooltip.add(loreLine);
+                continue;
             }
 
-            if (endOfIDs) continue;
+            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
+            if (rerollMatcher.find()) {
+                if (rerollMatcher.group("Rolls") == null) continue;
+
+                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
+                baseTooltip.add(loreLine);
+                continue;
+            }
 
             ItemIdentificationContainer idContainer = ItemIdentificationContainer.fromLore(loreLine, itemProfile);
             if (idContainer == null) { // not an ID line
@@ -172,6 +189,18 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
     public boolean hasNew() {
         return hasNew;
+    }
+
+    public List<ItemIdentificationContainer> getIdentifications() {
+        return identifications;
+    }
+
+    public List<Powder> getPowders() {
+        return powders;
+    }
+
+    public int getRerolls() {
+        return rerolls;
     }
 
     @Override
@@ -453,8 +482,12 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             }
         }
 
-        // tier
-        baseTooltip.add(itemProfile.getTier().asLore());
+        // tier & rerolls
+        MutableComponent tier = itemProfile.getTier().asLore().copy();
+        if (rerolls > 1) {
+            tier.append(" [" + rerolls + "]");
+        }
+        baseTooltip.add(tier);
 
         // untradable
         if (itemProfile.getRestriction() != null) {

@@ -24,6 +24,10 @@ public abstract class WynnItemStack extends ItemStack {
                 ChatFormatting.stripFormatting(super.getHoverName().getString()));
     }
 
+    public String getSimpleName() {
+        return itemName;
+    }
+
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         return super.getTooltipLines(player, flag);
