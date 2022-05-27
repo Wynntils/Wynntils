@@ -4,29 +4,22 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.google.gson.annotations.SerializedName;
+import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
 public enum ItemTier {
-    @SerializedName("NORMAL")
-    Normal(ChatFormatting.WHITE, -1, 0),
-    @SerializedName("UNIQUE")
-    Unique(ChatFormatting.YELLOW, 3, 0.5f),
-    @SerializedName("RARE")
-    Rare(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
-    @SerializedName("SET")
-    Set(ChatFormatting.GREEN, 8, 1.2f),
-    @SerializedName("FABLED")
-    Fabled(ChatFormatting.RED, 12, 4.5f),
-    @SerializedName("LEGENDARY")
-    Legendary(ChatFormatting.AQUA, 16, 8.0f),
-    @SerializedName("MYTHIC")
-    Mythic(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    @SerializedName("CRAFTED")
-    Crafted(ChatFormatting.DARK_AQUA, -1, 0);
+    NORMAL(ChatFormatting.WHITE, -1, 0),
+    UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
+    RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
+    SET(ChatFormatting.GREEN, 8, 1.2f),
+    FABLED(ChatFormatting.RED, 12, 4.5f),
+    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
+    MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
+    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;
@@ -64,6 +57,11 @@ public enum ItemTier {
     }
 
     public Component asLore() {
-        return new TextComponent(name() + " Item").withStyle(chatFormatting);
+        return new TextComponent(this + " Item").withStyle(chatFormatting);
+    }
+
+    @Override
+    public String toString() {
+        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
     }
 }

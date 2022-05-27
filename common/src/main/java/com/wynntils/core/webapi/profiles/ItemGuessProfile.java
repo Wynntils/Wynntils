@@ -15,6 +15,7 @@ import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ItemGuessProfile {
@@ -51,11 +52,12 @@ public class ItemGuessProfile {
                             weaponType.getValue().getAsJsonObject().entrySet()) {
 
                         raritiesMap.put(
-                                ItemTier.valueOf(rarity.getKey()),
+                                ItemTier.valueOf(rarity.getKey().toUpperCase(Locale.ROOT)),
                                 StringUtils.parseStringToList(rarity.getValue().getAsString()));
                     }
 
-                    itemGuessProfile.items.put(ItemType.valueOf(weaponType.getKey()), raritiesMap);
+                    itemGuessProfile.items.put(
+                            ItemType.valueOf(weaponType.getKey().toUpperCase(Locale.ROOT)), raritiesMap);
                 }
 
                 hashMap.put(itemGuesses.getKey(), itemGuessProfile);

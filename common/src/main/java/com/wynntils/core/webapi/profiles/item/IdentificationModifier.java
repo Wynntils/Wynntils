@@ -4,19 +4,12 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.google.gson.annotations.SerializedName;
-
 public enum IdentificationModifier {
-    @SerializedName("INTEGER")
-    Integer(""),
-    @SerializedName("PERCENTAGE")
-    Percentage("%"),
-    @SerializedName("FOUR_SECONDS")
-    FourSeconds("/4s"),
-    @SerializedName("THREE_SECONDS")
-    ThreeSeconds("/3s"),
-    @SerializedName("TIER")
-    Tier(" tier");
+    INTEGER(""),
+    PERCENTAGE("%"),
+    FOUR_SECONDS("/4s"),
+    THREE_SECONDS("/3s"),
+    TIER(" tier");
 
     final String inGame;
 
@@ -25,7 +18,7 @@ public enum IdentificationModifier {
     }
 
     public String getInGame(String name) {
-        if (this != FourSeconds) return inGame;
+        if (this != FOUR_SECONDS) return inGame;
 
         if (name.equals("manaRegen")) return "/5s";
         return "/3s";

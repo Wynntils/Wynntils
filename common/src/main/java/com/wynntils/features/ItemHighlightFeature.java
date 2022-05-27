@@ -12,8 +12,8 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.RenderUtils;
-import com.wynntils.wc.objects.item.render.HighlightedItem;
-import com.wynntils.wc.objects.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.custom.item.render.HighlightedItem;
+import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

@@ -17,6 +17,7 @@ public class ItemGuessFeature extends FeatureBase {
 
     public ItemGuessFeature() {}
 
+    // TODO replace with config
     public static final boolean showGuessesPrice = true;
 
     @Override
