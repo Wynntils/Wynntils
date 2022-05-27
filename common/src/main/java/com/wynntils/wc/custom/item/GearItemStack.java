@@ -19,6 +19,7 @@ import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.objects.ItemIdentificationContainer;
 import com.wynntils.wc.objects.Powder;
 import com.wynntils.wc.utils.IdentificationOrderer;
+import com.wynntils.wc.utils.WynnItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
                 continue;
             }
 
-            ItemIdentificationContainer idContainer = ItemIdentificationContainer.fromLore(loreLine, itemProfile);
+            ItemIdentificationContainer idContainer = WynnItemUtils.identificationFromLore(loreLine, itemProfile);
             if (idContainer == null) { // not an ID line
                 baseTooltip.add(loreLine);
                 continue;
@@ -155,7 +156,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
         List<Component> baseTooltip = constructBaseTooltip();
-        identifications = ItemIdentificationContainer.fromProfile(itemProfile);
+        identifications = WynnItemUtils.identificationsFromProfile(itemProfile);
         constructTooltips(baseTooltip);
     }
 
@@ -341,7 +342,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             isPerfect = overallPercentage >= 100d;
             isDefective = overallPercentage == 0;
 
-            name.append(ItemStatInfoFeature.getPercentageTextComponent(overallPercentage));
+            name.append(WynnItemUtils.getPercentageTextComponent(overallPercentage));
         }
 
         customName = name;
