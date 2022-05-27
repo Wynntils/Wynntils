@@ -38,11 +38,8 @@ public abstract class Feature {
 
         this.conditions = conditions.build();
 
-        if (this.conditions.isEmpty()) {
-            enable();
-        } else {
-            this.conditions.forEach(Condition::init);
-        }
+        if (this.conditions.isEmpty()) return;
+        this.conditions.forEach(Condition::init);
     }
 
     /**
@@ -95,9 +92,8 @@ public abstract class Feature {
     public final void enable() {
         if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        if (!onEnable()) {
-            return;
-        }
+        if (!canEnable()) return;
+        if (!onEnable()) return;
 
         enabled = true;
 
@@ -151,14 +147,6 @@ public abstract class Feature {
         return true;
     }
 
-    private void checkConditions() {
-        if (canEnable() && !enabled) {
-            enable();
-        } else if (enabled) {
-            disable();
-        }
-    }
-
     public class WebLoadedCondition extends Condition {
         @Override
         public void init() {
@@ -188,7 +176,6 @@ public abstract class Feature {
 
         public void setSatisfied(boolean satisfied) {
             this.satisfied = satisfied;
-            checkConditions();
         }
     }
 }

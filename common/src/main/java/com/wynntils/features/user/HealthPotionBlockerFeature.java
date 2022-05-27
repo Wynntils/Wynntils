@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.user;
 
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
-public class HealthPotionBlockerFeature extends Feature {
+public class HealthPotionBlockerFeature extends UserFeature {
 
     public HealthPotionBlockerFeature() {
         setupEventListener();

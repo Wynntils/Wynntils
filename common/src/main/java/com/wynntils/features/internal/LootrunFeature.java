@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.InternalFeature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LootrunFeature extends Feature {
+public class LootrunFeature extends InternalFeature {
 
     public LootrunFeature() {
         setupEventListener();
