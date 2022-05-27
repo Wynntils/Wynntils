@@ -6,9 +6,10 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
+import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.features.properties.KeyBinds;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -25,8 +26,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import org.lwjgl.glfw.GLFW;
 
+@KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class MountHorseHotkeyFeature extends UserFeature {
+    public static MountHorseHotkeyFeature INSTANCE;
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
@@ -37,10 +40,6 @@ public class MountHorseHotkeyFeature extends UserFeature {
 
     private final KeyHolder mountHorseKeybind = new KeyHolder(
             "Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, MountHorseHotkeyFeature::onMountHorseKeyPress);
-
-    public MountHorseHotkeyFeature() {
-        setupKeyHolder(mountHorseKeybind);
-    }
 
     private static void onMountHorseKeyPress() {
         if (!WynnUtils.onWorld()) return;

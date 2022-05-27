@@ -7,13 +7,14 @@ package com.wynntils.features.user;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
+import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
 public class ItemStatInfoFeature extends UserFeature {
+    public static ItemStatInfoFeature INSTANCE;
 
     // TODO: Replace these with configs
     public static final boolean showStars = true;
@@ -27,8 +28,6 @@ public class ItemStatInfoFeature extends UserFeature {
     public static final boolean reorderIdentifications = true;
     public static final boolean groupIdentifications = true;
 
-    public ItemStatInfoFeature() {}
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -38,7 +37,4 @@ public class ItemStatInfoFeature extends UserFeature {
     protected boolean onEnable() {
         return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
-
-    @Override
-    protected void onDisable() {}
 }

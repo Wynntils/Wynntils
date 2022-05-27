@@ -4,10 +4,14 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.EventListener;
+import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.StartEnabled;
+import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.features.debug.ConnectionProgressFeature;
-import com.wynntils.features.debug.KeyBindTestFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.internal.FixPacketBugsFeature;
 import com.wynntils.features.internal.LootrunFeature;
@@ -30,40 +34,97 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
-    private static final Map<Class<? extends Feature>, Feature> FEATURES = new HashMap<>();
-    private static final Map<Class<? extends Overlay>, Overlay> OVERLAYS = new HashMap<>();
+    private static final List<Feature> FEATURES = new ArrayList<>();
+    private static final List<Overlay> OVERLAYS = new ArrayList<>();
 
     public static void registerFeature(Feature feature) {
         if (feature instanceof Overlay overlay) {
-            OVERLAYS.put(overlay.getClass(), overlay);
+            OVERLAYS.add(overlay);
         }
 
-        FEATURES.put(feature.getClass(), feature);
+        FEATURES.add(feature);
+
+        initializeFeature(feature);
+    }
+
+    private static void initializeFeature(Feature feature) {
+        Class<? extends Feature> featureClass = feature.getClass();
+
+        // instance field
+        try {
+            Field instanceField = featureClass.getDeclaredField("INSTANCE");
+            instanceField.set(null, feature);
+        } catch (Exception e) {
+            Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
+            e.printStackTrace();
+            return;
+        }
+
+        // flag as event listener
+        if (featureClass.isAnnotationPresent(EventListener.class)) {
+            feature.setupEventListener();
+        }
+
+        // register key binds
+        if (featureClass.isAnnotationPresent(KeyBinds.class)) {
+            for (Field f : featureClass.getDeclaredFields()) {
+                if (!f.getType().equals(KeyHolder.class)) continue;
+
+                try {
+                    f.setAccessible(true);
+                    KeyHolder keyHolder = (KeyHolder) f.get(feature);
+                    feature.setupKeyHolder(keyHolder);
+                } catch (Exception e) {
+                    Reference.LOGGER.error(
+                            "Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // initialize & enable
+        feature.init();
+
+        if (feature instanceof InternalFeature) {
+            StartEnabled start = featureClass.getAnnotation(StartEnabled.class);
+            if (start != null && !start.value()) return; // not set to start enabled
+
+            feature.tryEnable();
+        }
+
+        if (feature instanceof UserFeature userFeature) {
+            if (!userFeature.userEnabled) return; // not enabled by user
+
+            userFeature.tryEnable();
+        }
+
+        if (feature instanceof DebugFeature) {
+            feature.tryEnable();
+        }
     }
 
     public static void registerFeatures(List<Feature> features) {
         features.forEach(FeatureRegistry::registerFeature);
     }
 
-    public static Map<Class<? extends Feature>, Feature> getFeatures() {
+    public static List<Feature> getFeatures() {
         return FEATURES;
     }
 
-    public static Map<Class<? extends Overlay>, Overlay> getOverlays() {
+    public static List<Overlay> getOverlays() {
         return OVERLAYS;
     }
 
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
-        registerFeature(new KeyBindTestFeature());
         registerFeature(new PacketDebuggerFeature());
 
         registerFeature(new DialogueOptionOverrideFeature());
@@ -83,10 +144,6 @@ public class FeatureRegistry {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
 
-        FEATURES.values().forEach(Feature::init);
-
-        FEATURES.get(LootrunFeature.class).disable(); // TODO: Make it an option to not enable a feature on init
-
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
         addCrashCallbacks();
@@ -103,7 +160,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES.values()) {
+                for (Feature feature : FEATURES) {
                     if (feature.isEnabled()) {
                         result.append("\n\t\t").append(feature.getName());
                     }
@@ -123,7 +180,7 @@ public class FeatureRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Overlay overlay : OVERLAYS.values()) {
+                for (Overlay overlay : OVERLAYS) {
                     if (overlay.isEnabled()) {
                         result.append("\n\t\t").append(overlay.getName());
                     }
@@ -138,7 +195,7 @@ public class FeatureRegistry {
         @SubscribeEvent
         public static void onTick(ClientTickEvent e) {
             if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-                for (Overlay overlay : OVERLAYS.values()) {
+                for (Overlay overlay : OVERLAYS) {
                     overlay.tick();
                 }
             }
@@ -150,7 +207,7 @@ public class FeatureRegistry {
             return;
 
             McUtils.mc().getProfiler().push("preRenOverlay");
-            for (Overlay overlay : OVERLAYS.values()) {
+            for (Overlay overlay : OVERLAYS) {
                 if (!overlay.visible) continue;
                 // if (!overlay.active) continue;
 
@@ -183,7 +240,7 @@ public class FeatureRegistry {
 
             McUtils.mc().getProfiler().push("postRenOverlay");
 
-            for (Overlay overlay : OVERLAYS.values()) {
+            for (Overlay overlay : OVERLAYS) {
                 if (!overlay.visible)
                     // if (!overlay.active) continue;
 

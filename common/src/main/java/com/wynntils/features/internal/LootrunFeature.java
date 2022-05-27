@@ -6,6 +6,8 @@ package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
+import com.wynntils.core.features.properties.EventListener;
+import com.wynntils.core.features.properties.StartEnabled;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -16,11 +18,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@EventListener
+@StartEnabled(false)
 public class LootrunFeature extends InternalFeature {
-
-    public LootrunFeature() {
-        setupEventListener();
-    }
+    public static LootrunFeature INSTANCE;
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {

@@ -8,9 +8,10 @@ import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
+import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.features.properties.KeyBinds;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
@@ -22,8 +23,10 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
+@KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
+    public static EmeraldPouchHotkeyFeature INSTANCE;
 
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",
@@ -31,10 +34,6 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             "Wynntils",
             true,
             EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
-
-    public EmeraldPouchHotkeyFeature() {
-        setupKeyHolder(emeraldPouchKeybind);
-    }
 
     private static void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;

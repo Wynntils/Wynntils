@@ -6,16 +6,15 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@EventListener
 public class ConnectionProgressFeature extends DebugFeature {
-
-    public ConnectionProgressFeature() {
-        setupEventListener();
-    }
+    public static ConnectionProgressFeature INSTANCE;
 
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {

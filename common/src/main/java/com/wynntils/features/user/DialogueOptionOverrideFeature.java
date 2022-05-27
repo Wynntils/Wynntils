@@ -5,22 +5,21 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
+import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@EventListener
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
 public class DialogueOptionOverrideFeature extends UserFeature {
-
-    public DialogueOptionOverrideFeature() {
-        setupEventListener();
-    }
+    public static DialogueOptionOverrideFeature INSTANCE;
 
     @SubscribeEvent
     public void onDialogueKeyPress(KeyInputEvent e) {

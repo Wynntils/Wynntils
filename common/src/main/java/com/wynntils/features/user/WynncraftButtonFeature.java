@@ -7,10 +7,11 @@ package com.wynntils.features.user;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
+import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.objects.ServerIcon;
 import net.minecraft.client.Minecraft;
@@ -23,12 +24,10 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
+@EventListener
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends UserFeature {
-
-    public WynncraftButtonFeature() {
-        setupEventListener();
-    }
+    public static WynncraftButtonFeature INSTANCE;
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {
