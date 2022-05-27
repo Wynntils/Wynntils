@@ -4,7 +4,7 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
-public class MythicBlockerFeature extends FeatureBase {
+public class MythicBlockerFeature extends Feature {
 
     public MythicBlockerFeature() {
         setupEventListener();

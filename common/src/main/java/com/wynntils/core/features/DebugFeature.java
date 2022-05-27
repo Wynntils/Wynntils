@@ -15,7 +15,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
-public abstract class DebugFeatureBase extends FeatureBase {
+public abstract class DebugFeature extends Feature {
 
     @Override
     public MutableComponent getNameComponent() {

@@ -4,7 +4,7 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -16,7 +16,7 @@ import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
-public class DialogueOptionOverrideFeature extends FeatureBase {
+public class DialogueOptionOverrideFeature extends Feature {
 
     public DialogueOptionOverrideFeature() {
         setupEventListener();

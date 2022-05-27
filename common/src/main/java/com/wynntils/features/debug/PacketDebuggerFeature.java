@@ -5,7 +5,7 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.features.DebugFeatureBase;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class PacketDebuggerFeature extends DebugFeatureBase {
+public class PacketDebuggerFeature extends DebugFeature {
 
     public static final boolean DEBUG_PACKETS = false;
 

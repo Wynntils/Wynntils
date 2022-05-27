@@ -5,7 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LootrunFeature extends FeatureBase {
+public class LootrunFeature extends Feature {
 
     public LootrunFeature() {
         setupEventListener();

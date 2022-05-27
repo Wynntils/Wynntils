@@ -4,14 +4,14 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.wc.utils.WynnPlayerUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PlayerGhostTransparencyFeature extends FeatureBase {
+public class PlayerGhostTransparencyFeature extends Feature {
     public PlayerGhostTransparencyFeature() {
         setupEventListener();
     }

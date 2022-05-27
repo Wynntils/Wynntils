@@ -6,7 +6,7 @@ package com.wynntils.features.debug;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.core.features.DebugFeatureBase;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -19,7 +19,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.scores.Team;
 
-public class KeyBindTestFeature extends DebugFeatureBase {
+public class KeyBindTestFeature extends DebugFeature {
 
     private final List<KeyHolder> keybinds = new ArrayList<>();
 

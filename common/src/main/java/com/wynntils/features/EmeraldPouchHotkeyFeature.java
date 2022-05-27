@@ -6,7 +6,7 @@ package com.wynntils.features;
 
 import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -23,7 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class EmeraldPouchHotkeyFeature extends FeatureBase {
+public class EmeraldPouchHotkeyFeature extends Feature {
 
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",

@@ -4,7 +4,7 @@
  */
 package com.wynntils.features;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -14,7 +14,7 @@ import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
-public class GammabrightFeature extends FeatureBase {
+public class GammabrightFeature extends Feature {
     private double lastGamma = 1f;
 
     private final KeyHolder gammabrightKeybind =

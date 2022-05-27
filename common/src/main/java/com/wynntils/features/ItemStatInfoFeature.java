@@ -5,7 +5,7 @@
 package com.wynntils.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.GameplayImpact;
 import com.wynntils.core.features.properties.PerformanceImpact;
@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.Stability;
 import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
-public class ItemStatInfoFeature extends FeatureBase {
+public class ItemStatInfoFeature extends Feature {
 
     // TODO: Replace these with configs
     public static final boolean showStars = true;
