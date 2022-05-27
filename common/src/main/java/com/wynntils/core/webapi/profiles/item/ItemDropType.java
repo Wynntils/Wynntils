@@ -4,13 +4,8 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.google.gson.annotations.SerializedName;
-
 public enum ItemDropType {
-    @SerializedName("NEVER")
-    Never, // quests or merchants
-    @SerializedName("LOOTCHEST")
-    Lootchest, // lootchests
-    @SerializedName("NORMAL")
-    Normal // mobs
+    NEVER, // quests or merchants
+    LOOTCHEST, // lootchests
+    NORMAL // mobs
 }
