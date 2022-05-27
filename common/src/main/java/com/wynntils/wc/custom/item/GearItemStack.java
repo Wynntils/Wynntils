@@ -24,13 +24,13 @@ import com.wynntils.wc.utils.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -107,10 +107,10 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
             Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
             if (rerollMatcher.find()) {
-                if (rerollMatcher.group("Rolls") == null) continue;
-
-                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
                 baseTooltip.add(loreLine);
+
+                if (rerollMatcher.group("Rolls") == null) continue;
+                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
                 continue;
             }
 
@@ -324,11 +324,12 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
     private void parseIDs() {
         overallPercentage = -1f;
         hasNew = identifications.stream().anyMatch(ItemIdentificationContainer::isNew);
-        DoubleStream percents = identifications.stream()
+        DoubleSummaryStatistics percents = identifications.stream()
                 .filter(Predicate.not(ItemIdentificationContainer::isFixed))
-                .mapToDouble(ItemIdentificationContainer::percent);
-        int idAmount = (int) percents.count();
-        float percentTotal = (float) percents.sum();
+                .mapToDouble(ItemIdentificationContainer::percent)
+                .summaryStatistics();
+        int idAmount = (int) percents.getCount();
+        float percentTotal = (float) percents.getSum();
 
         String originalName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName()));
         MutableComponent name = new TextComponent(originalName);

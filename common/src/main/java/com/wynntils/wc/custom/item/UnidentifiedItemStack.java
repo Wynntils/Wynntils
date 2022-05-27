@@ -16,6 +16,7 @@ import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -63,7 +64,7 @@ public class UnidentifiedItemStack extends WynnItemStack implements HighlightedI
 
         Map<ItemTier, List<String>> rarityMap;
         try {
-            rarityMap = guessProfile.getItems().get(ItemType.valueOf(itemType));
+            rarityMap = guessProfile.getItems().get(ItemType.valueOf(itemType.toUpperCase(Locale.ROOT)));
         } catch (IllegalArgumentException exception) { // itemType is invalid
             Reference.LOGGER.warn(String.format("ItemType was invalid for itemType: %s", itemType));
             return;
