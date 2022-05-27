@@ -5,14 +5,21 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
-import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,26 +76,14 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
-        // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
-        if (((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod() != 0
-                && McUtils.mc().level.getScoreboard().getPlayerTeam(packet.getName()) == null) {
+        if (EventFactory.onSetPlayerTeam(packet)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
-    private void handleSetSpawn(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
-        if (McUtils.player() == null) {
-            // Reset compass
-            CompassManager.reset();
-
-            if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(packet.getPos(), 0);
-
-            return;
-        }
-
-        // Cancel the event to force the compass to not change
-        if (CompassManager.getCompassLocation() != null) {
+    private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
+        if (EventFactory.onSetSpawn(packet.getPos())) {
             ci.cancel();
         }
     }
@@ -97,7 +92,7 @@ public abstract class ClientPacketListenerMixin {
             method =
                     "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         List<ItemStack> items = new ArrayList<>(packet.getItems());
         items.add(packet.getCarriedItem());
 
@@ -111,7 +106,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
             at = @At("RETURN"))
-    public void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (packet.getContainerId() == -1 || packet.getContainerId() == McUtils.containerMenu().containerId) {
             EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.containerMenu());
         } else if (packet.getContainerId() == -2

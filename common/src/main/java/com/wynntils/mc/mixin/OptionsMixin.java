@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.utils.keybinds.KeyManager;
+import com.wynntils.core.keybinds.KeyManager;
 import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Options.class)
-public class OptionsMixin {
+public abstract class OptionsMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     public void initPost(Minecraft minecraft, File file, CallbackInfo ci) {
         KeyManager.loadKeybinds((Options) (Object) this);

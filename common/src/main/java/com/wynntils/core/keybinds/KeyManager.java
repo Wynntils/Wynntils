@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils.keybinds;
+package com.wynntils.core.keybinds;
 
 import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -104,5 +105,19 @@ public class KeyManager {
 
     private static boolean hasName(String name) {
         return keyHolders.stream().anyMatch(k -> k.getName().equals(name));
+    }
+
+    public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
+        if (categorySortOrder.containsKey(category)) return;
+
+        int max = 0;
+
+        for (int val : categorySortOrder.values()) {
+            if (val > max) {
+                max = val;
+            }
+        }
+
+        categorySortOrder.put(category, max + 1);
     }
 }

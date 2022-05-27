@@ -5,7 +5,12 @@
 package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.wc.objects.ClassType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ItemProfile {
 

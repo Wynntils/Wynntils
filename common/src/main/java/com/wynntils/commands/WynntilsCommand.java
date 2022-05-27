@@ -7,16 +7,20 @@ package com.wynntils.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.Reference;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.commands.CommandBase;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 
 public class WynntilsCommand extends CommandBase {
     @Override
@@ -56,7 +60,8 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int reload(CommandContext<CommandSourceStack> context) {
-        for (Feature feature : FeatureRegistry.getFeatures()) { // disable all active features before resetting web
+        for (Feature feature :
+                FeatureRegistry.getFeatures().values()) { // disable all active features before resetting web
             if (feature.isEnabled()) {
                 feature.disable();
             }
@@ -66,7 +71,7 @@ public class WynntilsCommand extends CommandBase {
 
         WebManager.init(); // reloads api urls as well as web manager
 
-        for (Feature feature : FeatureRegistry.getFeatures()) { // re-enable all features which should be
+        for (Feature feature : FeatureRegistry.getFeatures().values()) { // re-enable all features which should be
             if (feature.canEnable()) {
                 feature.enable();
 

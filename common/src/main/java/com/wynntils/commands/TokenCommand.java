@@ -6,12 +6,16 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.commands.CommandBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 
 public class TokenCommand extends CommandBase {
     @Override

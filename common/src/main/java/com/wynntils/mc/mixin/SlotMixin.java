@@ -12,8 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Slot.class)
-public class SlotMixin {
-
+public abstract class SlotMixin {
     @ModifyVariable(
             method = "set(Lnet/minecraft/world/item/ItemStack;)V",
             at = @At("HEAD"),

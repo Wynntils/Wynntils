@@ -4,9 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,12 +20,12 @@ public abstract class MinecraftMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void onTickPre(CallbackInfo ci) {
-        WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.START));
+    public void tickPre(CallbackInfo ci) {
+        EventFactory.onTickStart();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
-    public void onTickPost(CallbackInfo ci) {
-        WynntilsMod.getEventBus().post(new ClientTickEvent(ClientTickEvent.Phase.END));
+    public void tickPost(CallbackInfo ci) {
+        EventFactory.onTickEnd();
     }
 }

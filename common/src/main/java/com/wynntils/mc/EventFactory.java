@@ -6,10 +6,21 @@ package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.*;
+import com.wynntils.mc.event.BossHealthUpdateEvent;
+import com.wynntils.mc.event.ChatSendMessageEvent;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.GameMenuInitEvent;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryRenderEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.ItemsReceivedEvent;
+import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
@@ -17,21 +28,51 @@ import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
+import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
+import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
@@ -131,6 +172,32 @@ public class EventFactory {
         post(new ResourcePackEvent());
     }
 
+    public static boolean onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
+        SetPlayerTeamEvent event =
+                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onBossHealthUpdate(
+            ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
+        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static boolean onSetSpawn(BlockPos spawnPos) {
+        SetSpawnEvent event = new SetSpawnEvent(spawnPos);
+        post(event);
+        return event.isCanceled();
+    }
+
     public static <T extends Packet<?>> boolean onPacketSent(T packet) {
         PacketSentEvent<T> event = new PacketSentEvent<>(packet);
         post(event);
@@ -141,6 +208,14 @@ public class EventFactory {
         PacketReceivedEvent<T> event = new PacketReceivedEvent<>(packet);
         post(event);
         return event.isCanceled();
+    }
+
+    public static void onTickStart() {
+        post(new ClientTickEvent(ClientTickEvent.Phase.START));
+    }
+
+    public static void onTickEnd() {
+        post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
 
     public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {
@@ -164,5 +239,30 @@ public class EventFactory {
 
     public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
         post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
+
+    public static boolean onChatSend(String message) {
+        ChatSendMessageEvent event = new ChatSendMessageEvent(message);
+        post(event);
+        return event.isCanceled();
+    }
+
+    public static void onRenderLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano) {
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+    }
+
+    public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
+        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
+        post(event);
+    }
+
+    public static void onContainerClickEvent(
+            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
+        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
 }

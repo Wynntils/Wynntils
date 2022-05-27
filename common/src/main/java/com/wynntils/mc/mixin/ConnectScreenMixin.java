@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ConnectScreen.class)
-public class ConnectScreenMixin {
+public abstract class ConnectScreenMixin {
     @Inject(method = "connect", at = @At("HEAD"))
-    public void onConnect(Minecraft minecraft, ServerAddress serverAddress, CallbackInfo ci) {
+    private void connectPre(Minecraft minecraft, ServerAddress serverAddress, CallbackInfo ci) {
         EventFactory.onConnect(serverAddress.getHost(), serverAddress.getPort());
     }
 }

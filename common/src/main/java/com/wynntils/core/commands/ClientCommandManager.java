@@ -2,22 +2,36 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils.commands;
+package com.wynntils.core.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.ChatSendMessageEvent;
 import com.wynntils.mc.utils.McUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.*;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -32,11 +46,57 @@ public class ClientCommandManager {
     }
 
     public static void init() {
+        WynntilsMod.getEventBus().register(ClientCommandManager.class);
+
         clientDispatcher = new CommandDispatcher<>();
         new WynntilsCommand().register(clientDispatcher); // TODO event
         new ServerCommand().register(clientDispatcher);
         new TokenCommand().register(clientDispatcher);
         new TerritoryCommand().register(clientDispatcher);
+        new LootrunCommand().register(clientDispatcher);
+    }
+
+    @SubscribeEvent
+    public static void onChatSend(ChatSendMessageEvent e) {
+        String message = e.getMessage();
+
+        if (message.startsWith("/")) {
+            StringReader reader = new StringReader(message);
+            reader.skip();
+            if (ClientCommandManager.executeCommand(reader, message)) {
+                e.setCanceled(true);
+            }
+        }
+    }
+
+    public static CompletableFuture<Suggestions> getCompletionSuggestions(
+            String cmd,
+            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
+            ParseResults<CommandSourceStack> clientParse,
+            ParseResults<SharedSuggestionProvider> serverParse,
+            int cursor) {
+        StringReader stringReader = new StringReader(cmd);
+        if (stringReader.canRead() && stringReader.peek() == '/') {
+            stringReader.skip();
+        }
+
+        CommandDispatcher<CommandSourceStack> clientDispatcher = getClientDispatcher();
+
+        CompletableFuture<Suggestions> clientSuggestions =
+                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
+        CompletableFuture<Suggestions> serverSuggestions =
+                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
+
+        CompletableFuture<Suggestions> result = new CompletableFuture<>();
+
+        CompletableFuture.allOf(clientSuggestions, serverSuggestions).thenRun(() -> {
+            final List<Suggestions> suggestions = new ArrayList<>();
+            suggestions.add(clientSuggestions.join());
+            suggestions.add(serverSuggestions.join());
+            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
+        });
+
+        return result;
     }
 
     public static ClientCommandSourceStack getSource() {

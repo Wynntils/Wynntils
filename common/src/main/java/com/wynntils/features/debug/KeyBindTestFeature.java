@@ -6,26 +6,20 @@ package com.wynntils.features.debug;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.DebugFeatureBase;
+import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.keybinds.KeyHolder;
-import com.wynntils.mc.utils.keybinds.KeyManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.scores.Team;
 
-public class KeyBindTestFeature extends DebugFeature {
-    @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("featureDebug.wynntils.keyBindTest.name");
-    }
+public class KeyBindTestFeature extends DebugFeatureBase {
 
     private final List<KeyHolder> keybinds = new ArrayList<>();
 
