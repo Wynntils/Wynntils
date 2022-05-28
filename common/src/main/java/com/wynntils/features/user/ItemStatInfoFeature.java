@@ -2,18 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
-public class ItemStatInfoFeature extends FeatureBase {
+@FeatureInfo(stability = Stability.STABLE)
+public class ItemStatInfoFeature extends UserFeature {
 
     // TODO: Replace these with configs
     public static final boolean showStars = true;
@@ -27,8 +25,6 @@ public class ItemStatInfoFeature extends FeatureBase {
     public static final boolean reorderIdentifications = true;
     public static final boolean groupIdentifications = true;
 
-    public ItemStatInfoFeature() {}
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
@@ -38,7 +34,4 @@ public class ItemStatInfoFeature extends FeatureBase {
     protected boolean onEnable() {
         return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
-
-    @Override
-    protected void onDisable() {}
 }

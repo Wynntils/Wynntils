@@ -2,13 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.user;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -25,8 +24,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class MountHorseHotkeyFeature extends FeatureBase {
+@FeatureInfo(stability = Stability.STABLE)
+public class MountHorseHotkeyFeature extends UserFeature {
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
@@ -35,12 +34,9 @@ public class MountHorseHotkeyFeature extends FeatureBase {
     private static int prevItem = -1;
     private static boolean alreadySetPrevItem = false;
 
+    @RegisterKeyBind
     private final KeyHolder mountHorseKeybind = new KeyHolder(
             "Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, MountHorseHotkeyFeature::onMountHorseKeyPress);
-
-    public MountHorseHotkeyFeature() {
-        setupKeyHolder(mountHorseKeybind);
-    }
 
     private static void onMountHorseKeyPress() {
         if (!WynnUtils.onWorld()) return;

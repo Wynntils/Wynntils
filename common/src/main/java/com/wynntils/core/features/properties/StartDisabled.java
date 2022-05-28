@@ -9,20 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Used to indicate that a feature should not be enabled automatically on load
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface FeatureInfo {
-    /** Subjective stability of feature */
-    Stability stability() default Stability.STABLE;
-
-    /**
-     * How stable a feature is to wynncraft changes, how able it is to be maintained, and other similar
-     * judgements. Subjective.
-     */
-    enum Stability {
-        EXPERIMENTAL,
-        UNSTABLE,
-        STABLE,
-        INVARIABLE
-    }
-}
+public @interface StartDisabled {}

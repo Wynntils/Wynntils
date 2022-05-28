@@ -4,12 +4,18 @@
  */
 package com.wynntils.core.features;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -20,6 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public abstract class Feature {
     private ImmutableList<Condition> conditions;
+    private boolean isListener = false;
+    private List<KeyHolder> keyMappings = new ArrayList<>();
 
     protected boolean enabled = false;
 
@@ -30,15 +38,41 @@ public abstract class Feature {
 
         this.conditions = conditions.build();
 
-        if (this.conditions.isEmpty()) {
-            enable();
-        } else {
-            this.conditions.forEach(Condition::init);
-        }
+        if (this.conditions.isEmpty()) return;
+        this.conditions.forEach(Condition::init);
+    }
+
+    /**
+     * Sets up this feature as an event listener. Called from the registry.
+     */
+    public void setupEventListener() {
+        this.isListener = true;
+    }
+
+    /**
+     * Adds a keyHolder to the feature. Called from the registry.
+     * @param keyHolder KeyHolder to add to the feature
+     */
+    public void setupKeyHolder(KeyHolder keyHolder) {
+        keyMappings.add(keyHolder);
+    }
+
+    /** Gets the name of a feature */
+    public String getName() {
+        return ComponentUtils.getFormatted(getNameComponent());
+    }
+
+    protected String getNameCamelCase() {
+        String name = this.getClass().getTypeName().replace("Feature", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    public MutableComponent getNameComponent() {
+        return new TranslatableComponent("feature.wynntils." + getNameCamelCase() + ".name");
     }
 
     /** Called on init of Feature */
-    protected abstract void onInit(ImmutableList.Builder<Condition> conditions);
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     /**
      * Called on enabling of Feature
@@ -47,20 +81,28 @@ public abstract class Feature {
      * is cancelled it isn't called again by the conditions and must be done so manually, likely by
      * the user.
      */
-    protected abstract boolean onEnable();
+    protected boolean onEnable() {
+        return true;
+    }
 
     /** Called on disabling of Feature */
-    protected abstract void onDisable();
+    protected void onDisable() {}
 
     /** Called to activate a feature */
     public final void enable() {
         if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
 
-        if (!onEnable()) {
-            return;
-        }
+        if (!canEnable()) return;
+        if (!onEnable()) return;
 
         enabled = true;
+
+        if (isListener) {
+            WynntilsMod.getEventBus().register(this);
+        }
+        for (KeyHolder key : keyMappings) {
+            KeyManager.registerKeybind(key);
+        }
     }
 
     /** Called for a feature's deactivation */
@@ -70,6 +112,13 @@ public abstract class Feature {
         onDisable();
 
         enabled = false;
+
+        if (isListener) {
+            WynntilsMod.getEventBus().unregister(this);
+        }
+        for (KeyHolder key : keyMappings) {
+            KeyManager.unregisterKeybind(key);
+        }
     }
 
     public final void tryEnable() {
@@ -98,14 +147,6 @@ public abstract class Feature {
         return true;
     }
 
-    private void checkConditions() {
-        if (canEnable() && !enabled) {
-            enable();
-        } else if (enabled) {
-            disable();
-        }
-    }
-
     public class WebLoadedCondition extends Condition {
         @Override
         public void init() {
@@ -124,13 +165,6 @@ public abstract class Feature {
         }
     }
 
-    /** Gets the name of a feature */
-    public String getName() {
-        return ComponentUtils.getFormatted(getNameComponent());
-    }
-
-    public abstract MutableComponent getNameComponent();
-
     public abstract class Condition {
         boolean satisfied = false;
 
@@ -142,7 +176,6 @@ public abstract class Feature {
 
         public void setSatisfied(boolean satisfied) {
             this.satisfied = satisfied;
-            checkConditions();
         }
     }
 }

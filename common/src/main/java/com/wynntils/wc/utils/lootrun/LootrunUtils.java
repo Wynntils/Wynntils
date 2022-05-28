@@ -13,8 +13,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.lootrun.objects.LootrunRenderType;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -84,11 +83,11 @@ public class LootrunUtils {
     }
 
     public static void enableFeature() {
-        FeatureRegistry.getFeatures().get(LootrunFeature.class).tryEnable();
+        LootrunFeature.INSTANCE.tryEnable();
     }
 
     public static void disableFeature() {
-        FeatureRegistry.getFeatures().get(LootrunFeature.class).tryDisable();
+        LootrunFeature.INSTANCE.tryDisable();
     }
 
     public static void render(PoseStack poseStack) {

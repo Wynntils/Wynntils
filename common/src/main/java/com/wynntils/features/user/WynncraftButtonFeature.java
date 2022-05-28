@@ -2,15 +2,14 @@
  * Copyright © Wynntils 2021-2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.user;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.objects.ServerIcon;
 import net.minecraft.client.Minecraft;
@@ -23,12 +22,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
-@FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class WynncraftButtonFeature extends FeatureBase {
-
-    public WynncraftButtonFeature() {
-        setupEventListener();
-    }
+@EventListener
+@FeatureInfo(stability = Stability.INVARIABLE)
+public class WynncraftButtonFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {

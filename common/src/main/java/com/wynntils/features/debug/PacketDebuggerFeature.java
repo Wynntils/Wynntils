@@ -5,7 +5,8 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.features.DebugFeatureBase;
+import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
@@ -34,7 +35,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class PacketDebuggerFeature extends DebugFeatureBase {
+@EventListener
+public class PacketDebuggerFeature extends DebugFeature {
 
     public static final boolean DEBUG_PACKETS = false;
 
@@ -67,10 +69,6 @@ public class PacketDebuggerFeature extends DebugFeatureBase {
             ServerboundMovePlayerPacket.Pos.class,
             ServerboundMovePlayerPacket.PosRot.class,
             ServerboundMovePlayerPacket.Rot.class);
-
-    public PacketDebuggerFeature() {
-        setupEventListener();
-    }
 
     private String describePacket(Packet<?> packet) {
         return ReflectionToStringBuilder.toString(packet, ToStringStyle.SHORT_PREFIX_STYLE)

@@ -2,15 +2,14 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.user;
 
 import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
 
-import com.wynntils.core.features.FeatureBase;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.GameplayImpact;
-import com.wynntils.core.features.properties.PerformanceImpact;
-import com.wynntils.core.features.properties.Stability;
+import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
@@ -22,19 +21,16 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
-public class EmeraldPouchHotkeyFeature extends FeatureBase {
+@FeatureInfo(stability = Stability.STABLE)
+public class EmeraldPouchHotkeyFeature extends UserFeature {
 
+    @RegisterKeyBind
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",
             GLFW.GLFW_KEY_UNKNOWN,
             "Wynntils",
             true,
             EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
-
-    public EmeraldPouchHotkeyFeature() {
-        setupKeyHolder(emeraldPouchKeybind);
-    }
 
     private static void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
