@@ -10,10 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to indicate whether an InternalFeature should begin as enabled or not
+ * Used to indicate that a feature should not be enabled automatically on load
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface StartEnabled {
-    boolean value() default true;
-}
+public @interface StartDisabled {}

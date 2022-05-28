@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.features.properties.StartEnabled;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -89,15 +89,14 @@ public class FeatureRegistry {
         // initialize & enable
         feature.init();
 
-        StartEnabled start = featureClass.getAnnotation(StartEnabled.class);
-        boolean startEnabled = (start == null || start.value());
+        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
 
         if (feature instanceof UserFeature userFeature) {
-            // TODO: this config value should be initialized with the value of startEnabled
+            // TODO: this config value should be initialized using value of startDisabled, if it doesn't exist
             if (!userFeature.userEnabled) return; // not enabled by user
 
             userFeature.tryEnable();
-        } else if (startEnabled) {
+        } else if (!startDisabled) {
             feature.tryEnable();
         }
     }
