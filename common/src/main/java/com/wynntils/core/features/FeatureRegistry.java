@@ -89,20 +89,15 @@ public class FeatureRegistry {
         // initialize & enable
         feature.init();
 
-        if (feature instanceof InternalFeature) {
-            StartEnabled start = featureClass.getAnnotation(StartEnabled.class);
-            if (start != null && !start.value()) return; // not set to start enabled
-
-            feature.tryEnable();
-        }
+        StartEnabled start = featureClass.getAnnotation(StartEnabled.class);
+        boolean startEnabled = (start == null || start.value());
 
         if (feature instanceof UserFeature userFeature) {
+            // TODO: this config value should be initialized with the value of startEnabled
             if (!userFeature.userEnabled) return; // not enabled by user
 
             userFeature.tryEnable();
-        }
-
-        if (feature instanceof DebugFeature) {
+        } else if (startEnabled) {
             feature.tryEnable();
         }
     }
