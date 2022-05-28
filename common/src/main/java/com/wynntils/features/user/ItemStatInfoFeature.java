@@ -7,12 +7,10 @@ package com.wynntils.features.user;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.STABLE)
 public class ItemStatInfoFeature extends UserFeature {
 
     // TODO: Replace these with configs

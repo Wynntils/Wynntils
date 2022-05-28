@@ -6,8 +6,6 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
@@ -26,7 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.STABLE)
 public class MountHorseHotkeyFeature extends UserFeature {
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse

@@ -10,8 +10,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
@@ -37,7 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @EventListener
-@FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.INVARIABLE)
 public class ItemScreenshotFeature extends UserFeature {
 
     @RegisterKeyBind

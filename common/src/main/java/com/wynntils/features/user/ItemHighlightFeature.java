@@ -7,8 +7,6 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -19,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
-@FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.MEDIUM, stability = Stability.STABLE)
+@FeatureInfo(stability = Stability.STABLE)
 public class ItemHighlightFeature extends UserFeature {
 
     @SubscribeEvent

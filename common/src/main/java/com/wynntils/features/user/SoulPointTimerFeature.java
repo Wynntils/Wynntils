@@ -7,8 +7,6 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.utils.ItemUtils;
@@ -24,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
+@FeatureInfo(stability = Stability.STABLE)
 public class SoulPointTimerFeature extends UserFeature {
 
     @SubscribeEvent

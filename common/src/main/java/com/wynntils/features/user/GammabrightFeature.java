@@ -6,15 +6,13 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.INVARIABLE)
 public class GammabrightFeature extends UserFeature {
 
     private double lastGamma = 1f;

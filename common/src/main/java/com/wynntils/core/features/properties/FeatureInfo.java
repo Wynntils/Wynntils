@@ -15,12 +15,6 @@ public @interface FeatureInfo {
     /** Subjective stability of feature */
     Stability stability() default Stability.STABLE;
 
-    /** Subjective Gameplay impact of feature */
-    GameplayImpact gameplay() default GameplayImpact.MEDIUM;
-
-    /** Subjective Performance impact of feature */
-    PerformanceImpact performance() default PerformanceImpact.MEDIUM;
-
     /**
      * How stable a feature is to wynncraft changes, how able it is to be maintained, and other similar
      * judgements. Subjective.
@@ -30,27 +24,5 @@ public @interface FeatureInfo {
         UNSTABLE,
         STABLE,
         INVARIABLE
-    }
-
-    /**
-     * How much impact on gameplay a feature has. For example, a more important feature like a minimap
-     * would have a larger impact than a smaller feature like blocking health pots. Subjective.
-     */
-    enum GameplayImpact {
-        SMALL,
-        MEDIUM,
-        LARGE,
-        EXTREME
-    }
-
-    /**
-     * How much performance strain the feature causes. For example, cached chunks would have a higher
-     * performance impact than a Wynncraft Button. Subjective.
-     */
-    enum PerformanceImpact {
-        SMALL,
-        MEDIUM,
-        LARGE,
-        EXTREME
     }
 }

@@ -8,8 +8,6 @@ import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
@@ -23,7 +21,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
 
     @RegisterKeyBind

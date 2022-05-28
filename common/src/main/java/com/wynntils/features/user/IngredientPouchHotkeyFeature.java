@@ -8,8 +8,6 @@ import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.LEFT_CLICK;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
-import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
@@ -18,7 +16,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
+@FeatureInfo(stability = Stability.STABLE)
 public class IngredientPouchHotkeyFeature extends UserFeature {
 
     @RegisterKeyBind
