@@ -37,7 +37,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @EventListener
 public class PacketDebuggerFeature extends DebugFeature {
-    public static PacketDebuggerFeature INSTANCE;
 
     public static final boolean DEBUG_PACKETS = false;
 

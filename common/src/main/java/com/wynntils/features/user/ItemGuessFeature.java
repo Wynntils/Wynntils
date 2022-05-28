@@ -14,7 +14,6 @@ import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.LARGE, stability = Stability.STABLE)
 public class ItemGuessFeature extends UserFeature {
-    public static ItemGuessFeature INSTANCE;
 
     // TODO replace with config
     public static final boolean showGuessesPrice = true;

@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @FeatureInfo(performance = PerformanceImpact.SMALL, gameplay = GameplayImpact.MEDIUM, stability = Stability.STABLE)
 public class ItemHighlightFeature extends UserFeature {
-    public static ItemHighlightFeature INSTANCE;
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {

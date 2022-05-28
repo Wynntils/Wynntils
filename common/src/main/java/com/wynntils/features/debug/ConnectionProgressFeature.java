@@ -14,7 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
 public class ConnectionProgressFeature extends DebugFeature {
-    public static ConnectionProgressFeature INSTANCE;
 
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {

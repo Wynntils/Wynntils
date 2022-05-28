@@ -26,7 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
 public class SoulPointTimerFeature extends UserFeature {
-    public static SoulPointTimerFeature INSTANCE;
 
     @SubscribeEvent
     public void onItemsReceived(ItemsReceivedEvent e) {

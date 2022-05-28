@@ -26,7 +26,6 @@ import org.lwjgl.glfw.GLFW;
 @KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
-    public static EmeraldPouchHotkeyFeature INSTANCE;
 
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",

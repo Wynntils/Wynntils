@@ -21,7 +21,6 @@ import org.lwjgl.glfw.GLFW;
 @KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class IngredientPouchHotkeyFeature extends UserFeature {
-    public static IngredientPouchHotkeyFeature INSTANCE;
 
     private final KeyHolder ingredientPouchKeybind = new KeyHolder(
             "Open Ingredient Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, this::onOpenIngredientPouchKeyPress);

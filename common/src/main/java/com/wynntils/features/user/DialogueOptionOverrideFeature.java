@@ -19,7 +19,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
 public class DialogueOptionOverrideFeature extends UserFeature {
-    public static DialogueOptionOverrideFeature INSTANCE;
 
     @SubscribeEvent
     public void onDialogueKeyPress(KeyInputEvent e) {

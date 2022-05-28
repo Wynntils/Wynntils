@@ -40,7 +40,6 @@ import org.lwjgl.glfw.GLFW;
 @KeyBinds
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class ItemScreenshotFeature extends UserFeature {
-    public static ItemScreenshotFeature INSTANCE;
 
     private final KeyHolder itemScreenshotKeybind =
             new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});

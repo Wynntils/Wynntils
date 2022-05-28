@@ -14,7 +14,6 @@ import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
 public class ItemStatInfoFeature extends UserFeature {
-    public static ItemStatInfoFeature INSTANCE;
 
     // TODO: Replace these with configs
     public static final boolean showStars = true;

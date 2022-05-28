@@ -23,7 +23,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.MEDIUM)
 public class HealthPotionBlockerFeature extends UserFeature {
-    public static HealthPotionBlockerFeature INSTANCE;
 
     @SubscribeEvent
     public void onPotionUse(PacketSentEvent<ServerboundUseItemPacket> e) {

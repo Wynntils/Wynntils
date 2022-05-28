@@ -29,7 +29,6 @@ import org.lwjgl.glfw.GLFW;
 @KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class MountHorseHotkeyFeature extends UserFeature {
-    public static MountHorseHotkeyFeature INSTANCE;
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;

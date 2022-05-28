@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 @EventListener
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class WynncraftButtonFeature extends UserFeature {
-    public static WynncraftButtonFeature INSTANCE;
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {

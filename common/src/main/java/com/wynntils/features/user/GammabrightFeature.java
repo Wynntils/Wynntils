@@ -17,7 +17,6 @@ import org.lwjgl.glfw.GLFW;
 @KeyBinds
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.LARGE, performance = PerformanceImpact.SMALL)
 public class GammabrightFeature extends UserFeature {
-    public static GammabrightFeature INSTANCE;
 
     private double lastGamma = 1f;
 

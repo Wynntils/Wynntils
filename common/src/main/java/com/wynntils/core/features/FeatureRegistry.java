@@ -59,8 +59,12 @@ public class FeatureRegistry {
 
         // instance field
         try {
-            Field instanceField = featureClass.getDeclaredField("INSTANCE");
-            instanceField.set(null, feature);
+            for (Field f : featureClass.getDeclaredFields()) {
+                if (!f.getName().equals("INSTANCE")) continue;
+
+                f.set(null, feature);
+                break;
+            }
         } catch (Exception e) {
             Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();

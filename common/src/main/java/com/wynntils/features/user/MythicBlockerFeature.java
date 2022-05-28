@@ -24,7 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.SMALL, performance = PerformanceImpact.SMALL)
 public class MythicBlockerFeature extends UserFeature {
-    public static MythicBlockerFeature INSTANCE;
 
     @SubscribeEvent
     public void onChestCloseAttempt(InventoryKeyPressEvent e) {

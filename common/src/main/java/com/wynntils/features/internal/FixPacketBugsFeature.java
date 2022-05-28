@@ -24,7 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @StartEnabled
 public class FixPacketBugsFeature extends InternalFeature {
-    public static FixPacketBugsFeature INSTANCE;
 
     private static final int METHOD_ADD = 0;
 
