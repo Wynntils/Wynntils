@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
 import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
@@ -23,10 +23,10 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-@KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
 
+    @RegisterKeyBind
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",
             GLFW.GLFW_KEY_UNKNOWN,

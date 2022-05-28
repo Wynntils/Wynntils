@@ -11,17 +11,17 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
 import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import org.lwjgl.glfw.GLFW;
 
-@KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class IngredientPouchHotkeyFeature extends UserFeature {
 
+    @RegisterKeyBind
     private final KeyHolder ingredientPouchKeybind = new KeyHolder(
             "Open Ingredient Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, this::onOpenIngredientPouchKeyPress);
 

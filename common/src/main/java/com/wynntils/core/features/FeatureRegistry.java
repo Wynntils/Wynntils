@@ -8,7 +8,7 @@ import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
-import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartEnabled;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.features.debug.ConnectionProgressFeature;
@@ -38,6 +38,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
@@ -59,12 +60,8 @@ public class FeatureRegistry {
 
         // instance field
         try {
-            for (Field f : featureClass.getDeclaredFields()) {
-                if (!f.getName().equals("INSTANCE")) continue;
-
-                f.set(null, feature);
-                break;
-            }
+            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE");
+            if (instanceField != null) instanceField.set(null, feature);
         } catch (Exception e) {
             Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();
@@ -77,19 +74,15 @@ public class FeatureRegistry {
         }
 
         // register key binds
-        if (featureClass.isAnnotationPresent(KeyBinds.class)) {
-            for (Field f : featureClass.getDeclaredFields()) {
-                if (!f.getType().equals(KeyHolder.class)) continue;
+        for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {
+            if (!f.getType().equals(KeyHolder.class)) continue;
 
-                try {
-                    f.setAccessible(true);
-                    KeyHolder keyHolder = (KeyHolder) f.get(feature);
-                    feature.setupKeyHolder(keyHolder);
-                } catch (Exception e) {
-                    Reference.LOGGER.error(
-                            "Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
-                    e.printStackTrace();
-                }
+            try {
+                KeyHolder keyHolder = (KeyHolder) FieldUtils.readField(f, feature, true);
+                feature.setupKeyHolder(keyHolder);
+            } catch (Exception e) {
+                Reference.LOGGER.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
+                e.printStackTrace();
             }
         }
 

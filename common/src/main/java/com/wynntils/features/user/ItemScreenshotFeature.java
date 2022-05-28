@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
 import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -37,10 +37,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @EventListener
-@KeyBinds
 @FeatureInfo(stability = Stability.INVARIABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class ItemScreenshotFeature extends UserFeature {
 
+    @RegisterKeyBind
     private final KeyHolder itemScreenshotKeybind =
             new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});
 

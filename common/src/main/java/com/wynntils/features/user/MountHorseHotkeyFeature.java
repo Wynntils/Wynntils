@@ -9,7 +9,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.GameplayImpact;
 import com.wynntils.core.features.properties.FeatureInfo.PerformanceImpact;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.features.properties.KeyBinds;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -26,7 +26,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import org.lwjgl.glfw.GLFW;
 
-@KeyBinds
 @FeatureInfo(stability = Stability.STABLE, gameplay = GameplayImpact.MEDIUM, performance = PerformanceImpact.SMALL)
 public class MountHorseHotkeyFeature extends UserFeature {
 
@@ -37,6 +36,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
     private static int prevItem = -1;
     private static boolean alreadySetPrevItem = false;
 
+    @RegisterKeyBind
     private final KeyHolder mountHorseKeybind = new KeyHolder(
             "Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, MountHorseHotkeyFeature::onMountHorseKeyPress);
 

@@ -10,8 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to indicate that a feature has keybinds that must be registered.
+ * Used to indicate a KeyHolder inside a feature, so it can be properly registered
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface KeyBinds {}
+@Target(ElementType.FIELD)
+public @interface RegisterKeyBind {}
