@@ -47,7 +47,8 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
     private void keyPressedPre(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)) {
+        if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)
+                .isCanceled()) {
             cir.setReturnValue(true);
         }
     }

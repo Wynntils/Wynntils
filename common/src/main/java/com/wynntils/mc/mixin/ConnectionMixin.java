@@ -28,7 +28,7 @@ public abstract class ConnectionMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void channelRead0Pre(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
-        if (EventFactory.onPacketReceived(packet)) {
+        if (EventFactory.onPacketReceived(packet).isCanceled()) {
             ci.cancel();
         }
     }
@@ -41,7 +41,7 @@ public abstract class ConnectionMixin {
             Packet<?> packet,
             GenericFutureListener<? extends Future<? super Void>> genericFutureListener,
             CallbackInfo ci) {
-        if (EventFactory.onPacketSent(packet)) {
+        if (EventFactory.onPacketSent(packet).isCanceled()) {
             ci.cancel();
         }
     }

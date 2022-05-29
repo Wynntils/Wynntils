@@ -77,8 +77,9 @@ import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
-    private static void post(Event event) {
+    private static <T extends Event> T post(T event) {
         WynntilsMod.getEventBus().post(event);
+        return event;
     }
 
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
@@ -149,10 +150,9 @@ public class EventFactory {
         post(new HotbarSlotRenderEvent.Post(stack, x, y));
     }
 
-    public static boolean onInventoryKeyPress(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
-        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot);
-        post(event);
-        return event.isCanceled();
+    public static InventoryKeyPressEvent onInventoryKeyPress(
+            int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
+        return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
     }
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
@@ -172,42 +172,30 @@ public class EventFactory {
         post(new ResourcePackEvent());
     }
 
-    public static boolean onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
-        SetPlayerTeamEvent event =
-                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
-        post(event);
-        return event.isCanceled();
+    public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
+        return post(new SetPlayerTeamEvent(
+                ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
     }
 
-    public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
-        RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
-        post(event);
-        return event.isCanceled();
+    public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        return post(new RemovePlayerFromTeamEvent(username, playerTeam));
     }
 
-    public static boolean onBossHealthUpdate(
+    public static BossHealthUpdateEvent onBossHealthUpdate(
             ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
-        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
-        post(event);
-        return event.isCanceled();
+        return post(new BossHealthUpdateEvent(packet, bossEvents));
     }
 
-    public static boolean onSetSpawn(BlockPos spawnPos) {
-        SetSpawnEvent event = new SetSpawnEvent(spawnPos);
-        post(event);
-        return event.isCanceled();
+    public static SetSpawnEvent onSetSpawn(BlockPos spawnPos) {
+        return post(new SetSpawnEvent(spawnPos));
     }
 
-    public static <T extends Packet<?>> boolean onPacketSent(T packet) {
-        PacketSentEvent<T> event = new PacketSentEvent<>(packet);
-        post(event);
-        return event.isCanceled();
+    public static <T extends Packet<?>> PacketSentEvent<T> onPacketSent(T packet) {
+        return post(new PacketSentEvent<>(packet));
     }
 
-    public static <T extends Packet<?>> boolean onPacketReceived(T packet) {
-        PacketReceivedEvent<T> event = new PacketReceivedEvent<>(packet);
-        post(event);
-        return event.isCanceled();
+    public static <T extends Packet<?>> PacketReceivedEvent<T> onPacketReceived(T packet) {
+        return post(new PacketReceivedEvent<>(packet));
     }
 
     public static void onTickStart() {
@@ -241,10 +229,8 @@ public class EventFactory {
         post(new KeyInputEvent(key, scanCode, action, modifiers));
     }
 
-    public static boolean onChatSend(String message) {
-        ChatSendMessageEvent event = new ChatSendMessageEvent(message);
-        post(event);
-        return event.isCanceled();
+    public static ChatSendMessageEvent onChatSend(String message) {
+        return post(new ChatSendMessageEvent(message));
     }
 
     public static void onRenderLast(

@@ -28,7 +28,7 @@ public abstract class BossHealthOverlayMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
-        if (EventFactory.onBossHealthUpdate(packet, events)) {
+        if (EventFactory.onBossHealthUpdate(packet, events).isCanceled()) {
             ci.cancel();
         }
     }
