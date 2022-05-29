@@ -36,6 +36,7 @@ import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -64,6 +65,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -129,7 +131,6 @@ public class EventFactory {
     // endregion
 
     // region Screen Events
-
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
             post(new TitleScreenInitEvent(titleScreen, addButton));
@@ -154,6 +155,10 @@ public class EventFactory {
 
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
         post(new ItemsReceivedEvent(container, items));
+    }
+
+    public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
+        return post(new SetSlotEvent(container, slot, item));
     }
 
     public static InventoryKeyPressEvent onInventoryKeyPress(

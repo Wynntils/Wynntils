@@ -14,6 +14,7 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.internal.FixPacketBugsFeature;
+import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
@@ -118,9 +119,14 @@ public class FeatureRegistry {
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
 
+        // internal
+        registerFeature(new LootrunFeature());
+        registerFeature(new FixPacketBugsFeature());
+        registerFeature(new ItemStackTransformerFeature());
+
+        // user
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
-        registerFeature(new FixPacketBugsFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
@@ -128,7 +134,6 @@ public class FeatureRegistry {
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
-        registerFeature(new LootrunFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
