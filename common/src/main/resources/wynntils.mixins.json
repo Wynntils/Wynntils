@@ -21,7 +21,8 @@
     "ScreenMixin",
     "SlotMixin",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
-    "accessors.OptionsAccessor"
+    "accessors.OptionsAccessor",
+    "accessors.GuiAccessor"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {

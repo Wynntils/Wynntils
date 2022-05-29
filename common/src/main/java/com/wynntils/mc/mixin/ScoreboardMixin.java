@@ -19,7 +19,7 @@ public abstract class ScoreboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        if (EventFactory.onRemovePlayerFromTeam(username, playerTeam)) {
+        if (EventFactory.onRemovePlayerFromTeam(username, playerTeam).isCanceled()) {
             ci.cancel();
         }
     }

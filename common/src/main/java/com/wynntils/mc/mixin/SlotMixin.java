@@ -4,21 +4,27 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.wc.custom.ItemStackTransformer;
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.SetSlotEvent;
+import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin {
-    @ModifyVariable(
+    @Redirect(
             method = "set(Lnet/minecraft/world/item/ItemStack;)V",
-            at = @At("HEAD"),
-            argsOnly = true,
-            ordinal = 0)
-    private ItemStack transformItemStack(ItemStack stack) {
-        return ItemStackTransformer.transform(stack);
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
+    private void redirectSetItem(Container container, int slot, ItemStack stack) {
+        SetSlotEvent result = EventFactory.onSetSlot(container, slot, stack);
+        if (result.isCanceled()) return;
+
+        container.setItem(slot, result.getItem());
     }
 }

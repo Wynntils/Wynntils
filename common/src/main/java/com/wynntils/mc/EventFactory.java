@@ -36,6 +36,7 @@ import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -64,6 +65,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -77,52 +79,30 @@ import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
 public class EventFactory {
-    private static void post(Event event) {
+    private static <T extends Event> T post(T event) {
         WynntilsMod.getEventBus().post(event);
+        return event;
     }
 
-    public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
-        if (screen instanceof TitleScreen titleScreen) {
-            post(new TitleScreenInitEvent(titleScreen, addButton));
-        } else if (screen instanceof PauseScreen gameMenuScreen) {
-            post(new GameMenuInitEvent(gameMenuScreen, addButton));
-        }
-    }
-
-    public static void onScreenOpened(Screen screen) {
-        post(new ScreenOpenedEvent(screen));
-    }
-
+    // region Wynntils Events
     public static void onWebSetup() {
         post(new WebSetupEvent());
+    }
+    // endregion
+
+    // region Render Events
+    public static void onRenderLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano) {
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
     }
 
     public static void onInventoryRender(
             Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
         post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
-    }
-
-    public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
-        Action action = packet.getAction();
-        List<PlayerUpdate> entries = packet.getEntries();
-
-        if (action == Action.UPDATE_DISPLAY_NAME) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                if (entry.getDisplayName() == null) continue;
-                post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()));
-            }
-        } else if (action == Action.ADD_PLAYER) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                post(new PlayerLogInEvent(profile.getId(), profile.getName()));
-            }
-        } else if (action == Action.REMOVE_PLAYER) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                post(new PlayerLogOutEvent(profile.getId()));
-            }
-        }
     }
 
     public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
@@ -148,18 +128,75 @@ public class EventFactory {
     public static void onHotbarSlotRenderPost(ItemStack stack, int x, int y) {
         post(new HotbarSlotRenderEvent.Post(stack, x, y));
     }
+    // endregion
 
-    public static boolean onInventoryKeyPress(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
-        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot);
+    // region Screen Events
+    public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
+        if (screen instanceof TitleScreen titleScreen) {
+            post(new TitleScreenInitEvent(titleScreen, addButton));
+        } else if (screen instanceof PauseScreen gameMenuScreen) {
+            post(new GameMenuInitEvent(gameMenuScreen, addButton));
+        }
+    }
+
+    public static void onScreenOpened(Screen screen) {
+        post(new ScreenOpenedEvent(screen));
+    }
+
+    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
+        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()));
+    }
+    // endregion
+
+    // region Container Events
+    public static void onContainerClose(ClientboundContainerClosePacket packet) {
+        post(new MenuClosedEvent());
+    }
+
+    public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
+        post(new ItemsReceivedEvent(container, items));
+    }
+
+    public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
+        return post(new SetSlotEvent(container, slot, item));
+    }
+
+    public static InventoryKeyPressEvent onInventoryKeyPress(
+            int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
+        return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
+    }
+
+    public static void onContainerClickEvent(
+            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
+        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
+    }
+    // endregion
+
+    // region Player Input Events
+    public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {
+        if (!packet.getRelativeArguments().isEmpty()) return;
+
+        Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
+        post(new PlayerTeleportEvent(newPosition));
+    }
+
+    public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
+        post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
+
+    public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
+        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
         post(event);
-        return event.isCanceled();
     }
+    // endregion
 
-    public static void onTabListCustomisation(ClientboundTabListPacket packet) {
-        String footer = packet.getFooter().getString();
-        post(new PlayerInfoFooterChangedEvent(footer));
+    // region Chat Events
+    public static ChatSendMessageEvent onChatSend(String message) {
+        return post(new ChatSendMessageEvent(message));
     }
+    // endregion
 
+    // region Server Events
     public static void onDisconnect() {
         post(new DisconnectedEvent());
     }
@@ -172,44 +209,64 @@ public class EventFactory {
         post(new ResourcePackEvent());
     }
 
-    public static boolean onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
-        SetPlayerTeamEvent event =
-                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
-        post(event);
-        return event.isCanceled();
+    public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
+        return post(new SetPlayerTeamEvent(
+                ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
     }
 
-    public static boolean onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
-        RemovePlayerFromTeamEvent event = new RemovePlayerFromTeamEvent(username, playerTeam);
-        post(event);
-        return event.isCanceled();
+    public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        return post(new RemovePlayerFromTeamEvent(username, playerTeam));
     }
 
-    public static boolean onBossHealthUpdate(
+    public static BossHealthUpdateEvent onBossHealthUpdate(
             ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
-        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, bossEvents);
-        post(event);
-        return event.isCanceled();
+        return post(new BossHealthUpdateEvent(packet, bossEvents));
     }
 
-    public static boolean onSetSpawn(BlockPos spawnPos) {
-        SetSpawnEvent event = new SetSpawnEvent(spawnPos);
-        post(event);
-        return event.isCanceled();
+    public static SetSpawnEvent onSetSpawn(BlockPos spawnPos) {
+        return post(new SetSpawnEvent(spawnPos));
     }
 
-    public static <T extends Packet<?>> boolean onPacketSent(T packet) {
-        PacketSentEvent<T> event = new PacketSentEvent<>(packet);
-        post(event);
-        return event.isCanceled();
+    public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
+        Action action = packet.getAction();
+        List<PlayerUpdate> entries = packet.getEntries();
+
+        if (action == Action.UPDATE_DISPLAY_NAME) {
+            for (PlayerUpdate entry : entries) {
+                GameProfile profile = entry.getProfile();
+                if (entry.getDisplayName() == null) continue;
+                post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()));
+            }
+        } else if (action == Action.ADD_PLAYER) {
+            for (PlayerUpdate entry : entries) {
+                GameProfile profile = entry.getProfile();
+                post(new PlayerLogInEvent(profile.getId(), profile.getName()));
+            }
+        } else if (action == Action.REMOVE_PLAYER) {
+            for (PlayerUpdate entry : entries) {
+                GameProfile profile = entry.getProfile();
+                post(new PlayerLogOutEvent(profile.getId()));
+            }
+        }
     }
 
-    public static <T extends Packet<?>> boolean onPacketReceived(T packet) {
-        PacketReceivedEvent<T> event = new PacketReceivedEvent<>(packet);
-        post(event);
-        return event.isCanceled();
+    public static void onTabListCustomisation(ClientboundTabListPacket packet) {
+        String footer = packet.getFooter().getString();
+        post(new PlayerInfoFooterChangedEvent(footer));
+    }
+    // endregion
+
+    // region Packet Events
+    public static <T extends Packet<?>> PacketSentEvent<T> onPacketSent(T packet) {
+        return post(new PacketSentEvent<>(packet));
     }
 
+    public static <T extends Packet<?>> PacketReceivedEvent<T> onPacketReceived(T packet) {
+        return post(new PacketReceivedEvent<>(packet));
+    }
+    // endregion
+
+    // region Game Events
     public static void onTickStart() {
         post(new ClientTickEvent(ClientTickEvent.Phase.START));
     }
@@ -217,52 +274,5 @@ public class EventFactory {
     public static void onTickEnd() {
         post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
-
-    public static void onPlayerMove(ClientboundPlayerPositionPacket packet) {
-        if (!packet.getRelativeArguments().isEmpty()) return;
-
-        Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
-        post(new PlayerTeleportEvent(newPosition));
-    }
-
-    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
-        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()));
-    }
-
-    public static void onContainerClose(ClientboundContainerClosePacket packet) {
-        post(new MenuClosedEvent());
-    }
-
-    public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
-        post(new ItemsReceivedEvent(container, items));
-    }
-
-    public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
-        post(new KeyInputEvent(key, scanCode, action, modifiers));
-    }
-
-    public static boolean onChatSend(String message) {
-        ChatSendMessageEvent event = new ChatSendMessageEvent(message);
-        post(event);
-        return event.isCanceled();
-    }
-
-    public static void onRenderLast(
-            LevelRenderer context,
-            PoseStack poseStack,
-            float partialTick,
-            Matrix4f projectionMatrix,
-            long finishTimeNano) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
-    }
-
-    public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
-        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
-        post(event);
-    }
-
-    public static void onContainerClickEvent(
-            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
-    }
+    // endregion
 }

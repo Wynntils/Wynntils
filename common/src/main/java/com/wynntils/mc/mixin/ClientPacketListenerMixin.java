@@ -76,14 +76,14 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
-        if (EventFactory.onSetPlayerTeam(packet)) {
+        if (EventFactory.onSetPlayerTeam(packet).isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
-        if (EventFactory.onSetSpawn(packet.getPos())) {
+        if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
             ci.cancel();
         }
     }
