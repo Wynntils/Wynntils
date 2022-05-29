@@ -43,7 +43,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void transformItem(SetSlotEvent event) {
+    public void onSetSlot(SetSlotEvent event) {
         if (!WynnUtils.onServer()) return;
 
         ItemStack stack = event.getItem();
