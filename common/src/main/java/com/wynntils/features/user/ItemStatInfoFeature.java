@@ -5,25 +5,40 @@
 package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.config.properties.ConfigOption;
+import com.wynntils.core.config.properties.Configurable;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE)
+@Configurable(category = "Item Identifications")
 public class ItemStatInfoFeature extends UserFeature {
 
-    // TODO: Replace these with configs
-    public static final boolean showStars = true;
-    public static final boolean colorLerp = true;
+    @ConfigOption(displayName = "Show Stars")
+    public static boolean showStars = true;
 
-    public static final boolean perfect = true;
-    public static final boolean defective = true;
-    public static final float obfuscationChanceStart = 0.08f;
-    public static final float obfuscationChanceEnd = 0.04f;
+    @ConfigOption(displayName = "Color Lerp")
+    public static boolean colorLerp = true;
 
-    public static final boolean reorderIdentifications = true;
-    public static final boolean groupIdentifications = true;
+    @ConfigOption(displayName = "Rainbow Perfect Items")
+    public static boolean perfect = true;
+
+    @ConfigOption(displayName = "Obfuscated Defective Items")
+    public static boolean defective = true;
+
+    @ConfigOption(displayName = "Obfuscation Start Chance")
+    public static float obfuscationChanceStart = 0.08f;
+
+    @ConfigOption(displayName = "Obfuscation End Chance")
+    public static float obfuscationChanceEnd = 0.04f;
+
+    @ConfigOption(displayName = "Reorder Identifications")
+    public static boolean reorderIdentifications = true;
+
+    @ConfigOption(displayName = "Group Identifications")
+    public static boolean groupIdentifications = true;
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {

@@ -6,6 +6,8 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.config.properties.Configurable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -86,6 +88,11 @@ public class FeatureRegistry {
                 Reference.LOGGER.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
                 e.printStackTrace();
             }
+        }
+
+        // register config options
+        if (featureClass.isAnnotationPresent(Configurable.class)) {
+            ConfigManager.registerConfigurable(featureClass);
         }
 
         // initialize & enable

@@ -5,6 +5,7 @@
 package com.wynntils.core;
 
 import com.wynntils.core.commands.ClientCommandManager;
+import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
@@ -40,6 +41,7 @@ public class WynntilsMod {
         parseVersion(modVersion);
 
         WebManager.init();
+        ConfigManager.init();
 
         ClientCommandManager.init();
         KeyManager.init();
