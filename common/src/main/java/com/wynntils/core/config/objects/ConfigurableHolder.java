@@ -6,12 +6,11 @@ package com.wynntils.core.config.objects;
 
 import com.wynntils.core.config.properties.Configurable;
 import java.util.List;
-import java.util.Locale;
 
 public class ConfigurableHolder {
-    private Class<?> configurableClass;
-    private List<ConfigOptionHolder> options;
-    private Configurable metadata;
+    private final Class<?> configurableClass;
+    private final List<ConfigOptionHolder> options;
+    private final Configurable metadata;
 
     public ConfigurableHolder(Class<?> configurableClass, List<ConfigOptionHolder> options, Configurable metadata) {
         this.configurableClass = configurableClass;
@@ -27,11 +26,11 @@ public class ConfigurableHolder {
         return metadata;
     }
 
-    public String getCategoryFileName() {
-        return metadata.category().toLowerCase(Locale.ROOT).replace(" ", "_");
+    public String getCategory() {
+        return metadata.category();
     }
 
     public String getJsonName() {
-        return configurableClass.getName();
+        return configurableClass.getSimpleName();
     }
 }

@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE)
-@Configurable(category = "Item Identifications")
+@Configurable(category = "Item Tooltips")
 public class ItemStatInfoFeature extends UserFeature {
 
     @ConfigOption(displayName = "Show Stars")

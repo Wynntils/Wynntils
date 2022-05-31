@@ -90,18 +90,22 @@ public class FeatureRegistry {
             }
         }
 
-        // register config options
+        // determine if feature should be enabled & set default enabled value for user features
+        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
+        if (feature instanceof UserFeature userFeature) {
+            userFeature.userEnabled = !startDisabled;
+        }
+
+        // register & load config options
+        // this has to be done after the userEnabled handling above, so the default value registers properly
         if (featureClass.isAnnotationPresent(Configurable.class)) {
-            ConfigManager.registerConfigurable(featureClass);
+            ConfigManager.registerConfigurable(feature);
         }
 
         // initialize & enable
         feature.init();
 
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-
         if (feature instanceof UserFeature userFeature) {
-            // TODO: this config value should be initialized using value of startDisabled, if it doesn't exist
             if (!userFeature.userEnabled) return; // not enabled by user
 
             userFeature.tryEnable();
@@ -148,6 +152,9 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
+
+        // save/create config files after loading all features' options
+        ConfigManager.saveConfigs();
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 

@@ -12,11 +12,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.objects.ConfigCategoryHolder;
 import com.wynntils.core.config.objects.ConfigOptionHolder;
 import com.wynntils.core.config.objects.ConfigurableHolder;
 import com.wynntils.core.config.properties.ConfigOption;
 import com.wynntils.core.config.properties.Configurable;
-import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,29 +28,25 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
-    public static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "configs");
+    private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "configs");
+    private static final String FILE_SUFFIX = ".config";
 
+    private static final List<ConfigCategoryHolder> configCategories = new ArrayList<>();
     private static File userConfigs;
-
-    /**
-     * Issue: multiple containers under same parent category
-     * Use map of category names to list of containers? Could make category holder object as well
-     *
-     */
-    private static List<ConfigurableHolder> configContainers = new ArrayList<>();
 
     private static Gson gson;
 
-    public static void registerConfigurable(Class<?> configurableClass) {
-        ConfigurableHolder configurable = configurableFromClass(configurableClass);
+    public static void registerConfigurable(Object configurableObject) {
+        ConfigurableHolder configurable = configurableFromObject(configurableObject);
         if (configurable == null) return; // not a valid configurable
 
-        configContainers.add(configurable);
+        // add configurable to its corresponding category, then try to load it from file
+        getOrCreateCategory(configurable.getCategory()).addConfigurable(configurable);
         loadConfig(configurable);
-        // saveConfig(configurable);
     }
 
     public static void init() {
@@ -63,46 +59,69 @@ public class ConfigManager {
     }
 
     private static void loadConfig(ConfigurableHolder configurable) {
+        String fileName = categoryToFileName(configurable.getCategory());
         try {
-            File configFile = new File(userConfigs, configurable.getCategoryFileName() + ".config");
+            File configFile = new File(userConfigs, fileName);
             if (!configFile.exists()) return; // nothing to load
 
             InputStreamReader reader = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8);
-            JsonElement element = JsonParser.parseReader(new JsonReader(reader));
+            JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
             reader.close();
-            if (!element.isJsonObject()) return; // invalid config file
+            if (!fileElement.isJsonObject()) return; // invalid config file
 
-            // attempt to load each value from the file
-            JsonObject configJson = element.getAsJsonObject();
-            for (String optionName : configJson.keySet()) {
-                tryUpdateOption(configurable, optionName, configJson.get(optionName));
+            // find configurable's section in file
+            JsonObject fileObject = fileElement.getAsJsonObject();
+            if (!fileObject.has(configurable.getJsonName())) return; // section doesn't exist, nothing to load
+            JsonObject configObject = fileObject.getAsJsonObject(configurable.getJsonName());
+
+            // attempt to load each value from the object
+            for (String optionName : configObject.keySet()) {
+                tryUpdateOption(configurable, optionName, configObject.get(optionName));
             }
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to load config: " + configurable.getCategoryFileName());
+            Reference.LOGGER.error("Failed to load config: " + fileName);
             e.printStackTrace();
         }
     }
 
-    private static void saveConfig(ConfigurableHolder configurable) {
+    private static void saveConfig(ConfigCategoryHolder category) {
+        String fileName = categoryToFileName(category.getName());
         try {
             // get file, create if necessary
-            File configFile = new File(userConfigs, configurable.getCategoryFileName() + ".config");
+            File configFile = new File(userConfigs, fileName);
             if (!configFile.exists()) configFile.createNewFile();
 
+            // create json object, with entry for each configurable
+            JsonObject configJson = new JsonObject();
+            for (ConfigurableHolder configurable : category.getConfigurables()) {
+                JsonObject configurableJson = configurableAsJson(configurable);
+                configJson.add(configurable.getJsonName(), configurableJson);
+            }
+
             // write json to file
-            JsonObject configJson = configurableAsJson(configurable);
             OutputStreamWriter fileWriter =
                     new OutputStreamWriter(new FileOutputStream(configFile), StandardCharsets.UTF_8);
             gson.toJson(configJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to save config: " + configurable.getCategoryFileName());
+            Reference.LOGGER.error("Failed to save config: " + fileName);
             e.printStackTrace();
         }
     }
 
     public static void saveConfigs() {
-        configContainers.forEach(ConfigManager::saveConfig);
+        configCategories.forEach(ConfigManager::saveConfig);
+    }
+
+    public static ConfigCategoryHolder getOrCreateCategory(String name) {
+        for (ConfigCategoryHolder category : configCategories) {
+            if (category.getName().equals(name)) return category;
+        }
+
+        // category doesn't exist yet, has to be created
+        ConfigCategoryHolder newCategory = new ConfigCategoryHolder(name);
+        configCategories.add(newCategory);
+        return newCategory;
     }
 
     private static void tryUpdateOption(ConfigurableHolder configurable, String optionName, JsonElement valueJson) {
@@ -125,7 +144,13 @@ public class ConfigManager {
         return json;
     }
 
-    private static ConfigurableHolder configurableFromClass(Class<?> configurableClass) {
+    private static String categoryToFileName(String categoryName) {
+        return categoryName.toLowerCase(Locale.ROOT).replace(" ", "_").replace("/", "-") + FILE_SUFFIX;
+    }
+
+    private static ConfigurableHolder configurableFromObject(Object configurableObject) {
+        Class<?> configurableClass = configurableObject.getClass();
+
         Configurable metadata = configurableClass.getAnnotation(Configurable.class);
         if (metadata == null || metadata.category().isEmpty()) return null; // not a valid config container
 
@@ -133,24 +158,21 @@ public class ConfigManager {
 
         // collect options
         for (Field f : FieldUtils.getFieldsWithAnnotation(configurableClass, ConfigOption.class)) {
-            ConfigOptionHolder option = optionFromField(f);
+            ConfigOptionHolder option = optionFromField(configurableObject, f);
             if (option == null) continue;
-
-            // special handling for user features that are disabled by default
-            if (f.getName().equals("userEnabled") && configurableClass.isAnnotationPresent(StartDisabled.class)) {
-                option.setValue(false);
-            }
 
             options.add(option);
         }
 
+        if (options.isEmpty()) return null; // configurable contains no options, so not valid
+
         return new ConfigurableHolder(configurableClass, options, metadata);
     }
 
-    private static ConfigOptionHolder optionFromField(Field field) {
+    private static ConfigOptionHolder optionFromField(Object parent, Field field) {
         ConfigOption metadata = field.getAnnotation(ConfigOption.class);
         if (metadata == null || metadata.displayName().isEmpty()) return null; // not a valid config variable
 
-        return new ConfigOptionHolder(field, field.getType(), metadata);
+        return new ConfigOptionHolder(parent, field, metadata);
     }
 }

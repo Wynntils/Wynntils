@@ -7,17 +7,24 @@ package com.wynntils.core.config.objects;
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.properties.ConfigOption;
 import java.lang.reflect.Field;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigOptionHolder {
+    private final Object parent;
+    private final Field optionField;
+    private final Class<?> optionType;
+    private final ConfigOption metadata;
 
-    private Field optionField;
-    private Class<?> optionType;
-    private ConfigOption metadata;
+    private final Object defaultValue;
 
-    public ConfigOptionHolder(Field field, Class<?> type, ConfigOption metadata) {
+    public ConfigOptionHolder(Object parent, Field field, ConfigOption metadata) {
+        this.parent = parent;
         this.optionField = field;
-        this.optionType = type;
+        this.optionType = field.getType();
         this.metadata = metadata;
+
+        // save default value to enable easy resetting
+        this.defaultValue = getValue();
     }
 
     public Class<?> getType() {
@@ -38,7 +45,7 @@ public class ConfigOptionHolder {
 
     public Object getValue() {
         try {
-            return optionField.get(null);
+            return FieldUtils.readField(optionField, parent, true);
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to get config option " + getOptionJsonName());
             e.printStackTrace();
@@ -48,10 +55,14 @@ public class ConfigOptionHolder {
 
     public void setValue(Object value) {
         try {
-            optionField.set(null, value);
+            FieldUtils.writeField(optionField, parent, value, true);
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set config option " + getOptionJsonName());
             e.printStackTrace();
         }
+    }
+
+    public void reset() {
+        setValue(defaultValue);
     }
 }
