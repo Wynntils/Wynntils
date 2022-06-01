@@ -153,8 +153,8 @@ public class FeatureRegistry {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
 
-        // save/create config files after loading all features' options
-        ConfigManager.saveConfigs();
+        // save/create config file after loading all features' options
+        ConfigManager.saveConfig();
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 

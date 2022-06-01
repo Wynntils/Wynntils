@@ -39,7 +39,7 @@ public class ConfigOptionHolder {
         return metadata;
     }
 
-    public String getOptionJsonName() {
+    public String getJsonName() {
         return optionField.getName();
     }
 
@@ -47,7 +47,7 @@ public class ConfigOptionHolder {
         try {
             return FieldUtils.readField(optionField, parent, true);
         } catch (IllegalAccessException e) {
-            Reference.LOGGER.error("Unable to get config option " + getOptionJsonName());
+            Reference.LOGGER.error("Unable to get config option " + getJsonName());
             e.printStackTrace();
             return null;
         }
@@ -57,9 +57,13 @@ public class ConfigOptionHolder {
         try {
             FieldUtils.writeField(optionField, parent, value, true);
         } catch (IllegalAccessException e) {
-            Reference.LOGGER.error("Unable to set config option " + getOptionJsonName());
+            Reference.LOGGER.error("Unable to set config option " + getJsonName());
             e.printStackTrace();
         }
+    }
+
+    public boolean isDefault() {
+        return defaultValue.equals(getValue());
     }
 
     public void reset() {

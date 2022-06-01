@@ -26,10 +26,6 @@ public class ConfigurableHolder {
         return metadata;
     }
 
-    public String getCategory() {
-        return metadata.category();
-    }
-
     public String getJsonName() {
         return configurableClass.getSimpleName();
     }

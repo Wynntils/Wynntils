@@ -12,7 +12,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.objects.ConfigCategoryHolder;
 import com.wynntils.core.config.objects.ConfigOptionHolder;
 import com.wynntils.core.config.objects.ConfigurableHolder;
 import com.wynntils.core.config.properties.ConfigOption;
@@ -28,15 +27,15 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
     private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "configs");
     private static final String FILE_SUFFIX = ".config";
 
-    private static final List<ConfigCategoryHolder> configCategories = new ArrayList<>();
-    private static File userConfigs;
+    private static final List<ConfigurableHolder> configContainers = new ArrayList<>();
+    private static File userConfig;
+    private static JsonObject configObject;
 
     private static Gson gson;
 
@@ -45,107 +44,81 @@ public class ConfigManager {
         if (configurable == null) return; // not a valid configurable
 
         // add configurable to its corresponding category, then try to load it from file
-        getOrCreateCategory(configurable.getCategory()).addConfigurable(configurable);
-        loadConfig(configurable);
+        configContainers.add(configurable);
+        loadConfigOptions(configurable);
     }
 
     public static void init() {
         gson = new GsonBuilder().setPrettyPrinting().create();
 
-        // set up config directories, create them if necessary
-        CONFIGS.mkdirs();
-        userConfigs = new File(CONFIGS, McUtils.mc().getUser().getUuid());
-        userConfigs.mkdirs();
+        loadConfigFile();
     }
 
-    private static void loadConfig(ConfigurableHolder configurable) {
-        String fileName = categoryToFileName(configurable.getCategory());
-        try {
-            File configFile = new File(userConfigs, fileName);
-            if (!configFile.exists()) return; // nothing to load
+    private static void loadConfigFile() {
+        // create config directory if necessary
+        CONFIGS.mkdirs();
 
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8);
+        // set up config file based on uuid, load it if it exists
+        userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+        if (!userConfig.exists()) return;
+
+        try {
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfig), StandardCharsets.UTF_8);
             JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
             reader.close();
             if (!fileElement.isJsonObject()) return; // invalid config file
 
-            // find configurable's section in file
-            JsonObject fileObject = fileElement.getAsJsonObject();
-            if (!fileObject.has(configurable.getJsonName())) return; // section doesn't exist, nothing to load
-            JsonObject configObject = fileObject.getAsJsonObject(configurable.getJsonName());
-
-            // attempt to load each value from the object
-            for (String optionName : configObject.keySet()) {
-                tryUpdateOption(configurable, optionName, configObject.get(optionName));
-            }
+            configObject = fileElement.getAsJsonObject();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to load config: " + fileName);
+            Reference.LOGGER.error("Failed to load user config file!");
             e.printStackTrace();
         }
     }
 
-    private static void saveConfig(ConfigCategoryHolder category) {
-        String fileName = categoryToFileName(category.getName());
-        try {
-            // get file, create if necessary
-            File configFile = new File(userConfigs, fileName);
-            if (!configFile.exists()) configFile.createNewFile();
+    private static void loadConfigOptions(ConfigurableHolder configurable) {
+        if (configObject == null) return; // nothing to load from
 
-            // create json object, with entry for each configurable
+        String prefix = configurable.getJsonName() + ".";
+        for (ConfigOptionHolder option : configurable.getOptions()) {
+            String name = prefix + option.getJsonName();
+
+            // option hasn't been saved to config
+            if (!configObject.has(name)) continue;
+
+            // read value and update option
+            JsonElement optionJson = configObject.get(name);
+            Object value = gson.fromJson(optionJson, option.getType());
+            option.setValue(value);
+        }
+    }
+
+    public static void saveConfig() {
+        try {
+            // create file if necessary
+            if (!userConfig.exists()) userConfig.createNewFile();
+
+            // create json object, with entry for each option of each container
             JsonObject configJson = new JsonObject();
-            for (ConfigurableHolder configurable : category.getConfigurables()) {
-                JsonObject configurableJson = configurableAsJson(configurable);
-                configJson.add(configurable.getJsonName(), configurableJson);
+            for (ConfigurableHolder configurable : configContainers) {
+                String prefix = configurable.getJsonName() + ".";
+                for (ConfigOptionHolder option : configurable.getOptions()) {
+                    if (option.isDefault()) continue; // only save options that are non-default
+
+                    String name = prefix + option.getJsonName();
+                    JsonElement optionElement = gson.toJsonTree(option.getValue());
+                    configJson.add(name, optionElement);
+                }
             }
 
             // write json to file
             OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(configFile), StandardCharsets.UTF_8);
+                    new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
             gson.toJson(configJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to save config: " + fileName);
+            Reference.LOGGER.error("Failed to save user config file!");
             e.printStackTrace();
         }
-    }
-
-    public static void saveConfigs() {
-        configCategories.forEach(ConfigManager::saveConfig);
-    }
-
-    public static ConfigCategoryHolder getOrCreateCategory(String name) {
-        for (ConfigCategoryHolder category : configCategories) {
-            if (category.getName().equals(name)) return category;
-        }
-
-        // category doesn't exist yet, has to be created
-        ConfigCategoryHolder newCategory = new ConfigCategoryHolder(name);
-        configCategories.add(newCategory);
-        return newCategory;
-    }
-
-    private static void tryUpdateOption(ConfigurableHolder configurable, String optionName, JsonElement valueJson) {
-        for (ConfigOptionHolder option : configurable.getOptions()) {
-            if (!optionName.equals(option.getOptionJsonName())) continue;
-
-            Object value = gson.fromJson(valueJson, option.getType());
-            option.setValue(value);
-            return;
-        }
-        // no matching option
-    }
-
-    private static JsonObject configurableAsJson(ConfigurableHolder configurable) {
-        JsonObject json = new JsonObject();
-        for (ConfigOptionHolder option : configurable.getOptions()) {
-            JsonElement optionElement = gson.toJsonTree(option.getValue());
-            json.add(option.getOptionJsonName(), optionElement);
-        }
-        return json;
-    }
-
-    private static String categoryToFileName(String categoryName) {
-        return categoryName.toLowerCase(Locale.ROOT).replace(" ", "_").replace("/", "-") + FILE_SUFFIX;
     }
 
     private static ConfigurableHolder configurableFromObject(Object configurableObject) {
