@@ -6,6 +6,8 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.config.properties.Configurable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -88,13 +90,22 @@ public class FeatureRegistry {
             }
         }
 
+        // determine if feature should be enabled & set default enabled value for user features
+        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
+        if (feature instanceof UserFeature userFeature) {
+            userFeature.userEnabled = !startDisabled;
+        }
+
+        // register & load config options
+        // this has to be done after the userEnabled handling above, so the default value registers properly
+        if (featureClass.isAnnotationPresent(Configurable.class)) {
+            ConfigManager.registerConfigurable(feature);
+        }
+
         // initialize & enable
         feature.init();
 
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-
         if (feature instanceof UserFeature userFeature) {
-            // TODO: this config value should be initialized using value of startDisabled, if it doesn't exist
             if (!userFeature.userEnabled) return; // not enabled by user
 
             userFeature.tryEnable();
@@ -141,6 +152,9 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
+
+        // save/create config file after loading all features' options
+        ConfigManager.saveConfig();
 
         WynntilsMod.getEventBus().register(OverlayListener.class);
 
