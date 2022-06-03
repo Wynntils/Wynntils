@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.ContainerUtils;
@@ -24,9 +24,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class MythicBlockerFeature extends UserFeature {
 
     @SubscribeEvent
-    public void onChestCloseAttempt(InventoryKeyPressEvent e) {
+    public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
-        if (!McUtils.mc().options.keyInventory.matches(e.getKeyCode(), e.getScanCode())) return;
         if (!ContainerUtils.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);

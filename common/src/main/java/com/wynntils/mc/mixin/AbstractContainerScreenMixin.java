@@ -52,4 +52,16 @@ public abstract class AbstractContainerScreenMixin {
             cir.setReturnValue(true);
         }
     }
+
+    @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
+    private void onCloseContainerPre(CallbackInfo ci) {
+        if (EventFactory.onCloseContainerPre().isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "onClose", at = @At("RETURN"))
+    private void onCloseContainerPost(CallbackInfo ci) {
+        EventFactory.onCloseContainerPost();
+    }
 }
