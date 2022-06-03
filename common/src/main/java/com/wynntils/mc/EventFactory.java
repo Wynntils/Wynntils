@@ -109,8 +109,13 @@ public class EventFactory {
         // TODO: Not implemented yet
     }
 
-    public static void onItemTooltipRender(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
+    public static ItemTooltipRenderEvent onItemTooltipRenderPre(
+            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
+    }
+
+    public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+        post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY));
     }
 
     public static void onSlotRenderPre(Screen screen, Slot slot) {
