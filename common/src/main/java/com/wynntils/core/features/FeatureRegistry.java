@@ -32,6 +32,7 @@ import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
+import com.wynntils.features.user.TooltipScaleFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -152,6 +153,7 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
+        registerFeature(new TooltipScaleFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

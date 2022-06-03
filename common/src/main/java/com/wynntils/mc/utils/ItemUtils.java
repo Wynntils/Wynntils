@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.TooltipFlag.Default;
 
 public class ItemUtils {
 
@@ -185,7 +186,8 @@ public class ItemUtils {
     }
 
     public static List<Component> getTooltipLines(ItemStack stack) {
-        return stack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
+        TooltipFlag flag = McUtils.options().advancedItemTooltips ? Default.ADVANCED : Default.NORMAL;
+        return stack.getTooltipLines(McUtils.player(), flag);
     }
 
     public static boolean isMythic(ItemStack stack) {
