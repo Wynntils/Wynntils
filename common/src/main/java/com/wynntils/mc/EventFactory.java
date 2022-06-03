@@ -14,6 +14,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -149,8 +150,16 @@ public class EventFactory {
     // endregion
 
     // region Container Events
-    public static void onContainerClose(ClientboundContainerClosePacket packet) {
+    public static void onClientboundContainerClosePacket(ClientboundContainerClosePacket packet) {
         post(new MenuClosedEvent());
+    }
+
+    public static ContainerCloseEvent.Pre onCloseContainerPre() {
+        return post(new ContainerCloseEvent.Pre());
+    }
+
+    public static void onCloseContainerPost() {
+        post(new ContainerCloseEvent.Post());
     }
 
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
@@ -274,5 +283,6 @@ public class EventFactory {
     public static void onTickEnd() {
         post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
+
     // endregion
 }

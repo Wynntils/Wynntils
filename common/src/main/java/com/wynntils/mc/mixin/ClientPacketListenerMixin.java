@@ -68,7 +68,7 @@ public abstract class ClientPacketListenerMixin {
             method = "handleContainerClose(Lnet/minecraft/network/protocol/game/ClientboundContainerClosePacket;)V",
             at = @At("RETURN"))
     private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
-        EventFactory.onContainerClose(packet);
+        EventFactory.onClientboundContainerClosePacket(packet);
     }
 
     @Inject(
