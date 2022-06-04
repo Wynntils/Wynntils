@@ -6,6 +6,7 @@ package com.wynntils.mc.utils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
+import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -183,6 +184,26 @@ public class ItemUtils {
             if (lore) toRemove.add(c);
         }
         tooltip.removeAll(toRemove);
+    }
+
+    /**
+     * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
+     */
+    public static boolean isWynnItem(ItemStack itemStack) {
+        for (Component line : getTooltipLines(itemStack)) {
+            Matcher m = ITEM_RARITY_PATTERN.matcher(line.getString());
+            if (m.find()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the passed item is an unidentified item
+     */
+    public static boolean isUnidentifiedItem(ItemStack itemStack) {
+        return itemStack instanceof UnidentifiedItemStack;
     }
 
     public static List<Component> getTooltipLines(ItemStack stack) {
