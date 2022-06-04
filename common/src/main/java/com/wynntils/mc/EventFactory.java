@@ -110,7 +110,7 @@ public class EventFactory {
         // TODO: Not implemented yet
     }
 
-    public static ItemTooltipRenderEvent onItemTooltipRenderPre(
+    public static ItemTooltipRenderEvent.Pre onItemTooltipRenderPre(
             PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
         return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
     }
