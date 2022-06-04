@@ -8,6 +8,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
@@ -22,6 +23,9 @@ public class WynnItemMatchers {
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
+
+    private static final Pattern ITEM_RARITY_PATTERN =
+            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
 
     public static boolean isSoulPoint(ItemStack stack) {
         return !stack.isEmpty()
@@ -85,6 +89,23 @@ public class WynnItemMatchers {
     public static boolean isCosmetic(ItemStack stack) {
         for (Component c : stack.getTooltipLines(null, TooltipFlag.Default.NORMAL)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
+        }
+        return false;
+    }
+
+    public static boolean isMythic(ItemStack stack) {
+        return stack.getDisplayName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    }
+
+    /**
+     * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
+     */
+    public static boolean isWynnItem(ItemStack itemStack) {
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            Matcher m = ITEM_RARITY_PATTERN.matcher(line.getString());
+            if (m.find()) {
+                return true;
+            }
         }
         return false;
     }
