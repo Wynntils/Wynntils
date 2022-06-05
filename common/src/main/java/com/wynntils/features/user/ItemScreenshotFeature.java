@@ -15,9 +15,9 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.RenderUtils;
+import com.wynntils.wc.utils.WynnItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -52,7 +53,7 @@ public class ItemScreenshotFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void render(ItemTooltipRenderEvent e) {
+    public void render(ItemTooltipRenderEvent.Pre e) {
         if (screenshotSlot == null) return;
 
         // has to be called during a render period
@@ -68,8 +69,8 @@ public class ItemScreenshotFeature extends UserFeature {
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
         ItemStack stack = hoveredSlot.getItem();
-        List<Component> tooltip = ItemUtils.getTooltipLines(stack);
-        ItemUtils.removeItemLore(tooltip);
+        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = McUtils.mc().font;
         int width = 0;

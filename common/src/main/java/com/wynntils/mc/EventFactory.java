@@ -14,6 +14,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -105,12 +106,13 @@ public class EventFactory {
         post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
-    public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
-        // TODO: Not implemented yet
+    public static ItemTooltipRenderEvent onItemTooltipRenderPre(
+            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
     }
 
-    public static void onItemTooltipRender(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        post(new ItemTooltipRenderEvent(poseStack, stack, mouseX, mouseY));
+    public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
+        post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY));
     }
 
     public static void onSlotRenderPre(Screen screen, Slot slot) {
@@ -149,8 +151,16 @@ public class EventFactory {
     // endregion
 
     // region Container Events
-    public static void onContainerClose(ClientboundContainerClosePacket packet) {
+    public static void onClientboundContainerClosePacket(ClientboundContainerClosePacket packet) {
         post(new MenuClosedEvent());
+    }
+
+    public static ContainerCloseEvent.Pre onCloseContainerPre() {
+        return post(new ContainerCloseEvent.Pre());
+    }
+
+    public static void onCloseContainerPost() {
+        post(new ContainerCloseEvent.Post());
     }
 
     public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
@@ -274,5 +284,6 @@ public class EventFactory {
     public static void onTickEnd() {
         post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
+
     // endregion
 }

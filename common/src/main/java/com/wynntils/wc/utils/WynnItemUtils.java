@@ -31,6 +31,9 @@ public class WynnItemUtils {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
+    private static final Pattern ITEM_RARITY_PATTERN =
+            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
+
     /**
      * Parse the item ID lore line from a given item, and convert it into an ItemIdentificationContainer
      * Returns null if the given lore line is not a valid ID
@@ -257,5 +260,21 @@ public class WynnItemUtils {
         } else {
             return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
         }
+    }
+
+    public static void removeLoreTooltipLines(List<Component> tooltip) {
+        List<Component> toRemove = new ArrayList<>();
+        boolean lore = false;
+        for (Component c : tooltip) {
+            // only remove text after the item type indicator
+            Matcher m = ITEM_RARITY_PATTERN.matcher(c.getString());
+            if (!lore && m.find()) {
+                lore = true;
+                continue;
+            }
+
+            if (lore) toRemove.add(c);
+        }
+        tooltip.removeAll(toRemove);
     }
 }
