@@ -21,11 +21,6 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     protected Slot hoveredSlot;
 
-    @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", at = @At("RETURN"))
-    private void renderTooltipPre(PoseStack poseStack, int mouseX, int mouseY, CallbackInfo info) {
-        EventFactory.onTooltipRender((Screen) (Object) this, poseStack, mouseX, mouseY);
-    }
-
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         EventFactory.onInventoryRender((Screen) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
