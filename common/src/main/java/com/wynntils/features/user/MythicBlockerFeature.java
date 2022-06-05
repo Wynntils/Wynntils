@@ -31,7 +31,6 @@ public class MythicBlockerFeature extends UserFeature {
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
             ItemStack stack = items.get(i);
-            if (!WynnItemMatchers.isWynnItem(stack) && !WynnItemMatchers.isUnidentified(stack)) continue;
             if (WynnItemMatchers.isMythic(stack)) {
                 McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.mythicBlocker.closingBlocked")
                         .withStyle(ChatFormatting.RED));
