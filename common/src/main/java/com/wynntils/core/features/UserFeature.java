@@ -7,6 +7,7 @@ package com.wynntils.core.features;
 import com.wynntils.core.config.Configurable;
 import com.wynntils.core.config.objects.ConfigOptionHolder;
 import com.wynntils.core.config.properties.ConfigOption;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 /**
  * A feature that is enabled & disabled by the user.
@@ -17,6 +18,7 @@ public abstract class UserFeature extends Feature implements Configurable {
 
     /** This handles the user enabling/disabling a feature in-game */
     @Override
+    @OverridingMethodsMustInvokeSuper
     public void onConfigUpdate(ConfigOptionHolder option) {
         if (!option.getField().getName().equals("userEnabled")) return;
 
