@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.config.Configurable;
 import com.wynntils.core.config.properties.ConfigOption;
 import com.wynntils.core.config.properties.ConfigurableInfo;
 import com.wynntils.core.features.UserFeature;
@@ -15,7 +14,7 @@ import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE)
 @ConfigurableInfo(category = "Item Tooltips")
-public class ItemStatInfoFeature extends UserFeature implements Configurable {
+public class ItemStatInfoFeature extends UserFeature {
 
     @ConfigOption(displayName = "Show Stars")
     public static boolean showStars = true;

@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.Configurable;
 import com.wynntils.core.config.properties.ConfigOption;
 import com.wynntils.core.config.properties.ConfigurableInfo;
 import com.wynntils.core.features.UserFeature;
@@ -22,7 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @EventListener
 @ConfigurableInfo(category = "Item Tooltips")
 @FeatureInfo(stability = Stability.STABLE)
-public class TooltipScaleFeature extends UserFeature implements Configurable {
+public class TooltipScaleFeature extends UserFeature {
 
     @ConfigOption(
             displayName = "Universal Scale",
