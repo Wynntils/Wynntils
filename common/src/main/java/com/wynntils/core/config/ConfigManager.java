@@ -15,7 +15,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.objects.ConfigOptionHolder;
 import com.wynntils.core.config.objects.ConfigurableHolder;
 import com.wynntils.core.config.properties.ConfigOption;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.properties.ConfigurableInfo;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,13 +39,16 @@ public class ConfigManager {
 
     private static Gson gson;
 
-    public static void registerConfigurable(Object configurableObject) {
+    public static void registerConfigurable(Configurable configurableObject) {
         ConfigurableHolder configurable = configurableFromObject(configurableObject);
         if (configurable == null) return; // not a valid configurable
 
         // add configurable to its corresponding category, then try to load it from file
         configContainers.add(configurable);
         loadConfigOptions(configurable);
+
+        // this is called to ensure any necessary setup happens, in case all options are default
+        configurableObject.onUpdate();
     }
 
     public static void init() {
@@ -121,11 +124,11 @@ public class ConfigManager {
         }
     }
 
-    private static ConfigurableHolder configurableFromObject(Object configurableObject) {
+    private static ConfigurableHolder configurableFromObject(Configurable configurableObject) {
         Class<?> configurableClass = configurableObject.getClass();
 
-        Configurable metadata = configurableClass.getAnnotation(Configurable.class);
-        if (metadata == null || metadata.category().isEmpty()) return null; // not a valid config container
+        ConfigurableInfo metadata = configurableClass.getAnnotation(ConfigurableInfo.class);
+        if (metadata == null || metadata.category().isEmpty()) return null; // not a valid configurable
 
         List<ConfigOptionHolder> options = new ArrayList<>();
 
@@ -142,7 +145,7 @@ public class ConfigManager {
         return new ConfigurableHolder(configurableClass, options, metadata);
     }
 
-    private static ConfigOptionHolder optionFromField(Object parent, Field field) {
+    private static ConfigOptionHolder optionFromField(Configurable parent, Field field) {
         ConfigOption metadata = field.getAnnotation(ConfigOption.class);
         if (metadata == null || metadata.displayName().isEmpty()) return null; // not a valid config variable
 

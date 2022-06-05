@@ -7,7 +7,7 @@ package com.wynntils.core.features;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.Configurable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -99,8 +99,8 @@ public class FeatureRegistry {
 
         // register & load config options
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        if (featureClass.isAnnotationPresent(Configurable.class)) {
-            ConfigManager.registerConfigurable(feature);
+        if (feature instanceof Configurable configurable) {
+            ConfigManager.registerConfigurable(configurable);
         }
 
         // initialize & enable

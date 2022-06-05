@@ -5,8 +5,9 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Configurable;
 import com.wynntils.core.config.properties.ConfigOption;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.properties.ConfigurableInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -19,9 +20,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
-@Configurable(category = "Item Tooltips")
+@ConfigurableInfo(category = "Item Tooltips")
 @FeatureInfo(stability = Stability.STABLE)
-public class TooltipScaleFeature extends UserFeature {
+public class TooltipScaleFeature extends UserFeature implements Configurable {
 
     @ConfigOption(
             displayName = "Universal Scale",

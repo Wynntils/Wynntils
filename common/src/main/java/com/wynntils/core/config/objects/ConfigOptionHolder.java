@@ -5,19 +5,20 @@
 package com.wynntils.core.config.objects;
 
 import com.wynntils.core.Reference;
+import com.wynntils.core.config.Configurable;
 import com.wynntils.core.config.properties.ConfigOption;
 import java.lang.reflect.Field;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigOptionHolder {
-    private final Object parent;
+    private final Configurable parent;
     private final Field optionField;
     private final Class<?> optionType;
     private final ConfigOption metadata;
 
     private final Object defaultValue;
 
-    public ConfigOptionHolder(Object parent, Field field, ConfigOption metadata) {
+    public ConfigOptionHolder(Configurable parent, Field field, ConfigOption metadata) {
         this.parent = parent;
         this.optionField = field;
         this.optionType = field.getType();
@@ -56,6 +57,7 @@ public class ConfigOptionHolder {
     public void setValue(Object value) {
         try {
             FieldUtils.writeField(optionField, parent, value, true);
+            parent.onUpdate();
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set config option " + getJsonName());
             e.printStackTrace();

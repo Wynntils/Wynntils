@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Configurable {
+public @interface ConfigurableInfo {
     /** The parent category for options within this container. Also defines file structure. */
     String category();
 

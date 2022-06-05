@@ -4,15 +4,15 @@
  */
 package com.wynntils.core.config.objects;
 
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.properties.ConfigurableInfo;
 import java.util.List;
 
 public class ConfigurableHolder {
     private final Class<?> configurableClass;
     private final List<ConfigOptionHolder> options;
-    private final Configurable metadata;
+    private final ConfigurableInfo metadata;
 
-    public ConfigurableHolder(Class<?> configurableClass, List<ConfigOptionHolder> options, Configurable metadata) {
+    public ConfigurableHolder(Class<?> configurableClass, List<ConfigOptionHolder> options, ConfigurableInfo metadata) {
         this.configurableClass = configurableClass;
         this.options = options;
         this.metadata = metadata;
@@ -22,7 +22,7 @@ public class ConfigurableHolder {
         return options;
     }
 
-    public Configurable getMetadata() {
+    public ConfigurableInfo getMetadata() {
         return metadata;
     }
 
