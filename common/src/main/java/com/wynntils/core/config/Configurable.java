@@ -4,7 +4,9 @@
  */
 package com.wynntils.core.config;
 
+import com.wynntils.core.config.objects.ConfigOptionHolder;
+
 /** Used to indicate that a class contains config options */
 public interface Configurable {
-    default void onUpdate() {}
+    default void onConfigUpdate(ConfigOptionHolder configOption) {}
 }

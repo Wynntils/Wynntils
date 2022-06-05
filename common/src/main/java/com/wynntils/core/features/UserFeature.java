@@ -5,6 +5,7 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.config.Configurable;
+import com.wynntils.core.config.objects.ConfigOptionHolder;
 import com.wynntils.core.config.properties.ConfigOption;
 
 /**
@@ -13,4 +14,14 @@ import com.wynntils.core.config.properties.ConfigOption;
 public abstract class UserFeature extends Feature implements Configurable {
     @ConfigOption(displayName = "Enabled", description = "Should this feature be enabled?")
     protected boolean userEnabled = true;
+
+    /** This handles the user enabling/disabling a feature in-game */
+    @Override
+    public void onConfigUpdate(ConfigOptionHolder option) {
+        if (userEnabled) {
+            tryEnable();
+        } else {
+            tryDisable();
+        }
+    }
 }

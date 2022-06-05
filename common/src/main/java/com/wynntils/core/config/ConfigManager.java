@@ -46,9 +46,6 @@ public class ConfigManager {
         // add configurable to its corresponding category, then try to load it from file
         configContainers.add(configurable);
         loadConfigOptions(configurable);
-
-        // this is called to ensure any necessary setup happens, in case all options are default
-        configurableObject.onUpdate();
     }
 
     public static void init() {

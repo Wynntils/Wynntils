@@ -57,7 +57,7 @@ public class ConfigOptionHolder {
     public void setValue(Object value) {
         try {
             FieldUtils.writeField(optionField, parent, value, true);
-            parent.onUpdate();
+            parent.onConfigUpdate(this);
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set config option " + getJsonName());
             e.printStackTrace();
