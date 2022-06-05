@@ -19,6 +19,8 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
@@ -113,5 +115,19 @@ public abstract class ClientPacketListenerMixin {
                 || (packet.getContainerId() == 0 && InventoryMenu.isHotbarSlot(packet.getSlot()))) {
             EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.inventoryMenu());
         }
+    }
+
+    @Inject(
+            method = "setTitleText(Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;)V",
+            at = @At("RETURN"))
+    private void setTitleTextPost(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
+        EventFactory.onTitleSetText(packet);
+    }
+
+    @Inject(
+            method = "setSubtitleText(Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;)V",
+            at = @At("RETURN"))
+    private void setSubtitleTextPost(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
+        EventFactory.onSubtitleSetText(packet);
     }
 }
