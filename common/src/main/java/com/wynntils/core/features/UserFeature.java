@@ -18,6 +18,8 @@ public abstract class UserFeature extends Feature implements Configurable {
     /** This handles the user enabling/disabling a feature in-game */
     @Override
     public void onConfigUpdate(ConfigOptionHolder option) {
+        if (!option.getField().getName().equals("userEnabled")) return;
+
         if (userEnabled) {
             tryEnable();
         } else {
