@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.properties.ConfigOption;
+import com.wynntils.core.config.properties.ConfigurableInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -17,6 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
 @FeatureInfo(stability = Stability.STABLE)
+@ConfigurableInfo(category = "Utilities")
 public class PlayerGhostTransparencyFeature extends UserFeature {
 
     @ConfigOption(
