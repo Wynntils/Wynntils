@@ -87,7 +87,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             return foundNonEmpty;
         } else {
             // As long as emeraldPouches was non-empty, we should have either at least
-            // one non-empty poach, or at least one empty poach. Return the empty poach
+            // one non-empty pouch, or at least one empty pouch. Return the empty pouch
             // with the largest capacity.
             assert (largestEmpty != null);
             return largestEmpty;
