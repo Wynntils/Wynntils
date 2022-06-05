@@ -8,11 +8,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
-public class ItemToolTipHoveredNameEvent extends Event {
+public class ItemTooltipHoveredNameEvent extends Event {
     private Component hoveredName;
     private final ItemStack stack;
 
-    public ItemToolTipHoveredNameEvent(Component hoveredName, ItemStack stack) {
+    public ItemTooltipHoveredNameEvent(Component hoveredName, ItemStack stack) {
         this.hoveredName = hoveredName;
         this.stack = stack;
     }
