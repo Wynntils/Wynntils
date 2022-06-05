@@ -37,7 +37,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        registerTransformer(WynnItemMatchers::isGear, GearItemStack::new);
+        registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
     }
