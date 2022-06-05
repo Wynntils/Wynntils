@@ -106,10 +106,6 @@ public class EventFactory {
         post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
-    public static void onTooltipRender(Screen screen, PoseStack poseStack, int mouseX, int mouseY) {
-        // TODO: Not implemented yet
-    }
-
     public static ItemTooltipRenderEvent onItemTooltipRenderPre(
             PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
         return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
