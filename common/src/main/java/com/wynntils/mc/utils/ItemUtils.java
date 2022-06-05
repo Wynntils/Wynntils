@@ -7,13 +7,9 @@ package com.wynntils.mc.utils;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -25,9 +21,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.TooltipFlag.Default;
 
 public class ItemUtils {
-
-    private static final Pattern ITEM_RARITY_PATTERN =
-            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
 
     /**
      * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
@@ -169,28 +162,8 @@ public class ItemUtils {
         return StringTag.valueOf(Component.Serializer.toJson(toConvert));
     }
 
-    public static void removeItemLore(List<Component> tooltip) {
-        List<Component> toRemove = new ArrayList<>();
-        boolean lore = false;
-        for (Component c : tooltip) {
-            // only remove text after the item type indicator
-            Matcher m = ITEM_RARITY_PATTERN.matcher(c.getString());
-            if (!lore && m.find()) {
-                lore = true;
-                continue;
-            }
-
-            if (lore) toRemove.add(c);
-        }
-        tooltip.removeAll(toRemove);
-    }
-
     public static List<Component> getTooltipLines(ItemStack stack) {
         TooltipFlag flag = McUtils.options().advancedItemTooltips ? Default.ADVANCED : Default.NORMAL;
         return stack.getTooltipLines(McUtils.player(), flag);
-    }
-
-    public static boolean isMythic(ItemStack stack) {
-        return stack.getDisplayName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
 }

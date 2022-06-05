@@ -15,9 +15,9 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.RenderUtils;
+import com.wynntils.wc.utils.WynnItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
-        ItemUtils.removeItemLore(tooltip);
+        WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = McUtils.mc().font;
         int width = 0;
