@@ -37,11 +37,6 @@ public class RenderUtils {
     }
 
     public static void drawRect(PoseStack poseStack, CustomColor color, int x, int y, int z, int width, int height) {
-        int alpha = color.a & 0xFF;
-        int red = color.r & 0xFF;
-        int green = color.g & 0xFF;
-        int blue = color.b & 0xFF;
-
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.enableBlend();
@@ -51,17 +46,20 @@ public class RenderUtils {
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         bufferBuilder
                 .vertex(matrix, x, y + height, z)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder
                 .vertex(matrix, x + width, y + height, z)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder
                 .vertex(matrix, x + width, y, z)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
-        bufferBuilder.vertex(matrix, x, y, z).color(red, green, blue, alpha).endVertex();
+        bufferBuilder
+                .vertex(matrix, x, y, z)
+                .color(color.r, color.g, color.b, color.a)
+                .endVertex();
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
         RenderSystem.disableBlend();
@@ -144,11 +142,6 @@ public class RenderUtils {
             int v,
             int textureWidth,
             int textureHeight) {
-        int alpha = color.a & 0xFF;
-        int red = color.r & 0xFF;
-        int green = color.g & 0xFF;
-        int blue = color.b & 0xFF;
-
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -163,22 +156,22 @@ public class RenderUtils {
         bufferBuilder
                 .vertex(matrix, x, y + height, z)
                 .uv(uOffset * uScale, (vOffset + v) * vScale)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder
                 .vertex(matrix, x + width, y + height, z)
                 .uv((uOffset + u) * uScale, (vOffset + v) * vScale)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder
                 .vertex(matrix, x + width, y, z)
                 .uv((uOffset + u) * uScale, vOffset * vScale)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder
                 .vertex(matrix, x, y, z)
                 .uv(uOffset * uScale, vOffset * vScale)
-                .color(red, green, blue, alpha)
+                .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
@@ -195,19 +188,25 @@ public class RenderUtils {
             int blitOffset,
             CustomColor colorA,
             CustomColor colorB) {
-        int A_a = (colorA.a & 0xFF);
-        int A_r = (colorA.r & 0xFF);
-        int A_g = (colorA.g & 0xFF);
-        int A_b = (colorA.b & 0xFF);
-        int B_a = (colorB.a & 0xFF);
-        int B_r = (colorB.r & 0xFF);
-        int B_g = (colorB.g & 0xFF);
-        int B_b = (colorB.b & 0xFF);
-        builder.vertex(matrix, x2, y1, blitOffset).color(A_r, A_g, A_b, A_a).endVertex();
-        builder.vertex(matrix, x1, y1, blitOffset).color(A_r, A_g, A_b, A_a).endVertex();
-        builder.vertex(matrix, x1, y2, blitOffset).color(B_r, B_g, B_b, B_a).endVertex();
-        builder.vertex(matrix, x2, y2, blitOffset).color(B_r, B_g, B_b, B_a).endVertex();
+        builder.vertex(matrix, x2, y1, blitOffset)
+                .color(colorA.r, colorA.g, colorA.b, colorA.a)
+                .endVertex();
+        builder.vertex(matrix, x1, y1, blitOffset)
+                .color(colorA.r, colorA.g, colorA.b, colorA.a)
+                .endVertex();
+        builder.vertex(matrix, x1, y2, blitOffset)
+                .color(colorB.r, colorB.g, colorB.b, colorB.a)
+                .endVertex();
+        builder.vertex(matrix, x2, y2, blitOffset)
+                .color(colorB.r, colorB.g, colorB.b, colorB.a)
+                .endVertex();
     }
+
+    // somewhat hacky solution to get around transparency issues - these colors were chosen to best match
+    // how tooltips are displayed in-game
+    private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);
+    private static final CustomColor BORDER_START = CustomColor.fromInt(0xFF25005B);
+    private static final CustomColor BORDER_END = CustomColor.fromInt(0xFF180033);
 
     public static void drawTooltip(List<ClientTooltipComponent> lines, PoseStack poseStack, Font font) {
         int tooltipWidth = 0;
@@ -225,11 +224,6 @@ public class RenderUtils {
         poseStack.pushPose();
         int tooltipX = 4;
         int tooltipY = 4;
-        // somewhat hacky solution to get around transparency issues - these colors were chosen to best match
-        // how tooltips are displayed in-game
-        CustomColor backgroundColor = CustomColor.fromInt(0xFF100010);
-        CustomColor borderColorStart = CustomColor.fromInt(0xFF25005B);
-        CustomColor borderColorEnd = CustomColor.fromInt(0xFF180033);
         int zLevel = 400;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
@@ -244,8 +238,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY - 3,
                 zLevel,
-                backgroundColor,
-                backgroundColor);
+                BACKGROUND,
+                BACKGROUND);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -254,8 +248,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY + tooltipHeight + 4,
                 zLevel,
-                backgroundColor,
-                backgroundColor);
+                BACKGROUND,
+                BACKGROUND);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -264,8 +258,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY + tooltipHeight + 3,
                 zLevel,
-                backgroundColor,
-                backgroundColor);
+                BACKGROUND,
+                BACKGROUND);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -274,8 +268,8 @@ public class RenderUtils {
                 tooltipX - 3,
                 tooltipY + tooltipHeight + 3,
                 zLevel,
-                backgroundColor,
-                backgroundColor);
+                BACKGROUND,
+                BACKGROUND);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -284,8 +278,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 4,
                 tooltipY + tooltipHeight + 3,
                 zLevel,
-                backgroundColor,
-                backgroundColor);
+                BACKGROUND,
+                BACKGROUND);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -294,8 +288,8 @@ public class RenderUtils {
                 tooltipX - 3 + 1,
                 tooltipY + tooltipHeight + 3 - 1,
                 zLevel,
-                borderColorStart,
-                borderColorEnd);
+                BORDER_START,
+                BORDER_END);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -304,8 +298,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY + tooltipHeight + 3 - 1,
                 zLevel,
-                borderColorStart,
-                borderColorEnd);
+                BORDER_START,
+                BORDER_END);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -314,8 +308,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY - 3 + 1,
                 zLevel,
-                borderColorStart,
-                borderColorStart);
+                BORDER_START,
+                BORDER_START);
         fillGradient(
                 matrix4f,
                 bufferBuilder,
@@ -324,8 +318,8 @@ public class RenderUtils {
                 tooltipX + tooltipWidth + 3,
                 tooltipY + tooltipHeight + 3,
                 zLevel,
-                borderColorEnd,
-                borderColorEnd);
+                BORDER_END,
+                BORDER_END);
         RenderSystem.enableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
