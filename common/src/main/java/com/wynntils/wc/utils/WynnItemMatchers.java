@@ -77,7 +77,20 @@ public class WynnItemMatchers {
                 && stack.getDisplayName().getString().contains("Horse");
     }
 
-    public static boolean isGear(ItemStack stack) {
+    /**
+     * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
+     */
+    public static boolean isGear(ItemStack itemStack) {
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            if (isRarityLine(line)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determines if a given ItemStack is an instance of a gear item in the API
+     */
+    public static boolean isKnownGear(ItemStack stack) {
         String name = stack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
         if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
@@ -94,19 +107,14 @@ public class WynnItemMatchers {
     }
 
     public static boolean isMythic(ItemStack stack) {
+        // only gear, identified or not, could be a mythic
+        if (!(isUnidentified(stack) || isGear(stack))) return false;
+
         return stack.getDisplayName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
 
-    /**
-     * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
-     */
-    public static boolean isWynnItem(ItemStack itemStack) {
-        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
-            Matcher m = ITEM_RARITY_PATTERN.matcher(line.getString());
-            if (m.find()) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isRarityLine(Component line) {
+        Matcher rarityMatcher = ITEM_RARITY_PATTERN.matcher(line.getString());
+        return rarityMatcher.find();
     }
 }
