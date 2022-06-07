@@ -9,6 +9,7 @@ import com.wynntils.core.features.InternalFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.CosmeticItemStack;
+import com.wynntils.wc.custom.item.CraftedGearItemStack;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
@@ -38,6 +39,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
+        registerTransformer(WynnItemMatchers::isCraftedGear, CraftedGearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
     }

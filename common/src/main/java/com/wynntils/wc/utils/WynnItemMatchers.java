@@ -69,19 +69,19 @@ public class WynnItemMatchers {
     }
 
     public static boolean isEmeraldPouch(ItemStack stack) {
-        return stack.getDisplayName().getString().startsWith("[§aEmerald Pouch§2 [Tier");
+        return stack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
     }
 
     public static boolean isHorse(ItemStack stack) {
         return stack.getItem() == Items.SADDLE
-                && stack.getDisplayName().getString().contains("Horse");
+                && stack.getHoverName().getString().contains("Horse");
     }
 
     /**
      * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
      */
-    public static boolean isGear(ItemStack itemStack) {
-        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+    public static boolean isGear(ItemStack stack) {
+        for (Component line : ItemUtils.getTooltipLines(stack)) {
             if (isRarityLine(line)) return true;
         }
         return false;
@@ -99,6 +99,12 @@ public class WynnItemMatchers {
                 && name.startsWith(profile.getTier().getChatFormatting().toString()));
     }
 
+    public static boolean isCraftedGear(ItemStack stack) {
+        String name = stack.getHoverName().getString();
+        // crafted gear will have a dark aqua name and a % marker for the status of the item
+        return (name.startsWith(ChatFormatting.DARK_AQUA.toString()) && name.contains("%"));
+    }
+
     public static boolean isCosmetic(ItemStack stack) {
         for (Component c : stack.getTooltipLines(null, TooltipFlag.Default.NORMAL)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
@@ -110,7 +116,7 @@ public class WynnItemMatchers {
         // only gear, identified or not, could be a mythic
         if (!(isUnidentified(stack) || isGear(stack))) return false;
 
-        return stack.getDisplayName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+        return stack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
 
     public static boolean isRarityLine(Component line) {
