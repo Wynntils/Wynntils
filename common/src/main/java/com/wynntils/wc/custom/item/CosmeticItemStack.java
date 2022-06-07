@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.custom.item;
 
+import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,19 +13,20 @@ import net.minecraft.world.item.ItemStack;
 
 public class CosmeticItemStack extends WynnItemStack implements HighlightedItem {
 
-    private ChatFormatting color;
+    private CustomColor highlightColor;
 
     public CosmeticItemStack(ItemStack stack) {
         super(stack);
 
-        color = ChatFormatting.getByCode(stack.getHoverName().getString().charAt(1));
-        if (color == null) color = ChatFormatting.WHITE;
+        ChatFormatting chatColor =
+                ChatFormatting.getByCode(stack.getHoverName().getString().charAt(1));
+        if (chatColor == null) chatColor = ChatFormatting.WHITE;
+
+        highlightColor = CustomColor.fromChatFormatting(chatColor);
     }
 
     @Override
-    public int getHighlightColor(Screen screen, Slot slot) {
-        int highlightColor = color.getColor();
-        highlightColor = 0xFF000000 | highlightColor;
+    public CustomColor getHighlightColor(Screen screen, Slot slot) {
         return highlightColor;
     }
 }

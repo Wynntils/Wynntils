@@ -11,6 +11,7 @@ import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.user.ItemGuessFeature;
+import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.reference.EmeraldSymbols;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
@@ -104,18 +105,12 @@ public class UnidentifiedItemStack extends WynnItemStack implements HighlightedI
     }
 
     @Override
-    public int getHighlightColor(Screen screen, Slot slot) {
-        int color = tier.getChatFormatting().getColor();
-        color = 0xFF000000 | color;
-
-        return color;
+    public CustomColor getHighlightColor(Screen screen, Slot slot) {
+        return tier.getHighlightColor();
     }
 
     @Override
-    public int getHotbarColor() {
-        int color = tier.getChatFormatting().getColor();
-        color = 0x80000000 | color;
-
-        return color;
+    public CustomColor getHotbarColor() {
+        return tier.getHighlightColor();
     }
 }

@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.objects.ItemIdentificationContainer;
@@ -306,19 +307,13 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
     }
 
     @Override
-    public int getHighlightColor(Screen screen, Slot slot) {
-        int color = itemProfile.getTier().getChatFormatting().getColor();
-        color = 0xFF000000 | color;
-
-        return color;
+    public CustomColor getHighlightColor(Screen screen, Slot slot) {
+        return itemProfile.getTier().getHighlightColor();
     }
 
     @Override
-    public int getHotbarColor() {
-        int color = itemProfile.getTier().getChatFormatting().getColor();
-        color = 0x80000000 | color;
-
-        return color;
+    public CustomColor getHotbarColor() {
+        return itemProfile.getTier().getHighlightColor();
     }
 
     private void parseIDs() {
