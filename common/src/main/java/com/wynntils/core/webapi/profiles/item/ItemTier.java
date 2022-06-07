@@ -4,35 +4,96 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
+import com.wynntils.features.user.ItemHighlightFeature;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.objects.CustomColor;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
 public enum ItemTier {
-    NORMAL(ChatFormatting.WHITE, -1, 0),
-    UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
-    RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
-    SET(ChatFormatting.GREEN, 8, 1.2f),
-    FABLED(ChatFormatting.RED, 12, 4.5f),
-    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
-    MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
+    NORMAL(
+            ChatFormatting.WHITE,
+            () -> ItemHighlightFeature.normalHighlightColor,
+            () -> ItemHighlightFeature.normalHighlightEnabled,
+            -1,
+            0),
+    UNIQUE(
+            ChatFormatting.YELLOW,
+            () -> ItemHighlightFeature.uniqueHighlightColor,
+            () -> ItemHighlightFeature.uniqueHighlightEnabled,
+            3,
+            0.5f),
+    RARE(
+            ChatFormatting.LIGHT_PURPLE,
+            () -> ItemHighlightFeature.rareHighlightColor,
+            () -> ItemHighlightFeature.rareHighlightEnabled,
+            8,
+            1.2f),
+    SET(
+            ChatFormatting.GREEN,
+            () -> ItemHighlightFeature.setHighlightColor,
+            () -> ItemHighlightFeature.setHighlightEnabled,
+            8,
+            1.2f),
+    FABLED(
+            ChatFormatting.RED,
+            () -> ItemHighlightFeature.fabledHighlightColor,
+            () -> ItemHighlightFeature.fabledHighlightEnabled,
+            12,
+            4.5f),
+    LEGENDARY(
+            ChatFormatting.AQUA,
+            () -> ItemHighlightFeature.legendaryHighlightColor,
+            () -> ItemHighlightFeature.legendaryHighlightEnabled,
+            16,
+            8.0f),
+    MYTHIC(
+            ChatFormatting.DARK_PURPLE,
+            () -> ItemHighlightFeature.mythicHighlightColor,
+            () -> ItemHighlightFeature.mythicHighlightEnabled,
+            90,
+            18.0f),
+    CRAFTED(
+            ChatFormatting.DARK_AQUA,
+            () -> ItemHighlightFeature.craftedHighlightColor,
+            () -> ItemHighlightFeature.craftedHighlightEnabled,
+            -1,
+            0);
 
     private final ChatFormatting chatFormatting;
+    private final Callable<CustomColor> highlightColor;
+    private final Callable<Boolean> highlightEnabled;
     private final int baseCost;
     private final float costMultiplier;
 
-    ItemTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
+    ItemTier(
+            ChatFormatting chatFormatting,
+            Callable<CustomColor> highlightColor,
+            Callable<Boolean> highlightEnabled,
+            int baseCost,
+            float costMultiplier) {
         this.chatFormatting = chatFormatting;
+        this.highlightColor = highlightColor;
+        this.highlightEnabled = highlightEnabled;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
     }
 
     public ChatFormatting getChatFormatting() {
         return chatFormatting;
+    }
+
+    public CustomColor getHighlightColor() {
+        try {
+            if (highlightEnabled.call()) return highlightColor.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CustomColor.NONE; // either highlight is disabled, or some error occurred
     }
 
     public static ItemTier fromComponent(Component component) {
