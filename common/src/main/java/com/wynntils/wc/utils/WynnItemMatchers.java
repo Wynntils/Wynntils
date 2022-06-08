@@ -16,7 +16,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
@@ -64,6 +63,13 @@ public class WynnItemMatchers {
         return CONSUMABLE_PATTERN.matcher(strippedName).matches();
     }
 
+    public static boolean hasDurability(ItemStack stack) {
+        for (Component c : ItemUtils.getTooltipLines(stack)) {
+            if (c.getString().endsWith(" Durability]")) return true;
+        }
+        return false;
+    }
+
     public static boolean isUnidentified(ItemStack stack) {
         return (stack.getItem() == Items.STONE_SHOVEL && stack.getDamageValue() >= 1 && stack.getDamageValue() <= 6);
     }
@@ -106,7 +112,7 @@ public class WynnItemMatchers {
     }
 
     public static boolean isCosmetic(ItemStack stack) {
-        for (Component c : stack.getTooltipLines(null, TooltipFlag.Default.NORMAL)) {
+        for (Component c : ItemUtils.getTooltipLines(stack)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
         }
         return false;
