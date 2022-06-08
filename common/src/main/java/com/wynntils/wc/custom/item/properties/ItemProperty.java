@@ -7,7 +7,7 @@ package com.wynntils.wc.custom.item.properties;
 import com.wynntils.wc.custom.item.WynnItemStack;
 
 public abstract class ItemProperty {
-    public static final Class<? extends ItemProperty> DURABILITY = DurabilityProperty.class;
+    public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
 
     protected WynnItemStack stack;
 

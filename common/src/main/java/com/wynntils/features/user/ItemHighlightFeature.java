@@ -17,6 +17,7 @@ import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
@@ -84,7 +85,7 @@ public class ItemHighlightFeature extends UserFeature {
     @ConfigOption(displayName = "Hotbar Highlight Opacity")
     public static float hotbarOpacity = .5f;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled) return;
 

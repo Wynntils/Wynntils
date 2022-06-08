@@ -13,6 +13,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.utils.objects.CustomColor;
 import java.awt.Image;
@@ -178,28 +179,34 @@ public class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    public static void fillGradient(
-            Matrix4f matrix,
-            BufferBuilder builder,
-            int x1,
-            int y1,
-            int x2,
-            int y2,
-            int blitOffset,
-            CustomColor colorA,
-            CustomColor colorB) {
-        builder.vertex(matrix, x2, y1, blitOffset)
-                .color(colorA.r, colorA.g, colorA.b, colorA.a)
-                .endVertex();
-        builder.vertex(matrix, x1, y1, blitOffset)
-                .color(colorA.r, colorA.g, colorA.b, colorA.a)
-                .endVertex();
-        builder.vertex(matrix, x1, y2, blitOffset)
-                .color(colorB.r, colorB.g, colorB.b, colorB.a)
-                .endVertex();
-        builder.vertex(matrix, x2, y2, blitOffset)
-                .color(colorB.r, colorB.g, colorB.b, colorB.a)
-                .endVertex();
+    private static final float MAX_CIRCLE_STEPS = 16f;
+
+    public static void drawArc(CustomColor color, int x, int y, float fill, int radius) {
+        drawArc(new PoseStack(), color, x, y, fill, radius);
+    }
+
+    public static void drawArc(PoseStack poseStack, CustomColor color, int x, int y, float fill, int radius) {
+        // keeps arc from overlapping itself
+        int numSteps = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
+
+        // RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.lineWidth(14.0f);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+        for (int i = 0; i <= numSteps; i++) {
+            float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
+            bufferBuilder
+                    .vertex(x + Math.sin(angle) * radius + 8, y - Math.cos(angle) * radius + 8, 0d)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
+        RenderSystem.disableBlend();
+        RenderSystem.enableDepthTest();
     }
 
     // somewhat hacky solution to get around transparency issues - these colors were chosen to best match
@@ -342,6 +349,30 @@ public class RenderUtils {
         }
         bufferSource.endBatch();
         poseStack.popPose();
+    }
+
+    public static void fillGradient(
+            Matrix4f matrix,
+            BufferBuilder builder,
+            int x1,
+            int y1,
+            int x2,
+            int y2,
+            int blitOffset,
+            CustomColor colorA,
+            CustomColor colorB) {
+        builder.vertex(matrix, x2, y1, blitOffset)
+                .color(colorA.r, colorA.g, colorA.b, colorA.a)
+                .endVertex();
+        builder.vertex(matrix, x1, y1, blitOffset)
+                .color(colorA.r, colorA.g, colorA.b, colorA.a)
+                .endVertex();
+        builder.vertex(matrix, x1, y2, blitOffset)
+                .color(colorB.r, colorB.g, colorB.b, colorB.a)
+                .endVertex();
+        builder.vertex(matrix, x2, y2, blitOffset)
+                .color(colorB.r, colorB.g, colorB.b, colorB.a)
+                .endVertex();
     }
 
     public static void copyImageToClipboard(BufferedImage bi) {
