@@ -6,28 +6,29 @@ package com.wynntils.core.features.overlays;
 
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
-import java.awt.Point;
 
 public abstract class Overlay extends Feature { // extends ScreenRenderer implements SettingsHolder {
 
-    public transient Point staticSize;
+    public transient OverlayPosition position;
     public transient boolean visible;
-    public transient OverlayGrowFrom growthX;
-    public transient OverlayGrowFrom growthY;
-    public transient RenderEvent.ElementType[] hookElements;
+    // public transient OverlayGrowFrom growthX;
+    // public transient OverlayGrowFrom growthY;
+    public transient RenderEvent.ElementType[] hookElements; // Not sure if this is needed
 
     public Overlay(
-            int sizeX,
-            int sizeY,
+            float posX,
+            float posY,
+            int width,
+            int height,
             boolean visible,
-            OverlayGrowFrom growthX,
-            OverlayGrowFrom growthY,
+            // OverlayGrowFrom growthX,
+            // OverlayGrowFrom growthY,
             RenderEvent.ElementType... hookElements) {
-        this.staticSize = new Point(sizeX, sizeY);
+        this.position = new OverlayPosition(posX, posY, width, height);
         this.visible = visible;
         this.hookElements = hookElements;
-        this.growthX = growthX;
-        this.growthY = growthY;
+        // this.growthX = growthX;
+        // this.growthY = growthY;
     }
 
     public abstract void render(RenderEvent.Pre e);
