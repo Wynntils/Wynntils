@@ -16,15 +16,15 @@ public abstract class Overlay extends Feature { // extends ScreenRenderer implem
     public transient RenderEvent.ElementType[] hookElements; // Not sure if this is needed
 
     public Overlay(
-            float posX,
-            float posY,
+            float x,
+            float y,
             int width,
             int height,
             boolean visible,
             // OverlayGrowFrom growthX,
             // OverlayGrowFrom growthY,
             RenderEvent.ElementType... hookElements) {
-        this.position = new OverlayPosition(posX, posY, width, height);
+        this.position = new OverlayPosition(x, y, width, height);
         this.visible = visible;
         this.hookElements = hookElements;
         // this.growthX = growthX;

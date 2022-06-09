@@ -7,51 +7,41 @@ package com.wynntils.core.features.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.mc.utils.McUtils;
 
-public class OverlayPosition {
-    private final float posX;
-    private final float posY;
+public class OverlayPosition { // Should be changed to RenderPosition if Overlays merge with Features
+    // Position along the x and y-axis as a percentage of the total screen width
+    public float x;
+    public float y;
 
-    private final int width;
-    private final int height;
+    public int width;
+    public int height;
 
+    // A cached value for the x and y-axis position according to the current screen size
     private float drawingX;
     private float drawingY;
 
-    public OverlayPosition(float posX, float posY, int width, int height) {
-        this.posX = posX;
-        this.posY = posY;
+    public OverlayPosition(float x, float y, int width, int height) {
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    public float getX() {
-        return posX;
-    }
-
     public float getCurrentX() {
+        this.refresh();
+
         return drawingX;
     }
 
-    public float getY() {
-        return posY;
-    }
-
     public float getCurrentY() {
+        this.refresh();
+
         return drawingY;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public void refresh() {
         Window screen = McUtils.mc().getWindow();
 
-        drawingX = posX * screen.getWidth();
-        drawingY = posY * screen.getHeight();
+        drawingX = x * screen.getWidth();
+        drawingY = y * screen.getHeight();
     }
 }
