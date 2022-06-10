@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
+import com.wynntils.utils.objects.CustomColor;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -31,15 +32,15 @@ public class RenderUtils {
 
     public static final ResourceLocation highlight = new ResourceLocation("wynntils", "textures/highlight.png");
 
-    public static void drawRect(int color, int x, int y, int width, int height) {
+    public static void drawRect(CustomColor color, int x, int y, int width, int height) {
         drawRect(new PoseStack(), color, x, y, 0, width, height);
     }
 
-    public static void drawRect(PoseStack poseStack, int color, int x, int y, int z, int width, int height) {
-        int alpha = (color >> 24) & 0xFF;
-        int red = (color >> 16) & 0xFF;
-        int green = (color >> 8) & 0xFF;
-        int blue = color & 0xFF;
+    public static void drawRect(PoseStack poseStack, CustomColor color, int x, int y, int z, int width, int height) {
+        int alpha = color.a & 0xFF;
+        int red = color.r & 0xFF;
+        int green = color.g & 0xFF;
+        int blue = color.b & 0xFF;
 
         Matrix4f matrix = poseStack.last().pose();
 
@@ -116,7 +117,14 @@ public class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
-            ResourceLocation tex, int color, int x, int y, int width, int height, int textureWidth, int textureHeight) {
+            ResourceLocation tex,
+            CustomColor color,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRectWithColor(
                 new PoseStack(), tex, color, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
@@ -124,7 +132,7 @@ public class RenderUtils {
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
             ResourceLocation tex,
-            int color,
+            CustomColor color,
             int x,
             int y,
             int z,
@@ -136,10 +144,10 @@ public class RenderUtils {
             int v,
             int textureWidth,
             int textureHeight) {
-        int alpha = (color >> 24) & 0xFF;
-        int red = (color >> 16) & 0xFF;
-        int green = (color >> 8) & 0xFF;
-        int blue = color & 0xFF;
+        int alpha = color.a & 0xFF;
+        int red = color.r & 0xFF;
+        int green = color.g & 0xFF;
+        int blue = color.b & 0xFF;
 
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
@@ -185,20 +193,20 @@ public class RenderUtils {
             int x2,
             int y2,
             int blitOffset,
-            int colorA,
-            int colorB) {
-        float f = (float) (colorA >> 24 & 0xFF) / 255.0f;
-        float g = (float) (colorA >> 16 & 0xFF) / 255.0f;
-        float h = (float) (colorA >> 8 & 0xFF) / 255.0f;
-        float i = (float) (colorA & 0xFF) / 255.0f;
-        float j = (float) (colorB >> 24 & 0xFF) / 255.0f;
-        float k = (float) (colorB >> 16 & 0xFF) / 255.0f;
-        float l = (float) (colorB >> 8 & 0xFF) / 255.0f;
-        float m = (float) (colorB & 0xFF) / 255.0f;
-        builder.vertex(matrix, x2, y1, blitOffset).color(g, h, i, f).endVertex();
-        builder.vertex(matrix, x1, y1, blitOffset).color(g, h, i, f).endVertex();
-        builder.vertex(matrix, x1, y2, blitOffset).color(k, l, m, j).endVertex();
-        builder.vertex(matrix, x2, y2, blitOffset).color(k, l, m, j).endVertex();
+            CustomColor colorA,
+            CustomColor colorB) {
+        int A_a = (colorA.a & 0xFF);
+        int A_r = (colorA.r & 0xFF);
+        int A_g = (colorA.g & 0xFF);
+        int A_b = (colorA.b & 0xFF);
+        int B_a = (colorB.a & 0xFF);
+        int B_r = (colorB.r & 0xFF);
+        int B_g = (colorB.g & 0xFF);
+        int B_b = (colorB.b & 0xFF);
+        builder.vertex(matrix, x2, y1, blitOffset).color(A_r, A_g, A_b, A_a).endVertex();
+        builder.vertex(matrix, x1, y1, blitOffset).color(A_r, A_g, A_b, A_a).endVertex();
+        builder.vertex(matrix, x1, y2, blitOffset).color(B_r, B_g, B_b, B_a).endVertex();
+        builder.vertex(matrix, x2, y2, blitOffset).color(B_r, B_g, B_b, B_a).endVertex();
     }
 
     public static void drawTooltip(List<ClientTooltipComponent> lines, PoseStack poseStack, Font font) {
@@ -219,9 +227,9 @@ public class RenderUtils {
         int tooltipY = 4;
         // somewhat hacky solution to get around transparency issues - these colors were chosen to best match
         // how tooltips are displayed in-game
-        int backgroundColor = 0xFF100010;
-        int borderColorStart = 0xFF25005B;
-        int borderColorEnd = 0xFF180033;
+        CustomColor backgroundColor = CustomColor.fromInt(0xFF100010);
+        CustomColor borderColorStart = CustomColor.fromInt(0xFF25005B);
+        CustomColor borderColorEnd = CustomColor.fromInt(0xFF180033);
         int zLevel = 400;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();

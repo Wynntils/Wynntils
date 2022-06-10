@@ -40,7 +40,9 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import java.util.List;
@@ -65,6 +67,8 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpd
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -285,5 +289,15 @@ public class EventFactory {
         post(new ClientTickEvent(ClientTickEvent.Phase.END));
     }
 
+    // endregion
+
+    // region Title Events
+    public static void onTitleSetText(ClientboundSetTitleTextPacket packet) {
+        post(new TitleSetTextEvent(packet.getText()));
+    }
+
+    public static void onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
+        post(new SubtitleSetTextEvent(packet.getText()));
+    }
     // endregion
 }

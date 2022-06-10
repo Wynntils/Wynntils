@@ -17,6 +17,7 @@ import com.wynntils.core.config.objects.ConfigurableHolder;
 import com.wynntils.core.config.properties.ConfigOption;
 import com.wynntils.core.config.properties.Configurable;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.CustomColor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,7 +50,10 @@ public class ConfigManager {
     }
 
     public static void init() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
+                .setPrettyPrinting()
+                .create();
 
         loadConfigFile();
     }

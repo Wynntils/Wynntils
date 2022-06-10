@@ -4,6 +4,8 @@
  */
 package com.wynntils.wc.custom.item.render;
 
+import com.wynntils.utils.objects.CustomColor;
+
 public interface HotbarHighlightedItem {
-    int getHotbarColor();
+    CustomColor getHotbarColor();
 }
