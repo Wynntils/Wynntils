@@ -1,5 +1,5 @@
 name: auto-format
-on: pull_request
+on: pull_request_target
 jobs:
   format:
     runs-on: ubuntu-latest
