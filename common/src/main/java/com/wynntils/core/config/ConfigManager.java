@@ -32,7 +32,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
     private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "configs");
-    private static final String FILE_SUFFIX = ".config";
+    private static final String FILE_SUFFIX = ".json";
 
     private static final List<ConfigurableHolder> configContainers = new ArrayList<>();
     private static File userConfig;
