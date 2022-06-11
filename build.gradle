@@ -37,7 +37,7 @@ subprojects {
     }
 }
 
-def versionObj = new Version(major: 1, minor: 1, patch: 0)
+def versionObj = new Version(major: 2, minor: 0, patch: 0)
 
 allprojects {
     apply plugin: "java"
