@@ -85,7 +85,7 @@ public class ItemHighlightFeature extends UserFeature {
     public static float hotbarOpacity = .5f;
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlotPre(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled) return;
 
         ItemStack item = e.getSlot().getItem();
@@ -98,6 +98,7 @@ public class ItemHighlightFeature extends UserFeature {
                 color.withAlpha(inventoryOpacity),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
+                200,
                 18,
                 18,
                 256,
@@ -113,6 +114,6 @@ public class ItemHighlightFeature extends UserFeature {
 
         CustomColor color = highlightedItem.getHotbarColor();
         if (color == CustomColor.NONE) return;
-        RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 16, 16);
+        RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
     }
 }
