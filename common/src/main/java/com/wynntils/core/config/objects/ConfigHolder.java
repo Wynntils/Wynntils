@@ -20,7 +20,6 @@ public class ConfigHolder extends StorageHolder {
                 metadata.visible());
 
         this.metadata = metadata;
-        // save default value to enable easy resetting
     }
 
     public Config getMetadata() {

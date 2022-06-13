@@ -26,6 +26,7 @@ public abstract class StorageHolder {
         this.category = category;
         this.visible = visible;
 
+        // save default value to enable easy resetting
         this.defaultValue = getValue();
     }
 
