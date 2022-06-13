@@ -28,6 +28,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class RenderUtils {
 
@@ -192,15 +193,16 @@ public class RenderUtils {
         // RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.lineWidth(14.0f);
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
+        BufferBuilder bufferBuilder = RenderSystem.renderThreadTesselator().getBuilder();
+        RenderSystem.lineWidth(4.0f);
+        bufferBuilder.begin(Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
         for (int i = 0; i <= numSteps; i++) {
             float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
             bufferBuilder
-                    .vertex(x + Math.sin(angle) * radius + 8, y - Math.cos(angle) * radius + 8, 0d)
+                    .vertex(x + Mth.sin(angle) * radius + 8, y - Mth.cos(angle) * radius + 8, 0d)
                     .color(color.r, color.g, color.b, color.a)
+                    .normal(0, 0, -1)
                     .endVertex();
         }
         bufferBuilder.end();
