@@ -4,12 +4,12 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.config.properties.ConfigOption;
+import com.wynntils.core.config.properties.Config;
 
 /**
  * A feature that is enabled & disabled by the user.
  */
 public abstract class UserFeature extends Feature {
-    @ConfigOption(displayName = "Enabled", description = "Should this feature be enabled?")
+    @Config(displayName = "Enabled", description = "Should this feature be enabled?")
     protected boolean userEnabled = true;
 }

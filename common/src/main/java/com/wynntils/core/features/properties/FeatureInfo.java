@@ -25,4 +25,10 @@ public @interface FeatureInfo {
         STABLE,
         INVARIABLE
     }
+
+    /** The parent category for options within this container. Also defines file structure. */
+    String category() default ""; // Add a default so there are no errors, won't be used anyway
+
+    /** Whether this container should be visible to the user */
+    boolean visible() default true;
 }

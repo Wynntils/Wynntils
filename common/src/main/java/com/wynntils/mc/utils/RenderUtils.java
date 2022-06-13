@@ -34,8 +34,8 @@ public class RenderUtils {
 
     public static final ResourceLocation highlight = new ResourceLocation("wynntils", "textures/highlight.png");
 
-    public static void drawRect(CustomColor color, int x, int y, int width, int height) {
-        drawRect(new PoseStack(), color, x, y, 0, width, height);
+    public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
+        drawRect(new PoseStack(), color, x, y, z, width, height);
     }
 
     public static void drawRect(PoseStack poseStack, CustomColor color, int x, int y, int z, int width, int height) {
@@ -121,12 +121,13 @@ public class RenderUtils {
             CustomColor color,
             int x,
             int y,
+            int z,
             int width,
             int height,
             int textureWidth,
             int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(), tex, color, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
+                new PoseStack(), tex, color, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRectWithColor(
