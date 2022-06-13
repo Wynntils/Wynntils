@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConfigOption {
+public @interface Config {
     /** The display name for this option, for users */
     String displayName();
 
