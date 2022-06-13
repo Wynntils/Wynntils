@@ -5,18 +5,16 @@
 package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.config.properties.ConfigOption;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.webapi.WebManager;
 
-@FeatureInfo(stability = Stability.STABLE)
-@Configurable(category = "Item Tooltips")
+@FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
 
-    @ConfigOption(displayName = "Show Guess Price")
+    @Config(displayName = "Show Guess Price")
     public static boolean showGuessesPrice = true;
 
     @Override

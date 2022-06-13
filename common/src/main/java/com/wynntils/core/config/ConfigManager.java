@@ -12,10 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.objects.ConfigOptionHolder;
-import com.wynntils.core.config.objects.ConfigurableHolder;
-import com.wynntils.core.config.properties.ConfigOption;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.config.objects.StorageHolder;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.io.File;
@@ -24,29 +21,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
     private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "config");
     private static final String FILE_SUFFIX = ".conf.json";
 
-    private static final List<ConfigurableHolder> configContainers = new ArrayList<>();
+    private static final List<StorageHolder> STORAGE_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
 
     private static Gson gson;
 
-    public static void registerConfigurable(Object configurableObject) {
-        ConfigurableHolder configurable = configurableFromObject(configurableObject);
-        if (configurable == null) return; // not a valid configurable
-
-        // add configurable to its corresponding category, then try to load it from file
-        configContainers.add(configurable);
-        loadConfigOptions(configurable);
+    public static void registerHolder(StorageHolder holder) {
+        STORAGE_HOLDERS.add(holder);
+        loadConfigOptions(holder);
     }
 
     public static void init() {
@@ -79,21 +70,19 @@ public class ConfigManager {
         }
     }
 
-    private static void loadConfigOptions(ConfigurableHolder configurable) {
+    private static void loadConfigOptions(StorageHolder holder) {
         if (configObject == null) return; // nothing to load from
 
-        String prefix = configurable.getJsonName() + ".";
-        for (ConfigOptionHolder option : configurable.getOptions()) {
-            String name = prefix + option.getJsonName();
+        String prefix = holder.getCategory() + ".";
+        String name = prefix + holder.getJsonName();
 
-            // option hasn't been saved to config
-            if (!configObject.has(name)) continue;
+        // option hasn't been saved to config
+        if (!configObject.has(name)) return;
 
-            // read value and update option
-            JsonElement optionJson = configObject.get(name);
-            Object value = gson.fromJson(optionJson, option.getType());
-            option.setValue(value);
-        }
+        // read value and update option
+        JsonElement holderJson = configObject.get(name);
+        Object value = gson.fromJson(holderJson, holder.getType());
+        holder.setValue(value);
     }
 
     public static void saveConfig() {
@@ -102,54 +91,24 @@ public class ConfigManager {
             if (!userConfig.exists()) userConfig.createNewFile();
 
             // create json object, with entry for each option of each container
-            JsonObject configJson = new JsonObject();
-            for (ConfigurableHolder configurable : configContainers) {
-                String prefix = configurable.getJsonName() + ".";
-                for (ConfigOptionHolder option : configurable.getOptions()) {
-                    if (option.isDefault()) continue; // only save options that are non-default
+            JsonObject holderJson = new JsonObject();
+            for (StorageHolder holder : STORAGE_HOLDERS) {
+                String prefix = holder.getCategory() + ".";
+                if (holder.isDefault()) continue; // only save options that are non-default
 
-                    String name = prefix + option.getJsonName();
-                    JsonElement optionElement = gson.toJsonTree(option.getValue());
-                    configJson.add(name, optionElement);
-                }
+                String name = prefix + holder.getJsonName();
+                JsonElement holderElement = gson.toJsonTree(holder.getValue());
+                holderJson.add(name, holderElement);
             }
 
             // write json to file
             OutputStreamWriter fileWriter =
                     new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-            gson.toJson(configJson, fileWriter);
+            gson.toJson(holderJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             Reference.LOGGER.error("Failed to save user config file!");
             e.printStackTrace();
         }
-    }
-
-    private static ConfigurableHolder configurableFromObject(Object configurableObject) {
-        Class<?> configurableClass = configurableObject.getClass();
-
-        Configurable metadata = configurableClass.getAnnotation(Configurable.class);
-        if (metadata == null || metadata.category().isEmpty()) return null; // not a valid config container
-
-        List<ConfigOptionHolder> options = new ArrayList<>();
-
-        // collect options
-        for (Field f : FieldUtils.getFieldsWithAnnotation(configurableClass, ConfigOption.class)) {
-            ConfigOptionHolder option = optionFromField(configurableObject, f);
-            if (option == null) continue;
-
-            options.add(option);
-        }
-
-        if (options.isEmpty()) return null; // configurable contains no options, so not valid
-
-        return new ConfigurableHolder(configurableClass, options, metadata);
-    }
-
-    private static ConfigOptionHolder optionFromField(Object parent, Field field) {
-        ConfigOption metadata = field.getAnnotation(ConfigOption.class);
-        if (metadata == null || metadata.displayName().isEmpty()) return null; // not a valid config variable
-
-        return new ConfigOptionHolder(parent, field, metadata);
     }
 }

@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.config.properties.ConfigOption;
+import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE)
 public class PlayerGhostTransparencyFeature extends UserFeature {
 
-    @ConfigOption(
+    @Config(
             displayName = "Player Ghost Translucence",
             description = "The level of translucence that should be applied to player ghosts")
     public static float playerGhostTranslucenceLevel = 0.75f;
