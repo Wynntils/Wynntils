@@ -13,6 +13,7 @@ import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.objects.StorageHolder;
+import com.wynntils.core.overlays.objects.OverlayPosition;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.io.File;
@@ -43,6 +44,7 @@ public class ConfigManager {
     public static void init() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
+                .registerTypeAdapter(OverlayPosition.class, new OverlayPosition.OverlayPositionSerializer())
                 .setPrettyPrinting()
                 .create();
 
