@@ -17,7 +17,7 @@ public class OverlayHolder extends StorageHolder {
                 parent,
                 field,
                 field.getType(),
-                field.getAnnotation(FeatureInfo.class).category(),
+                parent.getClass().getAnnotation(FeatureInfo.class).category(),
                 false);
 
         this.metadata = metadata;
