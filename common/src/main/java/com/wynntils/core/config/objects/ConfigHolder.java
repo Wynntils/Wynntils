@@ -16,7 +16,9 @@ public class ConfigHolder extends StorageHolder {
                 parent,
                 field,
                 field.getType(),
-                parent.getClass().getAnnotation(FeatureInfo.class).category(),
+                parent.getClass().getAnnotation(FeatureInfo.class) != null
+                        ? parent.getClass().getAnnotation(FeatureInfo.class).category()
+                        : "",
                 metadata.visible());
 
         this.metadata = metadata;

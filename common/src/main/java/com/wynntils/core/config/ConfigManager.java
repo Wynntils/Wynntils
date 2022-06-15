@@ -13,6 +13,7 @@ import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.objects.Overlay;
+import com.wynntils.core.config.objects.OverlayHolder;
 import com.wynntils.core.config.objects.StorageHolder;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -33,10 +34,15 @@ public class ConfigManager {
     private static final List<StorageHolder> STORAGE_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
+    private static final List<OverlayHolder> OVERLAY_HOLDERS = new ArrayList<>();
 
     private static Gson gson;
 
     public static void registerHolder(StorageHolder holder) {
+        if (holder instanceof OverlayHolder) {
+            OVERLAY_HOLDERS.add((OverlayHolder) holder);
+        }
+
         STORAGE_HOLDERS.add(holder);
         loadConfigOptions(holder);
     }
@@ -112,5 +118,9 @@ public class ConfigManager {
             Reference.LOGGER.error("Failed to save user config file!");
             e.printStackTrace();
         }
+    }
+
+    public static List<OverlayHolder> getOverlays() {
+        return OVERLAY_HOLDERS;
     }
 }
