@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
@@ -93,15 +94,15 @@ public class ItemHighlightFeature extends UserFeature {
         CustomColor color = highlightedItem.getHighlightColor(e.getScreen(), e.getSlot());
         if (color == CustomColor.NONE) return;
         RenderUtils.drawTexturedRectWithColor(
-                RenderUtils.highlight,
+                Texture.HIGHLIGHT.resource(),
                 color.withAlpha(inventoryOpacity),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 200,
                 18,
                 18,
-                256,
-                256);
+                Texture.HIGHLIGHT.width(),
+                Texture.HIGHLIGHT.height());
     }
 
     @SubscribeEvent

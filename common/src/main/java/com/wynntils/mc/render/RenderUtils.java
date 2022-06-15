@@ -12,10 +12,8 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -31,8 +29,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
 public class RenderUtils {
-
-    public static final ResourceLocation highlight = new ResourceLocation("wynntils", "textures/highlight.png");
 
     public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
         drawRect(new PoseStack(), color, x, y, z, width, height);
@@ -183,48 +179,33 @@ public class RenderUtils {
 
     private static final float MAX_CIRCLE_STEPS = 16f;
 
-    public static void drawArc(CustomColor color, int x, int y, float fill, int radius) {
-        drawArc(new PoseStack(), color, x, y, fill, radius);
+    public static void drawArc(CustomColor color, int x, int y, int z, float fill, int radius) {
+        drawArc(new PoseStack(), color, x, y, z, fill, radius);
     }
 
-    public static void drawArc(PoseStack poseStack, CustomColor color, int x, int y, float fill, int radius) {
+    public static void drawArc(PoseStack poseStack, CustomColor color, int x, int y, int z, float fill, int radius) {
         // keeps arc from overlapping itself
-        int numSteps = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
+        int segments = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
 
-        // RenderSystem.disableDepthTest();
-        /*RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-        RenderSystem.lineWidth(10.0f);
-        bufferBuilder.begin(Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-        for (int i = 0; i <= numSteps; i++) {
-            float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
-            bufferBuilder
-                    .vertex(x + Math.sin(angle) * radius + 8, y - Math.cos(angle) * radius + 8, 200d)
-                    .color(color.r, color.g, color.b, color.a).endVertex();
-        }
-        tesselator.end();
-        RenderSystem.disableBlend();
-        RenderSystem.enableDepthTest();*/
+        // each section of arc texture is 64 wide, ordered left to right
+        int uOffset = 64 * segments;
 
-        MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
-        VertexConsumer consumer = source.getBuffer(CustomRenderType.INVENTORY_ARC_LINE);
-
-        for (int i = 0; i <= numSteps; i++) {
-            float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
-            consumer.vertex(
-                            poseStack.last().pose(),
-                            (float) (x + Math.sin(angle) * radius + 8),
-                            (float) (y - Math.cos(angle) * radius + 8),
-                            200f)
-                    .color(color.r, color.g, color.b, color.a)
-                    .normal(0, 0, 1)
-                    .endVertex();
-        }
-
-        source.endBatch();
+        // render arc texture
+        drawTexturedRectWithColor(
+                poseStack,
+                Texture.ARC.resource(),
+                color,
+                x,
+                y,
+                z,
+                radius * 2,
+                radius * 2,
+                uOffset,
+                0,
+                64,
+                64,
+                Texture.ARC.width(),
+                Texture.ARC.height());
     }
 
     // somewhat hacky solution to get around transparency issues - these colors were chosen to best match

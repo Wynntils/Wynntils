@@ -32,23 +32,6 @@ public class CustomRenderType extends RenderType {
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
 
-    public static final RenderType INVENTORY_ARC_LINE = RenderType.create(
-            "inventory_arc",
-            DefaultVertexFormat.POSITION_COLOR_NORMAL,
-            Mode.LINE_STRIP,
-            256,
-            false,
-            false,
-            CompositeState.builder()
-                    .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
-                    .setLineState(new LineStateShard(OptionalDouble.of(4)))
-                    .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setOutputState(ITEM_ENTITY_TARGET)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setCullState(NO_CULL)
-                    .createCompositeState(false));
-
     public CustomRenderType(
             String pName,
             VertexFormat pFormat,
