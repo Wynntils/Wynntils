@@ -4,13 +4,14 @@
  */
 package com.wynntils.features.user;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.config.properties.Configurable;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.RenderUtils;
+import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
@@ -38,6 +39,6 @@ public class DurabilityArcFeature extends UserFeature {
         CustomColor color = CustomColor.fromInt(colorInt).setAlpha(160);
 
         // draw
-        RenderUtils.drawArc(color, e.getSlot().x, e.getSlot().y, durabilityPct, 8);
+        RenderUtils.drawArc(RenderSystem.getModelViewStack(), color, e.getSlot().x, e.getSlot().y, durabilityPct, 8);
     }
 }

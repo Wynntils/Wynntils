@@ -102,7 +102,7 @@ public class FeatureRegistry {
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
         for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Config.class)) {
-            ConfigManager.registerHolder(new ConfigHolder(feature.getClass(), f, f.getAnnotation(Config.class)));
+            ConfigManager.registerHolder(new ConfigHolder(feature, f, f.getAnnotation(Config.class)));
         }
 
         // initialize & enable

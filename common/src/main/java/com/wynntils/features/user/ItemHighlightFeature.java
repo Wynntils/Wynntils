@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.RenderUtils;
+import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;

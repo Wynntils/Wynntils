@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils;
+package com.wynntils.mc.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -12,9 +12,10 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Matrix4f;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -28,7 +29,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public class RenderUtils {
 
@@ -192,24 +192,39 @@ public class RenderUtils {
         int numSteps = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
 
         // RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
+        /*RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
-        BufferBuilder bufferBuilder = RenderSystem.renderThreadTesselator().getBuilder();
-        RenderSystem.lineWidth(4.0f);
-        bufferBuilder.begin(Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
+        RenderSystem.lineWidth(10.0f);
+        bufferBuilder.begin(Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
         for (int i = 0; i <= numSteps; i++) {
             float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
             bufferBuilder
-                    .vertex(x + Mth.sin(angle) * radius + 8, y - Mth.cos(angle) * radius + 8, 0d)
+                    .vertex(x + Math.sin(angle) * radius + 8, y - Math.cos(angle) * radius + 8, 200d)
+                    .color(color.r, color.g, color.b, color.a).endVertex();
+        }
+        tesselator.end();
+        RenderSystem.disableBlend();
+        RenderSystem.enableDepthTest();*/
+
+        MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
+        VertexConsumer consumer = source.getBuffer(CustomRenderType.INVENTORY_ARC_LINE);
+
+        for (int i = 0; i <= numSteps; i++) {
+            float angle = 2 * (float) Math.PI * i / (MAX_CIRCLE_STEPS - 1.0f);
+            consumer.vertex(
+                            poseStack.last().pose(),
+                            (float) (x + Math.sin(angle) * radius + 8),
+                            (float) (y - Math.cos(angle) * radius + 8),
+                            200f)
                     .color(color.r, color.g, color.b, color.a)
-                    .normal(0, 0, -1)
+                    .normal(0, 0, 1)
                     .endVertex();
         }
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
-        RenderSystem.disableBlend();
-        RenderSystem.enableDepthTest();
+
+        source.endBatch();
     }
 
     // somewhat hacky solution to get around transparency issues - these colors were chosen to best match

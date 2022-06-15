@@ -14,8 +14,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.internal.LootrunFeature;
+import com.wynntils.mc.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.lootrun.objects.LootrunRenderType;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.io.File;
@@ -205,7 +205,7 @@ public class LootrunUtils {
         if (level == null) return;
 
         for (ColoredPath locationsInRoute : locations) {
-            VertexConsumer consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
+            VertexConsumer consumer = source.getBuffer(CustomRenderType.LOOTRUN_LINE);
             Matrix4f lastMatrix = poseStack.last().pose();
             boolean sourceBatchEnded = false;
 
@@ -227,7 +227,7 @@ public class LootrunUtils {
                     if (blockValidness == BlockValidness.VALID) {
                         pauseDraw = false;
                         if (sourceBatchEnded) {
-                            consumer = source.getBuffer(LootrunRenderType.LOOTRUN_LINE);
+                            consumer = source.getBuffer(CustomRenderType.LOOTRUN_LINE);
                             sourceBatchEnded = false;
                         }
                         renderQueuedPoints(consumer, lastMatrix, toRender);

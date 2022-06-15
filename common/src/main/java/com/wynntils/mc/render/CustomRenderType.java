@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wc.utils.lootrun.objects;
+package com.wynntils.mc.render;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -11,7 +11,7 @@ import java.util.OptionalDouble;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 
-public class LootrunRenderType extends RenderType {
+public class CustomRenderType extends RenderType {
 
     // Copied from RenderType.LINE_STRIP and changed the line width from the default
     // to 3
@@ -32,7 +32,24 @@ public class LootrunRenderType extends RenderType {
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
 
-    public LootrunRenderType(
+    public static final RenderType INVENTORY_ARC_LINE = RenderType.create(
+            "inventory_arc",
+            DefaultVertexFormat.POSITION_COLOR_NORMAL,
+            Mode.LINE_STRIP,
+            256,
+            false,
+            false,
+            CompositeState.builder()
+                    .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
+                    .setLineState(new LineStateShard(OptionalDouble.of(4)))
+                    .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setOutputState(ITEM_ENTITY_TARGET)
+                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+                    .setCullState(NO_CULL)
+                    .createCompositeState(false));
+
+    public CustomRenderType(
             String pName,
             VertexFormat pFormat,
             Mode pMode,
