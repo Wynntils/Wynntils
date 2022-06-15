@@ -7,14 +7,13 @@ package com.wynntils.core.features;
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.objects.ConfigHolder;
+import com.wynntils.core.config.objects.Overlay;
+import com.wynntils.core.config.objects.OverlayHolder;
 import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.overlays.OverlayManager;
-import com.wynntils.core.overlays.objects.OverlayHolder;
-import com.wynntils.core.overlays.properties.Overlay;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.internal.FixPacketBugsFeature;
@@ -89,15 +88,14 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
-        // register & load configs
+        // register & load configs as well as overlays
         // this has to be done after the userEnabled handling above, so the default value registers properly
         for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Config.class)) {
-            ConfigManager.registerHolder(new ConfigHolder(feature.getClass(), f, f.getAnnotation(Config.class)));
-        }
-
-        // register overlays
-        for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Overlay.class)) {
-            OverlayManager.registerOverlay(new OverlayHolder(feature.getClass(), f, f.getAnnotation(Overlay.class)));
+            if (f.getType() == Overlay.class) {
+                ConfigManager.registerHolder(new OverlayHolder(feature.getClass(), f, f.getAnnotation(Config.class)));
+            } else {
+                ConfigManager.registerHolder(new ConfigHolder(feature.getClass(), f, f.getAnnotation(Config.class)));
+            }
         }
 
         // initialize & enable
