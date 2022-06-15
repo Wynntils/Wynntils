@@ -29,8 +29,8 @@ public class DurabilityArcFeature extends UserFeature {
         ItemStack item = e.getSlot().getItem();
         if (!(item instanceof WynnItemStack wynnItem)) return;
 
+        if (!wynnItem.hasProperty(ItemProperty.DURABILITY)) return; // no durability info
         DurabilityProperty durability = wynnItem.getProperty(ItemProperty.DURABILITY);
-        if (durability == null) return; // no durability info
 
         // calculate color of arc
         float durabilityPct = durability.getDurabilityPct();

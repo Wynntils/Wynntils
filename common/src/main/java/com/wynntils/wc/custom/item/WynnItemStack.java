@@ -45,4 +45,9 @@ public class WynnItemStack extends ItemStack {
         }
         return null; // no match
     }
+
+    public boolean hasProperty(Class<? extends ItemProperty> propertyType) {
+        // getProperty returns null if no property of the given type is present
+        return (getProperty(propertyType) != null);
+    }
 }
