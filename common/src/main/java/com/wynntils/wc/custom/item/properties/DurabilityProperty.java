@@ -4,12 +4,14 @@
  */
 package com.wynntils.wc.custom.item.properties;
 
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class DurabilityProperty extends ItemProperty {
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
@@ -36,5 +38,12 @@ public class DurabilityProperty extends ItemProperty {
 
     public float getDurabilityPct() {
         return (currentDurability * 1f) / maxDurability;
+    }
+
+    public static boolean hasDurability(ItemStack stack) {
+        for (Component c : ItemUtils.getTooltipLines(stack)) {
+            if (c.getString().endsWith(" Durability]")) return true;
+        }
+        return false;
     }
 }

@@ -63,13 +63,6 @@ public class WynnItemMatchers {
         return CONSUMABLE_PATTERN.matcher(strippedName).matches();
     }
 
-    public static boolean hasDurability(ItemStack stack) {
-        for (Component c : ItemUtils.getTooltipLines(stack)) {
-            if (c.getString().endsWith(" Durability]")) return true;
-        }
-        return false;
-    }
-
     public static boolean isUnidentified(ItemStack stack) {
         return (stack.getItem() == Items.STONE_SHOVEL && stack.getDamageValue() >= 1 && stack.getDamageValue() <= 6);
     }

@@ -53,7 +53,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
 
-        registerProperty(WynnItemMatchers::hasDurability, DurabilityProperty::new);
+        registerProperty(DurabilityProperty::hasDurability, DurabilityProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
