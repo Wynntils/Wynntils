@@ -18,10 +18,7 @@ public class ConfigHolder extends StorageHolder {
                 parent,
                 field,
                 field.getType(),
-                // This is a check for if the feature doesn't have the FeatureInfo annotation
-                parent.getClass().getAnnotation(FeatureInfo.class) != null
-                        ? parent.getClass().getAnnotation(FeatureInfo.class).category()
-                        : "",
+                parent.getClass().getAnnotation(FeatureInfo.class).category(),
                 metadata.visible());
 
         this.metadata = metadata;
