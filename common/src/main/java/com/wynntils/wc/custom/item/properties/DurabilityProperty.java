@@ -18,6 +18,7 @@ public class DurabilityProperty extends ItemProperty {
 
     private int currentDurability;
     private int maxDurability;
+    private float percent;
 
     public DurabilityProperty(WynnItemStack stack) {
         super(stack);
@@ -32,12 +33,13 @@ public class DurabilityProperty extends ItemProperty {
 
             this.currentDurability = Integer.parseInt(durabilityMatcher.group(1));
             this.maxDurability = Integer.parseInt(durabilityMatcher.group(2));
+            this.percent = (currentDurability * 1f) / maxDurability;
             break;
         }
     }
 
-    public float getDurabilityPct() {
-        return (currentDurability * 1f) / maxDurability;
+    public float getDurabilityPercent() {
+        return percent;
     }
 
     public static boolean hasDurability(ItemStack stack) {

@@ -33,11 +33,11 @@ public class DurabilityArcFeature extends UserFeature {
         DurabilityProperty durability = wynnItem.getProperty(ItemProperty.DURABILITY);
 
         // calculate color of arc
-        float durabilityPct = durability.getDurabilityPct();
-        int colorInt = Mth.hsvToRgb(Math.max(0f, durabilityPct) / 3f, 1f, 1f);
+        float durabilityPercent = durability.getDurabilityPercent();
+        int colorInt = Mth.hsvToRgb(Math.max(0f, durabilityPercent) / 3f, 1f, 1f);
         CustomColor color = CustomColor.fromInt(colorInt).setAlpha(160);
 
         // draw
-        RenderUtils.drawArc(color, e.getSlot().x, e.getSlot().y, 200, durabilityPct, 8);
+        RenderUtils.drawArc(color, e.getSlot().x, e.getSlot().y, 200, durabilityPercent, 8);
     }
 }
