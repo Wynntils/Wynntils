@@ -7,16 +7,19 @@ package com.wynntils.core.features;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -58,8 +61,13 @@ public abstract class Feature {
     }
 
     /** Gets the name of a feature */
-    public String getName() {
+    public String getTranslatedName() {
         return ComponentUtils.getFormatted(getNameComponent());
+    }
+
+    public String getShortName() {
+        String typeName = this.getClass().getTypeName();
+        return typeName.substring(typeName.lastIndexOf('.') + 1);
     }
 
     protected String getNameCamelCase() {
@@ -145,6 +153,10 @@ public abstract class Feature {
         }
 
         return true;
+    }
+
+    public final Field[] getConfigFields() {
+        return FieldUtils.getFieldsWithAnnotation(this.getClass(), Config.class);
     }
 
     public class WebLoadedCondition extends Condition {

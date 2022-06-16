@@ -64,7 +64,7 @@ public class CustomColor {
         Matcher hexMatcher = HEX_PATTERN.matcher(hex);
 
         // invalid format
-        if (!hexMatcher.matches()) return new CustomColor(0, 0, 0, 0);
+        if (!hexMatcher.matches()) return CustomColor.NONE;
 
         // parse hex
         return fromInt(Integer.parseInt(hexMatcher.group(1), 16));
@@ -76,7 +76,7 @@ public class CustomColor {
         Matcher stringMatcher = STRING_PATTERN.matcher(string);
 
         // invalid format
-        if (!stringMatcher.matches()) return new CustomColor(0, 0, 0, 0);
+        if (!stringMatcher.matches()) return CustomColor.NONE;
 
         return new CustomColor(
                 Integer.parseInt(stringMatcher.group(1)),
