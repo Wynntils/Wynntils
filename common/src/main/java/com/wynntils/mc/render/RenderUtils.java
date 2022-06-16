@@ -30,6 +30,12 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RenderUtils {
 
+    // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
+    // these colors were chosen to best match how tooltips are displayed in-game
+    private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);
+    private static final CustomColor BORDER_START = CustomColor.fromInt(0xFF25005B);
+    private static final CustomColor BORDER_END = CustomColor.fromInt(0xFF180033);
+
     public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
         drawRect(new PoseStack(), color, x, y, z, width, height);
     }
@@ -207,12 +213,6 @@ public class RenderUtils {
                 Texture.ARC.width(),
                 Texture.ARC.height());
     }
-
-    // somewhat hacky solution to get around transparency issues - these colors were chosen to best match
-    // how tooltips are displayed in-game
-    private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);
-    private static final CustomColor BORDER_START = CustomColor.fromInt(0xFF25005B);
-    private static final CustomColor BORDER_END = CustomColor.fromInt(0xFF180033);
 
     public static void drawTooltip(List<ClientTooltipComponent> lines, PoseStack poseStack, Font font) {
         int tooltipWidth = 0;
