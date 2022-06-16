@@ -88,7 +88,28 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("reload").executes(this::reload))
                 .then(Commands.literal("version").executes(this::version))
                 .then(Commands.literal("config").then(getConfigArgBuilder).then(setConfigArgBuilder))
+                .then(Commands.literal("feature").then(Commands.literal("list").executes(this::listFeatures)))
                 .executes(this::help));
+    }
+
+    private int listFeatures(CommandContext<CommandSourceStack> context) {
+        Set<Feature> features = FeatureRegistry.getFeatures().stream().collect(Collectors.toUnmodifiableSet());
+
+        MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
+
+        for (Feature feature : features) {
+            String longFeatureName = Arrays.stream(CaseFormat.LOWER_CAMEL
+                            .to(CaseFormat.LOWER_UNDERSCORE, feature.getShortName())
+                            .split("_"))
+                    .map(StringUtils::capitalize)
+                    .collect(Collectors.joining(" "));
+            response.append(new TextComponent("\n-").withStyle(ChatFormatting.GRAY))
+                    .append(new TextComponent(longFeatureName).withStyle(ChatFormatting.YELLOW));
+        }
+
+        context.getSource().sendSuccess(response, false);
+
+        return 1;
     }
 
     private int changeFeatureConfig(CommandContext<CommandSourceStack> context) {
@@ -253,7 +274,7 @@ public class WynntilsCommand extends CommandBase {
                 .collect(Collectors.toUnmodifiableSet());
 
         MutableComponent response =
-                new TextComponent(featureName + "'s config options:\n").withStyle(ChatFormatting.DARK_AQUA);
+                new TextComponent(featureName + "'s config options:\n").withStyle(ChatFormatting.AQUA);
 
         for (Field config : configs) {
             Object value = null;
