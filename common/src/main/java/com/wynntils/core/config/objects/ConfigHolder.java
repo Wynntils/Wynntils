@@ -9,6 +9,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import java.lang.reflect.Field;
 
 public class ConfigHolder extends StorageHolder {
+    // Config metadata is stored here to allow other systems to use StorageHolder without Config annotation but still be
+    // able to use the Config system
     private final Config metadata;
 
     public ConfigHolder(Object parent, Field field, Config metadata) {
@@ -16,7 +18,7 @@ public class ConfigHolder extends StorageHolder {
                 parent,
                 field,
                 field.getType(),
-                field.getAnnotation(FeatureInfo.class).category(),
+                parent.getClass().getAnnotation(FeatureInfo.class).category(),
                 metadata.visible());
 
         this.metadata = metadata;
