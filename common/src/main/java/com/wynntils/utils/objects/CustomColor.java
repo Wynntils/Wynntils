@@ -45,6 +45,25 @@ public class CustomColor {
         this.a = (int) (a * 255);
     }
 
+    public CustomColor(String toParse) {
+        String noSpace = toParse.replaceAll(" ", "");
+
+        CustomColor parseTry = CustomColor.fromString(noSpace);
+
+        if (parseTry == CustomColor.NONE) {
+            parseTry = CustomColor.fromHexString(noSpace);
+
+            if (parseTry == CustomColor.NONE) {
+                throw new RuntimeException("Failed to parse CustomColor");
+            }
+        }
+
+        this.r = parseTry.r;
+        this.g = parseTry.g;
+        this.b = parseTry.b;
+        this.a = parseTry.a;
+    }
+
     public CustomColor(CustomColor color) {
         this(color.r, color.g, color.b, color.a);
     }
@@ -64,7 +83,7 @@ public class CustomColor {
         Matcher hexMatcher = HEX_PATTERN.matcher(hex);
 
         // invalid format
-        if (!hexMatcher.matches()) return new CustomColor(0, 0, 0, 0);
+        if (!hexMatcher.matches()) return CustomColor.NONE;
 
         // parse hex
         return fromInt(Integer.parseInt(hexMatcher.group(1), 16));
@@ -76,7 +95,7 @@ public class CustomColor {
         Matcher stringMatcher = STRING_PATTERN.matcher(string);
 
         // invalid format
-        if (!stringMatcher.matches()) return new CustomColor(0, 0, 0, 0);
+        if (!stringMatcher.matches()) return CustomColor.NONE;
 
         return new CustomColor(
                 Integer.parseInt(stringMatcher.group(1)),

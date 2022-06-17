@@ -44,6 +44,7 @@ import com.wynntils.wc.utils.WynnUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -125,6 +126,12 @@ public class FeatureRegistry {
         return FEATURES;
     }
 
+    public static Optional<Feature> getFeatureFromString(String featureName) {
+        return FeatureRegistry.getFeatures().stream()
+                .filter(feature -> feature.getShortName().equals(featureName))
+                .findFirst();
+    }
+
     public static List<Overlay> getOverlays() {
         return OVERLAYS;
     }
@@ -179,7 +186,7 @@ public class FeatureRegistry {
 
                 for (Feature feature : FEATURES) {
                     if (feature.isEnabled()) {
-                        result.append("\n\t\t").append(feature.getName());
+                        result.append("\n\t\t").append(feature.getTranslatedName());
                     }
                 }
 
@@ -199,7 +206,7 @@ public class FeatureRegistry {
 
                 for (Overlay overlay : OVERLAYS) {
                     if (overlay.isEnabled()) {
-                        result.append("\n\t\t").append(overlay.getName());
+                        result.append("\n\t\t").append(overlay.getTranslatedName());
                     }
                 }
 
@@ -238,7 +245,7 @@ public class FeatureRegistry {
                     }
 
                     if (contained && overlay.visible) {
-                        McUtils.mc().getProfiler().push(overlay.getName());
+                        McUtils.mc().getProfiler().push(overlay.getTranslatedName());
                         overlay.render(e);
                         McUtils.mc().getProfiler().pop();
                     }
@@ -264,7 +271,7 @@ public class FeatureRegistry {
                     if (overlay.hookElements.length != 0) {
                         for (RenderEvent.ElementType type : overlay.hookElements) {
                             if (e.getType() == type) {
-                                McUtils.mc().getProfiler().push(overlay.getName());
+                                McUtils.mc().getProfiler().push(overlay.getTranslatedName());
                                 overlay.render(e);
                                 McUtils.mc().getProfiler().pop();
                                 break;
