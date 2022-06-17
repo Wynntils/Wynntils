@@ -4,27 +4,78 @@
  */
 package com.wynntils.core.config.objects;
 
+import com.wynntils.core.Reference;
 import com.wynntils.core.config.properties.Config;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigHolder extends StorageHolder {
-    // Config metadata is stored here to allow other systems to use StorageHolder without Config annotation but still be
-    // able to use the Config system
+public class ConfigHolder {
+    private final Feature parent;
+    private final Field field;
+    private final Class<?> fieldType;
+
+    private final String category;
     private final Config metadata;
 
-    public ConfigHolder(Object parent, Field field, Config metadata) {
-        super(
-                parent,
-                field,
-                field.getType(),
-                parent.getClass().getAnnotation(FeatureInfo.class).category(),
-                metadata.visible());
+    private final Object defaultValue;
 
+    public ConfigHolder(Feature parent, Field field, String category, Config metadata) {
+        this.parent = parent;
+        this.field = field;
+        this.fieldType = field.getType();
+
+        this.category = category;
         this.metadata = metadata;
+
+        // save default value to enable easy resetting
+        this.defaultValue = getValue();
+    }
+
+    public Class<?> getType() {
+        return fieldType;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public String getJsonName() {
+        return parent.getClass().getSimpleName() + "." + field.getName();
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public Config getMetadata() {
         return metadata;
+    }
+
+    public Object getValue() {
+        try {
+            return FieldUtils.readField(field, parent, true);
+        } catch (IllegalAccessException e) {
+            Reference.LOGGER.error("Unable to get field " + getJsonName());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setValue(Object value) {
+        try {
+            FieldUtils.writeField(field, parent, value, true);
+        } catch (IllegalAccessException e) {
+            Reference.LOGGER.error("Unable to set field " + getJsonName());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isDefault() {
+        return defaultValue.equals(getValue());
+    }
+
+    public void reset() {
+        setValue(defaultValue);
     }
 }

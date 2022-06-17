@@ -7,8 +7,6 @@ package com.wynntils.core.features;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.config.objects.ConfigHolder;
-import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -102,9 +100,7 @@ public class FeatureRegistry {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Config.class)) {
-            ConfigManager.registerHolder(new ConfigHolder(feature, f, f.getAnnotation(Config.class)));
-        }
+        ConfigManager.registerFeature(feature);
 
         // initialize & enable
         feature.init();

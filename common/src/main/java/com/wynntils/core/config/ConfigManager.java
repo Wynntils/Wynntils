@@ -12,7 +12,10 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.objects.StorageHolder;
+import com.wynntils.core.config.objects.ConfigHolder;
+import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.io.File;
@@ -21,23 +24,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
     private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "config");
     private static final String FILE_SUFFIX = ".conf.json";
 
-    private static final List<StorageHolder> STORAGE_HOLDERS = new ArrayList<>();
+    private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
 
     private static Gson gson;
 
-    public static void registerHolder(StorageHolder holder) {
-        STORAGE_HOLDERS.add(holder);
-        loadConfigOptions(holder);
+    public static void registerFeature(Feature feature) {
+        List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
+        if (featureConfigOptions == null) return; // invalid feature
+
+        loadConfigOptions(featureConfigOptions);
+        CONFIG_HOLDERS.addAll(featureConfigOptions);
     }
 
     public static void init() {
@@ -70,19 +78,18 @@ public class ConfigManager {
         }
     }
 
-    private static void loadConfigOptions(StorageHolder holder) {
+    private static void loadConfigOptions(List<ConfigHolder> holders) {
         if (configObject == null) return; // nothing to load from
 
-        String prefix = holder.getCategory() + ".";
-        String name = prefix + holder.getJsonName();
+        for (ConfigHolder holder : holders) {
+            // option hasn't been saved to config
+            if (!configObject.has(holder.getJsonName())) return;
 
-        // option hasn't been saved to config
-        if (!configObject.has(name)) return;
-
-        // read value and update option
-        JsonElement holderJson = configObject.get(name);
-        Object value = gson.fromJson(holderJson, holder.getType());
-        holder.setValue(value);
+            // read value and update option
+            JsonElement holderJson = configObject.get(holder.getJsonName());
+            Object value = gson.fromJson(holderJson, holder.getType());
+            holder.setValue(value);
+        }
     }
 
     public static void saveConfig() {
@@ -92,13 +99,11 @@ public class ConfigManager {
 
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
-            for (StorageHolder holder : STORAGE_HOLDERS) {
-                String prefix = holder.getCategory() + ".";
+            for (ConfigHolder holder : CONFIG_HOLDERS) {
                 if (holder.isDefault()) continue; // only save options that are non-default
 
-                String name = prefix + holder.getJsonName();
                 JsonElement holderElement = gson.toJsonTree(holder.getValue());
-                holderJson.add(name, holderElement);
+                holderJson.add(holder.getJsonName(), holderElement);
             }
 
             // write json to file
@@ -110,5 +115,22 @@ public class ConfigManager {
             Reference.LOGGER.error("Failed to save user config file!");
             e.printStackTrace();
         }
+    }
+
+    private static List<ConfigHolder> collectConfigOptions(Feature feature) {
+        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
+        // feature has no category defined, can't create options
+        if (featureInfo == null || featureInfo.category().isBlank()) return null;
+
+        String category = featureInfo.category();
+        List<ConfigHolder> options = new ArrayList<>();
+
+        // collect options
+        for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Config.class)) {
+            Config metadata = f.getAnnotation(Config.class);
+            options.add(new ConfigHolder(feature, f, category, metadata));
+        }
+
+        return options;
     }
 }
