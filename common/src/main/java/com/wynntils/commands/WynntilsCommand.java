@@ -7,7 +7,6 @@ package com.wynntils.commands;
 import com.google.common.base.CaseFormat;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.commands.wynntils.WynntilsConfigCommand;
 import com.wynntils.core.Reference;
 import com.wynntils.core.commands.CommandBase;
@@ -15,17 +14,13 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -34,25 +29,6 @@ import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 public class WynntilsCommand extends CommandBase {
-    public static final SuggestionProvider<CommandSourceStack> featureSuggestionProvider =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
-
-    public static final SuggestionProvider<CommandSourceStack> featureConfigSuggestionProvider =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    () -> {
-                        String featureName = context.getArgument("feature", String.class);
-
-                        Optional<Feature> foundFeature = FeatureRegistry.getFeatureFromString(featureName);
-
-                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
-
-                        return Arrays.stream(foundFeature.get().getConfigFields())
-                                .map(Field::getName)
-                                .iterator();
-                    },
-                    builder);
-
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("wynntils")

@@ -8,7 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.commands.WynntilsCommand;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.Feature;
@@ -16,12 +16,14 @@ import com.wynntils.core.features.FeatureRegistry;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -30,6 +32,25 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public abstract class WynntilsConfigCommand {
+    public static final SuggestionProvider<CommandSourceStack> featureSuggestionProvider =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
+
+    public static final SuggestionProvider<CommandSourceStack> featureConfigSuggestionProvider =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        String featureName = context.getArgument("feature", String.class);
+
+                        Optional<Feature> foundFeature = FeatureRegistry.getFeatureFromString(featureName);
+
+                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
+
+                        return Arrays.stream(foundFeature.get().getConfigFields())
+                                .map(Field::getName)
+                                .iterator();
+                    },
+                    builder);
+
     public static LiteralArgumentBuilder<CommandSourceStack> buildGetConfigArgBuilder() {
         LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = Commands.literal("get");
 
@@ -38,9 +59,9 @@ public abstract class WynntilsConfigCommand {
         // /wynntils config get <feature>
         // /wynntils config get <feature> <field>
         getConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(WynntilsCommand.featureSuggestionProvider)
+                .suggests(featureSuggestionProvider)
                 .then(Commands.argument("config", StringArgumentType.word())
-                        .suggests(WynntilsCommand.featureConfigSuggestionProvider)
+                        .suggests(featureConfigSuggestionProvider)
                         .executes(WynntilsConfigCommand::getSpecificConfigOption))
                 .executes(WynntilsConfigCommand::listAllConfigOptions));
 
@@ -52,9 +73,9 @@ public abstract class WynntilsConfigCommand {
 
         // /wynntils config set <feature> <field> <newValue>
         setConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(WynntilsCommand.featureSuggestionProvider)
+                .suggests(featureSuggestionProvider)
                 .then(Commands.argument("config", StringArgumentType.word())
-                        .suggests(WynntilsCommand.featureConfigSuggestionProvider)
+                        .suggests(featureConfigSuggestionProvider)
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
                                 .executes(WynntilsConfigCommand::changeFeatureConfig))));
 
