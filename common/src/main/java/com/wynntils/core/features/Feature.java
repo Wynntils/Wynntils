@@ -8,6 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
@@ -31,6 +32,7 @@ public abstract class Feature {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
+    private List<ConfigHolder> configOptions = new ArrayList<>();
 
     protected boolean enabled = false;
 
@@ -48,7 +50,7 @@ public abstract class Feature {
     /**
      * Sets up this feature as an event listener. Called from the registry.
      */
-    public void setupEventListener() {
+    public final void setupEventListener() {
         this.isListener = true;
     }
 
@@ -56,7 +58,7 @@ public abstract class Feature {
      * Adds a keyHolder to the feature. Called from the registry.
      * @param keyHolder KeyHolder to add to the feature
      */
-    public void setupKeyHolder(KeyHolder keyHolder) {
+    public final void setupKeyHolder(KeyHolder keyHolder) {
         keyMappings.add(keyHolder);
     }
 
@@ -154,6 +156,23 @@ public abstract class Feature {
 
         return true;
     }
+
+    /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
+    public final void addConfigOptions(List<ConfigHolder> options) {
+        configOptions.addAll(options);
+    }
+
+    public final List<ConfigHolder> getConfigOptions() {
+        return configOptions;
+    }
+
+    /** Called when a feature's config option is updated. Called by ConfigHolder */
+    public void updateConfigOption(ConfigHolder configHolder) {
+        onConfigUpdate(configHolder);
+    }
+
+    /** Used to react to config option updates.  */
+    protected void onConfigUpdate(ConfigHolder configHolder) {}
 
     public final Field[] getConfigFields() {
         return FieldUtils.getFieldsWithAnnotation(this.getClass(), Config.class);

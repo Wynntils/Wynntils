@@ -39,6 +39,10 @@ public class ConfigHolder {
         return field;
     }
 
+    public String getFieldName() {
+        return field.getName();
+    }
+
     public String getJsonName() {
         return parent.getClass().getSimpleName() + "." + field.getName();
     }
@@ -64,6 +68,7 @@ public class ConfigHolder {
     public void setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
+            parent.updateConfigOption(this);
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set field " + getJsonName());
             e.printStackTrace();
