@@ -82,8 +82,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();
 
-        List<Component> lore =
-                ComponentUtils.stripDuplicateBlank(super.getTooltipLines(null, TooltipFlag.Default.NORMAL));
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(getOriginalTooltip());
         lore.remove(0); // remove item name
 
         List<Component> baseTooltip = new ArrayList<>();
