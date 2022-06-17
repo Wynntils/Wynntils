@@ -12,6 +12,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.Reference;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -165,6 +166,8 @@ public class WynntilsCommand extends CommandBase {
                     .sendFailure(new TextComponent("Failed to set config field!").withStyle(ChatFormatting.RED));
             return 0;
         }
+
+        ConfigManager.saveConfig();
 
         context.getSource()
                 .sendSuccess(
