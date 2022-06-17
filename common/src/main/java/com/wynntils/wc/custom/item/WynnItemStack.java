@@ -4,19 +4,21 @@
  */
 package com.wynntils.wc.custom.item;
 
+import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.TooltipFlag.Default;
 
-public abstract class WynnItemStack extends ItemStack {
+public class WynnItemStack extends ItemStack {
 
     protected String itemName;
+    protected List<ItemProperty> properties = new ArrayList<>();
 
-    protected WynnItemStack(ItemStack stack) {
+    public WynnItemStack(ItemStack stack) {
         super(stack.getItem(), stack.getCount());
         if (stack.getTag() != null) setTag(stack.getTag());
 
@@ -28,8 +30,24 @@ public abstract class WynnItemStack extends ItemStack {
         return itemName;
     }
 
-    @Override
-    public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
-        return super.getTooltipLines(player, flag);
+    public List<Component> getOriginalTooltip() {
+        return super.getTooltipLines(null, Default.NORMAL);
+    }
+
+    public void addProperty(ItemProperty property) {
+        if (getProperty(property.getClass()) != null) return; // don't allow duplicate properties of same type
+        this.properties.add(property);
+    }
+
+    public <T extends ItemProperty> T getProperty(Class<T> propertyType) {
+        for (ItemProperty property : properties) {
+            if (property.getClass().equals(propertyType)) return (T) property;
+        }
+        return null; // no match
+    }
+
+    public boolean hasProperty(Class<? extends ItemProperty> propertyType) {
+        // getProperty returns null if no property of the given type is present
+        return (getProperty(propertyType) != null);
     }
 }

@@ -11,11 +11,13 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.RenderUtils;
+import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.render.HighlightedItem;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @EventListener
@@ -82,8 +84,8 @@ public class ItemHighlightFeature extends UserFeature {
     @Config(displayName = "Hotbar Highlight Opacity")
     public static float hotbarOpacity = .5f;
 
-    @SubscribeEvent
-    public void onRenderSlotPre(SlotRenderEvent.Pre e) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled) return;
 
         ItemStack item = e.getSlot().getItem();
@@ -92,15 +94,15 @@ public class ItemHighlightFeature extends UserFeature {
         CustomColor color = highlightedItem.getHighlightColor(e.getScreen(), e.getSlot());
         if (color == CustomColor.NONE) return;
         RenderUtils.drawTexturedRectWithColor(
-                RenderUtils.highlight,
+                Texture.HIGHLIGHT.resource(),
                 color.withAlpha(inventoryOpacity),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 200,
                 18,
                 18,
-                256,
-                256);
+                Texture.HIGHLIGHT.width(),
+                Texture.HIGHLIGHT.height());
     }
 
     @SubscribeEvent

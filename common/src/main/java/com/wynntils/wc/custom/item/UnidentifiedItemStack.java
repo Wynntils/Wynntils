@@ -40,7 +40,7 @@ public class UnidentifiedItemStack extends WynnItemStack implements HighlightedI
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
 
-        tooltip = super.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        tooltip = getOriginalTooltip();
 
         tier = ItemTier.fromComponent(getHoverName());
         if (tier == null) return;
