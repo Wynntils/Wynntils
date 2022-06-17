@@ -229,21 +229,25 @@ public class WynntilsCommand extends CommandBase {
                 .collect(Collectors.joining(" "));
 
         MutableComponent response = new TextComponent(longFeatureName + "\n").withStyle(ChatFormatting.YELLOW);
-        response.append(new TextComponent("Config option: ").withStyle(ChatFormatting.WHITE)
+        response.append(new TextComponent("Config option: ")
+                .withStyle(ChatFormatting.WHITE)
                 .append(new TextComponent(config.getAnnotation(Config.class).displayName())
                         .withStyle(ChatFormatting.YELLOW))
                 .append("\n"));
 
-        response.append(new TextComponent("Value: ").withStyle(ChatFormatting.WHITE)
+        response.append(new TextComponent("Value: ")
+                        .withStyle(ChatFormatting.WHITE)
                         .append(new TextComponent(configTypeString))
                         .append(new TextComponent(": "))
                         .append(new TextComponent(valueString).withStyle(ChatFormatting.GREEN)))
                 .append("\n");
-        response.append(new TextComponent("Subcategory: ").withStyle(ChatFormatting.WHITE)
+        response.append(new TextComponent("Subcategory: ")
+                        .withStyle(ChatFormatting.WHITE)
                         .append(new TextComponent(
                                 config.getAnnotation(Config.class).subcategory())))
                 .append("\n");
-        response.append(new TextComponent("Description: ").withStyle(ChatFormatting.WHITE)
+        response.append(new TextComponent("Description: ")
+                        .withStyle(ChatFormatting.WHITE)
                         .append(new TextComponent(
                                 config.getAnnotation(Config.class).description())))
                 .append("\n");
@@ -268,8 +272,9 @@ public class WynntilsCommand extends CommandBase {
                 .filter(field -> field.getAnnotation(Config.class).visible())
                 .collect(Collectors.toUnmodifiableSet());
 
-        MutableComponent response =
-                new TextComponent(featureName).withStyle(ChatFormatting.YELLOW).append(new TextComponent("'s config options:\n").withStyle(ChatFormatting.WHITE));
+        MutableComponent response = new TextComponent(featureName)
+                .withStyle(ChatFormatting.YELLOW)
+                .append(new TextComponent("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
         for (Field config : configs) {
             Object value = null;
@@ -282,7 +287,8 @@ public class WynntilsCommand extends CommandBase {
             String configTypeString = " (" + config.getType().getSimpleName() + ")";
             String valueString = value == null ? "Couldn't get value." : value.toString();
 
-            MutableComponent current = new TextComponent("\n - ").withStyle(ChatFormatting.GRAY)
+            MutableComponent current = new TextComponent("\n - ")
+                    .withStyle(ChatFormatting.GRAY)
                     .append(new TextComponent(configNameString)
                             .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
