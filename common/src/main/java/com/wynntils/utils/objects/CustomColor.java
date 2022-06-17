@@ -45,6 +45,25 @@ public class CustomColor {
         this.a = (int) (a * 255);
     }
 
+    public CustomColor(String toParse) {
+        String noSpace = toParse.replaceAll(" ", "");
+
+        CustomColor parseTry = CustomColor.fromString(noSpace);
+
+        if (parseTry == CustomColor.NONE) {
+            parseTry = CustomColor.fromHexString(noSpace);
+
+            if (parseTry == CustomColor.NONE) {
+                throw new RuntimeException("Failed to parse CustomColor");
+            }
+        }
+
+        this.r = parseTry.r;
+        this.g = parseTry.g;
+        this.b = parseTry.b;
+        this.a = parseTry.a;
+    }
+
     public CustomColor(CustomColor color) {
         this(color.r, color.g, color.b, color.a);
     }

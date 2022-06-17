@@ -13,8 +13,8 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.utils.objects.CustomColor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -269,35 +269,38 @@ public abstract class WynntilsConfigCommand {
     }
 
     private static Object tryParseNewValue(Class<?> typeToParse, String value) {
-        if (typeToParse == String.class) {
-            return value;
-        } else if (typeToParse == Boolean.TYPE) {
+        try {
+            return typeToParse.getConstructor(String.class).newInstance(value);
+        } catch (NoSuchMethodException
+                | InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException ignored) {
+        } // Basic parsing failed, handle edge cases
+
+        if (typeToParse == Boolean.TYPE) {
             if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
                 return Boolean.valueOf(value);
             } else {
                 return null;
             }
-        } else if (typeToParse == CustomColor.class) {
-            CustomColor customColor = CustomColor.fromString(value);
-            return customColor == CustomColor.NONE ? null : customColor;
-        } else if (typeToParse == Integer.TYPE) {
-            try {
+        }
+
+        try {
+            if (typeToParse == Integer.TYPE) {
                 return Integer.parseInt(value);
-            } catch (NumberFormatException exception) {
-                return null;
-            }
-        } else if (typeToParse == Float.TYPE) {
-            try {
+            } else if (typeToParse == Float.TYPE) {
                 return Float.parseFloat(value);
-            } catch (NumberFormatException exception) {
-                return null;
-            }
-        } else if (typeToParse == Double.TYPE) {
-            try {
+            } else if (typeToParse == Double.TYPE) {
                 return Double.parseDouble(value);
-            } catch (NumberFormatException exception) {
-                return null;
+            } else if (typeToParse == Long.TYPE) {
+                return Long.parseLong(value);
+            } else if (typeToParse == Short.TYPE) {
+                return Short.parseShort(value);
+            } else if (typeToParse == Byte.TYPE) {
+                return Byte.parseByte(value);
             }
+        } catch (NumberFormatException exception) {
+            return null;
         }
 
         return null;
