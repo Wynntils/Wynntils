@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.config.Config;
 
 /**
  * A feature that is enabled & disabled by the user.

@@ -12,8 +12,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.objects.ConfigHolder;
-import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.utils.McUtils;

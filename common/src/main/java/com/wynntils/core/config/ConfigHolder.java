@@ -2,10 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.objects;
+package com.wynntils.core.config;
 
 import com.wynntils.core.Reference;
-import com.wynntils.core.config.properties.Config;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
 import org.apache.commons.lang3.reflect.FieldUtils;

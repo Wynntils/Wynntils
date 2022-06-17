@@ -7,7 +7,7 @@ package com.wynntils.core.features;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;

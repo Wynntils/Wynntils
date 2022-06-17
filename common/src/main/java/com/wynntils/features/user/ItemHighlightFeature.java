@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
