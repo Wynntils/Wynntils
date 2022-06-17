@@ -36,6 +36,9 @@ public class RenderUtils {
     private static final CustomColor BORDER_START = CustomColor.fromInt(0xFF25005B);
     private static final CustomColor BORDER_END = CustomColor.fromInt(0xFF180033);
 
+    // number of possible segments for arc drawing
+    private static final float MAX_CIRCLE_STEPS = 16f;
+
     public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
         drawRect(new PoseStack(), color, x, y, z, width, height);
     }
@@ -182,8 +185,6 @@ public class RenderUtils {
         BufferUploader.end(bufferBuilder);
         RenderSystem.disableBlend();
     }
-
-    private static final float MAX_CIRCLE_STEPS = 16f;
 
     public static void drawArc(CustomColor color, int x, int y, int z, float fill, int radius) {
         drawArc(new PoseStack(), color, x, y, z, fill, radius);
