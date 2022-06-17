@@ -103,7 +103,7 @@ public class WynntilsCommand extends CommandBase {
                             .split("_"))
                     .map(StringUtils::capitalize)
                     .collect(Collectors.joining(" "));
-            response.append(new TextComponent("\n-").withStyle(ChatFormatting.GRAY))
+            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(new TextComponent(longFeatureName).withStyle(ChatFormatting.YELLOW));
         }
 
@@ -173,7 +173,7 @@ public class WynntilsCommand extends CommandBase {
                                 .append(new TextComponent(config.getAnnotation(Config.class)
                                                 .displayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(ChatFormatting.GREEN))
+                                        .withStyle(ChatFormatting.YELLOW))
                                 .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
                                 .append(new TextComponent(oldValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
@@ -228,29 +228,24 @@ public class WynntilsCommand extends CommandBase {
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining(" "));
 
-        MutableComponent response = new TextComponent(longFeatureName + "\n").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(
-                        "Config option: " + config.getAnnotation(Config.class).displayName())
-                .withStyle(ChatFormatting.GOLD)
+        MutableComponent response = new TextComponent(longFeatureName + "\n").withStyle(ChatFormatting.YELLOW);
+        response.append(new TextComponent("Config option: ").withStyle(ChatFormatting.WHITE)
+                .append(new TextComponent(config.getAnnotation(Config.class).displayName())
+                        .withStyle(ChatFormatting.YELLOW))
                 .append("\n"));
 
-        response.append(new TextComponent("Value: ")
-                        .withStyle(ChatFormatting.GREEN)
-                        .append(new TextComponent(configTypeString).withStyle(ChatFormatting.AQUA))
-                        .append(new TextComponent(": ").withStyle(ChatFormatting.GREEN))
-                        .append(new TextComponent(valueString).withStyle(ChatFormatting.YELLOW)))
+        response.append(new TextComponent("Value: ").withStyle(ChatFormatting.WHITE)
+                        .append(new TextComponent(configTypeString))
+                        .append(new TextComponent(": "))
+                        .append(new TextComponent(valueString).withStyle(ChatFormatting.GREEN)))
                 .append("\n");
-        response.append(new TextComponent("Subcategory: ")
-                        .withStyle(ChatFormatting.GREEN)
+        response.append(new TextComponent("Subcategory: ").withStyle(ChatFormatting.WHITE)
                         .append(new TextComponent(
-                                        config.getAnnotation(Config.class).subcategory())
-                                .withStyle(ChatFormatting.YELLOW)))
+                                config.getAnnotation(Config.class).subcategory())))
                 .append("\n");
-        response.append(new TextComponent("Description: ")
-                        .withStyle(ChatFormatting.GREEN)
+        response.append(new TextComponent("Description: ").withStyle(ChatFormatting.WHITE)
                         .append(new TextComponent(
-                                        config.getAnnotation(Config.class).description())
-                                .withStyle(ChatFormatting.YELLOW)))
+                                config.getAnnotation(Config.class).description())))
                 .append("\n");
 
         context.getSource().sendSuccess(response, false);
@@ -274,7 +269,7 @@ public class WynntilsCommand extends CommandBase {
                 .collect(Collectors.toUnmodifiableSet());
 
         MutableComponent response =
-                new TextComponent(featureName + "'s config options:\n").withStyle(ChatFormatting.AQUA);
+                new TextComponent(featureName).withStyle(ChatFormatting.YELLOW).append(new TextComponent("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
         for (Field config : configs) {
             Object value = null;
@@ -287,7 +282,7 @@ public class WynntilsCommand extends CommandBase {
             String configTypeString = " (" + config.getType().getSimpleName() + ")";
             String valueString = value == null ? "Couldn't get value." : value.toString();
 
-            MutableComponent current = new TextComponent("\n-")
+            MutableComponent current = new TextComponent("\n - ").withStyle(ChatFormatting.GRAY)
                     .append(new TextComponent(configNameString)
                             .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
@@ -295,12 +290,11 @@ public class WynntilsCommand extends CommandBase {
                                                     + config.getAnnotation(Config.class)
                                                             .description())
                                             .withStyle(ChatFormatting.LIGHT_PURPLE))))
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(configTypeString).withStyle(ChatFormatting.AQUA))
-                            .append(new TextComponent(": ").withStyle(ChatFormatting.GREEN))
+                            .withStyle(ChatFormatting.YELLOW)
+                            .append(new TextComponent(configTypeString).withStyle(ChatFormatting.WHITE))
+                            .append(new TextComponent(": "))
                             .append(new TextComponent(valueString)
-                                    .withStyle(ChatFormatting.YELLOW)
-                                    .withStyle(ChatFormatting.UNDERLINE)
+                                    .withStyle(ChatFormatting.GREEN)
                                     .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                             HoverEvent.Action.SHOW_TEXT,
                                             new TextComponent("Click here to change this setting."))))));
