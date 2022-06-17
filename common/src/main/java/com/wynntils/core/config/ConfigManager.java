@@ -42,6 +42,7 @@ public class ConfigManager {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
         if (featureConfigOptions == null) return; // invalid feature
 
+        feature.addConfigOptions(featureConfigOptions);
         loadConfigOptions(featureConfigOptions);
         CONFIG_HOLDERS.addAll(featureConfigOptions);
     }

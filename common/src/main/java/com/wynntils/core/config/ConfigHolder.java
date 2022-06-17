@@ -7,7 +7,7 @@ package com.wynntils.core.config;
 import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
@@ -88,12 +88,9 @@ public class ConfigHolder {
 
     public Object tryParseStringValue(String value) {
         try {
-            return fieldType.getConstructor(String.class).newInstance(value);
-        } catch (NumberFormatException
-                | NoSuchMethodException
-                | InstantiationException
-                | IllegalAccessException
-                | InvocationTargetException ignored) {
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            return wrapped.getConstructor(String.class).newInstance(value);
+        } catch (Exception ignored) {
         }
 
         // couldn't parse value
