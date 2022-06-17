@@ -7,6 +7,7 @@ package com.wynntils.core.config;
 import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
@@ -65,13 +66,15 @@ public class ConfigHolder {
         }
     }
 
-    public void setValue(Object value) {
+    public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
             parent.updateConfigOption(this);
+            return true;
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set field " + getJsonName());
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -81,5 +84,19 @@ public class ConfigHolder {
 
     public void reset() {
         setValue(defaultValue);
+    }
+
+    public Object tryParseStringValue(String value) {
+        try {
+            return fieldType.getConstructor(String.class).newInstance(value);
+        } catch (NumberFormatException
+                | NoSuchMethodException
+                | InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException ignored) {
+        }
+
+        // couldn't parse value
+        return null;
     }
 }
