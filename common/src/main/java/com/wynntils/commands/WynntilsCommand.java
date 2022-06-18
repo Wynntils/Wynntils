@@ -39,7 +39,8 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("version").executes(this::version))
                 .then(Commands.literal("config")
                         .then(WynntilsConfigCommand.buildGetConfigArgBuilder())
-                        .then(WynntilsConfigCommand.buildSetConfigArgBuilder()))
+                        .then(WynntilsConfigCommand.buildSetConfigArgBuilder())
+                        .then(WynntilsConfigCommand.buildResetConfigArgBuilder()))
                 .then(Commands.literal("feature").then(Commands.literal("list").executes(this::listFeatures)))
                 .executes(this::help));
     }

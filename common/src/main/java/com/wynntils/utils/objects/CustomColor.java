@@ -86,7 +86,7 @@ public class CustomColor {
         if (!hexMatcher.matches()) return CustomColor.NONE;
 
         // parse hex
-        return fromInt(Integer.parseInt(hexMatcher.group(1), 16));
+        return fromInt(Integer.parseInt(hexMatcher.group(1), 16)).setAlpha(255);
     }
 
     /** "rgba(r,g,b,a)" format as defined in toString() */
@@ -139,6 +139,14 @@ public class CustomColor {
         hex = "#" + hex;
 
         return hex;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CustomColor color)) return false;
+
+        // colors are equal as long as rgba values match
+        return (this.r == color.r && this.g == color.g && this.b == color.b && this.a == color.a);
     }
 
     @Override

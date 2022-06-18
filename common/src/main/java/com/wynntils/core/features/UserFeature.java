@@ -4,7 +4,8 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 
 /**
  * A feature that is enabled & disabled by the user.
@@ -12,4 +13,25 @@ import com.wynntils.core.config.properties.Config;
 public abstract class UserFeature extends Feature {
     @Config(displayName = "Enabled", description = "Should this feature be enabled?")
     protected boolean userEnabled = true;
+
+    @Override
+    public void updateConfigOption(ConfigHolder configHolder) {
+        // if user toggle was changed, enable/disable feature accordingly
+        if (configHolder.getFieldName().equals("userEnabled")) {
+            tryUserToggle();
+            return;
+        }
+
+        // otherwise, trigger regular config update
+        onConfigUpdate(configHolder);
+    }
+
+    /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
+    public final void tryUserToggle() {
+        if (userEnabled) {
+            tryEnable();
+        } else {
+            tryDisable();
+        }
+    }
 }

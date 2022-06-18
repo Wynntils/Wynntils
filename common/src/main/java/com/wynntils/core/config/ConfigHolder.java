@@ -2,29 +2,31 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.objects;
+package com.wynntils.core.config;
 
 import com.wynntils.core.Reference;
+import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public abstract class StorageHolder {
-    protected final Object parent;
-    protected final Field field;
-    protected final Class<?> fieldType;
+public class ConfigHolder {
+    private final Feature parent;
+    private final Field field;
+    private final Class<?> fieldType;
 
-    protected final String category;
-    protected final boolean visible;
+    private final String category;
+    private final Config metadata;
 
-    protected final Object defaultValue;
+    private final Object defaultValue;
 
-    public StorageHolder(Object parent, Field field, Class<?> fieldType, String category, boolean visible) {
+    public ConfigHolder(Feature parent, Field field, String category, Config metadata) {
         this.parent = parent;
         this.field = field;
-        this.fieldType = fieldType;
+        this.fieldType = field.getType();
 
         this.category = category;
-        this.visible = visible;
+        this.metadata = metadata;
 
         // save default value to enable easy resetting
         this.defaultValue = getValue();
@@ -38,12 +40,20 @@ public abstract class StorageHolder {
         return field;
     }
 
-    public String getJsonName() {
+    public String getFieldName() {
         return field.getName();
+    }
+
+    public String getJsonName() {
+        return parent.getClass().getSimpleName() + "." + field.getName();
     }
 
     public String getCategory() {
         return category;
+    }
+
+    public Config getMetadata() {
+        return metadata;
     }
 
     public Object getValue() {
@@ -56,17 +66,16 @@ public abstract class StorageHolder {
         }
     }
 
-    public void setValue(Object value) {
+    public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
+            parent.updateConfigOption(this);
+            return true;
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set field " + getJsonName());
             e.printStackTrace();
+            return false;
         }
-    }
-
-    public boolean isVisible() {
-        return visible;
     }
 
     public boolean isDefault() {
@@ -75,5 +84,16 @@ public abstract class StorageHolder {
 
     public void reset() {
         setValue(defaultValue);
+    }
+
+    public Object tryParseStringValue(String value) {
+        try {
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            return wrapped.getConstructor(String.class).newInstance(value);
+        } catch (Exception ignored) {
+        }
+
+        // couldn't parse value
+        return null;
     }
 }

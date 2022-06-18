@@ -7,19 +7,19 @@ package com.wynntils.core.features;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.properties.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -31,6 +31,7 @@ public abstract class Feature {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
+    private List<ConfigHolder> configOptions = new ArrayList<>();
 
     protected boolean enabled = false;
 
@@ -48,7 +49,7 @@ public abstract class Feature {
     /**
      * Sets up this feature as an event listener. Called from the registry.
      */
-    public void setupEventListener() {
+    public final void setupEventListener() {
         this.isListener = true;
     }
 
@@ -56,7 +57,7 @@ public abstract class Feature {
      * Adds a keyHolder to the feature. Called from the registry.
      * @param keyHolder KeyHolder to add to the feature
      */
-    public void setupKeyHolder(KeyHolder keyHolder) {
+    public final void setupKeyHolder(KeyHolder keyHolder) {
         keyMappings.add(keyHolder);
     }
 
@@ -155,9 +156,35 @@ public abstract class Feature {
         return true;
     }
 
-    public final Field[] getConfigFields() {
-        return FieldUtils.getFieldsWithAnnotation(this.getClass(), Config.class);
+    /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
+    public final void addConfigOptions(List<ConfigHolder> options) {
+        configOptions.addAll(options);
     }
+
+    /** Returns all config options registered in this feature */
+    public final List<ConfigHolder> getConfigOptions() {
+        return configOptions;
+    }
+
+    /** Returns all config options registered in this feature that should be visible to the user */
+    public final List<ConfigHolder> getVisibleConfigOptions() {
+        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
+    }
+
+    /** Returns the config option matching the given name, if it exists */
+    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
+        return getVisibleConfigOptions().stream()
+                .filter(c -> c.getFieldName().equals(name))
+                .findFirst();
+    }
+
+    /** Called when a feature's config option is updated. Called by ConfigHolder */
+    public void updateConfigOption(ConfigHolder configHolder) {
+        onConfigUpdate(configHolder);
+    }
+
+    /** Used to react to config option updates */
+    protected void onConfigUpdate(ConfigHolder configHolder) {}
 
     public class WebLoadedCondition extends Condition {
         @Override
