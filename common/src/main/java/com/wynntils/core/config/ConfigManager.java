@@ -99,7 +99,7 @@ public class ConfigManager {
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
             for (ConfigHolder holder : CONFIG_HOLDERS) {
-                if (holder.isDefault()) continue; // only save options that are non-default
+                if (!holder.isUserEdited()) continue; // only save options that have been set by the user
 
                 JsonElement holderElement = gson.toJsonTree(holder.getValue());
                 holderJson.add(holder.getJsonName(), holderElement);
