@@ -82,7 +82,7 @@ public class ConfigManager {
 
         for (ConfigHolder holder : holders) {
             // option hasn't been saved to config
-            if (!configObject.has(holder.getJsonName())) return;
+            if (!configObject.has(holder.getJsonName())) continue;
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
