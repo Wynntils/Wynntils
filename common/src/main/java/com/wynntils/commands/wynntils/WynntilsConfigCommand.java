@@ -220,7 +220,7 @@ public abstract class WynntilsConfigCommand {
 
         Object oldValue = config.getValue();
 
-        if (oldValue == parsedValue) {
+        if (oldValue.equals(parsedValue)) {
             context.getSource()
                     .sendFailure(new TextComponent("The new value is the same as the current setting.")
                             .withStyle(ChatFormatting.RED));
