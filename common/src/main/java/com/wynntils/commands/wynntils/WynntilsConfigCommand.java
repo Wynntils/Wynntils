@@ -78,6 +78,23 @@ public abstract class WynntilsConfigCommand {
         return setConfigArgBuilder;
     }
 
+    public static LiteralArgumentBuilder<CommandSourceStack> buildResetConfigArgBuilder() {
+        LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = Commands.literal("reset");
+
+        // Feature specified, config option is not, reset all configs
+        // If a feature and config field is specified, reset specific field
+        // /wynntils config reset <feature>
+        // /wynntils config reset <feature> <field>
+        resetConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
+                .suggests(featureSuggestionProvider)
+                .then(Commands.argument("config", StringArgumentType.word())
+                        .suggests(featureConfigSuggestionProvider)
+                        .executes(WynntilsConfigCommand::resetConfigOption))
+                .executes(WynntilsConfigCommand::resetAllConfigOptions));
+
+        return resetConfigArgBuilder;
+    }
+
     private static int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String configName = context.getArgument("config", String.class);
@@ -253,6 +270,67 @@ public abstract class WynntilsConfigCommand {
                                 .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
                         false);
 
+        return 1;
+    }
+
+    private static int resetConfigOption(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+        String configName = context.getArgument("config", String.class);
+
+        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+
+        if (featureOptional.isEmpty()) {
+            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Feature feature = featureOptional.get();
+        Optional<ConfigHolder> configOptional = feature.getConfigOptionFromString(configName);
+
+        if (configOptional.isEmpty()) {
+            context.getSource().sendFailure(new TextComponent("Config not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        ConfigHolder config = configOptional.get();
+        config.reset();
+
+        ConfigManager.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent("Successfully reset ")
+                                .withStyle(ChatFormatting.GREEN)
+                                .append(new TextComponent(config.getMetadata().displayName())
+                                        .withStyle(ChatFormatting.UNDERLINE)
+                                        .withStyle(ChatFormatting.YELLOW))
+                                .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
+                        false);
+        return 1;
+    }
+
+    private static int resetAllConfigOptions(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+
+        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+
+        if (featureOptional.isEmpty()) {
+            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Feature feature = featureOptional.get();
+        feature.getVisibleConfigOptions().forEach(ConfigHolder::reset);
+
+        ConfigManager.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent("Successfully reset ")
+                                .withStyle(ChatFormatting.GREEN)
+                                .append(new TextComponent(featureName).withStyle(ChatFormatting.YELLOW))
+                                .append(new TextComponent("'s config options.").withStyle(ChatFormatting.GREEN)),
+                        false);
         return 1;
     }
 }
