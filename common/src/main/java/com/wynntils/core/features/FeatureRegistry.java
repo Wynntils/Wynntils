@@ -6,7 +6,7 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.overlays.annotations.OverlayHolder;
+import com.wynntils.core.features.overlays.annotations.OverlayFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -65,7 +65,7 @@ public class FeatureRegistry {
         }
 
         // OverlayManager event listener setup
-        if (featureClass.isAnnotationPresent(OverlayHolder.class)) {
+        if (featureClass.isAnnotationPresent(OverlayFeature.class)) {
             feature.setupOverlay();
         }
 

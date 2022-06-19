@@ -9,11 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 public abstract class Overlay {
     // Top-Left point of Overlay
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
-    private int width;
-    private int height;
+    protected int width;
+    protected int height;
 
     public abstract void render(PoseStack poseStack, float partialTicks, Window window);
 }

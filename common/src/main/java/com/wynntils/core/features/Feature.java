@@ -35,20 +35,20 @@ public abstract class Feature {
     private List<KeyHolder> keyMappings = new ArrayList<>();
     private List<ConfigHolder> configOptions = new ArrayList<>();
 
-    private final OverlayManager overlayManager = new OverlayManager();
-
     protected boolean enabled = false;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
+
+        if (this.isOverlayHolder)
+            OverlayManager.searchAndRegisterOverlays(
+                    this.getClass()); // We have to register overlay types before onInit is called
 
         onInit(conditions);
 
         this.conditions = conditions.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
-
-        overlayManager.searchAndRegisterOverlays(this.getClass());
     }
 
     /**
@@ -118,9 +118,6 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
-        if (isOverlayHolder) {
-            WynntilsMod.getEventBus().register(this.overlayManager);
-        }
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
@@ -136,9 +133,6 @@ public abstract class Feature {
 
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
-        }
-        if (isOverlayHolder) {
-            WynntilsMod.getEventBus().unregister(this.overlayManager);
         }
         for (KeyHolder key : keyMappings) {
             KeyManager.unregisterKeybind(key);
