@@ -8,6 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
@@ -30,8 +31,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public abstract class Feature {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
+    private boolean isOverlayHolder = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
     private List<ConfigHolder> configOptions = new ArrayList<>();
+
+    private final OverlayManager overlayManager = new OverlayManager();
 
     protected boolean enabled = false;
 
@@ -42,8 +46,9 @@ public abstract class Feature {
 
         this.conditions = conditions.build();
 
-        if (this.conditions.isEmpty()) return;
-        this.conditions.forEach(Condition::init);
+        if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+
+        overlayManager.searchAndRegisterOverlays(this.getClass());
     }
 
     /**
@@ -51,6 +56,10 @@ public abstract class Feature {
      */
     public final void setupEventListener() {
         this.isListener = true;
+    }
+
+    public void setupOverlay() {
+        this.isOverlayHolder = true;
     }
 
     /**
@@ -109,6 +118,9 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
+        if (isOverlayHolder) {
+            WynntilsMod.getEventBus().register(this.overlayManager);
+        }
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
@@ -124,6 +136,9 @@ public abstract class Feature {
 
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
+        }
+        if (isOverlayHolder) {
+            WynntilsMod.getEventBus().unregister(this.overlayManager);
         }
         for (KeyHolder key : keyMappings) {
             KeyManager.unregisterKeybind(key);

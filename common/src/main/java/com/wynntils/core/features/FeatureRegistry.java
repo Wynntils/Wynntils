@@ -6,6 +6,7 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.features.overlays.annotations.OverlayHolder;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -17,6 +18,7 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
+import com.wynntils.features.user.DummyOverlayFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -60,6 +62,11 @@ public class FeatureRegistry {
             Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();
             return;
+        }
+
+        // OverlayManager event listener setup
+        if (featureClass.isAnnotationPresent(OverlayHolder.class)) {
+            feature.setupOverlay();
         }
 
         // flag as event listener
@@ -144,6 +151,7 @@ public class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new TooltipScaleFeature());
         registerFeature(new DurabilityArcFeature());
+        registerFeature(new DummyOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
