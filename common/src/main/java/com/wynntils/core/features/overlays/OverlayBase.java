@@ -7,13 +7,10 @@ package com.wynntils.core.features.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public abstract class Overlay {
-    // Top-Left point of Overlay
-    protected int x;
-    protected int y;
-
+public abstract class OverlayBase {
     protected int width;
     protected int height;
 
-    public abstract void render(PoseStack poseStack, float partialTicks, Window window);
+    public abstract void render(
+            OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window);
 }

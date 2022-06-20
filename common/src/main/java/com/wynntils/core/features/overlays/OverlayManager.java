@@ -7,101 +7,79 @@ package com.wynntils.core.features.overlays;
 import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.annotations.RegisteredOverlay;
+import com.wynntils.core.features.overlays.annotations.Overlay;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.objects.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class OverlayManager {
-    private static final Set<Class<? extends Overlay>> registeredOverlays = new HashSet<>();
-    private static final Map<Class<? extends Overlay>, List<Overlay>> overlayInstanceMap = new HashMap<>();
+    private static final Map<OverlayBase, OverlayPosition> overlayInstanceMap = new HashMap<>();
 
-    public static void searchAndRegisterOverlays(Class<? extends Feature> classToSearch) {
-        Set<Class<?>> declaredOverlays = Arrays.stream(classToSearch.getDeclaredClasses())
-                .filter(clazz -> clazz.isAnnotationPresent(RegisteredOverlay.class))
-                .filter(clazz -> clazz.getSuperclass() == Overlay.class)
-                .collect(Collectors.toUnmodifiableSet());
+    private static final Map<Class<? extends Feature>, List<Pair<OverlayBase, OverlayPosition>>> overlaysFeatureMap =
+            new HashMap<>();
 
-        for (Class<?> declaredOverlay : declaredOverlays) {
-            Class<? extends Overlay> overlay = (Class<? extends Overlay>) declaredOverlay;
-            registeredOverlays.add(overlay);
+    public static void registerOverlay(Feature registrar, OverlayBase overlay, OverlayPosition position) {
+        overlaysFeatureMap.putIfAbsent(registrar.getClass(), new ArrayList<>());
 
-            if (overlay.getAnnotation(RegisteredOverlay.class).enabled()) {
-                instantiateOverlay(overlay);
-            }
+        Pair<OverlayBase, OverlayPosition> overlayInfo = new Pair<>(overlay, position);
+        overlaysFeatureMap.get(registrar.getClass()).add(overlayInfo);
+
+        if (overlay.getClass().getAnnotation(Overlay.class).enabled()) {
+            instantiateOverlay(overlayInfo);
         }
-
-        if (!registeredOverlays.isEmpty())
-            Reference.LOGGER.info(
-                    classToSearch.getName() + " registered " + registeredOverlays.size() + " overlay(s).");
     }
 
-    private static Overlay instantiateOverlay(Class<? extends Overlay> overlay) {
+    private static void instantiateOverlay(Pair<OverlayBase, OverlayPosition> overlayInfo) {
         try {
-            Overlay instance = overlay.getConstructor().newInstance();
+            OverlayBase instance = overlayInfo.a.getClass().getConstructor().newInstance();
 
-            overlayInstanceMap.putIfAbsent(overlay, new ArrayList<>());
-            overlayInstanceMap.get(overlay).add(instance);
+            overlayInstanceMap.put(instance, overlayInfo.b);
 
-            return instance;
         } catch (InvocationTargetException
                 | NoSuchMethodException
                 | InstantiationException
                 | IllegalAccessException e) {
-            Reference.LOGGER.error("Error when instantiating " + overlay.getName());
+            Reference.LOGGER.error(
+                    "Error when instantiating " + overlayInfo.a.getClass().getName());
             e.printStackTrace();
         }
-        return null;
     }
 
-    public static Overlay createNewInstance(Class<? extends Overlay> overlay) {
-        if (!registeredOverlays.contains(overlay)) {
-            throw new RuntimeException(
-                    "Tried to create a " + overlay.getName() + " instance without it being a registered type.");
+    public static void disableOverlayForFeature(Feature feature) {
+        for (Pair<OverlayBase, OverlayPosition> overlayPositionPair : overlaysFeatureMap.get(feature.getClass())) {
+            overlayInstanceMap.remove(overlayPositionPair.a);
         }
-
-        return instantiateOverlay(overlay);
     }
 
-    public static void addNewInstance(Overlay instance) {
-        if (!registeredOverlays.contains(instance.getClass())) {
-            throw new RuntimeException("Tried to add a " + instance.getClass().getName()
-                    + " instance without it being a registered type.");
+    public static void enableOverlayForFeature(Feature feature) {
+        for (Pair<OverlayBase, OverlayPosition> overlayPositionPair : overlaysFeatureMap.get(feature.getClass())) {
+            // Prevent duplication from default enabled Overlays
+            if (overlayInstanceMap.keySet().stream()
+                    .anyMatch(overlayBase -> overlayPositionPair.a.getClass().isInstance(overlayBase))) continue;
+            instantiateOverlay(overlayPositionPair);
         }
-
-        overlayInstanceMap.putIfAbsent(instance.getClass(), new ArrayList<>());
-        overlayInstanceMap.get(instance.getClass()).add(instance);
     }
 
     @SubscribeEvent
     public static void onRenderPre(RenderEvent.Pre event) {
-        renderOverlays(event, RegisteredOverlay.RenderState.Pre);
+        renderOverlays(event, Overlay.RenderState.Pre);
     }
 
     @SubscribeEvent
     public static void onRenderPost(RenderEvent.Post event) {
-        renderOverlays(event, RegisteredOverlay.RenderState.Post);
+        renderOverlays(event, Overlay.RenderState.Post);
     }
 
-    private static void renderOverlays(RenderEvent event, RegisteredOverlay.RenderState renderState) {
-        for (List<Overlay> overlays : overlayInstanceMap.values()) {
-            for (Overlay overlay : overlays) {
-                RegisteredOverlay annotation = overlay.getClass().getAnnotation(RegisteredOverlay.class);
-                if (!annotation.enabled()
-                        || annotation.renderType() != event.getType()
-                        || annotation.renderAt() != renderState) {
-                    break; // Break because overlays of the same type have the same requirements
-                }
-                overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
-            }
+    private static void renderOverlays(RenderEvent event, Overlay.RenderState renderState) {
+        for (Map.Entry<OverlayBase, OverlayPosition> overlay : overlayInstanceMap.entrySet()) {
+            Overlay annotation = overlay.getKey().getClass().getAnnotation(Overlay.class);
+            overlay.getKey()
+                    .render(overlay.getValue(), event.getPoseStack(), event.getPartialTicks(), event.getWindow());
         }
     }
 

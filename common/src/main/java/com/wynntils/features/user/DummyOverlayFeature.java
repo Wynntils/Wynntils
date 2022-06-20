@@ -7,67 +7,74 @@ package com.wynntils.features.user;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.OverlayBase;
 import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.annotations.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayFeature;
-import com.wynntils.core.features.overlays.annotations.RegisteredOverlay;
+import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.utils.objects.CustomColor;
 
 @OverlayFeature
 public class DummyOverlayFeature extends UserFeature {
+
+    @Config(displayName = "Blue overlay position", visible = false)
+    OverlayPosition bluePosition = new OverlayPosition(150, 150);
+
+    @Config(displayName = "Red overlay position", visible = false)
+    OverlayPosition redPosition = new OverlayPosition(50, 50);
+
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         super.onInit(conditions);
 
-        DummyRedBoxOverlay newInstanceRed =
-                (DummyRedBoxOverlay) OverlayManager.createNewInstance(DummyRedBoxOverlay.class);
-        newInstanceRed.setPos(200, 200);
-
-        DummyBlueBoxOverlay newInstanceBlue = new DummyBlueBoxOverlay(225, 225, 50, 50);
-        OverlayManager.addNewInstance(newInstanceBlue);
+        OverlayManager.registerOverlay(this, new DummyBlueBoxOverlay(), bluePosition);
+        OverlayManager.registerOverlay(this, new DummyRedBoxOverlay(), redPosition);
     }
 
-    @RegisteredOverlay
-    public static class DummyRedBoxOverlay extends Overlay {
+    @Overlay(renderType = RenderEvent.ElementType.GUI)
+    public static class DummyRedBoxOverlay extends OverlayBase {
         public DummyRedBoxOverlay() {
-            this.x = 50;
-            this.y = 50;
             this.width = 100;
             this.height = 100;
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
-            RenderUtils.drawRect(new CustomColor(190, 40, 40).withAlpha(255), x, y, 0, width, height);
-        }
-
-        public void setPos(int x, int y) {
-            this.x = x;
-            this.y = y;
+        public void render(OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window) {
+            RenderUtils.drawRect(
+                    new CustomColor(190, 40, 40).withAlpha(255),
+                    overlayPosition.getX(),
+                    overlayPosition.getY(),
+                    0,
+                    width,
+                    height);
         }
     }
 
-    @RegisteredOverlay(renderAt = RegisteredOverlay.RenderState.Post)
-    public static class DummyBlueBoxOverlay extends Overlay {
+    @Overlay(renderType = RenderEvent.ElementType.GUI, renderAt = Overlay.RenderState.Post)
+    public static class DummyBlueBoxOverlay extends OverlayBase {
         public DummyBlueBoxOverlay() {
-            this.x = 75;
-            this.y = 75;
             this.width = 50;
             this.height = 50;
         }
 
-        public DummyBlueBoxOverlay(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
+        public DummyBlueBoxOverlay(int width, int height) {
             this.width = width;
             this.height = height;
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
-            RenderUtils.drawRect(new CustomColor(40, 40, 190).withAlpha(150), x, y, 1, width, height);
+        public void render(OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window) {
+            RenderUtils.drawRect(
+                    new CustomColor(40, 40, 190).withAlpha(150),
+                    overlayPosition.getX(),
+                    overlayPosition.getY(),
+                    1,
+                    width,
+                    height);
         }
     }
 }
