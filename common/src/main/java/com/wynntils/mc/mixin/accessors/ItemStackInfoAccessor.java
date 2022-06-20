@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.mixin.accessors;
 
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ChatScreen.class)
-public interface ChatScreenAccessor {
-    @Accessor("input")
-    EditBox getChatInput();
+@Mixin(HoverEvent.ItemStackInfo.class)
+public interface ItemStackInfoAccessor {
+    @Accessor("itemStack")
+    void setItemStack(ItemStack itemStack);
 }

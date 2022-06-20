@@ -302,7 +302,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
         if (isChatItem) {
             tooltip.add(new TextComponent("From chat")
-                    .withStyle(ChatFormatting.GRAY)
+                    .withStyle(ChatFormatting.DARK_GRAY)
                     .withStyle(ChatFormatting.ITALIC));
 
             tooltip.addAll(percentTooltip);
@@ -340,8 +340,12 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         int idAmount = (int) percents.getCount();
         float percentTotal = (float) percents.getSum();
 
-        String originalName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName()));
-        MutableComponent name = customName == null ? new TextComponent(originalName) : customName.copy();
+        MutableComponent name;
+        if (customName == null) {
+            name = new TextComponent(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName())));
+        } else {
+            name = customName.copy();
+        }
 
         if (hasNew) {
             name.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
@@ -415,7 +419,11 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
                 DamageType type = entry.getKey();
                 MutableComponent damage = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
-                damage.append(new TextComponent(" Damage: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                damage.append(new TextComponent(" Damage: " + entry.getValue())
+                        .withStyle(
+                                type == DamageType.NEUTRAL
+                                        ? type.getColor()
+                                        : ChatFormatting.GRAY)); // neutral is all gold
                 baseTooltip.add(damage);
             }
 
@@ -477,7 +485,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 MutableComponent powderLine = new TextComponent(
-                                "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "]")
+                                "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
                 if (powders.size() > 0) {
                     MutableComponent powderList = new TextComponent("[");

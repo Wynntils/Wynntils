@@ -9,7 +9,6 @@ import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.utils.ChatItemUtils;
@@ -18,11 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import net.minecraft.ChatFormatting;
+import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
@@ -69,7 +67,8 @@ public class ChatItemFeature extends InternalFeature {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
-        List<Component> components = message.getSiblings();
+        List<MutableComponent> components =
+                message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
         components.add(0, message.plainCopy().withStyle(message.getStyle()));
 
         // chat item tooltips
@@ -97,23 +96,11 @@ public class ChatItemFeature extends InternalFeature {
                     preText.withStyle(style);
                     temp.append(preText);
 
-                    MutableComponent tooltipComponent = new TextComponent("");
-                    for (Component c : ItemUtils.getTooltipLines(item)) {
-                        if (!tooltipComponent.getSiblings().isEmpty()) tooltipComponent.append(new TextComponent("\n"));
-
-                        tooltipComponent.append(c);
-                    }
-
-                    MutableComponent itemComponent = new TextComponent(
-                                    item.getItemProfile().getDisplayName())
-                            .withStyle(ChatFormatting.UNDERLINE)
-                            .withStyle(item.getItemProfile().getTier().getChatFormatting());
-                    itemComponent.withStyle(
-                            s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltipComponent)));
+                    // create hover-able text component for the item
+                    Component itemComponent = ChatItemUtils.createItemComponent(item);
                     temp.append(itemComponent);
 
                     comp = new TextComponent(text.substring(m.end())).withStyle(style);
-
                     m = ChatItemUtils.ENCODED_PATTERN.matcher(comp.getString()); // recreate matcher for new substring
                 } while (m.find()); // search for multiple items in the same message
                 temp.append(comp); // leftover text after item(s)

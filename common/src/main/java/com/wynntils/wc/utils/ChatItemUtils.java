@@ -7,6 +7,7 @@ package com.wynntils.wc.utils;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.objects.ItemIdentificationContainer;
 import com.wynntils.wc.objects.Powder;
@@ -17,6 +18,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class ChatItemUtils {
@@ -195,6 +201,18 @@ public class ChatItemUtils {
 
         // create chat gear stack
         return new GearItemStack(item, idContainers, powderList, rerolls);
+    }
+
+    public static Component createItemComponent(GearItemStack item) {
+        MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(item.getItemProfile().getTier().getChatFormatting());
+
+        HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(item);
+        ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(item);
+        itemComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent)));
+
+        return itemComponent;
     }
 
     private static String encodeString(String text) {
