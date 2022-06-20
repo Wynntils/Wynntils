@@ -9,6 +9,7 @@ import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.utils.ChatItemUtils;
@@ -96,11 +97,19 @@ public class ChatItemFeature extends InternalFeature {
                     preText.withStyle(style);
                     temp.append(preText);
 
-                    MutableComponent itemComponent = new TextComponent(item.getSimpleName())
+                    MutableComponent tooltipComponent = new TextComponent("");
+                    for (Component c : ItemUtils.getTooltipLines(item)) {
+                        if (!tooltipComponent.getSiblings().isEmpty()) tooltipComponent.append(new TextComponent("\n"));
+
+                        tooltipComponent.append(c);
+                    }
+
+                    MutableComponent itemComponent = new TextComponent(
+                                    item.getItemProfile().getDisplayName())
                             .withStyle(ChatFormatting.UNDERLINE)
                             .withStyle(item.getItemProfile().getTier().getChatFormatting());
-                    itemComponent.withStyle(s -> s.withHoverEvent(
-                            new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(item))));
+                    itemComponent.withStyle(
+                            s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltipComponent)));
                     temp.append(itemComponent);
 
                     comp = new TextComponent(text.substring(m.end())).withStyle(style);
@@ -110,7 +119,7 @@ public class ChatItemFeature extends InternalFeature {
                 temp.append(comp); // leftover text after item(s)
             }
 
-            // e.setMessage(temp);
+            e.setMessage(temp);
         }
     }
 }

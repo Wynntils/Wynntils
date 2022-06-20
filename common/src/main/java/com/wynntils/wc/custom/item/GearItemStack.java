@@ -180,6 +180,9 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
         this.setTag(tag);
 
+        customName = new TextComponent(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
+
         parseIDs();
         List<Component> baseTooltip = constructBaseTooltip();
         constructTooltips(baseTooltip);
@@ -215,7 +218,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
     @Override
     public Component getHoverName() {
-        if (isGuideStack) return customName;
+        if (isGuideStack || isChatItem) return customName;
 
         /*
          * This math was originally based off Avaritia code.
@@ -338,7 +341,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         float percentTotal = (float) percents.getSum();
 
         String originalName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName()));
-        MutableComponent name = new TextComponent(originalName);
+        MutableComponent name = customName == null ? new TextComponent(originalName) : customName.copy();
 
         if (hasNew) {
             name.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));

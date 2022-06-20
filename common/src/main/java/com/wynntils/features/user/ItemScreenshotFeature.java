@@ -17,6 +17,8 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.custom.item.GearItemStack;
+import com.wynntils.wc.utils.ChatItemUtils;
 import com.wynntils.wc.utils.WynnItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.image.BufferedImage;
@@ -27,7 +29,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -121,5 +125,19 @@ public class ItemScreenshotFeature extends UserFeature {
         McUtils.sendMessageToClient(
                 new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
                         .withStyle(ChatFormatting.GREEN));
+
+        // chat item
+        if (stack instanceof GearItemStack gearItem) {
+            String encoded = ChatItemUtils.encodeItem(gearItem);
+
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemMessage")
+                    .withStyle(ChatFormatting.DARK_GREEN)
+                    .withStyle(ChatFormatting.UNDERLINE)
+                    .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
+                    .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemTooltip")
+                                    .withStyle(ChatFormatting.DARK_AQUA)))));
+        }
     }
 }

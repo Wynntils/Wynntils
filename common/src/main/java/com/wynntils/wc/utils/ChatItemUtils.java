@@ -74,7 +74,7 @@ public class ChatItemUtils {
 
         // ids
         for (ItemIdentificationContainer id : sortedIds) {
-            if (id.isFixed()) continue; // don't care about these
+            if (id.identification().isFixed()) continue; // don't care about these
 
             int idValue = id.value();
             IdentificationProfile idProfile = id.identification();
@@ -95,7 +95,7 @@ public class ChatItemUtils {
 
         // powders
         List<Powder> powders = item.getPowders();
-        if (!powders.isEmpty()) {
+        if (powders != null && !powders.isEmpty()) {
             encoded.append(SEPARATOR);
 
             int counter = 0;
@@ -148,7 +148,7 @@ public class ChatItemUtils {
             if (status.isFixed()) {
                 value = status.getBaseValue();
             } else {
-                if (counter > ids.length) return null; // some kind of mismatch, abort
+                if (counter >= ids.length) return null; // some kind of mismatch, abort
 
                 // id value
                 int encodedValue = ids[counter] / 4;
