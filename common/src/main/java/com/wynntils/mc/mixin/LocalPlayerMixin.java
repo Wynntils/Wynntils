@@ -8,15 +8,12 @@ import com.wynntils.mc.EventFactory;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
-    @Inject(method = "chat", at = @At("HEAD"), cancellable = true)
-    private void chatPre(String message, CallbackInfo ci) {
-        if (EventFactory.onChatSend(message).isCanceled()) {
-            ci.cancel();
-        }
+    @ModifyVariable(method = "chat(Ljava/lang/String;)V", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    private String modifyChatMessage(String message) {
+        return EventFactory.onChatSent(message).getMessage();
     }
 }

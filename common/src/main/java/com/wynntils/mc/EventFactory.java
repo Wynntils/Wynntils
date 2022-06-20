@@ -9,7 +9,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.mc.event.ChatSendMessageEvent;
+import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -57,6 +58,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -205,8 +208,12 @@ public class EventFactory {
     // endregion
 
     // region Chat Events
-    public static ChatSendMessageEvent onChatSend(String message) {
-        return post(new ChatSendMessageEvent(message));
+    public static ChatSentEvent onChatSent(String message) {
+        return post(new ChatSentEvent(message));
+    }
+
+    public static ChatReceivedEvent onChatReceived(ChatType type, Component message) {
+        return post(new ChatReceivedEvent(type, message));
     }
     // endregion
 
