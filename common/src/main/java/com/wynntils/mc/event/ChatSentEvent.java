@@ -4,8 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class ChatSentEvent extends Event {
     private String message;
 

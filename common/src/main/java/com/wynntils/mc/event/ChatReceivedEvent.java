@@ -23,6 +23,10 @@ public class ChatReceivedEvent extends Event {
         return message;
     }
 
+    public ChatType getType() {
+        return type;
+    }
+
     public void setMessage(Component message) {
         this.message = message;
     }
