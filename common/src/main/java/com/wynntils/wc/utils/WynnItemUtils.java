@@ -57,6 +57,23 @@ public class WynnItemUtils {
             shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
         }
 
+        return identificationFromValue(lore, item, idName, shortIdName, value, starCount);
+    }
+
+    /**
+     * Creates an ItemIdentificationContainer from the given item, ID names, ID value, and star count
+     * Returns null if the given ID is not valid
+     *
+     * @param lore the ID lore line component - can be null if ID isn't being created from lore
+     * @param item the ItemProfile of the given item
+     * @param idName the in-game name of the given ID
+     * @param shortIdName the internal wynntils name of the given ID
+     * @param value the raw value of the given ID
+     * @param starCount the number of stars on the given ID
+     * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
+     */
+    public static ItemIdentificationContainer identificationFromValue(
+            Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
         boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(shortIdName);
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         IdentificationModifier type =
@@ -105,6 +122,9 @@ public class WynnItemUtils {
             rerollLine.append(WynnItemUtils.getRerollChancesComponent(
                     idProfile.getPerfectChance(), chances.increase(), chances.decrease()));
         }
+
+        // lore might be null if this ID is not being created from a lore line
+        if (lore == null) lore = percentLine;
 
         // create container
         return new ItemIdentificationContainer(

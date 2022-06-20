@@ -160,13 +160,18 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         constructTooltips(baseTooltip);
     }
 
+    /** Chat item constructor - used when decoding an encoded chat string */
     public GearItemStack(
-            ItemProfile itemProfile, List<ItemIdentificationContainer> identifications, List<Powder> powders) {
+            ItemProfile itemProfile,
+            List<ItemIdentificationContainer> identifications,
+            List<Powder> powders,
+            int rerolls) {
         super(itemProfile.getItemInfo().asItemStack());
 
         this.itemProfile = itemProfile;
         this.identifications = identifications;
         this.powders = powders;
+        this.rerolls = rerolls;
         isChatItem = true;
 
         CompoundTag tag = this.getOrCreateTag();
@@ -194,6 +199,10 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
     public List<ItemIdentificationContainer> getIdentifications() {
         return identifications;
+    }
+
+    public List<ItemIdentificationContainer> getOrderedIdentifications() {
+        return IdentificationOrderer.INSTANCE.orderIdentifications(identifications);
     }
 
     public List<Powder> getPowders() {
@@ -292,6 +301,9 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             tooltip.add(new TextComponent("From chat")
                     .withStyle(ChatFormatting.GRAY)
                     .withStyle(ChatFormatting.ITALIC));
+
+            tooltip.addAll(percentTooltip);
+            return tooltip;
         }
 
         if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {

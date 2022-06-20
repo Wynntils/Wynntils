@@ -197,8 +197,8 @@ public class EventFactory {
         post(new PlayerTeleportEvent(newPosition));
     }
 
-    public static void onKeyInput(int key, int scanCode, int action, int modifiers) {
-        post(new KeyInputEvent(key, scanCode, action, modifiers));
+    public static KeyInputEvent onKeyInput(int key, int scanCode, int action, int modifiers) {
+        return post(new KeyInputEvent(key, scanCode, action, modifiers));
     }
 
     public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
