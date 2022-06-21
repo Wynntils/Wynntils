@@ -9,6 +9,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
@@ -31,7 +32,6 @@ public abstract class WynntilsConfigCommand {
     public static final SuggestionProvider<CommandSourceStack> featureSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
-
     public static final SuggestionProvider<CommandSourceStack> featureConfigSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
@@ -47,7 +47,7 @@ public abstract class WynntilsConfigCommand {
                     },
                     builder);
 
-    public static LiteralArgumentBuilder<CommandSourceStack> buildGetConfigArgBuilder() {
+    public static LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
         LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = Commands.literal("get");
 
         // Feature specified, config option is not, print all configs
@@ -61,10 +61,10 @@ public abstract class WynntilsConfigCommand {
                         .executes(WynntilsConfigCommand::getSpecificConfigOption))
                 .executes(WynntilsConfigCommand::listAllConfigOptions));
 
-        return getConfigArgBuilder;
+        return getConfigArgBuilder.build();
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> buildSetConfigArgBuilder() {
+    public static LiteralCommandNode<CommandSourceStack> buildSetConfigNode() {
         LiteralArgumentBuilder<CommandSourceStack> setConfigArgBuilder = Commands.literal("set");
 
         // /wynntils config set <feature> <field> <newValue>
@@ -75,10 +75,10 @@ public abstract class WynntilsConfigCommand {
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
                                 .executes(WynntilsConfigCommand::changeFeatureConfig))));
 
-        return setConfigArgBuilder;
+        return setConfigArgBuilder.build();
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> buildResetConfigArgBuilder() {
+    public static LiteralCommandNode<CommandSourceStack> buildResetConfigNode() {
         LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = Commands.literal("reset");
 
         // Feature specified, config option is not, reset all configs
@@ -92,7 +92,7 @@ public abstract class WynntilsConfigCommand {
                         .executes(WynntilsConfigCommand::resetConfigOption))
                 .executes(WynntilsConfigCommand::resetAllConfigOptions));
 
-        return resetConfigArgBuilder;
+        return resetConfigArgBuilder.build();
     }
 
     private static int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
