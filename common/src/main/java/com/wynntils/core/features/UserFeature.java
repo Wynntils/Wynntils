@@ -34,4 +34,8 @@ public abstract class UserFeature extends Feature {
             tryDisable();
         }
     }
+
+    public void setUserEnabled(boolean newState) {
+        this.userEnabled = newState;
+    }
 }
