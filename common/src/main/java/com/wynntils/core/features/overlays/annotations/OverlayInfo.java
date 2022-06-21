@@ -11,14 +11,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Overlay {
+@Target(ElementType.FIELD)
+public @interface OverlayInfo {
     /* Whether the annotated overlay instantiated at registration */
     boolean enabled() default true;
 
     RenderEvent.ElementType renderType();
 
-    RenderState renderAt() default RenderState.Pre;
+    RenderState renderAt() default RenderState.Post;
 
     enum RenderState {
         Pre,

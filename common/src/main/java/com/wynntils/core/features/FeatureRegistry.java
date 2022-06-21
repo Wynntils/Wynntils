@@ -64,7 +64,6 @@ public class FeatureRegistry {
             return;
         }
 
-        // OverlayManager event listener setup
         if (featureClass.isAnnotationPresent(OverlayFeature.class)) {
             feature.setupOverlay();
         }

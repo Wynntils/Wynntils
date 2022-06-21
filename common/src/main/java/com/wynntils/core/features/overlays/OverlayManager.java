@@ -4,82 +4,59 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.annotations.Overlay;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.objects.Pair;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import com.wynntils.mc.utils.McUtils;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class OverlayManager {
-    private static final Map<OverlayBase, OverlayPosition> overlayInstanceMap = new HashMap<>();
+    private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
 
-    private static final Map<Class<? extends Feature>, List<Pair<OverlayBase, OverlayPosition>>> overlaysFeatureMap =
-            new HashMap<>();
+    private static final Set<Overlay> enabledOverlays = new HashSet<>();
 
-    public static void registerOverlay(Feature registrar, OverlayBase overlay, OverlayPosition position) {
-        overlaysFeatureMap.putIfAbsent(registrar.getClass(), new ArrayList<>());
+    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
+        overlayInfoMap.put(overlay, overlayInfo);
 
-        Pair<OverlayBase, OverlayPosition> overlayInfo = new Pair<>(overlay, position);
-        overlaysFeatureMap.get(registrar.getClass()).add(overlayInfo);
-
-        if (overlay.getClass().getAnnotation(Overlay.class).enabled()) {
-            instantiateOverlay(overlayInfo);
+        if (overlayInfo.enabled()) {
+            enabledOverlays.add(overlay);
         }
     }
 
-    private static void instantiateOverlay(Pair<OverlayBase, OverlayPosition> overlayInfo) {
-        try {
-            OverlayBase instance = overlayInfo.a.getClass().getConstructor().newInstance();
-
-            overlayInstanceMap.put(instance, overlayInfo.b);
-
-        } catch (InvocationTargetException
-                | NoSuchMethodException
-                | InstantiationException
-                | IllegalAccessException e) {
-            Reference.LOGGER.error(
-                    "Error when instantiating " + overlayInfo.a.getClass().getName());
-            e.printStackTrace();
-        }
+    public static void disableAllOverlaysForFeature(List<Overlay> overlays) {
+        enabledOverlays.removeIf(overlays::contains);
     }
 
-    public static void disableOverlayForFeature(Feature feature) {
-        for (Pair<OverlayBase, OverlayPosition> overlayPositionPair : overlaysFeatureMap.get(feature.getClass())) {
-            overlayInstanceMap.remove(overlayPositionPair.a);
-        }
-    }
-
-    public static void enableOverlayForFeature(Feature feature) {
-        for (Pair<OverlayBase, OverlayPosition> overlayPositionPair : overlaysFeatureMap.get(feature.getClass())) {
-            // Prevent duplication from default enabled Overlays
-            if (overlayInstanceMap.keySet().stream()
-                    .anyMatch(overlayBase -> overlayPositionPair.a.getClass().isInstance(overlayBase))) continue;
-            instantiateOverlay(overlayPositionPair);
-        }
+    public static void enableAllOverlaysForFeature(List<Overlay> overlays) {
+        enabledOverlays.addAll(overlays);
     }
 
     @SubscribeEvent
     public static void onRenderPre(RenderEvent.Pre event) {
-        renderOverlays(event, Overlay.RenderState.Pre);
+        McUtils.mc().getProfiler().push("preRenOverlay");
+        renderOverlays(event, OverlayInfo.RenderState.Pre);
+        McUtils.mc().getProfiler().pop();
     }
 
     @SubscribeEvent
     public static void onRenderPost(RenderEvent.Post event) {
-        renderOverlays(event, Overlay.RenderState.Post);
+        McUtils.mc().getProfiler().push("postRenOverlay");
+        renderOverlays(event, OverlayInfo.RenderState.Post);
+        McUtils.mc().getProfiler().pop();
     }
 
-    private static void renderOverlays(RenderEvent event, Overlay.RenderState renderState) {
-        for (Map.Entry<OverlayBase, OverlayPosition> overlay : overlayInstanceMap.entrySet()) {
-            Overlay annotation = overlay.getKey().getClass().getAnnotation(Overlay.class);
-            overlay.getKey()
-                    .render(overlay.getValue(), event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+    private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+        for (Overlay overlay : enabledOverlays) {
+            OverlayInfo annotation = overlayInfoMap.get(overlay);
+
+            if (renderState != annotation.renderAt() || event.getType() != annotation.renderType()) continue;
+
+            overlay.render(overlay.getPosition(), event.getPoseStack(), event.getPartialTicks(), event.getWindow());
         }
     }
 
