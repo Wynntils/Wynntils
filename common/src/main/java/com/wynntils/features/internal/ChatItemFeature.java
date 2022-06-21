@@ -12,20 +12,14 @@ import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.utils.ChatItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -61,7 +55,7 @@ public class ChatItemFeature extends InternalFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = ChatItemUtils.ENCODED_PATTERN.matcher(chatInput.getValue());
+        Matcher m = ChatItemUtils.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             String name = m.group("Name");
@@ -79,46 +73,8 @@ public class ChatItemFeature extends InternalFeature {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
-        List<MutableComponent> components =
-                message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
-        components.add(0, message.plainCopy().withStyle(message.getStyle()));
+        if (!ChatItemUtils.chatItemMatcher(message.getString()).find()) return; // no chat items to replace
 
-        // chat item tooltips
-        if (ChatItemUtils.ENCODED_PATTERN.matcher(message.getString()).find()) {
-            MutableComponent temp = new TextComponent("");
-            for (Component comp : components) {
-                Matcher m = ChatItemUtils.ENCODED_PATTERN.matcher(comp.getString());
-                if (!m.find()) {
-                    Component newComponent = comp.copy();
-                    temp.append(newComponent);
-                    continue;
-                }
-
-                do {
-                    String text = comp.getString();
-                    Style style = comp.getStyle();
-
-                    GearItemStack item = ChatItemUtils.decodeItem(m.group());
-                    if (item == null) { // couldn't decode, skip
-                        comp = comp.copy();
-                        continue;
-                    }
-
-                    MutableComponent preText = new TextComponent(text.substring(0, m.start()));
-                    preText.withStyle(style);
-                    temp.append(preText);
-
-                    // create hover-able text component for the item
-                    Component itemComponent = ChatItemUtils.createItemComponent(item);
-                    temp.append(itemComponent);
-
-                    comp = new TextComponent(text.substring(m.end())).withStyle(style);
-                    m = ChatItemUtils.ENCODED_PATTERN.matcher(comp.getString()); // recreate matcher for new substring
-                } while (m.find()); // search for multiple items in the same message
-                temp.append(comp); // leftover text after item(s)
-            }
-
-            e.setMessage(temp);
-        }
+        e.setMessage(ChatItemUtils.insertItemComponents(message));
     }
 }

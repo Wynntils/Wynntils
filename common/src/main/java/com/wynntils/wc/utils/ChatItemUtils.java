@@ -18,10 +18,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -37,8 +39,8 @@ public class ChatItemUtils {
 
     private static final boolean ENCODE_NAME = false;
 
-    public static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>" + RANGE
-            + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
+    private static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>"
+            + RANGE + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
 
     /**
      * Encodes the given item, as long as it is a standard gear item, into the following format
@@ -65,6 +67,9 @@ public class ChatItemUtils {
      * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
      *
      * Rerolls are simply encoded as a raw number.
+     *
+     * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
+     * modified without also changing the encoding in legacy.
      *
      */
     public static String encodeItem(GearItemStack item) {
@@ -203,7 +208,57 @@ public class ChatItemUtils {
         return new GearItemStack(item, idContainers, powderList, rerolls);
     }
 
-    public static Component createItemComponent(GearItemStack item) {
+    public static Matcher chatItemMatcher(String text) {
+        return ENCODED_PATTERN.matcher(text);
+    }
+
+    public static Component insertItemComponents(Component message) {
+        // no item tooltips to insert
+        if (!ENCODED_PATTERN.matcher(message.getString()).find()) return message;
+
+        List<MutableComponent> components =
+                message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
+        components.add(0, message.plainCopy().withStyle(message.getStyle()));
+
+        MutableComponent temp = new TextComponent("");
+
+        for (Component comp : components) {
+            Matcher m = ENCODED_PATTERN.matcher(comp.getString());
+            if (!m.find()) {
+                Component newComponent = comp.copy();
+                temp.append(newComponent);
+                continue;
+            }
+
+            do {
+                String text = comp.getString();
+                Style style = comp.getStyle();
+
+                GearItemStack item = decodeItem(m.group());
+                if (item == null) { // couldn't decode, skip
+                    comp = comp.copy();
+                    continue;
+                }
+
+                MutableComponent preText = new TextComponent(text.substring(0, m.start()));
+                preText.withStyle(style);
+                temp.append(preText);
+
+                // create hover-able text component for the item
+                Component itemComponent = createItemComponent(item);
+                temp.append(itemComponent);
+
+                comp = new TextComponent(text.substring(m.end())).withStyle(style);
+                m = ENCODED_PATTERN.matcher(comp.getString()); // recreate matcher for new substring
+            } while (m.find()); // search for multiple items in the same message
+
+            temp.append(comp); // leftover text after item(s)
+        }
+
+        return temp;
+    }
+
+    private static Component createItemComponent(GearItemStack item) {
         MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());

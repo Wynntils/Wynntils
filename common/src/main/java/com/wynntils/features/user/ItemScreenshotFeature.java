@@ -126,7 +126,7 @@ public class ItemScreenshotFeature extends UserFeature {
                 new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
                         .withStyle(ChatFormatting.GREEN));
 
-        // chat item
+        // chat item prompt
         if (stack instanceof GearItemStack gearItem) {
             String encoded = ChatItemUtils.encodeItem(gearItem);
 
