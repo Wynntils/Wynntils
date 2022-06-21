@@ -4,20 +4,17 @@
  */
 package com.wynntils.commands;
 
-import com.google.common.base.CaseFormat;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.commands.wynntils.WynntilsConfigCommand;
+import com.wynntils.commands.wynntils.WynntilsFeatureCommand;
 import com.wynntils.core.Reference;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,7 +23,6 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import org.apache.commons.lang3.StringUtils;
 
 public class WynntilsCommand extends CommandBase {
     @Override
@@ -38,31 +34,14 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("reload").executes(this::reload))
                 .then(Commands.literal("version").executes(this::version))
                 .then(Commands.literal("config")
-                        .then(WynntilsConfigCommand.buildGetConfigArgBuilder())
-                        .then(WynntilsConfigCommand.buildSetConfigArgBuilder())
-                        .then(WynntilsConfigCommand.buildResetConfigArgBuilder()))
-                .then(Commands.literal("feature").then(Commands.literal("list").executes(this::listFeatures)))
-                .executes(this::help));
-    }
-
-    private int listFeatures(CommandContext<CommandSourceStack> context) {
-        Set<Feature> features = FeatureRegistry.getFeatures().stream().collect(Collectors.toUnmodifiableSet());
-
-        MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
-
-        for (Feature feature : features) {
-            String longFeatureName = Arrays.stream(CaseFormat.LOWER_CAMEL
-                            .to(CaseFormat.LOWER_UNDERSCORE, feature.getShortName())
-                            .split("_"))
-                    .map(StringUtils::capitalize)
-                    .collect(Collectors.joining(" "));
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(longFeatureName).withStyle(ChatFormatting.YELLOW));
-        }
-
-        context.getSource().sendSuccess(response, false);
-
-        return 1;
+                        .then(WynntilsConfigCommand.buildGetConfigNode())
+                        .then(WynntilsConfigCommand.buildSetConfigNode())
+                        .then(WynntilsConfigCommand.buildResetConfigNode()))
+                .then(Commands.literal("feature")
+                        .then(WynntilsFeatureCommand.buildListNode())
+                        .then(WynntilsFeatureCommand.enableFeatureNode())
+                        .then(WynntilsFeatureCommand.disableFeatureNode())
+                        .executes(this::help)));
     }
 
     private int version(CommandContext<CommandSourceStack> context) {
