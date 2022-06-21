@@ -5,11 +5,16 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -27,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
@@ -129,5 +135,19 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void setSubtitleTextPost(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
         EventFactory.onSubtitleSetText(packet);
+    }
+
+    @Redirect(
+            method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
+    private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
+        ChatReceivedEvent result = EventFactory.onChatReceived(chatType, message);
+        if (result.isCanceled()) return;
+
+        gui.handleChat(chatType, result.getMessage(), uuid);
     }
 }
