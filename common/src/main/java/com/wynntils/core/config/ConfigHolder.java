@@ -19,6 +19,7 @@ public class ConfigHolder {
     private final Config metadata;
 
     private final Object defaultValue;
+    private boolean userEdited = false;
 
     public ConfigHolder(Feature parent, Field field, String category, Config metadata) {
         this.parent = parent;
@@ -70,6 +71,7 @@ public class ConfigHolder {
         try {
             FieldUtils.writeField(field, parent, value, true);
             parent.updateConfigOption(this);
+            userEdited = true;
             return true;
         } catch (IllegalAccessException e) {
             Reference.LOGGER.error("Unable to set field " + getJsonName());
@@ -78,12 +80,14 @@ public class ConfigHolder {
         }
     }
 
-    public boolean isDefault() {
-        return defaultValue.equals(getValue());
+    public boolean isUserEdited() {
+        return userEdited;
     }
 
     public void reset() {
         setValue(defaultValue);
+        // reset this flag so option is no longer saved to file
+        userEdited = false;
     }
 
     public Object tryParseStringValue(String value) {

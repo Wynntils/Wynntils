@@ -179,9 +179,7 @@ public abstract class Feature {
     }
 
     /** Called when a feature's config option is updated. Called by ConfigHolder */
-    public void updateConfigOption(ConfigHolder configHolder) {
-        onConfigUpdate(configHolder);
-    }
+    public abstract void updateConfigOption(ConfigHolder configHolder);
 
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
