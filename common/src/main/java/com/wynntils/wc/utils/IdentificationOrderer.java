@@ -5,6 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.wc.objects.ItemIdentificationContainer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -122,6 +123,12 @@ public class IdentificationOrderer {
 
         ordered.forEach(c -> result.add(c.getValue()));
         return result;
+    }
+
+    public List<ItemIdentificationContainer> orderIdentifications(List<ItemIdentificationContainer> ids) {
+        return ids.stream()
+                .sorted(Comparator.comparingInt(id -> getOrder(id.shortIdName())))
+                .toList();
     }
 
     private void organizeGroups() {

@@ -15,7 +15,7 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ChatSendMessageEvent;
+import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ClientCommandManager {
     }
 
     @SubscribeEvent
-    public static void onChatSend(ChatSendMessageEvent e) {
+    public static void onChatSend(ChatSentEvent e) {
         String message = e.getMessage();
 
         if (message.startsWith("/")) {
