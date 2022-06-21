@@ -4,8 +4,10 @@
  */
 package com.wynntils.features.internal;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
 import com.wynntils.core.features.properties.EventListener;
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -31,6 +33,16 @@ import org.lwjgl.glfw.GLFW;
 public class ChatItemFeature extends InternalFeature {
 
     private final Map<String, String> chatItems = new HashMap<>();
+
+    @Override
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+        conditions.add(new WebLoadedCondition());
+    }
+
+    @Override
+    protected boolean onEnable() {
+        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
+    }
 
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {
