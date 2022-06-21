@@ -160,13 +160,18 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         constructTooltips(baseTooltip);
     }
 
+    /** Chat item constructor - used when decoding an encoded chat string */
     public GearItemStack(
-            ItemProfile itemProfile, List<ItemIdentificationContainer> identifications, List<Powder> powders) {
+            ItemProfile itemProfile,
+            List<ItemIdentificationContainer> identifications,
+            List<Powder> powders,
+            int rerolls) {
         super(itemProfile.getItemInfo().asItemStack());
 
         this.itemProfile = itemProfile;
         this.identifications = identifications;
         this.powders = powders;
+        this.rerolls = rerolls;
         isChatItem = true;
 
         CompoundTag tag = this.getOrCreateTag();
@@ -174,6 +179,9 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         if (itemProfile.getItemInfo().isArmorColorValid())
             tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
         this.setTag(tag);
+
+        customName = new TextComponent(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
 
         parseIDs();
         List<Component> baseTooltip = constructBaseTooltip();
@@ -196,6 +204,10 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         return identifications;
     }
 
+    public List<ItemIdentificationContainer> getOrderedIdentifications() {
+        return IdentificationOrderer.INSTANCE.orderIdentifications(identifications);
+    }
+
     public List<Powder> getPowders() {
         return powders;
     }
@@ -206,7 +218,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
     @Override
     public Component getHoverName() {
-        if (isGuideStack) return customName;
+        if (isGuideStack || isChatItem) return customName;
 
         /*
          * This math was originally based off Avaritia code.
@@ -290,8 +302,11 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
 
         if (isChatItem) {
             tooltip.add(new TextComponent("From chat")
-                    .withStyle(ChatFormatting.GRAY)
+                    .withStyle(ChatFormatting.DARK_GRAY)
                     .withStyle(ChatFormatting.ITALIC));
+
+            tooltip.addAll(percentTooltip);
+            return tooltip;
         }
 
         if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {
@@ -325,8 +340,12 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         int idAmount = (int) percents.getCount();
         float percentTotal = (float) percents.getSum();
 
-        String originalName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName()));
-        MutableComponent name = new TextComponent(originalName);
+        MutableComponent name;
+        if (customName == null) {
+            name = new TextComponent(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(getHoverName())));
+        } else {
+            name = customName.copy();
+        }
 
         if (hasNew) {
             name.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
@@ -400,7 +419,11 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
             for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
                 DamageType type = entry.getKey();
                 MutableComponent damage = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
-                damage.append(new TextComponent(" Damage: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                damage.append(new TextComponent(" Damage: " + entry.getValue())
+                        .withStyle(
+                                type == DamageType.NEUTRAL
+                                        ? type.getColor()
+                                        : ChatFormatting.GRAY)); // neutral is all gold
                 baseTooltip.add(damage);
             }
 
@@ -462,7 +485,7 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 MutableComponent powderLine = new TextComponent(
-                                "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "]")
+                                "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
                 if (powders.size() > 0) {
                     MutableComponent powderList = new TextComponent("[");

@@ -14,6 +14,7 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.internal.ChatItemFeature;
 import com.wynntils.features.internal.FixPacketBugsFeature;
 import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
@@ -142,6 +143,7 @@ public class FeatureRegistry {
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new ItemStackTransformerFeature());
         registerFeature(new FixSpellOverwriteFeature());
+        registerFeature(new ChatItemFeature());
 
         // user
         registerFeature(new DialogueOptionOverrideFeature());
