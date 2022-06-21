@@ -4,7 +4,14 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.config.ConfigHolder;
+
 /**
  * A feature controlled from within Wynntils. Meant for implementing functionality that shouldn't be exposed to users.
  */
-public abstract class InternalFeature extends Feature {}
+public abstract class InternalFeature extends Feature {
+    @Override
+    public final void updateConfigOption(ConfigHolder configHolder) {
+        onConfigUpdate(configHolder);
+    }
+}

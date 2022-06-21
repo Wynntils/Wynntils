@@ -6,6 +6,7 @@ package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,6 +24,11 @@ public abstract class DebugFeature extends Feature {
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
+    }
+
+    @Override
+    public final void updateConfigOption(ConfigHolder configHolder) {
+        onConfigUpdate(configHolder);
     }
 
     public class DevelopmentCondition extends Condition {
