@@ -147,7 +147,7 @@ public class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new TooltipScaleFeature());
         registerFeature(new DurabilityArcFeature());
-        registerFeature(new DummyOverlayFeature());
+        // registerFeature(new DummyOverlayFeature()); TODO: We should have a way to register features with disabled state
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
