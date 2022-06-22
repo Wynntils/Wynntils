@@ -5,7 +5,6 @@
 package com.wynntils.features.internal;
 
 import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientTickEvent.Phase;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -17,7 +16,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 public class FixSpellOverwriteFeature extends InternalFeature {
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast!§3 \\[§b-([0-9]+) ✺§3\\]$");
 

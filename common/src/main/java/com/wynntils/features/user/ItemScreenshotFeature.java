@@ -8,7 +8,6 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -39,7 +38,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@EventListener
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class ItemScreenshotFeature extends UserFeature {
 

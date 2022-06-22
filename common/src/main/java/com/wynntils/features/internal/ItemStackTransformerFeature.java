@@ -6,7 +6,6 @@ package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.CosmeticItemStack;
 import com.wynntils.wc.custom.item.CraftedGearItemStack;
@@ -24,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 public class ItemStackTransformerFeature extends InternalFeature {
 
     private final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();

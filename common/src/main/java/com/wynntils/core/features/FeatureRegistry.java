@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
@@ -38,7 +37,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
 public class FeatureRegistry {
@@ -64,7 +65,7 @@ public class FeatureRegistry {
         }
 
         // flag as event listener
-        if (featureClass.isAnnotationPresent(EventListener.class)) {
+        if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
             feature.setupEventListener();
         }
 
