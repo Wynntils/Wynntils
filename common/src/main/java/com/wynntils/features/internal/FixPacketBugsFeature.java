@@ -5,7 +5,6 @@
 package com.wynntils.features.internal;
 
 import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
@@ -20,7 +19,6 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 public class FixPacketBugsFeature extends InternalFeature {
 
     private static final int METHOD_ADD = 0;
