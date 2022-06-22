@@ -7,7 +7,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.head_ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Set up JDK
@@ -16,6 +16,12 @@ jobs:
           distribution: "temurin"
           java-version: 17
           cache: "gradle"
+
+      - name: Print Vars (Debug)
+        run: |
+          echo $GITHUB_REPOSITORY
+          echo ${{ github.head_ref }}
+          echo ${{ github.repository }}
 
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
