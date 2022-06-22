@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
@@ -24,11 +23,6 @@ public class DummyOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay BasicBlueOverlay =
             new BasicOverlay(new OverlayPosition(50, 50), 75, 75, DummyOverlayFeature::renderBasicBlueBox);
-
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        super.onInit(conditions);
-    }
 
     public static class DummyRedComplexOverlay extends Overlay {
         public DummyRedComplexOverlay() {
