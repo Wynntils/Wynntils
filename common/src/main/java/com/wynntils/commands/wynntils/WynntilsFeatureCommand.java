@@ -45,13 +45,8 @@ public abstract class WynntilsFeatureCommand {
         MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
         for (Feature feature : features) {
-            String longFeatureName = Arrays.stream(CaseFormat.LOWER_CAMEL
-                            .to(CaseFormat.LOWER_UNDERSCORE, feature.getShortName())
-                            .split("_"))
-                    .map(StringUtils::capitalize)
-                    .collect(Collectors.joining(" "));
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(longFeatureName).withStyle(ChatFormatting.YELLOW));
+                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.YELLOW));
         }
 
         context.getSource().sendSuccess(response, false);

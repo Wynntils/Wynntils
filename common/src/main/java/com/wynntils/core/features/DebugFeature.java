@@ -17,11 +17,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 public abstract class DebugFeature extends Feature {
 
     @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("featureDebug.wynntils." + getNameCamelCase() + ".name");
-    }
-
-    @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
     }
