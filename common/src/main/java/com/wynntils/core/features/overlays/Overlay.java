@@ -4,41 +4,37 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.core.features.Feature;
-import com.wynntils.mc.event.RenderEvent;
-import java.awt.Point;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-public abstract class Overlay extends Feature { // extends ScreenRenderer implements SettingsHolder {
+public abstract class Overlay {
+    protected OverlayPosition position;
 
-    public transient Point staticSize;
-    public transient boolean visible;
-    public transient OverlayGrowFrom growthX;
-    public transient OverlayGrowFrom growthY;
-    public transient RenderEvent.ElementType[] hookElements;
+    protected float width;
+    protected float height;
 
-    public Overlay(
-            int sizeX,
-            int sizeY,
-            boolean visible,
-            OverlayGrowFrom growthX,
-            OverlayGrowFrom growthY,
-            RenderEvent.ElementType... hookElements) {
-        this.staticSize = new Point(sizeX, sizeY);
-        this.visible = visible;
-        this.hookElements = hookElements;
-        this.growthX = growthX;
-        this.growthY = growthY;
+    public Overlay(OverlayPosition position, float width, float height) {
+        this.position = position;
+        this.width = width;
+        this.height = height;
     }
 
-    public abstract void render(RenderEvent.Pre e);
+    public abstract void render(
+            OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window);
 
-    public abstract void render(RenderEvent.Post e);
+    public OverlayPosition getPosition() {
+        return position;
+    }
 
-    public abstract void tick();
+    public void setPosition(OverlayPosition position) {
+        this.position = position;
+    }
 
-    public enum OverlayGrowFrom {
-        LEFT,
-        CENTER,
-        RIGHT;
+    public float getHeight() {
+        return height;
+    }
+
+    public float getWidth() {
+        return width;
     }
 }

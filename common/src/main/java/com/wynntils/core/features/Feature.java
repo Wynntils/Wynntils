@@ -6,13 +6,18 @@ package com.wynntils.core.features;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -32,18 +38,38 @@ public abstract class Feature {
     private boolean isListener = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
     private List<ConfigHolder> configOptions = new ArrayList<>();
+    private List<Overlay> overlays = new ArrayList<>();
 
     protected boolean enabled = false;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
+        initOverlays();
+
         onInit(conditions);
 
         this.conditions = conditions.build();
 
-        if (this.conditions.isEmpty()) return;
-        this.conditions.forEach(Condition::init);
+        if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+    }
+
+    private void initOverlays() {
+        Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
+        for (Field overlayField : overlayFields) {
+            if (overlayField.getType() != Overlay.class) {
+                throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
+            }
+
+            try {
+                Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
+                OverlayManager.registerOverlay(overlay, overlayField.getAnnotation(OverlayInfo.class));
+                overlays.add(overlay);
+            } catch (IllegalAccessException e) {
+                Reference.LOGGER.error("Unable to get field " + overlayField);
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -109,6 +135,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
+        OverlayManager.enableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
@@ -125,6 +152,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
         }
+        OverlayManager.disableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
             KeyManager.unregisterKeybind(key);
         }

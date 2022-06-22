@@ -5,6 +5,7 @@
 package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
@@ -34,6 +35,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -106,6 +108,14 @@ public class EventFactory {
             Matrix4f projectionMatrix,
             long finishTimeNano) {
         post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+    }
+
+    public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
+        post(new RenderEvent.Pre(poseStack, partialTicks, window, RenderEvent.ElementType.GUI));
+    }
+
+    public static void onRenderGuiPost(PoseStack poseStack, float partialTicks, Window window) {
+        post(new RenderEvent.Post(poseStack, partialTicks, window, RenderEvent.ElementType.GUI));
     }
 
     public static void onInventoryRender(
