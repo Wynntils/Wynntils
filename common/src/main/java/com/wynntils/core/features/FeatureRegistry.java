@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.Reference;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.overlays.annotations.OverlayFeature;
 import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -63,10 +62,6 @@ public class FeatureRegistry {
             Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();
             return;
-        }
-
-        if (featureClass.isAnnotationPresent(OverlayFeature.class)) {
-            feature.setupOverlay();
         }
 
         // flag as event listener

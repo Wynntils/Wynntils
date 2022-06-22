@@ -8,17 +8,16 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public abstract class Overlay {
+    protected OverlayPosition position;
+
+    protected float width;
+    protected float height;
 
     public Overlay(OverlayPosition position, float width, float height) {
         this.position = position;
         this.width = width;
         this.height = height;
     }
-
-    protected OverlayPosition position;
-
-    protected float width;
-    protected float height;
 
     public abstract void render(
             OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window);
@@ -29,5 +28,13 @@ public abstract class Overlay {
 
     public void setPosition(OverlayPosition position) {
         this.position = position;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getWidth() {
+        return width;
     }
 }

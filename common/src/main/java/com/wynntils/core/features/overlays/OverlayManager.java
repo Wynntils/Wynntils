@@ -28,11 +28,11 @@ public class OverlayManager {
         }
     }
 
-    public static void disableAllOverlaysForFeature(List<Overlay> overlays) {
+    public static void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
     }
 
-    public static void enableAllOverlaysForFeature(List<Overlay> overlays) {
+    public static void enableOverlays(List<Overlay> overlays) {
         enabledOverlays.addAll(overlays);
     }
 

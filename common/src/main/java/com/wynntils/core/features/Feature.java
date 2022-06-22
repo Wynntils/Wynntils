@@ -36,7 +36,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public abstract class Feature {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
-    private boolean isOverlayHolder = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
     private List<ConfigHolder> configOptions = new ArrayList<>();
     private List<Overlay> overlays = new ArrayList<>();
@@ -46,7 +45,7 @@ public abstract class Feature {
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
-        if (this.isOverlayHolder) initOverlays();
+        initOverlays();
 
         onInit(conditions);
 
@@ -58,7 +57,9 @@ public abstract class Feature {
     private void initOverlays() {
         Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
         for (Field overlayField : overlayFields) {
-            if (overlayField.getType() != Overlay.class) continue;
+            if (overlayField.getType() != Overlay.class) {
+                throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
+            }
 
             try {
                 Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
@@ -76,10 +77,6 @@ public abstract class Feature {
      */
     public final void setupEventListener() {
         this.isListener = true;
-    }
-
-    public void setupOverlay() {
-        this.isOverlayHolder = true;
     }
 
     /**
@@ -138,9 +135,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
-        if (this.isOverlayHolder) {
-            OverlayManager.enableAllOverlaysForFeature(this.overlays);
-        }
+        OverlayManager.enableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
@@ -157,9 +152,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
         }
-        if (this.isOverlayHolder) {
-            OverlayManager.disableAllOverlaysForFeature(this.overlays);
-        }
+        OverlayManager.disableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
             KeyManager.unregisterKeybind(key);
         }
