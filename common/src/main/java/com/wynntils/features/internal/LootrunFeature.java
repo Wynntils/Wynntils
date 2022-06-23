@@ -6,7 +6,6 @@ package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 @StartDisabled
 public class LootrunFeature extends InternalFeature {
     public static LootrunFeature INSTANCE;
