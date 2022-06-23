@@ -21,12 +21,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class TooltipScaleFeature extends UserFeature {
 
-    @Config(displayName = "Universal Scale", description = "The scale factor that should be applied to every tooltip")
+    @Config
     public static float universalScale = 1f;
 
-    @Config(
-            displayName = "Fit to Screen",
-            description = "Whether tooltips should be scaled to always fit on the screen")
+    @Config
     public static boolean fitToScreen = true;
 
     private boolean scaledLast = false;

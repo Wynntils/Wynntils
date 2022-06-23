@@ -14,7 +14,7 @@ import com.wynntils.core.webapi.WebManager;
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
 
-    @Config(displayName = "Show Guess Price")
+    @Config
     public static boolean showGuessesPrice = true;
 
     @Override

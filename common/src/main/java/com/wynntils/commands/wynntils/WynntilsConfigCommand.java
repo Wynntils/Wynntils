@@ -129,7 +129,7 @@ public abstract class WynntilsConfigCommand {
         MutableComponent response = new TextComponent(longFeatureName + "\n").withStyle(ChatFormatting.YELLOW);
         response.append(new TextComponent("Config option: ")
                 .withStyle(ChatFormatting.WHITE)
-                .append(new TextComponent(config.getMetadata().displayName()).withStyle(ChatFormatting.YELLOW))
+                .append(new TextComponent(config.getDisplayName()).withStyle(ChatFormatting.YELLOW))
                 .append("\n"));
 
         response.append(new TextComponent("Value: ")
@@ -144,7 +144,7 @@ public abstract class WynntilsConfigCommand {
                 .append("\n");
         response.append(new TextComponent("Description: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(new TextComponent(config.getMetadata().description())))
+                        .append(new TextComponent(config.getDescription())))
                 .append("\n");
 
         context.getSource().sendSuccess(response, false);
@@ -171,7 +171,7 @@ public abstract class WynntilsConfigCommand {
         for (ConfigHolder config : feature.getVisibleConfigOptions()) {
             Object value = config.getValue();
 
-            String configNameString = config.getMetadata().displayName();
+            String configNameString = config.getDisplayName();
             String configTypeString = " (" + config.getType().getSimpleName() + ")";
             String valueString = value == null ? "Couldn't get value." : value.toString();
 
@@ -181,7 +181,7 @@ public abstract class WynntilsConfigCommand {
                             .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
                                     new TextComponent("Description: "
-                                                    + config.getMetadata().description())
+                                                    + config.getDescription())
                                             .withStyle(ChatFormatting.LIGHT_PURPLE))))
                             .withStyle(ChatFormatting.YELLOW)
                             .append(new TextComponent(configTypeString).withStyle(ChatFormatting.WHITE))
@@ -256,7 +256,7 @@ public abstract class WynntilsConfigCommand {
                 .sendSuccess(
                         new TextComponent("Successfully set ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getMetadata().displayName())
+                                .append(new TextComponent(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
@@ -301,7 +301,7 @@ public abstract class WynntilsConfigCommand {
                 .sendSuccess(
                         new TextComponent("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getMetadata().displayName())
+                                .append(new TextComponent(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),

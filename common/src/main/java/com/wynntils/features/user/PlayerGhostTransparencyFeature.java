@@ -19,9 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE, category = "Players")
 public class PlayerGhostTransparencyFeature extends UserFeature {
 
-    @Config(
-            displayName = "Player Ghost Translucence",
-            description = "The level of translucence that should be applied to player ghosts")
+    @Config
     public static float playerGhostTranslucenceLevel = 0.75f;
 
     @SubscribeEvent
