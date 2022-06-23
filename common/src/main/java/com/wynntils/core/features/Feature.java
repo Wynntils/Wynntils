@@ -16,14 +16,12 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.locale.Language;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -89,21 +87,20 @@ public abstract class Feature {
 
     /** Gets the name of a feature */
     public String getTranslatedName() {
-        return ComponentUtils.getFormatted(getNameComponent());
+        return getTranslation("name");
     }
 
     public String getShortName() {
-        String typeName = this.getClass().getTypeName();
-        return typeName.substring(typeName.lastIndexOf('.') + 1);
+        return this.getClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {
-        String name = this.getClass().getTypeName().replace("Feature", "");
+        String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils." + getNameCamelCase() + ".name");
+    public String getTranslation(String keySuffix) {
+        return Language.getInstance().getOrDefault("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
     /** Called on init of Feature */
