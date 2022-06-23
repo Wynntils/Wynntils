@@ -9,8 +9,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE)

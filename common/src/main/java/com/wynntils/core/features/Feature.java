@@ -16,13 +16,11 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import net.minecraft.locale.Language;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;

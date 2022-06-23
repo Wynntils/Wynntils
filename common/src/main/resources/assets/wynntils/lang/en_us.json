@@ -41,7 +41,6 @@
   "feature.wynntils.itemHighlight.normalHighlightColor.description": "",
   "feature.wynntils.itemHighlight.normalHighlightColor.name": "Normal Highlight Color",
   "feature.wynntils.itemHighlight.normalHighlightEnabled.description": "",
-  "feature.wynntils.itemHighlight.normalHighlightEnabled.name": "Normal Item Highlight JSON",
   "feature.wynntils.itemHighlight.normalHighlightEnabled.name": "Normal Item Highlight",
   "feature.wynntils.itemHighlight.rareHighlightColor.description": "",
   "feature.wynntils.itemHighlight.rareHighlightColor.name": "Rare Highlight Color",

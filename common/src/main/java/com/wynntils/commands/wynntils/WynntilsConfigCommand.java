@@ -180,8 +180,7 @@ public abstract class WynntilsConfigCommand {
                     .append(new TextComponent(configNameString)
                             .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    new TextComponent("Description: "
-                                                    + config.getDescription())
+                                    new TextComponent("Description: " + config.getDescription())
                                             .withStyle(ChatFormatting.LIGHT_PURPLE))))
                             .withStyle(ChatFormatting.YELLOW)
                             .append(new TextComponent(configTypeString).withStyle(ChatFormatting.WHITE))

@@ -4,7 +4,6 @@
  */
 package com.wynntils.commands.wynntils;
 
-import com.google.common.base.CaseFormat;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -13,7 +12,6 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +21,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import org.apache.commons.lang3.StringUtils;
 
 public abstract class WynntilsFeatureCommand {
     public static final SuggestionProvider<CommandSourceStack> userFeatureSuggestionProvider =

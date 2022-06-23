@@ -7,7 +7,6 @@ package com.wynntils.core.config;
 import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
-
 import net.minecraft.locale.Language;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
