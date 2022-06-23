@@ -6,7 +6,6 @@ package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -23,7 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@EventListener
 public class ChatItemFeature extends InternalFeature {
 
     private final Map<String, String> chatItems = new HashMap<>();
