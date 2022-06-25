@@ -12,11 +12,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Config {
-    /** The display name for this option, for users */
-    String displayName();
-
-    /** The description for this option, for users */
-    String description() default "";
+    /** The base part of the translation key to use for this option */
+    String key() default "";
 
     /** The subcategory this option belongs in within its container */
     String subcategory() default "";

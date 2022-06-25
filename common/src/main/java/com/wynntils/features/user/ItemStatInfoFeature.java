@@ -14,28 +14,28 @@ import com.wynntils.core.webapi.WebManager;
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemStatInfoFeature extends UserFeature {
 
-    @Config(displayName = "Show Stars")
+    @Config
     public static boolean showStars = true;
 
-    @Config(displayName = "Color Lerp")
+    @Config
     public static boolean colorLerp = true;
 
-    @Config(displayName = "Rainbow Perfect Items")
+    @Config
     public static boolean perfect = true;
 
-    @Config(displayName = "Obfuscated Defective Items")
+    @Config
     public static boolean defective = true;
 
-    @Config(displayName = "Obfuscation Start Chance")
+    @Config
     public static float obfuscationChanceStart = 0.08f;
 
-    @Config(displayName = "Obfuscation End Chance")
+    @Config
     public static float obfuscationChanceEnd = 0.04f;
 
-    @Config(displayName = "Reorder Identifications")
+    @Config
     public static boolean reorderIdentifications = true;
 
-    @Config(displayName = "Group Identifications")
+    @Config
     public static boolean groupIdentifications = true;
 
     @Override

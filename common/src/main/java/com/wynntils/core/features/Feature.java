@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import net.minecraft.locale.Language;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -100,7 +100,7 @@ public abstract class Feature {
     }
 
     public String getTranslation(String keySuffix) {
-        return Language.getInstance().getOrDefault("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
+        return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
     /** Called on init of Feature */

@@ -22,64 +22,64 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE, category = "Inventory")
 public class ItemHighlightFeature extends UserFeature {
 
-    @Config(displayName = "Normal Item Highlight")
+    @Config
     public static boolean normalHighlightEnabled = true;
 
-    @Config(displayName = "Normal Highlight Color")
+    @Config
     public static CustomColor normalHighlightColor = new CustomColor(255, 255, 255);
 
-    @Config(displayName = "Unique Item Highlight")
+    @Config
     public static boolean uniqueHighlightEnabled = true;
 
-    @Config(displayName = "Unique Highlight Color")
+    @Config
     public static CustomColor uniqueHighlightColor = new CustomColor(255, 255, 0);
 
-    @Config(displayName = "Rare Item Highlight")
+    @Config
     public static boolean rareHighlightEnabled = true;
 
-    @Config(displayName = "Rare Highlight Color")
+    @Config
     public static CustomColor rareHighlightColor = new CustomColor(255, 0, 255);
 
-    @Config(displayName = "Set Item Highlight")
+    @Config
     public static boolean setHighlightEnabled = true;
 
-    @Config(displayName = "Set Highlight Color")
+    @Config
     public static CustomColor setHighlightColor = new CustomColor(0, 255, 0);
 
-    @Config(displayName = "Legendary Item Highlight")
+    @Config
     public static boolean legendaryHighlightEnabled = true;
 
-    @Config(displayName = "Legendary Highlight Color")
+    @Config
     public static CustomColor legendaryHighlightColor = new CustomColor(0, 255, 255);
 
-    @Config(displayName = "Fabled Item Highlight")
+    @Config
     public static boolean fabledHighlightEnabled = true;
 
-    @Config(displayName = "Fabled Highlight Color")
+    @Config
     public static CustomColor fabledHighlightColor = new CustomColor(255, 85, 85);
 
-    @Config(displayName = "Mythic Item Highlight")
+    @Config
     public static boolean mythicHighlightEnabled = true;
 
-    @Config(displayName = "Mythic Highlight Color")
+    @Config
     public static CustomColor mythicHighlightColor = new CustomColor(76, 0, 76);
 
-    @Config(displayName = "Crafted Item Highlight")
+    @Config
     public static boolean craftedHighlightEnabled = true;
 
-    @Config(displayName = "Crafted Highlight Color")
+    @Config
     public static CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
 
-    @Config(displayName = "Inventory Item Highlights")
+    @Config
     public static boolean inventoryHighlightEnabled = true;
 
-    @Config(displayName = "Inventory Highlight Opacity")
+    @Config
     public static float inventoryOpacity = 1f;
 
-    @Config(displayName = "Hotbar Item Highlights")
+    @Config
     public static boolean hotbarHighlightEnabled = true;
 
-    @Config(displayName = "Hotbar Highlight Opacity")
+    @Config
     public static float hotbarOpacity = .5f;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

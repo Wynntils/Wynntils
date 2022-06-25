@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigHolder;
  * A feature that is enabled & disabled by the user.
  */
 public abstract class UserFeature extends Feature {
-    @Config(displayName = "Enabled", description = "Should this feature be enabled?")
+    @Config(key = "feature.wynntils.userFeature.userEnabled")
     protected boolean userEnabled = true;
 
     @Override
