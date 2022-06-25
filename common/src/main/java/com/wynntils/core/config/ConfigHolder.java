@@ -7,7 +7,7 @@ package com.wynntils.core.config;
 import com.wynntils.core.Reference;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
-import net.minecraft.locale.Language;
+import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -60,14 +60,14 @@ public class ConfigHolder {
 
     public String getDisplayName() {
         if (!getMetadata().key().isEmpty()) {
-            return Language.getInstance().getOrDefault(getMetadata().key() + ".name");
+            return I18n.get(getMetadata().key() + ".name");
         }
         return parent.getTranslation(field.getName() + ".name");
     }
 
     public String getDescription() {
         if (!getMetadata().key().isEmpty()) {
-            return Language.getInstance().getOrDefault(getMetadata().key() + ".description");
+            return I18n.get(getMetadata().key() + ".description");
         }
         return parent.getTranslation(field.getName() + ".description");
     }
