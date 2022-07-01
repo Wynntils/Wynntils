@@ -90,7 +90,7 @@ public class ChatItemUtils {
             int idValue = id.value();
             IdentificationProfile idProfile = id.identification();
 
-            int translatedValue = 0;
+            int translatedValue;
             if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
                 translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
             } else { // raw value
@@ -141,7 +141,8 @@ public class ChatItemUtils {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = WebManager.getItemsMap().get(name);
+        ItemProfile item =
+                WebManager.getItemsMap() != null ? WebManager.getItemsMap().get(name) : null;
         if (item == null) return null;
 
         // ids
@@ -271,12 +272,12 @@ public class ChatItemUtils {
     }
 
     private static String encodeString(String text) {
-        String encoded = "";
+        StringBuilder encoded = new StringBuilder();
         for (char c : text.toCharArray()) {
             int value = c - 32; // offset by 32 to ignore ascii control characters
-            encoded += new String(Character.toChars(value + OFFSET)); // get encoded representation
+            encoded.append(new String(Character.toChars(value + OFFSET))); // get encoded representation
         }
-        return encoded;
+        return encoded.toString();
     }
 
     private static String encodeNumber(int value) {
@@ -284,16 +285,16 @@ public class ChatItemUtils {
     }
 
     private static String decodeString(String text) {
-        String decoded = "";
+        StringBuilder decoded = new StringBuilder();
         for (int i = 0; i < text.length(); i += 2) {
             int value = text.codePointAt(i) - OFFSET + 32;
-            decoded += (char) value;
+            decoded.append((char) value);
         }
-        return decoded;
+        return decoded.toString();
     }
 
     private static int[] decodeNumbers(String text) {
-        int decoded[] = new int[text.length() / 2];
+        int[] decoded = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i += 2) {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;
         }
