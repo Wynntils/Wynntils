@@ -13,7 +13,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.overlaySizes.GuiScaleRespectingOverlaySize;
+import com.wynntils.core.features.overlays.overlaySizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -34,7 +34,7 @@ public class DummyOverlayFeature extends UserFeature {
                     OverlayPosition.VerticalAlignment.Top,
                     OverlayPosition.HorizontalAlignment.Left,
                     OverlayPosition.AnchorNinth.TopLeft),
-            new GuiScaleRespectingOverlaySize(75, 75),
+            new GuiScaledOverlaySize(75, 75),
             DummyOverlayFeature::renderBasicBlueBox);
 
     @OverlayInfo(
@@ -48,7 +48,7 @@ public class DummyOverlayFeature extends UserFeature {
                     OverlayPosition.VerticalAlignment.Middle,
                     OverlayPosition.HorizontalAlignment.Center,
                     OverlayPosition.AnchorNinth.Middle),
-            new GuiScaleRespectingOverlaySize(2, 2),
+            new GuiScaledOverlaySize(2, 2),
             DummyOverlayFeature::renderBasicGreenBox);
 
     public static class DummyRedComplexOverlay extends Overlay {

@@ -6,13 +6,13 @@ package com.wynntils.core.features.overlays;
 
 public class OverlayPosition {
 
-    private final int verticalOffset;
-    private final int horizontalOffset;
+    private int verticalOffset;
+    private int horizontalOffset;
 
-    private final VerticalAlignment verticalAlignment;
-    private final HorizontalAlignment horizontalAlignment;
+    private VerticalAlignment verticalAlignment;
+    private HorizontalAlignment horizontalAlignment;
 
-    private final AnchorNinth anchorNinth;
+    private AnchorNinth anchorNinth;
 
     public OverlayPosition(
             int verticalOffset,

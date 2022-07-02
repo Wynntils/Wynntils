@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.features.overlays.overlaySizes;
 
-public class GuiScaleRespectingOverlaySize extends OverlaySize {
-    public GuiScaleRespectingOverlaySize(float width, float height) {
+public class GuiScaledOverlaySize extends OverlaySize {
+    public GuiScaledOverlaySize(float width, float height) {
         super(width, height);
     }
 
