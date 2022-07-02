@@ -18,6 +18,8 @@ public class WynntilsModFabric implements ClientModInitializer {
             throw new RuntimeException("Where is my Wynntils?");
         }
 
-        WynntilsMod.init(wynntilsMod.get().getMetadata().getVersion().getFriendlyString());
+        WynntilsMod.init(
+                wynntilsMod.get().getMetadata().getVersion().getFriendlyString(),
+                FabricLoader.getInstance().isDevelopmentEnvironment());
     }
 }

@@ -27,18 +27,12 @@ public class WynntilsMod {
 
     private static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
-    public static boolean developmentEnvironment = true;
-
     public static IEventBus getEventBus() {
         return EVENT_BUS;
     }
 
-    public static void init(String modVersion) {
-        // TODO find out if dev environ
-        // Reference.developmentEnvironment = ((boolean)
-        // Launch.blackboard.get("fml.deobfuscatedEnvironment"))
-        // || (System.getProperty("wynntils.development") != null &&
-        // System.getProperty("wynntils.development").equals("true"));
+    public static void init(String modVersion, boolean isDevelopmentEnvironment) {
+        Reference.developmentEnvironment = isDevelopmentEnvironment;
         parseVersion(modVersion);
 
         WebManager.init();
@@ -60,7 +54,7 @@ public class WynntilsMod {
     }
 
     public static void parseVersion(String versionString) {
-        if (developmentEnvironment) Reference.LOGGER.info("Wynntils running on version " + versionString);
+        if (Reference.developmentEnvironment) Reference.LOGGER.info("Wynntils running on version " + versionString);
 
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
 
@@ -85,7 +79,7 @@ public class WynntilsMod {
 
             @Override
             public Object generate() {
-                return developmentEnvironment ? "Yes" : "No";
+                return Reference.developmentEnvironment ? "Yes" : "No";
             }
         });
     }
