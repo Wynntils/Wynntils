@@ -17,6 +17,7 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
+import com.wynntils.features.user.DummyOverlayFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -147,7 +148,7 @@ public class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new TooltipScaleFeature());
         registerFeature(new DurabilityArcFeature());
-        // registerFeature(new DummyOverlayFeature());
+        registerFeature(new DummyOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

@@ -4,10 +4,15 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.Pair;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +24,8 @@ public class OverlayManager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
+
+    private static final List<Pair<Coordinate, Coordinate>> ninths = new ArrayList<>(9);
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
@@ -56,11 +63,51 @@ public class OverlayManager {
 
             if (renderState != annotation.renderAt() || event.getType() != annotation.renderType()) continue;
 
-            overlay.render(overlay.getPosition(), event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
         }
     }
 
     public static void init() {
         WynntilsMod.getEventBus().register(OverlayManager.class);
+    }
+
+    @SubscribeEvent
+    public static void onResizeEvent(DisplayResizeEvent event) {
+        calculateNinths();
+    }
+
+    // Calculate the ninths when loading is finished (this acts as a "game loaded" event)
+    @SubscribeEvent
+    public static void gameInitEvent(TitleScreenInitEvent event) {
+        calculateNinths();
+    }
+
+    private static void calculateNinths() {
+        Window window = McUtils.mc().getWindow();
+        int width = window.getGuiScaledWidth();
+        int height = window.getGuiScaledHeight();
+
+        int wT = width / 3;
+        int hT = height / 3;
+
+        ninths.clear();
+        for (int h = 0; h < 3; h++) {
+            for (int w = 0; w < 3; w++) {
+                ninths.add(new Pair<>(new Coordinate(w * wT, h * hT), new Coordinate((w + 1) * wT, (h + 1) * hT)));
+            }
+        }
+
+        //        System.out.println("width = " + width);
+        //        System.out.println("height = " + height);
+        //        System.out.println("wT = " + wT);
+        //        System.out.println("hT = " + hT);
+    }
+
+    public static Pair<Coordinate, Coordinate> getNinth(OverlayPosition.AnchorNinth ninth) {
+        return ninths.get(ninth.getIndex());
+    }
+
+    public static List<Pair<Coordinate, Coordinate>> getNinths() {
+        return ninths;
     }
 }

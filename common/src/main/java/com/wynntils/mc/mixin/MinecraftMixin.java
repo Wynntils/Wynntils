@@ -28,4 +28,9 @@ public abstract class MinecraftMixin {
     public void tickPost(CallbackInfo ci) {
         EventFactory.onTickEnd();
     }
+
+    @Inject(method = "resizeDisplay", at = @At("RETURN"))
+    public void resizeDisplayPost(CallbackInfo ci) {
+        EventFactory.onResizeDisplayPost();
+    }
 }

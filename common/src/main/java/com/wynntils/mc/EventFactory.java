@@ -17,6 +17,7 @@ import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -304,6 +305,10 @@ public class EventFactory {
 
     public static void onTickEnd() {
         post(new ClientTickEvent(ClientTickEvent.Phase.END));
+    }
+
+    public static void onResizeDisplayPost() {
+        post(new DisplayResizeEvent.Post());
     }
 
     // endregion
