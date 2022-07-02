@@ -37,15 +37,18 @@ public class DummyOverlayFeature extends UserFeature {
             new GuiScaleRespectingOverlaySize(75, 75),
             DummyOverlayFeature::renderBasicBlueBox);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
-    private final Overlay BasicGreenOverlay = new BasicOverlay(
+    @OverlayInfo(
+            renderType = RenderEvent.ElementType.Crosshair,
+            renderAt = OverlayInfo.RenderState.Pre,
+            cancelRender = true)
+    private final Overlay CrosshairReplacerOverlay = new BasicOverlay(
             new OverlayPosition(
                     0,
                     0,
                     OverlayPosition.VerticalAlignment.Middle,
                     OverlayPosition.HorizontalAlignment.Center,
                     OverlayPosition.AnchorNinth.Middle),
-            new GuiScaleRespectingOverlaySize(5, 5),
+            new GuiScaleRespectingOverlaySize(2, 2),
             DummyOverlayFeature::renderBasicGreenBox);
 
     public static class DummyRedComplexOverlay extends Overlay {
@@ -85,7 +88,7 @@ public class DummyOverlayFeature extends UserFeature {
 
     private static void renderBasicGreenBox(Overlay overlay, PoseStack poseStack, float partialTicks, Window window) {
         RenderUtils.drawRect(
-                new CustomColor(70, 190, 70).withAlpha(50),
+                new CustomColor(70, 190, 70).withAlpha(255),
                 overlay.getRenderX(),
                 overlay.getRenderY(),
                 1,

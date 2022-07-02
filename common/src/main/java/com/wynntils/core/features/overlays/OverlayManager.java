@@ -63,6 +63,10 @@ public class OverlayManager {
 
             if (renderState != annotation.renderAt() || event.getType() != annotation.renderType()) continue;
 
+            if (annotation.cancelRender()) {
+                event.setCanceled(true);
+            }
+
             overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
         }
     }

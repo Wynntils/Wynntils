@@ -20,6 +20,8 @@ public @interface OverlayInfo {
 
     RenderState renderAt() default RenderState.Post;
 
+    boolean cancelRender() default false;
+
     enum RenderState {
         Pre,
         Post

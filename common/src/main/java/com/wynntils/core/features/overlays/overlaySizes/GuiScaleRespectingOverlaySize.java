@@ -4,8 +4,6 @@
  */
 package com.wynntils.core.features.overlays.overlaySizes;
 
-import com.wynntils.mc.utils.McUtils;
-
 public class GuiScaleRespectingOverlaySize extends OverlaySize {
     public GuiScaleRespectingOverlaySize(float width, float height) {
         super(width, height);
@@ -13,11 +11,11 @@ public class GuiScaleRespectingOverlaySize extends OverlaySize {
 
     @Override
     public float getWidth() {
-        return (float) (this.width * McUtils.window().getGuiScale());
+        return this.width;
     }
 
     @Override
     public float getHeight() {
-        return (float) (this.height * McUtils.window().getGuiScale());
+        return this.height;
     }
 }

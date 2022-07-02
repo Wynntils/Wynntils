@@ -119,6 +119,10 @@ public class EventFactory {
         post(new RenderEvent.Post(poseStack, partialTicks, window, RenderEvent.ElementType.GUI));
     }
 
+    public static RenderEvent.Pre onRenderCrosshairPre(PoseStack poseStack, Window window) {
+        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.Crosshair));
+    }
+
     public static void onInventoryRender(
             Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
         post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
