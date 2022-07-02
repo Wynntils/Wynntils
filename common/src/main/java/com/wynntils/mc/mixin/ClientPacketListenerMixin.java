@@ -24,6 +24,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
@@ -149,5 +150,10 @@ public abstract class ClientPacketListenerMixin {
         if (result.isCanceled()) return;
 
         gui.handleChat(chatType, result.getMessage(), uuid);
+    }
+
+    @Inject(method = "handleSetScore", at = @At("HEAD"))
+    private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
+        EventFactory.onSetScore(packet);
     }
 }
