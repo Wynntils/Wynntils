@@ -13,6 +13,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.features.overlays.overlaySizes.GuiScaleRespectingOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -33,9 +34,19 @@ public class DummyOverlayFeature extends UserFeature {
                     OverlayPosition.VerticalAlignment.Top,
                     OverlayPosition.HorizontalAlignment.Left,
                     OverlayPosition.AnchorNinth.TopLeft),
-            75,
-            75,
+            new GuiScaleRespectingOverlaySize(75, 75),
             DummyOverlayFeature::renderBasicBlueBox);
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
+    private final Overlay BasicGreenOverlay = new BasicOverlay(
+            new OverlayPosition(
+                    0,
+                    0,
+                    OverlayPosition.VerticalAlignment.Middle,
+                    OverlayPosition.HorizontalAlignment.Center,
+                    OverlayPosition.AnchorNinth.Middle),
+            new GuiScaleRespectingOverlaySize(5, 5),
+            DummyOverlayFeature::renderBasicGreenBox);
 
     public static class DummyRedComplexOverlay extends Overlay {
         public DummyRedComplexOverlay() {
@@ -57,14 +68,24 @@ public class DummyOverlayFeature extends UserFeature {
                     this.getRenderX(),
                     this.getRenderY(),
                     0,
-                    (int) width,
-                    (int) height);
+                    (int) this.getWidth(),
+                    (int) this.getHeight());
         }
     }
 
     public static void renderBasicBlueBox(Overlay overlay, PoseStack poseStack, float partialTicks, Window window) {
         RenderUtils.drawRect(
                 new CustomColor(40, 40, 190).withAlpha(150),
+                overlay.getRenderX(),
+                overlay.getRenderY(),
+                1,
+                (int) overlay.getWidth(),
+                (int) overlay.getHeight());
+    }
+
+    private static void renderBasicGreenBox(Overlay overlay, PoseStack poseStack, float partialTicks, Window window) {
+        RenderUtils.drawRect(
+                new CustomColor(70, 190, 70).withAlpha(50),
                 overlay.getRenderX(),
                 overlay.getRenderY(),
                 1,

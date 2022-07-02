@@ -96,11 +96,6 @@ public class OverlayManager {
                 ninths.add(new Pair<>(new Coordinate(w * wT, h * hT), new Coordinate((w + 1) * wT, (h + 1) * hT)));
             }
         }
-
-        //        System.out.println("width = " + width);
-        //        System.out.println("height = " + height);
-        //        System.out.println("wT = " + wT);
-        //        System.out.println("hT = " + hT);
     }
 
     public static Pair<Coordinate, Coordinate> getNinth(OverlayPosition.AnchorNinth ninth) {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.utils;
 
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -41,6 +42,10 @@ public class McUtils {
 
     public static Inventory inventory() {
         return McUtils.mc().player.getInventory();
+    }
+
+    public static Window window() {
+        return McUtils.mc().getWindow();
     }
 
     public static void sendMessageToClient(Component component) {
