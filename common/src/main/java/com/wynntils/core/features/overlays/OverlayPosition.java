@@ -12,23 +12,23 @@ public class OverlayPosition {
     private VerticalAlignment verticalAlignment;
     private HorizontalAlignment horizontalAlignment;
 
-    private AnchorNinth anchorNinth;
+    private AnchorSection anchorSection;
 
     public OverlayPosition(
             int verticalOffset,
             int horizontalOffset,
             VerticalAlignment verticalAlignment,
             HorizontalAlignment horizontalAlignment,
-            AnchorNinth anchorNinth) {
+            AnchorSection anchorSection) {
         this.verticalAlignment = verticalAlignment;
         this.horizontalAlignment = horizontalAlignment;
-        this.anchorNinth = anchorNinth;
+        this.anchorSection = anchorSection;
         this.verticalOffset = verticalOffset;
         this.horizontalOffset = horizontalOffset;
     }
 
-    public AnchorNinth getAnchorNinth() {
-        return anchorNinth;
+    public AnchorSection getAnchorSection() {
+        return anchorSection;
     }
 
     public HorizontalAlignment getHorizontalAlignment() {
@@ -47,7 +47,7 @@ public class OverlayPosition {
         return verticalOffset;
     }
 
-    public enum AnchorNinth {
+    public enum AnchorSection {
         TopLeft(0),
         TopMiddle(1),
         TopRight(2),
@@ -60,7 +60,7 @@ public class OverlayPosition {
 
         private final int index;
 
-        AnchorNinth(int index) {
+        AnchorSection(int index) {
             this.index = index;
         }
 

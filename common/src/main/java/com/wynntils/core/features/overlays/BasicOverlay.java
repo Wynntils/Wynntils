@@ -6,7 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.overlays.overlaySizes.OverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.objects.QuadConsumer;
 
 public class BasicOverlay extends Overlay {

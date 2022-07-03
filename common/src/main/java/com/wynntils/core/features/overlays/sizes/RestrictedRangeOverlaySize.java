@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.features.overlays.overlaySizes;
+package com.wynntils.core.features.overlays.sizes;
 
 public class RestrictedRangeOverlaySize extends OverlaySize {
     private final float maxWidth;
@@ -10,6 +10,10 @@ public class RestrictedRangeOverlaySize extends OverlaySize {
 
     public RestrictedRangeOverlaySize(float width, float height, float maxWidth, float maxHeight) {
         super(width, height);
+
+        this.width = Math.min(maxWidth, width);
+        this.height = Math.min(maxHeight, height);
+
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
     }

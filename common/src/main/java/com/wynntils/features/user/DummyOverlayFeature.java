@@ -13,7 +13,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.overlaySizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -32,21 +32,18 @@ public class DummyOverlayFeature extends DebugFeature {
                     15,
                     OverlayPosition.VerticalAlignment.Top,
                     OverlayPosition.HorizontalAlignment.Left,
-                    OverlayPosition.AnchorNinth.TopLeft),
+                    OverlayPosition.AnchorSection.TopLeft),
             new GuiScaledOverlaySize(75, 75),
             DummyOverlayFeature::renderBasicBlueBox);
 
-    @OverlayInfo(
-            renderType = RenderEvent.ElementType.Crosshair,
-            renderAt = OverlayInfo.RenderState.Pre,
-            cancelRender = true)
+    @OverlayInfo(renderType = RenderEvent.ElementType.Crosshair, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay CrosshairReplacerOverlay = new BasicOverlay(
             new OverlayPosition(
                     0,
                     0,
                     OverlayPosition.VerticalAlignment.Middle,
                     OverlayPosition.HorizontalAlignment.Center,
-                    OverlayPosition.AnchorNinth.Middle),
+                    OverlayPosition.AnchorSection.Middle),
             new GuiScaledOverlaySize(2, 2),
             DummyOverlayFeature::renderBasicGreenBox);
 
@@ -58,7 +55,7 @@ public class DummyOverlayFeature extends DebugFeature {
                             30,
                             OverlayPosition.VerticalAlignment.Bottom,
                             OverlayPosition.HorizontalAlignment.Right,
-                            OverlayPosition.AnchorNinth.Middle),
+                            OverlayPosition.AnchorSection.Middle),
                     100,
                     100);
         }

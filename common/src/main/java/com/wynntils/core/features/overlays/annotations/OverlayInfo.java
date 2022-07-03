@@ -20,10 +20,9 @@ public @interface OverlayInfo {
 
     RenderState renderAt() default RenderState.Post;
 
-    boolean cancelRender() default false;
-
     enum RenderState {
         Pre,
-        Post
+        Post,
+        Replace // This is Pre, but the event is cancelled
     }
 }

@@ -62,9 +62,6 @@ public abstract class Feature {
             try {
                 Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                if (annotation.cancelRender() && annotation.renderAt() == OverlayInfo.RenderState.Post) {
-                    throw new RuntimeException("Overlay cannot be cancelable if renderAt is RenderState.Post.");
-                }
                 OverlayManager.registerOverlay(overlay, annotation);
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {

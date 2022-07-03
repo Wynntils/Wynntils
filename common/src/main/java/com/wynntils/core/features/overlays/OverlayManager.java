@@ -61,9 +61,12 @@ public class OverlayManager {
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 
-            if (renderState != annotation.renderAt() || event.getType() != annotation.renderType()) continue;
+            if ((annotation.renderAt() == OverlayInfo.RenderState.Replace && renderState != OverlayInfo.RenderState.Pre)
+                    || (annotation.renderAt() != OverlayInfo.RenderState.Replace
+                            && renderState != annotation.renderAt())
+                    || event.getType() != annotation.renderType()) continue;
 
-            if (annotation.cancelRender()) {
+            if (annotation.renderAt() == OverlayInfo.RenderState.Replace) {
                 event.setCanceled(true);
             }
 
@@ -102,7 +105,7 @@ public class OverlayManager {
         }
     }
 
-    public static Pair<Coordinate, Coordinate> getNinth(OverlayPosition.AnchorNinth ninth) {
+    public static Pair<Coordinate, Coordinate> getNinth(OverlayPosition.AnchorSection ninth) {
         return ninths.get(ninth.getIndex());
     }
 

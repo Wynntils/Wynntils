@@ -312,7 +312,7 @@ public class EventFactory {
     }
 
     public static void onResizeDisplayPost() {
-        post(new DisplayResizeEvent.Post());
+        post(new DisplayResizeEvent());
     }
 
     // endregion
