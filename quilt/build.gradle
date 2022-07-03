@@ -27,39 +27,41 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
+repositories {
+    maven {
+        url "https://maven.quiltmc.org/repository/release/"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+architectury {
+    platformSetupLoomIde()
+    loader("quilt") { it.add(EventBusTransform.class) }
+}
+
 import com.wynntils.eventbustransformer.EventBusTransform
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
-architectury {
-    platformSetupLoomIde()
-    fabric() { it.add(EventBusTransform.class) }
-}
-
 configurations {
     common
-    // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    shadowCommon
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     implementation.extendsFrom shadowImplementation
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
-}
-
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
+    developmentQuilt.extendsFrom common
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version));
+    modImplementation "org.quiltmc:quilt-loader:${rootProject.quilt_loader_version}"
+    modApi "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${rootProject.quilt_fabric_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }
 
     shadowImplementation("net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}") {
         exclude group: 'org.ow2.asm'
@@ -70,28 +72,22 @@ dependencies {
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
     runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.2"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}"
+    modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}") {
+        exclude group: "net.fabricmc"
+    }
 }
 
 processResources {
     inputs.property "version", project.version
 
-    filesMatching("fabric.mod.json") {
-        expand("version": project.version)
+    filesMatching("quilt.mod.json") {
+        expand "version": project.version
     }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
-}
-
-jar {
-    classifier "dev"
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
     classifier "dev-shadow"
 }
@@ -101,12 +97,12 @@ task applyEventBus(type: Jar) {
     classifier "transformed-eventbus"
     dependsOn shadowJar
     doLast {
-      javaexec {
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = "com.wynntils.eventbustransformer.Main"
-        args(shadowJar.archiveFile.get(), archiveFile.get())
-        workingDir = "${buildDir}"
-      }
+        javaexec {
+            classpath = sourceSets.main.runtimeClasspath
+            mainClass = "com.wynntils.eventbustransformer.Main"
+            args(shadowJar.archiveFile.get(), archiveFile.get())
+            workingDir = "${buildDir}"
+        }
     }
 }
 
@@ -117,8 +113,18 @@ remapJar {
     classifier null
 }
 
+jar {
+    classifier "dev"
+}
+
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
 }

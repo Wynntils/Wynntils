@@ -1,0 +1,43 @@
+{
+  "mixin": [
+    "wynntils.mixins.json"
+  ],
+  "quilt_loader": {
+    "authors": [
+      "Team Wynntils"
+    ],
+    "contact": {
+      "homepage": "https://wynntils.com",
+      "sources": "https://github.com/Wynntils/Artemis"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.18.2"
+      }
+    ],
+    "description": "The best Wynncraft mod you'll probably find!",
+    "entrypoints": {
+      "client_init": [
+        "com.wynntils.quilt.WynntilsModQuilt"
+      ]
+    },
+    "environment": "*",
+    "group": "com.wynntils",
+    "icon": "assets/wynntils/icon.png",
+    "id": "wynntils",
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "license": "GNU AGPL 3",
+    "name": "Wynntils",
+    "version": "${version}"
+  },
+  "schema_version": 1
+}

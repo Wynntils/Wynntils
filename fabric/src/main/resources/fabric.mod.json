@@ -4,7 +4,7 @@
   ],
   "contact": {
     "homepage": "https://wynntils.com",
-    "sources": "https://github.com/magicus/WynnArchi"
+    "sources": "https://github.com/Wynntils/Artemis"
   },
   "depends": {
     "minecraft": ">=1.18.2"
