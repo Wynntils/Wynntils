@@ -4,4 +4,4 @@
  */
 package com.wynntils.core.features.overlays;
 
-public record Coordinate(int x, int y) {}
+public record SectionCoordinates(int x1, int y1, int x2, int y2) {}
