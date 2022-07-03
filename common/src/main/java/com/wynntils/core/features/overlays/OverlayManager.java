@@ -11,7 +11,6 @@ import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +24,7 @@ public class OverlayManager {
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
 
-    private static final List<Pair<Coordinate, Coordinate>> sections = new ArrayList<>(9);
+    private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
@@ -106,16 +105,16 @@ public class OverlayManager {
         sections.clear();
         for (int h = 0; h < 3; h++) {
             for (int w = 0; w < 3; w++) {
-                sections.add(new Pair<>(new Coordinate(w * wT, h * hT), new Coordinate((w + 1) * wT, (h + 1) * hT)));
+                sections.add(new SectionCoordinates(w * wT, h * hT, (w + 1) * wT, (h + 1) * hT));
             }
         }
     }
 
-    public static Pair<Coordinate, Coordinate> getSection(OverlayPosition.AnchorSection section) {
+    public static SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
         return sections.get(section.getIndex());
     }
 
-    public static List<Pair<Coordinate, Coordinate>> getSections() {
+    public static List<SectionCoordinates> getSections() {
         return sections;
     }
 }

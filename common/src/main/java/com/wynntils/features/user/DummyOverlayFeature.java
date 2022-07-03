@@ -8,17 +8,16 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.overlays.BasicOverlay;
-import com.wynntils.core.features.overlays.Coordinate;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
-import com.wynntils.utils.objects.Pair;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DummyOverlayFeature extends DebugFeature {
@@ -101,9 +100,9 @@ public class DummyOverlayFeature extends DebugFeature {
         int wT = width / 3;
         int hT = height / 3;
 
-        for (Pair<Coordinate, Coordinate> ninth : OverlayManager.getSections()) {
+        for (SectionCoordinates section : OverlayManager.getSections()) {
             RenderUtils.drawRect(
-                    CustomColor.fromInt(ninth.hashCode()).withAlpha(75), ninth.a.x(), ninth.a.y(), 0, wT, hT);
+                    CustomColor.fromInt(section.hashCode()).withAlpha(75), section.x1(), section.y1(), 0, wT, hT);
         }
     }
 }
