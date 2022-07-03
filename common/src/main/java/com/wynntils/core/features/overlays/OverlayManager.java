@@ -61,13 +61,19 @@ public class OverlayManager {
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 
-            if ((annotation.renderAt() == OverlayInfo.RenderState.Replace && renderState != OverlayInfo.RenderState.Pre)
-                    || (annotation.renderAt() != OverlayInfo.RenderState.Replace
-                            && renderState != annotation.renderAt())
-                    || event.getType() != annotation.renderType()) continue;
+            if (annotation.renderType() != event.getType()) {
+                continue;
+            }
 
             if (annotation.renderAt() == OverlayInfo.RenderState.Replace) {
+                if (renderState != OverlayInfo.RenderState.Pre) {
+                    continue;
+                }
                 event.setCanceled(true);
+            } else {
+                if (annotation.renderAt() != renderState) {
+                    continue;
+                }
             }
 
             overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
