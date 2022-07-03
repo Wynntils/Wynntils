@@ -37,22 +37,23 @@ public abstract class Overlay {
 
     // Return the X where the overlay should be rendered
     public int getRenderX() {
-        final Pair<Coordinate, Coordinate> ninth = OverlayManager.getNinth(this.position.getAnchorSection());
+        final Pair<Coordinate, Coordinate> section = OverlayManager.getSection(this.position.getAnchorSection());
         return switch (this.position.getHorizontalAlignment()) {
-            case Left -> ninth.a.x() + this.position.getHorizontalOffset();
-            case Center -> (int) (ninth.a.x() + ninth.b.x() - this.getWidth()) / 2
+            case Left -> section.a.x() + this.position.getHorizontalOffset();
+            case Center -> (int) (section.a.x() + section.b.x() - this.getWidth()) / 2
                     + this.position.getHorizontalOffset();
-            case Right -> (int) (ninth.b.x() - this.position.getHorizontalOffset() - this.getWidth());
+            case Right -> (int) (section.b.x() - this.position.getHorizontalOffset() - this.getWidth());
         };
     }
 
     // Return the Y where the overlay should be rendered
     public int getRenderY() {
-        final Pair<Coordinate, Coordinate> ninth = OverlayManager.getNinth(this.position.getAnchorSection());
+        final Pair<Coordinate, Coordinate> section = OverlayManager.getSection(this.position.getAnchorSection());
         return switch (this.position.getVerticalAlignment()) {
-            case Top -> ninth.a.y() + this.position.getVerticalOffset();
-            case Middle -> (int) (ninth.a.y() + ninth.b.y() - this.getHeight()) / 2 + this.position.getVerticalOffset();
-            case Bottom -> (int) (ninth.b.y() - this.position.getVerticalOffset() - this.getHeight());
+            case Top -> section.a.y() + this.position.getVerticalOffset();
+            case Middle -> (int) (section.a.y() + section.b.y() - this.getHeight()) / 2
+                    + this.position.getVerticalOffset();
+            case Bottom -> (int) (section.b.y() - this.position.getVerticalOffset() - this.getHeight());
         };
     }
 }

@@ -101,7 +101,7 @@ public class DummyOverlayFeature extends DebugFeature {
         int wT = width / 3;
         int hT = height / 3;
 
-        for (Pair<Coordinate, Coordinate> ninth : OverlayManager.getNinths()) {
+        for (Pair<Coordinate, Coordinate> ninth : OverlayManager.getSections()) {
             RenderUtils.drawRect(
                     CustomColor.fromInt(ninth.hashCode()).withAlpha(75), ninth.a.x(), ninth.a.y(), 0, wT, hT);
         }

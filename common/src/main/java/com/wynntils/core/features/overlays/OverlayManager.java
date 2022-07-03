@@ -25,7 +25,7 @@ public class OverlayManager {
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
 
-    private static final List<Pair<Coordinate, Coordinate>> ninths = new ArrayList<>(9);
+    private static final List<Pair<Coordinate, Coordinate>> sections = new ArrayList<>(9);
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
@@ -80,16 +80,16 @@ public class OverlayManager {
 
     @SubscribeEvent
     public static void onResizeEvent(DisplayResizeEvent event) {
-        calculateNinths();
+        calculateSections();
     }
 
-    // Calculate the ninths when loading is finished (this acts as a "game loaded" event)
+    // Calculate the sections when loading is finished (this acts as a "game loaded" event)
     @SubscribeEvent
     public static void gameInitEvent(TitleScreenInitEvent event) {
-        calculateNinths();
+        calculateSections();
     }
 
-    private static void calculateNinths() {
+    private static void calculateSections() {
         Window window = McUtils.mc().getWindow();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
@@ -97,19 +97,19 @@ public class OverlayManager {
         int wT = width / 3;
         int hT = height / 3;
 
-        ninths.clear();
+        sections.clear();
         for (int h = 0; h < 3; h++) {
             for (int w = 0; w < 3; w++) {
-                ninths.add(new Pair<>(new Coordinate(w * wT, h * hT), new Coordinate((w + 1) * wT, (h + 1) * hT)));
+                sections.add(new Pair<>(new Coordinate(w * wT, h * hT), new Coordinate((w + 1) * wT, (h + 1) * hT)));
             }
         }
     }
 
-    public static Pair<Coordinate, Coordinate> getNinth(OverlayPosition.AnchorSection ninth) {
-        return ninths.get(ninth.getIndex());
+    public static Pair<Coordinate, Coordinate> getSection(OverlayPosition.AnchorSection section) {
+        return sections.get(section.getIndex());
     }
 
-    public static List<Pair<Coordinate, Coordinate>> getNinths() {
-        return ninths;
+    public static List<Pair<Coordinate, Coordinate>> getSections() {
+        return sections;
     }
 }
