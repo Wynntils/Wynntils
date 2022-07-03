@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebReader;
 import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.utils.objects.ThrowingBiPredicate;
@@ -158,7 +158,7 @@ public class RequestBuilder {
             try {
                 return validator.test(data);
             } catch (Exception e) {
-                Reference.LOGGER.warn("Unable to validate cache");
+                WynntilsMod.warn("Unable to validate cache");
                 e.printStackTrace();
                 return false;
             }
@@ -194,7 +194,7 @@ public class RequestBuilder {
             boolean passed = verification.equals(expectedHash);
             if (!passed) {
                 // TODO
-                Reference.LOGGER.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""
+                WynntilsMod.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""
                         + verification.getMd5() + "\"");
             }
             return passed;

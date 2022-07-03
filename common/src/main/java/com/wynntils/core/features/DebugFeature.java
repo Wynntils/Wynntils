@@ -5,7 +5,7 @@
 package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -28,7 +28,7 @@ public abstract class DebugFeature extends Feature {
 
         @Override
         public void init() {
-            setSatisfied(Reference.developmentEnvironment);
+            setSatisfied(WynntilsMod.isDevelopmentEnvironment());
         }
     }
 }
