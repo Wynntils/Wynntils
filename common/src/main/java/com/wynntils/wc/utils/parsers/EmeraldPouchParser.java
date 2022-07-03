@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.utils.parsers;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.reference.EmeraldSymbols;
 import java.util.regex.Matcher;
@@ -27,7 +27,7 @@ public class EmeraldPouchParser {
                 return 0;
             }
 
-            Reference.LOGGER.error(
+            WynntilsMod.error(
                     "EmeraldPouchParser#getPouchUsage was called on an ItemStack that wasn't an emerald pouch");
             return -1;
         }
@@ -38,7 +38,7 @@ public class EmeraldPouchParser {
         String lore = ItemUtils.getStringLore(stack);
         Matcher capacityMatcher = POUCH_CAPACITY_PATTERN.matcher(lore);
         if (!capacityMatcher.find()) {
-            Reference.LOGGER.error(
+            WynntilsMod.error(
                     "EmeraldPouchParser#getPouchCapacity was called on an ItemStack that wasn't an emerald pouch");
             return -1;
         }
