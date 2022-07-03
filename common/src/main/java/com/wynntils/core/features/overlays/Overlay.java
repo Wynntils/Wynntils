@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.overlays.sizes.FixedOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.utils.objects.Pair;
 
 public abstract class Overlay {
     protected OverlayPosition position;
@@ -37,23 +36,23 @@ public abstract class Overlay {
 
     // Return the X where the overlay should be rendered
     public int getRenderX() {
-        final Pair<Coordinate, Coordinate> section = OverlayManager.getSection(this.position.getAnchorSection());
+        final SectionCoordinates section = OverlayManager.getSection(this.position.getAnchorSection());
         return switch (this.position.getHorizontalAlignment()) {
-            case Left -> section.a.x() + this.position.getHorizontalOffset();
-            case Center -> (int) (section.a.x() + section.b.x() - this.getWidth()) / 2
+            case Left -> section.x1() + this.position.getHorizontalOffset();
+            case Center -> (int) (section.x1() + section.x2() - this.getWidth()) / 2
                     + this.position.getHorizontalOffset();
-            case Right -> (int) (section.b.x() - this.position.getHorizontalOffset() - this.getWidth());
+            case Right -> (int) (section.x2() + this.position.getHorizontalOffset() - this.getWidth());
         };
     }
 
     // Return the Y where the overlay should be rendered
     public int getRenderY() {
-        final Pair<Coordinate, Coordinate> section = OverlayManager.getSection(this.position.getAnchorSection());
+        final SectionCoordinates section = OverlayManager.getSection(this.position.getAnchorSection());
         return switch (this.position.getVerticalAlignment()) {
-            case Top -> section.a.y() + this.position.getVerticalOffset();
-            case Middle -> (int) (section.a.y() + section.b.y() - this.getHeight()) / 2
+            case Top -> section.y1() + this.position.getVerticalOffset();
+            case Middle -> (int) (section.y1() + section.y2() - this.getHeight()) / 2
                     + this.position.getVerticalOffset();
-            case Bottom -> (int) (section.b.y() - this.position.getVerticalOffset() - this.getHeight());
+            case Bottom -> (int) (section.y2() + this.position.getVerticalOffset() - this.getHeight());
         };
     }
 }
