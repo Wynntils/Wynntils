@@ -7,14 +7,17 @@ package com.wynntils.forge;
 import com.wynntils.core.WynntilsMod;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
-        WynntilsMod.init(ModLoadingContext.get()
-                .getActiveContainer()
-                .getModInfo()
-                .getVersion()
-                .toString());
+        WynntilsMod.init(
+                ModLoadingContext.get()
+                        .getActiveContainer()
+                        .getModInfo()
+                        .getVersion()
+                        .toString(),
+                !FMLEnvironment.production);
     }
 }
