@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.commands.wynntils.WynntilsConfigCommand;
 import com.wynntils.commands.wynntils.WynntilsFeatureCommand;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -49,18 +49,18 @@ public class WynntilsCommand extends CommandBase {
 
         MutableComponent buildText;
 
-        if (Reference.VERSION.isEmpty()) {
+        if (WynntilsMod.getVersion().isEmpty()) {
             buildText = new TextComponent("Unknown Version");
         } else {
-            buildText = new TextComponent("Version " + Reference.VERSION);
+            buildText = new TextComponent("Version " + WynntilsMod.getVersion());
         }
 
         buildText.append("\n");
 
-        if (Reference.BUILD_NUMBER == -1) {
+        if (WynntilsMod.getBuildNumber() == -1) {
             buildText.append(new TextComponent("Unknown Build"));
         } else {
-            buildText.append(new TextComponent("Build " + Reference.BUILD_NUMBER));
+            buildText.append(new TextComponent("Build " + WynntilsMod.getBuildNumber()));
         }
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));

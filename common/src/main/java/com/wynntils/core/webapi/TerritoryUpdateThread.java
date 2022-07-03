@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.request.RequestHandler;
 
 public class TerritoryUpdateThread extends Thread {
@@ -28,6 +28,6 @@ public class TerritoryUpdateThread extends Thread {
         } catch (InterruptedException ignored) {
         }
 
-        Reference.LOGGER.info("Terminating territory update thread.");
+        WynntilsMod.info("Terminating territory update thread.");
     }
 }

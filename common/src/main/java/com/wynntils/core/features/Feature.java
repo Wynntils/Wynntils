@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
@@ -64,7 +63,7 @@ public abstract class Feature {
                 OverlayManager.registerOverlay(overlay, overlayField.getAnnotation(OverlayInfo.class));
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
-                Reference.LOGGER.error("Unable to get field " + overlayField);
+                WynntilsMod.error("Unable to get field " + overlayField);
                 e.printStackTrace();
             }
         }

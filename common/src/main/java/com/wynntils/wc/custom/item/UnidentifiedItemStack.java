@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.custom.item;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
@@ -67,7 +67,7 @@ public class UnidentifiedItemStack extends WynnItemStack implements HighlightedI
         try {
             rarityMap = guessProfile.getItems().get(ItemType.valueOf(itemType.toUpperCase(Locale.ROOT)));
         } catch (IllegalArgumentException exception) { // itemType is invalid
-            Reference.LOGGER.warn(String.format("ItemType was invalid for itemType: %s", itemType));
+            WynntilsMod.warn(String.format("ItemType was invalid for itemType: %s", itemType));
             return;
         }
         if (rarityMap == null) return;
