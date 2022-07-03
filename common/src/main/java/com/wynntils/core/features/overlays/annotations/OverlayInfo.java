@@ -22,6 +22,7 @@ public @interface OverlayInfo {
 
     enum RenderState {
         Pre,
-        Post
+        Post,
+        Replace // This is Pre, but the event is cancelled
     }
 }

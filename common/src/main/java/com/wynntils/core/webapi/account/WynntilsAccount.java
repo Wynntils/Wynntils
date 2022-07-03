@@ -6,7 +6,7 @@ package com.wynntils.core.webapi.account;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.PostRequestBuilder;
 import com.wynntils.core.webapi.request.Request;
@@ -77,7 +77,7 @@ public class WynntilsAccount {
         JsonObject authParams = new JsonObject();
         authParams.addProperty("username", McUtils.mc().getUser().getName());
         authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty("version", "A" + Reference.VERSION + "_" + Reference.BUILD_NUMBER);
+        authParams.addProperty("version", "A" + WynntilsMod.getVersion() + "_" + WynntilsMod.getBuildNumber());
 
         Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
                 .postJsonElement(authParams)
@@ -94,7 +94,7 @@ public class WynntilsAccount {
                             .forEach((k) ->
                                     encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                     ready = true;
-                    Reference.LOGGER.info("Successfully connected to Athena!");
+                    WynntilsMod.info("Successfully connected to Athena!");
                     return true;
                 })
                 .build();

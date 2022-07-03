@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
 import java.util.Locale;
@@ -154,7 +154,7 @@ public class IdentificationProfile {
                     starMin = 30;
                     starMax = 130;
 
-                    Reference.LOGGER.warn("Invalid star count of " + starCount);
+                    WynntilsMod.warn("Invalid star count of " + starCount);
             }
 
             double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);

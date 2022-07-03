@@ -5,7 +5,7 @@
 package com.wynntils.core.webapi.request;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.LoadingPhase;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -137,16 +137,16 @@ public class RequestHandler {
                                 e.printStackTrace();
                             }
 
-                            Reference.LOGGER.warn(req.id + ": Error using cached data that passed" + " validator!");
+                            WynntilsMod.warn(req.id + ": Error using cached data that passed" + " validator!");
                             FileUtils.deleteQuietly(req.cacheFile);
                         } else {
-                            Reference.LOGGER.warn("Cache for " + req.id + " at " + req.cacheFile.getPath()
+                            WynntilsMod.warn("Cache for " + req.id + " at " + req.cacheFile.getPath()
                                     + " could not be validated");
                         }
                     } catch (FileNotFoundException ignore) {
                     } catch (Exception e) {
-                        Reference.LOGGER.warn("Error occurred whilst trying to use validated cache for " + req.id
-                                + " at " + req.cacheFile.getPath());
+                        WynntilsMod.warn("Error occurred whilst trying to use validated cache for " + req.id + " at "
+                                + req.cacheFile.getPath());
                         e.printStackTrace();
                     }
                 }
@@ -157,14 +157,14 @@ public class RequestHandler {
                     if (req.useCacheAsBackup) {
                         try {
                             if (!req.handler.test(null, FileUtils.readFileToByteArray(req.cacheFile))) {
-                                Reference.LOGGER.warn("Error occurred whilst trying to use cache for " + req.id + " at "
+                                WynntilsMod.warn("Error occurred whilst trying to use cache for " + req.id + " at "
                                         + req.cacheFile.getPath() + ": Cache file is invalid");
                                 FileUtils.deleteQuietly(req.cacheFile);
                                 req.onError();
                             }
                         } catch (FileNotFoundException ignore) {
                         } catch (Exception e) {
-                            Reference.LOGGER.warn("Error occurred whilst trying to use cache for " + req.id + " at "
+                            WynntilsMod.warn("Error occurred whilst trying to use cache for " + req.id + " at "
                                     + req.cacheFile.getPath());
                             e.printStackTrace();
                             FileUtils.deleteQuietly(req.cacheFile);
@@ -229,12 +229,12 @@ public class RequestHandler {
         try {
             st = req.establishConnection();
             if (st.getResponseCode() != 200) {
-                Reference.LOGGER.warn("Invalid response code for request");
+                WynntilsMod.warn("Invalid response code for request");
                 st.disconnect();
                 return false;
             }
         } catch (Exception e) {
-            Reference.LOGGER.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
+            WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
             e.printStackTrace();
             return false;
         }
@@ -247,7 +247,7 @@ public class RequestHandler {
                         try {
                             FileUtils.writeByteArrayToFile(req.cacheFile, data);
                         } catch (Exception e) {
-                            Reference.LOGGER.warn("Error occurred whilst writing cache for " + req.id);
+                            WynntilsMod.warn("Error occurred whilst writing cache for " + req.id);
                             e.printStackTrace();
                             FileUtils.deleteQuietly(req.cacheFile);
                         }
@@ -255,14 +255,14 @@ public class RequestHandler {
 
                     return true;
                 } else {
-                    Reference.LOGGER.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
+                    WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
                 }
             }
         } catch (IOException e) {
-            Reference.LOGGER.warn("Error occurred whilst fetching " + req.id + " from " + req.url + ": "
+            WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url + ": "
                     + (e instanceof SocketTimeoutException ? "Socket timeout (server may be down)" : e.getMessage()));
         } catch (Exception e) {
-            Reference.LOGGER.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
+            WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
             e.printStackTrace();
         }
 

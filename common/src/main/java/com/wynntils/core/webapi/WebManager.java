@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
 public class WebManager {
-    public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
+    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;

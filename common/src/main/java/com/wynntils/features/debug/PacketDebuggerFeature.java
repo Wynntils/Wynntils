@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.debug;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
@@ -80,7 +80,7 @@ public class PacketDebuggerFeature extends DebugFeature {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        Reference.LOGGER.info("SENT packet: " + describePacket(packet));
+        WynntilsMod.info("SENT packet: " + describePacket(packet));
     }
 
     @SubscribeEvent
@@ -90,6 +90,6 @@ public class PacketDebuggerFeature extends DebugFeature {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        Reference.LOGGER.info("RECV packet: " + describePacket(packet));
+        WynntilsMod.info("RECV packet: " + describePacket(packet));
     }
 }

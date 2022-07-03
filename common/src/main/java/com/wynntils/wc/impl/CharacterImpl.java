@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.impl;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
@@ -38,7 +38,7 @@ public class CharacterImpl implements Character {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
-            Reference.LOGGER.info("In character selection menu");
+            WynntilsMod.info("In character selection menu");
         }
     }
 
@@ -56,7 +56,7 @@ public class CharacterImpl implements Character {
             inCharacterSelection = false;
         }
         if (e.getNewState() == State.CHARACTER_SELECTION) {
-            Reference.LOGGER.info("Preparing for character selection");
+            WynntilsMod.info("Preparing for character selection");
         }
     }
 
@@ -64,7 +64,7 @@ public class CharacterImpl implements Character {
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             currentCharacter = CharacterInfoImpl.parseCharacter(e.getItemStack());
-            Reference.LOGGER.info("Selected character " + currentCharacter);
+            WynntilsMod.info("Selected character " + currentCharacter);
         }
     }
 
