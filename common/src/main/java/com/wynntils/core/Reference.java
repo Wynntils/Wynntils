@@ -12,4 +12,6 @@ public class Reference {
     public static final Logger LOGGER = LoggerFactory.getLogger(WynntilsMod.MOD_ID);
     public static String VERSION = "";
     public static int BUILD_NUMBER = -1;
+
+    public static boolean developmentEnvironment;
 }
