@@ -123,6 +123,7 @@ public class FeatureRegistry {
         // debug
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
+        registerFeature(new DummyOverlayFeature());
 
         // internal
         registerFeature(new LootrunFeature());
@@ -148,7 +149,6 @@ public class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new TooltipScaleFeature());
         registerFeature(new DurabilityArcFeature());
-        registerFeature(new DummyOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

@@ -6,7 +6,7 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.overlays.BasicOverlay;
 import com.wynntils.core.features.overlays.Coordinate;
 import com.wynntils.core.features.overlays.Overlay;
@@ -21,8 +21,7 @@ import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.objects.Pair;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DummyOverlayFeature extends UserFeature {
-
+public class DummyOverlayFeature extends DebugFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay ComplexRedOverlay = new DummyRedComplexOverlay();
 
