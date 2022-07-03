@@ -60,7 +60,8 @@ public abstract class Feature {
 
             try {
                 Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
-                OverlayManager.registerOverlay(overlay, overlayField.getAnnotation(OverlayInfo.class));
+                OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
+                OverlayManager.registerOverlay(overlay, annotation);
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);
