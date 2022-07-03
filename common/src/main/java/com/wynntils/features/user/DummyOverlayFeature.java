@@ -50,8 +50,8 @@ public class DummyOverlayFeature extends DebugFeature {
         public DummyRedComplexOverlay() {
             super(
                     new OverlayPosition(
-                            15,
-                            30,
+                            -15,
+                            -30,
                             OverlayPosition.VerticalAlignment.Bottom,
                             OverlayPosition.HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.Middle),

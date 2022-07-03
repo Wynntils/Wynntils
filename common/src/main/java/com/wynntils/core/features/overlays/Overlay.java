@@ -41,7 +41,7 @@ public abstract class Overlay {
             case Left -> section.x1() + this.position.getHorizontalOffset();
             case Center -> (int) (section.x1() + section.x2() - this.getWidth()) / 2
                     + this.position.getHorizontalOffset();
-            case Right -> (int) (section.x2() - this.position.getHorizontalOffset() - this.getWidth());
+            case Right -> (int) (section.x2() + this.position.getHorizontalOffset() - this.getWidth());
         };
     }
 
@@ -52,7 +52,7 @@ public abstract class Overlay {
             case Top -> section.y1() + this.position.getVerticalOffset();
             case Middle -> (int) (section.y1() + section.y2() - this.getHeight()) / 2
                     + this.position.getVerticalOffset();
-            case Bottom -> (int) (section.y2() - this.position.getVerticalOffset() - this.getHeight());
+            case Bottom -> (int) (section.y2() + this.position.getVerticalOffset() - this.getHeight());
         };
     }
 }
