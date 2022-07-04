@@ -192,10 +192,10 @@ public class WebManager {
         handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
-                    Type hashmap_type = new TypeToken<HashMap<String, String>>() {}.getType();
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmap_type);
+                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
                     internalIdentifications =
-                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmap_type);
+                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
                     Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
                     majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
