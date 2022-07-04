@@ -5,6 +5,6 @@
 package com.wynntils.utils.objects;
 
 @FunctionalInterface
-public interface ThrowingBiPredicate<T, U, EXC extends Throwable> {
-    boolean test(T t, U u) throws EXC;
+public interface ThrowingBiPredicate<T, U, E extends Throwable> {
+    boolean test(T t, U u) throws E;
 }
