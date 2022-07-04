@@ -8,13 +8,14 @@ import com.wynntils.wc.custom.item.WynnItemStack;
 
 public abstract class ItemProperty {
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
+    public static final Class<ItemTierProperty> ITEM_TIER = ItemTierProperty.class;
 
-    protected WynnItemStack stack;
+    protected WynnItemStack item;
 
-    public ItemProperty(WynnItemStack stack) {
-        this.stack = stack;
+    public ItemProperty(WynnItemStack item) {
+        this.item = item;
 
-        // attach property to the stack
-        stack.addProperty(this);
+        // attach property to the itemstack
+        item.addProperty(this);
     }
 }

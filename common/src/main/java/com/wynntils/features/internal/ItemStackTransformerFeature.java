@@ -14,6 +14,7 @@ import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
+import com.wynntils.wc.custom.item.properties.ItemTierProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
@@ -51,7 +52,8 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
 
-        registerProperty(DurabilityProperty::hasDurability, DurabilityProperty::new);
+        registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
+        registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

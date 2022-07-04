@@ -13,7 +13,9 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.utils.objects.CustomColor;
-import com.wynntils.wc.custom.item.render.HighlightedItem;
+import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.ItemProperty;
+import com.wynntils.wc.custom.item.properties.ItemTierProperty;
 import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -87,9 +89,13 @@ public class ItemHighlightFeature extends UserFeature {
         if (!inventoryHighlightEnabled) return;
 
         ItemStack item = e.getSlot().getItem();
-        if (!(item instanceof HighlightedItem highlightedItem)) return;
+        if (!(item instanceof WynnItemStack wynnItem)) return;
 
-        CustomColor color = highlightedItem.getHighlightColor(e.getScreen(), e.getSlot());
+        if (!wynnItem.hasProperty(ItemProperty.ITEM_TIER)) return;
+        ItemTierProperty tierProperty = wynnItem.getProperty(ItemProperty.ITEM_TIER);
+        if (tierProperty.getTier() == null) return;
+
+        CustomColor color = tierProperty.getTier().getHighlightColor();
         if (color == CustomColor.NONE) return;
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
