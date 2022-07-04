@@ -13,7 +13,6 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
-
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.world.inventory.MenuType;
