@@ -17,6 +17,7 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
+import com.wynntils.features.user.DummyOverlayFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -122,7 +123,7 @@ public class FeatureRegistry {
         // debug
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
-        // registerFeature(new DummyOverlayFeature());
+        registerFeature(new DummyOverlayFeature());
 
         // internal
         registerFeature(new LootrunFeature());

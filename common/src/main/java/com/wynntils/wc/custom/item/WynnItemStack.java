@@ -36,7 +36,7 @@ public class WynnItemStack extends ItemStack {
     }
 
     public void addProperty(ItemProperty property) {
-        if (getProperty(property.getClass()) != null) return; // don't allow duplicate properties
+        if (hasProperty(property.getClass())) return; // don't allow duplicate properties
         this.properties.add(property);
     }
 

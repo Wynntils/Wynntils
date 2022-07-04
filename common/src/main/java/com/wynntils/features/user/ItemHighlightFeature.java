@@ -87,15 +87,7 @@ public class ItemHighlightFeature extends UserFeature {
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled) return;
 
-        ItemStack item = e.getSlot().getItem();
-        if (!(item instanceof WynnItemStack wynnItem)) return;
-
-        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return;
-        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
-
-        if (!highlight.isInventoryHighlight()) return;
-
-        CustomColor color = highlight.getHighlightColor();
+        CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
         RenderUtils.drawTexturedRectWithColor(
@@ -114,17 +106,21 @@ public class ItemHighlightFeature extends UserFeature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!hotbarHighlightEnabled) return;
 
-        ItemStack item = e.getStack();
-        if (!(item instanceof WynnItemStack wynnItem)) return;
-
-        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return;
-        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
-
-        if (!highlight.isHotbarHighlight()) return;
-
-        CustomColor color = highlight.getHighlightColor();
+        CustomColor color = getHighlightColor(e.getStack(), true);
         if (color == CustomColor.NONE) return;
 
         RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
+    }
+
+    private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
+        if (!(item instanceof WynnItemStack wynnItem)) return CustomColor.NONE;
+
+        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return CustomColor.NONE;
+        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
+
+        boolean enabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
+        if (!enabled) return CustomColor.NONE;
+
+        return highlight.getHighlightColor();
     }
 }
