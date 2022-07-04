@@ -42,13 +42,13 @@ public abstract class Feature {
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
-        initOverlays();
-
         onInit(conditions);
 
         this.conditions = conditions.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+
+        initOverlays();
     }
 
     private void initOverlays() {
@@ -61,7 +61,7 @@ public abstract class Feature {
             try {
                 Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation);
+                OverlayManager.registerOverlay(overlay, annotation, this.canEnable());
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);

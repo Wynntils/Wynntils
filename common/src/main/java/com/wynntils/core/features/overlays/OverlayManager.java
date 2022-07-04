@@ -26,10 +26,10 @@ public class OverlayManager {
 
     private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
-    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
+    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, boolean shouldEnable) {
         overlayInfoMap.put(overlay, overlayInfo);
 
-        if (overlayInfo.enabled()) {
+        if (shouldEnable && overlayInfo.enabled()) {
             enabledOverlays.add(overlay);
         }
     }
