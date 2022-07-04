@@ -61,7 +61,7 @@ public abstract class Feature {
             try {
                 Overlay overlay = (Overlay) FieldUtils.readField(overlayField, this, true);
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation, this.canEnable());
+                OverlayManager.registerOverlay(overlay, annotation);
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);
@@ -132,7 +132,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
-        OverlayManager.enableOverlays(this.overlays);
+        OverlayManager.enableOverlays(this.overlays, false);
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
