@@ -46,4 +46,12 @@ public abstract class GuiMixin {
     public void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
     }
+
+    @Inject(method = "renderCrosshair", at = @At(value = "HEAD"), cancellable = true)
+    public void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
+        if (EventFactory.onRenderCrosshairPre(poseStack, this.minecraft.getWindow())
+                .isCanceled()) {
+            ci.cancel();
+        }
+    }
 }

@@ -28,7 +28,7 @@ public abstract class DebugFeature extends Feature {
 
         @Override
         public void init() {
-            setSatisfied(WynntilsMod.developmentEnvironment);
+            setSatisfied(WynntilsMod.isDevelopmentEnvironment());
         }
     }
 }

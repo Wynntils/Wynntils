@@ -6,35 +6,53 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.features.overlays.sizes.FixedOverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 
 public abstract class Overlay {
     protected OverlayPosition position;
 
-    protected float width;
-    protected float height;
+    protected OverlaySize size;
 
     public Overlay(OverlayPosition position, float width, float height) {
         this.position = position;
-        this.width = width;
-        this.height = height;
+        this.size = new FixedOverlaySize(width, height);
     }
 
-    public abstract void render(
-            OverlayPosition overlayPosition, PoseStack poseStack, float partialTicks, Window window);
-
-    public OverlayPosition getPosition() {
-        return position;
-    }
-
-    public void setPosition(OverlayPosition position) {
+    public Overlay(OverlayPosition position, OverlaySize size) {
         this.position = position;
+        this.size = size;
+    }
+
+    public abstract void render(PoseStack poseStack, float partialTicks, Window window);
+
+    public float getWidth() {
+        return this.size.getWidth();
     }
 
     public float getHeight() {
-        return height;
+        return this.size.getHeight();
     }
 
-    public float getWidth() {
-        return width;
+    // Return the X where the overlay should be rendered
+    public int getRenderX() {
+        final SectionCoordinates section = OverlayManager.getSection(this.position.getAnchorSection());
+        return switch (this.position.getHorizontalAlignment()) {
+            case Left -> section.x1() + this.position.getHorizontalOffset();
+            case Center -> (int) (section.x1() + section.x2() - this.getWidth()) / 2
+                    + this.position.getHorizontalOffset();
+            case Right -> (int) (section.x2() + this.position.getHorizontalOffset() - this.getWidth());
+        };
+    }
+
+    // Return the Y where the overlay should be rendered
+    public int getRenderY() {
+        final SectionCoordinates section = OverlayManager.getSection(this.position.getAnchorSection());
+        return switch (this.position.getVerticalAlignment()) {
+            case Top -> section.y1() + this.position.getVerticalOffset();
+            case Middle -> (int) (section.y1() + section.y2() - this.getHeight()) / 2
+                    + this.position.getVerticalOffset();
+            case Bottom -> (int) (section.y2() + this.position.getVerticalOffset() - this.getHeight());
+        };
     }
 }

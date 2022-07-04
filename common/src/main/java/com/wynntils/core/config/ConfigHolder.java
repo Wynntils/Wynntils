@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.config;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import java.lang.reflect.Field;
 import net.minecraft.client.resources.language.I18n;
@@ -76,7 +76,7 @@ public class ConfigHolder {
         try {
             return FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
-            Reference.LOGGER.error("Unable to get field " + getJsonName());
+            WynntilsMod.error("Unable to get field " + getJsonName());
             e.printStackTrace();
             return null;
         }
@@ -89,7 +89,7 @@ public class ConfigHolder {
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {
-            Reference.LOGGER.error("Unable to set field " + getJsonName());
+            WynntilsMod.error("Unable to set field " + getJsonName());
             e.printStackTrace();
             return false;
         }

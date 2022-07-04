@@ -5,6 +5,6 @@
 package com.wynntils.utils.objects;
 
 @FunctionalInterface
-public interface PentaConsumer<A, B, C, D, E> {
-    void consume(A a, B b, C c, D d, E e);
+public interface QuadConsumer<A, B, C, D> {
+    void consume(A a, B b, C c, D d);
 }

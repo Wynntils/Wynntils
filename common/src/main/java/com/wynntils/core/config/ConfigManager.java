@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -29,7 +28,7 @@ import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
-    private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "config");
+    private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
 
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
@@ -72,7 +71,7 @@ public class ConfigManager {
 
             configObject = fileElement.getAsJsonObject();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to load user config file!");
+            WynntilsMod.error("Failed to load user config file!");
             e.printStackTrace();
         }
     }
@@ -111,7 +110,7 @@ public class ConfigManager {
             gson.toJson(holderJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to save user config file!");
+            WynntilsMod.error("Failed to save user config file!");
             e.printStackTrace();
         }
     }

@@ -4,10 +4,14 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.McUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +23,8 @@ public class OverlayManager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
+
+    private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
@@ -54,13 +60,61 @@ public class OverlayManager {
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 
-            if (renderState != annotation.renderAt() || event.getType() != annotation.renderType()) continue;
+            if (annotation.renderType() != event.getType()) {
+                continue;
+            }
 
-            overlay.render(overlay.getPosition(), event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            if (annotation.renderAt() == OverlayInfo.RenderState.Replace) {
+                if (renderState != OverlayInfo.RenderState.Pre) {
+                    continue;
+                }
+                event.setCanceled(true);
+            } else {
+                if (annotation.renderAt() != renderState) {
+                    continue;
+                }
+            }
+
+            overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
         }
     }
 
     public static void init() {
         WynntilsMod.getEventBus().register(OverlayManager.class);
+    }
+
+    @SubscribeEvent
+    public static void onResizeEvent(DisplayResizeEvent event) {
+        calculateSections();
+    }
+
+    // Calculate the sections when loading is finished (this acts as a "game loaded" event)
+    @SubscribeEvent
+    public static void gameInitEvent(TitleScreenInitEvent event) {
+        calculateSections();
+    }
+
+    private static void calculateSections() {
+        Window window = McUtils.mc().getWindow();
+        int width = window.getGuiScaledWidth();
+        int height = window.getGuiScaledHeight();
+
+        int wT = width / 3;
+        int hT = height / 3;
+
+        sections.clear();
+        for (int h = 0; h < 3; h++) {
+            for (int w = 0; w < 3; w++) {
+                sections.add(new SectionCoordinates(w * wT, h * hT, (w + 1) * wT, (h + 1) * hT));
+            }
+        }
+    }
+
+    public static SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
+        return sections.get(section.getIndex());
+    }
+
+    public static List<SectionCoordinates> getSections() {
+        return sections;
     }
 }

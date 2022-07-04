@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -17,6 +17,7 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
+import com.wynntils.features.user.DummyOverlayFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -59,7 +60,7 @@ public class FeatureRegistry {
             Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE");
             if (instanceField != null) instanceField.set(null, feature);
         } catch (Exception e) {
-            Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
+            WynntilsMod.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();
             return;
         }
@@ -77,7 +78,7 @@ public class FeatureRegistry {
                 KeyHolder keyHolder = (KeyHolder) FieldUtils.readField(f, feature, true);
                 feature.setupKeyHolder(keyHolder);
             } catch (Exception e) {
-                Reference.LOGGER.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
+                WynntilsMod.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
                 e.printStackTrace();
             }
         }
@@ -122,6 +123,7 @@ public class FeatureRegistry {
         // debug
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
+        registerFeature(new DummyOverlayFeature());
 
         // internal
         registerFeature(new LootrunFeature());
@@ -147,7 +149,6 @@ public class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new TooltipScaleFeature());
         registerFeature(new DurabilityArcFeature());
-        // registerFeature(new DummyOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
