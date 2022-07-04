@@ -34,7 +34,7 @@ public class TooltipScaleFeature extends UserFeature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
         if (!WynnUtils.onServer()) return;
 
-        currentScreen = McUtils.screen();
+        currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
         // calculate scale factor

@@ -26,62 +26,39 @@ import net.minecraft.world.inventory.InventoryMenu;
  */
 public class McUtils {
 
-    private static final Minecraft mc = Minecraft.getInstance();
-
-    // Discouraged for use due to AutoCloseable warnings
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }
 
     public static LocalPlayer player() {
-        return mc.player;
+        return mc().player;
     }
 
     public static Options options() {
-        return mc.options;
+        return mc().options;
     }
 
     public static InventoryMenu inventoryMenu() {
-        return mc.player.inventoryMenu;
+        return player().inventoryMenu;
     }
 
     public static AbstractContainerMenu containerMenu() {
-        return mc.player.containerMenu;
+        return player().containerMenu;
     }
 
     public static Inventory inventory() {
-        return mc.player.getInventory();
-    }
-
-    public static Screen screen() {
-        return mc.screen;
-    }
-
-    public static ClientLevel level() {
-        return mc.level;
-    }
-
-    public static Gui gui() {
-        return mc.gui;
-    }
-
-    public static Font font() {
-        return mc.font;
-    }
-
-    public static Camera mainCamera() {
-        return mc.gameRenderer.getMainCamera();
+        return player().getInventory();
     }
 
     public static Window window() {
-        return McUtils.mc().getWindow();
+        return mc().getWindow();
     }
 
     public static void sendMessageToClient(Component component) {
-        mc.player.sendMessage(component, Util.NIL_UUID);
+        player().sendMessage(component, Util.NIL_UUID);
     }
 
     public static void sendPacket(Packet<?> packet) {
-        mc.getConnection().send(packet);
+        mc().getConnection().send(packet);
     }
 }

@@ -56,7 +56,7 @@ public class FixPacketBugsFeature extends InternalFeature {
         if (!WynnUtils.onServer()) return;
 
         // Work around bug in Wynncraft that causes NPEs in Vanilla
-        PlayerTeam playerTeamFromUserName = McUtils.level().getScoreboard().getPlayersTeam(event.getUsername());
+        PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
         if (playerTeamFromUserName != event.getPlayerTeam()) {
             event.setCanceled(true);
         }

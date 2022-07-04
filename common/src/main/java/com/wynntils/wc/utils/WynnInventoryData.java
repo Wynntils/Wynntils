@@ -33,8 +33,8 @@ public class WynnInventoryData {
      *     which case soul points are already full
      */
     public static int getTicksTillNextSoulPoint() {
-        if (McUtils.level() == null) return -1;
+        if (McUtils.mc().level == null) return -1;
 
-        return 24000 - (int) (McUtils.level().getDayTime() % 24000);
+        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
     }
 }

@@ -27,13 +27,13 @@ public class CompassManager {
     public static void setCompassLocation(Location compassLocation) {
         CompassManager.compassLocation = compassLocation;
 
-        if (McUtils.level() != null) McUtils.level().setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+        if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
     }
 
     public static void reset() {
         compassLocation = null;
 
-        if (McUtils.level() != null) McUtils.level().setDefaultSpawnPos(null, 0);
+        if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(null, 0);
     }
 
     @SubscribeEvent
@@ -44,7 +44,7 @@ public class CompassManager {
             // Reset compass
             CompassManager.reset();
 
-            if (McUtils.level() != null) McUtils.level().setDefaultSpawnPos(spawnPos, 0);
+            if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
 
             return;
         }

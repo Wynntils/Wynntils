@@ -100,7 +100,7 @@ public class LootrunUtils {
             return;
         }
 
-        ClientLevel level = McUtils.level();
+        ClientLevel level = McUtils.mc().level;
 
         if (level == null) {
             return;
@@ -108,14 +108,14 @@ public class LootrunUtils {
 
         poseStack.pushPose();
 
-        Camera camera = McUtils.mainCamera();
+        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance;
-        BlockPos pos = McUtils.mainCamera().getBlockPosition();
+        BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
@@ -154,13 +154,13 @@ public class LootrunUtils {
             long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
-        Font font = McUtils.font();
+        Font font = McUtils.mc().font;
 
         for (Note note : notes) {
             Vec3 location = note.position();
             poseStack.pushPose();
             poseStack.translate(location.x, location.y + 2, location.z);
-            poseStack.mulPose(McUtils.mainCamera().rotation());
+            poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
             poseStack.scale(-0.025f, -0.025f, 0.025f);
             Matrix4f pose = poseStack.last().pose();
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
@@ -201,7 +201,7 @@ public class LootrunUtils {
             long chunkLong) {
         List<ColoredPath> locations = points.get(chunkLong);
 
-        Level level = McUtils.level();
+        Level level = McUtils.mc().level;
         if (level == null) return;
 
         for (ColoredPath locationsInRoute : locations) {

@@ -41,7 +41,7 @@ public class StringUtils {
     }
 
     public static String[] wrapTextBySize(String s, int maxPixels) {
-        Font font = McUtils.font();
+        Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
         String[] stringArray = s.split(" ");
