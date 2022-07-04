@@ -22,13 +22,13 @@ public class GammabrightFeature extends UserFeature {
             new KeyHolder("Gammabright", GLFW.GLFW_KEY_G, "Wynntils", true, this::onGammabrightKeyPress);
 
     private void onGammabrightKeyPress() {
-        double currentGamma = McUtils.mc().options.gamma;
+        double currentGamma = McUtils.options().gamma;
         if (currentGamma < 1000) {
             lastGamma = currentGamma;
-            McUtils.mc().options.gamma = 1000d;
+            McUtils.options().gamma = 1000d;
             return;
         }
 
-        McUtils.mc().options.gamma = lastGamma;
+        McUtils.options().gamma = lastGamma;
     }
 }

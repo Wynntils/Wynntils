@@ -28,8 +28,7 @@ public class EntityUtils {
 
     public static AbstractHorse searchForHorseNearby(int searchRadius) {
         Player player = McUtils.player();
-        List<AbstractHorse> horses = McUtils.mc()
-                .level
+        List<AbstractHorse> horses = McUtils.level()
                 .getEntitiesOfClass(
                         AbstractHorse.class,
                         new AABB(

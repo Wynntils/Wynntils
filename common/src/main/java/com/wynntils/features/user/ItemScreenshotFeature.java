@@ -66,7 +66,7 @@ public class ItemScreenshotFeature extends UserFeature {
     private static void takeScreenshot(Slot hoveredSlot) {
         if (!WynnUtils.onWorld()) return;
 
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
@@ -74,7 +74,7 @@ public class ItemScreenshotFeature extends UserFeature {
         List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
-        Font font = McUtils.mc().font;
+        Font font = McUtils.font();
         int width = 0;
         int height = 16;
 

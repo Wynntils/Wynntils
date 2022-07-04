@@ -100,7 +100,7 @@ public class LootrunUtils {
             return;
         }
 
-        ClientLevel level = McUtils.mc().level;
+        ClientLevel level = McUtils.level();
 
         if (level == null) {
             return;
@@ -108,14 +108,14 @@ public class LootrunUtils {
 
         poseStack.pushPose();
 
-        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        Camera camera = McUtils.mainCamera();
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.mc().options.renderDistance;
-        BlockPos pos = McUtils.mc().gameRenderer.getMainCamera().getBlockPosition();
+        int renderDistance = McUtils.options().renderDistance;
+        BlockPos pos = McUtils.mainCamera().getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
@@ -154,13 +154,13 @@ public class LootrunUtils {
             long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
-        Font font = McUtils.mc().font;
+        Font font = McUtils.font();
 
         for (Note note : notes) {
             Vec3 location = note.position();
             poseStack.pushPose();
             poseStack.translate(location.x, location.y + 2, location.z);
-            poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
+            poseStack.mulPose(McUtils.mainCamera().rotation());
             poseStack.scale(-0.025f, -0.025f, 0.025f);
             Matrix4f pose = poseStack.last().pose();
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
@@ -201,7 +201,7 @@ public class LootrunUtils {
             long chunkLong) {
         List<ColoredPath> locations = points.get(chunkLong);
 
-        Level level = McUtils.mc().level;
+        Level level = McUtils.level();
         if (level == null) return;
 
         for (ColoredPath locationsInRoute : locations) {
@@ -671,7 +671,7 @@ public class LootrunUtils {
             return;
         }
 
-        LocalPlayer player = McUtils.mc().player;
+        LocalPlayer player = McUtils.player();
         if (player != null) {
             Entity root = player.getRootVehicle();
             Vec3 pos = root.position();

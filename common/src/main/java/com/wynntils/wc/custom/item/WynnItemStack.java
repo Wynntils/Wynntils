@@ -41,7 +41,7 @@ public class WynnItemStack extends ItemStack {
 
     public <T extends ItemProperty> T getProperty(Class<T> propertyType) {
         for (ItemProperty property : properties) {
-            if (property.getClass().equals(propertyType)) return (T) property;
+            if (property.getClass().equals(propertyType)) return propertyType.cast(property);
         }
         return null; // no match
     }

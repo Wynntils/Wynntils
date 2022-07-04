@@ -18,15 +18,11 @@ import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import javax.crypto.SecretKey;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
-
-    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
-            new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
 
     String token;
     boolean ready = false;
@@ -34,7 +30,10 @@ public class WynntilsAccount {
     HashMap<String, String> encodedConfigs = new HashMap<>();
     HashMap<String, String> md5Verifications = new HashMap<>();
 
-    public WynntilsAccount() {}
+    public WynntilsAccount() {
+        Executors.newSingleThreadScheduledExecutor(
+                new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
+    }
 
     public String getToken() {
         return token;

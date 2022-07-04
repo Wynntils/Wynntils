@@ -40,7 +40,7 @@ public class FixSpellOverwriteFeature extends InternalFeature {
         if (event.getTickPhase() != Phase.END) return;
         if (overwriteHighlightTimer <= 0 || overwriteHighlightItem.isEmpty()) return;
 
-        Gui gui = McUtils.mc().gui;
+        Gui gui = McUtils.gui();
         ((GuiAccessor) gui).setToolHighlightTimer(overwriteHighlightTimer);
         ((GuiAccessor) gui).setLastToolHighlight(overwriteHighlightItem);
 

@@ -93,7 +93,6 @@ public class Location extends Vector3d {
     }
 
     public Location clone() throws CloneNotSupportedException {
-        Location clone = (Location) super.clone();
         return new Location(x, y, z);
     }
 

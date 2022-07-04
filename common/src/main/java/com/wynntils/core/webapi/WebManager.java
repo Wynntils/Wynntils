@@ -23,6 +23,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
@@ -37,7 +38,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
@@ -192,9 +192,12 @@ public class WebManager {
         handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), HashMap.class);
-                    internalIdentifications =
-                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), HashMap.class);
+                    @SuppressWarnings("unchecked")
+                    // For json output, because you cannot get the class of parametrized types
+                    Class<HashMap<String, String>> hss_class =
+                            (Class<HashMap<String, String>>) (Class<?>) HashMap.class;
+                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hss_class);
+                    internalIdentifications = gson.fromJson(json.getAsJsonObject("internalIdentifications"), hss_class);
 
                     Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
                     majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
@@ -257,10 +260,9 @@ public class WebManager {
         if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
+        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-        JsonObject main = new JsonParser()
-                .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
-                .getAsJsonObject();
         if (!main.has("message")) {
             main.remove("request");
 

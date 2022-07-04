@@ -39,7 +39,7 @@ public class ChatItemFeature extends InternalFeature {
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {
         if (!WynnUtils.onWorld()) return;
-        if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
+        if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
 
         EditBox chatInput = ((ChatScreenAccessor) chatScreen).getChatInput();
 
