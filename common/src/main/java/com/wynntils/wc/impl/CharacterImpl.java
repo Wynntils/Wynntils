@@ -9,9 +9,12 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState.State;
+
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -100,11 +103,10 @@ public class CharacterImpl implements Character {
         }
 
         public static CharacterInfo parseCharacter(ItemStack itemStack) {
-            /*
             List<String> lore = ItemUtils.getLore(itemStack);
             for (String s : lore) {
-                Reference.LOGGER.info("Lore: " + s);
-            }*/
+                // Reference.LOGGER.info("Lore: " + s);
+            }
 
             return new CharacterInfoImpl(null, false, 0, UUID.randomUUID());
         }
