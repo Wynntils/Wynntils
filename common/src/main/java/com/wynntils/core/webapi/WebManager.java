@@ -192,12 +192,10 @@ public class WebManager {
         handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
-                    @SuppressWarnings("unchecked")
-                    // For json output, because you cannot get the class of parametrized types
-                    Class<HashMap<String, String>> hss_class =
-                            (Class<HashMap<String, String>>) (Class<?>) HashMap.class;
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hss_class);
-                    internalIdentifications = gson.fromJson(json.getAsJsonObject("internalIdentifications"), hss_class);
+                    Type hashmap_type = new TypeToken<HashMap<String, String>>() {}.getType();
+                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmap_type);
+                    internalIdentifications =
+                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmap_type);
 
                     Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
                     majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
