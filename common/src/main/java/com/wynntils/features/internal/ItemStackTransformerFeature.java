@@ -7,11 +7,10 @@ package com.wynntils.features.internal;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.wc.custom.item.CosmeticItemStack;
-import com.wynntils.wc.custom.item.CraftedGearItemStack;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.ItemTierProperty;
@@ -48,12 +47,11 @@ public class ItemStackTransformerFeature extends InternalFeature {
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
-        registerTransformer(WynnItemMatchers::isCraftedGear, CraftedGearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
-        registerTransformer(WynnItemMatchers::isCosmetic, CosmeticItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
+        registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

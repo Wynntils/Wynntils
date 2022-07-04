@@ -15,8 +15,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
-import com.wynntils.wc.custom.item.properties.ItemTierProperty;
-import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
+import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -91,12 +90,14 @@ public class ItemHighlightFeature extends UserFeature {
         ItemStack item = e.getSlot().getItem();
         if (!(item instanceof WynnItemStack wynnItem)) return;
 
-        if (!wynnItem.hasProperty(ItemProperty.ITEM_TIER)) return;
-        ItemTierProperty tierProperty = wynnItem.getProperty(ItemProperty.ITEM_TIER);
-        if (tierProperty.getTier() == null) return;
+        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return;
+        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
 
-        CustomColor color = tierProperty.getTier().getHighlightColor();
+        if (!highlight.isInventoryHighlight()) return;
+
+        CustomColor color = highlight.getHighlightColor();
         if (color == CustomColor.NONE) return;
+
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(inventoryOpacity),
@@ -114,10 +115,16 @@ public class ItemHighlightFeature extends UserFeature {
         if (!hotbarHighlightEnabled) return;
 
         ItemStack item = e.getStack();
-        if (!(item instanceof HotbarHighlightedItem highlightedItem)) return;
+        if (!(item instanceof WynnItemStack wynnItem)) return;
 
-        CustomColor color = highlightedItem.getHotbarColor();
+        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return;
+        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
+
+        if (!highlight.isHotbarHighlight()) return;
+
+        CustomColor color = highlight.getHighlightColor();
         if (color == CustomColor.NONE) return;
+
         RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
     }
 }

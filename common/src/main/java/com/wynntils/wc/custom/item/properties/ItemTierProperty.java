@@ -5,11 +5,13 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
 
-public class ItemTierProperty extends ItemProperty {
-    private ItemTier tier;
+public class ItemTierProperty extends ItemProperty implements HighlightProperty {
+    private final ItemTier tier;
 
     public ItemTierProperty(WynnItemStack item) {
         super(item);
@@ -25,5 +27,10 @@ public class ItemTierProperty extends ItemProperty {
 
     public ItemTier getTier() {
         return tier;
+    }
+
+    @Override
+    public CustomColor getHighlightColor() {
+        return tier == null ? CustomColor.NONE : tier.getHighlightColor();
     }
 }

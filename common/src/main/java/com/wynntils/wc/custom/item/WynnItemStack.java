@@ -39,14 +39,14 @@ public class WynnItemStack extends ItemStack {
         this.properties.add(property);
     }
 
-    public <T extends ItemProperty> T getProperty(Class<T> propertyType) {
+    public <T> T getProperty(Class<T> propertyType) {
         for (ItemProperty property : properties) {
-            if (property.getClass().equals(propertyType)) return (T) property;
+            if (propertyType.isAssignableFrom(property.getClass())) return (T) property;
         }
         return null; // no match
     }
 
-    public boolean hasProperty(Class<? extends ItemProperty> propertyType) {
+    public boolean hasProperty(Class<?> propertyType) {
         // getProperty returns null if no property of the given type is present
         return (getProperty(propertyType) != null);
     }
