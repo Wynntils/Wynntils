@@ -6,7 +6,6 @@ package com.wynntils.mc.event;
 
 import net.minecraft.server.ServerScoreboard;
 import net.minecraftforge.eventbus.api.Event;
-import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardSetScoreEvent extends Event {
     private final String owner;
@@ -25,7 +24,7 @@ public class ScoreboardSetScoreEvent extends Event {
         return owner;
     }
 
-    public @Nullable String getObjectiveName() {
+    public String getObjectiveName() {
         return objectiveName;
     }
 
