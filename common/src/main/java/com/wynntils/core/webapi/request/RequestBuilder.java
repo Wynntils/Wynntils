@@ -94,11 +94,11 @@ public class RequestBuilder {
 
     /** As {@link #handle(Predicate) handle}, but the data is parsed as JSON */
     public RequestBuilder handleJson(Predicate<JsonElement> handler) {
-        return handleString(s -> handler.test(new JsonParser().parse(s)));
+        return handleString(s -> handler.test(JsonParser.parseString(s)));
     }
 
     public RequestBuilder handleJson(ThrowingBiPredicate<URLConnection, JsonElement, IOException> handler) {
-        return handleString((conn, s) -> handler.test(conn, new JsonParser().parse(s)));
+        return handleString((conn, s) -> handler.test(conn, JsonParser.parseString(s)));
     }
 
     /**

@@ -5,7 +5,6 @@
 package com.wynntils.utils.objects;
 
 @FunctionalInterface
-public interface ThrowingConsumer<T, Exception extends Throwable> {
-
-    void accept(T t) throws Exception;
+public interface ThrowingConsumer<T, E extends Throwable> {
+    void accept(T t) throws E;
 }

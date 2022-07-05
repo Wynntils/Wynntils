@@ -8,11 +8,11 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
+import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -38,7 +38,7 @@ public class KeyManager {
 
         keyHolders.add(toAdd);
 
-        Options options = Minecraft.getInstance().options;
+        Options options = McUtils.options();
 
         if (options == null) { // fabric's modinitalizer runs before options init, instead this is
             // loaded later by a mixin
@@ -73,7 +73,7 @@ public class KeyManager {
 
     public static void unregisterKeybind(KeyHolder toAdd) {
         if (keyHolders.remove(toAdd)) {
-            Options options = Minecraft.getInstance().options;
+            Options options = McUtils.options();
             synchronized (options) {
                 KeyMapping[] keyMappings = options.keyMappings;
 

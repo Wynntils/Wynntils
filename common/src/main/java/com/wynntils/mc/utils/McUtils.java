@@ -20,39 +20,40 @@ import net.minecraft.world.inventory.InventoryMenu;
  * commonly used. Tags used more often should be moved elsewhere Keep the names short, but distinct.
  */
 public class McUtils {
+
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }
 
     public static LocalPlayer player() {
-        return McUtils.mc().player;
+        return mc().player;
     }
 
     public static Options options() {
-        return McUtils.mc().options;
+        return mc().options;
     }
 
     public static InventoryMenu inventoryMenu() {
-        return McUtils.mc().player.inventoryMenu;
+        return player().inventoryMenu;
     }
 
     public static AbstractContainerMenu containerMenu() {
-        return McUtils.mc().player.containerMenu;
+        return player().containerMenu;
     }
 
     public static Inventory inventory() {
-        return McUtils.mc().player.getInventory();
+        return player().getInventory();
     }
 
     public static Window window() {
-        return McUtils.mc().getWindow();
+        return mc().getWindow();
     }
 
     public static void sendMessageToClient(Component component) {
-        McUtils.mc().player.sendMessage(component, Util.NIL_UUID);
+        player().sendMessage(component, Util.NIL_UUID);
     }
 
     public static void sendPacket(Packet<?> packet) {
-        McUtils.mc().getConnection().send(packet);
+        mc().getConnection().send(packet);
     }
 }

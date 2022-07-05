@@ -27,7 +27,7 @@ public class ContainerUtils {
     }
 
     public static NonNullList<ItemStack> getItems(Screen screen) {
-        if (screen instanceof AbstractContainerScreen containerScreen) {
+        if (screen instanceof AbstractContainerScreen<?> containerScreen) {
             return containerScreen.getMenu().getItems();
         }
 

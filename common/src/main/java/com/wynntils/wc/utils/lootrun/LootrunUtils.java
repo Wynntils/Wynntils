@@ -114,8 +114,8 @@ public class LootrunUtils {
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.mc().options.renderDistance;
-        BlockPos pos = McUtils.mc().gameRenderer.getMainCamera().getBlockPosition();
+        int renderDistance = McUtils.options().renderDistance;
+        BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
@@ -671,7 +671,7 @@ public class LootrunUtils {
             return;
         }
 
-        LocalPlayer player = McUtils.mc().player;
+        LocalPlayer player = McUtils.player();
         if (player != null) {
             Entity root = player.getRootVehicle();
             Vec3 pos = root.position();
