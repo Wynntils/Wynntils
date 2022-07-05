@@ -28,18 +28,20 @@ public class OverlayManager {
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
-
-        if (overlayInfo.enabled()) {
-            enabledOverlays.add(overlay);
-        }
     }
 
     public static void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
     }
 
-    public static void enableOverlays(List<Overlay> overlays) {
-        enabledOverlays.addAll(overlays);
+    public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
+        if (ignoreState) {
+            enabledOverlays.addAll(overlays);
+        } else {
+            enabledOverlays.addAll(overlays.stream()
+                    .filter(overlay -> overlayInfoMap.get(overlay).enabled())
+                    .toList());
+        }
     }
 
     @SubscribeEvent

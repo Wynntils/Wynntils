@@ -5,6 +5,7 @@
 package com.wynntils.wc.custom.item;
 
 import com.wynntils.wc.custom.item.properties.ItemProperty;
+import com.wynntils.wc.custom.item.properties.type.PropertyType;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +36,37 @@ public class WynnItemStack extends ItemStack {
     }
 
     public void addProperty(ItemProperty property) {
-        if (getProperty(property.getClass()) != null) return; // don't allow duplicate properties of same type
+        if (hasProperty(property.getClass())) return; // don't allow duplicate properties
         this.properties.add(property);
     }
 
-    public <T extends ItemProperty> T getProperty(Class<T> propertyType) {
+    /**
+     * Returns the specified property or the first property of the specified type, if it exists.
+     * Otherwise, returns null.
+     */
+    public <T> T getProperty(Class<T> propertyType) {
         for (ItemProperty property : properties) {
-            if (property.getClass().equals(propertyType)) return propertyType.cast(property);
+            if (propertyType.isAssignableFrom(property.getClass())) return propertyType.cast(property);
         }
         return null; // no match
     }
 
-    public boolean hasProperty(Class<? extends ItemProperty> propertyType) {
+    /**
+     * Returns true if the specified property, or a property of the specified type, is present
+     */
+    public boolean hasProperty(Class<?> propertyType) {
         // getProperty returns null if no property of the given type is present
         return (getProperty(propertyType) != null);
+    }
+
+    /**
+     * Returns all the present properties of the specified type.
+     */
+    public <T extends PropertyType> List<T> getProperties(Class<T> propertyType) {
+        List<T> collected = new ArrayList<>();
+        for (ItemProperty property : properties) {
+            if (propertyType.isAssignableFrom(property.getClass())) collected.add((T) property);
+        }
+        return collected;
     }
 }
