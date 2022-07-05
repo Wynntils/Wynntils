@@ -159,8 +159,6 @@ public class WorldStateImpl implements WorldState {
         if (m.find()) {
             String worldName = m.group(1);
             setState(State.WORLD, worldName, e.getId());
-        } else {
-            WynntilsMod.error("World name did not match pattern: " + name);
         }
     }
 }
