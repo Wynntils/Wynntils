@@ -22,9 +22,9 @@ public class WynnItemMatchers {
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
-
     private static final Pattern ITEM_RARITY_PATTERN =
-            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic) Item.*");
+            Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
+    private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -84,7 +84,7 @@ public class WynnItemMatchers {
      */
     public static boolean isGear(ItemStack itemStack) {
         for (Component line : ItemUtils.getTooltipLines(itemStack)) {
-            if (isRarityLine(line)) return true;
+            if (rarityLineMatcher(line).find()) return true;
         }
         return false;
     }
@@ -107,6 +107,23 @@ public class WynnItemMatchers {
         return (name.startsWith(ChatFormatting.DARK_AQUA.toString()) && name.contains("%"));
     }
 
+    /**
+     * Returns true if the passed item has a durability value (crafted items, tools)
+     */
+    public static boolean isDurabilityItem(ItemStack itemStack) {
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            if (durabilityLineMatcher(line).find()) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the passed item is within the Wynncraft tier system (mythic, legendary, etc.)
+     */
+    public static boolean isTieredItem(ItemStack itemStack) {
+        return isGear(itemStack) || isCraftedGear(itemStack) || isUnidentified(itemStack);
+    }
+
     public static boolean isCosmetic(ItemStack itemStack) {
         for (Component c : ItemUtils.getTooltipLines(itemStack)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
@@ -121,8 +138,11 @@ public class WynnItemMatchers {
         return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
 
-    public static boolean isRarityLine(Component line) {
-        Matcher rarityMatcher = ITEM_RARITY_PATTERN.matcher(line.getString());
-        return rarityMatcher.find();
+    public static Matcher rarityLineMatcher(Component line) {
+        return ITEM_RARITY_PATTERN.matcher(line.getString());
+    }
+
+    public static Matcher durabilityLineMatcher(Component line) {
+        return DURABILITY_PATTERN.matcher(line.getString());
     }
 }

@@ -14,9 +14,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.objects.CustomColor;
-import com.wynntils.wc.custom.item.render.HighlightedItem;
-import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.objects.ItemIdentificationContainer;
 import com.wynntils.wc.objects.Powder;
 import com.wynntils.wc.utils.IdentificationOrderer;
@@ -34,19 +31,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-public class GearItemStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
+public class GearItemStack extends WynnItemStack {
 
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
@@ -318,16 +313,6 @@ public class GearItemStack extends WynnItemStack implements HighlightedItem, Hot
         }
 
         return tooltip;
-    }
-
-    @Override
-    public CustomColor getHighlightColor(Screen screen, Slot slot) {
-        return itemProfile.getTier().getHighlightColor();
-    }
-
-    @Override
-    public CustomColor getHotbarColor() {
-        return itemProfile.getTier().getHighlightColor();
     }
 
     private void parseIDs() {

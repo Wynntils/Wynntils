@@ -284,7 +284,7 @@ public class WynnItemUtils {
         boolean lore = false;
         for (Component c : tooltip) {
             // only remove text after the item type indicator
-            if (!lore && WynnItemMatchers.isRarityLine(c)) {
+            if (!lore && WynnItemMatchers.rarityLineMatcher(c).find()) {
                 lore = true;
                 continue;
             }
