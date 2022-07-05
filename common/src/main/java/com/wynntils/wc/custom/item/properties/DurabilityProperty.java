@@ -4,31 +4,25 @@
  */
 package com.wynntils.wc.custom.item.properties;
 
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
+/** Represents the durability on items with that value (crafted items, gathering tools) */
 public class DurabilityProperty extends ItemProperty {
-    private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-
     private int currentDurability;
     private int maxDurability;
     private float percent;
 
-    public DurabilityProperty(WynnItemStack stack) {
-        super(stack);
+    public DurabilityProperty(WynnItemStack item) {
+        super(item);
 
         // parse durability
-        List<Component> lore = stack.getOriginalTooltip();
+        List<Component> lore = item.getOriginalTooltip();
         for (Component line : lore) {
-            String unformatted = WynnUtils.normalizeBadString(line.getString());
-
-            Matcher durabilityMatcher = DURABILITY_PATTERN.matcher(unformatted);
+            Matcher durabilityMatcher = WynnItemMatchers.durabilityLineMatcher(line);
             if (!durabilityMatcher.find()) continue;
 
             this.currentDurability = Integer.parseInt(durabilityMatcher.group(1));
@@ -40,12 +34,5 @@ public class DurabilityProperty extends ItemProperty {
 
     public float getDurabilityPercent() {
         return percent;
-    }
-
-    public static boolean hasDurability(ItemStack stack) {
-        for (Component c : ItemUtils.getTooltipLines(stack)) {
-            if (c.getString().endsWith(" Durability]")) return true;
-        }
-        return false;
     }
 }

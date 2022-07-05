@@ -5,16 +5,21 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
 
 public abstract class ItemProperty {
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
+    public static final Class<ItemTierProperty> ITEM_TIER = ItemTierProperty.class;
+    public static final Class<CosmeticTierProperty> COSMETIC_TIER = CosmeticTierProperty.class;
 
-    protected WynnItemStack stack;
+    public static final Class<HighlightProperty> HIGHLIGHT = HighlightProperty.class;
 
-    public ItemProperty(WynnItemStack stack) {
-        this.stack = stack;
+    protected WynnItemStack item;
 
-        // attach property to the stack
-        stack.addProperty(this);
+    public ItemProperty(WynnItemStack item) {
+        this.item = item;
+
+        // attach property to the itemstack
+        item.addProperty(this);
     }
 }
