@@ -30,12 +30,12 @@ public class WorldStateImpl implements WorldState {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
-    private static final UUID WORLD_UUID = UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af");
     private static final String WYNNCRAFT_SERVER_SUFFIX = ".wynncraft.com";
     private static final String WYNNCRAFT_BETA_PREFIX = "beta.";
 
     private String currentTabListFooter = "";
     private String currentWorldName = "";
+    private UUID currentWorldId = null;
     private boolean onBetaServer;
 
     private State currentState = State.NOT_CONNECTED;
@@ -65,13 +65,14 @@ public class WorldStateImpl implements WorldState {
         return currentState;
     }
 
-    private void setState(State newState, String newWorldName) {
+    private void setState(State newState, String newWorldName, UUID newUuid) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         State oldState = currentState;
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
+        currentWorldId = newUuid;
         WynntilsMod.getEventBus().post(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
@@ -80,7 +81,7 @@ public class WorldStateImpl implements WorldState {
         if (!onServer()) return;
 
         if (e.getScreen() instanceof DisconnectedScreen) {
-            setState(State.NOT_CONNECTED, "");
+            setState(State.NOT_CONNECTED, "", null);
         }
     }
 
@@ -88,7 +89,7 @@ public class WorldStateImpl implements WorldState {
     public void disconnected(DisconnectedEvent e) {
         if (!onServer()) return;
 
-        setState(State.NOT_CONNECTED, "");
+        setState(State.NOT_CONNECTED, "", null);
     }
 
     @SubscribeEvent
@@ -102,7 +103,7 @@ public class WorldStateImpl implements WorldState {
         String host = e.getHost().toLowerCase(Locale.ROOT);
         if (host.endsWith(WYNNCRAFT_SERVER_SUFFIX)) {
             onBetaServer = host.startsWith(WYNNCRAFT_BETA_PREFIX);
-            setState(State.CONNECTING, "");
+            setState(State.CONNECTING, "", null);
             currentTabListFooter = "";
         }
     }
@@ -111,8 +112,8 @@ public class WorldStateImpl implements WorldState {
     public void remove(PlayerLogOutEvent e) {
         if (!onServer()) return;
 
-        if (e.getId().equals(WORLD_UUID) && currentWorldName.length() > 0) {
-            setState(State.INTERIM, "");
+        if (e.getId().equals(currentWorldId) && currentWorldName.length() > 0) {
+            setState(State.INTERIM, "", null);
         }
     }
 
@@ -120,7 +121,7 @@ public class WorldStateImpl implements WorldState {
     public void onResourcePack(ResourcePackEvent e) {
         if (!onServer()) return;
 
-        setState(State.INTERIM, "");
+        setState(State.INTERIM, "", null);
     }
 
     @SubscribeEvent
@@ -128,7 +129,7 @@ public class WorldStateImpl implements WorldState {
         if (!onServer()) return;
 
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
-            setState(State.CHARACTER_SELECTION, "");
+            setState(State.CHARACTER_SELECTION, "", null);
         }
     }
 
@@ -143,7 +144,7 @@ public class WorldStateImpl implements WorldState {
 
         if (footer.length() > 0) {
             if (HUB_NAME.matcher(footer).find()) {
-                setState(State.HUB, "");
+                setState(State.HUB, "", null);
             }
         }
     }
@@ -152,16 +153,12 @@ public class WorldStateImpl implements WorldState {
     public void update(PlayerDisplayNameChangeEvent e) {
         if (!onServer()) return;
 
-        if (e.getId().equals(WORLD_UUID)) {
-            Component displayName = e.getDisplayName();
-            String name = ComponentUtils.getUnformatted(displayName);
-            Matcher m = WORLD_NAME.matcher(name);
-            if (m.find()) {
-                String worldName = m.group(1);
-                setState(State.WORLD, worldName);
-            } else {
-                WynntilsMod.error("World name did not match pattern: " + name);
-            }
+        Component displayName = e.getDisplayName();
+        String name = ComponentUtils.getUnformatted(displayName);
+        Matcher m = WORLD_NAME.matcher(name);
+        if (m.find()) {
+            String worldName = m.group(1);
+            setState(State.WORLD, worldName, e.getId());
         }
     }
 }
