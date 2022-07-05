@@ -36,10 +36,10 @@ public class ScoreboardManager {
 
     private static final String GUILD_ATTACK_UPCOMING = "§b§lUpcoming Attacks:";
     private static final Pattern GUILD_ATTACK_TERRITORY_PATTERN = Pattern.compile("§b-\\s(\\d+):(\\d+)\\s§3(.+)");
-    public static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
-    public static final Pattern GUILD_OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?Guild Obj: (.+)");
-    public static final Pattern PARTY_PATTERN = Pattern.compile("§e§lParty:§6\\s\\[Lv. (\\d+)]");
-    public static final Pattern PARTY_PLAYER_HEALTH_PATTERN =
+    private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
+    private static final Pattern GUILD_OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?Guild Obj: (.+)");
+    private static final Pattern PARTY_PATTERN = Pattern.compile("§e§lParty:§6\\s\\[Lv. (\\d+)]");
+    private static final Pattern PARTY_PLAYER_HEALTH_PATTERN =
             Pattern.compile("-\\s\\[\\|\\|(\\d+)\\|\\|]\\s(.+)\\s\\[(\\d+)]");
 
     // TimeUnit.Seconds
