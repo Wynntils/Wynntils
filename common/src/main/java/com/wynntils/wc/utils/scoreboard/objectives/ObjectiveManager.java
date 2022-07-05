@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class ObjectiveManager {
     // §b is guild objective, §a is normal objective and §c is daily objective
-    public static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([b|ac])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
+    public static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
 
     private static Objective guildObjective = null;
 
