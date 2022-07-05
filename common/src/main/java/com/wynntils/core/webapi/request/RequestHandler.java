@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -77,23 +79,21 @@ public class RequestHandler {
     }
 
     public Thread dispatch(boolean async) {
-        List<Request>[] groupedRequests;
+        List<List<Request>> groupedRequests;
         boolean anyRequests = false;
         int thisDispatch;
 
         synchronized (this) {
-            groupedRequests = (ArrayList<Request>[]) new ArrayList[maxParallelGroup + 1];
-
-            for (int i = 0; i < maxParallelGroup + 1; ++i) {
-                groupedRequests[i] = new ArrayList<>();
-            }
+            groupedRequests = Stream.generate(ArrayList<Request>::new)
+                    .limit(maxParallelGroup + 1)
+                    .collect(Collectors.toList());
 
             for (Request request : requests) {
                 if (request.currentlyHandling != LoadingPhase.UNLOADED) continue;
 
                 anyRequests = true;
                 request.currentlyHandling = LoadingPhase.TO_LOAD;
-                groupedRequests[request.parallelGroup].add(request);
+                groupedRequests.get(request.parallelGroup).add(request);
             }
 
             maxParallelGroup = 0;
@@ -115,8 +115,8 @@ public class RequestHandler {
         return null;
     }
 
-    private void handleDispatch(int dispatchId, List<Request>[] groupedRequests, int currentGroupIndex) {
-        List<Request> currentGroup = groupedRequests[currentGroupIndex];
+    private void handleDispatch(int dispatchId, List<List<Request>> groupedRequests, int currentGroupIndex) {
+        List<Request> currentGroup = groupedRequests.get(currentGroupIndex);
         if (currentGroup.size() == 0) {
             nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
             return;
@@ -207,8 +207,8 @@ public class RequestHandler {
         nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
     }
 
-    private void nextDispatch(int dispatchId, List<Request>[] groupedRequests, int currentGroupIndex) {
-        if (currentGroupIndex != groupedRequests.length - 1) {
+    private void nextDispatch(int dispatchId, List<List<Request>> groupedRequests, int currentGroupIndex) {
+        if (currentGroupIndex != groupedRequests.size() - 1) {
             handleDispatch(dispatchId, groupedRequests, currentGroupIndex + 1);
             return;
         }

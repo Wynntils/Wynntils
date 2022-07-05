@@ -46,7 +46,7 @@ public class WynnItemStack extends ItemStack {
      */
     public <T> T getProperty(Class<T> propertyType) {
         for (ItemProperty property : properties) {
-            if (propertyType.isAssignableFrom(property.getClass())) return (T) property;
+            if (propertyType.isAssignableFrom(property.getClass())) return propertyType.cast(property);
         }
         return null; // no match
     }

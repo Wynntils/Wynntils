@@ -405,14 +405,16 @@ public class RenderUtils {
     }
 
     public static BufferedImage createScreenshot(RenderTarget fb) {
-        NativeImage image = new NativeImage(fb.width, fb.height, false);
-        RenderSystem.bindTexture(fb.getColorTextureId());
-        image.downloadTexture(0, false);
-        image.flipY();
-
-        int[] pixelValues = image.makePixelArray();
         BufferedImage bufferedimage = new BufferedImage(fb.width, fb.height, BufferedImage.TYPE_INT_ARGB);
-        bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
+        try (NativeImage image = new NativeImage(fb.width, fb.height, false)) {
+            RenderSystem.bindTexture(fb.getColorTextureId());
+            image.downloadTexture(0, false);
+            image.flipY();
+
+            int[] pixelValues = image.makePixelArray();
+
+            bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
+        }
         return bufferedimage;
     }
 }
