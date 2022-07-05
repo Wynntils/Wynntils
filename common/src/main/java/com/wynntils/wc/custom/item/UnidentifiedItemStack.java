@@ -11,26 +11,21 @@ import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.user.ItemGuessFeature;
-import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.reference.EmeraldSymbols;
-import com.wynntils.wc.custom.item.render.HighlightedItem;
-import com.wynntils.wc.custom.item.render.HotbarHighlightedItem;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class UnidentifiedItemStack extends WynnItemStack implements HighlightedItem, HotbarHighlightedItem {
+public class UnidentifiedItemStack extends WynnItemStack {
 
     private ItemGuessProfile guessProfile;
     private ItemTier tier;
@@ -102,15 +97,5 @@ public class UnidentifiedItemStack extends WynnItemStack implements HighlightedI
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         return tooltip;
-    }
-
-    @Override
-    public CustomColor getHighlightColor(Screen screen, Slot slot) {
-        return tier.getHighlightColor();
-    }
-
-    @Override
-    public CustomColor getHotbarColor() {
-        return tier.getHighlightColor();
     }
 }
