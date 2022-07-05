@@ -25,7 +25,8 @@
     "accessors.GuiAccessor",
     "accessors.ChatScreenAccessor",
     "accessors.ItemStackInfoAccessor",
-    "accessors.ClientboundBossEventPacketAccessor"
+    "accessors.ClientboundBossEventPacketAccessor",
+    "accessors.ScoreboardAccessor"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
