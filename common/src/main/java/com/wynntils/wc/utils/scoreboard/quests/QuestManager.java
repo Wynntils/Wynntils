@@ -4,19 +4,18 @@
  */
 package com.wynntils.wc.utils.scoreboard.quests;
 
-import com.wynntils.mc.mixin.accessors.ScoreboardAccessor;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
-import java.util.Comparator;
-import java.util.HashMap;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
+import com.wynntils.wc.utils.scoreboard.ScoreboardLine;
+import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Score;
-import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.server.ServerScoreboard;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public class QuestManager {
@@ -25,65 +24,51 @@ public class QuestManager {
 
     private static QuestInfo currentQuest = null;
 
-    public static void tryParseQuest() {
-        Scoreboard scoreboard = McUtils.player().getScoreboard();
+    @SubscribeEvent
+    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent event) {
+        if (!event.getChangeMap().containsKey(WynntilsScoreboardUpdateEvent.ChangeType.Quest)) return;
 
-        List<Objective> objectives = scoreboard.getObjectives().stream().toList();
+        Set<WynntilsScoreboardUpdateEvent.Change> changes =
+                event.getChangeMap().get(WynntilsScoreboardUpdateEvent.ChangeType.Quest);
 
-        if (objectives.isEmpty()) {
-            return;
-        }
+        for (WynntilsScoreboardUpdateEvent.Change change : changes) {
+            if (change.method() == ServerScoreboard.Method.REMOVE) {
+                if (TRACKED_QUEST_STRING.equals(change.line())) {
+                    questTrackingStopped();
+                }
+            } else { // Method is CHANGE
+                // Use copy constructor to prevent threading issues
+                List<ScoreboardLine> reconstructedScoreboard =
+                        new ArrayList<>(ScoreboardManager.getReconstructedScoreboard());
 
-        final Objective objective = objectives.get(0);
+                List<String> questLines = reconstructedScoreboard.stream()
+                        .dropWhile(scoreboardLine -> !scoreboardLine.line().equals(TRACKED_QUEST_STRING))
+                        .takeWhile(scoreboardLine -> !scoreboardLine.line().matches("À+"))
+                        .map(scoreboardLine -> ChatFormatting.stripFormatting(scoreboardLine.line()))
+                        .filter(Objects::nonNull)
+                        .skip(1)
+                        .toList();
 
-        // use copy constructor to prevent concurrent modification
-        Map<String, Map<Objective, Score>> playerScores =
-                new HashMap<>(((ScoreboardAccessor) scoreboard).getPlayerScores());
+                if (questLines.isEmpty()) {
+                    WynntilsMod.error("QuestManager: questLines was empty.");
+                }
 
-        List<String> objectiveLines = playerScores.values().stream()
-                .map(objectiveScoreMap -> objectiveScoreMap.get(objective))
-                .filter(Objects::nonNull)
-                .sorted(Comparator.comparingInt(Score::getScore).reversed())
-                .map(Score::getOwner)
-                .toList();
+                currentQuest = new QuestInfo(
+                        questLines.get(0),
+                        StringUtils.joinWith(" ", questLines.stream().skip(1).collect(Collectors.toList())));
 
-        List<String> questLines = objectiveLines.stream()
-                .dropWhile(s -> !s.equals(TRACKED_QUEST_STRING))
-                .takeWhile(s -> !s.matches("À+"))
-                .skip(1)
-                .toList();
+                System.out.println(currentQuest);
 
-        if (questLines.isEmpty()) {
-            return;
-        }
-
-        // Invalidate wrong parsing due to scoreboard refresh
-        if (!questLines.get(0).startsWith("§e")) {
-            return;
-        }
-
-        // An objective will appear among the quest lines if scoreboard is refreshing
-        for (int i = 1; i < questLines.size(); i++) {
-            if (ObjectiveManager.OBJECTIVE_PATTERN.matcher(questLines.get(i)).matches()) {
-                questLines = questLines.subList(0, i);
+                // Only update currentQuest once per batch.
                 break;
             }
         }
-
-        questLines = questLines.stream()
-                .map(ChatFormatting::stripFormatting)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        currentQuest = new QuestInfo(
-                questLines.get(0),
-                StringUtils.joinWith(" ", questLines.stream().skip(1).toArray()));
     }
 
-    public static void checkIfTrackingStopped(String objectiveLine) {
-        if (objectiveLine.equals(TRACKED_QUEST_STRING)) {
-            currentQuest = null;
-        }
+    public static void questTrackingStopped() {
+        currentQuest = null;
+
+        System.out.println(currentQuest);
     }
 
     public static QuestInfo getCurrentQuest() {

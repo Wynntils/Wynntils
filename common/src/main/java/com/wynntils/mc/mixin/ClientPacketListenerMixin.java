@@ -152,7 +152,7 @@ public abstract class ClientPacketListenerMixin {
         gui.handleChat(chatType, result.getMessage(), uuid);
     }
 
-    @Inject(method = "handleSetScore", at = @At("HEAD"))
+    @Inject(method = "handleSetScore", at = @At("RETURN"))
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         EventFactory.onSetScore(packet);
     }

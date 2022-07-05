@@ -5,76 +5,91 @@
 package com.wynntils.wc.utils.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.server.ServerScoreboard;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ObjectiveManager {
     // §b is guild objective, §a is normal objective and §c is daily objective
     public static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
 
-    private static Objective guildObjective = null;
+    private static WynnObjective guildWynnObjective = null;
 
-    private static final List<Objective> objectives = new ArrayList<>();
+    private static final List<WynnObjective> WYNN_OBJECTIVES = new ArrayList<>();
 
-    public static void tryUpdateObjective(String objectiveString) {
-        Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(objectiveString);
-        if (!objectiveMatcher.matches()) return;
+    @SubscribeEvent
+    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent event) {
+        if (!event.getChangeMap().containsKey(WynntilsScoreboardUpdateEvent.ChangeType.Objective)) return;
 
-        if (Objects.equals(objectiveMatcher.group(1), "b")) {
-            updateGuildObjective(objectiveString);
-        } else {
-            updateObjective(objectiveString);
+        Set<WynntilsScoreboardUpdateEvent.Change> changes =
+                event.getChangeMap().get(WynntilsScoreboardUpdateEvent.ChangeType.Objective);
+
+        for (WynntilsScoreboardUpdateEvent.Change change : changes) {
+            Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(change.line());
+            if (!objectiveMatcher.matches()) {
+                WynntilsMod.error("ObjectiveManager: '" + change.line() + "' did not match objective format.");
+                continue;
+            }
+
+            WynnObjective parsed = WynnObjective.parseObjectiveLine(change.line());
+
+            if (change.method() == ServerScoreboard.Method.CHANGE) {
+                // Determine objective type with the formatting code
+                if (Objects.equals(objectiveMatcher.group(1), "b")) {
+                    updateGuildObjective(parsed);
+                } else {
+                    updateObjective(parsed);
+                }
+            } else { // Method is REMOVE
+                tryRemoveObjective(parsed);
+            }
         }
     }
 
-    public static void tryRemoveObjective(String objectiveString) {
-        Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(objectiveString);
-        if (!objectiveMatcher.matches()) return;
-
-        Objective parsed = Objective.parseObjectiveLine(objectiveString);
-
+    public static void tryRemoveObjective(WynnObjective parsed) {
         if (parsed.getGoal() == null) {
             return;
         }
 
-        if (guildObjective != null && guildObjective.isSameObjective(parsed)) {
-            guildObjective = null;
+        if (guildWynnObjective != null && guildWynnObjective.isSameObjective(parsed)) {
+            guildWynnObjective = null;
             return;
         }
 
-        objectives.removeIf(objective -> objective.isSameObjective(parsed));
+        WYNN_OBJECTIVES.removeIf(wynnObjective -> wynnObjective.isSameObjective(parsed));
     }
 
-    private static void updateObjective(String objectiveString) {
-        Objective parsed = Objective.parseObjectiveLine(objectiveString);
+    private static void updateObjective(WynnObjective parsed) {
+        WYNN_OBJECTIVES.removeIf(wynnObjective -> Objects.equals(wynnObjective.getGoal(), parsed.getGoal()));
+        WYNN_OBJECTIVES.add(parsed);
 
-        objectives.removeIf(objective -> Objects.equals(objective.getGoal(), parsed.getGoal()));
-        objectives.add(parsed);
-
-        if (objectives.size() > 3) {
+        if (WYNN_OBJECTIVES.size() > 3) {
             WynntilsMod.error("ObjectiveManager: Stored more than 3 objectives. Reset objective list.");
-            objectives.clear();
-            objectives.add(parsed);
+            WYNN_OBJECTIVES.clear();
+            WYNN_OBJECTIVES.add(parsed);
         }
     }
 
-    private static void updateGuildObjective(String objectiveString) {
-        guildObjective = Objective.parseObjectiveLine(objectiveString);
+    private static void updateGuildObjective(WynnObjective parsed) {
+        guildWynnObjective = parsed;
     }
 
     public static void resetObjectives() {
-        guildObjective = null;
-        objectives.clear();
+        guildWynnObjective = null;
+        WYNN_OBJECTIVES.clear();
     }
 
-    public static Objective getGuildObjective() {
-        return guildObjective;
+    public static WynnObjective getGuildObjective() {
+        return guildWynnObjective;
     }
 
-    public static List<Objective> getObjectives() {
-        return objectives;
+    public static List<WynnObjective> getObjectives() {
+        return WYNN_OBJECTIVES;
     }
 }

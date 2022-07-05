@@ -12,10 +12,10 @@ import net.minecraft.ChatFormatting;
 /*
  *  This class is an info holder for Wynncraft's daily and guild objectives
  */
-public record Objective(String goal, int score, int maxScore, long updatedAt, String original) {
+public record WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
     public static final Pattern OBJECTIVE_PARSER_PATTERN = Pattern.compile("^[- ] (.*): *(\\d+)/(\\d+)$");
 
-    public static Objective parseObjectiveLine(String objectiveLine) {
+    public static WynnObjective parseObjectiveLine(String objectiveLine) {
         String stripped = ChatFormatting.stripFormatting(objectiveLine);
 
         assert stripped != null;
@@ -26,9 +26,6 @@ public record Objective(String goal, int score, int maxScore, long updatedAt, St
         int maxScore = 0;
 
         // Match objective strings like "- Slay Lv. 20+ Mobs: 8/140" or "- Craft Items: 0/6"
-        // Could also be multi line like:
-        // "- Trade 24E with"
-        // "  lvl 10 players: 0/24"
         if (matcher.find()) {
             goal = matcher.group(1);
             try {
@@ -39,7 +36,7 @@ public record Objective(String goal, int score, int maxScore, long updatedAt, St
             }
         }
 
-        return new Objective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine);
+        return new WynnObjective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine);
     }
 
     @Override
@@ -71,7 +68,7 @@ public record Objective(String goal, int score, int maxScore, long updatedAt, St
         return maxScore;
     }
 
-    public boolean isSameObjective(Objective other) {
+    public boolean isSameObjective(WynnObjective other) {
         return Objects.equals(this.getGoal(), other.getGoal()) && this.getMaxScore() == other.getMaxScore();
     }
 }

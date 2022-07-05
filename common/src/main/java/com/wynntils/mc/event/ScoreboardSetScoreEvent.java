@@ -10,15 +10,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardSetScoreEvent extends Event {
     private final String owner;
-
-    @Nullable
     private final String objectiveName;
-
     private final int score;
     private final ServerScoreboard.Method method;
 
-    public ScoreboardSetScoreEvent(
-            String owner, @Nullable String objectiveName, int score, ServerScoreboard.Method method) {
+    public ScoreboardSetScoreEvent(String owner, String objectiveName, int score, ServerScoreboard.Method method) {
         this.owner = owner;
         this.objectiveName = objectiveName;
         this.score = score;
