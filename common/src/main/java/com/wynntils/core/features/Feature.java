@@ -42,13 +42,13 @@ public abstract class Feature {
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
-        initOverlays();
-
         onInit(conditions);
 
         this.conditions = conditions.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+
+        initOverlays();
     }
 
     private void initOverlays() {
@@ -132,7 +132,7 @@ public abstract class Feature {
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
-        OverlayManager.enableOverlays(this.overlays);
+        OverlayManager.enableOverlays(this.overlays, false);
         for (KeyHolder key : keyMappings) {
             KeyManager.registerKeybind(key);
         }
