@@ -57,8 +57,6 @@ public class QuestManager {
                         questLines.get(0),
                         StringUtils.joinWith(" ", questLines.stream().skip(1).collect(Collectors.toList())));
 
-                System.out.println(currentQuest);
-
                 // Only update currentQuest once per batch.
                 break;
             }
@@ -67,8 +65,6 @@ public class QuestManager {
 
     public static void questTrackingStopped() {
         currentQuest = null;
-
-        System.out.println(currentQuest);
     }
 
     public static QuestInfo getCurrentQuest() {
