@@ -12,21 +12,8 @@ import net.minecraft.ChatFormatting;
 /*
  *  This class is an info holder for Wynncraft's daily and guild objectives
  */
-public class Objective {
+public record Objective(String goal, int score, int maxScore, long updatedAt, String original) {
     public static final Pattern OBJECTIVE_PARSER_PATTERN = Pattern.compile("^[- ] (.*): *(\\d+)/(\\d+)$");
-    private final String goal;
-    private final int score;
-    private final int maxScore;
-    private long updatedAt;
-    private final String original;
-
-    private Objective(String goal, int score, int maxScore, String original) {
-        this.goal = goal;
-        this.score = score;
-        this.maxScore = maxScore;
-        this.updatedAt = System.currentTimeMillis();
-        this.original = original;
-    }
 
     public static Objective parseObjectiveLine(String objectiveLine) {
         String stripped = ChatFormatting.stripFormatting(objectiveLine);
@@ -52,7 +39,7 @@ public class Objective {
             }
         }
 
-        return new Objective(goal, score, maxScore, objectiveLine);
+        return new Objective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine);
     }
 
     @Override
