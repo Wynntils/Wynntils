@@ -36,7 +36,11 @@ public class ObjectiveManager {
 
         Objective parsed = Objective.parseObjectiveLine(objectiveString);
 
-        if (guildObjective.isSameObjective(parsed)) {
+        if (parsed.getGoal() == null) {
+            return;
+        }
+
+        if (guildObjective != null && guildObjective.isSameObjective(parsed)) {
             guildObjective = null;
             return;
         }
