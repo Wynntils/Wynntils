@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.event.WynntilsScoreboardUpdateEvent;
 import com.wynntils.wc.utils.scoreboard.ScoreboardLine;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,9 +31,7 @@ public class QuestManager {
                     questTrackingStopped();
                 }
             } else { // Method is CHANGE
-                // Use copy constructor to prevent threading issues
-                List<ScoreboardLine> reconstructedScoreboard =
-                        new ArrayList<>(ScoreboardManager.getReconstructedScoreboard());
+                List<ScoreboardLine> reconstructedScoreboard = ScoreboardManager.getReconstructedScoreboard();
 
                 List<String> questLines = reconstructedScoreboard.stream()
                         .dropWhile(scoreboardLine -> !scoreboardLine.line().equals(TRACKED_QUEST_STRING))

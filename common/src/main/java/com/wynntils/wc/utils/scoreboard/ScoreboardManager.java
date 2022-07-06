@@ -45,7 +45,7 @@ public class ScoreboardManager {
     // TimeUnit.Seconds
     private static final int CHANGE_PROCESS_RATE = 1;
 
-    private static final List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
+    private static List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
 
     private static final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
@@ -61,15 +61,17 @@ public class ScoreboardManager {
         Map<WynntilsScoreboardUpdateEvent.ChangeType, Set<WynntilsScoreboardUpdateEvent.Change>> changeTypes =
                 new HashMap<>();
 
+        List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
+
         while (!queuedChanges.isEmpty()) {
             ScoreboardLineChange processed = queuedChanges.pop();
 
             ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
 
-            reconstructedScoreboard.removeIf(scoreboardLine -> scoreboardLine.index() == processed.lineIndex());
+            scoreboardCopy.removeIf(scoreboardLine -> scoreboardLine.index() == processed.lineIndex());
 
             if (processed.method() == ServerScoreboard.Method.CHANGE) {
-                reconstructedScoreboard.add(line);
+                scoreboardCopy.add(line);
             }
 
             Optional<WynntilsScoreboardUpdateEvent.ChangeType> changeType = getChangeType(processed);
@@ -79,8 +81,9 @@ public class ScoreboardManager {
             });
         }
 
-        reconstructedScoreboard.sort(
-                Comparator.comparingInt(ScoreboardLine::index).reversed());
+        scoreboardCopy.sort(Comparator.comparingInt(ScoreboardLine::index).reversed());
+
+        reconstructedScoreboard = scoreboardCopy;
 
         for (Map.Entry<WynntilsScoreboardUpdateEvent.ChangeType, Set<WynntilsScoreboardUpdateEvent.Change>> entry :
                 changeTypes.entrySet()) {
