@@ -39,6 +39,7 @@ import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -73,6 +74,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpd
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
@@ -290,6 +292,11 @@ public class EventFactory {
         String footer = packet.getFooter().getString();
         post(new PlayerInfoFooterChangedEvent(footer));
     }
+
+    public static void onSetScore(ClientboundSetScorePacket packet) {
+        post(new ScoreboardSetScoreEvent(
+                packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()));
+    }
     // endregion
 
     // region Packet Events
@@ -325,5 +332,6 @@ public class EventFactory {
     public static void onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
         post(new SubtitleSetTextEvent(packet.getText()));
     }
+
     // endregion
 }

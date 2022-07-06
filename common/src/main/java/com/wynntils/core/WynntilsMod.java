@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.ModelLoader;
+import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,6 +86,7 @@ public class WynntilsMod {
         ClientCommandManager.init();
         KeyManager.init();
         CompassManager.init();
+        ScoreboardManager.init();
         ModelLoader.init();
         OverlayManager.init();
         FeatureRegistry.init();
