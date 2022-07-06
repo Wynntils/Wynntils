@@ -110,7 +110,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier null
+    classifier "quilt"
 }
 
 jar {
