@@ -9,6 +9,7 @@ import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,8 +67,17 @@ public class ObjectiveManager {
     }
 
     private static void updateObjective(WynnObjective parsed) {
-        WYNN_OBJECTIVES.removeIf(wynnObjective -> Objects.equals(wynnObjective.getGoal(), parsed.getGoal()));
-        WYNN_OBJECTIVES.add(parsed);
+        Optional<WynnObjective> objective = WYNN_OBJECTIVES.stream()
+                .filter(wynnObjective -> wynnObjective.isSameObjective(parsed))
+                .findFirst();
+
+        if (objective.isEmpty()) {
+            // New objective
+            WYNN_OBJECTIVES.add(parsed);
+        } else {
+            // Objective progress updated
+            objective.get().setScore(parsed.getScore());
+        }
 
         if (WYNN_OBJECTIVES.size() > 3) {
             WynntilsMod.error("ObjectiveManager: Stored more than 3 objectives. Reset objective list.");
@@ -77,6 +87,13 @@ public class ObjectiveManager {
     }
 
     private static void updateGuildObjective(WynnObjective parsed) {
+        if (guildWynnObjective.isSameObjective(parsed)) {
+            // Objective progress updated
+            guildWynnObjective.setScore(parsed.getScore());
+            return;
+        }
+
+        // New objective
         guildWynnObjective = parsed;
     }
 
