@@ -17,7 +17,7 @@ public final class WynnObjective {
     private final String goal;
     private int score;
     private final int maxScore;
-    private final long updatedAt;
+    private long updatedAt;
     private final String original;
 
     public WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
@@ -91,5 +91,6 @@ public final class WynnObjective {
 
     public void setScore(int score) {
         this.score = score;
+        this.updatedAt = System.currentTimeMillis();
     }
 }

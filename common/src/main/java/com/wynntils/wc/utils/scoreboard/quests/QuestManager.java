@@ -5,13 +5,12 @@
 package com.wynntils.wc.utils.scoreboard.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
+import com.wynntils.wc.event.WynntilsScoreboardUpdateEvent;
 import com.wynntils.wc.utils.scoreboard.ScoreboardLine;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.ServerScoreboard;
@@ -25,13 +24,9 @@ public class QuestManager {
     private static QuestInfo currentQuest = null;
 
     @SubscribeEvent
-    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent event) {
-        if (!event.getChangeMap().containsKey(WynntilsScoreboardUpdateEvent.ChangeType.Quest)) return;
+    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent.QuestChange event) {
 
-        Set<WynntilsScoreboardUpdateEvent.Change> changes =
-                event.getChangeMap().get(WynntilsScoreboardUpdateEvent.ChangeType.Quest);
-
-        for (WynntilsScoreboardUpdateEvent.Change change : changes) {
+        for (WynntilsScoreboardUpdateEvent.Change change : event.getChanges()) {
             if (change.method() == ServerScoreboard.Method.REMOVE) {
                 if (TRACKED_QUEST_STRING.equals(change.line())) {
                     questTrackingStopped();

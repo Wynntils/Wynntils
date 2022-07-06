@@ -5,12 +5,11 @@
 package com.wynntils.wc.utils.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
+import com.wynntils.wc.event.WynntilsScoreboardUpdateEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.server.ServerScoreboard;
@@ -25,13 +24,9 @@ public class ObjectiveManager {
     private static final List<WynnObjective> WYNN_OBJECTIVES = new ArrayList<>();
 
     @SubscribeEvent
-    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent event) {
-        if (!event.getChangeMap().containsKey(WynntilsScoreboardUpdateEvent.ChangeType.Objective)) return;
+    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent.ObjectiveChange event) {
 
-        Set<WynntilsScoreboardUpdateEvent.Change> changes =
-                event.getChangeMap().get(WynntilsScoreboardUpdateEvent.ChangeType.Objective);
-
-        for (WynntilsScoreboardUpdateEvent.Change change : changes) {
+        for (WynntilsScoreboardUpdateEvent.Change change : event.getChanges()) {
             Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(change.line());
             if (!objectiveMatcher.matches()) {
                 WynntilsMod.error("ObjectiveManager: '" + change.line() + "' did not match objective format.");
@@ -87,7 +82,7 @@ public class ObjectiveManager {
     }
 
     private static void updateGuildObjective(WynnObjective parsed) {
-        if (guildWynnObjective.isSameObjective(parsed)) {
+        if (guildWynnObjective != null && guildWynnObjective.isSameObjective(parsed)) {
             // Objective progress updated
             guildWynnObjective.setScore(parsed.getScore());
             return;

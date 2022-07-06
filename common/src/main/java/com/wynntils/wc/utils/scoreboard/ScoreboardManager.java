@@ -6,9 +6,9 @@ package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
-import com.wynntils.mc.event.WynntilsScoreboardUpdateEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.WorldStateEvent;
+import com.wynntils.wc.event.WynntilsScoreboardUpdateEvent;
 import com.wynntils.wc.model.WorldState;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
 import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
@@ -82,7 +82,10 @@ public class ScoreboardManager {
         reconstructedScoreboard.sort(
                 Comparator.comparingInt(ScoreboardLine::index).reversed());
 
-        WynntilsMod.getEventBus().post(new WynntilsScoreboardUpdateEvent(changeTypes));
+        for (Map.Entry<WynntilsScoreboardUpdateEvent.ChangeType, Set<WynntilsScoreboardUpdateEvent.Change>> entry :
+                changeTypes.entrySet()) {
+            WynntilsMod.getEventBus().post(entry.getKey().toEvent(entry.getValue()));
+        }
     };
 
     private static Optional<WynntilsScoreboardUpdateEvent.ChangeType> getChangeType(ScoreboardLineChange change) {
