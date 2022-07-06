@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.StringUtils;
 
 public class QuestManager {
 
@@ -46,8 +45,7 @@ public class QuestManager {
                 }
 
                 currentQuest = new QuestInfo(
-                        questLines.get(0),
-                        StringUtils.joinWith(" ", questLines.stream().skip(1).collect(Collectors.toList())));
+                        questLines.get(0), questLines.stream().skip(1).collect(Collectors.joining(" ")));
 
                 // Only update currentQuest once per batch.
                 break;
