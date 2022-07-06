@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features.overlays.sizes;
 
-public class RestrictedRangeOverlaySize extends OverlaySize {
+public class RestrictedRangeOverlaySize extends FixedOverlaySize {
     private final float maxWidth;
     private final float maxHeight;
 
@@ -16,16 +16,6 @@ public class RestrictedRangeOverlaySize extends OverlaySize {
 
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
-    }
-
-    @Override
-    public float getWidth() {
-        return width;
-    }
-
-    @Override
-    public float getHeight() {
-        return height;
     }
 
     public void setWidth(float newWidth) {

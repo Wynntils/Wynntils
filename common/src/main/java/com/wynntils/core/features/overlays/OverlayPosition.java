@@ -4,6 +4,9 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.wynntils.mc.render.HorizontalAlignment;
+import com.wynntils.mc.render.VerticalAlignment;
+
 public class OverlayPosition {
 
     private int verticalOffset;
@@ -67,17 +70,5 @@ public class OverlayPosition {
         public int getIndex() {
             return index;
         }
-    }
-
-    public enum HorizontalAlignment {
-        Left,
-        Center,
-        Right
-    }
-
-    public enum VerticalAlignment {
-        Top,
-        Middle,
-        Bottom
     }
 }
