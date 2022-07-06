@@ -5,48 +5,23 @@
 package com.wynntils.wc.utils.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.wc.event.WynntilsScoreboardUpdateEvent;
+import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
+import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.server.ServerScoreboard;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ObjectiveManager {
+public class ObjectiveManager implements ScoreboardHandler {
     // §b is guild objective, §a is normal objective and §c is daily objective
     public static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
 
     private static WynnObjective guildWynnObjective = null;
 
     private static final List<WynnObjective> WYNN_OBJECTIVES = new ArrayList<>();
-
-    @SubscribeEvent
-    public static void onScoreboardUpdate(WynntilsScoreboardUpdateEvent.ObjectiveChange event) {
-
-        for (WynntilsScoreboardUpdateEvent.Change change : event.getChanges()) {
-            Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(change.line());
-            if (!objectiveMatcher.matches()) {
-                WynntilsMod.error("ObjectiveManager: '" + change.line() + "' did not match objective format.");
-                continue;
-            }
-
-            WynnObjective parsed = WynnObjective.parseObjectiveLine(change.line());
-
-            if (change.method() == ServerScoreboard.Method.CHANGE) {
-                // Determine objective type with the formatting code
-                if (Objects.equals(objectiveMatcher.group(1), "b")) {
-                    updateGuildObjective(parsed);
-                } else {
-                    updateObjective(parsed);
-                }
-            } else { // Method is REMOVE
-                tryRemoveObjective(parsed);
-            }
-        }
-    }
 
     public static void tryRemoveObjective(WynnObjective parsed) {
         if (parsed.getGoal() == null) {
@@ -103,5 +78,57 @@ public class ObjectiveManager {
 
     public static List<WynnObjective> getObjectives() {
         return WYNN_OBJECTIVES;
+    }
+
+    @Override
+    public void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType) {
+        List<WynnObjective> objectives = reparseObjectives(newValue);
+
+        if (segmentType == ScoreboardManager.SegmentType.GuildObjective) {
+            for (WynnObjective objective : objectives) {
+                if (objective.isGuildObjective()) {
+                    updateGuildObjective(objective);
+                }
+            }
+        } else {
+            for (WynnObjective objective : objectives) {
+                if (!objective.isGuildObjective()) {
+                    updateObjective(objective);
+                }
+            }
+
+            // filter out deleted objectives
+            WYNN_OBJECTIVES.removeIf(
+                    wynnObjective -> objectives.stream().noneMatch(other -> other.isSameObjective(wynnObjective)));
+        }
+    }
+
+    @Override
+    public void onSegmentRemove(Segment segment, ScoreboardManager.SegmentType segmentType) {
+        List<WynnObjective> objectives = reparseObjectives(segment);
+
+        for (WynnObjective objective : objectives) {
+            tryRemoveObjective(objective);
+        }
+    }
+
+    private List<WynnObjective> reparseObjectives(Segment segment) {
+        List<WynnObjective> parsedObjectives = new ArrayList<>();
+        for (String line : segment.getContent()) {
+            Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(line);
+            if (!objectiveMatcher.matches()) {
+                continue;
+            }
+
+            WynnObjective parsed = WynnObjective.parseObjectiveLine(line);
+
+            // Determine objective type with the formatting code
+            if (Objects.equals(objectiveMatcher.group(1), "b")) {
+                parsed.setGuildObjective(true);
+            }
+
+            parsedObjectives.add(parsed);
+        }
+        return parsedObjectives;
     }
 }

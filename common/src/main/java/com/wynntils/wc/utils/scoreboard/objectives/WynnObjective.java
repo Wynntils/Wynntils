@@ -20,6 +20,8 @@ public final class WynnObjective {
     private long updatedAt;
     private final String original;
 
+    private boolean guildObjective;
+
     public WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
         this.goal = goal;
         this.score = score;
@@ -57,6 +59,10 @@ public final class WynnObjective {
         return goal + " [" + score + "/" + maxScore + "]";
     }
 
+    private void updateTimestamp() {
+        this.updatedAt = System.currentTimeMillis();
+    }
+
     public boolean hasProgress() {
         return this.maxScore > 0;
     }
@@ -85,12 +91,21 @@ public final class WynnObjective {
         return score;
     }
 
+    public boolean isGuildObjective() {
+        return guildObjective;
+    }
+
     public boolean isSameObjective(WynnObjective other) {
         return Objects.equals(this.getGoal(), other.getGoal()) && this.getMaxScore() == other.getMaxScore();
     }
 
     public void setScore(int score) {
         this.score = score;
-        this.updatedAt = System.currentTimeMillis();
+        updateTimestamp();
+    }
+
+    public void setGuildObjective(boolean guildObjective) {
+        this.guildObjective = guildObjective;
+        updateTimestamp();
     }
 }

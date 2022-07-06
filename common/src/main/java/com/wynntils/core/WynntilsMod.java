@@ -87,7 +87,6 @@ public class WynntilsMod {
         KeyManager.init();
         CompassManager.init();
         ScoreboardManager.init();
-
         ModelLoader.init();
         OverlayManager.init();
         FeatureRegistry.init();
