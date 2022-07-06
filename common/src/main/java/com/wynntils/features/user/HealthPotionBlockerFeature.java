@@ -29,7 +29,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
         if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
             e.setCanceled(true);
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.potionBlocker.healthFull")
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.healthPotionBlocker.healthFull")
                     .withStyle(ChatFormatting.RED));
         }
     }
