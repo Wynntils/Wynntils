@@ -124,7 +124,7 @@ public class WynntilsCommand extends CommandBase {
                 text, "wynntils", List.of("help"), "This shows a list of all available commands for Wynntils.");
         addCommandDescription(
                 text, "wynntils", List.of("discord"), "This provides you with an invite to our Discord server.");
-        addCommandDescription(text, "-wynntils", List.of(" version"), "This shows the installed Wynntils version.");
+        addCommandDescription(text, "wynntils", List.of("version"), "This shows the installed Wynntils version.");
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
