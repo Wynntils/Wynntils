@@ -6,22 +6,22 @@ package com.wynntils.mc.render;
 
 import com.wynntils.utils.objects.CustomColor;
 
-public record LineRenderTask(
+public record TextRenderTask(
         String text,
         float maxWidth,
         CustomColor customColor,
         FontRenderer.TextAlignment alignment,
         FontRenderer.TextShadow shadow) {
 
-    public LineRenderTask(String text, float maxWidth, CustomColor customColor) {
+    public TextRenderTask(String text, float maxWidth, CustomColor customColor) {
         this(text, maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
     }
 
-    public static LineRenderTask getWithHorizontalAlignment(
+    public static TextRenderTask getWithHorizontalAlignment(
             String text, float maxWidth, CustomColor customColor, HorizontalAlignment horizontalAlignment) {
         switch (horizontalAlignment) {
             case Left -> {
-                return new LineRenderTask(
+                return new TextRenderTask(
                         text,
                         maxWidth,
                         customColor,
@@ -29,7 +29,7 @@ public record LineRenderTask(
                         FontRenderer.TextShadow.NORMAL);
             }
             case Center -> {
-                return new LineRenderTask(
+                return new TextRenderTask(
                         text,
                         maxWidth,
                         customColor,
@@ -37,7 +37,7 @@ public record LineRenderTask(
                         FontRenderer.TextShadow.NORMAL);
             }
             case Right -> {
-                return new LineRenderTask(
+                return new TextRenderTask(
                         text,
                         maxWidth,
                         customColor,
@@ -46,7 +46,7 @@ public record LineRenderTask(
             }
         }
 
-        return new LineRenderTask(
+        return new TextRenderTask(
                 text, maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
     }
 }

@@ -14,7 +14,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.LineRenderTask;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
@@ -48,20 +48,20 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 return;
             }
 
-            List<LineRenderTask> toRender = new ArrayList<>();
+            List<TextRenderTask> toRender = new ArrayList<>();
 
-            toRender.add(LineRenderTask.getWithHorizontalAlignment(
+            toRender.add(TextRenderTask.getWithHorizontalAlignment(
                     "Tracked Quest Info:", this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment()));
-            toRender.add(LineRenderTask.getWithHorizontalAlignment(
+            toRender.add(TextRenderTask.getWithHorizontalAlignment(
                     currentQuest.quest(), this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment()));
-            toRender.add(LineRenderTask.getWithHorizontalAlignment(
+            toRender.add(TextRenderTask.getWithHorizontalAlignment(
                     currentQuest.description(),
                     this.getWidth(),
                     CommonColors.WHITE,
                     this.getRenderHorizontalAlignment()));
 
             FontRenderer.getInstance()
-                    .drawLinesWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),

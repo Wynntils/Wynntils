@@ -26,7 +26,7 @@ public class FontRenderer {
         return INSTANCE;
     }
 
-    public int drawLine(
+    public int renderText(
             PoseStack poseStack,
             String text,
             float x,
@@ -40,7 +40,7 @@ public class FontRenderer {
 
         switch (alignment) {
             case CENTER_ALIGNED:
-                return drawLine(
+                return renderText(
                         poseStack,
                         text,
                         x - font.width(text) / 2.0f,
@@ -49,7 +49,7 @@ public class FontRenderer {
                         TextAlignment.LEFT_ALIGNED,
                         shadow);
             case RIGHT_ALIGNED:
-                return drawLine(
+                return renderText(
                         poseStack, text, x - font.width(text), y, customColor, TextAlignment.LEFT_ALIGNED, shadow);
             default: {
                 if (shadow == TextShadow.NORMAL) {
@@ -60,7 +60,7 @@ public class FontRenderer {
         }
     }
 
-    public void drawLine(
+    public void renderText(
             PoseStack poseStack,
             String text,
             float x,
@@ -72,7 +72,7 @@ public class FontRenderer {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text) < maxWidth) {
-            drawLine(poseStack, text, x, y, customColor, alignment, shadow);
+            renderText(poseStack, text, x, y, customColor, alignment, shadow);
             return;
         }
 
@@ -84,7 +84,7 @@ public class FontRenderer {
         for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size() - 1; i--) {
             String shortened = String.join(" ", parts.subList(partBegin, i + 1));
             if (font.width(shortened) < maxWidth) {
-                drawLine(poseStack, shortened, x, y + (line * NEWLINE_OFFSET), customColor, alignment, shadow);
+                renderText(poseStack, shortened, x, y + (line * NEWLINE_OFFSET), customColor, alignment, shadow);
                 line++;
                 partBegin = i + 1;
                 i = parts.size();
@@ -92,21 +92,21 @@ public class FontRenderer {
         }
     }
 
-    private void drawLine(PoseStack poseStack, float x, float y, LineRenderTask line) {
-        drawLine(poseStack, line.text(), x, y, line.maxWidth(), line.customColor(), line.alignment(), line.shadow());
+    private void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
+        renderText(poseStack, line.text(), x, y, line.maxWidth(), line.customColor(), line.alignment(), line.shadow());
     }
 
-    public void drawLines(PoseStack poseStack, float x, float y, List<LineRenderTask> lines) {
+    public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
         for (int i = 0; i < lines.size(); i++) {
-            drawLine(poseStack, x, y + (NEWLINE_OFFSET * i), lines.get(i));
+            renderText(poseStack, x, y + (NEWLINE_OFFSET * i), lines.get(i));
         }
     }
 
-    public void drawLinesWithAlignment(
+    public void renderTextsWithAlignment(
             PoseStack poseStack,
             float renderX,
             float renderY,
-            List<LineRenderTask> toRender,
+            List<TextRenderTask> toRender,
             float width,
             float height,
             HorizontalAlignment horizontalAlignment,
@@ -124,24 +124,24 @@ public class FontRenderer {
             case Bottom -> renderY += (height - renderHeight) / McUtils.window().getGuiScale();
         }
 
-        drawLines(poseStack, renderX, renderY, toRender);
+        renderTexts(poseStack, renderX, renderY, toRender);
     }
 
-    private float calculateRenderHeight(List<LineRenderTask> toRender) {
+    private float calculateRenderHeight(List<TextRenderTask> toRender) {
         float height = 0;
-        for (LineRenderTask lineRenderTask : toRender) {
-            if (lineRenderTask.maxWidth() == 0) {
+        for (TextRenderTask textRenderTask : toRender) {
+            if (textRenderTask.maxWidth() == 0) {
                 height += font.lineHeight + NEWLINE_OFFSET;
             } else {
                 List<String> parts =
-                        Arrays.stream(lineRenderTask.text().split(" ")).toList();
+                        Arrays.stream(textRenderTask.text().split(" ")).toList();
 
                 int lines = 0;
                 int partBegin = 0;
 
                 for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size() - 1; i--) {
                     String shortened = String.join(" ", parts.subList(partBegin, i + 1));
-                    if (font.width(shortened) < lineRenderTask.maxWidth()) {
+                    if (font.width(shortened) < textRenderTask.maxWidth()) {
                         lines++;
                         partBegin = i + 1;
                         i = parts.size();
