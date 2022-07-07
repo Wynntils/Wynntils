@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface OverlayInfo {
-    /* Whether the annotated overlay enabled */
+    /* Whether the annotated overlay enabled by default */
     boolean enabled() default true;
 
     RenderEvent.ElementType renderType();

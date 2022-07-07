@@ -90,6 +90,9 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
+        // init overlays before ConfigManager
+        feature.initOverlays();
+
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
         ConfigManager.registerFeature(feature);

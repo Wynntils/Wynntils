@@ -11,6 +11,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -22,6 +23,7 @@ import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 
+@FeatureInfo(category = "overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay QuestInfoOverlay = new QuestInfoOverlay();

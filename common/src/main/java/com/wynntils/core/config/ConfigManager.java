@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -26,15 +27,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
-
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
-
     private static Gson gson;
 
     public static void registerFeature(Feature feature) {
@@ -121,14 +121,33 @@ public class ConfigManager {
         if (featureInfo == null || featureInfo.category().isBlank()) return null;
 
         String category = featureInfo.category();
+
+        loadFeatureOverlayConfigOptions(feature, category);
+
+        return getConfigOptions(category, feature);
+    }
+
+    private static void loadFeatureOverlayConfigOptions(Feature feature, String category) {
+        // collect feature's overlays' config options
+        for (Overlay overlay : feature.getOverlays()) {
+            List<ConfigHolder> options = getConfigOptions(category, overlay);
+
+            CONFIG_HOLDERS.addAll(options);
+
+            overlay.addConfigOptions(options);
+
+            loadConfigOptions(options);
+        }
+    }
+
+    @NotNull
+    private static List<ConfigHolder> getConfigOptions(String category, Object parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        // collect options
-        for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), Config.class)) {
-            Config metadata = f.getAnnotation(Config.class);
-            options.add(new ConfigHolder(feature, f, category, metadata));
+        for (Field overlayConfigFields : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
+            Config metadata = overlayConfigFields.getAnnotation(Config.class);
+            options.add(new ConfigHolder(parent, overlayConfigFields, category, metadata));
         }
-
         return options;
     }
 }

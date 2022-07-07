@@ -5,14 +5,16 @@
 package com.wynntils.core.config;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.Translatable;
+import com.wynntils.core.features.overlays.Overlay;
 import java.lang.reflect.Field;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
-    private final Feature parent;
+    private final Object parent;
     private final Field field;
     private final Class<?> fieldType;
 
@@ -22,7 +24,7 @@ public class ConfigHolder {
     private final Object defaultValue;
     private boolean userEdited = false;
 
-    public ConfigHolder(Feature parent, Field field, String category, Config metadata) {
+    public ConfigHolder(Object parent, Field field, String category, Config metadata) {
         this.parent = parent;
         this.field = field;
         this.fieldType = field.getType();
@@ -47,6 +49,12 @@ public class ConfigHolder {
     }
 
     public String getJsonName() {
+        if (parent instanceof Overlay) {
+            // "FeatureName.OverlayName.settingName"
+            return parent.getClass().getDeclaringClass().getSimpleName() + "."
+                    + parent.getClass().getSimpleName() + "." + field.getName();
+        }
+        // "FeatureName.settingName"
         return parent.getClass().getSimpleName() + "." + field.getName();
     }
 
@@ -62,14 +70,14 @@ public class ConfigHolder {
         if (!getMetadata().key().isEmpty()) {
             return I18n.get(getMetadata().key() + ".name");
         }
-        return parent.getTranslation(field.getName() + ".name");
+        return ((Translatable) parent).getTranslation(field.getName() + ".name");
     }
 
     public String getDescription() {
         if (!getMetadata().key().isEmpty()) {
             return I18n.get(getMetadata().key() + ".description");
         }
-        return parent.getTranslation(field.getName() + ".description");
+        return ((Translatable) parent).getTranslation(field.getName() + ".description");
     }
 
     public Object getValue() {
@@ -85,7 +93,7 @@ public class ConfigHolder {
     public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
-            parent.updateConfigOption(this);
+            ((Configurable) parent).updateConfigOption(this);
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {

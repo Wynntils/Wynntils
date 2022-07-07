@@ -4,24 +4,42 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.google.common.base.CaseFormat;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.FixedOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.client.resources.language.I18n;
 
-public abstract class Overlay {
+public abstract class Overlay implements Translatable, Configurable {
+    private List<ConfigHolder> configOptions = new ArrayList<>();
+
+    @Config
     protected OverlayPosition position;
 
+    @Config
     protected OverlaySize size;
+
+    @Config(key = "overlay.wynntils.overlay.userEnabled")
+    protected Boolean userEnabled = null;
 
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
+    @Config
     protected HorizontalAlignment horizontalAlignmentOverride = null;
+
+    @Config
     protected VerticalAlignment verticalAlignmentOverride = null;
 
     public Overlay(OverlayPosition position, float width, float height) {
@@ -46,6 +64,49 @@ public abstract class Overlay {
     }
 
     public abstract void render(PoseStack poseStack, float partialTicks, Window window);
+
+    @Override
+    public final void updateConfigOption(ConfigHolder configHolder) {
+        // if user toggle was changed, enable/disable feature accordingly
+        if (configHolder.getFieldName().equals("userEnabled")) {
+            if (isUserEnabled()) {
+                OverlayManager.enableOverlays(List.of(this), true);
+            } else {
+                OverlayManager.disableOverlays(List.of(this));
+            }
+            return;
+        }
+
+        // otherwise, trigger regular config update
+        onConfigUpdate(configHolder);
+    }
+
+    protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+    /** Registers the overlay's config options. Called by ConfigManager when overlay is loaded */
+    public final void addConfigOptions(List<ConfigHolder> options) {
+        configOptions.addAll(options);
+    }
+
+    /** Gets the name of a feature */
+    @Override
+    public String getTranslatedName() {
+        return getTranslation("name");
+    }
+
+    @Override
+    public String getTranslation(String keySuffix) {
+        return I18n.get("overlay.wynntils." + getNameCamelCase() + "." + keySuffix);
+    }
+
+    protected String getNameCamelCase() {
+        String name = this.getClass().getSimpleName().replace("Overlay", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    public Boolean isUserEnabled() {
+        return userEnabled;
+    }
 
     public float getWidth() {
         return this.size.getWidth();

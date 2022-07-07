@@ -30,7 +30,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature {
+public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private List<KeyHolder> keyMappings = new ArrayList<>();
@@ -47,11 +47,9 @@ public abstract class Feature {
         this.conditions = conditions.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
-
-        initOverlays();
     }
 
-    private void initOverlays() {
+    public final void initOverlays() {
         Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
         for (Field overlayField : overlayFields) {
             if (overlayField.getType() != Overlay.class) {
@@ -85,9 +83,19 @@ public abstract class Feature {
         keyMappings.add(keyHolder);
     }
 
+    public List<Overlay> getOverlays() {
+        return overlays;
+    }
+
     /** Gets the name of a feature */
+    @Override
     public String getTranslatedName() {
         return getTranslation("name");
+    }
+
+    @Override
+    public String getTranslation(String keySuffix) {
+        return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
     public String getShortName() {
@@ -97,10 +105,6 @@ public abstract class Feature {
     protected String getNameCamelCase() {
         String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
-
-    public String getTranslation(String keySuffix) {
-        return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
     /** Called on init of Feature */
@@ -204,6 +208,7 @@ public abstract class Feature {
     }
 
     /** Called when a feature's config option is updated. Called by ConfigHolder */
+    @Override
     public abstract void updateConfigOption(ConfigHolder configHolder);
 
     /** Used to react to config option updates */
