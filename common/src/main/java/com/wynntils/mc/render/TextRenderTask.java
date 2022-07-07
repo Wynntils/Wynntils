@@ -4,49 +4,33 @@
  */
 package com.wynntils.mc.render;
 
-import com.wynntils.utils.objects.CustomColor;
+public final class TextRenderTask {
+    private String text;
+    private TextRenderSetting setting;
 
-public record TextRenderTask(
-        String text,
-        float maxWidth,
-        CustomColor customColor,
-        FontRenderer.TextAlignment alignment,
-        FontRenderer.TextShadow shadow) {
-
-    public TextRenderTask(String text, float maxWidth, CustomColor customColor) {
-        this(text, maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
+    public TextRenderTask(String text, TextRenderSetting setting) {
+        this.text = text;
+        this.setting = setting;
     }
 
-    public static TextRenderTask getWithHorizontalAlignment(
-            String text, float maxWidth, CustomColor customColor, HorizontalAlignment horizontalAlignment) {
-        switch (horizontalAlignment) {
-            case Left -> {
-                return new TextRenderTask(
-                        text,
-                        maxWidth,
-                        customColor,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
-                        FontRenderer.TextShadow.NORMAL);
-            }
-            case Center -> {
-                return new TextRenderTask(
-                        text,
-                        maxWidth,
-                        customColor,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
-                        FontRenderer.TextShadow.NORMAL);
-            }
-            case Right -> {
-                return new TextRenderTask(
-                        text,
-                        maxWidth,
-                        customColor,
-                        FontRenderer.TextAlignment.RIGHT_ALIGNED,
-                        FontRenderer.TextShadow.NORMAL);
-            }
-        }
+    public String getText() {
+        return text;
+    }
 
-        return new TextRenderTask(
-                text, maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
+    public TextRenderSetting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(TextRenderSetting setting) {
+        this.setting = setting;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "TextRenderTask[" + "text=" + text + ", " + "setting=" + setting + ']';
     }
 }

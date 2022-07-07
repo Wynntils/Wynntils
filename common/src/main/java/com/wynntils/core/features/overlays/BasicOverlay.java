@@ -6,6 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.objects.QuadConsumer;
 
@@ -33,4 +34,7 @@ public class BasicOverlay extends Overlay {
     public void render(PoseStack poseStack, float partialTicks, Window window) {
         renderConsumer.consume(this, poseStack, partialTicks, window);
     }
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {}
 }
