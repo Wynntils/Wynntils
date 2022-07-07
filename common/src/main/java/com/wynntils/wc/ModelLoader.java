@@ -5,15 +5,13 @@
 package com.wynntils.wc;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.wc.impl.CharacterImpl;
-import com.wynntils.wc.impl.WorldStateImpl;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
 public abstract class ModelLoader {
-    private static final WorldState worldState = new WorldStateImpl();
-    private static final Character character = new CharacterImpl();
+    private static final WorldState worldState = new WorldState();
+    private static final Character character = new Character();
 
     public static final Model[] MODELS = new Model[] {worldState, character};
 
