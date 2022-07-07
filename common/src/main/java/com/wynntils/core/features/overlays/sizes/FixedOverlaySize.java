@@ -12,6 +12,10 @@ public class FixedOverlaySize extends OverlaySize {
         super(width, height);
     }
 
+    public FixedOverlaySize(String string) {
+        super(string);
+    }
+
     @Override
     public float getWidth() {
         return (float) (this.width / McUtils.window().getGuiScale());

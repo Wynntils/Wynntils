@@ -100,7 +100,9 @@ public class ConfigManager {
             for (ConfigHolder holder : CONFIG_HOLDERS) {
                 if (!holder.isUserEdited()) continue; // only save options that have been set by the user
 
-                JsonElement holderElement = gson.toJsonTree(holder.getValue());
+                Object value = holder.getValue();
+
+                JsonElement holderElement = gson.toJsonTree(value);
                 holderJson.add(holder.getJsonName(), holderElement);
             }
 

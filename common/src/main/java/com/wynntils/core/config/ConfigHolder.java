@@ -27,13 +27,21 @@ public class ConfigHolder {
     public ConfigHolder(Object parent, Field field, String category, Config metadata) {
         this.parent = parent;
         this.field = field;
-        this.fieldType = field.getType();
-
         this.category = category;
         this.metadata = metadata;
 
         // save default value to enable easy resetting
         this.defaultValue = getValue();
+
+        // This is done so the last subclass gets saved (so tryParseStringValue) works
+        // TODO: This is still not perfect. If the config field is an abstract class,
+        //       and is not instantiated by default, we cannot get it's actual class easily,
+        //       making tryParseStringValue fail.
+        if (this.defaultValue == null) {
+            this.fieldType = field.getType();
+        } else {
+            this.fieldType = this.defaultValue.getClass();
+        }
     }
 
     public Class<?> getType() {
@@ -116,6 +124,9 @@ public class ConfigHolder {
     public Object tryParseStringValue(String value) {
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            if (wrapped.isEnum()) {
+                return Enum.valueOf((Class<? extends Enum>) wrapped, value);
+            }
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }

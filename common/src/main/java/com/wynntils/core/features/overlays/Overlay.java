@@ -17,15 +17,17 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class Overlay implements Translatable, Configurable {
-    private List<ConfigHolder> configOptions = new ArrayList<>();
+    private final List<ConfigHolder> configOptions = new ArrayList<>();
 
-    @Config
+    @Config(key = "overlay.wynntils.overlay.position")
     protected OverlayPosition position;
 
-    @Config
+    @Config(key = "overlay.wynntils.overlay.size")
     protected OverlaySize size;
 
     @Config(key = "overlay.wynntils.overlay.userEnabled")
@@ -36,10 +38,10 @@ public abstract class Overlay implements Translatable, Configurable {
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @Config
+    @Config(key = "overlay.wynntils.overlay.horizontalAlignmentOverride")
     protected HorizontalAlignment horizontalAlignmentOverride = null;
 
-    @Config
+    @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected VerticalAlignment verticalAlignmentOverride = null;
 
     public Overlay(OverlayPosition position, float width, float height) {
@@ -69,11 +71,9 @@ public abstract class Overlay implements Translatable, Configurable {
     public final void updateConfigOption(ConfigHolder configHolder) {
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
-            if (isUserEnabled()) {
-                OverlayManager.enableOverlays(List.of(this), true);
-            } else {
-                OverlayManager.disableOverlays(List.of(this));
-            }
+            // This is done so all state checks run in order
+            OverlayManager.disableOverlays(List.of(this));
+            OverlayManager.enableOverlays(List.of(this), false);
             return;
         }
 
@@ -88,6 +88,18 @@ public abstract class Overlay implements Translatable, Configurable {
         configOptions.addAll(options);
     }
 
+    /** Returns all config options registered in this overlay that should be visible to the user */
+    public final List<ConfigHolder> getVisibleConfigOptions() {
+        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
+    }
+
+    /** Returns the config option matching the given name, if it exists */
+    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
+        return getVisibleConfigOptions().stream()
+                .filter(c -> c.getFieldName().equals(name))
+                .findFirst();
+    }
+
     /** Gets the name of a feature */
     @Override
     public String getTranslatedName() {
@@ -97,6 +109,10 @@ public abstract class Overlay implements Translatable, Configurable {
     @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("overlay.wynntils." + getNameCamelCase() + "." + keySuffix);
+    }
+
+    public String getShortName() {
+        return this.getClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {

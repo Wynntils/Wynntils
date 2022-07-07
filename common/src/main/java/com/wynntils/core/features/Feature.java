@@ -39,6 +39,8 @@ public abstract class Feature implements Translatable, Configurable {
 
     protected boolean enabled = false;
 
+    protected boolean initFinished = false;
+
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
 
@@ -47,6 +49,8 @@ public abstract class Feature implements Translatable, Configurable {
         this.conditions = conditions.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+
+        initFinished = true;
     }
 
     public final void initOverlays() {

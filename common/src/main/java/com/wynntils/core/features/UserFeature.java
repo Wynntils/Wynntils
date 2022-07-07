@@ -16,8 +16,12 @@ public abstract class UserFeature extends Feature {
 
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {
+
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
+            // If this was changed before init, do not try to toggle
+            if (!this.initFinished) return;
+
             tryUserToggle();
             return;
         }
