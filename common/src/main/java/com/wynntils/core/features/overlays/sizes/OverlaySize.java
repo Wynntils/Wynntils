@@ -16,4 +16,8 @@ public abstract class OverlaySize {
     public abstract float getWidth();
 
     public abstract float getHeight();
+
+    public abstract float getRenderedWidth();
+
+    public abstract float getRenderedHeight();
 }

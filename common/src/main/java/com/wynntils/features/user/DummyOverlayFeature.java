@@ -14,12 +14,16 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CustomColor;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@StartDisabled
 public class DummyOverlayFeature extends DebugFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay ComplexRedOverlay = new DummyRedComplexOverlay();
@@ -27,22 +31,14 @@ public class DummyOverlayFeature extends DebugFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay BasicBlueOverlay = new BasicOverlay(
             new OverlayPosition(
-                    15,
-                    15,
-                    OverlayPosition.VerticalAlignment.Top,
-                    OverlayPosition.HorizontalAlignment.Left,
-                    OverlayPosition.AnchorSection.TopLeft),
+                    15, 15, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
             new GuiScaledOverlaySize(75, 75),
             DummyOverlayFeature::renderBasicBlueBox);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.Crosshair, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay CrosshairReplacerOverlay = new BasicOverlay(
             new OverlayPosition(
-                    0,
-                    0,
-                    OverlayPosition.VerticalAlignment.Middle,
-                    OverlayPosition.HorizontalAlignment.Center,
-                    OverlayPosition.AnchorSection.Middle),
+                    0, 0, VerticalAlignment.Middle, HorizontalAlignment.Center, OverlayPosition.AnchorSection.Middle),
             new GuiScaledOverlaySize(2, 2),
             DummyOverlayFeature::renderBasicGreenBox);
 
@@ -52,8 +48,8 @@ public class DummyOverlayFeature extends DebugFeature {
                     new OverlayPosition(
                             -15,
                             -30,
-                            OverlayPosition.VerticalAlignment.Bottom,
-                            OverlayPosition.HorizontalAlignment.Right,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.Middle),
                     100,
                     100);
