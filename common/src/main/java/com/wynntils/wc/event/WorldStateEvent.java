@@ -4,13 +4,12 @@
  */
 package com.wynntils.wc.event;
 
-import com.wynntils.wc.model.WorldState;
 import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WorldStateEvent extends Event {
-    private final WorldState.State newState;
-    private final WorldState.State oldState;
+    private final State newState;
+    private final State oldState;
     private final String worldName;
 
     public WorldStateEvent(State newState, State oldState, String worldName) {
