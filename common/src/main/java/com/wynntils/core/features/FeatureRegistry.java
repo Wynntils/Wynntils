@@ -21,6 +21,7 @@ import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
+import com.wynntils.features.user.HudReplacementFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
@@ -151,6 +152,7 @@ public class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HudReplacementFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
