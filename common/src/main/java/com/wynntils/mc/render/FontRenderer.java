@@ -131,6 +131,8 @@ public class FontRenderer {
     }
 
     private float calculateRenderHeight(List<TextRenderTask> toRender) {
+        if (toRender.isEmpty()) return 0f;
+
         float height = 0;
         for (TextRenderTask textRenderTask : toRender) {
             if (textRenderTask.maxWidth() == 0) {
@@ -158,7 +160,7 @@ public class FontRenderer {
             }
         }
 
-        return (float) (height / 2 * McUtils.window().getGuiScale());
+        return (float) (height - NEWLINE_OFFSET / 2 * McUtils.window().getGuiScale());
     }
 
     public enum TextAlignment {
