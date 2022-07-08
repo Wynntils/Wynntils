@@ -81,7 +81,7 @@ public class FontRenderer {
         int line = 0;
         int partBegin = 0;
 
-        for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size() - 1; i--) {
+        for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size(); i--) {
             String shortened = String.join(" ", parts.subList(partBegin, i + 1));
             if (font.width(shortened) < maxWidth) {
                 renderText(poseStack, shortened, x, y + (line * NEWLINE_OFFSET), customColor, alignment, shadow);
