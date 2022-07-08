@@ -14,7 +14,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
-    private final Object parent;
+    private final Configurable parent;
     private final Field field;
     private final Class<?> fieldType;
 
@@ -24,7 +24,11 @@ public class ConfigHolder {
     private final Object defaultValue;
     private boolean userEdited = false;
 
-    public ConfigHolder(Object parent, Field field, String category, Config metadata) {
+    public ConfigHolder(Configurable parent, Field field, String category, Config metadata) {
+        if (!(parent instanceof Translatable)) {
+            throw new RuntimeException("Parent must implement Translatable interface.");
+        }
+
         this.parent = parent;
         this.field = field;
         this.category = category;
@@ -101,7 +105,7 @@ public class ConfigHolder {
     public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
-            ((Configurable) parent).updateConfigOption(this);
+            parent.updateConfigOption(this);
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {

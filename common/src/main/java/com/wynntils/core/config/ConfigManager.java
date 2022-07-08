@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -27,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ConfigManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
@@ -142,8 +142,7 @@ public class ConfigManager {
         }
     }
 
-    @NotNull
-    private static List<ConfigHolder> getConfigOptions(String category, Object parent) {
+    private static List<ConfigHolder> getConfigOptions(String category, Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field overlayConfigFields : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
