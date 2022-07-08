@@ -109,7 +109,8 @@ public abstract class Overlay implements Translatable, Configurable {
 
     @Override
     public String getTranslation(String keySuffix) {
-        return I18n.get("overlay.wynntils." + getNameCamelCase() + "." + keySuffix);
+        return I18n.get("feature.wynntils" + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase() + "."
+                + keySuffix);
     }
 
     public String getShortName() {
@@ -118,6 +119,11 @@ public abstract class Overlay implements Translatable, Configurable {
 
     protected String getNameCamelCase() {
         String name = this.getClass().getSimpleName().replace("Overlay", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    protected String getDeclaringFeatureNameCamelCase() {
+        String name = this.getClass().getDeclaringClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 

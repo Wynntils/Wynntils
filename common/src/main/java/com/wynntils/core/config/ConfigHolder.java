@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.config;
 
+import com.google.common.base.CaseFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
@@ -62,12 +63,21 @@ public class ConfigHolder {
 
     public String getJsonName() {
         if (parent instanceof Overlay) {
-            // "FeatureName.OverlayName.settingName"
-            return parent.getClass().getDeclaringClass().getSimpleName() + "."
-                    + parent.getClass().getSimpleName() + "." + field.getName();
+            // "featureName.overlayName.settingName"
+            return getDeclaringFeatureNameCamelCase() + "." + getNameCamelCase() + "." + field.getName();
         }
-        // "FeatureName.settingName"
-        return parent.getClass().getSimpleName() + "." + field.getName();
+        // "featureName.settingName"
+        return getNameCamelCase() + "." + field.getName();
+    }
+
+    protected String getNameCamelCase() {
+        String name = parent.getClass().getSimpleName().replace("Overlay", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    protected String getDeclaringFeatureNameCamelCase() {
+        String name = parent.getClass().getDeclaringClass().getSimpleName().replace("Feature", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public String getCategory() {
