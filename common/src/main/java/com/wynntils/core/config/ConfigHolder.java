@@ -71,12 +71,12 @@ public class ConfigHolder {
     }
 
     protected String getNameCamelCase() {
-        String name = parent.getClass().getSimpleName().replace("Overlay", "");
+        String name = parent.getClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     protected String getDeclaringFeatureNameCamelCase() {
-        String name = parent.getClass().getDeclaringClass().getSimpleName().replace("Feature", "");
+        String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
