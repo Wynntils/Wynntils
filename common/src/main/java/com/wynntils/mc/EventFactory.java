@@ -160,8 +160,8 @@ public class EventFactory {
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
             post(new TitleScreenInitEvent(titleScreen, addButton));
-        } else if (screen instanceof PauseScreen gameMenuScreen) {
-            post(new PauseMenuInitEvent(gameMenuScreen, addButton));
+        } else if (screen instanceof PauseScreen pauseMenuScreen) {
+            post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
         }
     }
 
