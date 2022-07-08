@@ -81,7 +81,10 @@ public class FontRenderer {
         int line = 0;
         int partBegin = 0;
 
-        for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size() - 1; i--) {
+        // Loop backwards to find the biggest text part we can fit in maxWidth
+        // if found, render it and reset the loop to try to do the same with
+        // the remaining parts
+        for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size(); i--) {
             String shortened = String.join(" ", parts.subList(partBegin, i + 1));
             if (font.width(shortened) < maxWidth) {
                 renderText(poseStack, shortened, x, y + (line * NEWLINE_OFFSET), customColor, alignment, shadow);
@@ -136,6 +139,8 @@ public class FontRenderer {
     }
 
     private float calculateRenderHeight(List<TextRenderTask> toRender) {
+        if (toRender.isEmpty()) return 0f;
+
         float height = 0;
         for (TextRenderTask textRenderTask : toRender) {
             if (textRenderTask.getSetting().maxWidth() == 0) {
@@ -147,7 +152,10 @@ public class FontRenderer {
                 int lines = 0;
                 int partBegin = 0;
 
-                for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size() - 1; i--) {
+                // Loop backwards to find the biggest text part we can fit in maxWidth
+                // if found, render it and reset the loop to try to do the same with
+                // the remaining parts
+                for (int i = parts.size() - 1; i >= 0 && partBegin <= parts.size(); i--) {
                     String shortened = String.join(" ", parts.subList(partBegin, i + 1));
                     if (font.width(shortened) < textRenderTask.getSetting().maxWidth()) {
                         lines++;
@@ -160,7 +168,7 @@ public class FontRenderer {
             }
         }
 
-        return (float) (height / 2 * McUtils.window().getGuiScale());
+        return (float) (height - NEWLINE_OFFSET / 2 * McUtils.window().getGuiScale());
     }
 
     public enum TextAlignment {
