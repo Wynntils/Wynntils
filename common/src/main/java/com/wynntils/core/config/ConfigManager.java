@@ -138,7 +138,7 @@ public class ConfigManager {
         for (Overlay overlay : feature.getOverlays()) {
             List<ConfigHolder> options = getConfigOptions(category, overlay);
 
-            registerConfigOptions(feature, options);
+            registerConfigOptions(overlay, options);
         }
     }
 
