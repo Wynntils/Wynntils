@@ -155,7 +155,7 @@ public class FontRenderer {
                 // Loop backwards to find the biggest text part we can fit in maxWidth
                 // if found, render it and reset the loop to try to do the same with
                 // the remaining parts
-                for (int i = parts.size() - 1; i >= 0 && partBegin <= parts.size(); i--) {
+                for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size(); i--) {
                     String shortened = String.join(" ", parts.subList(partBegin, i + 1));
                     if (font.width(shortened) < textRenderTask.getSetting().maxWidth()) {
                         lines++;
