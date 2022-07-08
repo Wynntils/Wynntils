@@ -18,7 +18,6 @@ import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
-import com.wynntils.mc.event.GameMenuInitEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryRenderEvent;
@@ -29,6 +28,7 @@ import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
+import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
@@ -161,7 +161,7 @@ public class EventFactory {
         if (screen instanceof TitleScreen titleScreen) {
             post(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen gameMenuScreen) {
-            post(new GameMenuInitEvent(gameMenuScreen, addButton));
+            post(new PauseMenuInitEvent(gameMenuScreen, addButton));
         }
     }
 

@@ -122,5 +122,8 @@
   "feature.wynntils.tooltipScale.universalScale.name": "Universal Scale",
   "feature.wynntils.userFeature.userEnabled.description": "Should this feature be enabled?",
   "feature.wynntils.userFeature.userEnabled.name": "Enabled",
-  "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature"
+  "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
+  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
+  "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Back to Hub",
+  "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu"
 }
