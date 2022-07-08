@@ -190,6 +190,7 @@ public abstract class Feature implements Translatable, Configurable {
     }
 
     /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
+    @Override
     public final void addConfigOptions(List<ConfigHolder> options) {
         configOptions.addAll(options);
     }

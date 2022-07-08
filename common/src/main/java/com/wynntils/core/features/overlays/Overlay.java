@@ -84,6 +84,7 @@ public abstract class Overlay implements Translatable, Configurable {
     protected abstract void onConfigUpdate(ConfigHolder configHolder);
 
     /** Registers the overlay's config options. Called by ConfigManager when overlay is loaded */
+    @Override
     public final void addConfigOptions(List<ConfigHolder> options) {
         configOptions.addAll(options);
     }

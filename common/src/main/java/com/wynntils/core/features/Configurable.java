@@ -5,7 +5,10 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.config.ConfigHolder;
+import java.util.List;
 
 public interface Configurable {
     void updateConfigOption(ConfigHolder configHolder);
+
+    void addConfigOptions(List<ConfigHolder> options);
 }

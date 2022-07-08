@@ -41,7 +41,11 @@ public class ConfigManager {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
         if (featureConfigOptions == null) return; // invalid feature
 
-        feature.addConfigOptions(featureConfigOptions);
+        registerConfigOptions(feature, featureConfigOptions);
+    }
+
+    private static void registerConfigOptions(Configurable configurable, List<ConfigHolder> featureConfigOptions) {
+        configurable.addConfigOptions(featureConfigOptions);
         loadConfigOptions(featureConfigOptions);
         CONFIG_HOLDERS.addAll(featureConfigOptions);
     }
@@ -124,21 +128,17 @@ public class ConfigManager {
 
         String category = featureInfo.category();
 
-        loadFeatureOverlayConfigOptions(feature, category);
+        loadFeatureOverlayConfigOptions(category, feature);
 
         return getConfigOptions(category, feature);
     }
 
-    private static void loadFeatureOverlayConfigOptions(Feature feature, String category) {
+    private static void loadFeatureOverlayConfigOptions(String category, Feature feature) {
         // collect feature's overlays' config options
         for (Overlay overlay : feature.getOverlays()) {
             List<ConfigHolder> options = getConfigOptions(category, overlay);
 
-            CONFIG_HOLDERS.addAll(options);
-
-            overlay.addConfigOptions(options);
-
-            loadConfigOptions(options);
+            registerConfigOptions(feature, options);
         }
     }
 
