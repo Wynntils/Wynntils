@@ -9,12 +9,12 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraftforge.eventbus.api.Event;
 
-/** Fired on initalization of {@link PauseScreen} */
-public class GameMenuInitEvent extends Event {
+/** Fired on initialization of {@link PauseScreen} */
+public class PauseMenuInitEvent extends Event {
     private final PauseScreen pauseScreen;
     private final Consumer<AbstractWidget> addButton;
 
-    public GameMenuInitEvent(PauseScreen pauseScreen, Consumer<AbstractWidget> addButton) {
+    public PauseMenuInitEvent(PauseScreen pauseScreen, Consumer<AbstractWidget> addButton) {
         this.pauseScreen = pauseScreen;
         this.addButton = addButton;
     }
