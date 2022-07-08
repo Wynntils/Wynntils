@@ -37,11 +37,13 @@ public abstract class GuiMixin {
         EventFactory.onHotbarSlotRenderPost(stack, x, y);
     }
 
+    // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At(value = "HEAD"))
     public void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPre(poseStack, partialTick, this.minecraft.getWindow());
     }
 
+    // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At(value = "RETURN"))
     public void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
