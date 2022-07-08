@@ -46,7 +46,16 @@ public enum ClassType {
         return false;
     }
 
-    public String getDisplayName() {
+    public String getName() {
+        return name;
+    }
+
+    public String getReskinnedName() {
+        return reskinnedName;
+    }
+
+    @Override
+    public String toString() {
         return name + "/" + reskinnedName;
     }
 }
