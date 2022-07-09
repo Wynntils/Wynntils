@@ -6,9 +6,11 @@ package com.wynntils.mc.event;
 
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on click in a container */
+@Cancelable
 public class ContainerClickEvent extends Event {
     private final int containerId;
     private final int slotNum;

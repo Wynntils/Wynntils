@@ -17,6 +17,7 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.overlays.Overlay;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -285,7 +286,7 @@ public abstract class WynntilsConfigCommand {
 
         Object oldValue = config.getValue();
 
-        if (oldValue.equals(parsedValue)) {
+        if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
                     .sendFailure(new TextComponent("The new value is the same as the current setting.")
                             .withStyle(ChatFormatting.RED));
@@ -308,7 +309,7 @@ public abstract class WynntilsConfigCommand {
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(oldValue.toString())
+                                .append(new TextComponent(oldValue == null ? "null" : oldValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
                                 .append(new TextComponent(" to ").withStyle(ChatFormatting.GREEN))
@@ -409,7 +410,7 @@ public abstract class WynntilsConfigCommand {
 
         Object oldValue = config.getValue();
 
-        if (oldValue.equals(parsedValue)) {
+        if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
                     .sendFailure(new TextComponent("The new value is the same as the current setting.")
                             .withStyle(ChatFormatting.RED));
@@ -432,7 +433,7 @@ public abstract class WynntilsConfigCommand {
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(oldValue.toString())
+                                .append(new TextComponent(oldValue == null ? "null" : oldValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
                                 .append(new TextComponent(" to ").withStyle(ChatFormatting.GREEN))
@@ -558,7 +559,7 @@ public abstract class WynntilsConfigCommand {
         Object value = config.getValue();
 
         String configNameString = config.getDisplayName();
-        String configTypeString = " (" + config.getType().getSimpleName() + ")";
+        String configTypeString = " (" + ((Class<?>) config.getType()).getSimpleName() + ")";
         String valueString = value == null ? "Value is null." : value.toString();
 
         return new TextComponent("\n - ")
@@ -588,7 +589,7 @@ public abstract class WynntilsConfigCommand {
         Object value = config.getValue();
 
         String valueString = value == null ? "Value is null." : value.toString();
-        String configTypeString = "(" + config.getType().getSimpleName() + ")";
+        String configTypeString = "(" + ((Class<?>) config.getType()).getSimpleName() + ")";
 
         MutableComponent response = new TextComponent("");
         response.append(new TextComponent("Config option: ")

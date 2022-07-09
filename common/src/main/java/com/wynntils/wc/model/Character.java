@@ -12,13 +12,20 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.Model;
 import com.wynntils.wc.event.WorldStateEvent;
+import com.wynntils.wc.objects.ClassType;
 import java.util.List;
-import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class Character implements Model {
+
+    private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
+    private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
+
     private CharacterInfo currentCharacter;
     private boolean inCharacterSelection;
 
@@ -60,18 +67,25 @@ public class Character implements Model {
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
-            currentCharacter = CharacterInfo.parseCharacter(e.getItemStack());
+            if (e.getItemStack().getItem() == Items.AIR) return;
+            currentCharacter = CharacterInfo.parseCharacter(e.getItemStack(), e.getSlotNum());
             WynntilsMod.info("Selected character " + currentCharacter);
         }
     }
 
+    // TODO: We don't have a way to parse CharacterInfo if auto select class is on for the player
+    //       Fix this by storing last selected class in WebAPI.
     public static class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;
-        private final UUID id;
 
-        private CharacterInfo(ClassType classType, boolean reskinned, int level, UUID id) {
+        // This field is basically the slot id of the class,
+        // meaning that if a class changes slots, the ID will not be persistent.
+        // This was implemented the same way by legacy.
+        private final int id;
+
+        private CharacterInfo(ClassType classType, boolean reskinned, int level, int id) {
             this.classType = classType;
             this.reskinned = reskinned;
             this.level = level;
@@ -90,17 +104,32 @@ public class Character implements Model {
             return level;
         }
 
-        public UUID getId() {
+        public int getId() {
             return id;
         }
 
-        public static CharacterInfo parseCharacter(ItemStack itemStack) {
+        public static CharacterInfo parseCharacter(ItemStack itemStack, int slotNum) {
             List<String> lore = ItemUtils.getLore(itemStack);
-            for (String s : lore) {
-                // Reference.LOGGER.info("Lore: " + s);
+
+            int level = 0;
+            ClassType classType = null;
+
+            for (String line : lore) {
+                Matcher matcher = LEVEL_PATTERN.matcher(line);
+                if (matcher.matches()) {
+                    level = Integer.parseInt(matcher.group(1));
+                    continue;
+                }
+
+                matcher = CLASS_PATTERN.matcher(line);
+
+                if (matcher.matches()) {
+                    classType = ClassType.fromName(matcher.group(1));
+                }
             }
 
-            return new CharacterInfo(null, false, 0, UUID.randomUUID());
+            return new CharacterInfo(
+                    classType, classType != null && ClassType.isReskinned(classType.getName()), level, slotNum);
         }
 
         @Override
@@ -108,13 +137,5 @@ public class Character implements Model {
             return "CharacterInfo[classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + ", id="
                     + id + ']';
         }
-    }
-
-    public enum ClassType {
-        ARCHER,
-        WARRIOR,
-        MAGE,
-        ASSASSIN,
-        SHAMAN
     }
 }

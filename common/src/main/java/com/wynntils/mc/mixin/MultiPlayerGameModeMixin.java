@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
-    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
+    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
 
@@ -33,7 +33,10 @@ public abstract class MultiPlayerGameModeMixin {
             itemStack = ItemStack.EMPTY;
         }
 
-        EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId);
+        if (EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId)
+                .isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"))

@@ -97,7 +97,7 @@ public class ItemProfile {
             parsedRequirements.put(type, reqStr);
         }
         if (getClassNeeded() != null) {
-            parsedRequirements.put(RequirementType.CLASS, getClassNeeded().getDisplayName());
+            parsedRequirements.put(RequirementType.CLASS, getClassNeeded().toString());
         }
     }
 

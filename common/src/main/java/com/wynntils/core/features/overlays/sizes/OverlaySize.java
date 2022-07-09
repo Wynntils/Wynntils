@@ -13,6 +13,9 @@ public abstract class OverlaySize {
     protected float width;
     protected float height;
 
+    // For GSON
+    public OverlaySize() {}
+
     public OverlaySize(float width, float height) {
         this.width = width;
         this.height = height;

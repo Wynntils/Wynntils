@@ -5,6 +5,12 @@
 package com.wynntils.core.features.overlays.sizes;
 
 public class RestrictedRangeOverlaySize extends FixedOverlaySize {
+    public RestrictedRangeOverlaySize() {
+        super();
+        this.maxWidth = -1;
+        this.maxHeight = -1;
+    }
+
     private final float maxWidth;
     private final float maxHeight;
 

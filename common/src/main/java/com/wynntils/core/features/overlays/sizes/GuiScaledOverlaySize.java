@@ -8,6 +8,10 @@ import com.wynntils.mc.utils.McUtils;
 
 // Since we use guiScaledWidth/guiScaledHeight for Overlays, we do not need to factor in GUI scale here.
 public class GuiScaledOverlaySize extends OverlaySize {
+    public GuiScaledOverlaySize() {
+        super();
+    }
+
     public GuiScaledOverlaySize(float width, float height) {
         super(width, height);
     }

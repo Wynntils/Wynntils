@@ -10,22 +10,26 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
     private final Configurable parent;
     private final Field field;
-    private final Class<?> fieldType;
+    private final Type fieldType;
 
     private final String category;
     private final Config metadata;
 
     private final Object defaultValue;
+
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, String category, Config metadata) {
+    public ConfigHolder(Configurable parent, Field field, String category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -35,21 +39,30 @@ public class ConfigHolder {
         this.category = category;
         this.metadata = metadata;
 
-        // save default value to enable easy resetting
-        this.defaultValue = getValue();
+        Type fieldTypeTemp;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
-        if (this.defaultValue == null) {
-            this.fieldType = field.getType();
-        } else {
-            this.fieldType = this.defaultValue.getClass();
+        //       Use TypeOverride to fix this
+        Object valueTemp = this.getValue();
+        fieldTypeTemp =
+                typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
+
+        // save default value to enable easy resetting
+        // We have to deep copy the value, so it is guaranteed that we detect changes
+        this.defaultValue =
+                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
+
+        if (this.defaultValue != null) {
+            fieldTypeTemp = defaultValue.getClass();
         }
+
+        this.fieldType = fieldTypeTemp;
     }
 
-    public Class<?> getType() {
+    public Type getType() {
         return fieldType;
     }
 
@@ -125,8 +138,21 @@ public class ConfigHolder {
         }
     }
 
-    public boolean isUserEdited() {
-        return userEdited;
+    public boolean valueChanged() {
+        if (this.userEdited) {
+            return true;
+        }
+
+        if (Objects.deepEquals(getValue(), defaultValue)) {
+            return false;
+        }
+
+        try {
+            return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+        } catch (Exception ignored) {
+        }
+
+        return false;
     }
 
     public void reset() {
@@ -137,7 +163,7 @@ public class ConfigHolder {
 
     public Object tryParseStringValue(String value) {
         try {
-            Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
             if (wrapped.isEnum()) {
                 return Enum.valueOf((Class<? extends Enum>) wrapped, value);
             }

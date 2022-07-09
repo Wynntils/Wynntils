@@ -17,10 +17,11 @@ import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
+import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
-import com.wynntils.mc.event.InventoryRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -125,9 +126,9 @@ public class EventFactory {
         return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.Crosshair));
     }
 
-    public static void onInventoryRender(
+    public static void onContainerRender(
             Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
-        post(new InventoryRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
+        post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
     public static ItemTooltipRenderEvent onItemTooltipRenderPre(
@@ -200,9 +201,9 @@ public class EventFactory {
         return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
     }
 
-    public static void onContainerClickEvent(
+    public static ContainerClickEvent onContainerClickEvent(
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
+        return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
     // endregion
 
@@ -221,6 +222,10 @@ public class EventFactory {
     public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
         PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
         post(event);
+    }
+
+    public static DropHeldItemEvent onDropPre(boolean fullStack) {
+        return post(new DropHeldItemEvent(fullStack));
     }
     // endregion
 
