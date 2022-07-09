@@ -12,6 +12,10 @@ public class GuiScaledOverlaySize extends OverlaySize {
         super(width, height);
     }
 
+    public GuiScaledOverlaySize(String string) {
+        super(string);
+    }
+
     @Override
     public float getWidth() {
         return this.width;

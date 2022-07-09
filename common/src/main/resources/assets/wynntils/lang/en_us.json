@@ -125,5 +125,17 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",
   "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Back to Hub",
-  "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu"
+  "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
+  "overlay.wynntils.overlay.horizontalAlignmentOverride.description": "Set this if you want to override the position horizontal alignment",
+  "overlay.wynntils.overlay.horizontalAlignmentOverride.name": "Horizontal Alignment Override",
+  "overlay.wynntils.overlay.position.description": "The position the overlay is displayed at",
+  "overlay.wynntils.overlay.position.name": "Overlay Position",
+  "overlay.wynntils.overlay.size.description": "The size of the overlay",
+  "overlay.wynntils.overlay.size.name": "Overlay Size",
+  "overlay.wynntils.overlay.userEnabled.description": "Should this feature be enabled?",
+  "overlay.wynntils.overlay.userEnabled.name": "Enabled",
+  "overlay.wynntils.overlay.verticalAlignmentOverride.description": "Set this if you want to override the position vertical alignment",
+  "overlay.wynntils.overlay.verticalAlignmentOverride.name": "Vertical Alignment Override",
+  "overlay.wynntils.questInfo.description": "Display the currently tracked quest's info",
+  "overlay.wynntils.questInfo.name": "Quest Info Tracker Overlay"
 }

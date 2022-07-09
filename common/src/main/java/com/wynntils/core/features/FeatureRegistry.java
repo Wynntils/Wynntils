@@ -17,7 +17,6 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
-import com.wynntils.features.user.DummyOverlayFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -91,6 +90,9 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
+        // init overlays before ConfigManager
+        feature.initOverlays();
+
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
         ConfigManager.registerFeature(feature);
@@ -125,7 +127,6 @@ public class FeatureRegistry {
         // debug
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
-        registerFeature(new DummyOverlayFeature());
 
         // internal
         registerFeature(new LootrunFeature());

@@ -4,15 +4,18 @@
  */
 package com.wynntils.core.config;
 
+import com.google.common.base.CaseFormat;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.Translatable;
+import com.wynntils.core.features.overlays.Overlay;
 import java.lang.reflect.Field;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
-    private final Feature parent;
+    private final Configurable parent;
     private final Field field;
     private final Class<?> fieldType;
 
@@ -22,16 +25,28 @@ public class ConfigHolder {
     private final Object defaultValue;
     private boolean userEdited = false;
 
-    public ConfigHolder(Feature parent, Field field, String category, Config metadata) {
+    public ConfigHolder(Configurable parent, Field field, String category, Config metadata) {
+        if (!(parent instanceof Translatable)) {
+            throw new RuntimeException("Parent must implement Translatable interface.");
+        }
+
         this.parent = parent;
         this.field = field;
-        this.fieldType = field.getType();
-
         this.category = category;
         this.metadata = metadata;
 
         // save default value to enable easy resetting
         this.defaultValue = getValue();
+
+        // This is done so the last subclass gets saved (so tryParseStringValue) works
+        // TODO: This is still not perfect. If the config field is an abstract class,
+        //       and is not instantiated by default, we cannot get it's actual class easily,
+        //       making tryParseStringValue fail.
+        if (this.defaultValue == null) {
+            this.fieldType = field.getType();
+        } else {
+            this.fieldType = this.defaultValue.getClass();
+        }
     }
 
     public Class<?> getType() {
@@ -47,7 +62,22 @@ public class ConfigHolder {
     }
 
     public String getJsonName() {
-        return parent.getClass().getSimpleName() + "." + field.getName();
+        if (parent instanceof Overlay) {
+            // "featureName.overlayName.settingName"
+            return getDeclaringFeatureNameCamelCase() + "." + getNameCamelCase() + "." + field.getName();
+        }
+        // "featureName.settingName"
+        return getNameCamelCase() + "." + field.getName();
+    }
+
+    protected String getNameCamelCase() {
+        String name = parent.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    protected String getDeclaringFeatureNameCamelCase() {
+        String name = parent.getClass().getDeclaringClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public String getCategory() {
@@ -62,14 +92,14 @@ public class ConfigHolder {
         if (!getMetadata().key().isEmpty()) {
             return I18n.get(getMetadata().key() + ".name");
         }
-        return parent.getTranslation(field.getName() + ".name");
+        return ((Translatable) parent).getTranslation(field.getName() + ".name");
     }
 
     public String getDescription() {
         if (!getMetadata().key().isEmpty()) {
             return I18n.get(getMetadata().key() + ".description");
         }
-        return parent.getTranslation(field.getName() + ".description");
+        return ((Translatable) parent).getTranslation(field.getName() + ".description");
     }
 
     public Object getValue() {
@@ -108,6 +138,9 @@ public class ConfigHolder {
     public Object tryParseStringValue(String value) {
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            if (wrapped.isEnum()) {
+                return Enum.valueOf((Class<? extends Enum>) wrapped, value);
+            }
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }

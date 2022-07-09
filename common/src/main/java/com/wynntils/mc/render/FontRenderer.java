@@ -96,7 +96,15 @@ public class FontRenderer {
     }
 
     private void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
-        renderText(poseStack, line.text(), x, y, line.maxWidth(), line.customColor(), line.alignment(), line.shadow());
+        renderText(
+                poseStack,
+                line.getText(),
+                x,
+                y,
+                line.getSetting().maxWidth(),
+                line.getSetting().customColor(),
+                line.getSetting().alignment(),
+                line.getSetting().shadow());
     }
 
     public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
@@ -135,11 +143,11 @@ public class FontRenderer {
 
         float height = 0;
         for (TextRenderTask textRenderTask : toRender) {
-            if (textRenderTask.maxWidth() == 0) {
+            if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight + NEWLINE_OFFSET;
             } else {
                 List<String> parts =
-                        Arrays.stream(textRenderTask.text().split(" ")).toList();
+                        Arrays.stream(textRenderTask.getText().split(" ")).toList();
 
                 int lines = 0;
                 int partBegin = 0;
@@ -147,9 +155,9 @@ public class FontRenderer {
                 // Loop backwards to find the biggest text part we can fit in maxWidth
                 // if found, render it and reset the loop to try to do the same with
                 // the remaining parts
-                for (int i = parts.size() - 1; i >= 0 && partBegin <= parts.size(); i--) {
+                for (int i = parts.size() - 1; i >= 0 && partBegin < parts.size(); i--) {
                     String shortened = String.join(" ", parts.subList(partBegin, i + 1));
-                    if (font.width(shortened) < textRenderTask.maxWidth()) {
+                    if (font.width(shortened) < textRenderTask.getSetting().maxWidth()) {
                         lines++;
                         partBegin = i + 1;
                         i = parts.size();

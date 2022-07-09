@@ -39,7 +39,13 @@ public class OverlayManager {
             enabledOverlays.addAll(overlays);
         } else {
             enabledOverlays.addAll(overlays.stream()
-                    .filter(overlay -> overlayInfoMap.get(overlay).enabled())
+                    .filter(overlay -> {
+                        if (overlay.isUserEnabled() != null) {
+                            return overlay.isUserEnabled();
+                        }
+
+                        return overlayInfoMap.get(overlay).enabled();
+                    })
                     .toList());
         }
     }
