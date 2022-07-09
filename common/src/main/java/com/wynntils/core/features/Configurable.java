@@ -17,5 +17,4 @@ public interface Configurable {
     default Map<String, Type> getTypeOverrides() {
         return Map.of();
     }
-    ;
 }
