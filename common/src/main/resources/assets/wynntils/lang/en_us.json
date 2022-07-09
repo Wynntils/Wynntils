@@ -54,6 +54,8 @@
   "feature.wynntils.itemHighlight.uniqueHighlightColor.name": "Unique Highlight Color",
   "feature.wynntils.itemHighlight.uniqueHighlightEnabled.description": "",
   "feature.wynntils.itemHighlight.uniqueHighlightEnabled.name": "Unique Item Highlight",
+  "feature.wynntils.itemLock.blockAllActionsOnLockedItems.description": "Should any click types be blocked on locked items?",
+  "feature.wynntils.itemLock.blockAllActionsOnLockedItems.name": "Block All Actions on Locked Items",
   "feature.wynntils.itemLock.name": "Item Lock Feature",
   "feature.wynntils.itemScreenshot.chatItemMessage": "Click here to copy the item for chat!",
   "feature.wynntils.itemScreenshot.chatItemTooltip": "Paste this text in chat to display your item to other Wynntils users",

@@ -50,6 +50,9 @@ public class ItemLockFeature extends UserFeature {
     @TypeOverride
     private static final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
 
+    @Config
+    public static boolean blockAllActionsOnLockedItems = false;
+
     @SubscribeEvent
     public void onKeyPress(InventoryKeyPressEvent e) {
         if (lockSlotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
@@ -82,7 +85,7 @@ public class ItemLockFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(ContainerClickEvent event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
-        if (event.getClickType() != ClickType.THROW) return;
+        if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
         Character character = WynnUtils.getCharacter();
         if (character == null || character.getCharacterInfo() == null) return;
