@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -21,6 +22,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.utils.WynnUtils;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -74,13 +76,11 @@ public class ItemLockFeature extends UserFeature {
         ConfigManager.saveConfig();
     }
 
-    @Config(visible = false, internal = true)
+    @Config(visible = false)
     private static Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
 
-    @Override
-    public void preInit() {
-        addConfigTypeOverride("classSlotLockMap", new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType());
-    }
+    @TypeOverride
+    private static final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

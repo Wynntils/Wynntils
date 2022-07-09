@@ -9,15 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/** Mark a type with this to set a specific type for a ConfigHolder */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Config {
-    /** The base part of the translation key to use for this option */
-    String key() default "";
-
-    /** The subcategory this option belongs in within its container */
-    String subcategory() default "";
-
-    /** Whether this option should be visible to users */
-    boolean visible() default true;
-}
+public @interface TypeOverride {}

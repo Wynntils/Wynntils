@@ -24,9 +24,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigManager {
@@ -109,7 +112,7 @@ public class ConfigManager {
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
             for (ConfigHolder holder : CONFIG_HOLDERS) {
-                if (!holder.isUserEdited()) continue; // only save options that have been set by the user
+                if (!holder.valueChanged()) continue; // only save options that have been set by the user
 
                 Object value = holder.getValue();
 
@@ -154,7 +157,24 @@ public class ConfigManager {
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
-            options.add(new ConfigHolder(parent, configField, category, metadata));
+
+            Optional<Field> typeField = Arrays.stream(
+                            FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
+                    .filter(field ->
+                            field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
+                    .findFirst();
+
+            if (typeField.isPresent()) {
+                try {
+                    Type type = (Type) FieldUtils.readField(typeField.get(), parent, true);
+                    options.add(new ConfigHolder(parent, configField, category, metadata, type));
+                } catch (IllegalAccessException e) {
+                    WynntilsMod.error("Unable to get field " + typeField.get().getName());
+                    e.printStackTrace();
+                }
+            } else {
+                options.add(new ConfigHolder(parent, configField, category, metadata, null));
+            }
         }
         return options;
     }

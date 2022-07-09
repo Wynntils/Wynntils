@@ -8,6 +8,10 @@ import com.wynntils.mc.utils.McUtils;
 
 // We need to divide by the GUI scale to get the fixed size, since we use guiScaledWidth/guiScaledHeight for Overlays.
 public class FixedOverlaySize extends OverlaySize {
+    public FixedOverlaySize() {
+        super();
+    }
+
     public FixedOverlaySize(float width, float height) {
         super(width, height);
     }

@@ -4,14 +4,19 @@
  */
 package com.wynntils.core.features.overlays.sizes;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class OverlaySize {
+public abstract class OverlaySize implements Serializable {
     protected static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
 
     protected float width;
     protected float height;
+
+    // For GSON
+    public OverlaySize() {}
 
     public OverlaySize(float width, float height) {
         this.width = width;
@@ -44,5 +49,18 @@ public abstract class OverlaySize {
     @Override
     public String toString() {
         return "OverlaySize{" + "width=" + width + ", height=" + height + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OverlaySize that = (OverlaySize) o;
+        return Float.compare(that.width, width) == 0 && Float.compare(that.height, height) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height);
     }
 }

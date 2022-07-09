@@ -9,8 +9,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.utils.ObjectUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -24,9 +26,12 @@ public class ConfigHolder {
     private final Config metadata;
 
     private final Object defaultValue;
+
+    private final Type typeOverride;
+
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, String category, Config metadata) {
+    public ConfigHolder(Configurable parent, Field field, String category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -35,9 +40,11 @@ public class ConfigHolder {
         this.field = field;
         this.category = category;
         this.metadata = metadata;
+        this.typeOverride = typeOverride;
 
         // save default value to enable easy resetting
-        this.defaultValue = getValue();
+        // We have to deep copy the value, so it is guaranteed that we detect changes
+        this.defaultValue = ObjectUtils.copy(getValue());
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
@@ -64,7 +71,7 @@ public class ConfigHolder {
     }
 
     public Type getTypeOverride() {
-        return parent.getTypeOverrides().getOrDefault(getFieldName(), null);
+        return typeOverride;
     }
 
     public String getJsonName() {
@@ -131,11 +138,8 @@ public class ConfigHolder {
         }
     }
 
-    public boolean isUserEdited() {
-        if (this.metadata.internal()) {
-            return true;
-        }
-        return userEdited;
+    public boolean valueChanged() {
+        return userEdited || !Objects.deepEquals(getValue(), defaultValue);
     }
 
     public void reset() {

@@ -91,8 +91,6 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
-        feature.preInit();
-
         // init overlays before ConfigManager
         feature.initOverlays();
 

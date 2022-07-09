@@ -6,10 +6,12 @@ package com.wynntils.core.features.overlays;
 
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OverlayPosition {
+public class OverlayPosition implements Serializable {
 
     protected static final Pattern POSITION_PATTERN = Pattern.compile(
             "OverlayPosition\\{verticalOffset=(.+),horizontalOffset=(.+),verticalAlignment=(.+),horizontalAlignment=(.+),anchorSection=(.+)}");
@@ -81,6 +83,23 @@ public class OverlayPosition {
                 + verticalAlignment + ", horizontalAlignment="
                 + horizontalAlignment + ", anchorSection="
                 + anchorSection + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OverlayPosition that = (OverlayPosition) o;
+        return verticalOffset == that.verticalOffset
+                && horizontalOffset == that.horizontalOffset
+                && verticalAlignment == that.verticalAlignment
+                && horizontalAlignment == that.horizontalAlignment
+                && anchorSection == that.anchorSection;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(verticalOffset, horizontalOffset, verticalAlignment, horizontalAlignment, anchorSection);
     }
 
     public enum AnchorSection {
