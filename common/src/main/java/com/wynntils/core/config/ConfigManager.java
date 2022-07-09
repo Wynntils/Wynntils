@@ -131,7 +131,7 @@ public class ConfigManager {
         FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
 
         String category = "";
-        // feature has no category defined, can't create options
+        // feature has no category defined, default to empty category
         if (featureInfo != null) {
             category = featureInfo.category();
         }
