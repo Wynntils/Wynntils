@@ -224,7 +224,7 @@ public class EventFactory {
         post(event);
     }
 
-    public static Event onDropPre(boolean fullStack) {
+    public static DropHeldItemEvent onDropPre(boolean fullStack) {
         return post(new DropHeldItemEvent(fullStack));
     }
     // endregion
