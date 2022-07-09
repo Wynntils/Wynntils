@@ -50,7 +50,7 @@ public class ConfigHolder {
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
-        //       Use Feature.typeOverrides to fix this
+        //       Use TypeOverride to fix this
         if (this.defaultValue == null) {
             this.fieldType = field.getType();
         } else {
