@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
@@ -139,7 +140,20 @@ public class ConfigHolder {
     }
 
     public boolean valueChanged() {
-        return userEdited || !Objects.deepEquals(getValue(), defaultValue);
+        if (this.userEdited) {
+            return true;
+        }
+
+        if (Objects.deepEquals(getValue(), defaultValue)) {
+            return false;
+        }
+
+        try {
+            return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+        } catch (Exception ignored) {
+        }
+
+        return false;
     }
 
     public void reset() {

@@ -5,7 +5,6 @@
 package com.wynntils.core.features.overlays.sizes;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,18 +48,5 @@ public abstract class OverlaySize implements Serializable {
     @Override
     public String toString() {
         return "OverlaySize{" + "width=" + width + ", height=" + height + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OverlaySize that = (OverlaySize) o;
-        return Float.compare(that.width, width) == 0 && Float.compare(that.height, height) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(width, height);
     }
 }

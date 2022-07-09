@@ -57,6 +57,7 @@ public class ConfigManager {
         gson = new GsonBuilder()
                 .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
                 .setPrettyPrinting()
+                .serializeNulls()
                 .create();
 
         loadConfigFile();
@@ -113,7 +114,6 @@ public class ConfigManager {
             JsonObject holderJson = new JsonObject();
             for (ConfigHolder holder : CONFIG_HOLDERS) {
                 if (!holder.valueChanged()) continue; // only save options that have been set by the user
-
                 Object value = holder.getValue();
 
                 JsonElement holderElement = gson.toJsonTree(value);
