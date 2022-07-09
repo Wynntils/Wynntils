@@ -44,43 +44,18 @@ public class ItemLockFeature extends UserFeature {
     private final KeyHolder lockSlotKeybind = new KeyHolder(
             "Lock Slot", GLFW.GLFW_KEY_H, "Wynntils", true, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
 
+    @Config(visible = false)
+    private static Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
+
+    @TypeOverride
+    private static final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
+
     @SubscribeEvent
     public void onKeyPress(InventoryKeyPressEvent e) {
         if (lockSlotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
             lockSlotKeybind.onPress();
         }
     }
-
-    private static void tryChangeLockStateOnHoveredSlot() {
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
-
-        Character character = WynnUtils.getCharacter();
-        if (character == null) return;
-
-        Character.CharacterInfo characterInfo = character.getCharacterInfo();
-        if (characterInfo == null) return;
-
-        Slot hoveredSlot = abstractContainerScreen.hoveredSlot;
-        if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
-
-        classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
-
-        Set<Integer> classSet = classSlotLockMap.get(characterInfo.getId());
-
-        if (classSet.contains(hoveredSlot.getContainerSlot())) {
-            classSet.remove(hoveredSlot.getContainerSlot());
-        } else {
-            classSet.add(hoveredSlot.getContainerSlot());
-        }
-
-        ConfigManager.saveConfig();
-    }
-
-    @Config(visible = false)
-    private static Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
-
-    @TypeOverride
-    private static final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -102,19 +77,6 @@ public class ItemLockFeature extends UserFeature {
 
             renderLockedSlot(event.getPoseStack(), abstractContainerScreen, lockedSlot.get());
         }
-    }
-
-    private void renderLockedSlot(PoseStack poseStack, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.ITEM_LOCK.resource(),
-                ((containerScreen.leftPos + lockedSlot.x)) + 12,
-                ((containerScreen.topPos + lockedSlot.y)) - 4,
-                400,
-                8,
-                8,
-                Texture.ITEM_LOCK.width() / 2,
-                Texture.ITEM_LOCK.height() / 2);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -156,5 +118,43 @@ public class ItemLockFeature extends UserFeature {
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
+    }
+
+    private void renderLockedSlot(PoseStack poseStack, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.ITEM_LOCK.resource(),
+                ((containerScreen.leftPos + lockedSlot.x)) + 12,
+                ((containerScreen.topPos + lockedSlot.y)) - 4,
+                400,
+                8,
+                8,
+                Texture.ITEM_LOCK.width() / 2,
+                Texture.ITEM_LOCK.height() / 2);
+    }
+
+    private static void tryChangeLockStateOnHoveredSlot() {
+        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+
+        Character character = WynnUtils.getCharacter();
+        if (character == null) return;
+
+        Character.CharacterInfo characterInfo = character.getCharacterInfo();
+        if (characterInfo == null) return;
+
+        Slot hoveredSlot = abstractContainerScreen.hoveredSlot;
+        if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
+
+        classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
+
+        Set<Integer> classSet = classSlotLockMap.get(characterInfo.getId());
+
+        if (classSet.contains(hoveredSlot.getContainerSlot())) {
+            classSet.remove(hoveredSlot.getContainerSlot());
+        } else {
+            classSet.add(hoveredSlot.getContainerSlot());
+        }
+
+        ConfigManager.saveConfig();
     }
 }
