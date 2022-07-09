@@ -10,7 +10,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -37,7 +36,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = "IWillRemoveThisWhenIFix#151")
 public class ItemLockFeature extends UserFeature {
 
     @RegisterKeyBind
