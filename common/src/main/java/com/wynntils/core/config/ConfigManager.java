@@ -38,7 +38,7 @@ public class ConfigManager {
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
-    static Gson gson;
+    private static Gson gson;
 
     public static void registerFeature(Feature feature) {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
@@ -173,5 +173,9 @@ public class ConfigManager {
             }
         }
         return options;
+    }
+
+    public static Gson getGson() {
+        return gson;
     }
 }

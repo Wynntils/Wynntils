@@ -52,7 +52,8 @@ public class ConfigHolder {
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = ConfigManager.gson.fromJson(ConfigManager.gson.toJson(getValue()), fieldTypeTemp);
+        this.defaultValue =
+                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
 
         if (this.defaultValue != null) {
             fieldTypeTemp = defaultValue.getClass();
