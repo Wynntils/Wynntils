@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo
 public class WynncraftPauseScreenFeature extends UserFeature {
 
     @SubscribeEvent

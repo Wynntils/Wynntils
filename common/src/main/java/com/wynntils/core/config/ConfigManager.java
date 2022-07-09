@@ -129,10 +129,12 @@ public class ConfigManager {
 
     private static List<ConfigHolder> collectConfigOptions(Feature feature) {
         FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-        // feature has no category defined, can't create options
-        if (featureInfo == null || featureInfo.category().isBlank()) return null;
 
-        String category = featureInfo.category();
+        String category = "";
+        // feature has no category defined, can't create options
+        if (featureInfo != null) {
+            category = featureInfo.category();
+        }
 
         loadFeatureOverlayConfigOptions(category, feature);
 
