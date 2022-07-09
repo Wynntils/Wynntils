@@ -12,7 +12,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
@@ -28,5 +30,12 @@ public abstract class LocalPlayerMixin {
         if (result.isCanceled()) return;
 
         connection.send(new ServerboundChatPacket(result.getMessage()));
+    }
+
+    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
+    private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onDropPre(fullStack).isCanceled()) {
+            cir.cancel();
+        }
     }
 }

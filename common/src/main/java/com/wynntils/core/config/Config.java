@@ -20,4 +20,7 @@ public @interface Config {
 
     /** Whether this option should be visible to users */
     boolean visible() default true;
+
+    /** Internal configs ignore ConfigHolder's userEdited field and always save */
+    boolean internal() default false;
 }

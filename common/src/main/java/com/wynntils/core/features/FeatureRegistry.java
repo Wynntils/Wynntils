@@ -24,6 +24,7 @@ import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemGuessFeature;
 import com.wynntils.features.user.ItemHighlightFeature;
+import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.ItemStatInfoFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
@@ -90,6 +91,8 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
+        feature.preInit();
+
         // init overlays before ConfigManager
         feature.initOverlays();
 
@@ -154,6 +157,7 @@ public class FeatureRegistry {
         registerFeature(new DurabilityArcFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new ItemLockFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

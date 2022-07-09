@@ -16,8 +16,11 @@ import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
@@ -37,9 +40,14 @@ public abstract class Feature implements Translatable, Configurable {
     private List<ConfigHolder> configOptions = new ArrayList<>();
     private List<Overlay> overlays = new ArrayList<>();
 
+    private final Map<String, Type> typeOverrides = new HashMap<>();
+
     protected boolean enabled = false;
 
     protected boolean initFinished = false;
+
+    /** Override this to register special config field types */
+    protected void preInit() {}
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -210,6 +218,15 @@ public abstract class Feature implements Translatable, Configurable {
         return getVisibleConfigOptions().stream()
                 .filter(c -> c.getFieldName().equals(name))
                 .findFirst();
+    }
+
+    protected final void addConfigTypeOverride(String fieldName, Type overrideType) {
+        this.typeOverrides.put(fieldName, overrideType);
+    }
+
+    @Override
+    public final Map<String, Type> getTypeOverrides() {
+        return typeOverrides;
     }
 
     /** Called when a feature's config option is updated. Called by ConfigHolder */

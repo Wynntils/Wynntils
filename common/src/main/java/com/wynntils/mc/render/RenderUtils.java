@@ -73,9 +73,28 @@ public class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            ResourceLocation tex, int x, int y, int width, int height, int textureWidth, int textureHeight) {
-        drawTexturedRect(
-                new PoseStack(), tex, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
+            PoseStack poseStack,
+            ResourceLocation tex,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(poseStack, tex, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
+    }
+
+    public static void drawTexturedRect(
+            PoseStack poseStack,
+            ResourceLocation tex,
+            int x,
+            int y,
+            int z,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(poseStack, tex, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(

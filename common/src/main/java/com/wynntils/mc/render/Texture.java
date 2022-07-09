@@ -8,7 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public enum Texture {
     HIGHLIGHT("highlight.png", 256, 256),
-    ARC("arc.png", 1024, 64);
+    ARC("arc.png", 1024, 64),
+
+    ITEM_LOCK("item_lock.png", 16, 16);
 
     private final ResourceLocation resource;
     private final int width;

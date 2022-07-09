@@ -10,6 +10,7 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -42,6 +43,7 @@ public class ConfigHolder {
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
+        //       Use Feature.typeOverrides to fix this
         if (this.defaultValue == null) {
             this.fieldType = field.getType();
         } else {
@@ -59,6 +61,10 @@ public class ConfigHolder {
 
     public String getFieldName() {
         return field.getName();
+    }
+
+    public Type getTypeOverride() {
+        return parent.getTypeOverrides().getOrDefault(getFieldName(), null);
     }
 
     public String getJsonName() {
@@ -126,6 +132,9 @@ public class ConfigHolder {
     }
 
     public boolean isUserEdited() {
+        if (this.metadata.internal()) {
+            return true;
+        }
         return userEdited;
     }
 

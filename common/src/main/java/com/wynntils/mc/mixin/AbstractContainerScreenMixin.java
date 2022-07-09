@@ -19,11 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
     @Shadow
-    protected Slot hoveredSlot;
+    public Slot hoveredSlot;
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
-        EventFactory.onInventoryRender((Screen) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+        EventFactory.onContainerRender((Screen) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 
     @Inject(

@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on inventory render */
-public class InventoryRenderEvent extends Event {
+public class ContainerRenderEvent extends Event {
     private final Screen screen;
     private final PoseStack poseStack;
     private final int mouseX;
@@ -18,7 +18,7 @@ public class InventoryRenderEvent extends Event {
     private final float partialTicks;
     private final Slot hoveredSlot;
 
-    public InventoryRenderEvent(
+    public ContainerRenderEvent(
             Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
         this.screen = screen;
         this.poseStack = poseStack;

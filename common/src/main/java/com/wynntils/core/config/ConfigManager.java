@@ -89,7 +89,14 @@ public class ConfigManager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value = gson.fromJson(holderJson, holder.getType());
+            Object value;
+
+            if (holder.getTypeOverride() == null) {
+                value = gson.fromJson(holderJson, holder.getType());
+            } else {
+                value = gson.fromJson(holderJson, holder.getTypeOverride());
+            }
+
             holder.setValue(value);
         }
     }
@@ -145,9 +152,9 @@ public class ConfigManager {
     private static List<ConfigHolder> getConfigOptions(String category, Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        for (Field overlayConfigFields : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
-            Config metadata = overlayConfigFields.getAnnotation(Config.class);
-            options.add(new ConfigHolder(parent, overlayConfigFields, category, metadata));
+        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
+            Config metadata = configField.getAnnotation(Config.class);
+            options.add(new ConfigHolder(parent, configField, category, metadata));
         }
         return options;
     }

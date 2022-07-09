@@ -5,10 +5,17 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.config.ConfigHolder;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 public interface Configurable {
     void updateConfigOption(ConfigHolder configHolder);
 
     void addConfigOptions(List<ConfigHolder> options);
+
+    default Map<String, Type> getTypeOverrides() {
+        return Map.of();
+    }
+    ;
 }
