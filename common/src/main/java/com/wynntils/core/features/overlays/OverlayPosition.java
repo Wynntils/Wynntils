@@ -6,11 +6,10 @@ package com.wynntils.core.features.overlays;
 
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
-import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OverlayPosition implements Serializable {
+public class OverlayPosition {
 
     protected static final Pattern POSITION_PATTERN = Pattern.compile(
             "OverlayPosition\\{verticalOffset=(.+),horizontalOffset=(.+),verticalAlignment=(.+),horizontalAlignment=(.+),anchorSection=(.+)}");

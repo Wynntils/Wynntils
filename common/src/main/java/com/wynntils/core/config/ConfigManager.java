@@ -38,7 +38,7 @@ public class ConfigManager {
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
     private static JsonObject configObject;
-    private static Gson gson;
+    static Gson gson;
 
     public static void registerFeature(Feature feature) {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
@@ -95,11 +95,7 @@ public class ConfigManager {
             JsonElement holderJson = configObject.get(holder.getJsonName());
             Object value;
 
-            if (holder.getTypeOverride() == null) {
-                value = gson.fromJson(holderJson, holder.getType());
-            } else {
-                value = gson.fromJson(holderJson, holder.getTypeOverride());
-            }
+            value = gson.fromJson(holderJson, holder.getType());
 
             holder.setValue(value);
         }

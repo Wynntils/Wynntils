@@ -4,11 +4,10 @@
  */
 package com.wynntils.core.features.overlays.sizes;
 
-import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class OverlaySize implements Serializable {
+public abstract class OverlaySize {
     protected static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
 
     protected float width;

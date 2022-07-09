@@ -9,7 +9,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.utils.ObjectUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -21,14 +20,12 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public class ConfigHolder {
     private final Configurable parent;
     private final Field field;
-    private final Class<?> fieldType;
+    private final Type fieldType;
 
     private final String category;
     private final Config metadata;
 
     private final Object defaultValue;
-
-    private final Type typeOverride;
 
     private boolean userEdited = false;
 
@@ -41,25 +38,30 @@ public class ConfigHolder {
         this.field = field;
         this.category = category;
         this.metadata = metadata;
-        this.typeOverride = typeOverride;
 
-        // save default value to enable easy resetting
-        // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = ObjectUtils.copy(getValue());
+        Type fieldTypeTemp;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        if (this.defaultValue == null) {
-            this.fieldType = field.getType();
-        } else {
-            this.fieldType = this.defaultValue.getClass();
+        Object valueTemp = this.getValue();
+        fieldTypeTemp =
+                typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
+
+        // save default value to enable easy resetting
+        // We have to deep copy the value, so it is guaranteed that we detect changes
+        this.defaultValue = ConfigManager.gson.fromJson(ConfigManager.gson.toJson(getValue()), fieldTypeTemp);
+
+        if (this.defaultValue != null) {
+            fieldTypeTemp = defaultValue.getClass();
         }
+
+        this.fieldType = fieldTypeTemp;
     }
 
-    public Class<?> getType() {
+    public Type getType() {
         return fieldType;
     }
 
@@ -69,10 +71,6 @@ public class ConfigHolder {
 
     public String getFieldName() {
         return field.getName();
-    }
-
-    public Type getTypeOverride() {
-        return typeOverride;
     }
 
     public String getJsonName() {
@@ -164,7 +162,7 @@ public class ConfigHolder {
 
     public Object tryParseStringValue(String value) {
         try {
-            Class<?> wrapped = ClassUtils.primitiveToWrapper(fieldType);
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
             if (wrapped.isEnum()) {
                 return Enum.valueOf((Class<? extends Enum>) wrapped, value);
             }
