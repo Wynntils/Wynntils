@@ -49,7 +49,7 @@ public class ConfigManager {
 
     private static void registerConfigOptions(Configurable configurable, List<ConfigHolder> featureConfigOptions) {
         configurable.addConfigOptions(featureConfigOptions);
-        loadConfigOptions(featureConfigOptions);
+        loadConfigOptions(featureConfigOptions, false);
         CONFIG_HOLDERS.addAll(featureConfigOptions);
     }
 
@@ -63,7 +63,7 @@ public class ConfigManager {
         loadConfigFile();
     }
 
-    private static void loadConfigFile() {
+    public static void loadConfigFile() {
         // create config directory if necessary
         CONFIGS.mkdirs();
 
@@ -84,12 +84,17 @@ public class ConfigManager {
         }
     }
 
-    private static void loadConfigOptions(List<ConfigHolder> holders) {
+    public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) return; // nothing to load from
 
         for (ConfigHolder holder : holders) {
             // option hasn't been saved to config
-            if (!configObject.has(holder.getJsonName())) continue;
+            if (!configObject.has(holder.getJsonName())) {
+                if (resetIfNotFound) {
+                    holder.reset();
+                }
+                continue;
+            }
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
@@ -205,5 +210,9 @@ public class ConfigManager {
 
     public static Gson getGson() {
         return gson;
+    }
+
+    public static List<ConfigHolder> getConfigHolders() {
+        return CONFIG_HOLDERS;
     }
 }
