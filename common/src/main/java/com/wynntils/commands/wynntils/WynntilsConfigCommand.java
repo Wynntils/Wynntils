@@ -161,6 +161,29 @@ public abstract class WynntilsConfigCommand {
         return resetConfigArgBuilder.build();
     }
 
+    public static LiteralCommandNode<CommandSourceStack> buildReloadConfigNode() {
+        LiteralArgumentBuilder<CommandSourceStack> reloadConfigArgBuilder = Commands.literal("reload");
+
+        // Reload config holder values from config file and then save to "merge".
+        // /wynntils config reload
+        reloadConfigArgBuilder.executes(WynntilsConfigCommand::reloadAllConfigOptions);
+
+        return reloadConfigArgBuilder.build();
+    }
+
+    private static int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
+        ConfigManager.loadConfigFile();
+        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        ConfigManager.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent("Successfully reloaded configs from file.").withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
     private static int resetOverlayConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
