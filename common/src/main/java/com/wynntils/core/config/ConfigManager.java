@@ -26,7 +26,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ConfigManager {
     private static final String FILE_SUFFIX = ".conf.json";
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
-    private static final File defaultConfig = new File(CONFIGS,  "default" + FILE_SUFFIX);
+    private static final File defaultConfig = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static JsonObject configObject;
     private static Gson gson;
 
