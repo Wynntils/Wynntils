@@ -160,6 +160,9 @@ public class FeatureRegistry {
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
 
+        // save/create default config file containing all config holders
+        ConfigManager.saveDefaultConfig();
+
         addCrashCallbacks();
     }
 
