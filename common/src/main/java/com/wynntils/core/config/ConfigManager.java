@@ -37,12 +37,12 @@ public class ConfigManager {
     private static final String FILE_SUFFIX = ".conf.json";
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
+    private static final File defaultConfig = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static JsonObject configObject;
     private static Gson gson;
 
     public static void registerFeature(Feature feature) {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
-        if (featureConfigOptions == null) return; // invalid feature
 
         registerConfigOptions(feature, featureConfigOptions);
     }
@@ -126,6 +126,32 @@ public class ConfigManager {
                     new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
             gson.toJson(holderJson, fileWriter);
             fileWriter.close();
+        } catch (IOException e) {
+            WynntilsMod.error("Failed to save user config file!");
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveDefaultConfig() {
+        try {
+            // create file if necessary
+            if (!defaultConfig.exists()) defaultConfig.createNewFile();
+
+            // create json object, with entry for each option of each container
+            JsonObject holderJson = new JsonObject();
+            for (ConfigHolder holder : CONFIG_HOLDERS) {
+                Object value = holder.getValue();
+
+                JsonElement holderElement = gson.toJsonTree(value);
+                holderJson.add(holder.getJsonName(), holderElement);
+            }
+
+            // write json to file
+            OutputStreamWriter fileWriter =
+                    new OutputStreamWriter(new FileOutputStream(defaultConfig), StandardCharsets.UTF_8);
+            gson.toJson(holderJson, fileWriter);
+            fileWriter.close();
+            WynntilsMod.info("Default config file created.");
         } catch (IOException e) {
             WynntilsMod.error("Failed to save user config file!");
             e.printStackTrace();
