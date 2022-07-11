@@ -39,6 +39,137 @@ public class RenderUtils {
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
 
+    // See https://github.com/MinecraftForge/MinecraftForge/issues/8083 as to why this uses TRIANGLE_STRIPS.
+    // TLDR: New OpenGL only supports TRIANGLES and Minecraft patched QUADS to be usable ATM, but LINES patch is broken
+    // and you can't use it.
+    // (This also means that using QUADS is probably not the best idea)
+    public static void drawLine(
+            PoseStack poseStack, CustomColor color, float x1, float y1, float x2, float y2, float z, float width) {
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+
+        float halfWidth = width / 2;
+
+        bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+
+        if (x1 == x2) {
+            if (y2 < y1) {
+                float tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+            bufferBuilder
+                    .vertex(matrix, x1 - halfWidth, y1, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 - halfWidth, y2, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1 + halfWidth, y1, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 + halfWidth, y2, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        } else if (y1 == y2) {
+            if (x2 < x1) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+            }
+
+            bufferBuilder
+                    .vertex(matrix, x1, y1 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1, y1 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2, y2 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2, y2 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        } else if ((x1 < x2 && y1 < y2) || (x2 < x1 && y2 < y1)) { // Top Left to Bottom Right line
+            if (x2 < x1) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+
+                tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+
+            bufferBuilder
+                    .vertex(matrix, x1 + halfWidth, y1 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1 - halfWidth, y1 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 + halfWidth, y2 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 - halfWidth, y2 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        } else { // Top Right to Bottom Left Line
+            if (x1 < x2) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+
+                tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+
+            bufferBuilder
+                    .vertex(matrix, x1 + halfWidth, y1 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1 - halfWidth, y1 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 + halfWidth, y2 + halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 - halfWidth, y2 - halfWidth, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
+        RenderSystem.disableBlend();
+    }
+
+    public static void drawRectBorders(
+            PoseStack poseStack, CustomColor color, float x1, float y1, float x2, float y2, float z, float lineWidth) {
+        drawLine(poseStack, color, x1, y1, x2, y1, z, lineWidth);
+        drawLine(poseStack, color, x2, y1, x2, y2, z, lineWidth);
+        drawLine(poseStack, color, x2, y2, x1, y2, z, lineWidth);
+        drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
+    }
+
     public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
         drawRect(new PoseStack(), color, x, y, z, width, height);
     }
