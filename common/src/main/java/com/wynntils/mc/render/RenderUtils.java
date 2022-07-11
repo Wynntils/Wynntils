@@ -170,11 +170,12 @@ public class RenderUtils {
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
     }
 
-    public static void drawRect(CustomColor color, int x, int y, int z, int width, int height) {
+    public static void drawRect(CustomColor color, float x, float y, float z, float width, float height) {
         drawRect(new PoseStack(), color, x, y, z, width, height);
     }
 
-    public static void drawRect(PoseStack poseStack, CustomColor color, int x, int y, int z, int width, int height) {
+    public static void drawRect(
+            PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.enableBlend();

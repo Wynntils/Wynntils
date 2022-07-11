@@ -125,4 +125,12 @@ public class OverlayManager {
     public static List<SectionCoordinates> getSections() {
         return sections;
     }
+
+    public static Set<Overlay> getOverlays() {
+        return overlayInfoMap.keySet();
+    }
+
+    public static boolean isEnabled(Overlay overlay) {
+        return enabledOverlays.contains(overlay);
+    }
 }

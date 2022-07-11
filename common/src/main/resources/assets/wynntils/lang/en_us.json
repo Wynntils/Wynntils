@@ -178,5 +178,9 @@
   "overlay.wynntils.overlay.verticalAlignmentOverride.description": "Set this if you want to override the position vertical alignment",
   "overlay.wynntils.overlay.verticalAlignmentOverride.name": "Vertical Alignment Override",
   "overlay.wynntils.questInfo.description": "Display the currently tracked quest's info",
-  "overlay.wynntils.questInfo.name": "Quest Info Tracker Overlay"
+  "overlay.wynntils.questInfo.name": "Quest Info Tracker Overlay",
+  "screens.wynntils.overlayManagement.applySettings": "Apply",
+  "screens.wynntils.overlayManagement.closeSettingsScreen": "Close",
+  "screens.wynntils.overlayManagement.name": "Overlay Management Screen",
+  "screens.wynntils.overlayManagement.testSettings": "Test"
 }
