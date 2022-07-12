@@ -7,11 +7,10 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.McUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -57,7 +56,8 @@ public abstract class ScreenMixin {
     }
 
     @Shadow
-    private void renderTooltipInternal(PoseStack poseStack, List<ClientTooltipComponent> clientTooltipComponents, int mouseX, int mouseY) { }
+    private void renderTooltipInternal(
+            PoseStack poseStack, List<ClientTooltipComponent> clientTooltipComponents, int mouseX, int mouseY) {}
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
@@ -97,31 +97,25 @@ public abstract class ScreenMixin {
 
         int mx = e.getMouseX();
         int tooltipX = mx + 12;
-        if (tooltipX + tooltipTextWidth + 4 > instance.width)
-        {
+        if (tooltipX + tooltipTextWidth + 4 > instance.width) {
             tooltipX = mx - 16 - tooltipTextWidth;
             if (tooltipX < 4) // if the tooltip doesn't fit on the screen
             {
-                if (mx > instance.width / 2)
-                    tooltipTextWidth = mx - 12 - 8;
-                else
-                    tooltipTextWidth = instance.width - 16 - mx;
+                if (mx > instance.width / 2) tooltipTextWidth = mx - 12 - 8;
+                else tooltipTextWidth = instance.width - 16 - mx;
             }
         }
         int tooltipTextWidthF = tooltipTextWidth;
         var wrappedTooltips = tooltipsFromItem.stream()
-                .flatMap(x-> McUtils.mc().font.split(x, tooltipTextWidthF).stream())
+                .flatMap(x -> McUtils.mc().font.split(x, tooltipTextWidthF).stream())
                 .map(ClientTooltipComponent::create)
                 .collect(Collectors.toList());
 
         var visualTooltipFromItem = e.getItemStack().getTooltipImage();
-        visualTooltipFromItem.ifPresent((tooltipComponent) -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltipComponent)));
+        visualTooltipFromItem.ifPresent(
+                (tooltipComponent) -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltipComponent)));
 
-        renderTooltipInternal(
-                poseStack,
-                wrappedTooltips,
-                mx,
-                e.getMouseY());
+        renderTooltipInternal(poseStack, wrappedTooltips, mx, e.getMouseY());
     }
 
     @Inject(
