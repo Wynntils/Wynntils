@@ -13,9 +13,11 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
+
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
@@ -26,6 +28,9 @@ public class TooltipScaleFeature extends UserFeature {
 
     @Config
     public static boolean fitToScreen = true;
+
+    @Config
+    public static boolean wrapText = true;
 
     private boolean scaledLast = false;
     private Screen currentScreen = null;
@@ -38,6 +43,12 @@ public class TooltipScaleFeature extends UserFeature {
 
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
+
+        if(wrapText) {
+            int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(e.getTooltips(), (int)(currentScreen.width / universalScale), (int)(e.getMouseX() / universalScale));
+            List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
+            e.setTooltips(Collections.unmodifiableList(wrappedTooltips));
+        }
 
         // calculate scale factor
         float scaleFactor = universalScale;
@@ -69,11 +80,6 @@ public class TooltipScaleFeature extends UserFeature {
 
         scaledLast = true;
 
-        // if calculated after scaling, will result in text possibly going above screen
-        // if calculated before scaling, will result in text leaving the screen on the sides
-        int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(currentScreen, e.getTooltips(), e.getMouseX());
-        List<FormattedText> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
-        e.setTooltips(wrappedTooltips);
     }
 
     @SubscribeEvent

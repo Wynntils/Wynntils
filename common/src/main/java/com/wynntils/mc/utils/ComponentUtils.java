@@ -10,16 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
-    public static String getFormatted(Component component) {
+    public static String getFormatted(FormattedText component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(
@@ -179,25 +174,31 @@ public class ComponentUtils {
         return newLore;
     }
 
-    public static int getOptimalTooltipWidth(Screen screen, List<FormattedText> tooltips, int mouseX) {
-        int width = tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
-        int tooltipX = mouseX + 12;
-        if (tooltipX + width + 4 > screen.width) {
-            tooltipX = mouseX - 16 - width;
-            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
-            {
-                if (mouseX > screen.width / 2) width = mouseX - 12 - 8;
-                else width = screen.width - 16 - mouseX;
-            }
-        }
-        return width;
+    public static Component formattedTextToComponent(FormattedText text) {
+        return new TextComponent(getFormatted(text));
     }
 
-    public static List<FormattedText> wrapTooltips(List<FormattedText> tooltips, int maxWidth) {
+    public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
+        int tooltipWidth = tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
+        int tooltipX = mouseX + 12;
+        if (tooltipX + tooltipWidth + 4 > screenWidth) {
+            tooltipX = mouseX - 16 - tooltipWidth;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > screenWidth / 2) tooltipWidth = mouseX - 12 - 8;
+                else tooltipWidth = screenWidth - 16 - mouseX;
+            }
+        }
+        return tooltipWidth;
+    }
+
+    public static List<Component> wrapTooltips(List<Component> tooltips, int maxWidth) {
         return tooltips.stream().flatMap(x -> splitText(x, maxWidth).stream()).toList();
     }
 
-    public static List<FormattedText> splitText(FormattedText text, int maxWidth) {
-        return McUtils.mc().font.getSplitter().splitLines(text, maxWidth, Style.EMPTY);
+    public static List<Component> splitText(Component text, int maxWidth) {
+        return McUtils.mc().font.getSplitter().splitLines(text, maxWidth, Style.EMPTY).stream()
+                .map(ComponentUtils::formattedTextToComponent)
+                .toList();
     }
 }
