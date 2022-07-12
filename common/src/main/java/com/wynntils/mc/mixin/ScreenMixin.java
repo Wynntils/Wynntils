@@ -9,6 +9,8 @@ import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import java.util.List;
 import java.util.Optional;
+
+import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -80,10 +82,11 @@ public abstract class ScreenMixin {
         ItemTooltipRenderEvent e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, mouseX, mouseY);
         if (e.isCanceled()) return;
 
+        var extendedTooltips = instance.getTooltipFromItem(e.getItemStack());
+        var wrappedTooltips = extendedTooltips.stream().flatMap(x-> McUtils.mc().font.split(x, Math.max(instance.width / 2, 200)).stream()).toList();
         instance.renderTooltip(
                 poseStack,
-                instance.getTooltipFromItem(e.getItemStack()),
-                e.getItemStack().getTooltipImage(),
+                wrappedTooltips,
                 e.getMouseX(),
                 e.getMouseY());
     }
