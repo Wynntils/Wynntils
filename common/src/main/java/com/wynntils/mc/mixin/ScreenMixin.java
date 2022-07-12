@@ -82,8 +82,34 @@ public abstract class ScreenMixin {
         ItemTooltipRenderEvent e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, mouseX, mouseY);
         if (e.isCanceled()) return;
 
-        var extendedTooltips = instance.getTooltipFromItem(e.getItemStack());
-        var wrappedTooltips = extendedTooltips.stream().flatMap(x-> McUtils.mc().font.split(x, Math.max(instance.width / 2, 200)).stream()).toList();
+
+        var tooltipsFromItem = instance.getTooltipFromItem(e.getItemStack());
+
+        // the following logic is taken from ForgeHooksClient::gatherTooltipComponents
+        int tooltipTextWidth = tooltipsFromItem.stream()
+                .mapToInt(McUtils.mc().font::width)
+                .max()
+                .orElse(0);
+
+        int tooltipX = mouseX + 12;
+        if (tooltipX + tooltipTextWidth + 4 > instance.width)
+        {
+            tooltipX = mouseX - 16 - tooltipTextWidth;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > instance.width / 2)
+                    tooltipTextWidth = mouseX - 12 - 8;
+                else
+                    tooltipTextWidth = instance.width - 16 - mouseX;
+            }
+        }
+        int tooltipTextWidthF = tooltipTextWidth;
+        var wrappedTooltips = tooltipsFromItem.stream()
+                .flatMap(x-> McUtils.mc().font.split(x, tooltipTextWidthF).stream())
+                .toList();
+
+        // TODO: use e.getItemStack().getTooltipImage() in the function call (maybe use mixins to reach screen::renderTooltipInternal)
+
         instance.renderTooltip(
                 poseStack,
                 wrappedTooltips,
