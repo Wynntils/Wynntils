@@ -10,7 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
