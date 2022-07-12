@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
@@ -16,7 +15,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -84,9 +82,11 @@ public abstract class ScreenMixin {
             ItemStack itemStack,
             int mouseX2,
             int mouseY2) {
-        ItemTooltipRenderEvent.Pre e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, tooltips, mouseX, mouseY);
+        ItemTooltipRenderEvent.Pre e =
+                EventFactory.onItemTooltipRenderPre(poseStack, itemStack, tooltips, mouseX, mouseY);
         if (e.isCanceled()) return;
-        instance.renderTooltip(e.getPoseStack(), e.getTooltips(), e.getItemStack().getTooltipImage(), e.getMouseX(), e.getMouseY());
+        instance.renderTooltip(
+                e.getPoseStack(), e.getTooltips(), e.getItemStack().getTooltipImage(), e.getMouseX(), e.getMouseY());
     }
 
     @Inject(

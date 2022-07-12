@@ -13,7 +13,6 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -44,8 +43,10 @@ public class TooltipScaleFeature extends UserFeature {
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
-        if(wrapText) {
-            int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(e.getTooltips(), (int)(currentScreen.width / universalScale), (int)(e.getMouseX() / universalScale));
+        if (wrapText) {
+            int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
+                    e.getTooltips(), (int) (currentScreen.width / universalScale), (int)
+                            (e.getMouseX() / universalScale));
             List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
             e.setTooltips(Collections.unmodifiableList(wrappedTooltips));
         }
@@ -79,7 +80,6 @@ public class TooltipScaleFeature extends UserFeature {
         poseStack.scale(scaleFactor, scaleFactor, 1);
 
         scaledLast = true;
-
     }
 
     @SubscribeEvent

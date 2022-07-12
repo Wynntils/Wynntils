@@ -184,7 +184,8 @@ public class ComponentUtils {
     }
 
     public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
-        int tooltipWidth = tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
+        int tooltipWidth =
+                tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
         int tooltipX = mouseX + 12;
         if (tooltipX + tooltipWidth + 4 > screenWidth) {
             tooltipX = mouseX - 16 - tooltipWidth;
