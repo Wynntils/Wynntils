@@ -65,6 +65,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -131,9 +132,9 @@ public class EventFactory {
         post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
-    public static ItemTooltipRenderEvent onItemTooltipRenderPre(
-            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
+    public static ItemTooltipRenderEvent.Pre onItemTooltipRenderPre(
+            PoseStack poseStack, ItemStack stack, List<FormattedText> tooltips, int mouseX, int mouseY) {
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, tooltips, mouseX, mouseY));
     }
 
     public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -176,5 +177,30 @@ public class ComponentUtils {
         }
 
         return newLore;
+    }
+
+    public static int getOptimalTooltipWidth(Screen screen, List<FormattedText> tooltips, int mouseX) {
+        int width = tooltips.stream()
+                .mapToInt(McUtils.mc().font::width)
+                .max()
+                .orElse(0);
+        int tooltipX = mouseX + 12;
+        if (tooltipX + width + 4 > screen.width) {
+            tooltipX = mouseX - 16 - width;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > screen.width / 2) width = mouseX - 12 - 8;
+                else width = screen.width - 16 - mouseX;
+            }
+        }
+        return width;
+    }
+
+    public static List<FormattedText> wrapTooltips(List<FormattedText> tooltips, int maxWidth) {
+        return tooltips.stream().flatMap(x->splitText(x,maxWidth).stream()).toList();
+    }
+
+    public static List<FormattedText> splitText(FormattedText text, int maxWidth) {
+        return McUtils.mc().font.getSplitter().splitLines(text, maxWidth, Style.EMPTY);
     }
 }

@@ -5,9 +5,13 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.Collections;
+import java.util.List;
 
 public abstract class ItemTooltipRenderEvent extends Event {
     private final PoseStack poseStack;
@@ -52,8 +56,19 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
     @Cancelable
     public static class Pre extends ItemTooltipRenderEvent {
-        public Pre(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+        private List<FormattedText> tooltips;
+
+        public Pre(PoseStack poseStack, ItemStack itemStack, List<FormattedText> tooltips, int mouseX, int mouseY) {
             super(poseStack, itemStack, mouseX, mouseY);
+            this.tooltips = tooltips;
+        }
+
+        public List<FormattedText> getTooltips() {
+            return tooltips;
+        }
+
+        public void setTooltips(List<FormattedText> tooltips) {
+            this.tooltips = Collections.unmodifiableList(tooltips);
         }
     }
 

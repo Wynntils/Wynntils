@@ -10,11 +10,14 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class TooltipScaleFeature extends UserFeature {
@@ -41,7 +44,7 @@ public class TooltipScaleFeature extends UserFeature {
         float scaleFactor = universalScale;
 
         if (fitToScreen) {
-            int lines = ItemUtils.getTooltipLines(e.getItemStack()).size();
+            int lines = e.getTooltips().size();
             // this is technically slightly larger than the actual height, but due to the tooltip offset/border, it
             // works to create a nice buffer at the top/bottom of the screen
             float tooltipHeight = 22 + (lines - 1) * 10;
@@ -66,6 +69,13 @@ public class TooltipScaleFeature extends UserFeature {
         poseStack.scale(scaleFactor, scaleFactor, 1);
 
         scaledLast = true;
+
+        // if calculated after scaling, will result in text possibly going above screen
+        // if calculated before scaling, will result in text leaving the screen on the sides
+        int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(currentScreen, e.getTooltips(), e.getMouseX());
+        List<FormattedText> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
+        e.setTooltips(wrappedTooltips);
+
     }
 
     @SubscribeEvent
