@@ -96,6 +96,7 @@ public abstract class ScreenMixin {
                 .orElse(0);
 
         int mx = e.getMouseX();
+        int my = e.getMouseY();
         int tooltipX = mx + 12;
         if (tooltipX + tooltipTextWidth + 4 > instance.width) {
             tooltipX = mx - 16 - tooltipTextWidth;
@@ -107,15 +108,15 @@ public abstract class ScreenMixin {
         }
         int tooltipTextWidthF = tooltipTextWidth;
         var wrappedTooltips = tooltipsFromItem.stream()
-                .flatMap(x -> McUtils.mc().font.split(x, tooltipTextWidthF).stream())
+                .flatMap(tooltip -> McUtils.mc().font.split(tooltip, tooltipTextWidthF).stream())
                 .map(ClientTooltipComponent::create)
                 .collect(Collectors.toList());
 
         var visualTooltipFromItem = e.getItemStack().getTooltipImage();
         visualTooltipFromItem.ifPresent(
-                (tooltipComponent) -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltipComponent)));
+                tooltip -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltip)));
 
-        renderTooltipInternal(poseStack, wrappedTooltips, mx, e.getMouseY());
+        renderTooltipInternal(poseStack, wrappedTooltips, mx, my);
     }
 
     @Inject(
