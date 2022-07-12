@@ -53,10 +53,6 @@ public abstract class ScreenMixin {
         return listener;
     }
 
-    @Shadow
-    private void renderTooltipInternal(
-            PoseStack poseStack, List<ClientTooltipComponent> clientTooltipComponents, int mouseX, int mouseY) {}
-
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
