@@ -9,6 +9,7 @@ import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +56,9 @@ public abstract class ScreenMixin {
         return listener;
     }
 
+    @Shadow
+    private void renderTooltipInternal(PoseStack poseStack, List<ClientTooltipComponent> clientTooltipComponents, int mouseX, int mouseY) { }
+
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
@@ -82,7 +87,6 @@ public abstract class ScreenMixin {
         ItemTooltipRenderEvent e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, mouseX, mouseY);
         if (e.isCanceled()) return;
 
-
         var tooltipsFromItem = instance.getTooltipFromItem(e.getItemStack());
 
         // the following logic is taken from ForgeHooksClient::gatherTooltipComponents
@@ -91,29 +95,32 @@ public abstract class ScreenMixin {
                 .max()
                 .orElse(0);
 
-        int tooltipX = mouseX + 12;
+        int mx = e.getMouseX();
+        int tooltipX = mx + 12;
         if (tooltipX + tooltipTextWidth + 4 > instance.width)
         {
-            tooltipX = mouseX - 16 - tooltipTextWidth;
+            tooltipX = mx - 16 - tooltipTextWidth;
             if (tooltipX < 4) // if the tooltip doesn't fit on the screen
             {
-                if (mouseX > instance.width / 2)
-                    tooltipTextWidth = mouseX - 12 - 8;
+                if (mx > instance.width / 2)
+                    tooltipTextWidth = mx - 12 - 8;
                 else
-                    tooltipTextWidth = instance.width - 16 - mouseX;
+                    tooltipTextWidth = instance.width - 16 - mx;
             }
         }
         int tooltipTextWidthF = tooltipTextWidth;
         var wrappedTooltips = tooltipsFromItem.stream()
                 .flatMap(x-> McUtils.mc().font.split(x, tooltipTextWidthF).stream())
-                .toList();
+                .map(ClientTooltipComponent::create)
+                .collect(Collectors.toList());
 
-        // TODO: use e.getItemStack().getTooltipImage() in the function call (maybe use mixins to reach screen::renderTooltipInternal)
+        var visualTooltipFromItem = e.getItemStack().getTooltipImage();
+        visualTooltipFromItem.ifPresent((tooltipComponent) -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltipComponent)));
 
-        instance.renderTooltip(
+        renderTooltipInternal(
                 poseStack,
                 wrappedTooltips,
-                e.getMouseX(),
+                mx,
                 e.getMouseY());
     }
 
