@@ -5,13 +5,12 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
-
-import java.util.Collections;
-import java.util.List;
 
 public abstract class ItemTooltipRenderEvent extends Event {
     private final PoseStack poseStack;

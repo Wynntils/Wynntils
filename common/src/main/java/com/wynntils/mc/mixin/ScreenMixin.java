@@ -7,8 +7,6 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.McUtils;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -86,9 +84,13 @@ public abstract class ScreenMixin {
             ItemStack itemStack,
             int mouseX2,
             int mouseY2) {
-        ItemTooltipRenderEvent.Pre e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, Collections.unmodifiableList(tooltips), mouseX, mouseY);
+        ItemTooltipRenderEvent.Pre e = EventFactory.onItemTooltipRenderPre(
+                poseStack, itemStack, Collections.unmodifiableList(tooltips), mouseX, mouseY);
         if (e.isCanceled()) return;
-        List<ClientTooltipComponent> clientTooltips = e.getTooltips().stream().map(Language.getInstance()::getVisualOrder).map(ClientTooltipComponent::create).toList();
+        List<ClientTooltipComponent> clientTooltips = e.getTooltips().stream()
+                .map(Language.getInstance()::getVisualOrder)
+                .map(ClientTooltipComponent::create)
+                .toList();
         renderTooltipInternal(e.getPoseStack(), clientTooltips, e.getMouseX(), e.getMouseY());
     }
 

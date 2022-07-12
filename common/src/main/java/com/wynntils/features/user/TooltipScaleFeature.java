@@ -13,11 +13,10 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class TooltipScaleFeature extends UserFeature {
@@ -75,7 +74,6 @@ public class TooltipScaleFeature extends UserFeature {
         int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(currentScreen, e.getTooltips(), e.getMouseX());
         List<FormattedText> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
         e.setTooltips(wrappedTooltips);
-
     }
 
     @SubscribeEvent

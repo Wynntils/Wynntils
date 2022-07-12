@@ -180,10 +180,7 @@ public class ComponentUtils {
     }
 
     public static int getOptimalTooltipWidth(Screen screen, List<FormattedText> tooltips, int mouseX) {
-        int width = tooltips.stream()
-                .mapToInt(McUtils.mc().font::width)
-                .max()
-                .orElse(0);
+        int width = tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
         int tooltipX = mouseX + 12;
         if (tooltipX + width + 4 > screen.width) {
             tooltipX = mouseX - 16 - width;
@@ -197,7 +194,7 @@ public class ComponentUtils {
     }
 
     public static List<FormattedText> wrapTooltips(List<FormattedText> tooltips, int maxWidth) {
-        return tooltips.stream().flatMap(x->splitText(x,maxWidth).stream()).toList();
+        return tooltips.stream().flatMap(x -> splitText(x, maxWidth).stream()).toList();
     }
 
     public static List<FormattedText> splitText(FormattedText text, int maxWidth) {
