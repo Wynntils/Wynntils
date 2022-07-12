@@ -113,8 +113,7 @@ public abstract class ScreenMixin {
                 .collect(Collectors.toList());
 
         var visualTooltipFromItem = e.getItemStack().getTooltipImage();
-        visualTooltipFromItem.ifPresent(
-                tooltip -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltip)));
+        visualTooltipFromItem.ifPresent(tooltip -> wrappedTooltips.add(1, ClientTooltipComponent.create(tooltip)));
 
         renderTooltipInternal(poseStack, wrappedTooltips, mx, my);
     }
