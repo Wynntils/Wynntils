@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.custom.item.properties;
 
+import com.wynntils.features.user.ItemHighlightFeature;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
@@ -21,6 +22,11 @@ public class CosmeticTierProperty extends ItemProperty implements HighlightPrope
         if (chatColor == null) chatColor = ChatFormatting.WHITE;
 
         highlightColor = CustomColor.fromChatFormatting(chatColor);
+    }
+
+    @Override
+    public boolean isHighlightEnabled() {
+        return ItemHighlightFeature.cosmeticHighlightEnabled;
     }
 
     @Override

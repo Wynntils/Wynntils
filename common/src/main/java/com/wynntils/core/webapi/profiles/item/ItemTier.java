@@ -87,13 +87,22 @@ public enum ItemTier {
         return chatFormatting;
     }
 
-    public CustomColor getHighlightColor() {
+    public boolean isHighlightEnabled() {
         try {
-            if (highlightEnabled.call()) return highlightColor.call();
+            return highlightEnabled.call();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return CustomColor.NONE; // either highlight is disabled, or some error occurred
+        return false; // some error occurred
+    }
+
+    public CustomColor getHighlightColor() {
+        try {
+            return highlightColor.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CustomColor.NONE; // some error occurred
     }
 
     public static ItemTier fromComponent(Component component) {

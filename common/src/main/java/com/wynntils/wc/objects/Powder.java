@@ -8,7 +8,6 @@ import com.wynntils.utils.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public enum Powder {
@@ -29,9 +28,6 @@ public enum Powder {
         this.lightColor = lightColor;
         this.darkColor = darkColor;
     }
-
-    public static Pattern POWDER_NAME_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
 
     public char getSymbol() {
         return symbol;
