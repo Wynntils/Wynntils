@@ -19,10 +19,10 @@ import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
-    public static String getFormatted(FormattedText component) {
+    public static String getFormatted(FormattedText formattedText) {
         StringBuilder result = new StringBuilder();
 
-        component.visit(
+        formattedText.visit(
                 new FormattedText.StyledContentConsumer<>() {
                     Style oldStyle = Style.EMPTY;
 
@@ -179,8 +179,8 @@ public class ComponentUtils {
         return newLore;
     }
 
-    public static Component formattedTextToComponent(FormattedText text) {
-        return new TextComponent(getFormatted(text));
+    public static Component formattedTextToComponent(FormattedText formattedText) {
+        return new TextComponent(getFormatted(formattedText));
     }
 
     public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
@@ -199,11 +199,11 @@ public class ComponentUtils {
     }
 
     public static List<Component> wrapTooltips(List<Component> tooltips, int maxWidth) {
-        return tooltips.stream().flatMap(x -> splitText(x, maxWidth).stream()).toList();
+        return tooltips.stream().flatMap(x -> splitComponent(x, maxWidth).stream()).toList();
     }
 
-    public static List<Component> splitText(Component text, int maxWidth) {
-        return McUtils.mc().font.getSplitter().splitLines(text, maxWidth, Style.EMPTY).stream()
+    public static List<Component> splitComponent(Component component, int maxWidth) {
+        return McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
                 .map(ComponentUtils::formattedTextToComponent)
                 .toList();
     }
