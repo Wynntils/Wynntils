@@ -199,7 +199,9 @@ public class ComponentUtils {
     }
 
     public static List<Component> wrapTooltips(List<Component> tooltips, int maxWidth) {
-        return tooltips.stream().flatMap(x -> splitComponent(x, maxWidth).stream()).toList();
+        return tooltips.stream()
+                .flatMap(x -> splitComponent(x, maxWidth).stream())
+                .toList();
     }
 
     public static List<Component> splitComponent(Component component, int maxWidth) {
