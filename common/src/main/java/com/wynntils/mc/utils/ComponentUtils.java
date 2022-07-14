@@ -19,7 +19,7 @@ import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
-    public static String getFormatted(FormattedText formattedText) {
+    public static String getCodedString(FormattedText formattedText) {
         StringBuilder result = new StringBuilder();
 
         formattedText.visit(
@@ -41,24 +41,25 @@ public class ComponentUtils {
         return result.toString();
     }
 
-    public static String getUnformatted(Component msg) {
-        return msg.getString();
+    public static String getUnformattedString(FormattedText formattedText) {
+        // TODO: remove §-codes from string (when implemented don't forget to modify usages)
+        return formattedText.getString();
     }
 
     @Nullable
-    public static String getFormatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
+    public static String getCodedString(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return ComponentUtils.getFormatted(component);
+        return getCodedString(component);
     }
 
     @Nullable
-    public static String getUnformatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
+    public static String getUnformattedString(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return component.getString();
+        return getUnformattedString(component);
     }
 
     /**
@@ -180,7 +181,7 @@ public class ComponentUtils {
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
-        return new TextComponent(getFormatted(formattedText));
+        return new TextComponent(getCodedString(formattedText));
     }
 
     public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {

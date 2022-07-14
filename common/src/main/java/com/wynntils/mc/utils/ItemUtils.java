@@ -35,7 +35,7 @@ public class ItemUtils {
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(ComponentUtils.getFormatted(loreTag.getString(i)));
+            lore.add(ComponentUtils.getCodedString(loreTag.getString(i)));
         }
 
         return lore;

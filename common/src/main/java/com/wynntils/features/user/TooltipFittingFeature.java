@@ -44,6 +44,7 @@ public class TooltipFittingFeature extends UserFeature {
         if (currentScreen == null) return; // shouldn't be possible
 
         if (wrapText) {
+            // calculate optimal wrapping for scaled up tooltips
             int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
                     e.getTooltips(), (int) (currentScreen.width / universalScale), (int)
                             (e.getMouseX() / universalScale));

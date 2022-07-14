@@ -40,7 +40,7 @@ public class Character implements Model {
     @SubscribeEvent
     public void onMenuOpened(MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getUnformatted(e.getTitle()).equals("§8§lSelect a Class")) {
+                && ComponentUtils.getUnformattedString(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
             WynntilsMod.info("In character selection menu");
         }
