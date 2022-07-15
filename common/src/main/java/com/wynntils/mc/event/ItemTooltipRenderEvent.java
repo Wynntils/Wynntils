@@ -5,6 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -52,8 +55,19 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
     @Cancelable
     public static class Pre extends ItemTooltipRenderEvent {
-        public Pre(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+        private List<Component> tooltips;
+
+        public Pre(PoseStack poseStack, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {
             super(poseStack, itemStack, mouseX, mouseY);
+            setTooltips(tooltips);
+        }
+
+        public List<Component> getTooltips() {
+            return tooltips;
+        }
+
+        public void setTooltips(List<Component> tooltips) {
+            this.tooltips = Collections.unmodifiableList(tooltips);
         }
     }
 

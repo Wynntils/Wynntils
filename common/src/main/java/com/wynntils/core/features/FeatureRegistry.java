@@ -32,7 +32,7 @@ import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.QuestInfoOverlayFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
-import com.wynntils.features.user.TooltipScaleFeature;
+import com.wynntils.features.user.TooltipFittingFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.mc.utils.CrashReportManager;
@@ -151,7 +151,7 @@ public class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
-        registerFeature(new TooltipScaleFeature());
+        registerFeature(new TooltipFittingFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new WynncraftPauseScreenFeature());
