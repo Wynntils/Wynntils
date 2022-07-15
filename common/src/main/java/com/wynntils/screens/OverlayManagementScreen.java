@@ -137,10 +137,7 @@ public class OverlayManagementScreen extends Screen {
         //  - OverlayArea
 
         // reset
-        selectionMode = SelectionMode.None;
-        selectedOverlay = null;
-        selectedCorner = null;
-        selectedEdge = null;
+        resetSelection();
 
         Vec2 mousePos = new Vec2((float) mouseX, (float) mouseY);
 
@@ -219,7 +216,7 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        selectedOverlay = null;
+        resetSelection();
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
@@ -326,6 +323,13 @@ public class OverlayManagementScreen extends Screen {
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
         }
+    }
+
+    private void resetSelection() {
+        selectionMode = SelectionMode.None;
+        selectedOverlay = null;
+        selectedCorner = null;
+        selectedEdge = null;
     }
 
     private enum SelectionMode {
