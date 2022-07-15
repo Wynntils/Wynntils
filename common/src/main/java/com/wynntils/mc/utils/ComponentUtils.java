@@ -15,6 +15,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
@@ -40,24 +41,24 @@ public class ComponentUtils {
         return result.toString();
     }
 
-    public static String getUnformatted(Component msg) {
-        return msg.getString();
-    }
-
-    @Nullable
-    public static String getFormatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
-        if (component == null) return null;
-
-        return ComponentUtils.getFormatted(component);
-    }
-
-    @Nullable
-    public static String getUnformatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
-        if (component == null) return null;
-
+    public static String getUnformatted(Component component) {
         return component.getString();
+    }
+
+    @Nullable
+    public static String getFormatted(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
+        if (component == null) return null;
+
+        return getFormatted(component);
+    }
+
+    @Nullable
+    public static String getUnformatted(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
+        if (component == null) return null;
+
+        return getUnformatted(component);
     }
 
     /**
@@ -176,5 +177,44 @@ public class ComponentUtils {
         }
 
         return newLore;
+    }
+
+    public static Component formattedTextToComponent(FormattedText formattedText) {
+        MutableComponent component = new TextComponent("");
+        formattedText.visit(
+                (style, string) -> {
+                    component.append(new TextComponent(string).withStyle(style));
+                    return Optional.empty();
+                },
+                Style.EMPTY);
+
+        return component;
+    }
+
+    public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
+        int tooltipWidth =
+                tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
+        int tooltipX = mouseX + 12;
+        if (tooltipX + tooltipWidth + 4 > screenWidth) {
+            tooltipX = mouseX - 16 - tooltipWidth;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > screenWidth / 2) tooltipWidth = mouseX - 12 - 8;
+                else tooltipWidth = screenWidth - 16 - mouseX;
+            }
+        }
+        return tooltipWidth;
+    }
+
+    public static List<Component> wrapTooltips(List<Component> tooltips, int maxWidth) {
+        return tooltips.stream()
+                .flatMap(x -> splitComponent(x, maxWidth).stream())
+                .toList();
+    }
+
+    public static List<Component> splitComponent(Component component, int maxWidth) {
+        return McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
+                .map(ComponentUtils::formattedTextToComponent)
+                .toList();
     }
 }
