@@ -25,6 +25,8 @@ public class WynnItemMatchers {
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
+    public static Pattern POWDER_PATTERN =
+            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -107,6 +109,13 @@ public class WynnItemMatchers {
         return (name.startsWith(ChatFormatting.DARK_AQUA.toString()) && name.contains("%"));
     }
 
+    public static boolean isMythic(ItemStack itemStack) {
+        // only gear, identified or not, could be a mythic
+        if (!(isUnidentified(itemStack) || isGear(itemStack))) return false;
+
+        return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    }
+
     /**
      * Returns true if the passed item has a durability value (crafted items, tools)
      */
@@ -131,18 +140,19 @@ public class WynnItemMatchers {
         return false;
     }
 
-    public static boolean isMythic(ItemStack itemStack) {
-        // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack))) return false;
-
-        return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    public static boolean isPowder(ItemStack itemStack) {
+        return powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static Matcher rarityLineMatcher(Component line) {
-        return ITEM_RARITY_PATTERN.matcher(line.getString());
+    public static Matcher rarityLineMatcher(Component text) {
+        return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
 
-    public static Matcher durabilityLineMatcher(Component line) {
-        return DURABILITY_PATTERN.matcher(line.getString());
+    public static Matcher durabilityLineMatcher(Component text) {
+        return DURABILITY_PATTERN.matcher(text.getString());
+    }
+
+    public static Matcher powderNameMatcher(Component text) {
+        return POWDER_PATTERN.matcher(text.getString());
     }
 }

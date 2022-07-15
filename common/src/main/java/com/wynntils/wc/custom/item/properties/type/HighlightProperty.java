@@ -10,6 +10,8 @@ public interface HighlightProperty extends PropertyType {
 
     CustomColor getHighlightColor();
 
+    boolean isHighlightEnabled();
+
     /** Whether this highlight should be shown in inventories */
     default boolean isInventoryHighlight() {
         return true;
