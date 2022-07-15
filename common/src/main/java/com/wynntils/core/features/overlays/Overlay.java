@@ -201,10 +201,10 @@ public abstract class Overlay implements Translatable, Configurable {
     public Map<Corner, Vec2> getCornersMap() {
         Map<Corner, Vec2> points = new HashMap<>();
 
-        points.put(Corner.TOP_LEFT, new Vec2(getRenderX(), getRenderY()));
-        points.put(Corner.TOP_RIGHT, new Vec2(getRenderX() + getWidth(), getRenderY()));
-        points.put(Corner.BOTTOM_LEFT, new Vec2(getRenderX(), getRenderY() + getHeight()));
-        points.put(Corner.BOTTOM_RIGHT, new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight()));
+        points.put(Corner.TopLeft, new Vec2(getRenderX(), getRenderY()));
+        points.put(Corner.TopRight, new Vec2(getRenderX() + getWidth(), getRenderY()));
+        points.put(Corner.BottomLeft, new Vec2(getRenderX(), getRenderY() + getHeight()));
+        points.put(Corner.BottomRight, new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight()));
 
         return points;
     }

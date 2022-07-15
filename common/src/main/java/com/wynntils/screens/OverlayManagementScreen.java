@@ -7,6 +7,7 @@ package com.wynntils.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.Corner;
+import com.wynntils.core.features.overlays.Edge;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -25,11 +26,12 @@ import net.minecraft.world.phys.Vec2;
 public class OverlayManagementScreen extends Screen {
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
-    private static final int MAX_CLICK_DISTANCE = 20;
+    private static final int MAX_CLICK_DISTANCE = 10;
 
     private static SelectionMode selectionMode = SelectionMode.None;
     private static Overlay selectedOverlay = null;
     private static Corner selectedCorner = null;
+    private static Edge selectedEdge = null;
 
     public OverlayManagementScreen() {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
@@ -138,6 +140,7 @@ public class OverlayManagementScreen extends Screen {
         selectionMode = SelectionMode.None;
         selectedOverlay = null;
         selectedCorner = null;
+        selectedEdge = null;
 
         Vec2 mousePos = new Vec2((float) mouseX, (float) mouseY);
 
@@ -149,7 +152,54 @@ public class OverlayManagementScreen extends Screen {
                     selectedCorner = corner.getKey();
                     selectionMode = SelectionMode.Corner;
 
-                    return super.mouseClicked(mouseX, mouseY, button);
+                    return false;
+                }
+            }
+        }
+
+        for (Overlay overlay : OverlayManager.getOverlays()) {
+            for (Edge value : Edge.values()) {
+                float minX, maxX, minY, maxY;
+
+                switch (value) {
+                    case Top -> {
+                        minX = overlay.getRenderX();
+                        maxX = overlay.getRenderX() + overlay.getWidth();
+                        minY = overlay.getRenderY() - MAX_CLICK_DISTANCE / 2f;
+                        maxY = overlay.getRenderY() + MAX_CLICK_DISTANCE / 2f;
+                    }
+                    case Left -> {
+                        minX = overlay.getRenderX() - MAX_CLICK_DISTANCE / 2f;
+                        maxX = overlay.getRenderX() + MAX_CLICK_DISTANCE / 2f;
+                        minY = overlay.getRenderY();
+                        maxY = overlay.getRenderY() + overlay.getHeight();
+                    }
+                    case Right -> {
+                        minX = overlay.getRenderX() + overlay.getWidth() - MAX_CLICK_DISTANCE / 2f;
+                        maxX = overlay.getRenderX() + overlay.getWidth() + MAX_CLICK_DISTANCE / 2f;
+                        minY = overlay.getRenderY();
+                        maxY = overlay.getRenderY() + overlay.getHeight();
+                    }
+                    case Bottom -> {
+                        minX = overlay.getRenderX();
+                        maxX = overlay.getRenderX() + overlay.getWidth();
+                        minY = overlay.getRenderY() + overlay.getHeight() - MAX_CLICK_DISTANCE / 2f;
+                        maxY = overlay.getRenderY() + overlay.getHeight() + MAX_CLICK_DISTANCE / 2f;
+                    }
+                    default -> {
+                        // should not happen
+                        continue;
+                    }
+                }
+
+                if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
+                    selectedOverlay = overlay;
+                    selectedEdge = value;
+                    selectionMode = SelectionMode.Edge;
+
+                    System.out.println(selectedEdge);
+
+                    return false;
                 }
             }
         }
@@ -160,7 +210,7 @@ public class OverlayManagementScreen extends Screen {
                 selectedOverlay = overlay;
                 selectionMode = SelectionMode.Area;
 
-                return super.mouseClicked(mouseX, mouseY, button);
+                return false;
             }
         }
 
@@ -182,9 +232,48 @@ public class OverlayManagementScreen extends Screen {
 
         handleOverlayCornerDrag(button, dragX, dragY);
 
+        handleOverlayEdgeDrag(button, dragX, dragY);
+
         handleOverlayBodyDrag(button, dragX, dragY);
 
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    private void handleOverlayEdgeDrag(int button, double dragX, double dragY) {
+        if (selectionMode != SelectionMode.Edge || selectedEdge == null || selectedOverlay == null) {
+            return;
+        }
+
+        Overlay overlay = selectedOverlay;
+        Edge edge = selectedEdge;
+
+        OverlaySize overlaySize = overlay.getSize();
+
+        final float renderX = overlay.getRenderX();
+        final float renderY = overlay.getRenderY();
+
+        switch (edge) {
+            case Top -> {
+                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+                overlay.setPosition(
+                        OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
+            }
+            case Left -> {
+                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setPosition(
+                        OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
+            }
+            case Right -> {
+                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setPosition(
+                        OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
+            }
+            case Bottom -> {
+                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+                overlay.setPosition(
+                        OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
+            }
+        }
     }
 
     private void handleOverlayBodyDrag(int button, double dragX, double dragY) {
@@ -212,25 +301,25 @@ public class OverlayManagementScreen extends Screen {
         final float renderY = overlay.getRenderY();
 
         switch (corner) {
-            case TOP_LEFT -> {
+            case TopLeft -> {
                 overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
                 overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) dragY));
             }
-            case TOP_RIGHT -> {
+            case TopRight -> {
                 overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
                 overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
             }
-            case BOTTOM_LEFT -> {
+            case BottomLeft -> {
                 overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
                 overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
             }
-            case BOTTOM_RIGHT -> {
+            case BottomRight -> {
                 overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
                 overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
