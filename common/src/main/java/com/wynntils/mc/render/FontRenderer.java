@@ -17,6 +17,7 @@ public class FontRenderer {
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
+    private static final int SHADOW_COLOR = 0;
 
     public FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
@@ -51,12 +52,20 @@ public class FontRenderer {
             case RIGHT_ALIGNED:
                 return renderText(
                         poseStack, text, x - font.width(text), y, customColor, TextAlignment.LEFT_ALIGNED, shadow);
-            default: {
-                if (shadow == TextShadow.NORMAL) {
-                    return font.drawShadow(poseStack, text, x, y, customColor.asInt());
+            default:
+                switch (shadow) {
+                    case OUTLINE:
+                        for (int i = -1; i <= 1; i++) {
+                            for (int j = -1; j <= 1; j++) {
+                                font.draw(poseStack, text, x + i, y + j, SHADOW_COLOR);
+                            }
+                        }
+                        return font.draw(poseStack, text, x, y, customColor.asInt());
+                    case NORMAL:
+                        return font.drawShadow(poseStack, text, x, y, customColor.asInt());
+                    default:
+                        return font.draw(poseStack, text, x, y, customColor.asInt());
                 }
-                return font.draw(poseStack, text, x, y, customColor.asInt());
-            }
         }
     }
 
@@ -179,6 +188,7 @@ public class FontRenderer {
 
     public enum TextShadow {
         NONE,
-        NORMAL
+        NORMAL,
+        OUTLINE
     }
 }
