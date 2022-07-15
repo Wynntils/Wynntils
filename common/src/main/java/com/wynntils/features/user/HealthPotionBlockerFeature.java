@@ -13,6 +13,7 @@ import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,15 +23,24 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
     @SubscribeEvent
     public void onPotionUse(PacketSentEvent<ServerboundUseItemPacket> e) {
-        if (!WynnUtils.onWorld()) return;
-
-        ItemStack stack = McUtils.inventory().getSelected();
-        if (!WynnItemMatchers.isHealingPotion(stack)) return;
-
-        if (McUtils.player().getHealth() == McUtils.player().getMaxHealth()) {
+        if (shouldBlock(e)) {
             e.setCanceled(true);
             McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.healthPotionBlocker.healthFull")
                     .withStyle(ChatFormatting.RED));
         }
+    }
+
+    @SubscribeEvent
+    public void onPotionUseOn(PacketSentEvent<ServerboundUseItemOnPacket> e) {
+        if (shouldBlock(e)) e.setCanceled(true);
+    }
+
+    private boolean shouldBlock(PacketSentEvent<?> e) {
+        if (!WynnUtils.onWorld()) return false;
+
+        ItemStack stack = McUtils.inventory().getSelected();
+        if (!WynnItemMatchers.isHealingPotion(stack)) return false;
+
+        return McUtils.player().getHealth() == McUtils.player().getMaxHealth();
     }
 }
