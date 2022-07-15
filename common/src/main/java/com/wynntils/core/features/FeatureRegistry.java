@@ -27,6 +27,7 @@ import com.wynntils.features.user.ItemHighlightFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.ItemStatInfoFeature;
+import com.wynntils.features.user.ItemTextOverlayFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.PlayerGhostTransparencyFeature;
@@ -156,6 +157,7 @@ public class FeatureRegistry {
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new ItemLockFeature());
+        registerFeature(new ItemTextOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

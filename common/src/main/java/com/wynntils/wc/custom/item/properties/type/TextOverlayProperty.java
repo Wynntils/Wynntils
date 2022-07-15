@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.custom.item.properties.type;
 
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.objects.CustomColor;
 
 public interface TextOverlayProperty extends PropertyType {
@@ -25,10 +26,6 @@ public interface TextOverlayProperty extends PropertyType {
     /**
      * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
      */
-    record TextOverlay(String text, CustomColor color, int xOffset, int yOffset, float scale) {
-
-        public TextOverlay(String text, CustomColor color, int xOffset, int yOffset) {
-            this(text, color, xOffset, yOffset, 1.0f);
-        }
-    }
+    record TextOverlay(
+            String text, CustomColor color, FontRenderer.TextShadow shadow, int xOffset, int yOffset, float scale) {}
 }

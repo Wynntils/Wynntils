@@ -5,6 +5,8 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.ItemHighlightFeature;
+import com.wynntils.features.user.ItemTextOverlayFeature;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
@@ -32,13 +34,15 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
         Matcher powderMatcher = WynnItemMatchers.powderNameMatcher(item.getHoverName());
         String powderNumeral = "I";
         if (powderMatcher.matches()) {
-            powderNumeral = powderMatcher.group(1);
+            powderNumeral = powderMatcher.group(2);
         }
 
-        String text = powderNumeral;
-        // TODO add option for arabic text
+        // convert from roman to arabic if necessary
+        String text = ItemTextOverlayFeature.powderTierRomanNumerals
+                ? powderNumeral
+                : "" + MathUtils.integerFromRoman(powderNumeral);
 
-        textOverlay = new TextOverlay(text, highlightColor, -1, 1);
+        textOverlay = new TextOverlay(text, highlightColor, ItemTextOverlayFeature.powderTierShadow, -1, 1, 0.75f);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return true; // TODO config option
+        return ItemTextOverlayFeature.powderTierEnabled;
     }
 
     @Override
