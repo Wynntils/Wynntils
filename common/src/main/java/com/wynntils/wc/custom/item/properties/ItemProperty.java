@@ -6,6 +6,7 @@ package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
+import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
 
 public abstract class ItemProperty {
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
@@ -13,6 +14,7 @@ public abstract class ItemProperty {
     public static final Class<CosmeticTierProperty> COSMETIC_TIER = CosmeticTierProperty.class;
 
     public static final Class<HighlightProperty> HIGHLIGHT = HighlightProperty.class;
+    public static final Class<TextOverlayProperty> TEXT_OVERLAY = TextOverlayProperty.class;
 
     protected WynnItemStack item;
 
