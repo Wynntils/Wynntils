@@ -181,7 +181,15 @@ public class ComponentUtils {
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
-        return new TextComponent(getCodedString(formattedText));
+        MutableComponent component = new TextComponent("");
+        formattedText.visit(
+                (style, string) -> {
+                    component.append(new TextComponent(string).withStyle(style));
+                    return Optional.empty();
+                },
+                Style.EMPTY);
+
+        return component;
     }
 
     public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
