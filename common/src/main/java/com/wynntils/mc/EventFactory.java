@@ -131,9 +131,9 @@ public class EventFactory {
         post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
-    public static ItemTooltipRenderEvent onItemTooltipRenderPre(
-            PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, mouseX, mouseY));
+    public static ItemTooltipRenderEvent.Pre onItemTooltipRenderPre(
+            PoseStack poseStack, ItemStack stack, List<Component> tooltips, int mouseX, int mouseY) {
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, tooltips, mouseX, mouseY));
     }
 
     public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
