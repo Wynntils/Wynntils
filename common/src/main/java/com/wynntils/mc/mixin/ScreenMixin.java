@@ -77,15 +77,11 @@ public abstract class ScreenMixin {
             ItemStack itemStack,
             int mouseX2,
             int mouseY2) {
-        ItemTooltipRenderEvent e = EventFactory.onItemTooltipRenderPre(poseStack, itemStack, mouseX, mouseY);
+        ItemTooltipRenderEvent.Pre e =
+                EventFactory.onItemTooltipRenderPre(poseStack, itemStack, tooltips, mouseX, mouseY);
         if (e.isCanceled()) return;
-
         instance.renderTooltip(
-                poseStack,
-                instance.getTooltipFromItem(e.getItemStack()),
-                e.getItemStack().getTooltipImage(),
-                e.getMouseX(),
-                e.getMouseY());
+                e.getPoseStack(), e.getTooltips(), e.getItemStack().getTooltipImage(), e.getMouseX(), e.getMouseY());
     }
 
     @Inject(
