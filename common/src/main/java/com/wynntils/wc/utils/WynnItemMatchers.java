@@ -41,7 +41,7 @@ public class WynnItemMatchers {
         boolean hasHealEffect = false;
         ListTag lore = ItemUtils.getLoreTagElseEmpty(itemStack);
         for (Tag tag : lore) {
-            String unformattedLoreLine = ComponentUtils.getUnformattedString(tag.getAsString());
+            String unformattedLoreLine = ComponentUtils.getUnformatted(tag.getAsString());
 
             if (unformattedLoreLine == null) continue;
 

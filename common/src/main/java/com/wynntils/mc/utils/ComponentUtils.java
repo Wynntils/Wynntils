@@ -19,10 +19,10 @@ import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
-    public static String getCodedString(FormattedText formattedText) {
+    public static String getFormatted(Component component) {
         StringBuilder result = new StringBuilder();
 
-        formattedText.visit(
+        component.visit(
                 new FormattedText.StyledContentConsumer<>() {
                     Style oldStyle = Style.EMPTY;
 
@@ -41,25 +41,24 @@ public class ComponentUtils {
         return result.toString();
     }
 
-    public static String getUnformattedString(FormattedText formattedText) {
-        // TODO: remove §-codes from string (when implemented don't forget to modify usages)
-        return formattedText.getString();
+    public static String getUnformatted(Component component) {
+        return component.getString();
     }
 
     @Nullable
-    public static String getCodedString(String jsonString) {
+    public static String getFormatted(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return getCodedString(component);
+        return getFormatted(component);
     }
 
     @Nullable
-    public static String getUnformattedString(String jsonString) {
+    public static String getUnformatted(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return getUnformattedString(component);
+        return getUnformatted(component);
     }
 
     /**
