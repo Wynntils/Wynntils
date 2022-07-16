@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ActionBarManager {
 
     private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("§c❤ (\\d+)/(\\d+)§0\\s+(.+)\\s+§b✺ (\\d+)/(\\d+)");
+            Pattern.compile("§c❤ ([0-9]+)/([0-9]+)§0\\s+(.+)\\s+§b✺ ([0-9]+)/([0-9]+)");
 
     private static String previousActionBar = null;
 
