@@ -30,6 +30,33 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public static boolean teleportScrollEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
+    public static boolean dungeonKeyEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
+    public static boolean amplifierTierEnabled = true;
+
+    @Config
+    public static boolean amplifierTierRomanNumerals = true;
+
+    @Config
+    public static FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
+    public static boolean consumableChargeEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow consumableChargeShadow = FontRenderer.TextShadow.NORMAL;
+
+    @Config
     public static boolean inventoryTextOverlayEnabled = true;
 
     @Config
