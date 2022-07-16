@@ -29,7 +29,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
 
         Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(item.getHoverName());
         if (nameMatcher.find()) {
-            location = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(nameMatcher.group(1)));
+            location = ChatFormatting.stripFormatting(nameMatcher.group(1));
 
             if (location.equals("Dungeon")) {
                 textColor = DUNGEON_COLOR;

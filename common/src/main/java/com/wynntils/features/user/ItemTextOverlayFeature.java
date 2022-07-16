@@ -36,6 +36,12 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public static boolean dungeonKeyEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
     public static boolean inventoryTextOverlayEnabled = true;
 
     @Config
