@@ -51,6 +51,12 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public static boolean consumableChargeEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow consumableChargeShadow = FontRenderer.TextShadow.NORMAL;
+
+    @Config
     public static boolean inventoryTextOverlayEnabled = true;
 
     @Config

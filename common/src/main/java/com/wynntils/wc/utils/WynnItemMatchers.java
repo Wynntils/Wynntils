@@ -19,7 +19,7 @@ import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
-    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
     private static final Pattern ITEM_RARITY_PATTERN =
@@ -62,12 +62,16 @@ public class WynnItemMatchers {
     }
 
     public static boolean isConsumable(ItemStack itemStack) {
-        if (itemStack.isEmpty() || (itemStack.getItem() != Items.POTION && itemStack.getItem() != Items.DIAMOND_AXE))
+        if (itemStack.isEmpty()) return false;
+
+        // consumables are either a potion or a diamond axe for crafteds
+        // to ensure an axe item is really a consumable, make sure it has the right name color
+        if (itemStack.getItem() != Items.POTION
+                && !(itemStack.getItem() == Items.DIAMOND_AXE
+                        && itemStack.getHoverName().getString().startsWith(ChatFormatting.DARK_AQUA.toString())))
             return false;
 
-        String name = itemStack.getHoverName().getString();
-        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
-        return CONSUMABLE_PATTERN.matcher(strippedName).matches();
+        return consumableNameMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isUnidentified(ItemStack itemStack) {
@@ -186,5 +190,9 @@ public class WynnItemMatchers {
 
     public static Matcher amplifierNameMatcher(Component text) {
         return AMPLIFIER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher consumableNameMatcher(Component text) {
+        return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 }
