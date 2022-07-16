@@ -157,7 +157,15 @@ public class WynnItemMatchers {
     }
 
     public static boolean isDungeonKey(ItemStack itemStack) {
-        return dungeonKeyNameMatcher(itemStack.getHoverName()).matches();
+        if (!dungeonKeyNameMatcher(itemStack.getHoverName()).matches()) return false;
+
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            // check lore to avoid matching misc. key items
+            if (line.getString().contains("Dungeon Info")) return true;
+            if (line.getString().contains("Corrupted Dungeon Key")) return true;
+        }
+
+        return false;
     }
 
     public static boolean isAmplifier(ItemStack itemStack) {
