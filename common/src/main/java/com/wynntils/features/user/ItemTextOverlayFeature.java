@@ -30,6 +30,12 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public static boolean teleportScrollEnabled = true;
+
+    @Config
+    public static FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
     public static boolean inventoryTextOverlayEnabled = true;
 
     @Config

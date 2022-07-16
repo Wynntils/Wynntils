@@ -25,8 +25,10 @@ public class WynnItemMatchers {
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-    public static Pattern POWDER_PATTERN =
+    private static final Pattern POWDER_PATTERN =
             Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
+    private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("(.*) Teleport Scroll");
+    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -144,6 +146,10 @@ public class WynnItemMatchers {
         return powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
+    public static boolean isTeleportScroll(ItemStack itemStack) {
+        return teleportScrollNameMatcher(itemStack.getHoverName()).matches();
+    }
+
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -154,5 +160,13 @@ public class WynnItemMatchers {
 
     public static Matcher powderNameMatcher(Component text) {
         return POWDER_PATTERN.matcher(text.getString());
+    }
+
+    public static Matcher teleportScrollNameMatcher(Component text) {
+        return TELEPORT_SCROLL_PATTERN.matcher(text.getString());
+    }
+
+    public static Matcher teleportScrollLocationMatcher(Component text) {
+        return TELEPORT_LOCATION_PATTERN.matcher(text.getString());
     }
 }
