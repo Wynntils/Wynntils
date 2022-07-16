@@ -42,6 +42,15 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public static boolean amplifierTierEnabled = true;
+
+    @Config
+    public static boolean amplifierTierRomanNumerals = true;
+
+    @Config
+    public static FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
     public static boolean inventoryTextOverlayEnabled = true;
 
     @Config

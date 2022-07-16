@@ -10,6 +10,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
 import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
 import com.wynntils.wc.custom.item.properties.DungeonKeyProperty;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
@@ -58,6 +59,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
         registerProperty(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
         registerProperty(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
+        registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

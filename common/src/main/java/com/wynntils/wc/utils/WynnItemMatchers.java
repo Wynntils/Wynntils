@@ -30,6 +30,7 @@ public class WynnItemMatchers {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
+    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -155,6 +156,10 @@ public class WynnItemMatchers {
         return dungeonKeyNameMatcher(itemStack.getHoverName()).matches();
     }
 
+    public static boolean isAmplifier(ItemStack itemStack) {
+        return amplifierNameMatcher(itemStack.getHoverName()).matches();
+    }
+
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -164,7 +169,7 @@ public class WynnItemMatchers {
     }
 
     public static Matcher powderNameMatcher(Component text) {
-        return POWDER_PATTERN.matcher(text.getString());
+        return POWDER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 
     public static Matcher teleportScrollNameMatcher(Component text) {
@@ -177,5 +182,9 @@ public class WynnItemMatchers {
 
     public static Matcher dungeonKeyNameMatcher(Component text) {
         return DUNGEON_KEY_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher amplifierNameMatcher(Component text) {
+        return AMPLIFIER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 }
