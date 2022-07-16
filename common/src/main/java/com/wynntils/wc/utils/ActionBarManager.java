@@ -15,14 +15,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ActionBarManager {
 
     private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("§c❤ ([0-9]+)/([0-9]+)§0\\s+(.+)\\s+§b✺ ([0-9]+)/([0-9]+)");
+            Pattern.compile("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)".replace("§", "(?:§[0-9a-fklmnor])*"));
 
     private static String previousActionBar = null;
 
-    private static int currentHealth = 100;
-    private static int maxHealth = 100;
-    private static int currentMana = 20;
-    private static int maxMana = 20;
+    private static int currentHealth = -1;
+    private static int maxHealth = -1;
+    private static int currentMana = -1;
+    private static int maxMana = -1;
 
     // The server doesn't send SetActionBarPackets, instead it sends ChatPackets with the ChatType GAME_INFO
     @SubscribeEvent
