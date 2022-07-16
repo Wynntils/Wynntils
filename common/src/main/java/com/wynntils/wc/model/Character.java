@@ -10,6 +10,7 @@ import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.Model;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.objects.ClassType;
@@ -79,6 +80,8 @@ public class Character implements Model {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;
+        private int maxHealth = -1;
+        private int health = -1;
 
         // This field is basically the slot id of the class,
         // meaning that if a class changes slots, the ID will not be persistent.
@@ -106,6 +109,30 @@ public class Character implements Model {
 
         public int getId() {
             return id;
+        }
+
+        public int getMaxHealth() {
+            return maxHealth;
+        }
+
+        public int getHealth() {
+            return health;
+        }
+
+        public int getMaxMana() {
+            return 20;
+        }
+
+        public int getMana() {
+            return McUtils.player().getFoodData().getFoodLevel();
+        }
+
+        public void setMaxHealth(int maxHealth) {
+            this.maxHealth = maxHealth;
+        }
+
+        public void setHealth(int health) {
+            this.health = health;
         }
 
         public static CharacterInfo parseCharacter(ItemStack itemStack, int slotNum) {
