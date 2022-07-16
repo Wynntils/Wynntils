@@ -79,8 +79,6 @@ public class Character implements Model {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;
-        private int maxHealth = -1;
-        private int health = -1;
 
         // This field is basically the slot id of the class,
         // meaning that if a class changes slots, the ID will not be persistent.
