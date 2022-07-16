@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -213,8 +214,10 @@ public class ComponentUtils {
     }
 
     public static List<Component> splitComponent(Component component, int maxWidth) {
-        return McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
+        List<Component> split = McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
                 .map(ComponentUtils::formattedTextToComponent)
-                .toList();
+                .collect(Collectors.toList());
+        if (split.isEmpty()) split.add(new TextComponent(""));
+        return split;
     }
 }
