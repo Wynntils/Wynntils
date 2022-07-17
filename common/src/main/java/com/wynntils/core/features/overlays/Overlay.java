@@ -112,8 +112,8 @@ public abstract class Overlay implements Translatable, Configurable {
 
     @Override
     public String getTranslation(String keySuffix) {
-        return I18n.get("feature.wynntils" + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase() + "."
-                + keySuffix);
+        return I18n.get("feature.wynntils." + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase()
+                + "." + keySuffix);
     }
 
     public String getShortName() {
