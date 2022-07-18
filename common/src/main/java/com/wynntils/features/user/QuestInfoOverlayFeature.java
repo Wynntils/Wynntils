@@ -89,6 +89,17 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()));
         }
 
+        private void recalculatePreviewRenderTasks() {
+            toRenderPreview[0].setSetting(TextRenderSetting.getWithHorizontalAlignment(
+                    this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment()));
+
+            toRenderPreview[1].setSetting(TextRenderSetting.getWithHorizontalAlignment(
+                    this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment()));
+
+            toRenderPreview[2].setSetting(TextRenderSetting.getWithHorizontalAlignment(
+                    this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()));
+        }
+
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             QuestInfo currentQuest = QuestManager.getCurrentQuest();
@@ -114,7 +125,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            recalculateRenderTasks(); // we have to force update every time
+            recalculatePreviewRenderTasks(); // we have to force update every time
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(

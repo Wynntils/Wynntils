@@ -172,6 +172,14 @@ public abstract class Overlay implements Translatable, Configurable {
         this.position = position;
     }
 
+    public void setVerticalAlignmentOverride(VerticalAlignment verticalAlignmentOverride) {
+        this.verticalAlignmentOverride = verticalAlignmentOverride;
+    }
+
+    public void setHorizontalAlignmentOverride(HorizontalAlignment horizontalAlignmentOverride) {
+        this.horizontalAlignmentOverride = horizontalAlignmentOverride;
+    }
+
     // Return the X where the overlay should be rendered
     public float getRenderX() {
         return getRenderX(this.position, this);

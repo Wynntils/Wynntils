@@ -209,7 +209,15 @@ public class FontRenderer {
     public enum TextAlignment {
         LEFT_ALIGNED,
         CENTER_ALIGNED,
-        RIGHT_ALIGNED
+        RIGHT_ALIGNED;
+
+        public static TextAlignment fromHorizontalAlignment(HorizontalAlignment alignment) {
+            return switch (alignment) {
+                case Left -> LEFT_ALIGNED;
+                case Center -> CENTER_ALIGNED;
+                case Right -> RIGHT_ALIGNED;
+            };
+        }
     }
 
     public enum TextShadow {
