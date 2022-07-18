@@ -13,15 +13,23 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.phys.Vec2;
 
@@ -29,7 +37,24 @@ public class OverlayManagementScreen extends Screen {
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 10;
+    private static final List<Component> HELP_TOOLTIP_LINES = List.of(
+            new TextComponent("Resize the overlay by dragging the edges or corners."),
+            new TextComponent("Move it by dragging the center of the overlay."),
+            new TextComponent("Click on the boxes on the edges of the overlay to change"),
+            new TextComponent("vertical and horizontal alignment."));
 
+    private static final List<Component> CLOSE_TOOLTIP_LINES =
+            List.of(new TextComponent("Click here to stop editing and reset changes."));
+
+    private static final List<Component> TEST_TOOLTIP_LINES = List.of(
+            new TextComponent("Click here to toggle test mode."),
+            new TextComponent("In test mode, you can see how your overlay setup would look in-game,"),
+            new TextComponent("using preview render mode."));
+
+    private static final List<Component> APPLY_TOOLTIP_LINES =
+            List.of(new TextComponent("Click here to apply changes to current overlay."));
+
+    private boolean testMode = false;
     private static SelectionMode selectionMode = SelectionMode.None;
     private static Overlay selectedOverlay = null;
     private static Corner selectedCorner = null;
@@ -55,14 +80,32 @@ public class OverlayManagementScreen extends Screen {
                 button -> {
                     McUtils.mc().setScreen(new OverlaySelectionScreen());
                     onClose();
-                }));
+                },
+                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
+                        poseStack,
+                        renderX,
+                        renderY,
+                        100,
+                        CLOSE_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false)));
         this.addRenderableWidget(new Button(
                 this.width / 2 - BUTTON_WIDTH / 2,
                 this.height - 150,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.testSettings"),
-                button -> {}));
+                button -> {
+                    testMode = !testMode;
+                },
+                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
+                        poseStack,
+                        renderX,
+                        renderY,
+                        100,
+                        TEST_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false)));
         this.addRenderableWidget(new Button(
                 this.width / 2 + BUTTON_WIDTH,
                 this.height - 150,
@@ -71,24 +114,43 @@ public class OverlayManagementScreen extends Screen {
                 new TranslatableComponent("screens.wynntils.overlayManagement.applySettings"),
                 button -> {
                     ConfigManager.saveConfig();
-                    McUtils.mc().setScreen(null);
+                    McUtils.mc().setScreen(new OverlaySelectionScreen());
                     onClose();
-                }));
+                },
+                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
+                        poseStack,
+                        renderX,
+                        renderY,
+                        100,
+                        APPLY_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false)));
     }
 
     @Override
     public void onClose() {
         ConfigManager.loadConfigFile();
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
-        //        for (ConfigHolder configHolder : ConfigManager.getConfigHolders().stream().filter(configHolder ->
-        // configHolder.getParent() == selectedOverlay).collect(Collectors.toSet())) {
-        //            selectedOverlay.updateConfigOption(configHolder);
-        //        }
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderSections(poseStack);
+        if (!testMode) {
+            renderSections(poseStack);
+        } else {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            this.width / 2f,
+                            this.height - 160,
+                            new TextRenderTask(
+                                    "Test mode on.",
+                                    new TextRenderSetting(
+                                            0,
+                                            CommonColors.WHITE,
+                                            FontRenderer.TextAlignment.CENTER_ALIGNED,
+                                            FontRenderer.TextShadow.NORMAL)));
+        }
 
         Set<Overlay> overlays = OverlayManager.getOverlays().stream()
                 .filter(OverlayManager::isEnabled)
@@ -113,6 +175,39 @@ public class OverlayManagementScreen extends Screen {
                     0,
                     overlay.getWidth(),
                     overlay.getHeight());
+
+            if (!testMode) {
+                FontRenderer.getInstance()
+                        .renderTextWithAlignment(
+                                poseStack,
+                                overlay.getRenderX(),
+                                overlay.getRenderY(),
+                                new TextRenderTask(
+                                        overlay.getTranslatedName(),
+                                        new TextRenderSetting(
+                                                overlay.getWidth(),
+                                                color,
+                                                FontRenderer.TextAlignment.CENTER_ALIGNED,
+                                                FontRenderer.TextShadow.OUTLINE)),
+                                overlay.getRenderedWidth(),
+                                overlay.getRenderedHeight(),
+                                HorizontalAlignment.Center,
+                                VerticalAlignment.Middle);
+            }
+
+            if (isMouseHoveringOverlay(overlay, mouseX, mouseY)) {
+                RenderUtils.drawTooltipAt(
+                        poseStack,
+                        mouseX
+                                - RenderUtils.getToolTipWidth(
+                                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
+                                        FontRenderer.getInstance().getFont()),
+                        mouseY,
+                        100,
+                        HELP_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false);
+            }
         }
 
         super.render(poseStack, mouseX, mouseY, partialTick); // This renders widgets
@@ -198,8 +293,7 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        if ((overlay.getRenderX() <= mouseX && overlay.getRenderX() + overlay.getWidth() >= mouseX)
-                && (overlay.getRenderY() <= mouseY && overlay.getRenderY() + overlay.getHeight() >= mouseY)) {
+        if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY)) {
             selectionMode = SelectionMode.Area;
 
             return false;
@@ -228,6 +322,11 @@ public class OverlayManagementScreen extends Screen {
         handleOverlayBodyDrag(button, dragX, dragY);
 
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    private boolean isMouseHoveringOverlay(Overlay overlay, double mouseX, double mouseY) {
+        return (overlay.getRenderX() <= mouseX && overlay.getRenderX() + overlay.getWidth() >= mouseX)
+                && (overlay.getRenderY() <= mouseY && overlay.getRenderY() + overlay.getHeight() >= mouseY);
     }
 
     private void handleOverlayEdgeDrag(int button, double dragX, double dragY) {
@@ -323,6 +422,10 @@ public class OverlayManagementScreen extends Screen {
         selectionMode = SelectionMode.None;
         selectedCorner = null;
         selectedEdge = null;
+    }
+
+    public boolean isTestMode() {
+        return testMode;
     }
 
     private enum SelectionMode {

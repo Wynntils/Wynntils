@@ -11,6 +11,7 @@ import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.OverlayManagementScreen;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,6 +58,10 @@ public class OverlayManager {
     }
 
     private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
+            if (!screen.isTestMode()) return;
+        }
+
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 

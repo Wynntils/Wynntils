@@ -96,6 +96,11 @@ public class OverlaySelectionScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            this.onClose();
+            return true;
+        }
+
         return overlayList.keyPressed(keyCode, scanCode, modifiers);
     }
 }

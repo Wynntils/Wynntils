@@ -20,12 +20,18 @@ import java.util.List;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntry> {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
     private static final CustomColor DISABLED_COLOR = new CustomColor(116, 0, 0, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
     private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(220, 0, 0, 255);
+
+    private static final List<Component> HELP_TOOLTIP_LINES = List.of(
+            new TextComponent("Left click on the overlay to edit it."),
+            new TextComponent("Right click on the overlay to disable/enable it."));
 
     private final Overlay overlay;
 
@@ -84,6 +90,17 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();
+
+        if (this.isMouseOver(mouseX, mouseY)) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    100,
+                    HELP_TOOLTIP_LINES,
+                    FontRenderer.getInstance().getFont(),
+                    false);
+        }
     }
 
     @Override
