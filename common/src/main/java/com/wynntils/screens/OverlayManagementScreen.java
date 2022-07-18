@@ -416,14 +416,7 @@ public class OverlayManagementScreen extends Screen {
     private void renderSections(PoseStack poseStack) {
         for (SectionCoordinates section : OverlayManager.getSections()) {
             RenderUtils.drawRectBorders(
-                    poseStack,
-                    CustomColor.fromInt(section.hashCode()).withAlpha(255),
-                    section.x1(),
-                    section.y1(),
-                    section.x2(),
-                    section.y2(),
-                    0,
-                    2);
+                    poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 2);
         }
     }
 
