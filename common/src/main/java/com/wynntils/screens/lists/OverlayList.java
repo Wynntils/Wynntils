@@ -96,9 +96,4 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     public static int getItemHeight() {
         return ITEM_HEIGHT;
     }
-
-    @Override
-    public int getMaxScroll() {
-        return super.getMaxScroll() - this.getRowWidth();
-    }
 }
