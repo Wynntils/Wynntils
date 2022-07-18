@@ -38,15 +38,7 @@ public class OverlayManager {
         if (ignoreState) {
             enabledOverlays.addAll(overlays);
         } else {
-            enabledOverlays.addAll(overlays.stream()
-                    .filter(overlay -> {
-                        if (overlay.isUserEnabled() != null) {
-                            return overlay.isUserEnabled();
-                        }
-
-                        return overlayInfoMap.get(overlay).enabled();
-                    })
-                    .toList());
+            enabledOverlays.addAll(overlays.stream().filter(Overlay::isEnabled).toList());
         }
     }
 
@@ -128,6 +120,10 @@ public class OverlayManager {
 
     public static Set<Overlay> getOverlays() {
         return overlayInfoMap.keySet();
+    }
+
+    public static OverlayInfo getOverlayInfo(Overlay overlay) {
+        return overlayInfoMap.getOrDefault(overlay, null);
     }
 
     public static boolean isEnabled(Overlay overlay) {

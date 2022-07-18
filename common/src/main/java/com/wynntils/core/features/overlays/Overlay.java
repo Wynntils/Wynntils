@@ -134,6 +134,14 @@ public abstract class Overlay implements Translatable, Configurable {
         return userEnabled;
     }
 
+    public boolean isEnabled() {
+        if (this.isUserEnabled() != null) {
+            return this.isUserEnabled();
+        }
+
+        return OverlayManager.getOverlayInfo(this).enabled();
+    }
+
     public float getWidth() {
         return this.size.getWidth();
     }

@@ -180,6 +180,15 @@ public class FontRenderer {
         return (float) (height - NEWLINE_OFFSET / 2 * McUtils.window().getGuiScale());
     }
 
+    public float calculateRenderHeight(List<String> lines, float maxWidth) {
+        return calculateRenderHeight(lines.stream()
+                .map(s -> new TextRenderTask(
+                        s,
+                        new TextRenderSetting(
+                                maxWidth, CustomColor.NONE, TextAlignment.LEFT_ALIGNED, TextShadow.NORMAL)))
+                .toList());
+    }
+
     public enum TextAlignment {
         LEFT_ALIGNED,
         CENTER_ALIGNED,
