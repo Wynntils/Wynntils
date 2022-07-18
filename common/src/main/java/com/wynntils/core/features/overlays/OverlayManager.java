@@ -58,8 +58,10 @@ public class OverlayManager {
     }
 
     private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+        boolean testMode = false;
+
         if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
-            if (!screen.isTestMode()) return;
+            testMode = screen.isTestMode();
         }
 
         for (Overlay overlay : enabledOverlays) {
@@ -80,7 +82,11 @@ public class OverlayManager {
                 }
             }
 
-            overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            if (testMode) {
+                overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            } else {
+                overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            }
         }
     }
 

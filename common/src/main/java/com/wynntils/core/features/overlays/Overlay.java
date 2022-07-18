@@ -70,6 +70,8 @@ public abstract class Overlay implements Translatable, Configurable {
 
     public abstract void render(PoseStack poseStack, float partialTicks, Window window);
 
+    public abstract void renderPreview(PoseStack poseStack, float partialTicks, Window window);
+
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {
         // if user toggle was changed, enable/disable feature accordingly

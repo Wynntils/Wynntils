@@ -135,9 +135,7 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (!testMode) {
-            renderSections(poseStack);
-        } else {
+        if (testMode) {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -150,33 +148,33 @@ public class OverlayManagementScreen extends Screen {
                                             CommonColors.WHITE,
                                             FontRenderer.TextAlignment.CENTER_ALIGNED,
                                             FontRenderer.TextShadow.NORMAL)));
-        }
+        } else {
+            renderSections(poseStack);
 
-        Set<Overlay> overlays = OverlayManager.getOverlays().stream()
-                .filter(OverlayManager::isEnabled)
-                .collect(Collectors.toSet());
+            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
+                    .filter(OverlayManager::isEnabled)
+                    .collect(Collectors.toSet());
 
-        for (Overlay overlay : overlays) {
-            CustomColor color = CommonColors.GREEN;
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    color,
-                    overlay.getRenderX(),
-                    overlay.getRenderY(),
-                    overlay.getRenderX() + overlay.getWidth(),
-                    overlay.getRenderY() + overlay.getHeight(),
-                    1,
-                    1.8f);
-            RenderUtils.drawRect(
-                    poseStack,
-                    color.withAlpha(30),
-                    overlay.getRenderX(),
-                    overlay.getRenderY(),
-                    0,
-                    overlay.getWidth(),
-                    overlay.getHeight());
+            for (Overlay overlay : overlays) {
+                CustomColor color = CommonColors.GREEN;
+                RenderUtils.drawRectBorders(
+                        poseStack,
+                        color,
+                        overlay.getRenderX(),
+                        overlay.getRenderY(),
+                        overlay.getRenderX() + overlay.getWidth(),
+                        overlay.getRenderY() + overlay.getHeight(),
+                        1,
+                        1.8f);
+                RenderUtils.drawRect(
+                        poseStack,
+                        color.withAlpha(30),
+                        overlay.getRenderX(),
+                        overlay.getRenderY(),
+                        0,
+                        overlay.getWidth(),
+                        overlay.getHeight());
 
-            if (!testMode) {
                 FontRenderer.getInstance()
                         .renderTextWithAlignment(
                                 poseStack,
@@ -193,20 +191,20 @@ public class OverlayManagementScreen extends Screen {
                                 overlay.getRenderedHeight(),
                                 HorizontalAlignment.Center,
                                 VerticalAlignment.Middle);
-            }
 
-            if (isMouseHoveringOverlay(overlay, mouseX, mouseY)) {
-                RenderUtils.drawTooltipAt(
-                        poseStack,
-                        mouseX
-                                - RenderUtils.getToolTipWidth(
-                                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
-                                        FontRenderer.getInstance().getFont()),
-                        mouseY,
-                        100,
-                        HELP_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false);
+                if (isMouseHoveringOverlay(overlay, mouseX, mouseY)) {
+                    RenderUtils.drawTooltipAt(
+                            poseStack,
+                            mouseX
+                                    - RenderUtils.getToolTipWidth(
+                                            RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
+                                            FontRenderer.getInstance().getFont()),
+                            mouseY,
+                            100,
+                            HELP_TOOLTIP_LINES,
+                            FontRenderer.getInstance().getFont(),
+                            false);
+                }
             }
         }
 

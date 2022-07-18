@@ -58,6 +58,21 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()))
         };
 
+        TextRenderTask[] toRenderPreview = {
+            new TextRenderTask(
+                    "Tracked Quest Info:",
+                    TextRenderSetting.getWithHorizontalAlignment(
+                            this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment())),
+            new TextRenderTask(
+                    "Test quest:",
+                    TextRenderSetting.getWithHorizontalAlignment(
+                            this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment())),
+            new TextRenderTask(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat.",
+                    TextRenderSetting.getWithHorizontalAlignment(
+                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()))
+        };
+
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             recalculateRenderTasks();
@@ -91,6 +106,22 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             Arrays.stream(toRender).toList(),
+                            this.getRenderedWidth(),
+                            this.getRenderedHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            recalculateRenderTasks(); // we have to force update every time
+
+            FontRenderer.getInstance()
+                    .renderTextsWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            Arrays.stream(toRenderPreview).toList(),
                             this.getRenderedWidth(),
                             this.getRenderedHeight(),
                             this.getRenderHorizontalAlignment(),
