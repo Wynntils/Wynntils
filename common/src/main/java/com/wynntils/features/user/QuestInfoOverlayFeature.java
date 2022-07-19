@@ -73,11 +73,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()))
         };
 
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            recalculateRenderTasks();
-        }
-
         private void recalculateRenderTasks() {
             toRender[0].setSetting(TextRenderSetting.getWithHorizontalAlignment(
                     this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment()));
@@ -98,6 +93,11 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
             toRenderPreview[2].setSetting(TextRenderSetting.getWithHorizontalAlignment(
                     this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()));
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            recalculateRenderTasks();
         }
 
         @Override
