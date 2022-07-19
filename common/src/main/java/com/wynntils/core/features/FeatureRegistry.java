@@ -19,6 +19,7 @@ import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.DurabilityArcFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
+import com.wynntils.features.user.GameUpdateOverlayFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
@@ -158,6 +159,7 @@ public class FeatureRegistry {
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new GameUpdateOverlayFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
