@@ -61,7 +61,7 @@ public class FeatureRegistry {
 
         // instance field
         try {
-            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE");
+            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
             if (instanceField != null) instanceField.set(null, feature);
         } catch (Exception e) {
             WynntilsMod.error("Failed to create instance object in " + featureClass.getName());
