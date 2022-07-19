@@ -22,6 +22,10 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.utils.objects.Pair;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +39,18 @@ import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
 public class OverlayManagementScreen extends Screen {
+    // This is used to calculate alignment lines
+    // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
+    // of the screen both vertically ang horizontally.
+    private static final int ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS = 4;
+    private static final int ALIGNMENT_SNAP_DISTANCE = 1;
+    // Bigger this value is, the harder it is to not align overlay to alignment line
+    private static final double ALIGNMENT_SNAP_HARDNESS = 12;
+
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 10;
+
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             new TextComponent("Resize the overlay by dragging the edges or corners."),
             new TextComponent("Move it by dragging the center of the overlay."),
@@ -57,11 +70,17 @@ public class OverlayManagementScreen extends Screen {
     private static final List<Component> APPLY_TOOLTIP_LINES =
             List.of(new TextComponent("Click here to apply changes to current overlay."));
 
-    private boolean testMode = false;
+    private static final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
+    private static final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
+    private static final Map<Edge, Double> edgeAlignmentSnapMap = new HashMap<>();
+    private static final Map<Edge, Float> alignmentLinesToRender = new HashMap<>();
+
     private static SelectionMode selectionMode = SelectionMode.None;
     private static Overlay selectedOverlay = null;
     private static Corner selectedCorner = null;
     private static Edge selectedEdge = null;
+
+    private boolean testMode = false;
 
     public OverlayManagementScreen(Overlay overlay) {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
@@ -71,6 +90,7 @@ public class OverlayManagementScreen extends Screen {
     @Override
     protected void init() {
         setupButtons();
+        calculateAlignmentLinePositions();
     }
 
     @Override
@@ -94,14 +114,18 @@ public class OverlayManagementScreen extends Screen {
                                             FontRenderer.TextAlignment.CENTER_ALIGNED,
                                             FontRenderer.TextShadow.NORMAL)));
         } else {
-            renderSections(poseStack);
+            if (selectionMode != SelectionMode.None) {
+                renderAlignmentLines(poseStack);
+            } else {
+                renderSections(poseStack);
+            }
 
             Set<Overlay> overlays = OverlayManager.getOverlays().stream()
                     .filter(OverlayManager::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                CustomColor color = CommonColors.GREEN;
+                CustomColor color = overlay == selectedOverlay ? CommonColors.LIGHT_BLUE : CommonColors.GREEN;
                 RenderUtils.drawRectBorders(
                         poseStack,
                         color,
@@ -151,20 +175,20 @@ public class OverlayManagementScreen extends Screen {
                                 overlay.getRenderedHeight() + yOffset,
                                 overlay.getRenderHorizontalAlignment(),
                                 overlay.getRenderVerticalAlignment());
+            }
 
-                if (isMouseHoveringOverlay(overlay, mouseX, mouseY)) {
-                    RenderUtils.drawTooltipAt(
-                            poseStack,
-                            mouseX
-                                    - RenderUtils.getToolTipWidth(
-                                            RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
-                                            FontRenderer.getInstance().getFont()),
-                            mouseY,
-                            100,
-                            HELP_TOOLTIP_LINES,
-                            FontRenderer.getInstance().getFont(),
-                            false);
-                }
+            if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
+                RenderUtils.drawTooltipAt(
+                        poseStack,
+                        mouseX
+                                - RenderUtils.getToolTipWidth(
+                                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
+                                        FontRenderer.getInstance().getFont()),
+                        mouseY,
+                        100,
+                        HELP_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false);
             }
         }
 
@@ -288,7 +312,7 @@ public class OverlayManagementScreen extends Screen {
             saveConfigForOverlay();
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 
     @Override
@@ -329,6 +353,10 @@ public class OverlayManagementScreen extends Screen {
             return;
         }
 
+        Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
+        dragX = newDrag.a;
+        dragY = newDrag.b;
+
         Overlay overlay = selectedOverlay;
         Edge edge = selectedEdge;
 
@@ -366,6 +394,10 @@ public class OverlayManagementScreen extends Screen {
             return;
         }
 
+        Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
+        dragX = newDrag.a;
+        dragY = newDrag.b;
+
         Overlay overlay = selectedOverlay;
 
         overlay.setPosition(OverlayPosition.getBestPositionFor(
@@ -376,6 +408,10 @@ public class OverlayManagementScreen extends Screen {
         if (selectionMode != SelectionMode.Corner || selectedCorner == null || selectedOverlay == null) {
             return;
         }
+
+        Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
+        dragX = newDrag.a;
+        dragY = newDrag.b;
 
         Overlay overlay = selectedOverlay;
         Corner corner = selectedCorner;
@@ -413,10 +449,129 @@ public class OverlayManagementScreen extends Screen {
         }
     }
 
+    // Pair<dragX, dragY>
+    private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
+        double originalX = dragX;
+        double originalY = dragY;
+
+        for (Edge edge : Arrays.stream(Edge.values())
+                .filter(edge -> !edgeAlignmentSnapMap.containsKey(edge))
+                .toList()) {
+            Pair<Vec2, Vec2> edgePos = edge.getEdgePos(selectedOverlay);
+
+            if (edge.isVerticalLine()) {
+                for (Float alignmentLinePosition : verticalAlignmentLinePositions) {
+                    if (Math.abs(this.width * alignmentLinePosition - edgePos.a.x) < ALIGNMENT_SNAP_DISTANCE) {
+                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
+                        alignmentLinesToRender.put(edge, alignmentLinePosition);
+                        break;
+                    }
+                }
+            } else {
+                for (Float alignmentLinePosition : horizontalAlignmentLinePositions) {
+                    if (Math.abs(this.height * alignmentLinePosition - edgePos.a.y) < ALIGNMENT_SNAP_DISTANCE) {
+                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
+                        alignmentLinesToRender.put(edge, alignmentLinePosition);
+                        break;
+                    }
+                }
+            }
+        }
+
+        Set<Edge> toBeRemoved = new HashSet<>();
+
+        for (Map.Entry<Edge, Double> entry : edgeAlignmentSnapMap.entrySet()) {
+            double newSnapValue;
+            if (entry.getKey().isVerticalLine()) {
+                newSnapValue = entry.getValue() - Math.abs(dragX);
+                dragX = 0;
+            } else {
+                newSnapValue = entry.getValue() - Math.abs(dragY);
+                dragY = 0;
+            }
+
+            if (newSnapValue <= 0) {
+                toBeRemoved.add(entry.getKey());
+                if (entry.getKey().isVerticalLine()) {
+                    dragX = originalX;
+                } else {
+                    dragY = originalY;
+                }
+            } else {
+                edgeAlignmentSnapMap.put(entry.getKey(), newSnapValue);
+            }
+        }
+
+        for (Edge edge : toBeRemoved) {
+            edgeAlignmentSnapMap.remove(edge);
+            alignmentLinesToRender.remove(edge);
+        }
+
+        return new Pair<>(dragX, dragY);
+    }
+
     private void renderSections(PoseStack poseStack) {
         for (SectionCoordinates section : OverlayManager.getSections()) {
             RenderUtils.drawRectBorders(
-                    poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 2);
+                    poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
+        }
+    }
+
+    private void renderAlignmentLines(PoseStack poseStack) {
+        for (Map.Entry<Edge, Float> entry : alignmentLinesToRender.entrySet()) {
+            if (entry.getKey().isVerticalLine()) {
+                RenderUtils.drawLine(
+                        poseStack,
+                        CommonColors.ORANGE,
+                        this.width * entry.getValue(),
+                        0,
+                        this.width * entry.getValue(),
+                        this.height,
+                        1,
+                        1);
+            } else {
+                RenderUtils.drawLine(
+                        poseStack,
+                        CommonColors.ORANGE,
+                        0,
+                        this.height * entry.getValue(),
+                        this.width,
+                        this.height * entry.getValue(),
+                        1,
+                        1);
+            }
+        }
+    }
+
+    private void calculateAlignmentLinePositions() {
+        verticalAlignmentLinePositions.clear();
+        horizontalAlignmentLinePositions.clear();
+
+        verticalAlignmentLinePositions.add(0f);
+        horizontalAlignmentLinePositions.add(0f);
+        verticalAlignmentLinePositions.add(1f);
+        horizontalAlignmentLinePositions.add(1f);
+
+        for (int i = 2; i <= ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS; i++) {
+            for (int j = 1; j < i; j++) {
+                verticalAlignmentLinePositions.add((float) j / i);
+                horizontalAlignmentLinePositions.add((float) j / i);
+            }
+        }
+
+        for (Overlay overlay :
+                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).collect(Collectors.toSet())) {
+            if (overlay == selectedOverlay) continue;
+
+            for (Edge edge : Edge.values()) {
+                Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
+
+                if (edge.isVerticalLine()) {
+                    verticalAlignmentLinePositions.add(edgePos.a.x / this.width);
+                } else {
+                    horizontalAlignmentLinePositions.add(edgePos.a.y / this.height);
+                }
+            }
         }
     }
 

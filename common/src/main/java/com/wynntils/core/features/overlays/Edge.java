@@ -4,6 +4,10 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.wynntils.utils.objects.Pair;
+import java.util.Map;
+import net.minecraft.world.phys.Vec2;
+
 public enum Edge {
     Top(Corner.TopLeft, Corner.TopRight),
     Left(Corner.TopLeft, Corner.BottomLeft),
@@ -24,5 +28,15 @@ public enum Edge {
 
     public Corner getCornerB() {
         return cornerB;
+    }
+
+    public boolean isVerticalLine() {
+        return this == Left || this == Right;
+    }
+
+    public Pair<Vec2, Vec2> getEdgePos(Overlay overlay) {
+        Map<Corner, Vec2> cornersMap = overlay.getCornersMap();
+
+        return new Pair<>(cornersMap.get(this.cornerA), cornersMap.get(this.cornerB));
     }
 }
