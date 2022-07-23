@@ -5,13 +5,25 @@
 package com.wynntils.core.objects;
 
 import com.wynntils.features.user.GameUpdateOverlayFeature;
-import net.minecraft.network.chat.Component;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 
 public class MessageContainer {
-    Component message;
+    TextRenderTask message;
     long endTime;
 
-    public MessageContainer(Component message) {
+    public MessageContainer(String message) {
+        this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
+        this.endTime = System.currentTimeMillis()
+                + (long) (GameUpdateOverlayFeature.getInstance().GameUpdateOverlay.messageTimeLimit * 1000);
+    }
+
+    public MessageContainer(String message, long endTime) {
+        this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
+        this.endTime = endTime;
+    }
+
+    public MessageContainer(TextRenderTask message) {
         this.message = message;
         this.endTime = System.currentTimeMillis()
                 + (long) (GameUpdateOverlayFeature.getInstance().GameUpdateOverlay.messageTimeLimit * 1000);
@@ -21,12 +33,17 @@ public class MessageContainer {
         return endTime - System.currentTimeMillis();
     }
 
-    public Component getMessage() {
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public TextRenderTask getMessage() {
         return message;
     }
 
-    public void editMessage(Component newMessage) {
-        this.message = newMessage;
+    public MessageContainer editMessage(String newMessage) {
+        this.message.setText(newMessage);
+        return this;
     }
 
     public void resetRemainingTime() {

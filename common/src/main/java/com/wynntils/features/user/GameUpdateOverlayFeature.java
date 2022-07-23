@@ -13,8 +13,10 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.objects.MessageContainer;
+import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -22,16 +24,16 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import java.util.ListIterator;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "overlays")
 public class GameUpdateOverlayFeature extends UserFeature {
@@ -42,7 +44,20 @@ public class GameUpdateOverlayFeature extends UserFeature {
 
     private static final List<MessageContainer> messageQueue = new LinkedList<>();
 
-    public static MessageContainer queueMessage(Component message) {
+    @SubscribeEvent
+    public void onChat(ChatReceivedEvent event) {
+        if (event.getMessage().getString().startsWith("§c❤")) {
+            return;
+        }
+
+        queueMessage(ComponentUtils.getUnformatted(event.getMessage()));
+    }
+
+    public static MessageContainer queueMessage(String message) {
+        return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
+    }
+
+    public static MessageContainer queueMessage(TextRenderTask message) {
         if (!WynnUtils.onWorld()) return null;
 
         WynntilsMod.info("Message Queued: " + message);
@@ -57,7 +72,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
         return msgContainer;
     }
 
-    public static void editMessage(MessageContainer msgContainer, Component newMessage) {
+    public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
         msgContainer.resetRemainingTime();
     }
@@ -86,8 +101,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
         @Config
         public boolean overrideNewMessages = true;
 
-        private TextRenderSetting textRenderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment());
+        private TextRenderSetting textRenderSetting;
 
         public GameUpdateOverlay() {
             super(
@@ -97,8 +111,9 @@ public class GameUpdateOverlayFeature extends UserFeature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
-                    500,
-                    220);
+                    new GuiScaledOverlaySize(250, 110));
+
+            updateTextRenderSetting();
         }
 
         @Override
@@ -115,23 +130,46 @@ public class GameUpdateOverlayFeature extends UserFeature {
 
             List<MessageContainer> toRender = new ArrayList<>();
 
-            Iterator<MessageContainer> messages = messageQueue.iterator();
-            while (messages.hasNext() && toRender.size() < messageLimit) {
-                MessageContainer message = messages.next();
+            ListIterator<MessageContainer> messages = messageQueue.listIterator(messageQueue.size());
+            while (messages.hasPrevious()) {
+                MessageContainer message = messages.previous();
 
                 if (message.getRemainingTime() <= 0.0f) {
                     messages.remove(); // remove the message if the time has come
                     continue;
                 }
 
-                toRender.add(message);
+                TextRenderTask messageTask = message.getMessage();
+
+                if (messageMaxLength == 0 || messageTask.getText().length() < messageMaxLength) {
+                    toRender.add(message);
+                } else {
+                    MessageContainer first = new MessageContainer(
+                            messageTask.getText().substring(0, messageMaxLength), message.getEndTime());
+                    MessageContainer second = new MessageContainer(
+                            messageTask.getText().substring(messageMaxLength), message.getEndTime());
+                    if (this.invertGrowth) {
+                        toRender.add(first);
+                        toRender.add(second);
+                    } else {
+                        toRender.add(second);
+                        toRender.add(first);
+                    }
+                }
             }
 
+            if (toRender.isEmpty()) return;
+
+            List<MessageContainer> renderedValues = this.overrideNewMessages
+                    ? toRender.subList(0, Math.min(toRender.size(), this.messageLimit))
+                    : toRender.subList(Math.max(toRender.size() - this.messageLimit, 0), toRender.size());
+
+            Collections.reverse(renderedValues);
+
             if (this.invertGrowth) {
-                while (toRender.size() < messageLimit) {
-                    toRender.add(new MessageContainer(new TextComponent("")));
+                while (renderedValues.size() < messageLimit) {
+                    renderedValues.add(0, new MessageContainer(""));
                 }
-                Collections.reverse(toRender);
             }
 
             FontRenderer.getInstance()
@@ -139,9 +177,15 @@ public class GameUpdateOverlayFeature extends UserFeature {
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            toRender.stream()
-                                    .map(messageContainer -> new TextRenderTask(
-                                            messageContainer.getMessage().getContents(), textRenderSetting))
+                            renderedValues.stream()
+                                    .map(messageContainer -> messageContainer
+                                            .getMessage()
+                                            .setSetting(textRenderSetting.withCustomColor(messageContainer
+                                                    .getMessage()
+                                                    .getSetting()
+                                                    .customColor()
+                                                    .withAlpha(
+                                                            Math.max(0, messageContainer.getRemainingTime() / 1000f)))))
                                     .toList(),
                             this.getRenderedWidth(),
                             this.getRenderedHeight(),
@@ -151,8 +195,13 @@ public class GameUpdateOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
+            updateTextRenderSetting();
+        }
+
+        private void updateTextRenderSetting() {
             textRenderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                    this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment());
+                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment())
+                    .withTextShadow(textShadow);
         }
     }
 
