@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.objects;
 
-import com.wynntils.features.user.GameUpdateOverlayFeature;
+import com.wynntils.features.user.overlays.GameUpdateOverlayFeature;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 
@@ -37,7 +37,7 @@ public class MessageContainer {
         return endTime;
     }
 
-    public TextRenderTask getMessage() {
+    public TextRenderTask getRenderTask() {
         return message;
     }
 

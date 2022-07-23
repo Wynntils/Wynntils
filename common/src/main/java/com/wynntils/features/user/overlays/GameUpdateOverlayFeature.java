@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user;
+package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,15 +16,12 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.objects.MessageContainer;
-import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.utils.WynnUtils;
@@ -33,9 +30,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "overlays")
+@FeatureInfo(category = "Overlays")
 public class GameUpdateOverlayFeature extends UserFeature {
     private static GameUpdateOverlayFeature INSTANCE;
 
@@ -43,15 +39,6 @@ public class GameUpdateOverlayFeature extends UserFeature {
     public final GameUpdateOverlay GameUpdateOverlay = new GameUpdateOverlay();
 
     private static final List<MessageContainer> messageQueue = new LinkedList<>();
-
-    @SubscribeEvent
-    public void onChat(ChatReceivedEvent event) {
-        if (event.getMessage().getString().startsWith("§c❤")) {
-            return;
-        }
-
-        queueMessage(ComponentUtils.getUnformatted(event.getMessage()));
-    }
 
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
@@ -118,16 +105,6 @@ public class GameUpdateOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.WHITE,
-                    this.getRenderX(),
-                    this.getRenderY(),
-                    this.getRenderX() + this.getWidth(),
-                    this.getRenderY() + this.getHeight(),
-                    0,
-                    2);
-
             List<MessageContainer> toRender = new ArrayList<>();
 
             ListIterator<MessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -139,7 +116,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
                     continue;
                 }
 
-                TextRenderTask messageTask = message.getMessage();
+                TextRenderTask messageTask = message.getRenderTask();
 
                 if (messageMaxLength == 0 || messageTask.getText().length() < messageMaxLength) {
                     toRender.add(message);
@@ -179,13 +156,12 @@ public class GameUpdateOverlayFeature extends UserFeature {
                             this.getRenderY(),
                             renderedValues.stream()
                                     .map(messageContainer -> messageContainer
-                                            .getMessage()
+                                            .getRenderTask()
                                             .setSetting(textRenderSetting.withCustomColor(messageContainer
-                                                    .getMessage()
+                                                    .getRenderTask()
                                                     .getSetting()
                                                     .customColor()
-                                                    .withAlpha(
-                                                            Math.max(0, messageContainer.getRemainingTime() / 1000f)))))
+                                                    .withAlpha(messageContainer.getRemainingTime() / 1000f))))
                                     .toList(),
                             this.getRenderedWidth(),
                             this.getRenderedHeight(),
