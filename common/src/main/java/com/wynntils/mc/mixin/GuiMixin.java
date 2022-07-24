@@ -83,6 +83,7 @@ public abstract class GuiMixin {
         RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
     }
 
+    // This doesn't work on forge. See ForgeIngameGuiMixin for replacement.
     @Redirect(
             method = "renderPlayerHealth",
             at =
