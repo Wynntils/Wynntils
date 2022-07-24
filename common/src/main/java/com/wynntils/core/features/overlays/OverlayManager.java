@@ -64,6 +64,8 @@ public class OverlayManager {
             testMode = screen.isTestMode();
         }
 
+        boolean shouldRender = !(McUtils.mc().screen instanceof OverlayManagementScreen);
+
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 
@@ -85,7 +87,9 @@ public class OverlayManager {
             if (testMode) {
                 overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
             } else {
-                overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                if (shouldRender) {
+                    overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                }
             }
         }
     }
