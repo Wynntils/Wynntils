@@ -11,7 +11,10 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.event.WorldStateEvent;
+import com.wynntils.wc.utils.SpellManager;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -21,6 +24,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
@@ -56,20 +60,22 @@ public class QuickCastFeature extends UserFeature {
     private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
     private static final boolean RIGHT = true;
     private static final boolean LEFT = false;
+    private static int lastSelectedSlot = 0;
+    private static int packetCountdown = 0;
 
-    public static void castFirstSpell() {
+    private static void castFirstSpell() {
         tryCastSpell(RIGHT, LEFT, RIGHT);
     }
 
-    public static void castSecondSpell() {
+    private static void castSecondSpell() {
         tryCastSpell(RIGHT, RIGHT, RIGHT);
     }
 
-    public static void castThirdSpell() {
+    private static void castThirdSpell() {
         tryCastSpell(RIGHT, LEFT, LEFT);
     }
 
-    public static void castFourthSpell() {
+    private static void castFourthSpell() {
         tryCastSpell(RIGHT, RIGHT, LEFT);
     }
 
@@ -84,6 +90,7 @@ public class QuickCastFeature extends UserFeature {
 
         List<String> loreLines = ItemUtils.getLore(heldItem);
 
+        boolean isArcher = false;
         for (String lore : loreLines) {
             Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore);
             if (matcher.matches()) {
@@ -91,6 +98,7 @@ public class QuickCastFeature extends UserFeature {
                         .withStyle(ChatFormatting.RED));
                 return;
             }
+            if (lore.contains("Archer/Hunter")) isArcher = true;
         }
 
         for (String lore : loreLines) {
@@ -103,24 +111,34 @@ public class QuickCastFeature extends UserFeature {
             }
         }
 
-        // TODO: Check for in-progress spells
-
-        // TODO: Actually check for archer class
-        boolean isSpellInverted = true;
-        castSpellSequence(Stream.of(a, b, c).map(x -> isSpellInverted != x).toList());
+        boolean isSpellInverted = isArcher;
+        List<Boolean> spell = Stream.of(a, b, c).map(x -> isSpellInverted != x).toList();
+        boolean[] partialSpell = SpellManager.getLastSpell();
+        for (int i = 0; i < partialSpell.length; ++i) {
+            if (partialSpell[i] != spell.get(i)) {
+                McUtils.sendMessageToClient(new TextComponent("Please wait for the incompatible spell-cast to finish")
+                        .withStyle(ChatFormatting.RED));
+                return;
+            }
+        }
+        lastSelectedSlot = McUtils.inventory().selected;
+        List<Boolean> remainder = new ArrayList<>(spell.subList(partialSpell.length, spell.size()));
+        remainder.stream().map(x -> x ? RIGHT_CLICK_PACKET : LEFT_CLICK_PACKET).forEach(SPELL_PACKET_QUEUE::add);
     }
-
-    static int time = 0;
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent e) {
+    public void onTick(ClientTickEvent e) {
         if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
-        time++;
-        if (time % 2 == 0 || SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (--packetCountdown > 0) return;
+        if (McUtils.inventory().selected != lastSelectedSlot)
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
         McUtils.sendPacket(SPELL_PACKET_QUEUE.poll());
+        if (!SPELL_PACKET_QUEUE.isEmpty()) packetCountdown = 3;
     }
 
-    private static void castSpellSequence(List<Boolean> spell) {
-        spell.stream().map(x -> x ? RIGHT_CLICK_PACKET : LEFT_CLICK_PACKET).forEach(SPELL_PACKET_QUEUE::add);
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        SPELL_PACKET_QUEUE.clear();
     }
 }

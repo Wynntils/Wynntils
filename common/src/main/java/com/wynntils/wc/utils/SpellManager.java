@@ -5,7 +5,9 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,7 +16,8 @@ public class SpellManager {
     private static final Pattern SPELL_PATTERN = Pattern.compile(
             "§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§".replace("§", "(?:§[0-9a-fklmnor])*"));
     public static final boolean[] NO_SPELL = new boolean[0];
-    public static boolean[] lastSpell = NO_SPELL;
+    private static boolean[] lastSpell = NO_SPELL;
+    private static int spellCountdown = 0;
 
     private static boolean[] getSpellFromString(String string) {
         Matcher spellMatcher = SPELL_PATTERN.matcher(string);
@@ -36,7 +39,14 @@ public class SpellManager {
     public static void tryUpdateSpell(String text) {
         boolean[] spell = getSpellFromString(text);
         if (spell == null) return;
-        lastSpell = spell.length == 3 ? NO_SPELL : spell;
+        if (Arrays.equals(lastSpell, spell)) return;
+        if (spell.length == 3) {
+            lastSpell = NO_SPELL;
+            spellCountdown = 0;
+        } else {
+            lastSpell = spell;
+            spellCountdown = 40;
+        }
     }
 
     @SubscribeEvent
@@ -45,11 +55,18 @@ public class SpellManager {
         tryUpdateSpell(e.getComponent().getString());
     }
 
+    @SubscribeEvent
+    public static void onTick(ClientTickEvent e) {
+        if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
+        if (spellCountdown <= 0 || --spellCountdown > 0) return;
+        lastSpell = NO_SPELL;
+    }
+
     public static void init() {
         WynntilsMod.getEventBus().register(SpellManager.class);
     }
 
-    private static boolean[] getLastSpell() {
+    public static boolean[] getLastSpell() {
         return lastSpell;
     }
 }
