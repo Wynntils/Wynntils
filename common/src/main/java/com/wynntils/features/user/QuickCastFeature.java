@@ -13,6 +13,7 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.utils.SpellManager;
+import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -82,7 +83,7 @@ public class QuickCastFeature extends UserFeature {
     private static void tryCastSpell(boolean a, boolean b, boolean c) {
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
-        if (!ItemUtils.isWeapon(heldItem)) {
+        if (!WynnItemMatchers.isWeapon(heldItem)) {
             McUtils.sendMessageToClient(
                     new TextComponent("You can only quick-cast with a weapon!").withStyle(ChatFormatting.RED));
             return;
