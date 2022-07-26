@@ -15,7 +15,6 @@ import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.utils.SpellManager;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -23,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
@@ -33,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = FeatureInfo.Stability.EXPERIMENTAL)
+@FeatureInfo(stability = FeatureInfo.Stability.STABLE)
 public class QuickCastFeature extends UserFeature {
 
     @RegisterKeyBind
@@ -81,11 +80,16 @@ public class QuickCastFeature extends UserFeature {
     }
 
     private static void tryCastSpell(boolean a, boolean b, boolean c) {
+
+        if(!SPELL_PACKET_QUEUE.isEmpty()) {
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.anotherInProgress").withStyle(ChatFormatting.RED));
+            return;
+        }
+
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (!WynnItemMatchers.isWeapon(heldItem)) {
-            McUtils.sendMessageToClient(
-                    new TextComponent("You can only quick-cast with a weapon!").withStyle(ChatFormatting.RED));
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.notAWeapon").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -95,8 +99,7 @@ public class QuickCastFeature extends UserFeature {
         for (String lore : loreLines) {
             Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore);
             if (matcher.matches()) {
-                McUtils.sendMessageToClient(new TextComponent("You can't use " + matcher.group(1) + "-type weapons!")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.classMismatch", matcher.group(1)).withStyle(ChatFormatting.RED));
                 return;
             }
             if (lore.contains("Archer/Hunter")) isArcher = true;
@@ -105,9 +108,7 @@ public class QuickCastFeature extends UserFeature {
         for (String lore : loreLines) {
             Matcher matcher = LVL_MIN_NOT_REACHED_PATTERN.matcher(lore);
             if (matcher.matches()) {
-                McUtils.sendMessageToClient(new TextComponent("You need to reach " + matcher.group(1) + " "
-                                + matcher.group(2) + " before using this weapon.")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)).withStyle(ChatFormatting.RED));
                 return;
             }
         }
@@ -117,13 +118,13 @@ public class QuickCastFeature extends UserFeature {
         boolean[] partialSpell = SpellManager.getLastSpell();
         for (int i = 0; i < partialSpell.length; ++i) {
             if (partialSpell[i] != spell.get(i)) {
-                McUtils.sendMessageToClient(new TextComponent("Please wait for the incompatible spell-cast to finish")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.incompatibleInProgress").withStyle(ChatFormatting.RED));
                 return;
             }
         }
+
         lastSelectedSlot = McUtils.inventory().selected;
-        List<Boolean> remainder = new ArrayList<>(spell.subList(partialSpell.length, spell.size()));
+        List<Boolean> remainder = spell.subList(partialSpell.length, spell.size());
         remainder.stream().map(x -> x ? RIGHT_CLICK_PACKET : LEFT_CLICK_PACKET).forEach(SPELL_PACKET_QUEUE::add);
     }
 
@@ -132,9 +133,11 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
-        if (McUtils.inventory().selected != lastSelectedSlot)
-            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
+        int currSelectedSlot = McUtils.inventory().selected;
+        boolean flag = currSelectedSlot != lastSelectedSlot;
+        if (flag) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
         McUtils.sendPacket(SPELL_PACKET_QUEUE.poll());
+        if (flag) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
         if (!SPELL_PACKET_QUEUE.isEmpty()) packetCountdown = 3;
     }
 
