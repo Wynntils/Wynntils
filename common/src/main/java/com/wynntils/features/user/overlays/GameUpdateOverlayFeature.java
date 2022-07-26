@@ -36,7 +36,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
     private static GameUpdateOverlayFeature INSTANCE;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final GameUpdateOverlay GameUpdateOverlay = new GameUpdateOverlay();
+    public final GameUpdateOverlay gameUpdateOverlay = new GameUpdateOverlay();
 
     private static final List<MessageContainer> messageQueue = new LinkedList<>();
 
@@ -52,8 +52,8 @@ public class GameUpdateOverlayFeature extends UserFeature {
         McUtils.mc().doRunTask(() -> {
             messageQueue.add(msgContainer);
 
-            if (GameUpdateOverlayFeature.INSTANCE.GameUpdateOverlay.overrideNewMessages
-                    && messageQueue.size() > GameUpdateOverlayFeature.INSTANCE.GameUpdateOverlay.messageLimit)
+            if (GameUpdateOverlayFeature.INSTANCE.gameUpdateOverlay.overrideNewMessages
+                    && messageQueue.size() > GameUpdateOverlayFeature.INSTANCE.gameUpdateOverlay.messageLimit)
                 messageQueue.remove(0);
         });
         return msgContainer;

@@ -15,7 +15,7 @@ public class MessageContainer {
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
         this.endTime = System.currentTimeMillis()
-                + (long) (GameUpdateOverlayFeature.getInstance().GameUpdateOverlay.messageTimeLimit * 1000);
+                + (long) (GameUpdateOverlayFeature.getInstance().gameUpdateOverlay.messageTimeLimit * 1000);
     }
 
     public MessageContainer(String message, long endTime) {
@@ -26,7 +26,7 @@ public class MessageContainer {
     public MessageContainer(TextRenderTask message) {
         this.message = message;
         this.endTime = System.currentTimeMillis()
-                + (long) (GameUpdateOverlayFeature.getInstance().GameUpdateOverlay.messageTimeLimit * 1000);
+                + (long) (GameUpdateOverlayFeature.getInstance().gameUpdateOverlay.messageTimeLimit * 1000);
     }
 
     public long getRemainingTime() {
@@ -48,6 +48,6 @@ public class MessageContainer {
 
     public void resetRemainingTime() {
         this.endTime = System.currentTimeMillis()
-                + (long) (GameUpdateOverlayFeature.getInstance().GameUpdateOverlay.messageTimeLimit * 1000);
+                + (long) (GameUpdateOverlayFeature.getInstance().gameUpdateOverlay.messageTimeLimit * 1000);
     }
 }
