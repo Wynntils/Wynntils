@@ -74,16 +74,14 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         poseStack.translate(0, 0, 1);
         String translatedName = this.overlay.getTranslatedName();
+        float renderHeightForOverlayName =
+                FontRenderer.getInstance().calculateRenderHeight(List.of(translatedName), width);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         translatedName,
                         3,
-                        (OverlayList.getItemHeight()
-                                        - FontRenderer.getInstance()
-                                                        .calculateRenderHeight(List.of(translatedName), width)
-                                                / 2f)
-                                / 2f,
+                        (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f,
                         width,
                         CommonColors.WHITE,
                         FontRenderer.TextAlignment.LEFT_ALIGNED,
