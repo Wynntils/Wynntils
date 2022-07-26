@@ -73,6 +73,39 @@ public class FontRenderer {
         }
     }
 
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            TextAlignment textAlignment,
+            TextShadow textShadow) {
+        switch (textAlignment) {
+            case LEFT_ALIGNED -> renderText(poseStack, text, x1, y, maxWidth, customColor, textAlignment, textShadow);
+            case CENTER_ALIGNED -> renderText(
+                    poseStack,
+                    text,
+                    x1 + (x2 - x1 - font.width(text)) / 2,
+                    y,
+                    maxWidth,
+                    customColor,
+                    TextAlignment.LEFT_ALIGNED,
+                    textShadow);
+            case RIGHT_ALIGNED -> renderText(
+                    poseStack,
+                    text,
+                    x2 - font.width(text),
+                    y,
+                    maxWidth,
+                    customColor,
+                    TextAlignment.LEFT_ALIGNED,
+                    textShadow);
+        }
+    }
+
     public void renderText(
             PoseStack poseStack,
             String text,

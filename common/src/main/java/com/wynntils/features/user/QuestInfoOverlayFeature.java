@@ -27,7 +27,7 @@ import java.util.List;
 @FeatureInfo(category = "overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay QuestInfoOverlay = new QuestInfoOverlay();
+    private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
         public QuestInfoOverlay() {

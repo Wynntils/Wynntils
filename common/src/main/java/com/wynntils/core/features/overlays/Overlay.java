@@ -125,8 +125,7 @@ public abstract class Overlay implements Translatable, Configurable {
     }
 
     protected String getNameCamelCase() {
-        String name = this.getClass().getSimpleName().replace("Overlay", "");
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        return this.getClass().getSimpleName().replace("Overlay", "");
     }
 
     protected String getDeclaringFeatureNameCamelCase() {
