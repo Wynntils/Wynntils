@@ -27,10 +27,10 @@ import com.wynntils.wc.utils.ActionBarManager;
 @FeatureInfo(category = "overlays")
 public class CustomBarsFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay HealthBarOverlay = new HealthBarOverlay();
+    private final Overlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay ManaBarOverlay = new ManaBarOverlay();
+    private final Overlay manaBarOverlay = new ManaBarOverlay();
 
     public static class HealthBarOverlay extends Overlay {
 
