@@ -6,7 +6,7 @@ package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
-import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -51,7 +51,7 @@ public class SpellManager {
     }
 
     @SubscribeEvent
-    public static void onTitleUpdate(TitleSetTextEvent e) {
+    public static void onTitleUpdate(SubtitleSetTextEvent e) {
         if (!WynnUtils.onWorld()) return;
         tryUpdateSpell(e.getComponent().getString());
     }

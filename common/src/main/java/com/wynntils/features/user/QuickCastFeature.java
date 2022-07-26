@@ -124,7 +124,8 @@ public class QuickCastFeature extends UserFeature {
 
         boolean isSpellInverted = isArcher;
         List<SpellUnit> spell = Stream.of(a, b, c)
-                .map(x -> isSpellInverted != x ? SpellUnit.RIGHT : SpellUnit.LEFT)
+                .map(x -> isSpellInverted != x)
+                .map(x -> x ? SpellUnit.RIGHT : SpellUnit.LEFT)
                 .toList();
         SpellUnit[] partialSpell = SpellManager.getLastSpell();
         for (int i = 0; i < partialSpell.length; ++i) {
