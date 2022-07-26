@@ -31,6 +31,7 @@ import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.features.user.overlays.CustomBarsFeature;
 import com.wynntils.features.user.overlays.GameUpdateOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
@@ -162,6 +163,7 @@ public class FeatureRegistry {
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new GameUpdateOverlayFeature());
         registerFeature(new PouchRedirectFeature());
+        registerFeature(new CustomBarsFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
