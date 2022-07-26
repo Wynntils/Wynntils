@@ -87,8 +87,8 @@ public class WynnItemMatchers {
     /**
      * Returns true if the passed item has an attack speed
      */
-    public static boolean isWeapon(ItemStack heldItem) {
-        String lore = ItemUtils.getStringLore(heldItem);
+    public static boolean isWeapon(ItemStack itemStack) {
+        String lore = ItemUtils.getStringLore(itemStack);
         return lore.contains("Attack Speed") && lore.contains("§7");
     }
 

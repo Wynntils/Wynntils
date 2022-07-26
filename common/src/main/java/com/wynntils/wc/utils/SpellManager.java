@@ -7,6 +7,7 @@ package com.wynntils.wc.utils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.wc.event.WorldStateEvent;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,11 +16,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SpellManager {
     private static final Pattern SPELL_PATTERN = Pattern.compile(
             "§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§".replace("§", "(?:§[0-9a-fklmnor])*"));
-    public static final boolean[] NO_SPELL = new boolean[0];
-    private static boolean[] lastSpell = NO_SPELL;
+    public static final SpellUnit[] NO_SPELL = new SpellUnit[0];
+    private static SpellUnit[] lastSpell = NO_SPELL;
     private static int spellCountdown = 0;
 
-    private static boolean[] getSpellFromString(String string) {
+    private static SpellUnit[] getSpellFromString(String string) {
         Matcher spellMatcher = SPELL_PATTERN.matcher(string);
         if (!spellMatcher.matches()) return null;
 
@@ -28,16 +29,16 @@ public class SpellManager {
             if (spellMatcher.group(size + 1).equals("?")) break;
         }
 
-        boolean[] spell = new boolean[size];
+        SpellUnit[] spell = new SpellUnit[size];
         for (int i = 0; i < size; ++i) {
-            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R';
+            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R' ? SpellUnit.RIGHT : SpellUnit.LEFT;
         }
 
         return spell;
     }
 
     public static void tryUpdateSpell(String text) {
-        boolean[] spell = getSpellFromString(text);
+        SpellUnit[] spell = getSpellFromString(text);
         if (spell == null) return;
         if (Arrays.equals(lastSpell, spell)) return;
         if (spell.length == 3) {
@@ -62,11 +63,21 @@ public class SpellManager {
         lastSpell = NO_SPELL;
     }
 
+    @SubscribeEvent
+    public static void onWorldChange(WorldStateEvent e) {
+        lastSpell = NO_SPELL;
+    }
+
     public static void init() {
         WynntilsMod.getEventBus().register(SpellManager.class);
     }
 
-    public static boolean[] getLastSpell() {
+    public static SpellUnit[] getLastSpell() {
         return lastSpell;
+    }
+
+    public enum SpellUnit {
+        RIGHT,
+        LEFT
     }
 }

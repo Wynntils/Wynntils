@@ -13,6 +13,7 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.utils.SpellManager;
+import com.wynntils.wc.utils.SpellManager.SpellUnit;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.LinkedList;
@@ -58,25 +59,25 @@ public class QuickCastFeature extends UserFeature {
     private static final Packet<?> RIGHT_CLICK_PACKET = new ServerboundUseItemPacket(InteractionHand.MAIN_HAND);
     private static final Packet<?> LEFT_CLICK_PACKET = new ServerboundSwingPacket(InteractionHand.MAIN_HAND);
     private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
-    private static final boolean RIGHT = true;
-    private static final boolean LEFT = false;
+    private static final boolean PRIMARY = true;
+    private static final boolean SECONDARY = false;
     private static int lastSelectedSlot = 0;
     private static int packetCountdown = 0;
 
     private static void castFirstSpell() {
-        tryCastSpell(RIGHT, LEFT, RIGHT);
+        tryCastSpell(PRIMARY, SECONDARY, PRIMARY);
     }
 
     private static void castSecondSpell() {
-        tryCastSpell(RIGHT, RIGHT, RIGHT);
+        tryCastSpell(PRIMARY, PRIMARY, PRIMARY);
     }
 
     private static void castThirdSpell() {
-        tryCastSpell(RIGHT, LEFT, LEFT);
+        tryCastSpell(PRIMARY, SECONDARY, SECONDARY);
     }
 
     private static void castFourthSpell() {
-        tryCastSpell(RIGHT, RIGHT, LEFT);
+        tryCastSpell(PRIMARY, PRIMARY, SECONDARY);
     }
 
     private static void tryCastSpell(boolean a, boolean b, boolean c) {
@@ -122,8 +123,10 @@ public class QuickCastFeature extends UserFeature {
         }
 
         boolean isSpellInverted = isArcher;
-        List<Boolean> spell = Stream.of(a, b, c).map(x -> isSpellInverted != x).toList();
-        boolean[] partialSpell = SpellManager.getLastSpell();
+        List<SpellUnit> spell = Stream.of(a, b, c)
+                .map(x -> isSpellInverted != x ? SpellUnit.RIGHT : SpellUnit.LEFT)
+                .toList();
+        SpellUnit[] partialSpell = SpellManager.getLastSpell();
         for (int i = 0; i < partialSpell.length; ++i) {
             if (partialSpell[i] != spell.get(i)) {
                 McUtils.sendMessageToClient(
@@ -134,8 +137,10 @@ public class QuickCastFeature extends UserFeature {
         }
 
         lastSelectedSlot = McUtils.inventory().selected;
-        List<Boolean> remainder = spell.subList(partialSpell.length, spell.size());
-        remainder.stream().map(x -> x ? RIGHT_CLICK_PACKET : LEFT_CLICK_PACKET).forEach(SPELL_PACKET_QUEUE::add);
+        List<SpellUnit> remainder = spell.subList(partialSpell.length, spell.size());
+        remainder.stream()
+                .map(x -> x == SpellUnit.RIGHT ? RIGHT_CLICK_PACKET : LEFT_CLICK_PACKET)
+                .forEach(SPELL_PACKET_QUEUE::add);
     }
 
     @SubscribeEvent
@@ -143,11 +148,14 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
+
         int currSelectedSlot = McUtils.inventory().selected;
-        boolean flag = currSelectedSlot != lastSelectedSlot;
-        if (flag) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
+        boolean slotChanged = currSelectedSlot != lastSelectedSlot;
+
+        if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
         McUtils.sendPacket(SPELL_PACKET_QUEUE.poll());
-        if (flag) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
+        if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
+
         if (!SPELL_PACKET_QUEUE.isEmpty()) packetCountdown = 3;
     }
 
