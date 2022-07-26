@@ -70,7 +70,9 @@ public abstract class Overlay implements Translatable, Configurable {
 
     public abstract void render(PoseStack poseStack, float partialTicks, Window window);
 
-    public abstract void renderPreview(PoseStack poseStack, float partialTicks, Window window);
+    public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+        this.render(poseStack, partialTicks, window);
+    }
 
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {
