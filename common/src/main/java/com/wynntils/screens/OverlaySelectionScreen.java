@@ -32,7 +32,8 @@ public class OverlaySelectionScreen extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
-        this.fillGradient(poseStack, 0, 0, this.width, this.height, -1072689136, -804253680);
+        int backgroundColor = CommonColors.DARK_GRAY.withAlpha(200).asInt();
+        this.fillGradient(poseStack, 0, 0, this.width, this.height, backgroundColor, backgroundColor);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Texture.OVERLAY_SELECTION_GUI.resource());
