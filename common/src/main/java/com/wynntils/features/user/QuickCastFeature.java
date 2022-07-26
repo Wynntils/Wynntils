@@ -81,15 +81,17 @@ public class QuickCastFeature extends UserFeature {
 
     private static void tryCastSpell(boolean a, boolean b, boolean c) {
 
-        if(!SPELL_PACKET_QUEUE.isEmpty()) {
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.anotherInProgress").withStyle(ChatFormatting.RED));
+        if (!SPELL_PACKET_QUEUE.isEmpty()) {
+            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.anotherInProgress")
+                    .withStyle(ChatFormatting.RED));
             return;
         }
 
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (!WynnItemMatchers.isWeapon(heldItem)) {
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.notAWeapon").withStyle(ChatFormatting.RED));
+            McUtils.sendMessageToClient(
+                    new TranslatableComponent("feature.wynntils.quickCast.notAWeapon").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -99,7 +101,9 @@ public class QuickCastFeature extends UserFeature {
         for (String lore : loreLines) {
             Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore);
             if (matcher.matches()) {
-                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.classMismatch", matcher.group(1)).withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(
+                        new TranslatableComponent("feature.wynntils.quickCast.classMismatch", matcher.group(1))
+                                .withStyle(ChatFormatting.RED));
                 return;
             }
             if (lore.contains("Archer/Hunter")) isArcher = true;
@@ -108,7 +112,11 @@ public class QuickCastFeature extends UserFeature {
         for (String lore : loreLines) {
             Matcher matcher = LVL_MIN_NOT_REACHED_PATTERN.matcher(lore);
             if (matcher.matches()) {
-                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)).withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(new TranslatableComponent(
+                                "feature.wynntils.quickCast.levelRequirementNotReached",
+                                matcher.group(1),
+                                matcher.group(2))
+                        .withStyle(ChatFormatting.RED));
                 return;
             }
         }
@@ -118,7 +126,9 @@ public class QuickCastFeature extends UserFeature {
         boolean[] partialSpell = SpellManager.getLastSpell();
         for (int i = 0; i < partialSpell.length; ++i) {
             if (partialSpell[i] != spell.get(i)) {
-                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.quickCast.incompatibleInProgress").withStyle(ChatFormatting.RED));
+                McUtils.sendMessageToClient(
+                        new TranslatableComponent("feature.wynntils.quickCast.incompatibleInProgress")
+                                .withStyle(ChatFormatting.RED));
                 return;
             }
         }
