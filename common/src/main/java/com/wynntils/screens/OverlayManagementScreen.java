@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.Button;
@@ -293,7 +294,10 @@ public class OverlayManagementScreen extends Screen {
             VerticalAlignment[] values = VerticalAlignment.values();
             index = (values.length + index) % values.length;
             selectedOverlay.setVerticalAlignmentOverride(values[index]);
-            saveConfigForOverlay();
+            selectedOverlay.getVisibleConfigOptions().stream()
+                    .filter(configHolder -> Objects.equals(configHolder.getFieldName(), "verticalAlignmentOverride"))
+                    .findFirst()
+                    .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
             int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
@@ -306,7 +310,10 @@ public class OverlayManagementScreen extends Screen {
             HorizontalAlignment[] values = HorizontalAlignment.values();
             index = (values.length + index) % values.length;
             selectedOverlay.setHorizontalAlignmentOverride(values[index]);
-            saveConfigForOverlay();
+            selectedOverlay.getVisibleConfigOptions().stream()
+                    .filter(configHolder -> Objects.equals(configHolder.getFieldName(), "horizontalAlignmentOverride"))
+                    .findFirst()
+                    .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
         }
 
         return false;
@@ -333,11 +340,6 @@ public class OverlayManagementScreen extends Screen {
     private boolean isMouseHoveringOverlay(Overlay overlay, double mouseX, double mouseY) {
         return (overlay.getRenderX() <= mouseX && overlay.getRenderX() + overlay.getWidth() >= mouseX)
                 && (overlay.getRenderY() <= mouseY && overlay.getRenderY() + overlay.getHeight() >= mouseY);
-    }
-
-    private void saveConfigForOverlay() {
-        ConfigManager.saveConfig();
-        reloadConfigForOverlay();
     }
 
     private void reloadConfigForOverlay() {
