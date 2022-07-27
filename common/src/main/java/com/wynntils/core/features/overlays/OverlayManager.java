@@ -59,12 +59,12 @@ public class OverlayManager {
 
     private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
         boolean testMode = false;
+        boolean shouldRender = true;
 
         if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
             testMode = screen.isTestMode();
+            shouldRender = false;
         }
-
-        boolean shouldRender = !(McUtils.mc().screen instanceof OverlayManagementScreen);
 
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
