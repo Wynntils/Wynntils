@@ -144,20 +144,6 @@ public class OverlayManagementScreen extends Screen {
                         overlay.getWidth(),
                         overlay.getHeight());
 
-                int xOffset =
-                        switch (overlay.getRenderHorizontalAlignment()) {
-                            case Left -> 3;
-                            case Center -> 0;
-                            case Right -> -3;
-                        };
-
-                int yOffset =
-                        switch (overlay.getRenderVerticalAlignment()) {
-                            case Top -> 5;
-                            case Middle -> 0;
-                            case Bottom -> -5;
-                        };
-
                 TextRenderTask renderTask = new TextRenderTask(
                         overlay.getTranslatedName(),
                         new TextRenderSetting(
@@ -169,11 +155,11 @@ public class OverlayManagementScreen extends Screen {
                 FontRenderer.getInstance()
                         .renderTextWithAlignment(
                                 poseStack,
-                                overlay.getRenderX() + xOffset,
-                                overlay.getRenderY() + yOffset,
+                                overlay.getRenderX(),
+                                overlay.getRenderY() - 1.8f,
                                 renderTask,
-                                overlay.getRenderedWidth() + xOffset,
-                                overlay.getRenderedHeight() + yOffset,
+                                overlay.getRenderedWidth(),
+                                overlay.getRenderedHeight(),
                                 overlay.getRenderHorizontalAlignment(),
                                 overlay.getRenderVerticalAlignment());
             }

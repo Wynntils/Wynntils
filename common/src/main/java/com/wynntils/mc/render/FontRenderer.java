@@ -223,11 +223,11 @@ public class FontRenderer {
                     }
                 }
 
-                height += lines * (font.lineHeight + NEWLINE_OFFSET);
+                height += lines * (font.lineHeight) + NEWLINE_OFFSET * (lines - 1);
             }
         }
 
-        return (float) (height - NEWLINE_OFFSET / 2 * McUtils.window().getGuiScale());
+        return (float) (height / 2 * McUtils.window().getGuiScale());
     }
 
     public float calculateRenderHeight(List<String> lines, float maxWidth) {
