@@ -20,6 +20,7 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.objects.Pair;
@@ -51,6 +52,7 @@ public class OverlayManagementScreen extends Screen {
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 10;
+    private static final int ANIMATION_LENGTH = 30;
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             new TextComponent("Resize the overlay by dragging the edges or corners."),
@@ -85,9 +87,12 @@ public class OverlayManagementScreen extends Screen {
 
     private boolean snappingEnabled = true;
 
+    private int animationLengthRemaining;
+
     public OverlayManagementScreen(Overlay overlay) {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
         selectedOverlay = overlay;
+        animationLengthRemaining = ANIMATION_LENGTH;
     }
 
     @Override
@@ -99,6 +104,15 @@ public class OverlayManagementScreen extends Screen {
     @Override
     public void onClose() {
         reloadConfigForOverlay();
+    }
+
+    @Override
+    public void tick() {
+        if (animationLengthRemaining <= 0) {
+            return;
+        }
+
+        animationLengthRemaining--;
     }
 
     @Override
@@ -135,9 +149,12 @@ public class OverlayManagementScreen extends Screen {
                         overlay.getRenderY() + overlay.getHeight(),
                         1,
                         1.8f);
+                int colorAlphaRect = overlay == selectedOverlay
+                        ? (int) Math.max(MathUtils.map(animationLengthRemaining, 0, ANIMATION_LENGTH, 30, 255), 30)
+                        : 30;
                 RenderUtils.drawRect(
                         poseStack,
-                        color.withAlpha(30),
+                        color.withAlpha(colorAlphaRect),
                         overlay.getRenderX(),
                         overlay.getRenderY(),
                         0,
