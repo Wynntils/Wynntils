@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 
 public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final int ITEM_HEIGHT = 25;
+    private static final int ROW_WIDTH = 161;
     private final List<Overlay> overlays;
 
     public OverlayList(OverlaySelectionScreen screen) {
@@ -85,7 +86,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
 
     @Override
     public int getRowWidth() {
-        return 161;
+        return ROW_WIDTH;
     }
 
     @Override
