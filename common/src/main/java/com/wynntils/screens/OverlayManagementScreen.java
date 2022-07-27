@@ -323,18 +323,22 @@ public class OverlayManagementScreen extends Screen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (testMode) return false;
 
-        // Order:
-        //  - Corners
-        //  - Edges
-        //  - OverlayArea
+        switch (selectionMode) {
+            case Corner -> {
+                handleOverlayCornerDrag(button, dragX, dragY);
+            }
+            case Edge -> {
+                handleOverlayEdgeDrag(button, dragX, dragY);
+            }
+            case Area -> {
+                handleOverlayBodyDrag(button, dragX, dragY);
+            }
+            default -> {
+                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            }
+        }
 
-        handleOverlayCornerDrag(button, dragX, dragY);
-
-        handleOverlayEdgeDrag(button, dragX, dragY);
-
-        handleOverlayBodyDrag(button, dragX, dragY);
-
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return false;
     }
 
     private boolean isMouseHoveringOverlay(Overlay overlay, double mouseX, double mouseY) {
@@ -348,7 +352,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void handleOverlayEdgeDrag(int button, double dragX, double dragY) {
-        if (selectionMode != SelectionMode.Edge || selectedEdge == null || selectedOverlay == null) {
+        if (selectedEdge == null || selectedOverlay == null) {
             return;
         }
 
@@ -389,7 +393,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void handleOverlayBodyDrag(int button, double dragX, double dragY) {
-        if (selectionMode != SelectionMode.Area || selectedOverlay == null) {
+        if (selectedOverlay == null) {
             return;
         }
 
@@ -404,7 +408,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void handleOverlayCornerDrag(int button, double dragX, double dragY) {
-        if (selectionMode != SelectionMode.Corner || selectedCorner == null || selectedOverlay == null) {
+        if (selectedCorner == null || selectedOverlay == null) {
             return;
         }
 
