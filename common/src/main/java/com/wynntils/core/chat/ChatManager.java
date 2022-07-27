@@ -6,6 +6,7 @@ package com.wynntils.core.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,6 +16,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatManager {
     private static final Pattern INFO_BAR_PATTERN = Pattern.compile("§c❤ (\\d+)\\/(\\d+)§0 .* §b✺ (\\d+)\\/(\\d+)");
+    private static final Pattern NPC_DIALOG_PATTERN = Pattern.compile("\n\n +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r\n*$");
+    private static final Pattern PRE_DIALOG_PATTERN = Pattern.compile("\n§r\nÀ+\n*$");
 
     public static void init() {
         WynntilsMod.getEventBus().register(ChatManager.class);
@@ -32,9 +35,27 @@ public class ChatManager {
     }
 
     private static void parseChatMessage(Component message) {
-        // this is a real chat message, or wynncraft stuff like
-        // " [Info] Link your Wynncraft forum account with "/forum" and get a stylish white username in chat! Visit
-        // wynncraft.com/forumlink for more!"
+        String msg = ComponentUtils.getFormatted(message);
+        if (msg.contains("\n")) {
+            // It's a multi-line message (NPC dialog "screen"), figure out parts
+            Matcher m = PRE_DIALOG_PATTERN.matcher(msg);
+            if (m.find()) {
+                // Before an NPC dialog starts, this gets sent to "clear the screen"
+                // but we can just ignore it
+                return;
+            }
+            Matcher m2 = NPC_DIALOG_PATTERN.matcher(msg);
+            if (m2.find()) {
+                // This is a NPC dialog screen
+            } else {
+                // The dialog has ended, and normal chat is restored. This screen
+                // shows how the chat looks minus the NPC dialog.
+            }
+
+            String[] lines = msg.split("\\n");
+        } else {
+            // This is a normal, single line chat
+        }
     }
 
     private static void parseSystemMessage(Component message) {
