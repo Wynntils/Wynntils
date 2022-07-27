@@ -7,6 +7,8 @@ package com.wynntils.screens.lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlaySelectionScreen;
@@ -14,10 +16,17 @@ import com.wynntils.screens.lists.entries.OverlayEntry;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final int ITEM_HEIGHT = 25;
     private static final int ROW_WIDTH = 161;
+
+    private static final List<Component> HELP_TOOLTIP_LINES = List.of(
+            new TextComponent("Left click on the overlay to edit it."),
+            new TextComponent("Right click on the overlay to disable/enable it."));
+
     private final List<Overlay> overlays;
 
     public OverlayList(OverlaySelectionScreen screen) {
@@ -43,6 +52,19 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.render(poseStack, mouseX, mouseY, partialTick);
+
+        OverlayEntry hovered = this.getHovered();
+
+        if (hovered != null) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    100,
+                    HELP_TOOLTIP_LINES,
+                    FontRenderer.getInstance().getFont(),
+                    false);
+        }
     }
 
     @Override
