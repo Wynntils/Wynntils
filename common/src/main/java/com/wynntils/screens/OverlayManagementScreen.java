@@ -123,7 +123,8 @@ public class OverlayManagementScreen extends Screen {
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                CustomColor color = overlay == selectedOverlay ? CommonColors.LIGHT_BLUE : CommonColors.GREEN;
+                CustomColor color =
+                        overlay == selectedOverlay ? CommonColors.GREEN : new CustomColor(200, 200, 200, 255);
                 RenderUtils.drawRectBorders(
                         poseStack,
                         color,

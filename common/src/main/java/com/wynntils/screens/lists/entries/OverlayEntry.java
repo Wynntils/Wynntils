@@ -25,9 +25,9 @@ import net.minecraft.network.chat.TextComponent;
 
 public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntry> {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
-    private static final CustomColor DISABLED_COLOR = new CustomColor(116, 0, 0, 255);
+    private static final CustomColor DISABLED_COLOR = new CustomColor(60, 60, 60, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
-    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(220, 0, 0, 255);
+    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(0, 0, 0, 255);
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             new TextComponent("Left click on the overlay to edit it."),
