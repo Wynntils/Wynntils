@@ -177,7 +177,7 @@ public class FontRenderer {
 
         switch (verticalAlignment) {
             case Middle -> renderY +=
-                    (height / 2 - renderHeight) / McUtils.window().getGuiScale();
+                    (height - renderHeight) / 2 / McUtils.window().getGuiScale();
             case Bottom -> renderY += (height - renderHeight) / McUtils.window().getGuiScale();
         }
 
