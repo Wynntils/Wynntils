@@ -16,11 +16,10 @@ public class BasicOverlay extends Overlay {
 
     public BasicOverlay(
             OverlayPosition position,
-            float width,
-            float height,
+            OverlaySize overlaySize,
             QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer,
             QuadConsumer<Overlay, PoseStack, Float, Window> renderPreviewConsumer) {
-        super(position, width, height);
+        super(position, overlaySize);
         this.renderConsumer = renderConsumer;
         this.renderPreviewConsumer = renderPreviewConsumer;
     }
@@ -28,11 +27,10 @@ public class BasicOverlay extends Overlay {
     public BasicOverlay(
             OverlayPosition position,
             OverlaySize overlaySize,
-            QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer,
-            QuadConsumer<Overlay, PoseStack, Float, Window> renderPreviewConsumer) {
+            QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer) {
         super(position, overlaySize);
         this.renderConsumer = renderConsumer;
-        this.renderPreviewConsumer = renderPreviewConsumer;
+        this.renderPreviewConsumer = renderConsumer;
     }
 
     @Override
