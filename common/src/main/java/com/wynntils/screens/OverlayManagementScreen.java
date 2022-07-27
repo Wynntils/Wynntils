@@ -101,18 +101,14 @@ public class OverlayManagementScreen extends Screen {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (testMode) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            this.width / 2f,
-                            this.height - 160,
-                            new TextRenderTask(
-                                    "Test mode on.",
-                                    new TextRenderSetting(
-                                            0,
-                                            CommonColors.WHITE,
-                                            FontRenderer.TextAlignment.CENTER_ALIGNED,
-                                            FontRenderer.TextShadow.NORMAL)));
+            TextRenderTask renderTask = new TextRenderTask(
+                    "Test mode on.",
+                    new TextRenderSetting(
+                            0,
+                            CommonColors.WHITE,
+                            FontRenderer.TextAlignment.CENTER_ALIGNED,
+                            FontRenderer.TextShadow.NORMAL));
+            FontRenderer.getInstance().renderText(poseStack, this.width / 2f, this.height - 160, renderTask);
         } else {
             if (selectionMode != SelectionMode.None) {
                 renderAlignmentLines(poseStack);
@@ -158,19 +154,20 @@ public class OverlayManagementScreen extends Screen {
                             case Bottom -> -5;
                         };
 
+                TextRenderTask renderTask = new TextRenderTask(
+                        overlay.getTranslatedName(),
+                        new TextRenderSetting(
+                                overlay.getWidth(),
+                                color,
+                                FontRenderer.TextAlignment.fromHorizontalAlignment(
+                                        overlay.getRenderHorizontalAlignment()),
+                                FontRenderer.TextShadow.OUTLINE));
                 FontRenderer.getInstance()
                         .renderTextWithAlignment(
                                 poseStack,
                                 overlay.getRenderX() + xOffset,
                                 overlay.getRenderY() + yOffset,
-                                new TextRenderTask(
-                                        overlay.getTranslatedName(),
-                                        new TextRenderSetting(
-                                                overlay.getWidth(),
-                                                color,
-                                                FontRenderer.TextAlignment.fromHorizontalAlignment(
-                                                        overlay.getRenderHorizontalAlignment()),
-                                                FontRenderer.TextShadow.OUTLINE)),
+                                renderTask,
                                 overlay.getRenderedWidth() + xOffset,
                                 overlay.getRenderedHeight() + yOffset,
                                 overlay.getRenderHorizontalAlignment(),
@@ -178,12 +175,12 @@ public class OverlayManagementScreen extends Screen {
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
+                int toolTipWidth = RenderUtils.getToolTipWidth(
+                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
+                        FontRenderer.getInstance().getFont());
                 RenderUtils.drawTooltipAt(
                         poseStack,
-                        mouseX
-                                - RenderUtils.getToolTipWidth(
-                                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
-                                        FontRenderer.getInstance().getFont()),
+                        mouseX - toolTipWidth,
                         mouseY,
                         100,
                         HELP_TOOLTIP_LINES,
