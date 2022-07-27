@@ -8,9 +8,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.Texture;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.lists.OverlayList;
 import com.wynntils.utils.objects.CommonColors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -18,6 +20,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class OverlaySelectionScreen extends Screen {
+    private static final int BUTTON_WIDTH = 60;
+    private static final int BUTTON_HEIGHT = 20;
+
     private OverlayList overlayList;
 
     public OverlaySelectionScreen() {
@@ -27,6 +32,15 @@ public class OverlaySelectionScreen extends Screen {
     @Override
     protected void init() {
         overlayList = new OverlayList(this);
+        this.addRenderableWidget(new Button(
+                this.width / 2 - BUTTON_WIDTH / 2,
+                this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                new TranslatableComponent("screens.wynntils.overlaySelection.close"),
+                button -> {
+                    McUtils.mc().setScreen(null);
+                }));
     }
 
     @Override
@@ -89,6 +103,7 @@ public class OverlaySelectionScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
         return overlayList.mouseClicked(mouseX, mouseY, button);
     }
 
