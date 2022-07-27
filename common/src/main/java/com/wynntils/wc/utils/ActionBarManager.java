@@ -5,7 +5,9 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.utils.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
@@ -14,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ActionBarManager {
 
     private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)".replace("§", "(?:§[0-9a-fklmnor])*"));
+            StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 
     private static String previousActionBar = null;
 
@@ -41,7 +43,7 @@ public class ActionBarManager {
         maxMana = Integer.parseInt(matcher.group(5));
 
         String centerText = matcher.group(3);
-        SpellManager.tryUpdateSpell(centerText);
+        QuickCastFeature.tryUpdateSpell(centerText);
     }
 
     public static void init() {

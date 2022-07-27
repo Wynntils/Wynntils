@@ -15,7 +15,6 @@ import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.ModelLoader;
 import com.wynntils.wc.utils.ActionBarManager;
-import com.wynntils.wc.utils.SpellManager;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import java.io.File;
 import java.util.regex.Matcher;
@@ -92,7 +91,6 @@ public class WynntilsMod {
         ModelLoader.init();
         OverlayManager.init();
         ActionBarManager.init();
-        SpellManager.init();
         FeatureRegistry.init();
     }
 
