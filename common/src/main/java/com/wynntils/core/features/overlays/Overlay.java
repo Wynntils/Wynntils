@@ -16,9 +16,7 @@ import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
@@ -218,14 +216,12 @@ public abstract class Overlay implements Translatable, Configurable {
         return verticalAlignmentOverride == null ? position.getVerticalAlignment() : verticalAlignmentOverride;
     }
 
-    public Map<Corner, Vec2> getCornersMap() {
-        Map<Corner, Vec2> points = new HashMap<>();
-
-        points.put(Corner.TopLeft, new Vec2(getRenderX(), getRenderY()));
-        points.put(Corner.TopRight, new Vec2(getRenderX() + getWidth(), getRenderY()));
-        points.put(Corner.BottomLeft, new Vec2(getRenderX(), getRenderY() + getHeight()));
-        points.put(Corner.BottomRight, new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight()));
-
-        return points;
+    public Vec2 getCornerPoints(Corner corner) {
+        return switch (corner) {
+            case TopLeft -> new Vec2(getRenderX(), getRenderY());
+            case TopRight -> new Vec2(getRenderX() + getWidth(), getRenderY());
+            case BottomLeft -> new Vec2(getRenderX(), getRenderY() + getHeight());
+            case BottomRight -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
+        };
     }
 }

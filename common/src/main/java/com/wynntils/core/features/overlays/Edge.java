@@ -5,7 +5,6 @@
 package com.wynntils.core.features.overlays;
 
 import com.wynntils.utils.objects.Pair;
-import java.util.Map;
 import net.minecraft.world.phys.Vec2;
 
 public enum Edge {
@@ -35,8 +34,6 @@ public enum Edge {
     }
 
     public Pair<Vec2, Vec2> getEdgePos(Overlay overlay) {
-        Map<Corner, Vec2> cornersMap = overlay.getCornersMap();
-
-        return new Pair<>(cornersMap.get(this.cornerA), cornersMap.get(this.cornerB));
+        return new Pair<>(overlay.getCornerPoints(this.cornerA), overlay.getCornerPoints(this.cornerB));
     }
 }

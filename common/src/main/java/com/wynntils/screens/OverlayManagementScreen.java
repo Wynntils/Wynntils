@@ -211,10 +211,10 @@ public class OverlayManagementScreen extends Screen {
 
         Vec2 mousePos = new Vec2((float) mouseX, (float) mouseY);
 
-        for (Map.Entry<Corner, Vec2> corner : overlay.getCornersMap().entrySet()) {
-            float distance = corner.getValue().distanceToSqr(mousePos);
+        for (Corner corner : Corner.values()) {
+            float distance = overlay.getCornerPoints(corner).distanceToSqr(mousePos);
             if (distance < MAX_CLICK_DISTANCE) {
-                selectedCorner = corner.getKey();
+                selectedCorner = corner;
                 selectionMode = SelectionMode.Corner;
 
                 return false;
