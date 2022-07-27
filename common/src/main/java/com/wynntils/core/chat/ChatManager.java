@@ -16,7 +16,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatManager {
     private static final Pattern INFO_BAR_PATTERN = Pattern.compile("§c❤ (\\d+)\\/(\\d+)§0 .* §b✺ (\\d+)\\/(\\d+)");
-    private static final Pattern NPC_DIALOG_PATTERN = Pattern.compile("\n\n +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r\n*$");
+    private static final Pattern NPC_DIALOG_PATTERN =
+            Pattern.compile("\n\n +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r\n*$");
     private static final Pattern PRE_DIALOG_PATTERN = Pattern.compile("\n§r\nÀ+\n*$");
 
     public static void init() {
