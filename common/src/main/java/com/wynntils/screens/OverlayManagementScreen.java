@@ -320,6 +320,7 @@ public class OverlayManagementScreen extends Screen {
                     .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
         } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
             ConfigManager.saveConfig();
+            McUtils.mc().setScreen(new OverlaySelectionScreen());
             onClose();
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             McUtils.mc().setScreen(new OverlaySelectionScreen());
