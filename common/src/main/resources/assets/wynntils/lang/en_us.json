@@ -201,6 +201,8 @@
   "screens.wynntils.overlayManagement.applySettings": "Apply",
   "screens.wynntils.overlayManagement.closeSettingsScreen": "Close",
   "screens.wynntils.overlayManagement.name": "Overlay Management Screen",
+  "screens.wynntils.overlayManagement.testModeOn": "Test mode on",
   "screens.wynntils.overlayManagement.testSettings": "Test",
-  "screens.wynntils.overlaySelection.name": "Overlay Selection Screen"
+  "screens.wynntils.overlaySelection.name": "Overlay Selection Screen",
+  "screens.wynntils.overlaySelection.overlays": "Overlays"
 }

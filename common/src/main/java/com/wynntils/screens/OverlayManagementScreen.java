@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -103,7 +104,7 @@ public class OverlayManagementScreen extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (testMode) {
             TextRenderTask renderTask = new TextRenderTask(
-                    "Test mode on.",
+                    I18n.get("screens.wynntils.overlayManagement.testModeOn"),
                     new TextRenderSetting(
                             0,
                             CommonColors.WHITE,

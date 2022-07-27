@@ -13,6 +13,7 @@ import com.wynntils.utils.objects.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
@@ -56,7 +57,7 @@ public class OverlaySelectionScreen extends Screen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "Overlays",
+                        I18n.get("screens.wynntils.overlaySelection.overlays"),
                         5,
                         4,
                         CommonColors.WHITE,
