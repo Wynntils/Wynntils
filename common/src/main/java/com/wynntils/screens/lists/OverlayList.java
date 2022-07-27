@@ -11,14 +11,13 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlaySelectionScreen;
 import com.wynntils.screens.lists.entries.OverlayEntry;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 
 public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final int ITEM_HEIGHT = 25;
-    private final Set<Overlay> overlays;
+    private final List<Overlay> overlays;
 
     public OverlayList(OverlaySelectionScreen screen) {
         super(
@@ -29,7 +28,8 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 ITEM_HEIGHT);
 
-        this.overlays = new HashSet<>(OverlayManager.getOverlays());
+        this.overlays =
+                OverlayManager.getOverlays().stream().sorted(Overlay::compareTo).toList();
 
         for (Overlay overlay : this.overlays) {
             this.addEntry(new OverlayEntry(overlay));

@@ -5,6 +5,7 @@
 package com.wynntils.core.features.overlays;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -122,6 +123,10 @@ public abstract class Overlay implements Translatable, Configurable {
         return this.getClass().getSimpleName();
     }
 
+    public Class<?> getDeclaringClass() {
+        return this.getClass().getDeclaringClass();
+    }
+
     protected String getNameCamelCase() {
         return CaseFormat.UPPER_CAMEL.to(
                 CaseFormat.LOWER_CAMEL, this.getClass().getSimpleName().replace("Overlay", ""));
@@ -223,5 +228,14 @@ public abstract class Overlay implements Translatable, Configurable {
             case BottomLeft -> new Vec2(getRenderX(), getRenderY() + getHeight());
             case BottomRight -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
         };
+    }
+
+    public int compareTo(Overlay other) {
+        return ComparisonChain.start()
+                .compare(
+                        this.getDeclaringClass().getSimpleName(),
+                        other.getDeclaringClass().getSimpleName())
+                .compare(this.getTranslatedName(), other.getTranslatedName())
+                .result();
     }
 }
