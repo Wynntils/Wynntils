@@ -10,10 +10,15 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
+import com.wynntils.wc.custom.item.properties.ConsumableChargeProperty;
 import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
+import com.wynntils.wc.custom.item.properties.DungeonKeyProperty;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.ItemTierProperty;
+import com.wynntils.wc.custom.item.properties.PowderTierProperty;
+import com.wynntils.wc.custom.item.properties.TeleportScrollProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
@@ -52,6 +57,11 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
+        registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
+        registerProperty(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
+        registerProperty(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
+        registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
+        registerProperty(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

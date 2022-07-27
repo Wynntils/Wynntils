@@ -19,12 +19,18 @@ import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
 public class WynnItemMatchers {
-    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+) \\[([0-9]+)/([0-9]+)]");
+    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
+    private static final Pattern POWDER_PATTERN =
+            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
+    private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("(.*) Teleport Scroll");
+    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
+    private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
+    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -56,12 +62,16 @@ public class WynnItemMatchers {
     }
 
     public static boolean isConsumable(ItemStack itemStack) {
-        if (itemStack.isEmpty() || (itemStack.getItem() != Items.POTION && itemStack.getItem() != Items.DIAMOND_AXE))
+        if (itemStack.isEmpty()) return false;
+
+        // consumables are either a potion or a diamond axe for crafteds
+        // to ensure an axe item is really a consumable, make sure it has the right name color
+        if (itemStack.getItem() != Items.POTION
+                && !(itemStack.getItem() == Items.DIAMOND_AXE
+                        && itemStack.getHoverName().getString().startsWith(ChatFormatting.DARK_AQUA.toString())))
             return false;
 
-        String name = itemStack.getHoverName().getString();
-        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
-        return CONSUMABLE_PATTERN.matcher(strippedName).matches();
+        return consumableNameMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isUnidentified(ItemStack itemStack) {
@@ -107,6 +117,13 @@ public class WynnItemMatchers {
         return (name.startsWith(ChatFormatting.DARK_AQUA.toString()) && name.contains("%"));
     }
 
+    public static boolean isMythic(ItemStack itemStack) {
+        // only gear, identified or not, could be a mythic
+        if (!(isUnidentified(itemStack) || isGear(itemStack))) return false;
+
+        return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    }
+
     /**
      * Returns true if the passed item has a durability value (crafted items, tools)
      */
@@ -131,18 +148,59 @@ public class WynnItemMatchers {
         return false;
     }
 
-    public static boolean isMythic(ItemStack itemStack) {
-        // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack))) return false;
-
-        return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    public static boolean isPowder(ItemStack itemStack) {
+        return powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static Matcher rarityLineMatcher(Component line) {
-        return ITEM_RARITY_PATTERN.matcher(line.getString());
+    public static boolean isTeleportScroll(ItemStack itemStack) {
+        return teleportScrollNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static Matcher durabilityLineMatcher(Component line) {
-        return DURABILITY_PATTERN.matcher(line.getString());
+    public static boolean isDungeonKey(ItemStack itemStack) {
+        if (!dungeonKeyNameMatcher(itemStack.getHoverName()).matches()) return false;
+
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            // check lore to avoid matching misc. key items
+            if (line.getString().contains("Dungeon Info")) return true;
+            if (line.getString().contains("Corrupted Dungeon Key")) return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isAmplifier(ItemStack itemStack) {
+        return amplifierNameMatcher(itemStack.getHoverName()).matches();
+    }
+
+    public static Matcher rarityLineMatcher(Component text) {
+        return ITEM_RARITY_PATTERN.matcher(text.getString());
+    }
+
+    public static Matcher durabilityLineMatcher(Component text) {
+        return DURABILITY_PATTERN.matcher(text.getString());
+    }
+
+    public static Matcher powderNameMatcher(Component text) {
+        return POWDER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher teleportScrollNameMatcher(Component text) {
+        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher teleportScrollLocationMatcher(Component text) {
+        return TELEPORT_LOCATION_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher dungeonKeyNameMatcher(Component text) {
+        return DUNGEON_KEY_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher amplifierNameMatcher(Component text) {
+        return AMPLIFIER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher consumableNameMatcher(Component text) {
+        return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 }

@@ -72,6 +72,12 @@ public class ItemHighlightFeature extends UserFeature {
     public static CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
 
     @Config
+    public static boolean cosmeticHighlightEnabled = true;
+
+    @Config
+    public static boolean powderHighlightEnabled = true;
+
+    @Config
     public static boolean inventoryHighlightEnabled = true;
 
     @Config
@@ -118,8 +124,8 @@ public class ItemHighlightFeature extends UserFeature {
         if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return CustomColor.NONE;
         HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
 
-        boolean enabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
-        if (!enabled) return CustomColor.NONE;
+        boolean contextEnabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
+        if (!highlight.isHighlightEnabled() || !contextEnabled) return CustomColor.NONE;
 
         return highlight.getHighlightColor();
     }

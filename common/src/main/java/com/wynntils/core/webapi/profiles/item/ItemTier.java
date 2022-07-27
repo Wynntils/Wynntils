@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.ItemHighlightFeature;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -87,13 +88,22 @@ public enum ItemTier {
         return chatFormatting;
     }
 
+    public boolean isHighlightEnabled() {
+        try {
+            return highlightEnabled.call();
+        } catch (Exception e) {
+            WynntilsMod.error(e.getMessage());
+            return false;
+        }
+    }
+
     public CustomColor getHighlightColor() {
         try {
-            if (highlightEnabled.call()) return highlightColor.call();
+            return highlightColor.call();
         } catch (Exception e) {
-            e.printStackTrace();
+            WynntilsMod.error(e.getMessage());
+            return CustomColor.NONE;
         }
-        return CustomColor.NONE; // either highlight is disabled, or some error occurred
     }
 
     public static ItemTier fromComponent(Component component) {
