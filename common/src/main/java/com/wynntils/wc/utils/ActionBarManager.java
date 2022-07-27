@@ -5,11 +5,12 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.utils.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import net.minecraft.network.chat.ChatType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -19,6 +20,7 @@ public class ActionBarManager {
             StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 
     private static String previousActionBar = null;
+    private static String previousMessage = null;
 
     private static int currentHealth = -1;
     private static int maxHealth = -1;
@@ -42,8 +44,11 @@ public class ActionBarManager {
         currentMana = Integer.parseInt(matcher.group(4));
         maxMana = Integer.parseInt(matcher.group(5));
 
-        String centerText = matcher.group(3);
-        QuickCastFeature.tryUpdateSpell(centerText);
+        String message = matcher.group(3);
+        if(message.equals(previousMessage)) return;
+        previousMessage = message;
+
+        WynntilsMod.getEventBus().post(new ActionBarMessageUpdateEvent(message));
     }
 
     public static void init() {

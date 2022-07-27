@@ -13,6 +13,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
@@ -60,7 +61,7 @@ public class QuickCastFeature extends UserFeature {
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
     public static final SpellDirection[] NO_SPELL = new SpellDirection[0];
-    private static SpellDirection[] partialSpell = NO_SPELL;
+    private static SpellDirection[] spellInProgress = NO_SPELL;
 
     private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
 
@@ -74,17 +75,22 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
         tryUpdateSpell(e.getComponent().getString());
     }
+    @SubscribeEvent
+    public void onActionbarMessageUpdate(ActionBarMessageUpdateEvent e) {
+        if (!WynnUtils.onWorld()) return;
+        tryUpdateSpell(e.getMessage());
+    }
 
     // this also gets called from ActionBarManager with the actionbar's center contents
     public static void tryUpdateSpell(String text) {
         SpellDirection[] spell = getSpellFromString(text);
         if (spell == null) return;
-        if (Arrays.equals(partialSpell, spell)) return;
+        if (Arrays.equals(spellInProgress, spell)) return;
         if (spell.length == 3) {
-            partialSpell = NO_SPELL;
+            spellInProgress = NO_SPELL;
             spellCountdown = 0;
         } else {
-            partialSpell = spell;
+            spellInProgress = spell;
             spellCountdown = 40;
         }
     }
@@ -159,15 +165,15 @@ public class QuickCastFeature extends UserFeature {
         List<SpellDirection> spell = Stream.of(a, b, c)
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
-        for (int i = 0; i < partialSpell.length; ++i) {
-            if (partialSpell[i] != spell.get(i)) {
+        for (int i = 0; i < spellInProgress.length; ++i) {
+            if (spellInProgress[i] != spell.get(i)) {
                 sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.incompatibleInProgress"));
                 return;
             }
         }
 
         lastSelectedSlot = McUtils.inventory().selected;
-        List<SpellDirection> remainder = spell.subList(partialSpell.length, spell.size());
+        List<SpellDirection> remainder = spell.subList(spellInProgress.length, spell.size());
         remainder.stream().map(SpellDirection::getInteractionPacket).forEach(SPELL_PACKET_QUEUE::add);
     }
 
@@ -176,7 +182,7 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
 
         // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0 && --spellCountdown <= 0) partialSpell = NO_SPELL;
+        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = NO_SPELL;
 
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
@@ -195,7 +201,7 @@ public class QuickCastFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         SPELL_PACKET_QUEUE.clear();
-        partialSpell = NO_SPELL;
+        spellInProgress = NO_SPELL;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
