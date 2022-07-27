@@ -83,6 +83,8 @@ public class OverlayManagementScreen extends Screen {
 
     private boolean testMode = false;
 
+    private boolean snappingEnabled = true;
+
     public OverlayManagementScreen(Overlay overlay) {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
         selectedOverlay = overlay;
@@ -319,9 +321,21 @@ public class OverlayManagementScreen extends Screen {
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             McUtils.mc().setScreen(new OverlaySelectionScreen());
             onClose();
+        } else if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            snappingEnabled = false;
+            edgeAlignmentSnapMap.clear();
+            alignmentLinesToRender.clear();
         }
 
         return false;
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            snappingEnabled = true;
+        }
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -459,6 +473,10 @@ public class OverlayManagementScreen extends Screen {
 
     // Pair<dragX, dragY>
     private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
+        if (!snappingEnabled) {
+            return new Pair<>(dragX, dragY);
+        }
+
         double originalX = dragX;
         double originalY = dragY;
 
