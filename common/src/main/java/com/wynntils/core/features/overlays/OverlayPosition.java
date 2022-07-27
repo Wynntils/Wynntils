@@ -99,21 +99,23 @@ public class OverlayPosition {
         SectionCoordinates sectionCoordinates = OverlayManager.getSection(section);
 
         // 2. Calculate the best alignment inside the section
-        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left;
+        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
 
-        if ((sectionCoordinates.x1() + sectionCoordinates.x2()) / 2 == (int) middleOfOverlay.x) {
-            horizontalAlignment = HorizontalAlignment.Center;
-        } else if (Math.abs(sectionCoordinates.x2() - middleOfOverlay.x)
-                < Math.abs(sectionCoordinates.x1() - middleOfOverlay.x)) {
+        float distanceToCenterHorizontally =
+                Math.abs((sectionCoordinates.x1() + sectionCoordinates.x2()) / 2f - middleOfOverlay.x);
+        if (Math.abs(sectionCoordinates.x1() - middleOfOverlay.x) < distanceToCenterHorizontally) {
+            horizontalAlignment = HorizontalAlignment.Left;
+        } else if (Math.abs(sectionCoordinates.x2() - middleOfOverlay.x) < distanceToCenterHorizontally) {
             horizontalAlignment = HorizontalAlignment.Right;
         }
 
-        VerticalAlignment verticalAlignment = VerticalAlignment.Top;
+        VerticalAlignment verticalAlignment = VerticalAlignment.Middle;
 
-        if ((sectionCoordinates.y1() + sectionCoordinates.y2()) / 2 == (int) middleOfOverlay.y) {
-            verticalAlignment = VerticalAlignment.Middle;
-        } else if (Math.abs(sectionCoordinates.y2() - middleOfOverlay.y)
-                < Math.abs(sectionCoordinates.y1() - middleOfOverlay.y)) {
+        float distanceToCenterVertically =
+                Math.abs((sectionCoordinates.y1() + sectionCoordinates.y2()) / 2f - middleOfOverlay.y);
+        if (Math.abs(sectionCoordinates.y1() - middleOfOverlay.y) < distanceToCenterVertically) {
+            verticalAlignment = VerticalAlignment.Top;
+        } else if (Math.abs(sectionCoordinates.y2() - middleOfOverlay.y) < distanceToCenterVertically) {
             verticalAlignment = VerticalAlignment.Bottom;
         }
 
