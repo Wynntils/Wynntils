@@ -515,26 +515,18 @@ public class RenderUtils {
     }
 
     public static int getToolTipWidth(List<ClientTooltipComponent> lines, Font font) {
-        int tooltipWidth = 0;
-
-        for (ClientTooltipComponent clientTooltipComponent : lines) {
-            int lineWidth = clientTooltipComponent.getWidth(font);
-            if (lineWidth > tooltipWidth) {
-                tooltipWidth = lineWidth;
-            }
-        }
-
-        return tooltipWidth;
+        return lines.stream()
+                .map(clientTooltipComponent -> clientTooltipComponent.getWidth(font))
+                .max(Integer::compareTo)
+                .orElse(0);
     }
 
     public static int getToolTipHeight(List<ClientTooltipComponent> lines) {
-        int tooltipHeight = lines.size() == 1 ? -2 : 0;
-
-        for (ClientTooltipComponent clientTooltipComponent : lines) {
-            tooltipHeight += clientTooltipComponent.getHeight();
-        }
-
-        return tooltipHeight;
+        return (lines.size() == 1 ? -2 : 0)
+                + lines.stream()
+                        .map(ClientTooltipComponent::getHeight)
+                        .mapToInt(Integer::intValue)
+                        .sum();
     }
 
     public static List<ClientTooltipComponent> componentToClientTooltipComponent(List<Component> components) {
