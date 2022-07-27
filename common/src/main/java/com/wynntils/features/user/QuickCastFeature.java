@@ -69,9 +69,9 @@ public class QuickCastFeature extends UserFeature {
     private static int spellCountdown = 0;
     private static int lastSelectedSlot = 0;
 
-    // only actually useful when player is still low-level
     @SubscribeEvent
     public void onSubtitleUpdate(SubtitleSetTextEvent e) {
+        // only actually used when player is still low-level
         if (!WynnUtils.onWorld()) return;
         tryUpdateSpell(e.getComponent().getString());
     }
@@ -82,7 +82,6 @@ public class QuickCastFeature extends UserFeature {
         tryUpdateSpell(e.getMessage());
     }
 
-    // this also gets called from ActionBarManager with the actionbar's center contents
     public static void tryUpdateSpell(String text) {
         SpellDirection[] spell = getSpellFromString(text);
         if (spell == null) return;
