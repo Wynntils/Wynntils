@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.Button;
@@ -296,9 +295,8 @@ public class OverlayManagementScreen extends Screen {
             VerticalAlignment[] values = VerticalAlignment.values();
             index = (values.length + index) % values.length;
             selectedOverlay.setVerticalAlignmentOverride(values[index]);
-            selectedOverlay.getVisibleConfigOptions().stream()
-                    .filter(configHolder -> Objects.equals(configHolder.getFieldName(), "verticalAlignmentOverride"))
-                    .findFirst()
+            selectedOverlay
+                    .getConfigOptionFromString("verticalAlignmentOverride")
                     .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
             int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
@@ -312,9 +310,8 @@ public class OverlayManagementScreen extends Screen {
             HorizontalAlignment[] values = HorizontalAlignment.values();
             index = (values.length + index) % values.length;
             selectedOverlay.setHorizontalAlignmentOverride(values[index]);
-            selectedOverlay.getVisibleConfigOptions().stream()
-                    .filter(configHolder -> Objects.equals(configHolder.getFieldName(), "horizontalAlignmentOverride"))
-                    .findFirst()
+            selectedOverlay
+                    .getConfigOptionFromString("horizontalAlignmentOverride")
                     .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
         }
 
