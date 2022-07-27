@@ -563,7 +563,7 @@ public class OverlayManagementScreen extends Screen {
         }
 
         for (Overlay overlay :
-                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).collect(Collectors.toSet())) {
+                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).toList()) {
             if (overlay == selectedOverlay) continue;
 
             for (Edge edge : Edge.values()) {
