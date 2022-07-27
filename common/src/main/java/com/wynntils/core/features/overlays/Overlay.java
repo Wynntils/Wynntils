@@ -187,29 +187,29 @@ public abstract class Overlay implements Translatable, Configurable {
 
     // Return the X where the overlay should be rendered
     public float getRenderX() {
-        return getRenderX(this.position, this);
+        return getRenderX(this.position);
     }
 
     // Return the Y where the overlay should be rendered
     public float getRenderY() {
-        return getRenderY(this.position, this);
+        return getRenderY(this.position);
     }
 
-    public static float getRenderX(OverlayPosition position, Overlay overlay) {
+    public float getRenderX(OverlayPosition position) {
         final SectionCoordinates section = OverlayManager.getSection(position.getAnchorSection());
         return switch (position.getHorizontalAlignment()) {
             case Left -> section.x1() + position.getHorizontalOffset();
-            case Center -> (section.x1() + section.x2() - overlay.getWidth()) / 2 + position.getHorizontalOffset();
-            case Right -> (section.x2() + position.getHorizontalOffset() - overlay.getWidth());
+            case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
+            case Right -> (section.x2() + position.getHorizontalOffset() - this.getWidth());
         };
     }
 
-    public static float getRenderY(OverlayPosition position, Overlay overlay) {
+    public float getRenderY(OverlayPosition position) {
         final SectionCoordinates section = OverlayManager.getSection(position.getAnchorSection());
         return switch (position.getVerticalAlignment()) {
             case Top -> section.y1() + position.getVerticalOffset();
-            case Middle -> (section.y1() + section.y2() - overlay.getHeight()) / 2 + position.getVerticalOffset();
-            case Bottom -> section.y2() + position.getVerticalOffset() - overlay.getHeight();
+            case Middle -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
+            case Bottom -> section.y2() + position.getVerticalOffset() - this.getHeight();
         };
     }
 

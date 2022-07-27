@@ -121,8 +121,8 @@ public class OverlayPosition {
         OverlayPosition newOverlayPositionTemp =
                 new OverlayPosition(0, 0, verticalAlignment, horizontalAlignment, section);
 
-        float renderX = Overlay.getRenderX(newOverlayPositionTemp, overlay);
-        float renderY = Overlay.getRenderY(newOverlayPositionTemp, overlay);
+        float renderX = overlay.getRenderX(newOverlayPositionTemp);
+        float renderY = overlay.getRenderY(newOverlayPositionTemp);
 
         // 4. Calculate the alignment offsets to match the current render position, but factor in argument offsets
         return new OverlayPosition(
