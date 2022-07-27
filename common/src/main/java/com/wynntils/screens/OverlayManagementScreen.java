@@ -313,6 +313,12 @@ public class OverlayManagementScreen extends Screen {
             selectedOverlay
                     .getConfigOptionFromString("horizontalAlignmentOverride")
                     .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
+        } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
+            ConfigManager.saveConfig();
+            onClose();
+        } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            McUtils.mc().setScreen(new OverlaySelectionScreen());
+            onClose();
         }
 
         return false;
