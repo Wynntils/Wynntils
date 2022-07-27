@@ -75,6 +75,7 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
         tryUpdateSpell(e.getComponent().getString());
     }
+
     @SubscribeEvent
     public void onActionbarMessageUpdate(ActionBarMessageUpdateEvent e) {
         if (!WynnUtils.onWorld()) return;

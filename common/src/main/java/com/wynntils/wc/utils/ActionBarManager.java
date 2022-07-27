@@ -7,10 +7,9 @@ package com.wynntils.wc.utils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import net.minecraft.network.chat.ChatType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -45,7 +44,7 @@ public class ActionBarManager {
         maxMana = Integer.parseInt(matcher.group(5));
 
         String message = matcher.group(3);
-        if(message.equals(previousMessage)) return;
+        if (message.equals(previousMessage)) return;
         previousMessage = message;
 
         WynntilsMod.getEventBus().post(new ActionBarMessageUpdateEvent(message));
