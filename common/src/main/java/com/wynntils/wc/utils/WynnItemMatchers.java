@@ -84,6 +84,14 @@ public class WynnItemMatchers {
         return itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
     }
 
+    /**
+     * Returns true if the passed item has an attack speed
+     */
+    public static boolean isWeapon(ItemStack itemStack) {
+        String lore = ItemUtils.getStringLore(itemStack);
+        return lore.contains("Attack Speed") && lore.contains("§7");
+    }
+
     public static boolean isHorse(ItemStack itemStack) {
         return itemStack.getItem() == Items.SADDLE
                 && itemStack.getHoverName().getString().contains("Horse");
