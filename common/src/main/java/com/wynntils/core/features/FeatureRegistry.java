@@ -32,6 +32,7 @@ import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.QuestInfoOverlayFeature;
+import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TooltipFittingFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
@@ -132,34 +133,35 @@ public class FeatureRegistry {
         registerFeature(new PacketDebuggerFeature());
 
         // internal
-        registerFeature(new LootrunFeature());
-        registerFeature(new FixPacketBugsFeature());
-        registerFeature(new ItemStackTransformerFeature());
-        registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new FixPacketBugsFeature());
+        registerFeature(new FixSpellOverwriteFeature());
+        registerFeature(new ItemStackTransformerFeature());
+        registerFeature(new LootrunFeature());
 
         // user
+        registerFeature(new CustomBarsFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
+        registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
+        registerFeature(new ItemTextOverlayFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new SoulPointTimerFeature());
-        registerFeature(new WynncraftButtonFeature());
-        registerFeature(new TooltipFittingFeature());
-        registerFeature(new DurabilityArcFeature());
         registerFeature(new QuestInfoOverlayFeature());
+        registerFeature(new QuickCastFeature());
+        registerFeature(new SoulPointTimerFeature());
+        registerFeature(new TooltipFittingFeature());
+        registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new ItemLockFeature());
-        registerFeature(new ItemTextOverlayFeature());
-        registerFeature(new CustomBarsFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
