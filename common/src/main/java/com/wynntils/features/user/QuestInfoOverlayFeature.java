@@ -38,7 +38,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         private final List<TextRenderTask> toRender = createRenderTaskList("", "");
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList(
-                I18n.get("feature.wynntils.questInfoOverlay.overlay.testQuestName") + ":",
+                I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":",
                 """
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus \
                 in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
@@ -59,7 +59,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         private List<TextRenderTask> createRenderTaskList(String questName, String questDesc) {
             String[] texts = new String[] {
-                I18n.get("feature.wynntils.questInfoOverlay.overlay.title") + ":", questName, questDesc
+                I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":", questName, questDesc
             };
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
