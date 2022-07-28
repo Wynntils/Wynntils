@@ -20,8 +20,10 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
+import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
 import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @FeatureInfo(category = "overlays")
@@ -43,68 +45,39 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     VerticalAlignment.Middle);
         }
 
-        List<TextRenderTask> toRender = List.of(
-                new TextRenderTask(
-                        "Tracked Quest Info:",
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment())),
-                new TextRenderTask(
-                        "",
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment())),
-                new TextRenderTask(
-                        "",
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment())));
+        List<CustomColor> textColors = List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
+        List<TextRenderTask> toRender = createRenderTaskList("", "");
+        List<TextRenderTask> toRenderPreview = createRenderTaskList(
+                "Test quest:",
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus  \
+                in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
+                """);
 
-        List<TextRenderTask> toRenderPreview = List.of(
-                new TextRenderTask(
-                        "Tracked Quest Info:",
+        private List<TextRenderTask> createRenderTaskList(String questName, String questDesc) {
+            String[] texts = new String[] {"Tracked Quest Info:", questName, questDesc};
+            List<TextRenderTask> renderTaskList = new ArrayList<>(3);
+            for (int i = 0; i < 3; i++) {
+                renderTaskList.add(new TextRenderTask(
+                        texts[i],
                         TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment())),
-                new TextRenderTask(
-                        "Test quest:",
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment())),
-                new TextRenderTask(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat.",
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment())));
-
-        private void recalculateRenderTasks() {
-            toRender.get(0)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment()));
-
-            toRender.get(1)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment()));
-
-            toRender.get(2)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()));
+                                this.getWidth(), textColors.get(i), this.getRenderHorizontalAlignment())));
+            }
+            return renderTaskList;
         }
 
-        private void recalculatePreviewRenderTasks() {
-            toRenderPreview
-                    .get(0)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.GREEN, this.getRenderHorizontalAlignment()));
-
-            toRenderPreview
-                    .get(1)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.ORANGE, this.getRenderHorizontalAlignment()));
-
-            toRenderPreview
-                    .get(2)
-                    .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment()));
+        private void recalculateRenderTasks(List<TextRenderTask> renderTasks) {
+            for (int i = 0; i < 3; i++) {
+                renderTasks
+                        .get(i)
+                        .setSetting(TextRenderSetting.getWithHorizontalAlignment(
+                                this.getWidth(), textColors.get(i), this.getRenderHorizontalAlignment()));
+            }
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            recalculateRenderTasks();
+            recalculateRenderTasks(toRender);
         }
 
         @Override
@@ -132,7 +105,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            recalculatePreviewRenderTasks(); // we have to force update every time
+            recalculateRenderTasks(toRenderPreview); // we have to force update every time
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(
