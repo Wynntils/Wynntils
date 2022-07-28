@@ -223,7 +223,7 @@ public class FontRenderer {
                     }
                 }
 
-                height += lines * (font.lineHeight) + NEWLINE_OFFSET * (lines - 1);
+                height += lines * font.lineHeight + NEWLINE_OFFSET * (lines - 1);
             }
         }
 
