@@ -38,4 +38,13 @@ public abstract class ForgeIngameGuiMixin {
             ci.cancel();
         }
     }
+
+    // The render food mixin above does not get called, we need this as a replacement.
+    @Inject(method = "renderHealthMount", at = @At(value = "HEAD"), cancellable = true, remap = false)
+    public void onRenderHealthMountPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
+        if (EventFactory.onRenderFoodPre(poseStack, Minecraft.getInstance().getWindow())
+                .isCanceled()) {
+            ci.cancel();
+        }
+    }
 }

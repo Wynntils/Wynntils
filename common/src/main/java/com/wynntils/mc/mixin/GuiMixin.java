@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
@@ -101,5 +102,14 @@ public abstract class GuiMixin {
 
         RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
         return 0;
+    }
+
+    // On fabric/quilt, we can just cancel this. Wynncraft does not use vehicle health in any meaningful way.
+    // This does not work on forge. See ForgeIngameGui for replacement.
+    @Inject(method = "renderVehicleHealth", at = @At("HEAD"), cancellable = true)
+    public void onVehicleHearthRender(PoseStack poseStack, CallbackInfo ci) {
+        if (WynnUtils.onWorld()) {
+            ci.cancel();
+        }
     }
 }
