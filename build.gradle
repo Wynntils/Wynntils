@@ -8,7 +8,10 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
-def usingHotswapAgent = true
+// Add "wynntils.hotswap=true" to your personal gradle properties file to use hotswap.
+// By default, this is C:\Users\<your username>\.gradle\gradle.properties on Windows
+// or ~/.gradle/gradle.properties on Linux/MacOS.
+def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
 
 subprojects {
     apply plugin: "dev.architectury.loom"
