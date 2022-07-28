@@ -49,11 +49,11 @@ public class ClientCommandManager {
         WynntilsMod.getEventBus().register(ClientCommandManager.class);
 
         clientDispatcher = new CommandDispatcher<>();
-        new WynntilsCommand().register(clientDispatcher); // TODO event
-        new ServerCommand().register(clientDispatcher);
-        new TokenCommand().register(clientDispatcher);
-        new TerritoryCommand().register(clientDispatcher);
         new LootrunCommand().register(clientDispatcher);
+        new ServerCommand().register(clientDispatcher);
+        new TerritoryCommand().register(clientDispatcher);
+        new TokenCommand().register(clientDispatcher);
+        new WynntilsCommand().register(clientDispatcher); // TODO event
     }
 
     @SubscribeEvent
