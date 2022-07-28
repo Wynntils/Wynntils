@@ -87,6 +87,7 @@ public class OverlayManagementScreen extends Screen {
 
     private boolean snappingEnabled = true;
 
+    private boolean userInteracted = false;
     private int animationLengthRemaining;
 
     public OverlayManagementScreen(Overlay overlay) {
@@ -108,8 +109,10 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public void tick() {
+        if (userInteracted) return;
+
         if (animationLengthRemaining <= 0) {
-            return;
+            animationLengthRemaining = ANIMATION_LENGTH;
         }
 
         animationLengthRemaining--;
@@ -217,6 +220,9 @@ public class OverlayManagementScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (testMode) return super.mouseClicked(mouseX, mouseY, button);
 
+        userInteracted = true;
+        animationLengthRemaining = 0;
+
         // Order:
         //  - Corners
         //  - Edges
@@ -301,6 +307,9 @@ public class OverlayManagementScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (testMode) return false;
+
+        userInteracted = true;
+        animationLengthRemaining = 0;
 
         if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
             int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
