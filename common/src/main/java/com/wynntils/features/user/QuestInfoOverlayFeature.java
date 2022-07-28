@@ -26,12 +26,24 @@ import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.resources.language.I18n;
+
 @FeatureInfo(category = "overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
+        private final static List<CustomColor> TEXT_COLORS = List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
+
+        private final List<TextRenderTask> toRender = createRenderTaskList("", "");
+        private final List<TextRenderTask> toRenderPreview = createRenderTaskList(
+                I18n.get("feature.wynntils.questInfoOverlay.overlay.testQuestName") + ":",
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus  \
+                in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
+                """);
+
         public QuestInfoOverlay() {
             super(
                     new OverlayPosition(
@@ -45,39 +57,34 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     VerticalAlignment.Middle);
         }
 
-        List<CustomColor> textColors = List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
-        List<TextRenderTask> toRender = createRenderTaskList("", "");
-        List<TextRenderTask> toRenderPreview = createRenderTaskList(
-                "Test quest:",
-                """
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus  \
-                in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
-                """);
-
         private List<TextRenderTask> createRenderTaskList(String questName, String questDesc) {
-            String[] texts = new String[] {"Tracked Quest Info:", questName, questDesc};
+            String[] texts = new String[] {
+                I18n.get("feature.wynntils.questInfoOverlay.overlay.title") + ":",
+                questName,
+                questDesc
+            };
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
                         texts[i],
                         TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), textColors.get(i), this.getRenderHorizontalAlignment())));
+                                this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())));
             }
             return renderTaskList;
         }
 
-        private void recalculateRenderTasks(List<TextRenderTask> renderTasks) {
+        private void updateTextRenderSettings(List<TextRenderTask> renderTasks) {
             for (int i = 0; i < 3; i++) {
                 renderTasks
                         .get(i)
                         .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), textColors.get(i), this.getRenderHorizontalAlignment()));
+                                this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment()));
             }
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            recalculateRenderTasks(toRender);
+            updateTextRenderSettings(toRender);
         }
 
         @Override
@@ -105,7 +112,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            recalculateRenderTasks(toRenderPreview); // we have to force update every time
+            updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(
