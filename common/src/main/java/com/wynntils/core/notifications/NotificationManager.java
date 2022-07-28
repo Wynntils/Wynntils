@@ -7,14 +7,12 @@ package com.wynntils.core.notifications;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.NotificationEvent;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.LinkedList;
-import java.util.List;
 
 public class NotificationManager {
-    private static final List<MessageContainer> messageQueue = new LinkedList<>();
+
+    private static final long DEFAULT_MESSAGE_TIME_LIMIT = 10000;
 
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
@@ -24,10 +22,7 @@ public class NotificationManager {
         if (!WynnUtils.onWorld()) return null;
 
         WynntilsMod.info("Message Queued: " + message);
-        MessageContainer msgContainer = new MessageContainer(message);
-        McUtils.mc().doRunTask(() -> {
-            messageQueue.add(msgContainer);
-        });
+        MessageContainer msgContainer = new MessageContainer(message, DEFAULT_MESSAGE_TIME_LIMIT);
 
         WynntilsMod.getEventBus().post(new NotificationEvent.Queue(msgContainer));
 
@@ -36,7 +31,7 @@ public class NotificationManager {
 
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
-        msgContainer.resetRemainingTime();
+        msgContainer.resetRemainingTime(DEFAULT_MESSAGE_TIME_LIMIT);
 
         WynntilsMod.getEventBus().post(new NotificationEvent.Edit(msgContainer));
     }

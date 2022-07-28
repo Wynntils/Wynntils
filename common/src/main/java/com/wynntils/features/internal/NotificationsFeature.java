@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.internal;
 
-import com.wynntils.core.config.Config;
 import com.wynntils.core.features.InternalFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.mc.utils.McUtils;
@@ -13,8 +12,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NotificationsFeature extends InternalFeature {
-    @Config
-    public static float messageTimeLimit = 10f;
 
     // Handles both edit and queue
     @SubscribeEvent

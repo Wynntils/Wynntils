@@ -40,7 +40,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
-        messageQueue.add(event.getMessageContainer());
+        messageQueue.add(
+                event.getMessageContainer().resetRemainingTime((long) GameNotificationOverlay.messageTimeLimit));
 
         if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
                 && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
@@ -55,11 +56,15 @@ public class GameNotificationOverlayFeature extends UserFeature {
                 .filter(messageContainer -> messageContainer.hashCode() == newContainer.hashCode())
                 .findFirst()
                 .ifPresent(messageContainer -> {
-                    messageContainer.update(newContainer);
+                    messageContainer.update(
+                            newContainer.resetRemainingTime((long) GameNotificationOverlay.messageTimeLimit));
                 });
     }
 
     public static class GameNotificationOverlay extends Overlay {
+
+        @Config
+        public static float messageTimeLimit = 10f;
 
         @Config
         public int messageLimit = 5;
@@ -133,7 +138,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
             if (this.invertGrowth) {
                 while (renderedValues.size() < messageLimit) {
-                    renderedValues.add(0, new MessageContainer(""));
+                    renderedValues.add(
+                            0, new MessageContainer("", (long) (GameNotificationOverlay.messageTimeLimit * 1000)));
                 }
             }
 

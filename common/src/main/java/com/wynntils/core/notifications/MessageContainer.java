@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.notifications;
 
-import com.wynntils.features.internal.NotificationsFeature;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 
@@ -12,19 +11,14 @@ public class MessageContainer {
     TextRenderTask message;
     long endTime;
 
-    public MessageContainer(String message) {
+    public MessageContainer(String message, long messageTimeLimit) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.endTime = System.currentTimeMillis() + (long) (NotificationsFeature.messageTimeLimit * 1000);
+        this.endTime = System.currentTimeMillis() + messageTimeLimit;
     }
 
-    public MessageContainer(String message, long endTime) {
-        this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.endTime = endTime;
-    }
-
-    public MessageContainer(TextRenderTask message) {
+    public MessageContainer(TextRenderTask message, long messageTimeLimit) {
         this.message = message;
-        this.endTime = System.currentTimeMillis() + (long) (NotificationsFeature.messageTimeLimit * 1000);
+        this.endTime = System.currentTimeMillis() + messageTimeLimit;
     }
 
     public long getRemainingTime() {
@@ -44,8 +38,9 @@ public class MessageContainer {
         return this;
     }
 
-    public void resetRemainingTime() {
-        this.endTime = System.currentTimeMillis() + (long) (NotificationsFeature.messageTimeLimit * 1000);
+    public MessageContainer resetRemainingTime(long messageTimeLimit) {
+        this.endTime = System.currentTimeMillis() + messageTimeLimit;
+        return this;
     }
 
     public void update(MessageContainer other) {
