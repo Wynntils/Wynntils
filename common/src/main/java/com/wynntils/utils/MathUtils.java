@@ -59,4 +59,14 @@ public class MathUtils {
         }
         return num;
     }
+
+    public static double map(double sourceNumber, double fromA, double fromB, double toA, double toB) {
+        double deltaA = fromB - fromA;
+        double deltaB = toB - toA;
+        double scale = deltaB / deltaA;
+        double negA = -1 * fromA;
+        double offset = (negA * scale) + toA;
+        double finalNumber = (sourceNumber * scale) + offset;
+        return finalNumber;
+    }
 }

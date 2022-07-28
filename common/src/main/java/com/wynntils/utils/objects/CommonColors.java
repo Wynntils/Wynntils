@@ -15,6 +15,7 @@ public class CommonColors {
     public static final CustomColor CYAN = CustomColor.fromInt(0x438e82).withAlpha(255);
     public static final CustomColor LIGHT_GRAY = CustomColor.fromInt(0xadadad).withAlpha(255);
     public static final CustomColor GRAY = CustomColor.fromInt(0x636363).withAlpha(255);
+    public static final CustomColor DARK_GRAY = CustomColor.fromInt(0x101010).withAlpha(255);
     public static final CustomColor PINK = CustomColor.fromInt(0xffb7b7).withAlpha(255);
     public static final CustomColor LIGHT_GREEN = CustomColor.fromInt(0x49ff59).withAlpha(255);
     public static final CustomColor LIGHT_BLUE = CustomColor.fromInt(0x00e9ff).withAlpha(255);

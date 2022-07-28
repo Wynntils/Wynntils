@@ -11,7 +11,8 @@ public enum Texture {
     ARC("arc.png", 1024, 64),
     ITEM_LOCK("item_lock.png", 16, 16),
     HEALTH_BAR("bars_health.png", 256, 256),
-    MANA_BAR("bars_mana.png", 256, 256);
+    MANA_BAR("bars_mana.png", 256, 256),
+    OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256);
 
     private final ResourceLocation resource;
     private final int width;
