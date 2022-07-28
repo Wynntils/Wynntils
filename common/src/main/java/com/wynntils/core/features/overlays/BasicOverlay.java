@@ -12,14 +12,16 @@ import com.wynntils.utils.objects.QuadConsumer;
 
 public class BasicOverlay extends Overlay {
     private final QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer;
+    private final QuadConsumer<Overlay, PoseStack, Float, Window> renderPreviewConsumer;
 
     public BasicOverlay(
             OverlayPosition position,
-            float width,
-            float height,
-            QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer) {
-        super(position, width, height);
+            OverlaySize overlaySize,
+            QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer,
+            QuadConsumer<Overlay, PoseStack, Float, Window> renderPreviewConsumer) {
+        super(position, overlaySize);
         this.renderConsumer = renderConsumer;
+        this.renderPreviewConsumer = renderPreviewConsumer;
     }
 
     public BasicOverlay(
@@ -28,11 +30,17 @@ public class BasicOverlay extends Overlay {
             QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer) {
         super(position, overlaySize);
         this.renderConsumer = renderConsumer;
+        this.renderPreviewConsumer = renderConsumer;
     }
 
     @Override
     public void render(PoseStack poseStack, float partialTicks, Window window) {
         renderConsumer.consume(this, poseStack, partialTicks, window);
+    }
+
+    @Override
+    public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+        renderPreviewConsumer.consume(this, poseStack, partialTicks, window);
     }
 
     @Override

@@ -10,5 +10,6 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
 accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
+accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
 accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
 accessible method net/minecraft/client/gui/components/ChatComponent addMessage (Lnet/minecraft/network/chat/Component;I)V
