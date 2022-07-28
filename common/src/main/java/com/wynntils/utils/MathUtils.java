@@ -67,7 +67,6 @@ public class MathUtils {
         double negA = -1 * fromA;
         double offset = (negA * scale) + toA;
         double finalNumber = (sourceNumber * scale) + offset;
-        int calcScale = (int) Math.pow(10, 5);
-        return (double) Math.round(finalNumber * calcScale) / calcScale;
+        return finalNumber;
     }
 }
