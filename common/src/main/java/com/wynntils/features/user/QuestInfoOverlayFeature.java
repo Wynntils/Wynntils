@@ -25,7 +25,6 @@ import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
 import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.client.resources.language.I18n;
 
 @FeatureInfo(category = "overlays")
@@ -34,7 +33,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
-        private final static List<CustomColor> TEXT_COLORS = List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
+        private static final List<CustomColor> TEXT_COLORS =
+                List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
 
         private final List<TextRenderTask> toRender = createRenderTaskList("", "");
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList(
@@ -59,9 +59,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         private List<TextRenderTask> createRenderTaskList(String questName, String questDesc) {
             String[] texts = new String[] {
-                I18n.get("feature.wynntils.questInfoOverlay.overlay.title") + ":",
-                questName,
-                questDesc
+                I18n.get("feature.wynntils.questInfoOverlay.overlay.title") + ":", questName, questDesc
             };
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
