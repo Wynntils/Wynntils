@@ -43,7 +43,7 @@ import org.lwjgl.glfw.GLFW;
 public class OverlayManagementScreen extends Screen {
     // This is used to calculate alignment lines
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
-    // of the screen both vertically ang horizontally.
+    // of the screen both vertically and horizontally.
     private static final int ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS = 4;
     private static final int ALIGNMENT_SNAP_DISTANCE = 1;
     // Bigger this value is, the harder it is to not align overlay to alignment line
