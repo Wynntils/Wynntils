@@ -19,6 +19,7 @@ import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.File;
@@ -110,6 +111,11 @@ public class WebManager {
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+
+            if (McUtils.player() == null) {
+                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
+                return;
+            }
 
             McUtils.sendMessageToClient(failed);
         }
