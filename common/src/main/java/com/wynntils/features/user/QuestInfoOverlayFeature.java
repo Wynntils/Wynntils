@@ -40,7 +40,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList(
                 I18n.get("feature.wynntils.questInfoOverlay.overlay.testQuestName") + ":",
                 """
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus  \
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus \
                 in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
                 """);
 
