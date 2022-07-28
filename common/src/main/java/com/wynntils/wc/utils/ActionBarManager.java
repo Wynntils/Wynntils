@@ -5,34 +5,32 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
+import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.protocol.game.ClientboundChatPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ActionBarManager {
 
     private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)".replace("§", "(?:§[0-9a-fklmnor])*"));
+            StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 
     private static String previousActionBar = null;
+    private static String previousMessage = null;
 
     private static int currentHealth = -1;
     private static int maxHealth = -1;
     private static int currentMana = -1;
     private static int maxMana = -1;
 
-    // The server doesn't send SetActionBarPackets, instead it sends ChatPackets with the ChatType GAME_INFO
     @SubscribeEvent
-    public static void onActionBarUpdate(PacketReceivedEvent<ClientboundChatPacket> e) {
-        if (!WynnUtils.onWorld()) return;
+    public static void onActionBarUpdate(ChatReceivedEvent e) {
+        if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;
 
-        ClientboundChatPacket packet = e.getPacket();
-        if (packet.getType() != ChatType.GAME_INFO) return;
-
-        String actionBar = packet.getMessage().getString();
+        String actionBar = e.getMessage().getString();
         // don't parse unchanged actionbar
         if (actionBar.equals(previousActionBar)) return;
         previousActionBar = actionBar;
@@ -45,8 +43,11 @@ public class ActionBarManager {
         currentMana = Integer.parseInt(matcher.group(4));
         maxMana = Integer.parseInt(matcher.group(5));
 
-        String centerText = matcher.group(3);
-        // TODO: parse partial spell progress from centerText
+        String message = matcher.group(3);
+        if (message.equals(previousMessage)) return;
+        previousMessage = message;
+
+        WynntilsMod.getEventBus().post(new ActionBarMessageUpdateEvent(message));
     }
 
     public static void init() {

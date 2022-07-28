@@ -43,6 +43,7 @@ public class FixPacketBugsFeature extends InternalFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {
         if (!WynnUtils.onServer()) return;
+        if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (event.getMethod() != METHOD_ADD
@@ -54,6 +55,7 @@ public class FixPacketBugsFeature extends InternalFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRemovePlayerFromTeam(RemovePlayerFromTeamEvent event) {
         if (!WynnUtils.onServer()) return;
+        if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
