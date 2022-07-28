@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -15,66 +14,55 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.objects.MessageContainer;
+import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wc.event.NotificationEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
-public class GameUpdateOverlayFeature extends UserFeature {
-    private static GameUpdateOverlayFeature INSTANCE;
-
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final GameUpdateOverlay gameUpdateOverlay = new GameUpdateOverlay();
-
+public class GameNotificationOverlayFeature extends UserFeature {
+    private static GameNotificationOverlayFeature INSTANCE;
     private static final List<MessageContainer> messageQueue = new LinkedList<>();
 
-    public static MessageContainer queueMessage(String message) {
-        return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    public final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
+
+    @SubscribeEvent
+    public void onGameNotification(NotificationEvent.Queue event) {
+        messageQueue.add(event.getMessageContainer());
+
+        if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
+                && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
+            messageQueue.remove(0);
+        }
     }
 
-    public static MessageContainer queueMessage(TextRenderTask message) {
-        if (!WynnUtils.onWorld()) return null;
-
-        WynntilsMod.info("Message Queued: " + message);
-        MessageContainer msgContainer = new MessageContainer(message);
-        McUtils.mc().doRunTask(() -> {
-            messageQueue.add(msgContainer);
-
-            if (GameUpdateOverlayFeature.INSTANCE.gameUpdateOverlay.overrideNewMessages
-                    && messageQueue.size() > GameUpdateOverlayFeature.INSTANCE.gameUpdateOverlay.messageLimit)
-                messageQueue.remove(0);
-        });
-        return msgContainer;
+    @SubscribeEvent
+    public void onGameNotification(NotificationEvent.Edit event) {
+        MessageContainer newContainer = event.getMessageContainer();
+        messageQueue.stream()
+                .filter(messageContainer -> messageContainer.hashCode() == newContainer.hashCode())
+                .findFirst()
+                .ifPresent(messageContainer -> {
+                    messageContainer.update(newContainer);
+                });
     }
 
-    public static void editMessage(MessageContainer msgContainer, String newMessage) {
-        msgContainer.editMessage(newMessage);
-        msgContainer.resetRemainingTime();
-    }
-
-    public static void resetMessages() {
-        McUtils.mc().doRunTask(messageQueue::clear);
-    }
-
-    public static class GameUpdateOverlay extends Overlay {
+    public static class GameNotificationOverlay extends Overlay {
 
         @Config
         public int messageLimit = 5;
-
-        @Config
-        public float messageTimeLimit = 10f;
 
         @Config
         public boolean invertGrowth = true;
@@ -90,7 +78,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
 
         private TextRenderSetting textRenderSetting;
 
-        public GameUpdateOverlay() {
+        public GameNotificationOverlay() {
             super(
                     new OverlayPosition(
                             0,
@@ -181,7 +169,7 @@ public class GameUpdateOverlayFeature extends UserFeature {
         }
     }
 
-    public static GameUpdateOverlayFeature getInstance() {
+    public static GameNotificationOverlayFeature getInstance() {
         return INSTANCE;
     }
 }

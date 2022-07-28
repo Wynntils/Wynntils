@@ -7,8 +7,8 @@ package com.wynntils.features.user.redirects;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.objects.MessageContainer;
-import com.wynntils.features.user.overlays.GameUpdateOverlayFeature;
+import com.wynntils.core.notifications.MessageContainer;
+import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.regex.Matcher;
@@ -44,7 +44,7 @@ public class PouchRedirectFeature extends UserFeature {
                     .matcher(stringWithFormattingCodes)
                     .matches()) {
                 event.setCanceled(true);
-                GameUpdateOverlayFeature.queueMessage(stringWithFormattingCodes);
+                NotificationManager.queueMessage(stringWithFormattingCodes);
                 return;
             }
         }
@@ -59,9 +59,9 @@ public class PouchRedirectFeature extends UserFeature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    GameUpdateOverlayFeature.editMessage(emeraldPouchMessage, stringWithFormattingCodes);
+                    NotificationManager.editMessage(emeraldPouchMessage, stringWithFormattingCodes);
                 } else {
-                    emeraldPouchMessage = GameUpdateOverlayFeature.queueMessage(stringWithFormattingCodes);
+                    emeraldPouchMessage = NotificationManager.queueMessage(stringWithFormattingCodes);
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();

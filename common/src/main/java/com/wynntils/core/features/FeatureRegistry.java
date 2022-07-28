@@ -16,6 +16,7 @@ import com.wynntils.features.internal.FixPacketBugsFeature;
 import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
+import com.wynntils.features.internal.NotificationsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -32,7 +33,7 @@ import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsFeature;
-import com.wynntils.features.user.overlays.GameUpdateOverlayFeature;
+import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.redirects.PouchRedirectFeature;
@@ -139,6 +140,7 @@ public class FeatureRegistry {
         registerFeature(new ItemStackTransformerFeature());
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new NotificationsFeature());
 
         // user
         registerFeature(new DialogueOptionOverrideFeature());
@@ -161,7 +163,7 @@ public class FeatureRegistry {
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemTextOverlayFeature());
-        registerFeature(new GameUpdateOverlayFeature());
+        registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new CustomBarsFeature());
 
