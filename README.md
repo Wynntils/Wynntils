@@ -26,7 +26,8 @@ The code format is checked by spotless. To make sure your commits pass the spotl
 
 Using the Hotswap Agent is recommended if you want to do live code editing. See [Hotswap Agent installation instructions](http://hotswapagent.org/mydoc_quickstart-jdk17.html),
 but bear in mind that the instructions are incorrect (!). Don't "unpack" `hotswap-agent.jar`, instead
-rename the downloaded jar file to `hotswap-agent.jar`.
+rename the downloaded jar file to `hotswap-agent.jar`. Finally add `wynntils.hotswap=true` in your personal `gradle.properties` file.
+By default, this is `C:\Users\<your username>\.gradle\gradle.properties` on Windows, or `~/.gradle/gradle.properties` on Linux/MacOS.
 
 <i>TODO Run Configurations and Authenticating</i>
 
