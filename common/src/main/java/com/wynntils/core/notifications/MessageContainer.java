@@ -9,24 +9,13 @@ import com.wynntils.mc.render.TextRenderTask;
 
 public class MessageContainer {
     TextRenderTask message;
-    long endTime;
 
-    public MessageContainer(String message, long messageTimeLimit) {
+    public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.endTime = System.currentTimeMillis() + messageTimeLimit;
     }
 
-    public MessageContainer(TextRenderTask message, long messageTimeLimit) {
+    public MessageContainer(TextRenderTask message) {
         this.message = message;
-        this.endTime = System.currentTimeMillis() + messageTimeLimit;
-    }
-
-    public long getRemainingTime() {
-        return endTime - System.currentTimeMillis();
-    }
-
-    public long getEndTime() {
-        return endTime;
     }
 
     public TextRenderTask getRenderTask() {
@@ -38,13 +27,7 @@ public class MessageContainer {
         return this;
     }
 
-    public MessageContainer resetRemainingTime(long messageTimeLimit) {
-        this.endTime = System.currentTimeMillis() + messageTimeLimit;
-        return this;
-    }
-
     public void update(MessageContainer other) {
         this.message = other.message;
-        this.endTime = other.endTime;
     }
 }

@@ -20,6 +20,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
@@ -43,7 +44,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
 
         if (emeraldPouches.isEmpty()) {
             NotificationManager.queueMessage(new TextRenderTask(
-                    I18n.get("feature.wynntils.emeraldPouchKeybind.noPouch"),
+                    ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.noPouch"),
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
@@ -59,7 +60,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 NotificationManager.queueMessage(new TextRenderTask(
-                        I18n.get("feature.wynntils.emeraldPouchKeybind.multipleFilled"),
+                        ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.multipleFilled"),
                         TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             }
         }

@@ -15,6 +15,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
+import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -33,15 +34,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = "Overlays")
 public class GameNotificationOverlayFeature extends UserFeature {
     private static GameNotificationOverlayFeature INSTANCE;
-    private static final List<MessageContainer> messageQueue = new LinkedList<>();
+    private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
-        messageQueue.add(
-                event.getMessageContainer().resetRemainingTime((long) GameNotificationOverlay.messageTimeLimit));
+        messageQueue.add(new TimedMessageContainer(
+                event.getMessageContainer(), (long) GameNotificationOverlay.messageTimeLimit * 1000));
 
         if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
                 && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
@@ -53,11 +54,11 @@ public class GameNotificationOverlayFeature extends UserFeature {
     public void onGameNotification(NotificationEvent.Edit event) {
         MessageContainer newContainer = event.getMessageContainer();
         messageQueue.stream()
-                .filter(messageContainer -> messageContainer.hashCode() == newContainer.hashCode())
+                .filter(timedMessageContainer ->
+                        timedMessageContainer.getMessageContainer().hashCode() == newContainer.hashCode())
                 .findFirst()
-                .ifPresent(messageContainer -> {
-                    messageContainer.update(
-                            newContainer.resetRemainingTime((long) GameNotificationOverlay.messageTimeLimit));
+                .ifPresent(timedMessageContainer -> {
+                    timedMessageContainer.update(newContainer, (long) GameNotificationOverlay.messageTimeLimit * 1000);
                 });
     }
 
@@ -98,11 +99,11 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<MessageContainer> toRender = new ArrayList<>();
+            List<TimedMessageContainer> toRender = new ArrayList<>();
 
-            ListIterator<MessageContainer> messages = messageQueue.listIterator(messageQueue.size());
+            ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
             while (messages.hasPrevious()) {
-                MessageContainer message = messages.previous();
+                TimedMessageContainer message = messages.previous();
 
                 if (message.getRemainingTime() <= 0.0f) {
                     messages.remove(); // remove the message if the time has come
@@ -114,10 +115,12 @@ public class GameNotificationOverlayFeature extends UserFeature {
                 if (messageMaxLength == 0 || messageTask.getText().length() < messageMaxLength) {
                     toRender.add(message);
                 } else {
-                    MessageContainer first = new MessageContainer(
-                            messageTask.getText().substring(0, messageMaxLength), message.getEndTime());
-                    MessageContainer second = new MessageContainer(
-                            messageTask.getText().substring(messageMaxLength), message.getEndTime());
+                    TimedMessageContainer first = new TimedMessageContainer(
+                            new MessageContainer(messageTask.getText().substring(0, messageMaxLength)),
+                            message.getEndTime());
+                    TimedMessageContainer second = new TimedMessageContainer(
+                            new MessageContainer(messageTask.getText().substring(messageMaxLength)),
+                            message.getEndTime());
                     if (this.invertGrowth) {
                         toRender.add(first);
                         toRender.add(second);
@@ -130,7 +133,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
             if (toRender.isEmpty()) return;
 
-            List<MessageContainer> renderedValues = this.overrideNewMessages
+            List<TimedMessageContainer> renderedValues = this.overrideNewMessages
                     ? toRender.subList(0, Math.min(toRender.size(), this.messageLimit))
                     : toRender.subList(Math.max(toRender.size() - this.messageLimit, 0), toRender.size());
 
@@ -138,8 +141,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
             if (this.invertGrowth) {
                 while (renderedValues.size() < messageLimit) {
-                    renderedValues.add(
-                            0, new MessageContainer("", (long) (GameNotificationOverlay.messageTimeLimit * 1000)));
+                    renderedValues.add(0, new TimedMessageContainer(new MessageContainer(""), (long)
+                            (GameNotificationOverlay.messageTimeLimit * 1000)));
                 }
             }
 
