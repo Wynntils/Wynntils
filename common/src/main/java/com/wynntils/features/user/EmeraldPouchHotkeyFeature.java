@@ -11,13 +11,16 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
@@ -39,9 +42,9 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         List<EmeraldPouch> emeraldPouches = InventoryUtils.getEmeraldPouches(player.getInventory());
 
         if (emeraldPouches.isEmpty()) {
-            // TODO: change sendMessageToClient to GameUpdateOverlay messages once that's available
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.noPouch")
-                    .withStyle(ChatFormatting.DARK_RED));
+            NotificationManager.queueMessage(new TextRenderTask(
+                    I18n.get("feature.wynntils.emeraldPouchKeybind.noPouch"),
+                    TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
             if (emeraldPouch != null) {
@@ -55,10 +58,9 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                 InventoryUtils.sendInventorySlotMouseClick(slotNumber, emeraldPouch.getStack(), RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
-                // TODO: change sendMessageToClient to GameUpdateOverlay messages once that's available
-                McUtils.sendMessageToClient(
-                        new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.multipleFilled")
-                                .withStyle(ChatFormatting.DARK_RED));
+                NotificationManager.queueMessage(new TextRenderTask(
+                        I18n.get("feature.wynntils.emeraldPouchKeybind.multipleFilled"),
+                        TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             }
         }
     }
