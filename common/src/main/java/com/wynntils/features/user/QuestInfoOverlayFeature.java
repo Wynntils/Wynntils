@@ -36,13 +36,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
         private static final List<CustomColor> TEXT_COLORS =
                 List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
 
-        private final List<TextRenderTask> toRender = createRenderTaskList("", "");
-        private final List<TextRenderTask> toRenderPreview = createRenderTaskList(
-                I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":",
-                """
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus purus \
-                in lacus pulvinar dictum. Quisque suscipit erat pellentesque egestas volutpat. \
-                """);
+        private final List<TextRenderTask> toRender = createRenderTaskList();
+        private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
 
         public QuestInfoOverlay() {
             super(
@@ -57,14 +52,11 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     VerticalAlignment.Middle);
         }
 
-        private List<TextRenderTask> createRenderTaskList(String questName, String questDesc) {
-            String[] texts = new String[] {
-                I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":", questName, questDesc
-            };
+        private List<TextRenderTask> createRenderTaskList() {
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
-                        texts[i],
+                        null,
                         TextRenderSetting.getWithHorizontalAlignment(
                                 this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())));
             }
@@ -93,6 +85,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 return;
             }
 
+            if (toRender.get(0).getText() == null) {
+                // Set at first use; I18n is not available at initialization time
+                toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+            }
             toRender.get(1).setText(currentQuest.quest());
             toRender.get(2).setText(currentQuest.description());
 
@@ -110,6 +106,23 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            if (toRenderPreview.get(0).getText() == null) {
+                // Set at first use; I18n is not available at initialization time
+                toRenderPreview
+                        .get(0)
+                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+                toRenderPreview
+                        .get(1)
+                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
+                toRenderPreview
+                        .get(2)
+                        .setText(
+                                """
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
+                                tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
+                                pellentesque egestas volutpat. \
+                                """);
+            }
             updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
             FontRenderer.getInstance()
