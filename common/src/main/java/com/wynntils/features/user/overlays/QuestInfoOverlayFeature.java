@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user;
+package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
-@FeatureInfo(category = "overlays")
+@FeatureInfo(category = "Overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
