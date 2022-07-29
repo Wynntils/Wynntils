@@ -7,62 +7,177 @@ package com.wynntils.core.chat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ChatManager {
+    private static final boolean EXTRACT_DIALOG = true;
     private static final Pattern INFO_BAR_PATTERN = Pattern.compile("§c❤ (\\d+)\\/(\\d+)§0 .* §b✺ (\\d+)\\/(\\d+)");
-    private static final Pattern NPC_DIALOG_PATTERN =
-            Pattern.compile("\n\n +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r\n*$");
-    private static final Pattern PRE_DIALOG_PATTERN = Pattern.compile("\n§r\nÀ+\n*$");
+    private static final Pattern NPC_FINAL_PATTERN =
+            Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
 
     public static void init() {
         WynntilsMod.getEventBus().register(ChatManager.class);
     }
 
+    private static String lastRealChat = null;
+    private static List<String> lastNpcDialog = List.of();
+
+    private static boolean handleChatLine(Component message) {
+        // If we want to cancel a chat line, return false here
+        return true;
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatReceivedEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!WynnUtils.onServer()) return;
+        if (e.getType() != ChatType.CHAT) return;
 
-        switch (e.getType()) {
-            case GAME_INFO -> parseGameInfo(e.getMessage());
-            case SYSTEM -> parseSystemMessage(e.getMessage());
-            case CHAT -> parseChatMessage(e.getMessage());
-        }
-    }
-
-    private static void parseChatMessage(Component message) {
+        Component message = e.getMessage();
         String msg = ComponentUtils.getFormatted(message);
-        if (msg.contains("\n")) {
-            // It's a multi-line message (NPC dialog "screen"), figure out parts
-            Matcher m = PRE_DIALOG_PATTERN.matcher(msg);
-            if (m.find()) {
-                // Before an NPC dialog starts, this gets sent to "clear the screen"
-                // but we can just ignore it
-                return;
+        if (!msg.contains("\n")) {
+            saveLastChat(ComponentUtils.getFormatted(message));
+            if (!handleChatLine(message)) {
+                e.setCanceled(true);
             }
-            Matcher m2 = NPC_DIALOG_PATTERN.matcher(msg);
-            if (m2.find()) {
-                // This is a NPC dialog screen
-            } else {
-                // The dialog has ended, and normal chat is restored. This screen
-                // shows how the chat looks minus the NPC dialog.
-            }
+            return;
+        }
 
-            String[] lines = msg.split("\\n");
-        } else {
-            // This is a normal, single line chat
+        if (EXTRACT_DIALOG) {
+            handleMultilineMessage(msg);
+            e.setCanceled(true);
         }
     }
 
-    private static void parseSystemMessage(Component message) {
-        // this is a wynncraft response, e.g.
-        // "/toggle
-        // [swears/blood/insults/autojoin/music/vet/war/guildjoin/attacksound/rpwarning/100/sb/autotracking/pouchmsg/combatbar/ghosts/popups/guildpopups/friendpopups/beacon/outlines/bombbell/pouchpickup/queststartbeacon]"
+    private static String stripFormattingCodes(String msg) {
+        return msg.replaceAll("§[0-9a-fklmnor]", "");
+    }
+
+    private static void handleMultilineMessage(String msg) {
+        LinkedList<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
+        // From now on, we'll work on reversed lists
+        Collections.reverse(lines);
+        LinkedList<String> newLines = new LinkedList<>();
+        if (lastRealChat == null) {
+            // If we have no history, all lines are to be considered new
+            lines.forEach(newLines::addLast);
+        } else {
+            // Figure out what's new since last chat message
+            for (String line : lines) {
+                String noCodes = stripFormattingCodes(line);
+                if (noCodes.equals(lastRealChat)) break;
+                newLines.addLast(line);
+            }
+        }
+
+        if (newLines.isEmpty()) {
+            // No new lines has appeared since last registered chat line.
+            // We could just have a dialog that disappeared, so we must signal this
+            handleNewNpcDialog(List.of());
+            return;
+        }
+
+        if (newLines.getLast().isEmpty()) {
+            // Wynntils add an empty line before the NPC dialog; remove it
+            newLines.removeLast();
+        }
+
+        LinkedList<String> newChatLines = new LinkedList<>();
+        LinkedList<String> dialog = new LinkedList<>();
+
+        String trailingLine = newLines.getFirst();
+        Matcher m = NPC_FINAL_PATTERN.matcher(trailingLine);
+        if (m.find()) {
+            // This is an NPC dialog screen.
+            // First remove the "Press SHIFT to continue" trailer.
+            newLines.removeFirst();
+            if (newLines.getFirst().isEmpty()) {
+                newLines.removeFirst();
+            } else {
+                WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
+            }
+
+            // Separate the dialog part from any potential new "real" chat lines
+            boolean dialogDone = false;
+            for (String line : newLines) {
+                if (!dialogDone) {
+                    if (line.equals("§r")) {
+                        dialogDone = true;
+                        // Intentionally throw away this line
+                    } else {
+                        dialog.push(line);
+                    }
+                } else {
+                    newChatLines.push(line);
+                }
+            }
+        } else {
+            // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
+            // We just ignore that part
+            if (trailingLine.matches("À+")) {
+                newLines.removeFirst();
+                if (newLines.getFirst().equals("§r")) {
+                    newLines.removeFirst();
+                } else {
+                    WynntilsMod.warn("Malformed dialog [#2]: " + newLines.getFirst());
+                }
+            }
+
+            // What remains, if any, are new chat lines
+            newLines.forEach(newChatLines::push);
+        }
+
+        // Register all new chat lines
+        newChatLines.forEach(ChatManager::handleFakeChatLine);
+
+        // Update the new dialog
+        handleNewNpcDialog(dialog);
+    }
+
+    private static void handleNewNpcDialog(List<String> dialog) {
+        // dialog could be the empty list, this means the last dialog is removed
+        if (!dialog.equals(lastNpcDialog)) {
+            lastNpcDialog = dialog;
+            for (String dialogLine : dialog) {
+                McUtils.sendMessageToClient(new TextComponent("NPC: " + dialogLine));
+            }
+        }
+    }
+
+    private static void handleFakeChatLine(String codedString) {
+        // This is a normal, single line chat but coded with format codes
+        saveLastChat(codedString);
+        TextComponent message = new TextComponent(codedString);
+        if (handleChatLine(message)) {
+            McUtils.sendMessageToClient(message);
+        }
+    }
+
+    private static void saveLastChat(String codedString) {
+        String msg = stripFormattingCodes(codedString);
+        if (!msg.isBlank()) {
+            lastRealChat = msg;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onGameInfoReceived(ChatReceivedEvent e) {
+        if (!WynnUtils.onServer()) return;
+        if (e.getType() != ChatType.GAME_INFO) return;
+
+        parseGameInfo(e.getMessage());
     }
 
     private static void parseGameInfo(Component message) {
