@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.Validate;
 
@@ -21,7 +22,7 @@ public class ServerIcon {
     public static final ResourceLocation FALLBACK;
 
     private final ServerData server;
-    private ResourceLocation serverIconLocation;
+    private volatile ResourceLocation serverIconLocation;
     private final Consumer<ServerIcon> onDone;
 
     static {
@@ -45,7 +46,10 @@ public class ServerIcon {
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
         // set it later
-        if (allowStale && Minecraft.getInstance().getTextureManager().getTexture(destination, null) != null) {
+        SimpleTexture defaultTexture = new SimpleTexture(FALLBACK);
+        if (allowStale
+                && Minecraft.getInstance().getTextureManager().getTexture(destination, defaultTexture)
+                        != defaultTexture) {
             serverIconLocation = destination;
             onDone();
             return;
@@ -112,8 +116,8 @@ public class ServerIcon {
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
         synchronized (this) {
-            serverIconLocation = destination;
             Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
+            serverIconLocation = destination;
         }
     }
 }
