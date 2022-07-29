@@ -10,7 +10,7 @@ on:
       - '**.md'
 
 jobs:
-  format:
+  spotless_format:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -37,7 +37,7 @@ jobs:
           commit_user_email: 'admin@wynntils.com'
           commit_message: 'chore: spotless formatting'
 
-  build:
+  build_libs:
     needs: format
     runs-on: ubuntu-latest
     steps:
