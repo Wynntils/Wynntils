@@ -1,0 +1,8 @@
+version: "1.0"
+profile:
+  name: qodana.starter
+include:
+  - name: AssignmentToStaticFieldFromInstanceMethod
+  - name: RedundantLabeledSwitchRuleCodeBlock
+exclude:
+  - name: UnstableApiUsage
