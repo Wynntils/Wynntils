@@ -81,6 +81,10 @@ public class WynntilsMod {
         // making sure this is set to false will fix that
         System.setProperty("java.awt.headless", "false");
 
+        int a = 1;
+
+        if (a == 2) {}
+
         // Init all managers
         WebManager.init();
         ConfigManager.init();
