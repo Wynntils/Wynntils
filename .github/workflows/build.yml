@@ -1,13 +1,13 @@
 name: build
 
 on:
+  workflow_dispatch:
+  pull_request_target:
   push:
     branches:
       - main
     paths-ignore:
       - '**.md'
-  pull_request_target:
-  workflow_dispatch:
 
 jobs:
   format:
