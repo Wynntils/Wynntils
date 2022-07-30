@@ -34,18 +34,6 @@ public class ChatManager {
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
-    /**
-     * Return a "massaged" version of the message, or null if we should cancel the
-     * message entirely.
-     */
-    private static Component handleChatLine(Component message, ChatMessageReceivedEvent.MessageType type) {
-        // If we want to cancel a chat line, return false here
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, type);
-        WynntilsMod.getEventBus().post(event);
-        if (event.isCanceled()) return null;
-        return event.getMessage();
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
@@ -55,9 +43,9 @@ public class ChatManager {
         String msg = ComponentUtils.getFormatted(message);
         if (!msg.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
-            ChatMessageReceivedEvent.MessageType type = e.getType() == ChatType.SYSTEM
-                    ? ChatMessageReceivedEvent.MessageType.SYSTEM
-                    : ChatMessageReceivedEvent.MessageType.NORMAL;
+            MessageType type = e.getType() == ChatType.SYSTEM
+                    ? MessageType.SYSTEM
+                    : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, type);
             if (updatedMessage == null) {
                 e.setCanceled(true);
@@ -68,12 +56,12 @@ public class ChatManager {
         }
 
         if (EXTRACT_DIALOG) {
-            handleMultilineMessage(msg, e.getType() == ChatType.SYSTEM);
+            handleMultilineMessage(msg);
             e.setCanceled(true);
         }
     }
 
-    private static void handleMultilineMessage(String msg, boolean isSystem) {
+    private static void handleMultilineMessage(String msg) {
         LinkedList<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
@@ -148,7 +136,7 @@ public class ChatManager {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(line -> handleFakeChatLine(line, isSystem));
+        newChatLines.forEach(line -> handleFakeChatLine(line));
 
         // Update the new dialog
         handleNewNpcDialog(dialog);
@@ -164,11 +152,11 @@ public class ChatManager {
         }
     }
 
-    private static void handleFakeChatLine(String codedString, boolean isSystem) {
+    private static void handleFakeChatLine(String codedString) {
         // This is a normal, single line chat but coded with format codes
         saveLastChat(codedString);
         TextComponent message = new TextComponent(codedString);
-        Component updatedMessage = handleChatLine(message, ChatMessageReceivedEvent.MessageType.BACKGROUND);
+        Component updatedMessage = handleChatLine(message, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -181,5 +169,37 @@ public class ChatManager {
         if (!msg.isBlank()) {
             lastRealChat = msg;
         }
+    }
+
+    private static RecipientType getRecipientType(Component message, MessageType type) {
+        String msg = ComponentUtils.getFormatted(message);
+        if (type == MessageType.SYSTEM) {
+            // System type messages can only be "info" messages
+            return RecipientType.INFO;
+        } else {
+            for (RecipientType recipient : RecipientType.values()) {
+                if (recipient.matchPattern(msg, type)) {
+                    return recipient;
+                }
+            }
+
+            // If no specific recipient matched, it is an "info" message
+            return RecipientType.INFO;
+        }
+    }
+
+    /**
+     * Return a "massaged" version of the message, or null if we should cancel the
+     * message entirely.
+     */
+    private static Component handleChatLine(Component message, MessageType type) {
+        RecipientType recipient = getRecipientType(message, type);
+
+        System.out.println("Handling chat: " + ComponentUtils.getFormatted(message) + ", type:" + type + ", recipient: " + recipient);
+
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, type, recipient);
+        WynntilsMod.getEventBus().post(event);
+        if (event.isCanceled()) return null;
+        return event.getMessage();
     }
 }

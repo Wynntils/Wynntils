@@ -4,6 +4,8 @@
  */
 package com.wynntils.wc.event;
 
+import com.wynntils.core.chat.MessageType;
+import com.wynntils.core.chat.RecipientType;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -12,10 +14,12 @@ import net.minecraftforge.eventbus.api.Event;
 public class ChatMessageReceivedEvent extends Event {
     private Component message;
     private final MessageType type;
+    private final RecipientType recipient;
 
-    public ChatMessageReceivedEvent(Component message, MessageType type) {
+    public ChatMessageReceivedEvent(Component message, MessageType type, RecipientType recipient) {
         this.message = message;
         this.type = type;
+        this.recipient = recipient;
     }
 
     public Component getMessage() {
@@ -30,9 +34,7 @@ public class ChatMessageReceivedEvent extends Event {
         return type;
     }
 
-    public enum MessageType {
-        NORMAL,
-        SYSTEM,
-        BACKGROUND
+    public RecipientType getRecipient() {
+        return recipient;
     }
 }
