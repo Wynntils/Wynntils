@@ -4,9 +4,8 @@
  */
 package com.wynntils.wc.event;
 
-import net.minecraftforge.eventbus.api.Event;
-
 import java.util.List;
+import net.minecraftforge.eventbus.api.Event;
 
 public class NpcDialogEvent extends Event {
     private final List<String> codedDialogLines;

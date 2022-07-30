@@ -14,7 +14,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.utils.WynnUtils;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
