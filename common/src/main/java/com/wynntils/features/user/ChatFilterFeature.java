@@ -53,7 +53,8 @@ public class ChatFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_SHOUT = Pattern.compile("^§r§8.* \\[[A-Z0-9]+\\] shouts: §r§7.*");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
-    private static final Pattern BACKGROUND_WELCOME_2 = Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
+    private static final Pattern BACKGROUND_WELCOME_2 =
+            Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
 
     private static final Pattern BACKGROUND_SYSTEM_INFO = Pattern.compile("^§r§8\\[Info\\] .*");
     private static final Pattern BACKGROUND_GUILD_INFO = Pattern.compile("TODO_MISSING");
@@ -223,7 +224,8 @@ public class ChatFilterFeature extends UserFeature {
             }
 
             if (hideWelcome) {
-                if (BACKGROUND_WELCOME_1.matcher(msg).find() || BACKGROUND_WELCOME_2.matcher(msg).find()) {
+                if (BACKGROUND_WELCOME_1.matcher(msg).find()
+                        || BACKGROUND_WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
