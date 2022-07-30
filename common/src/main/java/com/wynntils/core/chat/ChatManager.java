@@ -9,6 +9,7 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
+import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.Collections;
@@ -144,9 +145,8 @@ public class ChatManager {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
-            for (String dialogLine : dialog) {
-                McUtils.sendMessageToClient(new TextComponent("NPC: " + dialogLine));
-            }
+            NpcDialogEvent event = new NpcDialogEvent(dialog);
+            WynntilsMod.getEventBus().post(event);
         }
     }
 
