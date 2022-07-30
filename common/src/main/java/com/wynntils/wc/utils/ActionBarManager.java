@@ -5,7 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import java.util.regex.Matcher;
@@ -27,7 +27,7 @@ public class ActionBarManager {
     private static int maxMana = -1;
 
     @SubscribeEvent
-    public static void onActionBarUpdate(ChatReceivedEvent e) {
+    public static void onActionBarUpdate(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;
 
         String actionBar = e.getMessage().getString();

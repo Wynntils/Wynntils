@@ -5,9 +5,10 @@
 package com.wynntils.core.chat;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,13 +34,20 @@ public class ChatManager {
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
-    private static boolean handleChatLine(Component message) {
+    /**
+     * Return a "massaged" version of the message, or null if we should cancel the
+     * message entirely.
+     */
+    private static Component handleChatLine(Component message) {
         // If we want to cancel a chat line, return false here
-        return true;
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message);
+        WynntilsMod.getEventBus().post(event);
+        if (event.isCanceled()) return null;
+        return event.getMessage();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onChatReceived(ChatReceivedEvent e) {
+    public static void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
         if (e.getType() != ChatType.CHAT) return;
 
@@ -47,8 +55,11 @@ public class ChatManager {
         String msg = ComponentUtils.getFormatted(message);
         if (!msg.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
-            if (!handleChatLine(message)) {
+            Component updatedMessage = handleChatLine(message);
+            if (updatedMessage == null) {
                 e.setCanceled(true);
+            } else if (!updatedMessage.equals(message)) {
+                e.setMessage(updatedMessage);
             }
             return;
         }
@@ -158,9 +169,12 @@ public class ChatManager {
         // This is a normal, single line chat but coded with format codes
         saveLastChat(codedString);
         TextComponent message = new TextComponent(codedString);
-        if (handleChatLine(message)) {
-            McUtils.sendMessageToClient(message);
-        }
+        Component updatedMessage = handleChatLine(message);
+        // If the message is canceled, we do not need to cancel any packets,
+        // just don't send out the chat message
+        if (updatedMessage == null) return;
+
+        McUtils.sendMessageToClient(updatedMessage);
     }
 
     private static void saveLastChat(String codedString) {
