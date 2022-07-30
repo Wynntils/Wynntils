@@ -18,7 +18,8 @@ public class ChatMessageReceivedEvent extends Event {
     private final MessageType messageType;
     private final RecipientType recipientType;
 
-    public ChatMessageReceivedEvent(Component message, String codedMessage, MessageType messageType, RecipientType recipientType) {
+    public ChatMessageReceivedEvent(
+            Component message, String codedMessage, MessageType messageType, RecipientType recipientType) {
         this.message = message;
         this.codedMessage = codedMessage; // message, but as a format-coded string
         this.messageType = messageType;
