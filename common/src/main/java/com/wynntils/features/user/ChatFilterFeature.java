@@ -46,6 +46,22 @@ public class ChatFilterFeature extends UserFeature {
     private static final Pattern VIP_LOGIN =
             Pattern.compile("^§3\\[§r§.[A-Z+]+§r§3\\] §r§b.*§r§3 has just logged in!$");
 
+    private static final Pattern BACKGROUND_GLOBAL_CHAT = Pattern.compile("");
+    private static final Pattern BACKGROUND_LOCAL_CHAT = Pattern.compile("");
+    private static final Pattern BACKGROUND_PRIVATE_CHAT = Pattern.compile("");
+    private static final Pattern BACKGROUND_SHOUT = Pattern.compile("");
+
+    private static final Pattern BACKGROUND_SYSTEM_INFO = Pattern.compile("");
+    private static final Pattern BACKGROUND_GUILD_INFO = Pattern.compile("");
+
+    private static final Pattern BACKGROUND_SOUL_POINT_1 = Pattern.compile("");
+    private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("");
+
+    private static final Pattern BACKGROUND_LEVEL_UP_1 = Pattern.compile("");
+    private static final Pattern BACKGROUND_LEVEL_UP_2 = Pattern.compile("");
+
+    private static final Pattern BACKGROUND_VIP_LOGIN = Pattern.compile("");
+
     @Config
     private boolean hideWelcome = true;
 
@@ -70,9 +86,9 @@ public class ChatFilterFeature extends UserFeature {
 
         String msg = ComponentUtils.getFormatted(e.getMessage());
 
-        System.out.println("We got chat1: " + msg + "system:" + e.isSystem());
+        System.out.println("We got chat1: " + msg + "system:" + e.getType());
 
-        if (!e.isSystem()) {
+        if (e.getType() == ChatMessageReceivedEvent.MessageType.NORMAL) {
             if (GLOBAL_CHAT.matcher(msg).find()) {
                 handleGlobalChat(e);
                 return;
@@ -113,9 +129,9 @@ public class ChatFilterFeature extends UserFeature {
                 }
             }
 
-            System.out.println("UNHANDLED: " + msg);
-            e.setMessage(new TextComponent("UNHANDLED: ").append(e.getMessage()));
-        } else {
+            System.out.println("UNHANDLED_NORMAL: " + msg);
+            e.setMessage(new TextComponent("UNHANDLED_NORMAL: ").append(e.getMessage()));
+        } else if (e.getType() == ChatMessageReceivedEvent.MessageType.SYSTEM) {
             if (hideLevelUp) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -156,6 +172,71 @@ public class ChatFilterFeature extends UserFeature {
 
             System.out.println("UNHANDLED_SYSTEM: " + msg);
             e.setMessage(new TextComponent("UNHANDLED_SYSTEM: ").append(e.getMessage()));
+        } else if (e.getType() == ChatMessageReceivedEvent.MessageType.BACKGROUND) {
+            if (BACKGROUND_GLOBAL_CHAT.matcher(msg).find()) {
+                handleGlobalChat(e);
+                return;
+            }
+            if (BACKGROUND_LOCAL_CHAT.matcher(msg).find()) {
+                handleLocalChat(e);
+                return;
+            }
+            if (BACKGROUND_PRIVATE_CHAT.matcher(msg).find()) {
+                handlePrivateChat(e);
+                return;
+            }
+            if (BACKGROUND_SHOUT.matcher(msg).find()) {
+                handleShout(e);
+                return;
+            }
+
+            if (hideSystemInfo) {
+                if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (redirectGuildInfo) {
+                Matcher m = BACKGROUND_GUILD_INFO.matcher(msg);
+                if (m.find()) {
+                    e.setCanceled(true);
+                    NotificationManager.queueMessage(ComponentUtils.stripFormattingCodes(m.group(1)));
+                    return;
+                }
+            }
+            if (hideLevelUp) {
+                if (BACKGROUND_LEVEL_UP_1.matcher(msg).find()
+                        || BACKGROUND_LEVEL_UP_2.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (hideVipLogin) {
+                if (BACKGROUND_VIP_LOGIN.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (redirectSoulPoint) {
+                if (BACKGROUND_SOUL_POINT_1.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+
+                Matcher m = BACKGROUND_SOUL_POINT_2.matcher(msg);
+                if (m.find()) {
+                    e.setCanceled(true);
+                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+                    NotificationManager.queueMessage(m.group(1));
+                    return;
+                }
+            }
+
+            System.out.println("UNHANDLED_BACKGROUND: " + msg);
+            e.setMessage(new TextComponent("UNHANDLED_BACKGROUND: ").append(e.getMessage()));
         }
     }
 

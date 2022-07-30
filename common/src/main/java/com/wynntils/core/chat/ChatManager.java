@@ -38,9 +38,9 @@ public class ChatManager {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message, boolean isSystem) {
+    private static Component handleChatLine(Component message, ChatMessageReceivedEvent.MessageType type) {
         // If we want to cancel a chat line, return false here
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, isSystem);
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, type);
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
@@ -55,7 +55,10 @@ public class ChatManager {
         String msg = ComponentUtils.getFormatted(message);
         if (!msg.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
-            Component updatedMessage = handleChatLine(message, e.getType() == ChatType.SYSTEM);
+            ChatMessageReceivedEvent.MessageType type = e.getType() == ChatType.SYSTEM
+                    ? ChatMessageReceivedEvent.MessageType.SYSTEM
+                    : ChatMessageReceivedEvent.MessageType.NORMAL;
+            Component updatedMessage = handleChatLine(message, type);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -165,7 +168,7 @@ public class ChatManager {
         // This is a normal, single line chat but coded with format codes
         saveLastChat(codedString);
         TextComponent message = new TextComponent(codedString);
-        Component updatedMessage = handleChatLine(message, isSystem);
+        Component updatedMessage = handleChatLine(message, ChatMessageReceivedEvent.MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
