@@ -77,11 +77,11 @@ public class InfoMessageFilterFeature extends UserFeature {
         if (!WynnUtils.onServer()) return;
         if (e.getRecipientType() == RecipientType.INFO) return;
 
-        RecipientType recipient = e.getRecipientType();
-        MessageType type = e.getMessageType();
+        RecipientType recipientType = e.getRecipientType();
+        MessageType messageType = e.getMessageType();
 
         // TODO: This is a stand-in for per recipientType chat tabs
-        e.setMessage(new TextComponent(type.name() + "-" + recipient.name() + ": ").append(e.getMessage()));
+        e.setMessage(new TextComponent(messageType.name() + "-" + recipientType.name() + ": ").append(e.getMessage()));
     }
 
     @SubscribeEvent
@@ -99,9 +99,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     private void filterInfoMessage(ChatMessageReceivedEvent e) {
         String msg = e.getCodedMessage();
-        MessageType type = e.getMessageType();
+        MessageType messageType = e.getMessageType();
 
-        if (type == MessageType.NORMAL) {
+        if (messageType == MessageType.NORMAL) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -115,7 +115,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (type == MessageType.SYSTEM) {
+        } else if (messageType == MessageType.SYSTEM) {
             if (hideLevelUp) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -153,7 +153,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (type == MessageType.BACKGROUND) {
+        } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);

@@ -43,8 +43,8 @@ public class ChatManager {
         String codedMessage = ComponentUtils.getCoded(message);
         if (!codedMessage.contains("\n")) {
             saveLastChat(ComponentUtils.getCoded(message));
-            MessageType type = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
-            Component updatedMessage = handleChatLine(message, codedMessage, type);
+            MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
+            Component updatedMessage = handleChatLine(message, codedMessage, messageType);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -169,15 +169,15 @@ public class ChatManager {
         }
     }
 
-    private static RecipientType getRecipientType(Component message, MessageType type) {
+    private static RecipientType getRecipientType(Component message, MessageType messageType) {
         String msg = ComponentUtils.getCoded(message);
-        if (type == MessageType.SYSTEM) {
+        if (messageType == MessageType.SYSTEM) {
             // System type messages can only be "info" messages
             return RecipientType.INFO;
         } else {
-            for (RecipientType recipient : RecipientType.values()) {
-                if (recipient.matchPattern(msg, type)) {
-                    return recipient;
+            for (RecipientType recipientType : RecipientType.values()) {
+                if (recipientType.matchPattern(msg, messageType)) {
+                    return recipientType;
                 }
             }
 
@@ -190,13 +190,13 @@ public class ChatManager {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message, String codedMessage, MessageType type) {
-        RecipientType recipient = getRecipientType(message, type);
+    private static Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
+        RecipientType recipientType = getRecipientType(message, messageType);
 
         System.out.println(
-                "Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + type + ", recipient: " + recipient);
+                "Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + messageType + ", recipient: " + recipientType);
 
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, codedMessage, type, recipient);
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();

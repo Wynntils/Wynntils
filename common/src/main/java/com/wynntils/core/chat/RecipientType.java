@@ -27,9 +27,9 @@ public enum RecipientType {
         this.backgroundPattern = (backgroundPattern == null ? null : Pattern.compile(backgroundPattern));
     }
 
-    public boolean matchPattern(String msg, MessageType type) {
-        assert (type == MessageType.NORMAL || type == MessageType.BACKGROUND);
-        Pattern pattern = (type == MessageType.NORMAL ? normalPattern : backgroundPattern);
+    public boolean matchPattern(String msg, MessageType messageType) {
+        assert (messageType == MessageType.NORMAL || messageType == MessageType.BACKGROUND);
+        Pattern pattern = (messageType == MessageType.NORMAL ? normalPattern : backgroundPattern);
         if (pattern == null) return false;
         return pattern.matcher(msg).find();
     }
