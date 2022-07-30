@@ -10,7 +10,10 @@ import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -27,7 +30,8 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
         CustomColor textColor = CITY_COLOR;
         String location = "";
 
-        Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(item.getHoverName());
+        Component itemName = item.getHoverName();
+        Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(itemName);
         if (nameMatcher.find()) {
             location = ChatFormatting.stripFormatting(nameMatcher.group(1));
 
@@ -40,11 +44,26 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                     // remove "the" to properly represent forgery scrolls
                     location = WynnUtils.normalizeBadString(locationMatcher.group(1))
                             .replace("the ", "");
+
+                    location = Arrays.stream(location.split(" ", 2))
+                            .map(s -> s.substring(0, 1))
+                            .collect(Collectors.joining())
+                            .toUpperCase(Locale.ROOT);
+
+                    break;
+                }
+            } else {
+                for (Component line : item.getOriginalTooltip()) {
+                    Matcher locationMatcher = WynnItemMatchers.teleportScrollLocationMatcher(line);
+                    if (!locationMatcher.matches()) continue;
+
+                    location = locationMatcher.group(1);
+
                     break;
                 }
             }
 
-            location = location.substring(0, 1);
+            location = location.substring(0, 2);
         }
 
         textOverlay = new TextOverlay(location, textColor, ItemTextOverlayFeature.teleportScrollShadow, -1, 1, 1f);

@@ -27,7 +27,7 @@ public class WynnItemMatchers {
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
-    private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("(.*) Teleport Scroll");
+    private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile(".*§b(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
@@ -193,7 +193,7 @@ public class WynnItemMatchers {
     }
 
     public static Matcher teleportScrollNameMatcher(Component text) {
-        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getFormatted(text)));
     }
 
     public static Matcher teleportScrollLocationMatcher(Component text) {
