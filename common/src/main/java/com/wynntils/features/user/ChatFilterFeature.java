@@ -19,9 +19,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo
 public class ChatFilterFeature extends UserFeature {
     private static final Pattern GLOBAL_CHAT =
-            Pattern.compile("§8\\[(Lv\\. )?\\d+/\\d+/..(/[^]]+)?\\]§r§7 \\[[A-Z0-9]+\\]§r.*");
-    private static final Pattern LOCAL_CHAT = Pattern.compile("§7\\[(Lv. )?\\d+/\\d+/..(/[^]]+)\\]§r.*");
-    private static final Pattern PRIVATE_CHAT = Pattern.compile("§7\\[§r§5.*§r§6 ➤ §r§5.*§r§7\\] §r§f");
+            Pattern.compile("^§8\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\]§r§7 \\[[A-Z0-9]+\\]§r.*");
+    private static final Pattern LOCAL_CHAT = Pattern.compile("^§7\\[(Lv. )?\\d+\\*?/\\d+/..(/[^]]+)\\]§r.*");
+    private static final Pattern PRIVATE_CHAT = Pattern.compile("^§7\\[§r§5.*§r§6 ➤ §r§5.*§r§7\\] §r§f.*");
     private static final Pattern SHOUT = Pattern.compile("^§3.* \\[[A-Z0-9]+\\] shouts: §r§b.*");
 
     private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
@@ -33,7 +33,7 @@ public class ChatFilterFeature extends UserFeature {
     private static final Pattern WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern WELCOME_2 = Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
 
-    private static final Pattern SYSTEM_INFO = Pattern.compile("^§6\\[Info\\] §r.*");
+    private static final Pattern SYSTEM_INFO = Pattern.compile("^(§r)?§.\\[Info\\] .*");
     private static final Pattern GUILD_INFO = Pattern.compile("^§3\\[INFO§3\\]§b (.*)$");
 
     private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
@@ -44,23 +44,29 @@ public class ChatFilterFeature extends UserFeature {
             Pattern.compile("^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$");
 
     private static final Pattern VIP_LOGIN =
-            Pattern.compile("^§3\\[§r§.[A-Z+]+§r§3\\] §r§b.*§r§3 has just logged in!$");
+            Pattern.compile("^§.\\[§r§.[A-Z+]+§r§.\\] §r§..*§r§. has just logged in!$");
 
-    private static final Pattern BACKGROUND_GLOBAL_CHAT = Pattern.compile("");
-    private static final Pattern BACKGROUND_LOCAL_CHAT = Pattern.compile("");
-    private static final Pattern BACKGROUND_PRIVATE_CHAT = Pattern.compile("");
-    private static final Pattern BACKGROUND_SHOUT = Pattern.compile("");
+    private static final Pattern BACKGROUND_GLOBAL_CHAT = Pattern.compile(
+            "^(§r§8)?\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\] \\[[A-Z0-9]+\\](§r§7)?( \\[(§k\\|)?§r§.[A-Z+]+§r§.(§k\\|§r§7)?\\])?(§r§7)? (§r§8)?.*");
+    private static final Pattern BACKGROUND_LOCAL_CHAT = Pattern.compile("TODO_MISSING");
+    private static final Pattern BACKGROUND_PRIVATE_CHAT = Pattern.compile("^§r§8\\[.* ➤ .*\\] §r§7.*");
+    private static final Pattern BACKGROUND_SHOUT = Pattern.compile("^§r§8.* \\[[A-Z0-9]+\\] shouts: §r§7.*");
 
-    private static final Pattern BACKGROUND_SYSTEM_INFO = Pattern.compile("");
-    private static final Pattern BACKGROUND_GUILD_INFO = Pattern.compile("");
+    private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
+    private static final Pattern BACKGROUND_WELCOME_2 = Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
 
-    private static final Pattern BACKGROUND_SOUL_POINT_1 = Pattern.compile("");
-    private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("");
+    private static final Pattern BACKGROUND_SYSTEM_INFO = Pattern.compile("^§r§8\\[Info\\] .*");
+    private static final Pattern BACKGROUND_GUILD_INFO = Pattern.compile("TODO_MISSING");
 
-    private static final Pattern BACKGROUND_LEVEL_UP_1 = Pattern.compile("");
-    private static final Pattern BACKGROUND_LEVEL_UP_2 = Pattern.compile("");
+    private static final Pattern BACKGROUND_SOUL_POINT_1 = Pattern.compile("TODO_MISSING");
+    private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("TODO_MISSING");
 
-    private static final Pattern BACKGROUND_VIP_LOGIN = Pattern.compile("");
+    private static final Pattern BACKGROUND_LEVEL_UP_1 = Pattern.compile("TODO_MISSING");
+    private static final Pattern BACKGROUND_LEVEL_UP_2 =
+            Pattern.compile("^§r§8\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
+
+    private static final Pattern BACKGROUND_VIP_LOGIN =
+            Pattern.compile("^§r§8\\[§r§7[A-Z+]+§r§8\\] §r§7.*§r§8 has just logged in!$");
 
     @Config
     private boolean hideWelcome = true;
@@ -173,6 +179,9 @@ public class ChatFilterFeature extends UserFeature {
             System.out.println("UNHANDLED_SYSTEM: " + msg);
             e.setMessage(new TextComponent("UNHANDLED_SYSTEM: ").append(e.getMessage()));
         } else if (e.getType() == ChatMessageReceivedEvent.MessageType.BACKGROUND) {
+            System.out.println("BACKGROUND: " + msg);
+            e.setMessage(new TextComponent("BACKGROUND: ").append(e.getMessage()));
+
             if (BACKGROUND_GLOBAL_CHAT.matcher(msg).find()) {
                 handleGlobalChat(e);
                 return;
@@ -208,6 +217,13 @@ public class ChatFilterFeature extends UserFeature {
             if (hideLevelUp) {
                 if (BACKGROUND_LEVEL_UP_1.matcher(msg).find()
                         || BACKGROUND_LEVEL_UP_2.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (hideWelcome) {
+                if (BACKGROUND_WELCOME_1.matcher(msg).find() || BACKGROUND_WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
