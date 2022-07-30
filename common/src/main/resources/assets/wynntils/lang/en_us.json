@@ -193,6 +193,8 @@
   "feature.wynntils.pouchRedirectFeature.redirectEmeraldPouch.name": "Redirect Emerald Pouch Messages",
   "feature.wynntils.pouchRedirectFeature.redirectIngredientPouch.description": "Should messages about ingredients being added to your pouch be redirected to the game update ticker?",
   "feature.wynntils.pouchRedirectFeature.redirectIngredientPouch.name": "Redirect Ingredient Pouch Messages",
+  "feature.wynntils.questInfoOverlay.disableQuestTrackingOnScoreboard.description": "Should quest tracking be enabled on the scoreboard? This option only works if QuestInfoOverlay is turned on.",
+  "feature.wynntils.questInfoOverlay.disableQuestTrackingOnScoreboard.name": "Disable Scoreboard Quest Tracking",
   "feature.wynntils.questInfoOverlay.name": "Quest Status Overlay Feature",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.description": "Display the currently tracked quest's info",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.name": "Quest Info Tracker",
