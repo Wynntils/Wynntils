@@ -193,10 +193,11 @@ public class ChatManager {
     private static Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
         RecipientType recipientType = getRecipientType(message, messageType);
 
-        System.out.println(
-                "Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + messageType + ", recipient: " + recipientType);
+        System.out.println("Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + messageType
+                + ", recipient: " + recipientType);
 
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
+        ChatMessageReceivedEvent event =
+                new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
