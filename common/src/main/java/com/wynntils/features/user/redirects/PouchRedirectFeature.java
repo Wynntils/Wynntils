@@ -40,9 +40,7 @@ public class PouchRedirectFeature extends UserFeature {
         String codedString = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch) {
-            if (INGREDIENT_POUCH_PICKUP_PATTERN
-                    .matcher(codedString)
-                    .matches()) {
+            if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString).matches()) {
                 event.setCanceled(true);
                 NotificationManager.queueMessage(codedString);
                 return;
