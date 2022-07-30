@@ -6,6 +6,7 @@ package com.wynntils.wc.event;
 
 import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.chat.RecipientType;
+import com.wynntils.mc.utils.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -13,13 +14,15 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ChatMessageReceivedEvent extends Event {
     private Component message;
-    private final MessageType type;
-    private final RecipientType recipient;
+    private String codedMessage;
+    private final MessageType messageType;
+    private final RecipientType recipientType;
 
-    public ChatMessageReceivedEvent(Component message, MessageType type, RecipientType recipient) {
+    public ChatMessageReceivedEvent(Component message, String codedMessage, MessageType messageType, RecipientType recipientType) {
         this.message = message;
-        this.type = type;
-        this.recipient = recipient;
+        this.codedMessage = codedMessage; // message, but as a format-coded string
+        this.messageType = messageType;
+        this.recipientType = recipientType;
     }
 
     public Component getMessage() {
@@ -28,13 +31,18 @@ public class ChatMessageReceivedEvent extends Event {
 
     public void setMessage(Component message) {
         this.message = message;
+        this.codedMessage = ComponentUtils.getFormatted(message);
     }
 
-    public MessageType getType() {
-        return type;
+    public String getCodedMessage() {
+        return codedMessage;
     }
 
-    public RecipientType getRecipient() {
-        return recipient;
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public RecipientType getRecipientType() {
+        return recipientType;
     }
 }

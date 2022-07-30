@@ -40,11 +40,11 @@ public class ChatManager {
         if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();
-        String msg = ComponentUtils.getFormatted(message);
-        if (!msg.contains("\n")) {
+        String codedMessage = ComponentUtils.getFormatted(message);
+        if (!codedMessage.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
             MessageType type = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
-            Component updatedMessage = handleChatLine(message, type);
+            Component updatedMessage = handleChatLine(message, codedMessage, type);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -54,7 +54,7 @@ public class ChatManager {
         }
 
         if (EXTRACT_DIALOG) {
-            handleMultilineMessage(msg);
+            handleMultilineMessage(codedMessage);
             e.setCanceled(true);
         }
     }
@@ -154,7 +154,7 @@ public class ChatManager {
         // This is a normal, single line chat but coded with format codes
         saveLastChat(codedString);
         TextComponent message = new TextComponent(codedString);
-        Component updatedMessage = handleChatLine(message, MessageType.BACKGROUND);
+        Component updatedMessage = handleChatLine(message, codedString, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -190,13 +190,13 @@ public class ChatManager {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message, MessageType type) {
+    private static Component handleChatLine(Component message, String codedMessage, MessageType type) {
         RecipientType recipient = getRecipientType(message, type);
 
         System.out.println("Handling chat: " + ComponentUtils.getFormatted(message) + ", type:" + type + ", recipient: "
                 + recipient);
 
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, type, recipient);
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, codedMessage, type, recipient);
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();

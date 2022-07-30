@@ -10,7 +10,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.regex.Matcher;
@@ -19,7 +18,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
-public class ChatFilterFeature extends UserFeature {
+public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
     private static final Pattern PRE_WELCOME_2 =
             Pattern.compile("^§6Thank you for using the WynnPack. Enjoy the game!$");
@@ -76,10 +75,10 @@ public class ChatFilterFeature extends UserFeature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
-        if (e.getRecipient() == RecipientType.INFO) return;
+        if (e.getRecipientType() == RecipientType.INFO) return;
 
-        RecipientType recipient = e.getRecipient();
-        MessageType type = e.getType();
+        RecipientType recipient = e.getRecipientType();
+        MessageType type = e.getMessageType();
 
         // TODO: This is a stand-in for per recipientType chat tabs
         e.setMessage(new TextComponent(type.name() + "-" + recipient.name() + ": ").append(e.getMessage()));
@@ -88,20 +87,20 @@ public class ChatFilterFeature extends UserFeature {
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
-        if (e.getRecipient() != RecipientType.INFO) return;
+        if (e.getRecipientType() != RecipientType.INFO) return;
 
-        String msg = ComponentUtils.getFormatted(e.getMessage());
-        MessageType type = e.getType();
-
-        filterInfoMessage(e, msg, type);
+        filterInfoMessage(e);
 
         if (!e.isCanceled()) {
-            System.out.println("UNHANDLED-" + type.name() + ": " + msg);
-            e.setMessage(new TextComponent("UNHANDLED-" + type.name() + ": ").append(e.getMessage()));
+            System.out.println("UNHANDLED-" + e.getMessageType().name() + ": " + e.getCodedMessage());
+            e.setMessage(new TextComponent("UNHANDLED-" + e.getMessageType().name() + ": ").append(e.getMessage()));
         }
     }
 
-    private void filterInfoMessage(ChatMessageReceivedEvent e, String msg, MessageType type) {
+    private void filterInfoMessage(ChatMessageReceivedEvent e) {
+        String msg = e.getCodedMessage();
+        MessageType type = e.getMessageType();
+
         if (type == MessageType.NORMAL) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {

@@ -17,7 +17,7 @@ import com.wynntils.features.internal.FixSpellOverwriteFeature;
 import com.wynntils.features.internal.ItemStackTransformerFeature;
 import com.wynntils.features.internal.LootrunFeature;
 import com.wynntils.features.internal.NotificationsFeature;
-import com.wynntils.features.user.ChatFilterFeature;
+import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -145,7 +145,6 @@ public class FeatureRegistry {
         registerFeature(new NotificationsFeature());
 
         // user
-        registerFeature(new ChatFilterFeature());
         registerFeature(new CustomBarsFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
@@ -153,6 +152,7 @@ public class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
