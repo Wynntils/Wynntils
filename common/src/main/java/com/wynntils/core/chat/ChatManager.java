@@ -38,9 +38,9 @@ public class ChatManager {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message) {
+    private static Component handleChatLine(Component message, boolean isSystem) {
         // If we want to cancel a chat line, return false here
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message);
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, isSystem);
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
@@ -49,13 +49,13 @@ public class ChatManager {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
-        if (e.getType() != ChatType.CHAT) return;
+        if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();
         String msg = ComponentUtils.getFormatted(message);
         if (!msg.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
-            Component updatedMessage = handleChatLine(message);
+            Component updatedMessage = handleChatLine(message, e.getType() == ChatType.SYSTEM);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -65,16 +65,12 @@ public class ChatManager {
         }
 
         if (EXTRACT_DIALOG) {
-            handleMultilineMessage(msg);
+            handleMultilineMessage(msg, e.getType() == ChatType.SYSTEM);
             e.setCanceled(true);
         }
     }
 
-    private static String stripFormattingCodes(String msg) {
-        return msg.replaceAll("§[0-9a-fklmnor]", "");
-    }
-
-    private static void handleMultilineMessage(String msg) {
+    private static void handleMultilineMessage(String msg, boolean isSystem) {
         LinkedList<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
@@ -85,7 +81,7 @@ public class ChatManager {
         } else {
             // Figure out what's new since last chat message
             for (String line : lines) {
-                String noCodes = stripFormattingCodes(line);
+                String noCodes = ComponentUtils.stripFormattingCodes(line);
                 if (noCodes.equals(lastRealChat)) break;
                 newLines.addLast(line);
             }
@@ -149,7 +145,7 @@ public class ChatManager {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(ChatManager::handleFakeChatLine);
+        newChatLines.forEach(line -> handleFakeChatLine(line, isSystem));
 
         // Update the new dialog
         handleNewNpcDialog(dialog);
@@ -165,11 +161,11 @@ public class ChatManager {
         }
     }
 
-    private static void handleFakeChatLine(String codedString) {
+    private static void handleFakeChatLine(String codedString, boolean isSystem) {
         // This is a normal, single line chat but coded with format codes
         saveLastChat(codedString);
         TextComponent message = new TextComponent(codedString);
-        Component updatedMessage = handleChatLine(message);
+        Component updatedMessage = handleChatLine(message, isSystem);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -178,7 +174,7 @@ public class ChatManager {
     }
 
     private static void saveLastChat(String codedString) {
-        String msg = stripFormattingCodes(codedString);
+        String msg = ComponentUtils.stripFormattingCodes(codedString);
         if (!msg.isBlank()) {
             lastRealChat = msg;
         }

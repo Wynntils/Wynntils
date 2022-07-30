@@ -11,9 +11,11 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ChatMessageReceivedEvent extends Event {
     private Component message;
+    private final boolean isSystem;
 
-    public ChatMessageReceivedEvent(Component message) {
+    public ChatMessageReceivedEvent(Component message, boolean isSystem) {
         this.message = message;
+        this.isSystem = isSystem;
     }
 
     public Component getMessage() {
@@ -22,5 +24,9 @@ public class ChatMessageReceivedEvent extends Event {
 
     public void setMessage(Component message) {
         this.message = message;
+    }
+
+    public boolean isSystem() {
+        return isSystem;
     }
 }
