@@ -19,10 +19,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo
 public class ChatFilterFeature extends UserFeature {
     private static final Pattern GLOBAL_CHAT =
-            Pattern.compile("§8\\[(Lv. )?\\d+/\\d+/..(/[^]]+)\\]§r§7 \\[[A-Z0-9]+\\]§r.*");
+            Pattern.compile("§8\\[(Lv\\. )?\\d+/\\d+/..(/[^]]+)?\\]§r§7 \\[[A-Z0-9]+\\]§r.*");
     private static final Pattern LOCAL_CHAT = Pattern.compile("§7\\[(Lv. )?\\d+/\\d+/..(/[^]]+)\\]§r.*");
     private static final Pattern PRIVATE_CHAT = Pattern.compile("§7\\[§r§5.*§r§6 ➤ §r§5.*§r§7\\] §r§f");
     private static final Pattern SHOUT = Pattern.compile("^§3.* \\[[A-Z0-9]+\\] shouts: §r§b.*");
+
+    private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
+    private static final Pattern PRE_WELCOME_2 =
+            Pattern.compile("^§6Thank you for using the WynnPack. Enjoy the game!$");
+    private static final Pattern PRE_WELCOME_3 = Pattern.compile(
+            "^§cSelect a class! Each class is saved individually across all servers, you can come back at any time with /class and select another class!$");
 
     private static final Pattern WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern WELCOME_2 = Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
@@ -112,6 +118,15 @@ public class ChatFilterFeature extends UserFeature {
         } else {
             if (hideLevelUp) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (hideWelcome) {
+                if (PRE_WELCOME_1.matcher(msg).find()
+                        || PRE_WELCOME_2.matcher(msg).find()
+                        || PRE_WELCOME_3.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
