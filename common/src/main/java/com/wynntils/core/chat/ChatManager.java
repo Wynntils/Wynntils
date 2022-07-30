@@ -43,9 +43,7 @@ public class ChatManager {
         String msg = ComponentUtils.getFormatted(message);
         if (!msg.contains("\n")) {
             saveLastChat(ComponentUtils.getFormatted(message));
-            MessageType type = e.getType() == ChatType.SYSTEM
-                    ? MessageType.SYSTEM
-                    : MessageType.NORMAL;
+            MessageType type = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, type);
             if (updatedMessage == null) {
                 e.setCanceled(true);
@@ -195,7 +193,8 @@ public class ChatManager {
     private static Component handleChatLine(Component message, MessageType type) {
         RecipientType recipient = getRecipientType(message, type);
 
-        System.out.println("Handling chat: " + ComponentUtils.getFormatted(message) + ", type:" + type + ", recipient: " + recipient);
+        System.out.println("Handling chat: " + ComponentUtils.getFormatted(message) + ", type:" + type + ", recipient: "
+                + recipient);
 
         ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, type, recipient);
         WynntilsMod.getEventBus().post(event);

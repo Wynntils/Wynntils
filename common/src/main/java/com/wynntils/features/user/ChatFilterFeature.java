@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -11,7 +12,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import com.wynntils.core.chat.MessageType;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

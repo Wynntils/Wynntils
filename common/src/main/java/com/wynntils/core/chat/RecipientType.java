@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.core.chat;
 
 import java.util.regex.Pattern;
@@ -24,8 +28,7 @@ public enum RecipientType {
     }
 
     public boolean matchPattern(String msg, MessageType type) {
-        assert (type == MessageType.NORMAL
-                || type == MessageType.BACKGROUND);
+        assert (type == MessageType.NORMAL || type == MessageType.BACKGROUND);
         Pattern pattern = (type == MessageType.NORMAL ? normalPattern : backgroundPattern);
         if (pattern == null) return false;
         return pattern.matcher(msg).find();
