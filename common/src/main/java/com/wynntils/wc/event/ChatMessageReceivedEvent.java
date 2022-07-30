@@ -32,7 +32,7 @@ public class ChatMessageReceivedEvent extends Event {
 
     public void setMessage(Component message) {
         this.message = message;
-        this.codedMessage = ComponentUtils.getFormatted(message);
+        this.codedMessage = ComponentUtils.getCoded(message);
     }
 
     public String getCodedMessage() {

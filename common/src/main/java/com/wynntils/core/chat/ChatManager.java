@@ -40,9 +40,9 @@ public class ChatManager {
         if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();
-        String codedMessage = ComponentUtils.getFormatted(message);
+        String codedMessage = ComponentUtils.getCoded(message);
         if (!codedMessage.contains("\n")) {
-            saveLastChat(ComponentUtils.getFormatted(message));
+            saveLastChat(ComponentUtils.getCoded(message));
             MessageType type = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, codedMessage, type);
             if (updatedMessage == null) {
@@ -170,7 +170,7 @@ public class ChatManager {
     }
 
     private static RecipientType getRecipientType(Component message, MessageType type) {
-        String msg = ComponentUtils.getFormatted(message);
+        String msg = ComponentUtils.getCoded(message);
         if (type == MessageType.SYSTEM) {
             // System type messages can only be "info" messages
             return RecipientType.INFO;
@@ -193,7 +193,7 @@ public class ChatManager {
     private static Component handleChatLine(Component message, String codedMessage, MessageType type) {
         RecipientType recipient = getRecipientType(message, type);
 
-        System.out.println("Handling chat: " + ComponentUtils.getFormatted(message) + ", type:" + type + ", recipient: "
+        System.out.println("Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + type + ", recipient: "
                 + recipient);
 
         ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, codedMessage, type, recipient);

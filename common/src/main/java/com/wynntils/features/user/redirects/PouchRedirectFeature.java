@@ -37,20 +37,20 @@ public class PouchRedirectFeature extends UserFeature {
         }
 
         Component component = event.getComponent();
-        String stringWithFormattingCodes = ComponentUtils.getFormatted(component);
+        String codedString = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch) {
             if (INGREDIENT_POUCH_PICKUP_PATTERN
-                    .matcher(stringWithFormattingCodes)
+                    .matcher(codedString)
                     .matches()) {
                 event.setCanceled(true);
-                NotificationManager.queueMessage(stringWithFormattingCodes);
+                NotificationManager.queueMessage(codedString);
                 return;
             }
         }
 
         if (redirectEmeraldPouch) {
-            Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(stringWithFormattingCodes);
+            Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString);
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -59,9 +59,9 @@ public class PouchRedirectFeature extends UserFeature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    NotificationManager.editMessage(emeraldPouchMessage, stringWithFormattingCodes);
+                    NotificationManager.editMessage(emeraldPouchMessage, codedString);
                 } else {
-                    emeraldPouchMessage = NotificationManager.queueMessage(stringWithFormattingCodes);
+                    emeraldPouchMessage = NotificationManager.queueMessage(codedString);
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
