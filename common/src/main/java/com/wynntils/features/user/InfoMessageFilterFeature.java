@@ -48,7 +48,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
     private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
 
-    private static final Pattern BACKGROUND_LEVEL_UP_1 = Pattern.compile("TODO_MISSING");
+    private static final Pattern BACKGROUND_LEVEL_UP_1 = Pattern.compile("^(§r§8)?.* is now level .* in §.*$");
     private static final Pattern BACKGROUND_LEVEL_UP_2 =
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
