@@ -12,7 +12,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.List;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -39,14 +38,12 @@ public class ChatManagerTestFeature extends DebugFeature {
     public void onNpcDialog(NpcDialogEvent e) {
         if (!WynnUtils.onServer()) return;
 
-        List<String> codedDialogLines = e.getCodedDialogLines();
-        if (codedDialogLines.isEmpty()) {
+        String codedDialog = e.getCodedDialog();
+        if (codedDialog == null) {
             McUtils.sendMessageToClient(new TextComponent("[NPC dialog removed]"));
             return;
         }
 
-        for (String dialogLine : codedDialogLines) {
-            McUtils.sendMessageToClient(new TextComponent("NPC: " + dialogLine));
-        }
+        McUtils.sendMessageToClient(new TextComponent("NPC: " + codedDialog));
     }
 }

@@ -80,7 +80,7 @@ public class ChatManager {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNewNpcDialog(List.of());
+            handleNpcDialog(List.of());
             return;
         }
 
@@ -138,16 +138,7 @@ public class ChatManager {
         newChatLines.forEach(line -> handleFakeChatLine(line));
 
         // Update the new dialog
-        handleNewNpcDialog(dialog);
-    }
-
-    private static void handleNewNpcDialog(List<String> dialog) {
-        // dialog could be the empty list, this means the last dialog is removed
-        if (!dialog.equals(lastNpcDialog)) {
-            lastNpcDialog = dialog;
-            NpcDialogEvent event = new NpcDialogEvent(dialog);
-            WynntilsMod.getEventBus().post(event);
-        }
+        handleNpcDialog(dialog);
     }
 
     private static void handleFakeChatLine(String codedString) {
@@ -205,6 +196,19 @@ public class ChatManager {
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
+    }
+
+    private static void handleNpcDialog(List<String> dialog) {
+        // dialog could be the empty list, this means the last dialog is removed
+        if (!dialog.equals(lastNpcDialog)) {
+            lastNpcDialog = dialog;
+            if (dialog.size() > 1) {
+                WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
+            } else {
+                NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
+                WynntilsMod.getEventBus().post(event);
+            }
+        }
     }
 
     public static void enableNpcDialogExtraction() {

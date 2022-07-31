@@ -4,17 +4,16 @@
  */
 package com.wynntils.wc.event;
 
-import java.util.List;
 import net.minecraftforge.eventbus.api.Event;
 
 public class NpcDialogEvent extends Event {
-    private final List<String> codedDialogLines;
+    private final String codedDialog;
 
-    public NpcDialogEvent(List<String> codedDialogLines) {
-        this.codedDialogLines = codedDialogLines;
+    public NpcDialogEvent(String codedDialog) {
+        this.codedDialog = codedDialog;
     }
 
-    public List<String> getCodedDialogLines() {
-        return codedDialogLines;
+    public String getCodedDialog() {
+        return codedDialog;
     }
 }
