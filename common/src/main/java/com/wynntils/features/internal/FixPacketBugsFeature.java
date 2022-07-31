@@ -26,7 +26,7 @@ public class FixPacketBugsFeature extends InternalFeature {
     private static final int METHOD_ADD = 0;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onBossEventPackageReceived(BossHealthUpdateEvent event) {
+    public void onBossEventPackageReceived(BossHealthUpdateEvent event) {
         if (!WynnUtils.onServer()) return;
 
         ClientboundBossEventPacket packet = event.getPacket();
