@@ -158,8 +158,10 @@ public abstract class ClientPacketListenerMixin {
         gui.handleChat(chatType, result.getMessage(), uuid);
     }
 
-    @Inject(method = "handleSetScore", at = @At("RETURN"))
+    @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
-        EventFactory.onSetScore(packet);
+        if (EventFactory.onSetScore(packet).isCanceled()) {
+            ci.cancel();
+        }
     }
 }
