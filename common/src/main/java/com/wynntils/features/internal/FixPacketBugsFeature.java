@@ -5,6 +5,7 @@
 package com.wynntils.features.internal;
 
 import com.wynntils.core.features.InternalFeature;
+import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
@@ -74,6 +75,16 @@ public class FixPacketBugsFeature extends InternalFeature {
         // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
         Entity entity = McUtils.mc().level.getEntity(event.getVehicle());
         if (entity == null) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onAddEntityLookup(AddEntityLookupEvent event) {
+        if (!WynnUtils.onServer()) return;
+
+        // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
+        if (event.getEntityMap().containsKey(event.getUUID())) {
             event.setCanceled(true);
         }
     }
