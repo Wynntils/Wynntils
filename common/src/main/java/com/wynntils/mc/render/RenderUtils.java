@@ -563,10 +563,21 @@ public class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-        int half = (textureY1 + textureY2) / 2;
-        drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half + 1);
+
+        int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+        drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForeground(
-                poseStack, texture, x1, y1, x2, y2, textureX1, half + 1, textureX2, textureY2, progress);
+                poseStack,
+                texture,
+                x1,
+                y1,
+                x2,
+                y2,
+                textureX1,
+                half,
+                textureX2,
+                textureY2 + (textureY2 - textureY1) % 2,
+                progress);
     }
 
     private static void drawProgressBarForeground(
@@ -594,7 +605,7 @@ public class RenderUtils {
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
                 yMin = Math.min(y1, y2),
-                yMax = Math.max(y1, y2) - 1.5f,
+                yMax = Math.max(y1, y2),
                 txMin = (float) Math.min(textureX1, textureX2) / texture.width(),
                 txMax = (float) Math.max(textureX1, textureX2) / texture.width(),
                 tyMin = (float) Math.min(textureY1, textureY2) / texture.height(),
