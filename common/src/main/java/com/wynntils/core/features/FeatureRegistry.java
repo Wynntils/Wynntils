@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.features.debug.ChatManagerTestFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.internal.ChatItemFeature;
@@ -133,6 +134,7 @@ public class FeatureRegistry {
 
     public static void init() {
         // debug
+        registerFeature(new ChatManagerTestFeature());
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
 

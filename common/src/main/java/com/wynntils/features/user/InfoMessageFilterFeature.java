@@ -10,11 +10,8 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.utils.WynnUtils;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.TextComponent;
@@ -76,33 +73,6 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean redirectSoulPoint = true;
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onServer()) return;
-        if (e.getRecipientType() == RecipientType.INFO) return;
-
-        RecipientType recipientType = e.getRecipientType();
-        MessageType messageType = e.getMessageType();
-
-        // TODO: This is a stand-in for per recipientType chat tabs
-        e.setMessage(new TextComponent(messageType.name() + "-" + recipientType.name() + ": ").append(e.getMessage()));
-    }
-
-    @SubscribeEvent
-    public void onNpcDialog(NpcDialogEvent e) {
-        if (!WynnUtils.onServer()) return;
-
-        List<String> codedDialogLines = e.getCodedDialogLines();
-        if (codedDialogLines.isEmpty()) {
-            McUtils.sendMessageToClient(new TextComponent("[NPC dialog removed]"));
-            return;
-        }
-
-        for (String dialogLine : codedDialogLines) {
-            McUtils.sendMessageToClient(new TextComponent("NPC: " + dialogLine));
-        }
-    }
-
-    @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
         if (e.getRecipientType() != RecipientType.INFO) return;
@@ -127,6 +97,13 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
+            if (hideVipLogin) {
+                if (VIP_LOGIN.matcher(msg).find()) {
+                    e.setCanceled(true);
+                    return;
+                }
+            }
+
             if (hideWelcome) {
                 if (WELCOME_1.matcher(msg).find() || WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -145,13 +122,6 @@ public class InfoMessageFilterFeature extends UserFeature {
                 if (PRE_WELCOME_1.matcher(msg).find()
                         || PRE_WELCOME_2.matcher(msg).find()
                         || PRE_WELCOME_3.matcher(msg).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-            }
-
-            if (hideVipLogin) {
-                if (VIP_LOGIN.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }

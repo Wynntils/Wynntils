@@ -24,16 +24,16 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatManager {
-    private static final boolean EXTRACT_DIALOG = true;
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
+
+    private static boolean extractDialog = false;
+    private static String lastRealChat = null;
+    private static List<String> lastNpcDialog = List.of();
 
     public static void init() {
         WynntilsMod.getEventBus().register(ChatManager.class);
     }
-
-    private static String lastRealChat = null;
-    private static List<String> lastNpcDialog = List.of();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
@@ -54,7 +54,7 @@ public class ChatManager {
             return;
         }
 
-        if (EXTRACT_DIALOG) {
+        if (extractDialog) {
             handleMultilineMessage(codedMessage);
             e.setCanceled(true);
         }
@@ -172,7 +172,11 @@ public class ChatManager {
     private static RecipientType getRecipientType(Component message, MessageType messageType) {
         String msg = ComponentUtils.getCoded(message);
         if (messageType == MessageType.SYSTEM) {
-            // System type messages can only be "info" messages
+            // System type messages can only be shouts or "info" messages
+            // We call this MessageType.NORMAL anyway...
+            if (RecipientType.SHOUT.matchPattern(msg, MessageType.NORMAL)) {
+                return RecipientType.SHOUT;
+            }
             return RecipientType.INFO;
         } else {
             for (RecipientType recipientType : RecipientType.values()) {
@@ -201,5 +205,13 @@ public class ChatManager {
         WynntilsMod.getEventBus().post(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
+    }
+
+    public static void enableNpcDialogExtraction() {
+        extractDialog = true;
+    }
+
+    public static void disableNpcDialogExtraction() {
+        extractDialog = false;
     }
 }
