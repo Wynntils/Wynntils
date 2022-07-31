@@ -6,6 +6,7 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
@@ -21,14 +22,31 @@ import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
 import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
+
+    @Config
+    public static boolean disableQuestTrackingOnScoreboard = true;
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+        if (questInfoOverlay.isEnabled()
+                && disableQuestTrackingOnScoreboard
+                && event.getSegment().getType() == ScoreboardManager.SegmentType.Quest) {
+            event.setCanceled(true);
+        }
+    }
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 

@@ -306,8 +306,8 @@ public class EventFactory {
         post(new PlayerInfoFooterChangedEvent(footer));
     }
 
-    public static void onSetScore(ClientboundSetScorePacket packet) {
-        post(new ScoreboardSetScoreEvent(
+    public static ScoreboardSetScoreEvent onSetScore(ClientboundSetScorePacket packet) {
+        return post(new ScoreboardSetScoreEvent(
                 packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()));
     }
     // endregion

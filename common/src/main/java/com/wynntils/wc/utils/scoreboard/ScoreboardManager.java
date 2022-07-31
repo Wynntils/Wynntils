@@ -8,8 +8,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.Pair;
+import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
+import com.wynntils.wc.utils.WynnUtils;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
 import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -26,9 +29,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ScoreboardManager {
@@ -39,8 +46,9 @@ public class ScoreboardManager {
     private static final Pattern GUILD_OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?Guild Obj: (.+)");
     private static final Pattern PARTY_PATTERN = Pattern.compile("Party:\\s\\[Lv. (\\d+)]");
 
-    // TimeUnit.Seconds
-    private static final int CHANGE_PROCESS_RATE = 1;
+    // TimeUnit.MILLISECONDS
+    // 250 -> 4 times a second
+    private static final int CHANGE_PROCESS_RATE = 250;
 
     private static List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
 
@@ -52,28 +60,35 @@ public class ScoreboardManager {
 
     private static ScheduledExecutorService executor = null;
 
-    // Wynn has two different objectives for the same thing, making packets/events duplicated. This is used to prevent
-    // the duplication.
-    private static Objective trackedObjectivePlayer = null;
-
     private static final Runnable changeHandlerRunnable = () -> {
-        if (queuedChanges.isEmpty()) return;
+        if (queuedChanges.isEmpty()) {
+            handleScoreboardReconstruction();
+            return;
+        }
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
 
         Set<String> changedLines = new HashSet<>();
 
+        for (ScoreboardLineChange queuedChange : queuedChanges) {
+            if (queuedChange.method() == ServerScoreboard.Method.REMOVE) {
+                scoreboardCopy.removeIf(
+                        scoreboardLine -> Objects.equals(scoreboardLine.line(), queuedChange.lineText()));
+            }
+        }
+
         while (!queuedChanges.isEmpty()) {
             ScoreboardLineChange processed = queuedChanges.pop();
 
-            ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
-
-            scoreboardCopy.removeIf(scoreboardLine -> scoreboardLine.index() == processed.lineIndex());
-
-            if (processed.method() == ServerScoreboard.Method.CHANGE) {
-                scoreboardCopy.add(line);
-                changedLines.add(processed.lineText());
+            if (processed.method() == ServerScoreboard.Method.REMOVE) {
+                continue;
             }
+
+            scoreboardCopy.removeIf(scoreboardLine -> Objects.equals(scoreboardLine.line(), processed.lineText()));
+
+            ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
+            scoreboardCopy.add(line);
+            changedLines.add(processed.lineText());
         }
 
         scoreboardCopy.sort(Comparator.comparingInt(ScoreboardLine::index).reversed());
@@ -140,7 +155,52 @@ public class ScoreboardManager {
                 }
             }
         }
+
+        handleScoreboardReconstruction();
     };
+
+    private static void handleScoreboardReconstruction() {
+        Scoreboard scoreboard = McUtils.player().getScoreboard();
+
+        List<String> skipped = new ArrayList<>();
+
+        for (Segment parsedSegment : segments) {
+            boolean cancelled = WynntilsMod.getEventBus().post(new ScoreboardSegmentAdditionEvent(parsedSegment));
+
+            if (cancelled) {
+                skipped.addAll(parsedSegment.getScoreboardLines());
+            }
+        }
+
+        final String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
+
+        Objective objective = scoreboard.getObjective(objectiveName);
+
+        if (objective == null) {
+            objective = scoreboard.addObjective(
+                    objectiveName,
+                    ObjectiveCriteria.DUMMY,
+                    new TextComponent("play.wynncraft.com")
+                            .withStyle(ChatFormatting.GOLD)
+                            .withStyle(ChatFormatting.BOLD),
+                    ObjectiveCriteria.RenderType.INTEGER);
+        }
+
+        scoreboard.setDisplayObjective(1, objective);
+
+        for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
+            scoreMap.remove(objective);
+        }
+
+        for (ScoreboardLine scoreboardLine : reconstructedScoreboard) {
+            if (skipped.contains(scoreboardLine.line())) {
+                continue;
+            }
+
+            Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
+            score.setScore(scoreboardLine.index());
+        }
+    }
 
     private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
         List<Segment> segments = new ArrayList<>();
@@ -162,6 +222,7 @@ public class ScoreboardManager {
                             .collect(Collectors.toList())
                             .subList(currentSegment.getStartIndex() + 1, i));
                     currentSegment.setEndIndex(i - 1);
+                    currentSegment.setEnd(strippedLine);
                     segments.add(currentSegment);
                     currentSegment = null;
                 }
@@ -212,41 +273,20 @@ public class ScoreboardManager {
         scoreboardHandlers.add(new Pair<>(handlerInstance, segmentTypes));
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetScore(ScoreboardSetScoreEvent event) {
-        if (trackedObjectivePlayer == null) {
-            getTrackedObjectivePlayer();
+        if (!WynnUtils.onServer()) return;
 
-            if (trackedObjectivePlayer == null) {
-                return;
-            }
-        }
-
-        // Prevent duplication
-        if (!Objects.equals(event.getObjectiveName(), trackedObjectivePlayer.getName())) {
-            return;
-        }
+        event.setCanceled(true);
 
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
-    }
-
-    private static void getTrackedObjectivePlayer() {
-        Scoreboard scoreboard = McUtils.player().getScoreboard();
-
-        List<Objective> objectives = scoreboard.getObjectives().stream().toList();
-
-        if (objectives.isEmpty()) {
-            return;
-        }
-
-        trackedObjectivePlayer = objectives.get(0);
     }
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.State.WORLD) {
             executor = Executors.newScheduledThreadPool(1);
-            executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
             return;
         }
 
