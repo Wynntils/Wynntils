@@ -42,6 +42,7 @@ import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
@@ -74,6 +75,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -263,6 +265,10 @@ public class EventFactory {
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
         return post(new SetPlayerTeamEvent(
                 ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
+    }
+
+    public static SetEntityPassengersEvent onSetEntityPassengers(ClientboundSetPassengersPacket packet) {
+        return post(new SetEntityPassengersEvent(packet.getVehicle()));
     }
 
     public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
