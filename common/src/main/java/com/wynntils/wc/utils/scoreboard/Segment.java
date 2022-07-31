@@ -4,11 +4,13 @@
  */
 package com.wynntils.wc.utils.scoreboard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Segment {
     private final ScoreboardManager.SegmentType type;
     private final String header;
+    private String end;
     private List<String> content = null;
     private final int startIndex;
     private int endIndex = -1;
@@ -52,6 +54,20 @@ public final class Segment {
         return header;
     }
 
+    public String getEnd() {
+        return end;
+    }
+
+    public List<String> getScoreboardLines() {
+        List<String> lines = new ArrayList<>(this.content);
+        lines.add(this.header);
+        if (this.end != null) {
+            lines.add(this.end);
+        }
+
+        return lines;
+    }
+
     public boolean isChanged() {
         return changed;
     }
@@ -66,5 +82,9 @@ public final class Segment {
 
     public void setChanged(boolean changed) {
         this.changed = changed;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 }
