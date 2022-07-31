@@ -11,8 +11,8 @@ import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
-import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatManagerTestFeature extends DebugFeature {
@@ -22,11 +22,8 @@ public class ChatManagerTestFeature extends DebugFeature {
         return super.onEnable();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onServer()) return;
-        if (e.getRecipientType() == RecipientType.INFO) return;
-
         RecipientType recipientType = e.getRecipientType();
         MessageType messageType = e.getMessageType();
 
@@ -36,8 +33,6 @@ public class ChatManagerTestFeature extends DebugFeature {
 
     @SubscribeEvent
     public void onNpcDialog(NpcDialogEvent e) {
-        if (!WynnUtils.onServer()) return;
-
         String codedDialog = e.getCodedDialog();
         if (codedDialog == null) {
             McUtils.sendMessageToClient(new TextComponent("[NPC dialog removed]"));

@@ -11,11 +11,10 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import com.wynntils.wc.utils.WynnUtils;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class InfoMessageFilterFeature extends UserFeature {
@@ -74,18 +73,8 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onServer()) return;
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        filterInfoMessage(e);
-
-        if (!e.isCanceled()) {
-            System.out.println("UNHANDLED-" + e.getMessageType().name() + ": " + e.getCodedMessage());
-            e.setMessage(new TextComponent("UNHANDLED-" + e.getMessageType().name() + ": ").append(e.getMessage()));
-        }
-    }
-
-    private void filterInfoMessage(ChatMessageReceivedEvent e) {
         String msg = e.getCodedMessage();
         MessageType messageType = e.getMessageType();
 
