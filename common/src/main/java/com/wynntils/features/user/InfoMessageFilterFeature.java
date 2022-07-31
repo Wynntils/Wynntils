@@ -11,10 +11,9 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class InfoMessageFilterFeature extends UserFeature {
