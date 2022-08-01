@@ -35,7 +35,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern LEVEL_UP_2 =
             Pattern.compile("^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$");
 
-    private static final Pattern VIP_LOGIN =
+    private static final Pattern LOGIN_ANNOUNCEMENT =
             Pattern.compile("^§.\\[§r§.[A-Z+]+§r§.\\] §r§..*§r§. has just logged in!$");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
@@ -52,7 +52,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_LEVEL_UP_2 =
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
-    private static final Pattern BACKGROUND_VIP_LOGIN =
+    private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
             Pattern.compile("^(§r§8)?\\[§r§7[A-Z+]+§r§8\\] §r§7.*§r§8 has just logged in!$");
 
     @Config
@@ -65,7 +65,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean hideLevelUp = true;
 
     @Config
-    private boolean hideVipLogin = true;
+    private boolean hideLoginAnnouncements = true;
 
     @Config
     private boolean redirectSoulPoint = true;
@@ -85,8 +85,8 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideVipLogin) {
-                if (VIP_LOGIN.matcher(msg).find()) {
+            if (hideLoginAnnouncements) {
+                if (LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
@@ -153,8 +153,8 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideVipLogin) {
-                if (BACKGROUND_VIP_LOGIN.matcher(msg).find()) {
+            if (hideLoginAnnouncements) {
+                if (BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
