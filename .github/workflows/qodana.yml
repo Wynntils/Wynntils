@@ -1,0 +1,45 @@
+name: Qodana
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    outputs:
+      qodana: ${{ steps.qodana.outputs.result }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Rename misc file
+        run: |
+          cp ./.idea/misc-example.xml ./.idea/misc.xml
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: "gradle"
+      - name: 'Qodana Scan'
+        id: qodana
+        uses: JetBrains/qodana-action@v2022.1.1
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
+      - name: Post Qodana job summary
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          SUMMARY_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments \
+            -d '{"body":"### Qodana code review\n'${{ steps.qodana.outputs.result }}'\nSee more at: '$SUMMARY_URL'\n"}'
