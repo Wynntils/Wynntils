@@ -16,7 +16,7 @@ public class TranslationManager {
             ChatFormatting.GRAY + "[" + TranslationFeature.INSTANCE.languageName + "]" + ChatFormatting.RESET;
     public static final String UNTRANSLATED_PREFIX = ChatFormatting.GRAY + "[en]" + ChatFormatting.RESET;
 
-    private static TranslationServices translator = null;
+    private static TranslationService translator = null;
 
     /**
      * Get a TranslationService.
@@ -40,10 +40,11 @@ public class TranslationManager {
      *
      * @return An instance of the selected translation service, or null on failure
      */
-    public static TranslationServices getTranslator() {
+    public static TranslationService getTranslator() {
         // These might not have been created yet, or reset by config changing
         if (TranslationManager.translator == null) {
-            TranslationManager.translator = TranslationFeature.INSTANCE.translationService;
+            TranslationManager.translator =
+                    TranslationManager.getService(TranslationFeature.INSTANCE.translationService);
         }
         return translator;
     }

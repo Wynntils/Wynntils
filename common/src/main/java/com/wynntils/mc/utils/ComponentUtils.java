@@ -223,4 +223,8 @@ public final class ComponentUtils {
         if (split.isEmpty()) split.add(new TextComponent(""));
         return split;
     }
+
+    public static String stripFormattingCodes(String msg) {
+        return msg.replaceAll("§[0-9a-fklmnor]", "");
+    }
 }
