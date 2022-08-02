@@ -5,8 +5,10 @@
 package com.wynntils.features.internal;
 
 import com.wynntils.core.features.InternalFeature;
+import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
@@ -15,6 +17,7 @@ import java.util.UUID;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.OperationType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,7 +27,7 @@ public class FixPacketBugsFeature extends InternalFeature {
     private static final int METHOD_ADD = 0;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onBossEventPackageReceived(BossHealthUpdateEvent event) {
+    public void onBossEventPackageReceived(BossHealthUpdateEvent event) {
         if (!WynnUtils.onServer()) return;
 
         ClientboundBossEventPacket packet = event.getPacket();
@@ -60,6 +63,28 @@ public class FixPacketBugsFeature extends InternalFeature {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
         if (playerTeamFromUserName != event.getPlayerTeam()) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetEntityPassengersPacket(SetEntityPassengersEvent event) {
+        if (!WynnUtils.onServer()) return;
+        if (McUtils.mc().level == null) return;
+
+        // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
+        Entity entity = McUtils.mc().level.getEntity(event.getVehicle());
+        if (entity == null) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onAddEntityLookup(AddEntityLookupEvent event) {
+        if (!WynnUtils.onServer()) return;
+
+        // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
+        if (event.getEntityMap().containsKey(event.getUUID())) {
             event.setCanceled(true);
         }
     }

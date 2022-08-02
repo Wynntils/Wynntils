@@ -9,8 +9,9 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -42,6 +43,7 @@ import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
@@ -74,6 +76,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -86,6 +89,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
@@ -242,8 +246,8 @@ public class EventFactory {
         return post(new ChatSentEvent(message));
     }
 
-    public static ChatReceivedEvent onChatReceived(ChatType type, Component message) {
-        return post(new ChatReceivedEvent(type, message));
+    public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
+        return post(new ChatPacketReceivedEvent(type, message));
     }
     // endregion
 
@@ -263,6 +267,14 @@ public class EventFactory {
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
         return post(new SetPlayerTeamEvent(
                 ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
+    }
+
+    public static AddEntityLookupEvent onAddEntityLookup(UUID uuid, Map<UUID, EntityAccess> entityMap) {
+        return post(new AddEntityLookupEvent(uuid, entityMap));
+    }
+
+    public static SetEntityPassengersEvent onSetEntityPassengers(ClientboundSetPassengersPacket packet) {
+        return post(new SetEntityPassengersEvent(packet.getVehicle()));
     }
 
     public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
