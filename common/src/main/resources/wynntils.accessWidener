@@ -15,4 +15,3 @@ accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gu
 accessible method net/minecraft/client/gui/components/ChatComponent addMessage (Lnet/minecraft/network/chat/Component;I)V
 accessible field net/minecraft/world/scores/Scoreboard displayObjectives [Lnet/minecraft/world/scores/Objective;
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
-mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
