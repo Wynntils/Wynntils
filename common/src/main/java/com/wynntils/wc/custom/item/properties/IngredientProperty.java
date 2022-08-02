@@ -20,17 +20,21 @@ public class IngredientProperty extends ItemProperty implements HighlightPropert
 
         String name = WynnUtils.normalizeBadString(item.getHoverName().getString());
 
+        tier = calculateTier(name);
+    }
+
+    private IngredientTier calculateTier(String name) {
         if (name.endsWith(ChatFormatting.GOLD + " [" + ChatFormatting.YELLOW + "✫" + ChatFormatting.DARK_GRAY + "✫✫"
                 + ChatFormatting.GOLD + "]")) {
-            tier = IngredientTier.ONE;
+            return IngredientTier.ONE;
         } else if (name.endsWith(ChatFormatting.DARK_PURPLE + " [" + ChatFormatting.LIGHT_PURPLE + "✫✫"
                 + ChatFormatting.DARK_GRAY + "✫" + ChatFormatting.DARK_PURPLE + "]")) {
-            tier = IngredientTier.TWO;
+            return IngredientTier.TWO;
         } else if (name.endsWith(
                 ChatFormatting.DARK_AQUA + " [" + ChatFormatting.AQUA + "✫✫✫" + ChatFormatting.DARK_AQUA + "]")) {
-            tier = IngredientTier.THREE;
+            return IngredientTier.THREE;
         } else {
-            tier = IngredientTier.ZERO;
+            return IngredientTier.ZERO;
         }
     }
 
