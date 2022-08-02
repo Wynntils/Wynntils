@@ -218,7 +218,9 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (testMode) return super.mouseClicked(mouseX, mouseY, button);
+        // Let the buttons of the Screen have priority
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        if (testMode) return false;
 
         userInteracted = true;
         animationLengthRemaining = 0;
@@ -293,15 +295,17 @@ public class OverlayManagementScreen extends Screen {
             return false;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        // Let the buttons of the Screen have priority
+        if (super.mouseReleased(mouseX, mouseY, button)) return true;
         if (testMode) return false;
 
         resetSelection();
-        return super.mouseReleased(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
@@ -367,6 +371,8 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        // Let the buttons of the Screen have priority
+        if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) return true;
         if (testMode) return false;
 
         switch (selectionMode) {
@@ -378,9 +384,6 @@ public class OverlayManagementScreen extends Screen {
             }
             case Area -> {
                 handleOverlayBodyDrag(button, dragX, dragY);
-            }
-            default -> {
-                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
             }
         }
 
