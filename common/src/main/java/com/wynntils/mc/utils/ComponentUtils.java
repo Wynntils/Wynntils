@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
     // Text with formatting codes "§cTest §1Text"
-    public static String getFormatted(Component component) {
+    public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(
@@ -49,11 +49,11 @@ public class ComponentUtils {
     }
 
     @Nullable
-    public static String getFormatted(String jsonString) {
+    public static String getCoded(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return getFormatted(component);
+        return getCoded(component);
     }
 
     @Nullable

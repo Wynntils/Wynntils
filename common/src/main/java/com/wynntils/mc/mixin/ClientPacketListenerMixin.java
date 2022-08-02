@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +23,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -90,6 +91,17 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
+    @Inject(
+            method =
+                    "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    public void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
+        if (EventFactory.onSetEntityPassengers(packet).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
@@ -152,7 +164,7 @@ public abstract class ClientPacketListenerMixin {
                             target =
                                     "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
     private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
-        ChatReceivedEvent result = EventFactory.onChatReceived(chatType, message);
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
         if (result.isCanceled()) return;
 
         gui.handleChat(chatType, result.getMessage(), uuid);

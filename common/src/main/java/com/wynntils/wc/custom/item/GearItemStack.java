@@ -327,7 +327,7 @@ public class GearItemStack extends WynnItemStack {
 
         MutableComponent name;
         if (customName == null) {
-            name = new TextComponent(WynnUtils.normalizeBadString(ComponentUtils.getFormatted(getHoverName())));
+            name = new TextComponent(WynnUtils.normalizeBadString(ComponentUtils.getCoded(getHoverName())));
         } else {
             name = customName.copy();
         }

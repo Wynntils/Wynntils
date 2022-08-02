@@ -4,6 +4,7 @@
  */
 package com.wynntils.core;
 
+import com.wynntils.core.chat.ChatManager;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.FeatureRegistry;
@@ -82,16 +83,17 @@ public class WynntilsMod {
         System.setProperty("java.awt.headless", "false");
 
         // Init all managers
-        WebManager.init();
-        ConfigManager.init();
+        ActionBarManager.init();
+        ChatManager.init();
         ClientCommandManager.init();
-        KeyManager.init();
         CompassManager.init();
-        ScoreboardManager.init();
+        ConfigManager.init();
+        FeatureRegistry.init();
+        KeyManager.init();
         ModelLoader.init();
         OverlayManager.init();
-        ActionBarManager.init();
-        FeatureRegistry.init();
+        ScoreboardManager.init();
+        WebManager.init();
     }
 
     private static void parseVersion(String versionString) {
