@@ -9,7 +9,9 @@ import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
+import java.util.Arrays;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 
 public class DungeonKeyProperty extends ItemProperty implements TextOverlayProperty {
@@ -32,7 +34,9 @@ public class DungeonKeyProperty extends ItemProperty implements TextOverlayPrope
                 textColor = CORRUPTED_COLOR;
             }
 
-            dungeon = keyMatcher.group(1).substring(0, 1);
+            dungeon = Arrays.stream(keyMatcher.group(1).split(" ", 2))
+                    .map(s -> s.substring(0, 1))
+                    .collect(Collectors.joining());
         }
 
         textOverlay = new TextOverlay(dungeon, textColor, ItemTextOverlayFeature.dungeonKeyShadow, -1, 1, 1f);
