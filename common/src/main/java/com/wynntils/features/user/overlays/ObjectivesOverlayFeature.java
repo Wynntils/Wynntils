@@ -24,13 +24,17 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
 import com.wynntils.wc.utils.scoreboard.objectives.WynnObjective;
+import java.util.List;
 
 public class ObjectivesOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay guildObjectiveOverlay = new GuildObjectiveOverlay();
 
-    public static class GuildObjectiveOverlay extends ObjectiveOverlay {
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
+
+    public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
 
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColour")
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
@@ -43,7 +47,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
-                    new GuiScaledOverlaySize(150, 30));
+                    new GuiScaledOverlaySize(150, 30),
+                    HorizontalAlignment.Left,
+                    VerticalAlignment.Middle);
         }
 
         @Override
@@ -61,15 +67,18 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 }
             }
 
+            final float SPACE_BETWEEN = 10;
+
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;
-            final float renderedHeight = 5 + barHeight * (this.getWidth() / barWidth + 1);
+            final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
+            final float renderedHeight = 9 + actualBarHeight;
 
-            float renderY =
-                    switch (this.getRenderVerticalAlignment()) {
-                        case Top -> this.getRenderY();
-                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+            float renderY = this.getRenderY()
+                    + switch (this.getRenderVerticalAlignment()) {
+                        case Top -> 0;
+                        case Middle -> (this.getHeight() - renderedHeight) / 2f;
+                        case Bottom -> this.getHeight() - renderedHeight;
                     };
 
             FontRenderer.getInstance()
@@ -90,9 +99,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         poseStack,
                         Texture.BUBBLE_BAR,
                         this.getRenderX(),
-                        renderY + 10,
+                        renderY + SPACE_BETWEEN,
                         this.getRenderX() + this.getWidth(),
-                        renderY + 10 + barHeight * (this.getWidth() / barWidth),
+                        renderY + SPACE_BETWEEN + actualBarHeight,
                         0,
                         objectivesTexture.yOffset,
                         barWidth,
@@ -110,7 +119,94 @@ public class ObjectivesOverlayFeature extends UserFeature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public abstract static class ObjectiveOverlay extends Overlay {
+    public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
+
+        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColour")
+        public CustomColor textColor = CommonColors.GREEN;
+
+        public DailyObjectiveOverlay() {
+            super(
+                    new OverlayPosition(
+                            -35.5f,
+                            -5.0f,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Right,
+                            OverlayPosition.AnchorSection.BottomRight),
+                    new GuiScaledOverlaySize(150, 100),
+                    HorizontalAlignment.Left,
+                    VerticalAlignment.Bottom);
+        }
+
+        @Override
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            List<WynnObjective> objectives = ObjectiveManager.getObjectives();
+
+            final float SPACE_BETWEEN = 10;
+
+            final int barHeight = this.enableProgressBar ? 5 : 0;
+            final int barWidth = 182;
+            final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
+            final float renderedHeight = SPACE_BETWEEN + 9 + actualBarHeight;
+            final float fullHeight = renderedHeight * objectives.size() - SPACE_BETWEEN;
+
+            float offsetY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> 0;
+                        case Middle -> (this.getHeight() - fullHeight) / 2f;
+                        case Bottom -> this.getHeight() - fullHeight;
+                    };
+
+            for (WynnObjective objective : objectives) {
+                if (this.hideOnInactivity) {
+                    final int maxInactivityMs = 3000;
+                    if (objective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
+                        continue;
+                    }
+                }
+
+                float renderY = offsetY + this.getRenderY();
+
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore(),
+                                this.getRenderX(),
+                                this.getRenderX() + this.getWidth(),
+                                renderY,
+                                0,
+                                this.textColor,
+                                FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
+                                this.textShadow);
+
+                if (this.enableProgressBar) {
+                    RenderUtils.drawProgressBar(
+                            poseStack,
+                            Texture.EXPERIENCE_BAR,
+                            this.getRenderX(),
+                            renderY + SPACE_BETWEEN,
+                            this.getRenderX() + this.getWidth(),
+                            renderY + SPACE_BETWEEN + actualBarHeight,
+                            0,
+                            objectivesTexture.yOffset,
+                            barWidth,
+                            objectivesTexture.yOffset + 10,
+                            objective.getProgress());
+                }
+
+                offsetY += renderedHeight;
+            }
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            render(poseStack, partialTicks, window);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+    }
+
+    public abstract static class ObjectiveOverlayBase extends Overlay {
 
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public boolean hideOnInactivity = false;
@@ -124,8 +220,12 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        public ObjectiveOverlay(OverlayPosition position, OverlaySize size) {
-            super(position, size);
+        public ObjectiveOverlayBase(
+                OverlayPosition position,
+                OverlaySize size,
+                HorizontalAlignment horizontalAlignmentOverride,
+                VerticalAlignment verticalAlignmentOverride) {
+            super(position, size, horizontalAlignmentOverride, verticalAlignmentOverride);
         }
     }
 

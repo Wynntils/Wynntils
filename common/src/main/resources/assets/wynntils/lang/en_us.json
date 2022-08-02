@@ -185,6 +185,7 @@
   "feature.wynntils.mythicBlocker.name": "Mythic Chest Blocker Feature",
   "feature.wynntils.notifications.name": "Notifications Feature",
   "feature.wynntils.objectivesOverlay.name": "Objectives Overlay Feature",
+  "feature.wynntils.objectivesOverlay.overlay.dailyObjective.name": "Daily Objective",
   "feature.wynntils.objectivesOverlay.overlay.guildObjective.name": "Guild Objective",
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar.description": "Should the objectives progress be shown as a bar?",
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar.name": "Enable Objectives Bar",
