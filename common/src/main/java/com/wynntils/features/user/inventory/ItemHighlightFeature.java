@@ -72,6 +72,30 @@ public class ItemHighlightFeature extends UserFeature {
     public static CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
 
     @Config
+    public static boolean zeroStarIngredientHighlightEnabled = true;
+
+    @Config
+    public static CustomColor zeroStarIngredientHighlightColor = new CustomColor(102, 102, 102);
+
+    @Config
+    public static boolean oneStarIngredientHighlightEnabled = true;
+
+    @Config
+    public static CustomColor oneStarIngredientHighlightColor = new CustomColor(255, 247, 153);
+
+    @Config
+    public static boolean twoStarIngredientHighlightEnabled = true;
+
+    @Config
+    public static CustomColor twoStarIngredientHighlightColor = new CustomColor(255, 255, 0);
+
+    @Config
+    public static boolean threeStarIngredientHighlightEnabled = true;
+
+    @Config
+    public static CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
+
+    @Config
     public static boolean cosmeticHighlightEnabled = true;
 
     @Config
