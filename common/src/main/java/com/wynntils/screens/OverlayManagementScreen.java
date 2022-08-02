@@ -376,15 +376,10 @@ public class OverlayManagementScreen extends Screen {
         if (testMode) return false;
 
         switch (selectionMode) {
-            case Corner -> {
-                handleOverlayCornerDrag(button, dragX, dragY);
-            }
-            case Edge -> {
-                handleOverlayEdgeDrag(button, dragX, dragY);
-            }
-            case Area -> {
-                handleOverlayBodyDrag(button, dragX, dragY);
-            }
+            case Corner -> handleOverlayCornerDrag(dragX, dragY);
+            case Edge -> handleOverlayEdgeDrag(dragX, dragY);
+            case Area -> handleOverlayBodyDrag(dragX, dragY);
+            default -> {}
         }
 
         return false;
@@ -400,7 +395,7 @@ public class OverlayManagementScreen extends Screen {
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
     }
 
-    private void handleOverlayEdgeDrag(int button, double dragX, double dragY) {
+    private void handleOverlayEdgeDrag(double dragX, double dragY) {
         if (selectedEdge == null || selectedOverlay == null) {
             return;
         }
@@ -441,7 +436,7 @@ public class OverlayManagementScreen extends Screen {
         }
     }
 
-    private void handleOverlayBodyDrag(int button, double dragX, double dragY) {
+    private void handleOverlayBodyDrag(double dragX, double dragY) {
         if (selectedOverlay == null) {
             return;
         }
@@ -456,7 +451,7 @@ public class OverlayManagementScreen extends Screen {
                 overlay, overlay.getRenderX(), overlay.getRenderY(), (float) dragX, (float) dragY));
     }
 
-    private void handleOverlayCornerDrag(int button, double dragX, double dragY) {
+    private void handleOverlayCornerDrag(double dragX, double dragY) {
         if (selectedCorner == null || selectedOverlay == null) {
             return;
         }
@@ -656,9 +651,7 @@ public class OverlayManagementScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.testSettings"),
-                button -> {
-                    testMode = !testMode;
-                },
+                button -> testMode = !testMode,
                 (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
                         poseStack,
                         renderX,
