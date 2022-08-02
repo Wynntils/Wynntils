@@ -24,6 +24,51 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+/**
+ * The responsibility of this class is to act as the first gateway for incoming
+ * chat messages from Wynncraft. Chat messages in vanilla comes in three types,
+ * CHAT, SYSTEM and GAME_INFO. The latter is the "action bar", and is handled
+ * elsewhere. The difference between CHAT and SYSTEM is almost academic; it looks
+ * the same to users, but Wynntils put different messages in different categories.
+ * Most are CHAT, but a few are SYSTEM. When we pass on the messages, we use the
+ * term "NORMAL" instead of "CHAT".
+ *
+ * Using the regexp patterns in RecipientType, we classify the incoming messages
+ * according to if they are sent to the guild, party, global chat, etc. Messages
+ * that do not match any of these categories are called "info" messages, and are
+ * typically automated responses or announcements. Messages that do match any other
+ * category, are sent by other users (what could really be termed "chat"). The one
+ * exception is guild messages, which can also be e.g. WAR announcements.
+ * (Unfortunately, there is no way to distinguish these from chat sent by a build
+ * member named "WAR", or "INFO", or..., so if these need to be separated, it has
+ * to happen in a later stage).
+ *
+ * The final problem this class needs to resolve is how Wynncraft handles NPC
+ * dialogs. When you enter a NPC dialog, Wynncraft start sending "screens" once a
+ * second or so, which is multi-line messages that repeat the chat history, and add
+ * the NPC dialog at the end. This way, the vanilla client will always show the NPC
+ * dialog, so it is a clever hack in that respect. But it makes our life harder. We
+ * solve this by detecting when a multiline "screen" happens, look for the last
+ * real chat message we received, and splits of the rest as the "newLines". These
+ * are in turn examined, since they can contain the actual NPC dialog, or they can
+ * contain new chat messages sent while the user is in the NPC dialog.
+ *
+ * These new chat messages are the real problematic thing here. They are
+ * differently formatted to be gray and tuned-down, which makes the normal regexp
+ * matching fail. They are also sent as pure strings with formatting codes, instead
+ * of Components as normal one-line chats are. This mean things like hover and
+ * onClick information is lost. (There is nothing we can do about this, it is a
+ * Wynncraft limitation.) We send out these chat messages one by one, as they would
+ * have appeared if we were not in a NPC dialog, but we tag them as BACKGROUND to
+ * signal that formatting is different.
+ *
+ * In a normal vanilla setting, the last "screen" that Wynncraft sends out, the
+ * messages are re-colored to have their normal colors restored (hover and onClick
+ * as still missing, though). Currently, we do not handle this, since it would mean
+ * sending out information that already sent chat lines would need to be updated to
+ * a different formatting. This could be done, but requires extra logic, and most
+ * importantly, a way to update already printed chat lines.
+ */
 public class ChatManager {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
