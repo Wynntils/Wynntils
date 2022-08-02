@@ -153,7 +153,7 @@ public class FontRenderer {
                 lastPart = lastPart.substring(0, index);
                 continue;
             }
-            String thisCode = lastPart.substring(index, index+2);
+            String thisCode = lastPart.substring(index, index + 2);
             if (thisCode.charAt(1) == 'r') {
                 // it's a reset code, we can stop looking
                 break;

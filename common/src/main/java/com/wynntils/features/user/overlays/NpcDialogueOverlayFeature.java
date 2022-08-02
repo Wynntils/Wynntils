@@ -21,12 +21,8 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.NpcDialogEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -143,7 +139,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            String fakeDialogue = "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r";
+            String fakeDialogue =
+                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r";
             // we have to force update every time
             updateTextRenderSettings();
 
