@@ -23,6 +23,7 @@ import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.event.NpcDialogEvent;
+import com.wynntils.wc.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -33,7 +34,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
     private String currentDialogue;
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onNpcDialogue(NpcDialogEvent e) {
         String msg = e.getCodedDialog();
         if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
@@ -44,6 +45,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         currentDialogue = msg;
         // Cancel the event so the chat fallback does not get it
         e.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent e) {
+        currentDialogue = null;
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -68,7 +74,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateTextRenderSettings() {
             renderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                    this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment());
+                    this.getWidth() - 5, CommonColors.WHITE, this.getRenderHorizontalAlignment());
         }
 
         @Override
@@ -109,8 +115,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderX() + 5,
                             this.getRenderY() + 5,
                             dialogueRenderTask,
-                            this.getRenderedWidth() - 15,
-                            this.getRenderedHeight() - 15,
+                            this.getRenderedWidth() - 10,
+                            this.getRenderedHeight() - 10,
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 

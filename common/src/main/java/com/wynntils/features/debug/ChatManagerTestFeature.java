@@ -37,7 +37,7 @@ public class ChatManagerTestFeature extends DebugFeature {
         e.setMessage(new TextComponent(messageType.name() + "-" + recipientType.name() + ": ").append(e.getMessage()));
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onNpcDialog(NpcDialogEvent e) {
         // This fallback is used if the NPC dialogue overlay is disabled
         String codedDialog = e.getCodedDialog();
