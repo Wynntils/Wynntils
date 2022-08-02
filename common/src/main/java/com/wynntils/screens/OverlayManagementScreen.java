@@ -218,7 +218,9 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (testMode) return super.mouseClicked(mouseX, mouseY, button);
+        // Let the buttons of the Screen have priority
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        if (testMode) return false;
 
         userInteracted = true;
         animationLengthRemaining = 0;
@@ -293,15 +295,17 @@ public class OverlayManagementScreen extends Screen {
             return false;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        // Let the buttons of the Screen have priority
+        if (super.mouseReleased(mouseX, mouseY, button)) return true;
         if (testMode) return false;
 
         resetSelection();
-        return super.mouseReleased(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
@@ -367,21 +371,15 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        // Let the buttons of the Screen have priority
+        if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) return true;
         if (testMode) return false;
 
         switch (selectionMode) {
-            case Corner -> {
-                handleOverlayCornerDrag(button, dragX, dragY);
-            }
-            case Edge -> {
-                handleOverlayEdgeDrag(button, dragX, dragY);
-            }
-            case Area -> {
-                handleOverlayBodyDrag(button, dragX, dragY);
-            }
-            default -> {
-                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-            }
+            case Corner -> handleOverlayCornerDrag(dragX, dragY);
+            case Edge -> handleOverlayEdgeDrag(dragX, dragY);
+            case Area -> handleOverlayBodyDrag(dragX, dragY);
+            default -> {}
         }
 
         return false;
@@ -397,7 +395,7 @@ public class OverlayManagementScreen extends Screen {
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
     }
 
-    private void handleOverlayEdgeDrag(int button, double dragX, double dragY) {
+    private void handleOverlayEdgeDrag(double dragX, double dragY) {
         if (selectedEdge == null || selectedOverlay == null) {
             return;
         }
@@ -438,7 +436,7 @@ public class OverlayManagementScreen extends Screen {
         }
     }
 
-    private void handleOverlayBodyDrag(int button, double dragX, double dragY) {
+    private void handleOverlayBodyDrag(double dragX, double dragY) {
         if (selectedOverlay == null) {
             return;
         }
@@ -453,7 +451,7 @@ public class OverlayManagementScreen extends Screen {
                 overlay, overlay.getRenderX(), overlay.getRenderY(), (float) dragX, (float) dragY));
     }
 
-    private void handleOverlayCornerDrag(int button, double dragX, double dragY) {
+    private void handleOverlayCornerDrag(double dragX, double dragY) {
         if (selectedCorner == null || selectedOverlay == null) {
             return;
         }
@@ -653,9 +651,7 @@ public class OverlayManagementScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.testSettings"),
-                button -> {
-                    testMode = !testMode;
-                },
+                button -> testMode = !testMode,
                 (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
                         poseStack,
                         renderX,
