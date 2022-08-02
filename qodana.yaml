@@ -7,3 +7,6 @@ include:
   - name: RedundantLabeledSwitchRuleCodeBlock
 exclude:
   - name: UnstableApiUsage
+  - name: RegExpRepeatedSpace
+  - name: RegExpRedundantEscape
+  - name: UnnecessaryReturn
