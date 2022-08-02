@@ -163,23 +163,24 @@ public class ChatManager {
 
     private static RecipientType getRecipientType(Component message, MessageType messageType) {
         String msg = ComponentUtils.getCoded(message);
+
+        // Check if message match a recipient category
         if (messageType == MessageType.SYSTEM) {
             // System type messages can only be shouts or "info" messages
             // We call this MessageType.NORMAL anyway...
             if (RecipientType.SHOUT.matchPattern(msg, MessageType.NORMAL)) {
                 return RecipientType.SHOUT;
             }
-            return RecipientType.INFO;
         } else {
             for (RecipientType recipientType : RecipientType.values()) {
                 if (recipientType.matchPattern(msg, messageType)) {
                     return recipientType;
                 }
             }
-
-            // If no specific recipient matched, it is an "info" message
-            return RecipientType.INFO;
         }
+
+        // If no specific recipient matched, it is an "info" message
+        return RecipientType.INFO;
     }
 
     /**
@@ -188,9 +189,6 @@ public class ChatManager {
      */
     private static Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
         RecipientType recipientType = getRecipientType(message, messageType);
-
-        System.out.println("Handling chat: " + ComponentUtils.getCoded(message) + ", type:" + messageType
-                + ", recipient: " + recipientType);
 
         ChatMessageReceivedEvent event =
                 new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
@@ -205,10 +203,10 @@ public class ChatManager {
             lastNpcDialog = dialog;
             if (dialog.size() > 1) {
                 WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
-            } else {
-                NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
-                WynntilsMod.getEventBus().post(event);
+                // Keep going anyway and post the first line of the dialog
             }
+            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
+            WynntilsMod.getEventBus().post(event);
         }
     }
 

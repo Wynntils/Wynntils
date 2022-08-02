@@ -21,8 +21,8 @@ public class PouchRedirectFeature extends UserFeature {
     private static final Pattern INGREDIENT_POUCH_PICKUP_PATTERN = Pattern.compile("^§a\\+\\d+ §7.+§a to pouch$");
     private static final Pattern EMERALD_POUCH_PICKUP_PATTERN = Pattern.compile("§a\\+(\\d+)§7 Emeralds? §ato pouch");
 
-    private static long lastEmeraldPouchPickup = 0;
-    private static MessageContainer emeraldPouchMessage = null;
+    private long lastEmeraldPouchPickup = 0;
+    private MessageContainer emeraldPouchMessage = null;
 
     @Config
     public boolean redirectIngredientPouch = true;

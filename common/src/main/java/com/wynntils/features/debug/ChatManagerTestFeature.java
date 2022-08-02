@@ -22,6 +22,12 @@ public class ChatManagerTestFeature extends DebugFeature {
         return super.onEnable();
     }
 
+    @Override
+    protected void onDisable() {
+        ChatManager.disableNpcDialogExtraction();
+        super.onDisable();
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
         RecipientType recipientType = e.getRecipientType();
