@@ -169,10 +169,8 @@ public class ChatManager {
             // We just ignore that part
             if (trailingLine.matches("À+")) {
                 newLines.removeFirst();
-                if (newLines.getFirst().equals("§r")) {
+                while (!newLines.isEmpty() && newLines.getFirst().matches("(§r)?\\s*")) {
                     newLines.removeFirst();
-                } else {
-                    WynntilsMod.warn("Malformed dialog [#2]: " + newLines.getFirst());
                 }
             }
 

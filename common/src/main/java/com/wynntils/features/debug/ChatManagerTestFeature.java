@@ -39,6 +39,7 @@ public class ChatManagerTestFeature extends DebugFeature {
 
     @SubscribeEvent
     public void onNpcDialog(NpcDialogEvent e) {
+        // This fallback is used if the NPC dialogue overlay is disabled
         String codedDialog = e.getCodedDialog();
         if (codedDialog == null) {
             McUtils.sendMessageToClient(new TextComponent("[NPC dialog removed]"));

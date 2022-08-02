@@ -133,10 +133,38 @@ public class FontRenderer {
         List<String> parts = Arrays.stream(StringUtils.wrapTextBySize(text, (int) maxWidth))
                 .filter(s -> !s.isBlank())
                 .toList();
+        String lastPart = "";
         for (int i = 0; i < parts.size(); i++) {
-            String part = parts.get(i);
+            // copy the format codes to this part as well
+            String part = getLastPartCodes(lastPart) + parts.get(i);
+            lastPart = part;
             renderText(poseStack, part, x, y + (i * NEWLINE_OFFSET), customColor, alignment, shadow);
         }
+    }
+
+    private String getLastPartCodes(String lastPart) {
+        if (!lastPart.contains("§")) return "";
+
+        String lastPartCodes = "";
+        int index;
+        while ((index = lastPart.lastIndexOf("§")) != -1) {
+            if (index >= lastPart.length() - 1) {
+                // trailing §, no format code, skip it
+                lastPart = lastPart.substring(0, index);
+                continue;
+            }
+            String thisCode = lastPart.substring(index, index+2);
+            if (thisCode.charAt(1) == 'r') {
+                // it's a reset code, we can stop looking
+                break;
+            }
+            // prepend to codes since we're going backwards
+            lastPartCodes = thisCode + lastPartCodes;
+
+            lastPart = lastPart.substring(0, index);
+        }
+
+        return lastPartCodes;
     }
 
     public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
@@ -196,7 +224,7 @@ public class FontRenderer {
                 poseStack, renderX, renderY, List.of(toRender), width, height, horizontalAlignment, verticalAlignment);
     }
 
-    private float calculateRenderHeight(List<TextRenderTask> toRender) {
+    public float calculateRenderHeight(List<TextRenderTask> toRender) {
         if (toRender.isEmpty()) return 0f;
 
         float height = 0;

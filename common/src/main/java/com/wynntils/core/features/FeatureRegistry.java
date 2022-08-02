@@ -37,6 +37,7 @@ import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.redirects.PouchRedirectFeature;
@@ -164,6 +165,7 @@ public class FeatureRegistry {
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new QuestInfoOverlayFeature());
