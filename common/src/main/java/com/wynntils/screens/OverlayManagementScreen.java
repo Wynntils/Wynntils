@@ -310,7 +310,13 @@ public class OverlayManagementScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (testMode) return false;
+        if (testMode) {
+            if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+                testMode = false;
+            }
+
+            return false;
+        }
 
         userInteracted = true;
         animationLengthRemaining = 0;
