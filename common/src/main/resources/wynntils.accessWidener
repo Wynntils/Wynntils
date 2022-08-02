@@ -1,4 +1,4 @@
-accessWidener v1 named
+accessWidener v2 named
 
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
@@ -15,3 +15,4 @@ accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gu
 accessible method net/minecraft/client/gui/components/ChatComponent addMessage (Lnet/minecraft/network/chat/Component;I)V
 accessible field net/minecraft/world/scores/Scoreboard displayObjectives [Lnet/minecraft/world/scores/Objective;
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
+mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
