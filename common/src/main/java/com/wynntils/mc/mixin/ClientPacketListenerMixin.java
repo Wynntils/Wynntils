@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -164,7 +164,7 @@ public abstract class ClientPacketListenerMixin {
                             target =
                                     "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
     private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
-        ChatReceivedEvent result = EventFactory.onChatReceived(chatType, message);
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
         if (result.isCanceled()) return;
 
         gui.handleChat(chatType, result.getMessage(), uuid);

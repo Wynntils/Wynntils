@@ -193,7 +193,7 @@ public class WynnItemMatchers {
     }
 
     public static Matcher teleportScrollNameMatcher(Component text) {
-        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getFormatted(text)));
+        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getCoded(text)));
     }
 
     public static Matcher teleportScrollLocationMatcher(Component text) {

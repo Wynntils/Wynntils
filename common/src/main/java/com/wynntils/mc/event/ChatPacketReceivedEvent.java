@@ -10,11 +10,11 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ChatReceivedEvent extends Event {
+public class ChatPacketReceivedEvent extends Event {
     private final ChatType type;
     private Component message;
 
-    public ChatReceivedEvent(ChatType type, Component message) {
+    public ChatPacketReceivedEvent(ChatType type, Component message) {
         this.type = type;
         this.message = message;
     }

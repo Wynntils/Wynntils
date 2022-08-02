@@ -11,7 +11,7 @@ import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -246,8 +246,8 @@ public class EventFactory {
         return post(new ChatSentEvent(message));
     }
 
-    public static ChatReceivedEvent onChatReceived(ChatType type, Component message) {
-        return post(new ChatReceivedEvent(type, message));
+    public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
+        return post(new ChatPacketReceivedEvent(type, message));
     }
     // endregion
 

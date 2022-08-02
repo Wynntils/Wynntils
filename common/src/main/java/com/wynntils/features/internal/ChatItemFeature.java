@@ -7,7 +7,7 @@ package com.wynntils.features.internal;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.event.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
@@ -67,7 +67,7 @@ public class ChatItemFeature extends InternalFeature {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatReceivedEvent e) {
+    public void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
