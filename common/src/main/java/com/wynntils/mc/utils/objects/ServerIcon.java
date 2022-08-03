@@ -6,6 +6,7 @@ package com.wynntils.mc.utils.objects;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -40,7 +41,7 @@ public class ServerIcon {
 
         // Try default
         ResourceLocation destination =
-                new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
+                new ResourceLocation("wynntils/servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
@@ -112,8 +113,10 @@ public class ServerIcon {
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
         synchronized (this) {
-            Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
-            serverIconLocation = destination;
+            RenderSystem.recordRenderCall(() -> {
+                Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
+                serverIconLocation = destination;
+            });
         }
     }
 }
