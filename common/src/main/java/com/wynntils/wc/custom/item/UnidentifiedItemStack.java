@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -105,12 +106,15 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
             guesses.append("§7: ");
 
-            guesses.append(itemsForLevel.stream()
+            Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
                     .reduce((i, j) -> i.append(new TextComponent(", ").withStyle(ChatFormatting.GRAY))
-                            .append(j))
-                    .get());
+                            .append(j));
 
-            tooltip.add(guesses);
+            if (itemsComponent.isPresent()) {
+                guesses.append(itemsComponent.get());
+
+                tooltip.add(guesses);
+            }
         }
     }
 
