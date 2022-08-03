@@ -15,6 +15,7 @@ import com.wynntils.wc.custom.item.properties.ConsumableChargeProperty;
 import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
 import com.wynntils.wc.custom.item.properties.DungeonKeyProperty;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
+import com.wynntils.wc.custom.item.properties.IngredientProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.ItemTierProperty;
 import com.wynntils.wc.custom.item.properties.PowderTierProperty;
@@ -62,6 +63,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
         registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
         registerProperty(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
+        registerProperty(WynnItemMatchers::isIngredient, IngredientProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
