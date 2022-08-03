@@ -13,6 +13,7 @@ import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
+    private static ItemGuessFeature INSTANCE;
 
     @Config
     public static boolean showGuessesPrice = true;
@@ -24,6 +25,14 @@ public class ItemGuessFeature extends UserFeature {
 
     @Override
     protected boolean onEnable() {
-        return WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses();
+        if (!WebManager.isItemListLoaded()) {
+            WebManager.tryLoadItemList(); // Can still function if it fails
+        }
+
+        return (WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses());
+    }
+
+    public static ItemGuessFeature getInstance() {
+        return INSTANCE;
     }
 }

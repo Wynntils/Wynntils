@@ -13,9 +13,12 @@ import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.utils.reference.EmeraldSymbols;
 import com.wynntils.wc.utils.WynnUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,17 +30,16 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
 
-    private ItemGuessProfile guessProfile;
-    private ItemTier tier;
-
-    private List<Component> tooltip;
+    private final List<Component> tooltip;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
 
         tooltip = getOriginalTooltip();
 
-        tier = ItemTier.fromComponent(getHoverName());
+        if (!ItemGuessFeature.getInstance().isEnabled()) return;
+
+        ItemTier tier = ItemTier.fromComponent(getHoverName());
         if (tier == null) return;
 
         String itemType = itemName.split(" ", 2)[1];
@@ -55,7 +57,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         if (levelRange == null) return;
         if (WebManager.getItemGuesses() == null || WebManager.getItemsMap() == null) return;
 
-        guessProfile = WebManager.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap;
@@ -68,30 +70,52 @@ public class UnidentifiedItemStack extends WynnItemStack {
         if (rarityMap == null) return;
 
         List<String> items = rarityMap.get(tier);
-        if (items == null) return;
+        if (items == null || items.isEmpty()) return;
 
-        MutableComponent guesses = new TextComponent("");
+        tooltip.add(new TranslatableComponent("feature.wynntils.itemGuess.possibilities"));
+
+        Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
+
         for (String item : items) {
+            ItemProfile profile = WebManager.getItemsMap().get(item);
+
+            int level = (profile != null) ? profile.getLevelRequirement() : -1;
+
             MutableComponent itemDesc = new TextComponent(item).withStyle(tier.getChatFormatting());
 
-            ItemProfile itemProfile = WebManager.getItemsMap().get(item);
-            if (ItemGuessFeature.showGuessesPrice && itemProfile != null) {
-                int level = itemProfile.getLevelRequirement();
-                int itemCost = tier.getItemIdentificationCost(level);
-                itemDesc.append(new TextComponent(" [")
-                        .append(new TextComponent(itemCost + " " + EmeraldSymbols.E_STRING)
+            levelToItems.computeIfAbsent(level, i -> new ArrayList<>()).add(itemDesc);
+        }
+
+        for (Map.Entry<Integer, List<MutableComponent>> entry : levelToItems.entrySet()) {
+            int level = entry.getKey();
+            List<MutableComponent> itemsForLevel = entry.getValue();
+
+            MutableComponent guesses = new TextComponent("    ");
+
+            guesses.append(
+                    new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level != -1 ? level : "?"));
+
+            if (ItemGuessFeature.showGuessesPrice && level != -1) {
+                guesses.append(new TextComponent(" [")
+                        .append(new TextComponent(
+                                        (tier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(new TextComponent("]"))
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            if (guesses.getSiblings().size() > 0)
-                guesses.append(new TextComponent(", ").withStyle(ChatFormatting.GRAY));
+            guesses.append("§7: ");
 
-            guesses.append(itemDesc);
+            Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
+                    .reduce((i, j) -> i.append(new TextComponent(", ").withStyle(ChatFormatting.GRAY))
+                            .append(j));
+
+            if (itemsComponent.isPresent()) {
+                guesses.append(itemsComponent.get());
+
+                tooltip.add(guesses);
+            }
         }
-
-        tooltip.add(new TranslatableComponent("feature.wynntils.itemGuess.possibilities", guesses));
     }
 
     @Override
