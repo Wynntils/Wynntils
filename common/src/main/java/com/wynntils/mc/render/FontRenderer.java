@@ -138,7 +138,7 @@ public class FontRenderer {
             // copy the format codes to this part as well
             String part = getLastPartCodes(lastPart) + parts.get(i);
             lastPart = part;
-            renderText(poseStack, part, x, y + (i * NEWLINE_OFFSET), customColor, alignment, shadow);
+            renderText(poseStack, part, x, y + (i * font.lineHeight), customColor, alignment, shadow);
         }
     }
 
@@ -200,12 +200,15 @@ public class FontRenderer {
             case Right -> renderX += width / McUtils.window().getGuiScale();
         }
 
-        float renderHeight = calculateRenderHeight(toRender);
+        if (verticalAlignment != VerticalAlignment.Top) {
+            float renderHeight = calculateRenderHeight(toRender);
 
-        switch (verticalAlignment) {
-            case Middle -> renderY +=
-                    (height - renderHeight) / 2 / McUtils.window().getGuiScale();
-            case Bottom -> renderY += (height - renderHeight) / McUtils.window().getGuiScale();
+            switch (verticalAlignment) {
+                case Middle -> renderY +=
+                        (height - renderHeight) / 2 / McUtils.window().getGuiScale();
+                case Bottom -> renderY +=
+                        (height - renderHeight) / McUtils.window().getGuiScale();
+            }
         }
 
         renderTexts(poseStack, renderX, renderY, toRender);
@@ -228,9 +231,12 @@ public class FontRenderer {
         if (toRender.isEmpty()) return 0f;
 
         float height = 0;
+        int totalLineCount = 0;
+
         for (TextRenderTask textRenderTask : toRender) {
             if (textRenderTask.getSetting().maxWidth() == 0) {
-                height += font.lineHeight + NEWLINE_OFFSET;
+                height += font.lineHeight;
+                totalLineCount++;
             } else {
                 int lines = 1;
                 if (textRenderTask.getText().contains(" ")) {
@@ -241,11 +247,14 @@ public class FontRenderer {
                             .size();
                 }
 
-                height += lines * font.lineHeight + NEWLINE_OFFSET * (lines - 1);
+                height += lines * font.lineHeight;
+                totalLineCount++;
             }
         }
 
-        return (float) (height / 2 * McUtils.window().getGuiScale());
+        height += (totalLineCount - 1) * NEWLINE_OFFSET;
+
+        return height;
     }
 
     public float calculateRenderHeight(List<String> lines, float maxWidth) {

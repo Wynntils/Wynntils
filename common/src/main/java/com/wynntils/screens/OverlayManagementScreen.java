@@ -508,10 +508,18 @@ public class OverlayManagementScreen extends Screen {
             return new Pair<>(dragX, dragY);
         }
 
+        List<Edge> edgesToSnapTo =
+                switch (OverlayManagementScreen.selectionMode) {
+                    case None -> List.of();
+                    case Corner -> OverlayManagementScreen.selectedCorner.getEdges();
+                    case Edge -> List.of(OverlayManagementScreen.selectedEdge);
+                    case Area -> Arrays.stream(Edge.values()).toList();
+                };
+
         double originalX = dragX;
         double originalY = dragY;
 
-        for (Edge edge : Arrays.stream(Edge.values())
+        for (Edge edge : edgesToSnapTo.stream()
                 .filter(edge -> !edgeAlignmentSnapMap.containsKey(edge))
                 .toList()) {
             Pair<Vec2, Vec2> edgePos = edge.getEdgePos(selectedOverlay);
