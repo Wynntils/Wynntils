@@ -112,8 +112,8 @@ public class ServerIcon {
         Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
         synchronized (this) {
-            serverIconLocation = destination;
             Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
+            serverIconLocation = destination;
         }
     }
 }

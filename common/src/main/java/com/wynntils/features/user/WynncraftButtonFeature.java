@@ -55,6 +55,10 @@ public class WynncraftButtonFeature extends UserFeature {
         public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
+            if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
+                return;
+            }
+
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
             // Insets the icon by 3
