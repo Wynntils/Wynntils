@@ -29,9 +29,6 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
 
-    private ItemGuessProfile guessProfile;
-    private ItemTier tier;
-
     private final List<Component> tooltip;
 
     public UnidentifiedItemStack(ItemStack stack) {
@@ -39,7 +36,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
         tooltip = getOriginalTooltip();
 
-        tier = ItemTier.fromComponent(getHoverName());
+        if (!ItemGuessFeature.getInstance().isEnabled()) return;
+
+        ItemTier tier = ItemTier.fromComponent(getHoverName());
         if (tier == null) return;
 
         String itemType = itemName.split(" ", 2)[1];
@@ -57,7 +56,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         if (levelRange == null) return;
         if (WebManager.getItemGuesses() == null || WebManager.getItemsMap() == null) return;
 
-        guessProfile = WebManager.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap;
@@ -90,10 +89,10 @@ public class UnidentifiedItemStack extends WynnItemStack {
             int level = entry.getKey();
             List<MutableComponent> itemsForLevel = entry.getValue();
 
-            MutableComponent guesses = new TextComponent("  ");
+            MutableComponent guesses = new TextComponent("    ");
 
             guesses.append(
-                    new TranslatableComponent("feature.wynntils.itemGuess.levelline", level != -1 ? level : "?"));
+                    new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level != -1 ? level : "?"));
 
             if (ItemGuessFeature.showGuessesPrice && level != -1) {
                 guesses.append(new TextComponent(" [")
