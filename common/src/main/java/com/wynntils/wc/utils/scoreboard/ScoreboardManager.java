@@ -160,46 +160,48 @@ public class ScoreboardManager {
     };
 
     private static void handleScoreboardReconstruction() {
-        Scoreboard scoreboard = McUtils.player().getScoreboard();
+        McUtils.mc().doRunTask(() -> {
+            Scoreboard scoreboard = McUtils.player().getScoreboard();
 
-        List<String> skipped = new ArrayList<>();
+            List<String> skipped = new ArrayList<>();
 
-        for (Segment parsedSegment : segments) {
-            boolean cancelled = WynntilsMod.getEventBus().post(new ScoreboardSegmentAdditionEvent(parsedSegment));
+            for (Segment parsedSegment : segments) {
+                boolean cancelled = WynntilsMod.getEventBus().post(new ScoreboardSegmentAdditionEvent(parsedSegment));
 
-            if (cancelled) {
-                skipped.addAll(parsedSegment.getScoreboardLines());
-            }
-        }
-
-        final String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
-
-        Objective objective = scoreboard.getObjective(objectiveName);
-
-        if (objective == null) {
-            objective = scoreboard.addObjective(
-                    objectiveName,
-                    ObjectiveCriteria.DUMMY,
-                    new TextComponent("play.wynncraft.com")
-                            .withStyle(ChatFormatting.GOLD)
-                            .withStyle(ChatFormatting.BOLD),
-                    ObjectiveCriteria.RenderType.INTEGER);
-        }
-
-        scoreboard.setDisplayObjective(1, objective);
-
-        for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
-            scoreMap.remove(objective);
-        }
-
-        for (ScoreboardLine scoreboardLine : reconstructedScoreboard) {
-            if (skipped.contains(scoreboardLine.line())) {
-                continue;
+                if (cancelled) {
+                    skipped.addAll(parsedSegment.getScoreboardLines());
+                }
             }
 
-            Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
-            score.setScore(scoreboardLine.index());
-        }
+            final String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
+
+            Objective objective = scoreboard.getObjective(objectiveName);
+
+            if (objective == null) {
+                objective = scoreboard.addObjective(
+                        objectiveName,
+                        ObjectiveCriteria.DUMMY,
+                        new TextComponent("play.wynncraft.com")
+                                .withStyle(ChatFormatting.GOLD)
+                                .withStyle(ChatFormatting.BOLD),
+                        ObjectiveCriteria.RenderType.INTEGER);
+            }
+
+            scoreboard.setDisplayObjective(1, objective);
+
+            for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
+                scoreMap.remove(objective);
+            }
+
+            for (ScoreboardLine scoreboardLine : reconstructedScoreboard) {
+                if (skipped.contains(scoreboardLine.line())) {
+                    continue;
+                }
+
+                Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
+                score.setScore(scoreboardLine.index());
+            }
+        });
     }
 
     private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
