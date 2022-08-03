@@ -7,10 +7,11 @@ package com.wynntils.mc.render;
 import net.minecraft.resources.ResourceLocation;
 
 public enum Texture {
-    HIGHLIGHT("highlight.png", 256, 256),
     ARC("arc.png", 1024, 64),
-    ITEM_LOCK("item_lock.png", 16, 16),
     HEALTH_BAR("bars_health.png", 256, 256),
+    HIGHLIGHT("highlight.png", 256, 256),
+    ITEM_LOCK("item_lock.png", 16, 16),
+    LOOTRUN_LINE("path_arrow.png", 16, 16),
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256);
 
