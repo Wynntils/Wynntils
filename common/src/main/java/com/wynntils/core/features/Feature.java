@@ -237,6 +237,11 @@ public abstract class Feature implements Translatable, Configurable {
             setSatisfied(true);
             WynntilsMod.getEventBus().unregister(this);
         }
+
+        @Override
+        public boolean isSatisfied() {
+            return super.isSatisfied() || WebManager.isSetup();
+        }
     }
 
     public abstract class Condition {
