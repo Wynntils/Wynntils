@@ -176,4 +176,10 @@ public abstract class ClientPacketListenerMixin {
             ci.cancel();
         }
     }
+
+    @Inject(method = "onDisconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
+    public void onDisconnectPre(Component reason, CallbackInfo ci) {
+        // Unexpected disconnect
+        EventFactory.onDisconnect();
+    }
 }
