@@ -83,17 +83,24 @@ public class WynntilsMod {
         System.setProperty("java.awt.headless", "false");
 
         // Init all managers
-        ActionBarManager.init();
-        ChatManager.init();
-        ClientCommandManager.init();
-        CompassManager.init();
+
+        // Pre-Init, needed for later managers - Dependencies for other features
         ConfigManager.init();
-        FeatureRegistry.init();
+        ClientCommandManager.init();
         KeyManager.init();
-        ModelLoader.init();
         OverlayManager.init();
         ScoreboardManager.init();
         WebManager.init();
+
+        // Init - No dependencies
+        ActionBarManager.init();
+        ChatManager.init();
+        CompassManager.init();
+        ModelLoader.init();
+
+        // Forced Post Init, this should be last init in almost any case.
+        FeatureRegistry.init(); // Needs WebManager, ConfigManager (KeyManager, OverlayManager, ClientCommandManager,
+        // ScoreboardManager indirectly)
     }
 
     private static void parseVersion(String versionString) {
