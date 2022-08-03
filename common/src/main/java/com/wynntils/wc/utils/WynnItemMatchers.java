@@ -31,6 +31,7 @@ public class WynnItemMatchers {
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
+    private static final Pattern INGREDIENT_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -180,6 +181,18 @@ public class WynnItemMatchers {
         return amplifierNameMatcher(itemStack.getHoverName()).matches();
     }
 
+    public static boolean isIngredient(ItemStack itemStack) {
+        if (!ingredientMatcher(itemStack.getHoverName()).matches()) {
+            return false;
+        }
+
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            if (ComponentUtils.getCoded(line).contains("§8Crafting Ingredient")) return true;
+        }
+
+        return false;
+    }
+
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -210,5 +223,9 @@ public class WynnItemMatchers {
 
     public static Matcher consumableNameMatcher(Component text) {
         return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    public static Matcher ingredientMatcher(Component text) {
+        return INGREDIENT_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
     }
 }
