@@ -8,6 +8,7 @@ import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.render.Texture;
 import java.io.IOException;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
@@ -26,7 +27,7 @@ public class ServerIcon {
     private final Consumer<ServerIcon> onDone;
 
     static {
-        FALLBACK = new ResourceLocation("textures/misc/unknown_server.png");
+        FALLBACK = Texture.WYNNCRAFT_ICON.resource();
     }
 
     /**
@@ -41,7 +42,7 @@ public class ServerIcon {
 
         // Try default
         ResourceLocation destination =
-                new ResourceLocation("wynntils/servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
+                new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
@@ -55,7 +56,8 @@ public class ServerIcon {
         try {
             ServerStatusPinger pinger = new ServerStatusPinger();
             pinger.pingServer(server, () -> {
-                loadServerIcon(destination);
+                // FIXME: DynamicTexture issues in loadServerIcon
+                // loadServerIcon(destination);
                 onDone();
             });
         } catch (Exception e) {

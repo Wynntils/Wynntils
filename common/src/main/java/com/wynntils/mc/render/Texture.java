@@ -12,7 +12,8 @@ public enum Texture {
     ITEM_LOCK("item_lock.png", 16, 16),
     HEALTH_BAR("bars_health.png", 256, 256),
     MANA_BAR("bars_mana.png", 256, 256),
-    OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256);
+    OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
+    WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64);
 
     private final ResourceLocation resource;
     private final int width;

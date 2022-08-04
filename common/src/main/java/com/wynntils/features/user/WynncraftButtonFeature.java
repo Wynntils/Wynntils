@@ -48,7 +48,7 @@ public class WynncraftButtonFeature extends UserFeature {
             this.serverData = serverData;
             this.backScreen = backScreen;
 
-            this.serverIcon = new ServerIcon(serverData, false);
+            this.serverIcon = new ServerIcon(serverData, true);
         }
 
         @Override
