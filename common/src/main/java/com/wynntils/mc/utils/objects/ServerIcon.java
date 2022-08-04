@@ -42,7 +42,7 @@ public class ServerIcon {
 
         // Try default
         ResourceLocation destination =
-                new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
+                new ResourceLocation("wynntils/servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
         // If someone converts this to get the actual ServerData used by the gui, check
         // ServerData#pinged here and
