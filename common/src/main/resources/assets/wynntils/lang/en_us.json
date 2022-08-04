@@ -241,6 +241,8 @@
   "feature.wynntils.questInfoOverlay.overlay.questInfo.description": "Display the currently tracked quest's info",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.name": "Quest Info Tracker",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName": "Test quest",
+  "feature.wynntils.questInfoOverlay.overlay.questInfo.textShadow.description": "What should the text shadow look like?",
+  "feature.wynntils.questInfoOverlay.overlay.questInfo.textShadow.name": "Text Shadow",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.title": "Tracked Quest Info",
   "feature.wynntils.quickCast.anotherInProgress": "Please wait for the previous quick-cast to finish.",
   "feature.wynntils.quickCast.classMismatch": "You can't use %s weapons!",
