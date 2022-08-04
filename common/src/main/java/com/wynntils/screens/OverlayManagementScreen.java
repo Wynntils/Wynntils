@@ -332,10 +332,11 @@ public class OverlayManagementScreen extends Screen {
 
             VerticalAlignment[] values = VerticalAlignment.values();
             index = (values.length + index) % values.length;
-            selectedOverlay.setVerticalAlignmentOverride(values[index]);
+
+            int finalIndex = index;
             selectedOverlay
                     .getConfigOptionFromString("verticalAlignmentOverride")
-                    .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
+                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
             int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
@@ -347,10 +348,11 @@ public class OverlayManagementScreen extends Screen {
 
             HorizontalAlignment[] values = HorizontalAlignment.values();
             index = (values.length + index) % values.length;
-            selectedOverlay.setHorizontalAlignmentOverride(values[index]);
+
+            int finalIndex = index;
             selectedOverlay
                     .getConfigOptionFromString("horizontalAlignmentOverride")
-                    .ifPresent(configHolder -> selectedOverlay.updateConfigOption(configHolder));
+                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
         } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
             ConfigManager.saveConfig();
             McUtils.mc().setScreen(new OverlaySelectionScreen());
