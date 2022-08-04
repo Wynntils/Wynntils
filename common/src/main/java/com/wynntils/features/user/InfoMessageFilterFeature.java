@@ -37,7 +37,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$");
 
     private static final Pattern LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^§.\\[§r§.[A-Z+]+§r§.\\] §r§..*§r§. has just logged in!$");
+            Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
@@ -54,7 +54,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
     private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^(§r§8)?\\[§r§7[A-Z+]+§r§8\\] §r§7.*§r§8 has just logged in!$");
+            Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
     @Config
     private boolean hideWelcome = true;
@@ -66,7 +66,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean hideLevelUp = true;
 
     @Config
-    private boolean hideLoginAnnouncements = true;
+    private boolean redirectLoginAnnouncements = true;
 
     @Config
     private boolean redirectSoulPoint = true;
@@ -88,9 +88,16 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideLoginAnnouncements) {
-                if (LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
+            if (redirectLoginAnnouncements) {
+                Matcher matcher = LOGIN_ANNOUNCEMENT.matcher(msg);
+                if (matcher.find()) {
                     e.setCanceled(true);
+
+                    String playerName = matcher.group(2);
+                    String rank = matcher.group(1);
+
+                    sendLoginMessage(playerName, rank);
+
                     return;
                 }
             }
@@ -156,9 +163,16 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideLoginAnnouncements) {
-                if (BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
+            if (redirectLoginAnnouncements) {
+                Matcher matcher = BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg);
+                if (matcher.find()) {
                     e.setCanceled(true);
+
+                    String playerName = matcher.group(3);
+                    String rank = matcher.group(2);
+
+                    sendLoginMessage(playerName, rank);
+
                     return;
                 }
             }
@@ -177,6 +191,23 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
+        }
+    }
+
+    private static void sendLoginMessage(String playerName, String rank) {
+        switch (rank) {
+            case "VIP" -> NotificationManager.queueMessage(
+                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN + "[" + ChatFormatting.GREEN + "VIP"
+                            + ChatFormatting.DARK_GREEN + "] " + ChatFormatting.GREEN + playerName);
+            case "VIP+" -> NotificationManager.queueMessage(
+                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_AQUA + "[" + ChatFormatting.AQUA + "VIP+"
+                            + ChatFormatting.DARK_AQUA + "] " + ChatFormatting.AQUA + playerName);
+            case "HERO" -> NotificationManager.queueMessage(
+                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_PURPLE + "[" + ChatFormatting.LIGHT_PURPLE
+                            + "HERO" + ChatFormatting.DARK_PURPLE + "] " + ChatFormatting.LIGHT_PURPLE + playerName);
+            case "CHAMPION" -> NotificationManager.queueMessage(
+                    ChatFormatting.GREEN + "→ " + ChatFormatting.YELLOW + "[" + ChatFormatting.GOLD + "CHAMPION"
+                            + ChatFormatting.YELLOW + "] " + ChatFormatting.GOLD + playerName);
         }
     }
 }
