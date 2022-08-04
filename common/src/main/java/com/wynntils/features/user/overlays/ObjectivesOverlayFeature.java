@@ -22,11 +22,34 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
 import com.wynntils.wc.utils.scoreboard.objectives.WynnObjective;
 import java.util.List;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ObjectivesOverlayFeature extends UserFeature {
+
+    @Config
+    public static boolean disableObjectiveTrackingOnScoreboard = true;
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+        if (disableObjectiveTrackingOnScoreboard) {
+            if (event.getSegment().getType() == ScoreboardManager.SegmentType.GuildObjective
+                    && guildObjectiveOverlay.isEnabled()) {
+                event.setCanceled(true);
+                return;
+            }
+            if (event.getSegment().getType() == ScoreboardManager.SegmentType.Objective
+                    && dailyObjectiveOverlay.isEnabled()) {
+                event.setCanceled(true);
+                return;
+            }
+        }
+    }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay guildObjectiveOverlay = new GuildObjectiveOverlay();
