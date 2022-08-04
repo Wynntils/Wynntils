@@ -19,6 +19,8 @@
   "feature.wynntils.customBars.overlay.manaBar.textColor.name": "Text Color",
   "feature.wynntils.customBars.overlay.manaBar.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.customBars.overlay.manaBar.textShadow.name": "Text Shadow",
+  "feature.wynntils.customBars.shouldDisplayOnActionBar.description": "Should health and mana data be removed from the action bar? This option won't work if the appropriate custom bar is not enabled.",
+  "feature.wynntils.customBars.shouldDisplayOnActionBar.name": "Display Health/Mana on Action Bar",
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override Feature",
   "feature.wynntils.emeraldPouchKeybind.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
   "feature.wynntils.emeraldPouchKeybind.name": "Emerald Pouch Keybind Feature",
