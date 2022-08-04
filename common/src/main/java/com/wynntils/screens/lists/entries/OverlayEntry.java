@@ -22,6 +22,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 
 public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntry> {
+    private static final float PADDING = 2.4f;
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
     private static final CustomColor DISABLED_COLOR = new CustomColor(60, 60, 60, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
@@ -51,7 +52,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
             boolean isMouseOver,
             float partialTick) {
         poseStack.pushPose();
-        poseStack.translate(left, top, 0);
+        poseStack.translate(left + PADDING, top + PADDING, 0);
 
         boolean enabled = OverlayManager.isEnabled(this.overlay);
         int y = index != 0 ? 2 : 0;
@@ -62,9 +63,10 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                 0,
                 y,
                 0,
-                width,
-                height - y);
-        RenderUtils.drawRectBorders(poseStack, enabled ? ENABLED_COLOR : DISABLED_COLOR, 0, y, width, height, 1, 2);
+                width - PADDING,
+                height - y - PADDING);
+        RenderUtils.drawRectBorders(
+                poseStack, enabled ? ENABLED_COLOR : DISABLED_COLOR, 0, y, width - PADDING, height - PADDING, 1, 2);
 
         poseStack.translate(0, 0, 1);
         String translatedName = this.overlay.getTranslatedName();
@@ -75,8 +77,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                         poseStack,
                         translatedName,
                         3,
-                        (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f,
-                        width,
+                        (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
+                        width - PADDING,
                         CommonColors.WHITE,
                         FontRenderer.TextAlignment.LEFT_ALIGNED,
                         FontRenderer.TextShadow.NORMAL);

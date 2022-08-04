@@ -25,6 +25,7 @@ import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wc.utils.ActionBarManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wynntils.wc.utils.WynnUtils;
 
 @FeatureInfo(category = "overlays")
 public class CustomBarsFeature extends UserFeature {
@@ -79,6 +80,8 @@ public class CustomBarsFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
             final float renderedHeight = 10 + healthTexture.getHeight() * (this.getWidth() / 81);
 
             float renderY =
@@ -145,6 +148,8 @@ public class CustomBarsFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
             final float renderedHeight = 10 + manaTexture.getHeight() * (this.getWidth() / 81);
 
             float renderY =
