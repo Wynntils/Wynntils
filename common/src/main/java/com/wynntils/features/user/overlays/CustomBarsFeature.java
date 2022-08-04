@@ -22,10 +22,30 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wc.utils.ActionBarManager;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "overlays")
 public class CustomBarsFeature extends UserFeature {
+
+    @Config
+    public boolean shouldDisplayOnActionBar = false;
+
+    @SubscribeEvent
+    public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
+        if (shouldDisplayOnActionBar || !manaBarOverlay.isEnabled()) return;
+
+        event.setMessage("");
+    }
+
+    @SubscribeEvent
+    public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
+        if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
+
+        event.setMessage("");
+    }
+
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay healthBarOverlay = new HealthBarOverlay();
 
