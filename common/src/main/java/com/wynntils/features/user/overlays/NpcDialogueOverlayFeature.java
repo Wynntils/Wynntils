@@ -85,8 +85,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         private void renderDialogue(PoseStack poseStack, String currentDialogue) {
             List<TextRenderTask> dialogueRenderTask = List.of(new TextRenderTask(currentDialogue, renderSetting));
 
-            // There's something fishy going on with calculateRenderHeight...
-            float textHeight = FontRenderer.getInstance().calculateRenderHeight(dialogueRenderTask) / 2;
+            float textHeight = FontRenderer.getInstance().calculateRenderHeight(dialogueRenderTask);
             // Draw a translucent background
             // TODO: Replace this with a more stylish background?
             RenderUtils.drawRectBorders(
@@ -95,7 +94,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     this.getRenderX(),
                     this.getRenderY(),
                     this.getRenderX() + this.getWidth(),
-                    this.getRenderY() + textHeight,
+                    this.getRenderY() + textHeight + 10,
                     1,
                     1.8f);
             int colorAlphaRect = 45;
@@ -106,7 +105,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     this.getRenderY(),
                     0,
                     this.getWidth(),
-                    textHeight);
+                    textHeight + 10);
 
             // Render the message
             FontRenderer.getInstance()
@@ -126,7 +125,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX() + 5,
-                            this.getRenderY() + 10 + textHeight,
+                            this.getRenderY() + 20 + textHeight,
                             List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)),
                             this.getRenderedWidth() - 15,
                             this.getRenderedHeight() - 15,
