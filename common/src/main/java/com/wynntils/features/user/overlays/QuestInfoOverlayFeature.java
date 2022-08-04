@@ -51,6 +51,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
+
+        @Config
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
         private static final List<CustomColor> TEXT_COLORS =
                 List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
 
@@ -76,7 +80,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 renderTaskList.add(new TextRenderTask(
                         null,
                         TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())));
+                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                                .withTextShadow(this.textShadow)));
             }
             return renderTaskList;
         }
@@ -86,7 +91,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 renderTasks
                         .get(i)
                         .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                                this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment()));
+                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                                .withTextShadow(this.textShadow));
             }
         }
 
