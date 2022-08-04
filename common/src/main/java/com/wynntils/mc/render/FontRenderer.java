@@ -224,7 +224,8 @@ public class FontRenderer {
             }
         }
 
-        height += (totalLineCount - 1) * NEWLINE_OFFSET;
+        // Add additional height for different render tasks, but not for same render task split into multiple lines
+        height += (totalLineCount - 1) * (NEWLINE_OFFSET - font.lineHeight);
 
         return height;
     }
