@@ -193,13 +193,23 @@ public class ScoreboardManager {
                 scoreMap.remove(objective);
             }
 
-            for (ScoreboardLine scoreboardLine : reconstructedScoreboard) {
-                if (skipped.contains(scoreboardLine.line())) {
+            // Filter and skip leading empty lines
+            List<ScoreboardLine> toBeAdded = reconstructedScoreboard.stream()
+                    .filter(scoreboardLine -> !skipped.contains(scoreboardLine.line()))
+                    .dropWhile(scoreboardLine -> scoreboardLine.line().matches("À+"))
+                    .toList();
+
+            boolean allEmpty = true;
+
+            // Skip trailing empty lines
+            for (int i = toBeAdded.size() - 1; i >= 0; i--) {
+                if (allEmpty && toBeAdded.get(i).line().matches("À+")) {
                     continue;
                 }
 
-                Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
-                score.setScore(scoreboardLine.index());
+                allEmpty = false;
+                Score score = scoreboard.getOrCreatePlayerScore(toBeAdded.get(i).line(), objective);
+                score.setScore(toBeAdded.get(i).index());
             }
         });
     }

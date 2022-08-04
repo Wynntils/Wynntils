@@ -204,6 +204,8 @@
   "feature.wynntils.npcDialogueOverlay.name": "NPC Dialogue Overlay Feature",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.description": "Popup displaying the current NPC dialogue",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.name": "NPC Dialogue",
+  "feature.wynntils.objectivesOverlay.disableObjectiveTrackingOnScoreboard.description": "Should objective tracking be removed from the scoreboard? This option only works if the specific objective overlay is turned on.",
+  "feature.wynntils.objectivesOverlay.disableObjectiveTrackingOnScoreboard.name": "Disable Scoreboard Objective Tracking",
   "feature.wynntils.objectivesOverlay.name": "Objectives Overlay Feature",
   "feature.wynntils.objectivesOverlay.overlay.dailyObjective.name": "Daily Objective",
   "feature.wynntils.objectivesOverlay.overlay.guildObjective.name": "Guild Objective",
