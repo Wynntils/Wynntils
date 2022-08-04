@@ -24,8 +24,8 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wc.utils.ActionBarManager;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import com.wynntils.wc.utils.WynnUtils;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "overlays")
 public class CustomBarsFeature extends UserFeature {
