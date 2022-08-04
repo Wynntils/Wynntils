@@ -224,7 +224,8 @@ public class FontRenderer {
             }
         }
 
-        height += (totalLineCount - 1) * NEWLINE_OFFSET;
+        // This would be (totalLineCount - 1) * (NEWLINE_OFFSET - font.lineHeight) -> totalLineCount - 1
+        height += (totalLineCount - 1);
 
         return height;
     }
