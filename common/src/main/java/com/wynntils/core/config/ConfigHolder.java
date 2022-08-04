@@ -160,7 +160,9 @@ public class ConfigHolder {
     }
 
     public void reset() {
-        setValue(defaultValue);
+        // deep copy because writeField set's the field to be our default value instance when resetting, making default
+        // value change with the field's actual value
+        setValue(ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(defaultValue), this.fieldType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }

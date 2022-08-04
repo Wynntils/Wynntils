@@ -48,12 +48,16 @@ public class WynncraftButtonFeature extends UserFeature {
             this.serverData = serverData;
             this.backScreen = backScreen;
 
-            this.serverIcon = new ServerIcon(serverData, true);
+            this.serverIcon = new ServerIcon(serverData, false);
         }
 
         @Override
         public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
+
+            if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
+                return;
+            }
 
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
