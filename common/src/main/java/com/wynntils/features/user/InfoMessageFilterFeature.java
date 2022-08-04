@@ -13,6 +13,7 @@ import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
@@ -77,6 +78,8 @@ public class InfoMessageFilterFeature extends UserFeature {
         String msg = e.getCodedMessage();
         MessageType messageType = e.getMessageType();
 
+        System.out.println("msg = " + msg);
+
         if (messageType == MessageType.NORMAL) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
@@ -125,7 +128,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                 if (m.find()) {
                     e.setCanceled(true);
                     // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(m.group(1));
+                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
                     return;
                 }
             }
