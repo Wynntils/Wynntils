@@ -78,8 +78,6 @@ public class InfoMessageFilterFeature extends UserFeature {
         String msg = e.getCodedMessage();
         MessageType messageType = e.getMessageType();
 
-        System.out.println("msg = " + msg);
-
         if (messageType == MessageType.NORMAL) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
@@ -195,19 +193,31 @@ public class InfoMessageFilterFeature extends UserFeature {
     }
 
     private static void sendLoginMessage(String playerName, String rank) {
+        ChatFormatting primary;
+        ChatFormatting secondary;
         switch (rank) {
-            case "VIP" -> NotificationManager.queueMessage(
-                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN + "[" + ChatFormatting.GREEN + "VIP"
-                            + ChatFormatting.DARK_GREEN + "] " + ChatFormatting.GREEN + playerName);
-            case "VIP+" -> NotificationManager.queueMessage(
-                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_AQUA + "[" + ChatFormatting.AQUA + "VIP+"
-                            + ChatFormatting.DARK_AQUA + "] " + ChatFormatting.AQUA + playerName);
-            case "HERO" -> NotificationManager.queueMessage(
-                    ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_PURPLE + "[" + ChatFormatting.LIGHT_PURPLE
-                            + "HERO" + ChatFormatting.DARK_PURPLE + "] " + ChatFormatting.LIGHT_PURPLE + playerName);
-            case "CHAMPION" -> NotificationManager.queueMessage(
-                    ChatFormatting.GREEN + "→ " + ChatFormatting.YELLOW + "[" + ChatFormatting.GOLD + "CHAMPION"
-                            + ChatFormatting.YELLOW + "] " + ChatFormatting.GOLD + playerName);
+            case "VIP" -> {
+                primary = ChatFormatting.DARK_GREEN;
+                secondary = ChatFormatting.GREEN;
+            }
+            case "VIP+" -> {
+                primary = ChatFormatting.DARK_AQUA;
+                secondary = ChatFormatting.AQUA;
+            }
+            case "HERO" -> {
+                primary = ChatFormatting.DARK_PURPLE;
+                secondary = ChatFormatting.LIGHT_PURPLE;
+            }
+            case "CHAMPION" -> {
+                primary = ChatFormatting.YELLOW;
+                secondary = ChatFormatting.GOLD;
+            }
+            default -> {
+                return;
+            }
         }
+
+        NotificationManager.queueMessage(ChatFormatting.GREEN + "→ " + primary + "[" + secondary + rank + primary + "] "
+                + secondary + playerName);
     }
 }
