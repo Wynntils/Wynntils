@@ -62,16 +62,16 @@ public class FontRenderer {
             default:
                 switch (shadow) {
                     case OUTLINE:
-                        for (int i = -1; i <= 1; i++) {
-                            for (int j = -1; j <= 1; j++) {
-                                font.draw(
-                                        poseStack,
-                                        ChatFormatting.stripFormatting(text),
-                                        x + i,
-                                        y + j,
-                                        SHADOW_COLOR.withAlpha(customColor.a).asInt());
-                            }
-                        }
+                        int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
+                        String strippedText = ChatFormatting.stripFormatting(text);
+
+                        // draw outline behind text
+                        font.draw(poseStack, strippedText, x, y, shadowColor);
+                        font.draw(poseStack, strippedText, x + 1, y, shadowColor);
+                        font.draw(poseStack, strippedText, x - 1, y, shadowColor);
+                        font.draw(poseStack, strippedText, x, y + 1, shadowColor);
+                        font.draw(poseStack, strippedText, x, y - 1, shadowColor);
+
                         return font.draw(poseStack, text, x, y, customColor.asInt());
                     case NORMAL:
                         return font.drawShadow(poseStack, text, x, y, customColor.asInt());
