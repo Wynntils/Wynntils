@@ -6,8 +6,8 @@ package com.wynntils.wc.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class ActionBarMessageUpdateEvent extends Event {
-    private final String message;
+public abstract class ActionBarMessageUpdateEvent extends Event {
+    private String message;
 
     public ActionBarMessageUpdateEvent(String message) {
         this.message = message;
@@ -15,5 +15,28 @@ public class ActionBarMessageUpdateEvent extends Event {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    // Center string for coords, string, etc
+    public static class ActionText extends ActionBarMessageUpdateEvent {
+        public ActionText(String message) {
+            super(message);
+        }
+    }
+
+    public static class HealthText extends ActionBarMessageUpdateEvent {
+        public HealthText(String message) {
+            super(message);
+        }
+    }
+
+    public static class ManaText extends ActionBarMessageUpdateEvent {
+        public ManaText(String message) {
+            super(message);
+        }
     }
 }
