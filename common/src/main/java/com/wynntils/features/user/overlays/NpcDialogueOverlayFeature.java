@@ -87,16 +87,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             float textHeight = FontRenderer.getInstance().calculateRenderHeight(dialogueRenderTask);
             // Draw a translucent background
-            // TODO: Replace this with a more stylish background?
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.DARK_GRAY,
-                    this.getRenderX(),
-                    this.getRenderY(),
-                    this.getRenderX() + this.getWidth(),
-                    this.getRenderY() + textHeight + 10,
-                    1,
-                    1.8f);
             int colorAlphaRect = 45;
             RenderUtils.drawRect(
                     poseStack,
