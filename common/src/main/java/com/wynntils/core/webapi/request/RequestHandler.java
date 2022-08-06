@@ -175,6 +175,7 @@ public class RequestHandler {
                             req.onError();
                         }
                     } else {
+                        WynntilsMod.warn("Unable to satisfy request");
                         req.onError();
                     }
                 }

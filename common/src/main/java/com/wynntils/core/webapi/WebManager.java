@@ -246,6 +246,8 @@ public class WebManager {
 
         final File mapDirectory = new File(API_CACHE_ROOT, "map");
 
+        mapDirectory.mkdirs();
+
         final CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         handler.addAndDispatchAsync(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
@@ -264,6 +266,7 @@ public class WebManager {
                         try (FileInputStream in = new FileInputStream(mapFile)) {
                             nativeImage = NativeImage.read(in);
                         } catch (IOException e) {
+                            e.printStackTrace();
                             result.complete(false);
                             return true;
                         }
@@ -282,13 +285,15 @@ public class WebManager {
                     synchronized (RequestHandler.class) {
                         handler.addAndDispatch(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
                                 .onError(() -> result.complete(false))
+                                .useCacheAsBackup()
                                 .handle(bytes -> {
                                     NativeImage nativeImage;
 
                                     try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
                                         nativeImage = NativeImage.read(in);
-                                        nativeImage.writeToFile(mapDirectory); // cache
+                                        nativeImage.writeToFile(mapFile); // cache
                                     } catch (IOException e) {
+                                        e.printStackTrace();
                                         result.complete(false);
                                         return true;
                                     }
