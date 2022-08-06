@@ -66,9 +66,6 @@ public class LootrunUtils {
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
 
-    private static final int ACTIVE_COLOR = ChatFormatting.AQUA.getColor();
-    private static final int RECORDING_COLOR = 0xff0000;
-
     private static LootrunState state = LootrunState.DISABLED;
 
     private static LootrunInstance lootrun = null;
@@ -91,8 +88,8 @@ public class LootrunUtils {
     }
 
     public static void render(PoseStack poseStack) {
-        renderLootrun(poseStack, lootrun, ACTIVE_COLOR);
-        renderLootrun(poseStack, recordingCompiled, RECORDING_COLOR);
+        renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColour.asInt());
+        renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColour.asInt());
     }
 
     private static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
@@ -137,7 +134,7 @@ public class LootrunUtils {
                     renderChests(poseStack, lootrun, color, source, chunkLong);
                 }
 
-                if (lootrun.notes().containsKey(chunkLong)) {
+                if (lootrun.notes().containsKey(chunkLong) && LootrunFeature.INSTANCE.showNotes) {
                     renderNotes(poseStack, lootrun, color, source, chunkLong);
                 }
             }
@@ -204,8 +201,17 @@ public class LootrunUtils {
         Level level = McUtils.mc().level;
         if (level == null) return;
 
+        renderNonTexturedLootrunPoints(poseStack, source, locations, level, CustomRenderType.LOOTRUN_LINE);
+    }
+
+    private static void renderNonTexturedLootrunPoints(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource source,
+            List<ColoredPath> locations,
+            Level level,
+            RenderType renderType) {
         for (ColoredPath locationsInRoute : locations) {
-            VertexConsumer consumer = source.getBuffer(CustomRenderType.LOOTRUN_LINE);
+            VertexConsumer consumer = source.getBuffer(renderType);
             Matrix4f lastMatrix = poseStack.last().pose();
             boolean sourceBatchEnded = false;
 
@@ -227,7 +233,7 @@ public class LootrunUtils {
                     if (blockValidness == BlockValidness.VALID) {
                         pauseDraw = false;
                         if (sourceBatchEnded) {
-                            consumer = source.getBuffer(CustomRenderType.LOOTRUN_LINE);
+                            consumer = source.getBuffer(renderType);
                             sourceBatchEnded = false;
                         }
                         renderQueuedPoints(consumer, lastMatrix, toRender);
@@ -321,7 +327,7 @@ public class LootrunUtils {
         if (recording != null) {
             recordingInformation.setDirty(true);
         } else if (uncompiled != null) {
-            lootrun = compile(uncompiled);
+            lootrun = compile(uncompiled, false);
             if (saveToFile && uncompiled.file() != null) {
                 LootrunSaveResult lootrunSaveResult =
                         trySaveCurrentLootrun(uncompiled.file().getName());
@@ -343,8 +349,8 @@ public class LootrunUtils {
         return 1;
     }
 
-    public static LootrunInstance compile(LootrunUncompiled uncompiled) {
-        Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path());
+    public static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+        Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
@@ -406,45 +412,64 @@ public class LootrunUtils {
         return result;
     }
 
-    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw) {
+    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw, boolean recording) {
         float sampleRate = 10f;
+
         List<List<Vec3>> sampled =
                 sample(raw, sampleRate).stream().map(Path::points).toList();
         List<Vec3> vec3s = sampled.stream().flatMap(List::stream).toList();
+
         ChunkPos lastChunkPos = null;
         ColoredPath locationsList = new ColoredPath(new ArrayList<>());
+
         Iterator<Integer> colorIterator = COLORS.iterator();
-        Integer currentColor = null;
         Integer nextColor = colorIterator.next();
+        Integer currentColor = nextColor;
+
         float differenceRed = 0;
         float differenceGreen = 0;
         float differenceBlue = 0;
+
         for (int i = 0; i < vec3s.size(); i++) {
             Vec3 location = vec3s.get(i);
-            int cycleDistance = 20;
-            int cycle = 10 * cycleDistance;
-            int parts = i % cycle;
-            float done = (float) parts / (float) cycle;
-            int usedColor;
-            if (parts == 0) {
-                currentColor = nextColor;
-                if (!colorIterator.hasNext()) {
-                    colorIterator = COLORS.iterator();
-                }
-                nextColor = colorIterator.next();
-                differenceRed = (float) (FastColor.ARGB32.red(nextColor) - FastColor.ARGB32.red(currentColor));
-                differenceGreen = (float) (FastColor.ARGB32.green(nextColor) - FastColor.ARGB32.green(currentColor));
-                differenceBlue = (float) (FastColor.ARGB32.blue(nextColor) - FastColor.ARGB32.blue(currentColor));
-                usedColor = currentColor;
-            } else {
-                usedColor = currentColor;
-                usedColor += (0x010000) * (int) (differenceRed * done);
-                usedColor += (0x000100) * (int) (differenceGreen * done);
-                usedColor += (int) (differenceBlue * done);
-            }
 
-            locationsList.points().add(new ColoredPoint(location, usedColor | 0xff000000));
+            if (LootrunFeature.INSTANCE.rainbowLootRun && !recording) {
+                int cycleDistance = LootrunFeature.INSTANCE.cycleDistance;
+                int cycle = 10 * cycleDistance;
+                int parts = i % cycle;
+                float done = (float) parts / (float) cycle;
+
+                int usedColor;
+                if (parts == 0) {
+                    currentColor = nextColor;
+                    if (!colorIterator.hasNext()) {
+                        colorIterator = COLORS.iterator();
+                    }
+                    nextColor = colorIterator.next();
+                    differenceRed = (float) (FastColor.ARGB32.red(nextColor) - FastColor.ARGB32.red(currentColor));
+                    differenceGreen =
+                            (float) (FastColor.ARGB32.green(nextColor) - FastColor.ARGB32.green(currentColor));
+                    differenceBlue = (float) (FastColor.ARGB32.blue(nextColor) - FastColor.ARGB32.blue(currentColor));
+                    usedColor = currentColor;
+                } else {
+                    usedColor = currentColor;
+                    usedColor += (0x010000) * (int) (differenceRed * done);
+                    usedColor += (0x000100) * (int) (differenceGreen * done);
+                    usedColor += (int) (differenceBlue * done);
+                }
+
+                locationsList.points().add(new ColoredPoint(location, usedColor | 0xff000000));
+            } else {
+                locationsList
+                        .points()
+                        .add(new ColoredPoint(
+                                location,
+                                recording
+                                        ? LootrunFeature.INSTANCE.recordingPathColour.asInt()
+                                        : LootrunFeature.INSTANCE.activePathColour.asInt()));
+            }
         }
+
         ColoredPath lastLocationList = null;
         Long2ObjectMap<List<ColoredPath>> sampleByChunk = new Long2ObjectOpenHashMap<>();
         for (int i = 0; i < locationsList.points().size(); i++) {
@@ -564,7 +589,7 @@ public class LootrunUtils {
                 file = new FileReader(lootrunFile);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
-                LootrunUtils.lootrun = compile(uncompiled);
+                LootrunUtils.lootrun = compile(uncompiled, false);
                 state = LootrunState.LOADED;
                 enableFeature();
                 file.close();
@@ -683,7 +708,7 @@ public class LootrunUtils {
             }
 
             if (recordingInformation.isDirty()) {
-                recordingCompiled = compile(recording);
+                recordingCompiled = compile(recording, true);
                 recordingInformation.setDirty(false);
             }
         }
