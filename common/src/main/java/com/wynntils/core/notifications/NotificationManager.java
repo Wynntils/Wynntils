@@ -19,7 +19,7 @@ public class NotificationManager {
     }
 
     public static MessageContainer queueMessage(Component message) {
-        return queueMessage(new TextRenderTask(ComponentUtils.getUnformatted(message), TextRenderSetting.DEFAULT));
+        return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
     }
 
     public static MessageContainer queueMessage(TextRenderTask message) {
