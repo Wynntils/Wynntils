@@ -47,7 +47,6 @@ public class MapProfile {
             mapResource = new ResourceLocation("wynntils", "main-map.png");
 
             McUtils.mc().getTextureManager().register(mapResource, texture);
-
         }
 
         return mapResource;

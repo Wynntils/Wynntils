@@ -45,7 +45,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
@@ -270,7 +269,11 @@ public class WebManager {
                                     nativeImage = NativeImage.read(in);
 
                                     map = new MapProfile(
-                                            new DynamicTexture(nativeImage), rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+                                            new DynamicTexture(nativeImage),
+                                            rightX,
+                                            rightZ,
+                                            nativeImage.getWidth(),
+                                            nativeImage.getHeight());
                                     result.complete(true);
                                 } catch (IOException e) {
                                     WynntilsMod.info("IOException occured while loading map image");
