@@ -25,33 +25,6 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
-      - name: Cache Gradle Jars
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-jars-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-jars-
-          path: |
-            /home/runner/.gradle/caches/jars-*/*
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-deps-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-deps-
-          path: |
-            /home/runner/.gradle/caches/modules-*/files-*/*/*/*/*
-
-      - name: Cache Remapped Minecraft
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-loom-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-loom-
-          path: |
-            ~/.gradle
-
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
@@ -78,33 +51,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
-
-      - name: Cache Gradle Jars
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-jars-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-jars-
-          path: |
-            /home/runner/.gradle/caches/jars-*/*
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-deps-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-deps-
-          path: |
-            /home/runner/.gradle/caches/modules-*/files-*/*/*/*/*
-
-      - name: Cache Remapped Minecraft
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-gradle-caches-loom-
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-loom-
-          path: |
-            ~/.gradle
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
