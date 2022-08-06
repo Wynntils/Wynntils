@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: 17
@@ -29,7 +29,7 @@ jobs:
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: spotlessApply
+          arguments: spotlessApply --build-cache
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
@@ -57,4 +57,4 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -x spotlessCheck --no-daemon
+          arguments: build -x spotlessCheck --no-daemon --build-cache
