@@ -66,10 +66,10 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean hideLevelUp = true;
 
     @Config
-    private boolean redirectLoginAnnouncements = true;
+    private FilterType loginAnnouncements = FilterType.REDIRECT;
 
     @Config
-    private boolean redirectSoulPoint = true;
+    private FilterType soulPoint = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -86,15 +86,17 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (redirectLoginAnnouncements) {
+            if (loginAnnouncements != FilterType.KEEP) {
                 Matcher matcher = LOGIN_ANNOUNCEMENT.matcher(msg);
                 if (matcher.find()) {
                     e.setCanceled(true);
 
-                    String playerName = matcher.group(2);
-                    String rank = matcher.group(1);
+                    if (loginAnnouncements == FilterType.REDIRECT) {
+                        String playerName = matcher.group(2);
+                        String rank = matcher.group(1);
 
-                    sendLoginMessage(playerName, rank);
+                        sendLoginMessage(playerName, rank);
+                    }
 
                     return;
                 }
@@ -123,7 +125,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (redirectSoulPoint) {
+            if (soulPoint != FilterType.KEEP) {
                 if (SOUL_POINT_1.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
@@ -132,8 +134,10 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
-                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
+                    if (soulPoint == FilterType.REDIRECT) {
+                        // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+                        NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
+                    }
                     return;
                 }
             }
@@ -161,21 +165,23 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (redirectLoginAnnouncements) {
+            if (loginAnnouncements != FilterType.KEEP) {
                 Matcher matcher = BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg);
                 if (matcher.find()) {
                     e.setCanceled(true);
 
-                    String playerName = matcher.group(3);
-                    String rank = matcher.group(2);
+                    if (loginAnnouncements == FilterType.REDIRECT) {
+                        String playerName = matcher.group(3);
+                        String rank = matcher.group(2);
 
-                    sendLoginMessage(playerName, rank);
+                        sendLoginMessage(playerName, rank);
+                    }
 
                     return;
                 }
             }
 
-            if (redirectSoulPoint) {
+            if (soulPoint != FilterType.KEEP) {
                 if (BACKGROUND_SOUL_POINT_1.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
@@ -184,8 +190,11 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = BACKGROUND_SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
-                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(m.group(1));
+
+                    if (soulPoint == FilterType.REDIRECT) {
+                        // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+                        NotificationManager.queueMessage(m.group(1));
+                    }
                     return;
                 }
             }
@@ -219,5 +228,11 @@ public class InfoMessageFilterFeature extends UserFeature {
 
         NotificationManager.queueMessage(ChatFormatting.GREEN + "→ " + primary + "[" + secondary + rank + primary + "] "
                 + secondary + playerName);
+    }
+
+    public enum FilterType {
+        KEEP,
+        HIDE,
+        REDIRECT
     }
 }
