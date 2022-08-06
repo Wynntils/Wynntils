@@ -82,7 +82,6 @@ public class RequestHandler {
         addAndDispatch(req, true);
     }
 
-
     public Thread dispatch(boolean async) {
         List<List<Request>> groupedRequests;
         boolean anyRequests = false;

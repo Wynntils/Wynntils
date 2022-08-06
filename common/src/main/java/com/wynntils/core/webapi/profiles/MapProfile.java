@@ -1,6 +1,9 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.core.webapi.profiles;
 
-import com.mojang.blaze3d.platform.TextureUtil;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapProfile {
@@ -56,5 +59,3 @@ public class MapProfile {
         return imageWidth;
     }
 }
-
-

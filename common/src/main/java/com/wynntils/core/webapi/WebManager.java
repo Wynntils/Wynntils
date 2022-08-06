@@ -19,7 +19,6 @@ import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.EventFactory;
@@ -27,8 +26,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.wc.utils.IdentificationOrderer;
-
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +41,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.ClickEvent;
@@ -52,10 +48,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import org.jetbrains.annotations.Nullable;
-
-import javax.imageio.ImageIO;
 
 /** Provides and loads web content on demand */
 public class WebManager {
@@ -268,7 +261,7 @@ public class WebManager {
                     // hack: Caching is done manually
                     if (mapFile.exists() && new MD5Verification(mapFile).equals(md5)) {
                         NativeImage nativeImage;
-                        try(FileInputStream in = new FileInputStream(mapFile)) {
+                        try (FileInputStream in = new FileInputStream(mapFile)) {
                             nativeImage = NativeImage.read(in);
                         } catch (IOException e) {
                             result.complete(false);
@@ -302,9 +295,12 @@ public class WebManager {
 
                                     ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
 
-                                    McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+                                    McUtils.mc()
+                                            .getTextureManager()
+                                            .register(resource, new DynamicTexture(nativeImage));
 
-                                    map = new MapProfile(resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+                                    map = new MapProfile(
+                                            resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
 
                                     result.complete(true);
                                     return true;
@@ -314,11 +310,9 @@ public class WebManager {
 
                     return true;
                 })
-                .build()
-        );
+                .build());
 
         return result;
-
     }
 
     public static boolean tryReloadApiUrls(boolean async) {
