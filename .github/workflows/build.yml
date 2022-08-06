@@ -28,7 +28,11 @@ jobs:
       - name: Cache Remapped Minecraft
         uses: actions/cache@v3
         with:
-          key: "loom"
+          key: ${{ runner.os }}-gradle-caches-loom-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-loom-${{ env.cache-name }}-
+            ${{ runner.os }}-gradle-caches-loom-
+            ${{ runner.os }}-
           path: |
             ~/.gradle
 
@@ -62,7 +66,11 @@ jobs:
       - name: Cache Remapped Minecraft
         uses: actions/cache@v3
         with:
-          key: "loom"
+          key: ${{ runner.os }}-gradle-caches-loom-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-loom-${{ env.cache-name }}-
+            ${{ runner.os }}-gradle-caches-loom-
+            ${{ runner.os }}-
           path: |
             ~/.gradle
 
