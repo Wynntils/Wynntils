@@ -299,9 +299,7 @@ public class WebManager {
 
                                 ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
 
-                                McUtils.mc()
-                                        .getTextureManager()
-                                        .register(resource, new DynamicTexture(nativeImage));
+                                McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
 
                                 map = new MapProfile(
                                         resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
