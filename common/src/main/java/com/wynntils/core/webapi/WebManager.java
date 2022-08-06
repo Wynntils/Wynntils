@@ -9,21 +9,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
+import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.wc.utils.IdentificationOrderer;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -35,12 +43,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import org.jetbrains.annotations.Nullable;
+
+import javax.imageio.ImageIO;
 
 /** Provides and loads web content on demand */
 public class WebManager {
@@ -66,6 +81,8 @@ public class WebManager {
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static @Nullable WynntilsAccount account = null;
+
+    private static @Nullable MapProfile map = null;
 
     public static void init() {
         tryReloadApiUrls(false);
@@ -129,7 +146,7 @@ public class WebManager {
     public static boolean tryLoadTerritories(RequestHandler handler) {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         String url = apiUrls.get("Athena") + "/cache/get/territoryList";
-        handler.addRequest(new RequestBuilder(url, "territory")
+        handler.addAndDispatch(new RequestBuilder(url, "territory")
                 .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
                 .handleJsonObject(json -> {
                     if (!json.has("territories")) return false;
@@ -146,8 +163,6 @@ public class WebManager {
                     return true;
                 })
                 .build());
-
-        handler.dispatch(false);
 
         return isTerritoryListLoaded();
     }
@@ -170,7 +185,7 @@ public class WebManager {
 
     public static boolean tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
                 .handleJsonObject(json -> {
                     Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
@@ -188,15 +203,13 @@ public class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemGuessesLoaded();
     }
 
     public static boolean tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
                     Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -231,10 +244,81 @@ public class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemListLoaded();
+    }
+
+    public static CompletableFuture<Boolean> tryLoadMap() {
+        if (apiUrls == null || !apiUrls.hasKey("MainMap")) return CompletableFuture.completedFuture(false);
+
+        final File mapDirectory = new File(API_CACHE_ROOT, "map");
+
+        final CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        handler.addAndDispatchAsync(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
+                .cacheTo(new File(mapDirectory, "main-map.txt"))
+                .handleWebReader(reader -> {
+                    double rightX = Double.parseDouble(reader.get("CenterX"));
+                    double rightZ = Double.parseDouble(reader.get("CenterZ"));
+
+                    final String md5 = reader.get("MD5");
+
+                    final File mapFile = new File(mapDirectory, "main-map.png");
+
+                    // hack: Caching is done manually
+                    if (mapFile.exists() && new MD5Verification(mapFile).equals(md5)) {
+                        NativeImage nativeImage;
+                        try(FileInputStream in = new FileInputStream(mapFile)) {
+                            nativeImage = NativeImage.read(in);
+                        } catch (IOException e) {
+                            result.complete(false);
+                            return true;
+                        }
+
+                        ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
+
+                        McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+
+                        map = new MapProfile(resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+
+                        result.complete(true);
+                        return true;
+                    }
+
+                    // TODO DownloaderManager?
+                    synchronized (RequestHandler.class) {
+                        handler.addAndDispatch(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
+                                .onError(() -> result.complete(false))
+                                .handle(bytes -> {
+                                    NativeImage nativeImage;
+
+                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                        nativeImage = NativeImage.read(in);
+                                        nativeImage.writeToFile(mapDirectory); // cache
+                                    } catch (IOException e) {
+                                        result.complete(false);
+                                        return true;
+                                    }
+
+                                    ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
+
+                                    McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+
+                                    map = new MapProfile(resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+
+                                    result.complete(true);
+                                    return true;
+                                })
+                                .build());
+                    }
+
+                    return true;
+                })
+                .build()
+        );
+
+        return result;
+
     }
 
     public static boolean tryReloadApiUrls(boolean async) {
@@ -308,6 +392,10 @@ public class WebManager {
 
     public static boolean isTerritoryListLoaded() {
         return !territories.isEmpty();
+    }
+
+    public static boolean isMapLoaded() {
+        return map != null;
     }
 
     public static @Nullable HashMap<String, ItemGuessProfile> getItemGuesses() {

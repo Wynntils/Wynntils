@@ -61,6 +61,11 @@ public class RequestHandler {
         dispatch(false);
     }
 
+    /** Send all enqueued requests inside of a new thread and return that thread */
+    public Thread dispatchAsync() {
+        return dispatch(true);
+    }
+
     /** Enqueue a new {@link Request} and dispatches it */
     public void addAndDispatch(Request req, boolean async) {
         addRequest(req);
@@ -69,14 +74,14 @@ public class RequestHandler {
 
     /** Enqueue a new {@link Request} and dispatches it */
     public void addAndDispatch(Request req) {
-        addRequest(req);
-        dispatch(false);
+        addAndDispatch(req, false);
     }
 
-    /** Send all enqueued requests inside of a new thread and return that thread */
-    public Thread dispatchAsync() {
-        return dispatch(true);
+    /** Enqueue a new {@link Request} and dispatches it */
+    public void addAndDispatchAsync(Request req) {
+        addAndDispatch(req, true);
     }
+
 
     public Thread dispatch(boolean async) {
         List<List<Request>> groupedRequests;
