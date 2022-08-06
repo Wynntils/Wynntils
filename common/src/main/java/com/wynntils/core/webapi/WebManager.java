@@ -250,7 +250,7 @@ public class WebManager {
 
         final CompletableFuture<Boolean> result = new CompletableFuture<>();
 
-        handler.addAndDispatchAsync(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
                 .cacheTo(new File(mapDirectory, "main-map.txt"))
                 .handleWebReader(reader -> {
                     double rightX = Double.parseDouble(reader.get("CenterX"));
@@ -282,36 +282,34 @@ public class WebManager {
                     }
 
                     // TODO DownloaderManager?
-                    synchronized (RequestHandler.class) {
-                        handler.addAndDispatch(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
-                                .onError(() -> result.complete(false))
-                                .useCacheAsBackup()
-                                .handle(bytes -> {
-                                    NativeImage nativeImage;
+                    handler.addAndDispatchAsync(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
+                            .onError(() -> result.complete(false))
+                            .useCacheAsBackup()
+                            .handle(bytes -> {
+                                NativeImage nativeImage;
 
-                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                        nativeImage = NativeImage.read(in);
-                                        nativeImage.writeToFile(mapFile); // cache
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                        result.complete(false);
-                                        return true;
-                                    }
-
-                                    ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
-
-                                    McUtils.mc()
-                                            .getTextureManager()
-                                            .register(resource, new DynamicTexture(nativeImage));
-
-                                    map = new MapProfile(
-                                            resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
-
-                                    result.complete(true);
+                                try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                    nativeImage = NativeImage.read(in);
+                                    nativeImage.writeToFile(mapFile); // cache
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    result.complete(false);
                                     return true;
-                                })
-                                .build());
-                    }
+                                }
+
+                                ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
+
+                                McUtils.mc()
+                                        .getTextureManager()
+                                        .register(resource, new DynamicTexture(nativeImage));
+
+                                map = new MapProfile(
+                                        resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+
+                                result.complete(true);
+                                return true;
+                            })
+                            .build());
 
                     return true;
                 })
