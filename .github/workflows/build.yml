@@ -25,14 +25,30 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Gradle Jars
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-gradle-caches-jars-
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-jars-
+          path: |
+            /home/runner/.gradle/caches/jars-*/*
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-gradle-caches-deps-
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-deps-
+          path: |
+            /home/runner/.gradle/caches/modules-*/files-*/*/*/*/*
+
       - name: Cache Remapped Minecraft
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-gradle-caches-loom-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
+          key: ${{ runner.os }}-gradle-caches-loom-
           restore-keys: |
-            ${{ runner.os }}-gradle-caches-loom-${{ env.cache-name }}-
             ${{ runner.os }}-gradle-caches-loom-
-            ${{ runner.os }}-
           path: |
             ~/.gradle
 
@@ -63,14 +79,30 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Gradle Jars
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-gradle-caches-jars-
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-jars-
+          path: |
+            /home/runner/.gradle/caches/jars-*/*
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-gradle-caches-deps-
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-deps-
+          path: |
+            /home/runner/.gradle/caches/modules-*/files-*/*/*/*/*
+
       - name: Cache Remapped Minecraft
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-gradle-caches-loom-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
+          key: ${{ runner.os }}-gradle-caches-loom-
           restore-keys: |
-            ${{ runner.os }}-gradle-caches-loom-${{ env.cache-name }}-
             ${{ runner.os }}-gradle-caches-loom-
-            ${{ runner.os }}-
           path: |
             ~/.gradle
 
