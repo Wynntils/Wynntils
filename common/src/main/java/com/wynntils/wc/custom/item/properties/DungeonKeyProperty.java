@@ -5,6 +5,7 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
@@ -39,7 +40,14 @@ public class DungeonKeyProperty extends ItemProperty implements TextOverlayPrope
                     .collect(Collectors.joining());
         }
 
-        textOverlay = new TextOverlay(dungeon, textColor, ItemTextOverlayFeature.dungeonKeyShadow, -1, 1, 1f);
+        textOverlay = new TextOverlay(
+                dungeon,
+                textColor,
+                FontRenderer.TextAlignment.LEFT_ALIGNED,
+                ItemTextOverlayFeature.dungeonKeyShadow,
+                -1,
+                1,
+                1f);
     }
 
     @Override

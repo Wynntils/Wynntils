@@ -98,7 +98,7 @@ public class ItemTextOverlayFeature extends UserFeature {
                             x,
                             y,
                             textOverlay.color(),
-                            FontRenderer.TextAlignment.LEFT_ALIGNED,
+                            textOverlay.alignment(),
                             textOverlay.shadow());
         }
     }

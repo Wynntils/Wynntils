@@ -27,6 +27,8 @@ public class WynnItemMatchers {
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
+
+    private static final Pattern SKILL_POINT_NAME_PATTERN = Pattern.compile("§dUpgrade your §[2ebcf].+?§d skill");
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile(".*§b(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
@@ -161,6 +163,10 @@ public class WynnItemMatchers {
         return powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
+    public static boolean isSkillPoint(ItemStack itemStack) {
+        return skillPointNameMatcher(itemStack.getHoverName()).matches();
+    }
+
     public static boolean isTeleportScroll(ItemStack itemStack) {
         return teleportScrollNameMatcher(itemStack.getHoverName()).matches();
     }
@@ -203,6 +209,10 @@ public class WynnItemMatchers {
 
     public static Matcher powderNameMatcher(Component text) {
         return POWDER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
+    private static Matcher skillPointNameMatcher(Component text) {
+        return SKILL_POINT_NAME_PATTERN.matcher(ComponentUtils.getCoded(text));
     }
 
     public static Matcher teleportScrollNameMatcher(Component text) {

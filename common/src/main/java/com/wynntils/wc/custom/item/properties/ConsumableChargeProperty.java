@@ -5,6 +5,7 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.WynnItemStack;
@@ -27,7 +28,13 @@ public class ConsumableChargeProperty extends ItemProperty implements TextOverla
 
         int xOffset = 17 - McUtils.mc().font.width(charges);
         textOverlay = new TextOverlay(
-                charges, CommonColors.WHITE, ItemTextOverlayFeature.consumableChargeShadow, xOffset, 9, 1f);
+                charges,
+                CommonColors.WHITE,
+                FontRenderer.TextAlignment.LEFT_ALIGNED,
+                ItemTextOverlayFeature.consumableChargeShadow,
+                xOffset,
+                9,
+                1f);
     }
 
     @Override

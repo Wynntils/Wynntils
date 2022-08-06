@@ -19,6 +19,7 @@ import com.wynntils.wc.custom.item.properties.IngredientProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.ItemTierProperty;
 import com.wynntils.wc.custom.item.properties.PowderTierProperty;
+import com.wynntils.wc.custom.item.properties.SkillPointProperty;
 import com.wynntils.wc.custom.item.properties.TeleportScrollProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
@@ -59,6 +60,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
         registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
+        registerProperty(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
         registerProperty(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
         registerProperty(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
         registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
