@@ -25,6 +25,12 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Remapped Minecraft
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle
+
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
@@ -51,6 +57,12 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
+
+      - name: Cache Remapped Minecraft
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
