@@ -232,6 +232,7 @@ public class RequestHandler {
         HttpURLConnection st;
         try {
             st = req.establishConnection();
+            st.setReadTimeout(0);
             if (st.getResponseCode() != 200) {
                 WynntilsMod.warn("Invalid response code for request");
                 st.disconnect();

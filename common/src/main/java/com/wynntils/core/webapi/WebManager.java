@@ -321,7 +321,6 @@ public class WebManager {
                 .handleWebReader(reader -> {
                     apiUrls = reader;
                     if (!setup) {
-                        tryLoadMap();
                         setup = true;
                     }
 
@@ -331,6 +330,8 @@ public class WebManager {
                 .build());
 
         handler.dispatch(async);
+
+        tryLoadMap();
 
         return setup;
     }
