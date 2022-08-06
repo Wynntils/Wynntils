@@ -24,11 +24,9 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.MD5Verification;
 import com.wynntils.wc.utils.IdentificationOrderer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -253,58 +251,32 @@ public class WebManager {
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
                 .cacheTo(new File(mapDirectory, "main-map.txt"))
                 .handleWebReader(reader -> {
+                    // TODO change
                     double rightX = Double.parseDouble(reader.get("CenterX"));
                     double rightZ = Double.parseDouble(reader.get("CenterZ"));
 
                     final String md5 = reader.get("MD5");
 
-                    final File mapFile = new File(mapDirectory, "main-map.png");
-
-                    // hack: Caching is done manually
-                    if (mapFile.exists() && new MD5Verification(mapFile).equals(md5)) {
-                        NativeImage nativeImage;
-                        try (FileInputStream in = new FileInputStream(mapFile)) {
-                            nativeImage = NativeImage.read(in);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            result.complete(false);
-                            return true;
-                        }
-
-                        ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
-
-                        McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
-
-                        map = new MapProfile(resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
-
-                        result.complete(true);
-                        return true;
-                    }
-
                     // TODO DownloaderManager?
                     handler.addAndDispatchAsync(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
                             .onError(() -> result.complete(false))
+                            .cacheTo(new File(mapDirectory, "main-map.png"))
+                            .cacheMD5Validator(md5)
                             .useCacheAsBackup()
                             .handle(bytes -> {
                                 NativeImage nativeImage;
 
                                 try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
                                     nativeImage = NativeImage.read(in);
-                                    nativeImage.writeToFile(mapFile); // cache
+
+                                    map = new MapProfile(
+                                            new DynamicTexture(nativeImage), rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
+                                    result.complete(true);
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    WynntilsMod.info("IOException occured while loading map image");
                                     result.complete(false);
-                                    return true;
                                 }
 
-                                ResourceLocation resource = new ResourceLocation("wynntils", "main-map.png");
-
-                                McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
-
-                                map = new MapProfile(
-                                        resource, rightX, rightZ, nativeImage.getWidth(), nativeImage.getHeight());
-
-                                result.complete(true);
                                 return true;
                             })
                             .build());

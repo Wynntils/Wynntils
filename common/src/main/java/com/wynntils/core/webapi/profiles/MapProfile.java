@@ -4,10 +4,13 @@
  */
 package com.wynntils.core.webapi.profiles;
 
+import com.wynntils.mc.utils.McUtils;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapProfile {
 
+    DynamicTexture texture;
     ResourceLocation mapResource;
 
     double rightX;
@@ -15,8 +18,8 @@ public class MapProfile {
     int imageWidth;
     int imageHeight;
 
-    public MapProfile(ResourceLocation mapResource, double rightX, double rightZ, int imageWidth, int imageHeight) {
-        this.mapResource = mapResource;
+    public MapProfile(DynamicTexture texture, double rightX, double rightZ, int imageWidth, int imageHeight) {
+        this.texture = texture;
         this.rightX = rightX;
         this.rightZ = rightZ;
         this.imageWidth = imageWidth;
@@ -40,6 +43,13 @@ public class MapProfile {
     }
 
     public ResourceLocation resource() {
+        if (mapResource == null) {
+            mapResource = new ResourceLocation("wynntils", "main-map.png");
+
+            McUtils.mc().getTextureManager().register(mapResource, texture);
+
+        }
+
         return mapResource;
     }
 
