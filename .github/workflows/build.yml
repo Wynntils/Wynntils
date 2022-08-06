@@ -24,12 +24,10 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
-          cache: "gradle"
 
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
-          cache: "gradle"
           arguments: spotlessApply --build-cache
 
       - uses: stefanzweifel/git-auto-commit-action@v4
@@ -53,10 +51,8 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
-          cache: "gradle"
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          cache: "gradle"
           arguments: build -x spotlessCheck --no-daemon --build-cache
