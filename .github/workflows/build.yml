@@ -29,7 +29,8 @@ jobs:
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: spotlessApply
+          cache: "gradle"
+          arguments: spotlessApply --build-cache
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
@@ -57,4 +58,5 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -x spotlessCheck --no-daemon
+          cache: "gradle"
+          arguments: build -x spotlessCheck --no-daemon --build-cache
