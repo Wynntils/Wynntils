@@ -90,14 +90,14 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher matcher = LOGIN_ANNOUNCEMENT.matcher(msg);
                 if (matcher.find()) {
                     e.setCanceled(true);
-
-                    if (loginAnnouncements == FilterType.REDIRECT) {
-                        String playerName = matcher.group(2);
-                        String rank = matcher.group(1);
-
-                        sendLoginMessage(playerName, rank);
+                    if (loginAnnouncements == FilterType.HIDE) {
+                        return;
                     }
 
+                    String playerName = matcher.group(2);
+                    String rank = matcher.group(1);
+
+                    sendLoginMessage(playerName, rank);
                     return;
                 }
             }
@@ -134,10 +134,12 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
-                    if (soulPoint == FilterType.REDIRECT) {
-                        // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                        NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
+                    if (soulPoint == FilterType.HIDE) {
+                        return;
                     }
+
+                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
                     return;
                 }
             }
@@ -169,14 +171,14 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher matcher = BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg);
                 if (matcher.find()) {
                     e.setCanceled(true);
-
-                    if (loginAnnouncements == FilterType.REDIRECT) {
-                        String playerName = matcher.group(3);
-                        String rank = matcher.group(2);
-
-                        sendLoginMessage(playerName, rank);
+                    if (loginAnnouncements == FilterType.HIDE) {
+                        return;
                     }
 
+                    String playerName = matcher.group(3);
+                    String rank = matcher.group(2);
+
+                    sendLoginMessage(playerName, rank);
                     return;
                 }
             }
@@ -190,11 +192,12 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = BACKGROUND_SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
-
-                    if (soulPoint == FilterType.REDIRECT) {
-                        // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                        NotificationManager.queueMessage(m.group(1));
+                    if (soulPoint == FilterType.HIDE) {
+                        return;
                     }
+
+                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+                    NotificationManager.queueMessage(m.group(1));
                     return;
                 }
             }
