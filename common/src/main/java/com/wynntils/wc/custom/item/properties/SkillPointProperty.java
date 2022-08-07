@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.custom.item.properties;
 
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -19,6 +20,9 @@ public class SkillPointProperty extends CustomStackCountProperty {
         String pointsLine = ItemUtils.getLore(item).get(3);
         String points = pointsLine.substring(6, pointsLine.indexOf('p') - 1);
 
-        this.setCustomStackCount(points, CustomColor.fromChatFormatting(ChatFormatting.getByCode(colorCode)));
+        this.setCustomStackCount(
+                points,
+                CustomColor.fromChatFormatting(ChatFormatting.getByCode(colorCode)),
+                FontRenderer.TextShadow.NORMAL);
     }
 }

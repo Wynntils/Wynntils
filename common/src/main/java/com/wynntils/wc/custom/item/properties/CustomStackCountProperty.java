@@ -18,9 +18,8 @@ public abstract class CustomStackCountProperty extends ItemProperty implements T
         item.setCount(1);
     }
 
-    protected void setCustomStackCount(String value, CustomColor color) {
-        textOverlay = new TextOverlay(
-                value, color, FontRenderer.TextAlignment.RIGHT_ALIGNED, FontRenderer.TextShadow.NORMAL, 17, 9, 1);
+    protected void setCustomStackCount(String value, CustomColor color, FontRenderer.TextShadow shadow) {
+        textOverlay = new TextOverlay(value, color, FontRenderer.TextAlignment.RIGHT_ALIGNED, shadow, 17, 9, 1);
     }
 
     @Override

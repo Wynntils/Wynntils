@@ -4,6 +4,7 @@
  */
 package com.wynntils.wc.custom.item.properties;
 
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.WynnItemStack;
@@ -14,6 +15,6 @@ public class DailyRewardMultiplierProperty extends CustomStackCountProperty {
         // Multiplier line is always on index 3
         String value = String.valueOf(ItemUtils.getLore(item).get(3).charAt(25));
 
-        this.setCustomStackCount(value, CommonColors.WHITE);
+        this.setCustomStackCount(value, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
     }
 }
