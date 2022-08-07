@@ -32,7 +32,8 @@ public class IdentificationProfile {
 
     public void calculateMinMax() {
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
-            min = max = baseValue;
+            min = baseValue;
+            max = baseValue;
             return;
         }
 

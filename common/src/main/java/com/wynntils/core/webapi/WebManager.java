@@ -42,7 +42,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
-public class WebManager {
+public final class WebManager {
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
@@ -65,6 +65,8 @@ public class WebManager {
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static WynntilsAccount account = null;
+
+    private WebManager() {}
 
     public static void init() {
         tryReloadApiUrls(false);
@@ -208,6 +210,7 @@ public class WebManager {
                     Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
                     materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
+                    // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
                     IdentificationOrderer.INSTANCE =
                             gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 

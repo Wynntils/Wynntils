@@ -29,7 +29,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class RenderUtils {
+public final class RenderUtils {
     // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
     // these colors were chosen to best match how tooltips are displayed in-game
     private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);
@@ -38,6 +38,8 @@ public class RenderUtils {
 
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
+
+    private RenderUtils() {}
 
     // See https://github.com/MinecraftForge/MinecraftForge/issues/8083 as to why this uses TRIANGLE_STRIPS.
     // TLDR: New OpenGL only supports TRIANGLES and Minecraft patched QUADS to be usable ATM, but LINES patch is broken
@@ -689,30 +691,6 @@ public class RenderUtils {
     }
 
     public static void copyImageToClipboard(BufferedImage bi) {
-        class ClipboardImage implements Transferable {
-            private final Image image;
-
-            public ClipboardImage(Image image) {
-                this.image = image;
-            }
-
-            @Override
-            public DataFlavor[] getTransferDataFlavors() {
-                return new DataFlavor[] {DataFlavor.imageFlavor};
-            }
-
-            @Override
-            public boolean isDataFlavorSupported(DataFlavor flavor) {
-                return DataFlavor.imageFlavor.equals(flavor);
-            }
-
-            @Override
-            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-                if (!DataFlavor.imageFlavor.equals(flavor)) throw new UnsupportedFlavorException(flavor);
-                return this.image;
-            }
-        }
-
         ClipboardImage ci = new ClipboardImage(bi);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ci, null);
     }
@@ -729,5 +707,29 @@ public class RenderUtils {
             bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
         }
         return bufferedimage;
+    }
+
+    private static class ClipboardImage implements Transferable {
+        private final Image image;
+
+        public ClipboardImage(Image image) {
+            this.image = image;
+        }
+
+        @Override
+        public DataFlavor[] getTransferDataFlavors() {
+            return new DataFlavor[] {DataFlavor.imageFlavor};
+        }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return DataFlavor.imageFlavor.equals(flavor);
+        }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+            if (!DataFlavor.imageFlavor.equals(flavor)) throw new UnsupportedFlavorException(flavor);
+            return this.image;
+        }
     }
 }

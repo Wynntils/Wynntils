@@ -152,9 +152,10 @@ public class FontRenderer {
     }
 
     public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
+        float currentY = y;
         for (TextRenderTask line : lines) {
-            renderText(poseStack, x, y, line);
-            y += calculateRenderHeight(List.of(line));
+            renderText(poseStack, x, currentY, line);
+            currentY += calculateRenderHeight(List.of(line));
         }
     }
 
