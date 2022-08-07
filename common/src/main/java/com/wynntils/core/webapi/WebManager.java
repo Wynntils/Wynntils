@@ -71,7 +71,7 @@ public class WebManager {
 
     private static WynntilsAccount account = null;
 
-    private static @Nullable MapProfile map = null;
+    private static MapProfile map = null;
 
     public static void init() {
         tryReloadApiUrls(false);
