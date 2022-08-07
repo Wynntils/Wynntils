@@ -19,7 +19,6 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.jetbrains.annotations.NotNull;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class WynncraftButtonFeature extends UserFeature {
@@ -52,7 +51,7 @@ public class WynncraftButtonFeature extends UserFeature {
         }
 
         @Override
-        public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
 
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
