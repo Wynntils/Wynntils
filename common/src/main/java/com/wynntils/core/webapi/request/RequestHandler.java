@@ -268,7 +268,7 @@ public class RequestHandler {
         } catch (IOException e) {
             WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url + ": "
                     + (e instanceof SocketTimeoutException ? "Socket timeout (server may be down)" : e.getMessage()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
             e.printStackTrace();
         }

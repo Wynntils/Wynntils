@@ -157,7 +157,7 @@ public class RequestBuilder {
         this.cacheValidator = data -> {
             try {
                 return validator.test(data);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 WynntilsMod.warn("Unable to validate cache");
                 e.printStackTrace();
                 return false;

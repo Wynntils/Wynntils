@@ -34,7 +34,7 @@ public abstract class OverlaySize {
             this.width = Float.parseFloat(matcher.group(1));
             this.height = Float.parseFloat(matcher.group(2));
         } catch (NumberFormatException exception) {
-            throw new RuntimeException("Failed to parse OverlaySize");
+            throw new RuntimeException("Failed to parse OverlaySize", exception);
         }
     }
 

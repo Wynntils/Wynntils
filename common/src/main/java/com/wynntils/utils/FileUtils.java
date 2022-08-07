@@ -7,7 +7,9 @@ package com.wynntils.utils;
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
 
-public class FileUtils {
+public final class FileUtils {
+    private FileUtils() {}
+
     /**
      * Wraps File#mkdirs with a log output, in case of failure
      */

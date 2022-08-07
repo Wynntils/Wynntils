@@ -79,7 +79,7 @@ public class OverlayManagementScreen extends Screen {
     private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
 
     private SelectionMode selectionMode = SelectionMode.None;
-    private Overlay selectedOverlay;
+    private final Overlay selectedOverlay;
     private Corner selectedCorner = null;
     private Edge selectedEdge = null;
 

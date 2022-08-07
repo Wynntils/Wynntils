@@ -214,10 +214,6 @@ public abstract class Feature implements Translatable, Configurable {
                 .findFirst();
     }
 
-    /** Called when a feature's config option is updated. Called by ConfigHolder */
-    @Override
-    public abstract void updateConfigOption(ConfigHolder configHolder);
-
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 

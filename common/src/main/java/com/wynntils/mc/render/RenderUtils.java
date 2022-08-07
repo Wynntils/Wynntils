@@ -709,7 +709,7 @@ public final class RenderUtils {
         return bufferedimage;
     }
 
-    private static class ClipboardImage implements Transferable {
+    private static final class ClipboardImage implements Transferable {
         private final Image image;
 
         private ClipboardImage(Image image) {

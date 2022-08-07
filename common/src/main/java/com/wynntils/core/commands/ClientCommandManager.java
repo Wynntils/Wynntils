@@ -150,7 +150,7 @@ public final class ClientCommandManager {
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
                 ClientCommandManager.sendError(text);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             TextComponent error =
                     new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             ClientCommandManager.sendError(new TranslatableComponent("command.failed")

@@ -153,7 +153,7 @@ public class ConfigHolder {
 
         try {
             return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
-        } catch (Exception ignored) {
+        } catch (RuntimeException ignored) {
             // Reflection equals does not always work, use deepEquals instead of assuming no change
             // Since deepEquals is already false when we reach this, we can assume change
             return true;

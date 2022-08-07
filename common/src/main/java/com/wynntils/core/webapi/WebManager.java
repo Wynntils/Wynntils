@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -336,7 +337,7 @@ public final class WebManager {
      *     players on it
      * @throws IOException thrown by URLConnection
      */
-    public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
+    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
         if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));

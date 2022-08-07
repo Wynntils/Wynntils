@@ -50,7 +50,7 @@ public class OverlayPosition {
             this.horizontalAlignment = HorizontalAlignment.valueOf(matcher.group(4));
             this.anchorSection = AnchorSection.valueOf(matcher.group(5));
         } catch (IllegalArgumentException exception) {
-            throw new RuntimeException("Failed to parse OverlayPosition");
+            throw new RuntimeException("Failed to parse OverlayPosition", exception);
         }
     }
 

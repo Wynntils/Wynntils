@@ -141,5 +141,4 @@ public class DynamicTag implements Tag {
             return true;
         }
     }
-    ;
 }
