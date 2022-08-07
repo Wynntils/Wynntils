@@ -5,7 +5,6 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
-import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.utils.WynnItemMatchers;
@@ -22,7 +21,7 @@ public class ConsumableChargeProperty extends CustomStackCountProperty {
             charges = consumableMatcher.group(2);
         }
 
-        this.setCustomStackCount(charges, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
+        this.setCustomStackCount(charges, CommonColors.WHITE, ItemTextOverlayFeature.consumableChargeShadow);
     }
 
     @Override
