@@ -260,34 +260,35 @@ public class WebManager {
                     final String md5 = mapData.get("hash").getAsString();
 
                     // TODO DownloaderManager?
-                    handler.addAndDispatchAsync(new RequestBuilder(mapData.get("download").getAsString(), "main_map.png")
-                            .onError(() -> result.complete(false))
-                            .cacheTo(new File(mapDirectory, "main-map.png"))
-                            .cacheMD5Validator(md5)
-                            .useCacheAsBackup()
-                            .handle(bytes -> {
-                                NativeImage nativeImage;
+                    handler.addAndDispatchAsync(
+                            new RequestBuilder(mapData.get("download").getAsString(), "main_map.png")
+                                    .onError(() -> result.complete(false))
+                                    .cacheTo(new File(mapDirectory, "main-map.png"))
+                                    .cacheMD5Validator(md5)
+                                    .useCacheAsBackup()
+                                    .handle(bytes -> {
+                                        NativeImage nativeImage;
 
-                                try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                    nativeImage = NativeImage.read(in);
+                                        try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                            nativeImage = NativeImage.read(in);
 
-                                    map = new MapProfile(
-                                            new DynamicTexture(nativeImage),
-                                            x1,
-                                            z1,
-                                            x2,
-                                            z2,
-                                            nativeImage.getWidth(),
-                                            nativeImage.getHeight());
-                                    result.complete(true);
-                                } catch (IOException e) {
-                                    WynntilsMod.info("IOException occured while loading map image");
-                                    result.complete(false);
-                                }
+                                            map = new MapProfile(
+                                                    new DynamicTexture(nativeImage),
+                                                    x1,
+                                                    z1,
+                                                    x2,
+                                                    z2,
+                                                    nativeImage.getWidth(),
+                                                    nativeImage.getHeight());
+                                            result.complete(true);
+                                        } catch (IOException e) {
+                                            WynntilsMod.info("IOException occured while loading map image");
+                                            result.complete(false);
+                                        }
 
-                                return true;
-                            })
-                            .build());
+                                        return true;
+                                    })
+                                    .build());
 
                     return true;
                 })

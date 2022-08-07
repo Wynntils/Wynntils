@@ -30,7 +30,6 @@ public class MapProfile {
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
 
-
         // Remove this if we ever have non 1 to 1 maps
         assert x2 - x1 == textureWidth;
         assert z2 - z1 == textureHeight;
