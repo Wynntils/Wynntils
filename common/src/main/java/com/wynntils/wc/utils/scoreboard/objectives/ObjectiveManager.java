@@ -77,7 +77,8 @@ public class ObjectiveManager implements ScoreboardHandler {
     }
 
     public static List<WynnObjective> getObjectives() {
-        return WYNN_OBJECTIVES;
+        // Make copy, so we don't have to worry about concurrent modification
+        return new ArrayList<>(WYNN_OBJECTIVES);
     }
 
     @Override
