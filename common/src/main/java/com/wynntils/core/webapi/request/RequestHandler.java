@@ -59,6 +59,11 @@ public class RequestHandler {
         dispatch(false);
     }
 
+    /** Send all enqueued requests inside of a new thread and return that thread */
+    public Thread dispatchAsync() {
+        return dispatch(true);
+    }
+
     /** Enqueue a new {@link Request} and dispatches it */
     public void addAndDispatch(Request req, boolean async) {
         addRequest(req);
@@ -67,13 +72,12 @@ public class RequestHandler {
 
     /** Enqueue a new {@link Request} and dispatches it */
     public void addAndDispatch(Request req) {
-        addRequest(req);
-        dispatch(false);
+        addAndDispatch(req, false);
     }
 
-    /** Send all enqueued requests inside a new thread and return that thread */
-    public Thread dispatchAsync() {
-        return dispatch(true);
+    /** Enqueue a new {@link Request} and dispatches it */
+    public void addAndDispatchAsync(Request req) {
+        addAndDispatch(req, true);
     }
 
     public Thread dispatch(boolean async) {
@@ -143,7 +147,7 @@ public class RequestHandler {
                         }
                     } catch (FileNotFoundException ignore) {
                     } catch (Exception e) {
-                        WynntilsMod.warn("Error occurred whilst trying to use validated cache for " + req.id + " at "
+                        WynntilsMod.warn("Error occurred whilst trying to validate cache for " + req.id + " at "
                                 + req.cacheFile.getPath());
                         e.printStackTrace();
                     }
@@ -161,6 +165,8 @@ public class RequestHandler {
                                 req.onError();
                             }
                         } catch (FileNotFoundException ignore) {
+                            WynntilsMod.warn("Could not find file while trying to use cache as backup");
+                            req.onError();
                         } catch (Exception e) {
                             WynntilsMod.warn("Error occurred whilst trying to use cache for " + req.id + " at "
                                     + req.cacheFile.getPath());
@@ -169,9 +175,11 @@ public class RequestHandler {
                             req.onError();
                         }
                     } else {
+                        WynntilsMod.warn("Request was not satisfied before and using cache as backup is not set");
                         req.onError();
                     }
                 }
+
                 req.currentlyHandling = LoadingPhase.LOADED;
                 return null;
             });
@@ -226,6 +234,7 @@ public class RequestHandler {
         HttpURLConnection st;
         try {
             st = req.establishConnection();
+            st.setReadTimeout(0);
             if (st.getResponseCode() != 200) {
                 WynntilsMod.warn("Invalid response code for request");
                 st.disconnect();

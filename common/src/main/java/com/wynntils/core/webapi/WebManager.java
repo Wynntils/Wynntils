@@ -7,11 +7,15 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
@@ -23,6 +27,7 @@ import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.IdentificationOrderer;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,9 +37,11 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -67,6 +74,8 @@ public final class WebManager {
     private static WynntilsAccount account = null;
 
     private WebManager() {}
+    
+    private static List<MapProfile> maps = null;
 
     public static void init() {
         tryReloadApiUrls(false);
@@ -130,7 +139,7 @@ public final class WebManager {
     public static boolean tryLoadTerritories(RequestHandler handler) {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         String url = apiUrls.get("Athena") + "/cache/get/territoryList";
-        handler.addRequest(new RequestBuilder(url, "territory")
+        handler.addAndDispatch(new RequestBuilder(url, "territory")
                 .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
                 .handleJsonObject(json -> {
                     if (!json.has("territories")) return false;
@@ -147,8 +156,6 @@ public final class WebManager {
                     return true;
                 })
                 .build());
-
-        handler.dispatch(false);
 
         return isTerritoryListLoaded();
     }
@@ -171,7 +178,7 @@ public final class WebManager {
 
     public static boolean tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
                 .handleJsonObject(json -> {
                     Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
@@ -189,15 +196,13 @@ public final class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemGuessesLoaded();
     }
 
     public static boolean tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
                     Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -233,10 +238,76 @@ public final class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemListLoaded();
+    }
+
+    public static CompletableFuture<Boolean> tryLoadMaps() {
+        if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
+
+        File mapDirectory = new File(API_CACHE_ROOT, "maps");
+
+        String url = apiUrls.get("AMainMap");
+
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        handler.addAndDispatch(new RequestBuilder(url, "maps")
+                .cacheTo(new File(mapDirectory, "maps.json"))
+                .handleJson(json -> {
+                    String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
+
+                    JsonArray mapArray = json.getAsJsonArray();
+
+                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
+
+                    for (JsonElement mapData : mapArray) {
+                        JsonObject mapObject = mapData.getAsJsonObject();
+
+                        // Final since used in closure
+                        final int x1 = mapObject.get("x1").getAsInt();
+                        final int z1 = mapObject.get("z1").getAsInt();
+                        final int x2 = mapObject.get("x2").getAsInt();
+                        final int z2 = mapObject.get("z2").getAsInt();
+
+                        final String file = mapObject.get("file").getAsString();
+
+                        String md5 = mapObject.get("hash").getAsString();
+
+                        // TODO DownloaderManager? + Overlay
+                        handler.addRequest(new RequestBuilder(fileBase + file, file)
+                                .cacheTo(new File(mapDirectory, file))
+                                .cacheMD5Validator(md5)
+                                .useCacheAsBackup()
+                                .handle(bytes -> {
+                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                        NativeImage nativeImage = NativeImage.read(in);
+
+                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
+                                    } catch (IOException e) {
+                                        WynntilsMod.info("IOException occurred while loading map image of " + file);
+                                        return false; // don't cache
+                                    }
+
+                                    return true;
+                                })
+                                .build());
+                    }
+
+                    // hacky way to know when handler has finished dispatching
+                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
+                        if (syncList.size() == mapArray.size()) {
+                            result.complete(true);
+                            maps = syncList;
+                        } else {
+                            result.complete(false);
+                        }
+                    });
+
+                    return true;
+                })
+                .build());
+
+        return result;
     }
 
     private static void tryReloadApiUrls(boolean async) {
@@ -254,6 +325,8 @@ public final class WebManager {
                 .build());
 
         handler.dispatch(async);
+
+        tryLoadMaps();
     }
 
     /**
@@ -310,6 +383,10 @@ public final class WebManager {
         return !territories.isEmpty();
     }
 
+    public static boolean isMapLoaded() {
+        return maps != null;
+    }
+
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
@@ -340,6 +417,10 @@ public final class WebManager {
 
     public static HashMap<String, TerritoryProfile> getTerritories() {
         return territories;
+    }
+
+    public static List<MapProfile> getMaps() {
+        return maps;
     }
 
     public static boolean isSetup() {
