@@ -31,7 +31,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ObjectivesOverlayFeature extends UserFeature {
-
     @Config
     public static boolean disableObjectiveTrackingOnScoreboard = true;
 
@@ -58,7 +57,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
-
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColour")
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
 
@@ -143,7 +141,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
-
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColour")
         public CustomColor textColor = CommonColors.GREEN;
 
@@ -230,7 +227,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     public abstract static class ObjectiveOverlayBase extends Overlay {
-
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public boolean hideOnInactivity = false;
 

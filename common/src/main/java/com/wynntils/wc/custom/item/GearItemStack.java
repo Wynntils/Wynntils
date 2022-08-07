@@ -42,7 +42,6 @@ import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
 public class GearItemStack extends WynnItemStack {
-
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
 
@@ -84,8 +83,7 @@ public class GearItemStack extends WynnItemStack {
 
         boolean hasIds = false;
         boolean endOfIDs = false;
-        for (int i = 0; i < lore.size(); i++) {
-            Component loreLine = lore.get(i);
+        for (Component loreLine : lore) {
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
 
             if (unformattedLoreLine.equals("Set Bonus:")) {
@@ -229,7 +227,7 @@ public class GearItemStack extends WynnItemStack {
             for (int i = 0; i < name.length(); i++) {
                 int cycle = 1000;
                 Style color = Style.EMPTY
-                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7) % cycle) / (float) cycle, 0.8F, 0.8F))
+                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7.0f) % cycle) / (float) cycle, 0.8F, 0.8F))
                         .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));

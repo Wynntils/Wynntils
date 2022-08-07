@@ -16,14 +16,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
 public class IdentificationOrderer {
-
     public static IdentificationOrderer INSTANCE = new IdentificationOrderer(null, null, null);
 
-    Map<String, Integer> order = new HashMap<>();
-    ArrayList<String> groups = new ArrayList<>();
-    ArrayList<String> inverted = new ArrayList<>();
+    private final Map<String, Integer> order = new HashMap<>();
+    private final ArrayList<String> groups = new ArrayList<>();
+    private final ArrayList<String> inverted = new ArrayList<>();
 
-    transient Map<Integer, Integer> organizedGroups = null;
+    private transient Map<Integer, Integer> organizedGroups = null;
 
     public IdentificationOrderer(
             Map<String, Integer> idOrders, ArrayList<String> groupRanges, ArrayList<String> inverted) {}

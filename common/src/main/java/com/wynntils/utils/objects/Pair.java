@@ -10,17 +10,12 @@ import java.util.Objects;
  * The Pair Type Holds 1 field of type T and 1 field of type J
  */
 public class Pair<T, J> {
-
-    public T a;
-    public J b;
+    public final T a;
+    public final J b;
 
     public Pair(T a, J b) {
         this.a = a;
         this.b = b;
-    }
-
-    public Pair() {
-        this(null, null);
     }
 
     @Override

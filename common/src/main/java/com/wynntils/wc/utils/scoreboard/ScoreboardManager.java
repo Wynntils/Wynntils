@@ -6,6 +6,7 @@ package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.Pair;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
@@ -39,7 +40,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ScoreboardManager {
-
     private static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
     private static final Pattern QUEST_TRACK_PATTERN = Pattern.compile("Tracked Quest:");
     private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
@@ -221,7 +221,7 @@ public class ScoreboardManager {
 
         for (int i = 0; i < scoreboardCopy.size(); i++) {
             String strippedLine =
-                    ChatFormatting.stripFormatting(scoreboardCopy.get(i).line());
+                    ComponentUtils.stripFormatting(scoreboardCopy.get(i).line());
 
             if (strippedLine == null) {
                 continue;

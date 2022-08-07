@@ -6,13 +6,13 @@ package com.wynntils.mc.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 
 public class FontRenderer {
@@ -63,7 +63,7 @@ public class FontRenderer {
                 switch (shadow) {
                     case OUTLINE:
                         int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                        String strippedText = ChatFormatting.stripFormatting(text);
+                        String strippedText = ComponentUtils.stripFormatting(text);
 
                         // draw outline behind text
                         font.draw(poseStack, strippedText, x, y, shadowColor);
@@ -236,7 +236,6 @@ public class FontRenderer {
         for (TextRenderTask textRenderTask : toRender) {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
-                totalLineCount++;
             } else {
                 int lines = 1;
                 if (textRenderTask.getText().contains(" ")) {
@@ -248,8 +247,8 @@ public class FontRenderer {
                 }
 
                 height += lines * font.lineHeight;
-                totalLineCount++;
             }
+            totalLineCount++;
         }
 
         // Add additional height for different render tasks, but not for same render task split into multiple lines

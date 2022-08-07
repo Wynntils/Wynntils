@@ -28,7 +28,6 @@ import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class ChatItemUtils {
-
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));

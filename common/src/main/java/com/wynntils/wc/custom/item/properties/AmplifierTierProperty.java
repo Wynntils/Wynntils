@@ -6,6 +6,7 @@ package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
@@ -30,7 +31,13 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
                 : "" + MathUtils.integerFromRoman(ampNumeral);
 
         textOverlay = new TextOverlay(
-                text, ItemTier.LEGENDARY.getHighlightColor(), ItemTextOverlayFeature.amplifierTierShadow, -1, 1, 0.75f);
+                text,
+                ItemTier.LEGENDARY.getHighlightColor(),
+                FontRenderer.TextAlignment.LEFT_ALIGNED,
+                ItemTextOverlayFeature.amplifierTierShadow,
+                -1,
+                1,
+                0.75f);
     }
 
     @Override

@@ -29,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
-
     private final List<Component> tooltip;
 
     public UnidentifiedItemStack(ItemStack stack) {

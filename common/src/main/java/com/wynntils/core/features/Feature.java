@@ -33,9 +33,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
-    private List<KeyHolder> keyMappings = new ArrayList<>();
-    private List<ConfigHolder> configOptions = new ArrayList<>();
-    private List<Overlay> overlays = new ArrayList<>();
+    private final List<KeyHolder> keyMappings = new ArrayList<>();
+    private final List<ConfigHolder> configOptions = new ArrayList<>();
+    private final List<Overlay> overlays = new ArrayList<>();
 
     protected boolean enabled = false;
 
@@ -221,7 +221,7 @@ public abstract class Feature implements Translatable, Configurable {
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-    public class WebLoadedCondition extends Condition {
+    public static class WebLoadedCondition extends Condition {
         @Override
         public void init() {
             if (WebManager.isSetup()) {
@@ -244,7 +244,7 @@ public abstract class Feature implements Translatable, Configurable {
         }
     }
 
-    public abstract class Condition {
+    public abstract static class Condition {
         boolean satisfied = false;
 
         public boolean isSatisfied() {

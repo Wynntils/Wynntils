@@ -12,17 +12,16 @@ import java.util.regex.Pattern;
 import net.minecraft.world.phys.Vec2;
 
 public class OverlayPosition {
-
     protected static final Pattern POSITION_PATTERN = Pattern.compile(
             "OverlayPosition\\{verticalOffset=(.+),horizontalOffset=(.+),verticalAlignment=(.+),horizontalAlignment=(.+),anchorSection=(.+)}");
 
-    private float verticalOffset;
-    private float horizontalOffset;
+    private final float verticalOffset;
+    private final float horizontalOffset;
 
-    private VerticalAlignment verticalAlignment;
-    private HorizontalAlignment horizontalAlignment;
+    private final VerticalAlignment verticalAlignment;
+    private final HorizontalAlignment horizontalAlignment;
 
-    private AnchorSection anchorSection;
+    private final AnchorSection anchorSection;
 
     public OverlayPosition(
             float verticalOffset,

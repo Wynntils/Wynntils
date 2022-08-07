@@ -20,7 +20,6 @@ import net.minecraft.world.inventory.InventoryMenu;
  * commonly used. Tags used more often should be moved elsewhere Keep the names short, but distinct.
  */
 public class McUtils {
-
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }

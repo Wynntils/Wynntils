@@ -19,7 +19,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Inventory")
 public class ItemTextOverlayFeature extends UserFeature {
-
     @Config
     public static boolean powderTierEnabled = true;
 
@@ -98,7 +97,7 @@ public class ItemTextOverlayFeature extends UserFeature {
                             x,
                             y,
                             textOverlay.color(),
-                            FontRenderer.TextAlignment.LEFT_ALIGNED,
+                            textOverlay.alignment(),
                             textOverlay.shadow());
         }
     }

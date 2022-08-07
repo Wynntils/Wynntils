@@ -15,7 +15,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class DialogueOptionOverrideFeature extends UserFeature {
-
     @SubscribeEvent
     public void onDialogueKeyPress(KeyInputEvent e) {
         if (!WynnUtils.onWorld() || e.getAction() != 1) return; // Only send packet on presses, not releases

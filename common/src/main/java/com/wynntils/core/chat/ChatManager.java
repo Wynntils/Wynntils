@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -117,7 +116,7 @@ public class ChatManager {
         } else {
             // Figure out what's new since last chat message
             for (String line : lines) {
-                String noCodes = ChatFormatting.stripFormatting(line);
+                String noCodes = ComponentUtils.stripFormatting(line);
                 if (noCodes.equals(lastRealChat)) break;
                 newLines.addLast(line);
             }
@@ -179,7 +178,7 @@ public class ChatManager {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(line -> handleFakeChatLine(line));
+        newChatLines.forEach(ChatManager::handleFakeChatLine);
 
         // Update the new dialog
         handleNpcDialog(dialog);
@@ -198,7 +197,7 @@ public class ChatManager {
     }
 
     private static void saveLastChat(String codedString) {
-        String msg = ChatFormatting.stripFormatting(codedString);
+        String msg = ComponentUtils.stripFormatting(codedString);
         if (!msg.isBlank()) {
             lastRealChat = msg;
         }

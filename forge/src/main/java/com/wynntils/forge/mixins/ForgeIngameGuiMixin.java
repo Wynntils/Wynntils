@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ForgeIngameGui.class)
 public abstract class ForgeIngameGuiMixin {
-
     // This is kinda hacky, but we can't shadow minecraft here,
     // so we have to use the instance.
 

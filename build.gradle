@@ -76,13 +76,18 @@ allprojects {
             // define the steps to apply to Java source code
             importOrder()
             removeUnusedImports()
-            palantirJavaFormat('2.17.0')
+            palantirJavaFormat('2.26.0')
             trimTrailingWhitespace()
             endWithNewline()
             // Custom rule from https://github.com/apache/geode
             custom 'Refuse wildcard imports', {
                 if (it =~ /\nimport .*\*;/) {
                     throw new AssertionError("Do not use wildcard imports.  'spotlessApply' cannot resolve this issue.")
+                }
+            }
+            custom 'Refuse IntelliJ annotations', {
+                if (it =~ /\nimport org\.jetbrains\.annotations\./) {
+                    throw new AssertionError("Do not use IntelliJ annotations.  'spotlessApply' cannot resolve this issue.")
                 }
             }
             licenseHeader '/*\n' +

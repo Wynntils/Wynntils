@@ -17,7 +17,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
-import org.jetbrains.annotations.Nullable;
 
 public class ComponentUtils {
     // Text with formatting codes "§cTest §1Text"
@@ -45,10 +44,9 @@ public class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return ChatFormatting.stripFormatting(component.getString());
+        return ComponentUtils.stripFormatting(component.getString());
     }
 
-    @Nullable
     public static String getCoded(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
@@ -56,7 +54,6 @@ public class ComponentUtils {
         return getCoded(component);
     }
 
-    @Nullable
     public static String getUnformatted(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
@@ -180,6 +177,10 @@ public class ComponentUtils {
         }
 
         return newLore;
+    }
+
+    public static String stripFormatting(String text) {
+        return text == null ? "" : ChatFormatting.stripFormatting(text);
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {

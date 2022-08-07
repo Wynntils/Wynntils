@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.utils.ContainerUtils;
@@ -23,7 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 public class LootrunFeature extends InternalFeature {
-
     public static LootrunFeature INSTANCE;
 
     // TODO: Add textured path type
@@ -47,7 +47,7 @@ public class LootrunFeature extends InternalFeature {
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        LootrunUtils.LOOTRUNS.mkdirs();
+        FileUtils.mkdir(LootrunUtils.LOOTRUNS);
     }
 
     @SubscribeEvent
