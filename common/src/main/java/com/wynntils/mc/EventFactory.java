@@ -70,13 +70,11 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
-import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
-import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -193,7 +191,7 @@ public class EventFactory {
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket(ClientboundContainerClosePacket packet) {
+    public static void onClientboundContainerClosePacket() {
         post(new MenuClosedEvent());
     }
 
@@ -265,7 +263,7 @@ public class EventFactory {
         post(new ConnectedEvent(host, port));
     }
 
-    public static void onResourcePack(ClientboundResourcePackPacket packet) {
+    public static void onResourcePack() {
         post(new ResourcePackEvent());
     }
 

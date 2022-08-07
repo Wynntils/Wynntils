@@ -24,7 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 public class LootrunFeature extends InternalFeature {
-
     public static LootrunFeature INSTANCE;
 
     // TODO: Add textured path type

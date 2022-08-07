@@ -208,7 +208,6 @@ public class FontRenderer {
         for (TextRenderTask textRenderTask : toRender) {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
-                totalLineCount++;
             } else {
                 int lines = 1;
                 if (textRenderTask.getText().contains(" ")) {
@@ -220,8 +219,8 @@ public class FontRenderer {
                 }
 
                 height += lines * font.lineHeight;
-                totalLineCount++;
             }
+            totalLineCount++;
         }
 
         // Add additional height for different render tasks, but not for same render task split into multiple lines

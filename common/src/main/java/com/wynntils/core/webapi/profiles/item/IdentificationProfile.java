@@ -15,14 +15,13 @@ import java.util.Map;
  * https://forums.wynncraft.com/threads/how-identifications-are-calculated.128923/
  */
 public class IdentificationProfile {
-
     private static final Map<String, IdentificationModifier> typeMap = new HashMap<>();
 
-    protected IdentificationModifier type;
-    private final int baseValue;
-    protected boolean isFixed;
-
-    private transient int min, max;
+    private IdentificationModifier type;
+    private int baseValue;
+    private boolean isFixed;
+    private transient int min;
+    private transient int max;
 
     public IdentificationProfile(IdentificationModifier type, int baseValue, boolean isFixed) {
         this.type = type;

@@ -37,7 +37,7 @@ public abstract class ScreenMixin {
 
     @Final
     @Shadow
-    private List<Widget> renderables;
+    public List<Widget> renderables;
 
     // Making this public is required for the mixin, use this with caution anywhere else
     public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {

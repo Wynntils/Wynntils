@@ -38,7 +38,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public class ClientCommandManager {
-
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {

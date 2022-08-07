@@ -13,7 +13,6 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE)
 public abstract class DebugFeature extends Feature {
-
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
@@ -24,8 +23,7 @@ public abstract class DebugFeature extends Feature {
         onConfigUpdate(configHolder);
     }
 
-    public class DevelopmentCondition extends Condition {
-
+    public static class DevelopmentCondition extends Condition {
         @Override
         public void init() {
             setSatisfied(WynntilsMod.isDevelopmentEnvironment());

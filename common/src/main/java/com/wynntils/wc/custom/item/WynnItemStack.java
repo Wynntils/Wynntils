@@ -15,9 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag.Default;
 
 public class WynnItemStack extends ItemStack {
-
-    protected String itemName;
-    protected List<ItemProperty> properties = new ArrayList<>();
+    protected final String itemName;
+    protected final List<ItemProperty> properties = new ArrayList<>();
 
     public WynnItemStack(ItemStack stack) {
         super(stack.getItem(), stack.getCount());

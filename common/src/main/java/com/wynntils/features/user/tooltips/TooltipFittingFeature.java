@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class TooltipFittingFeature extends UserFeature {
-
     @Config
     public static float universalScale = 1f;
 
