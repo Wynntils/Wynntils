@@ -44,7 +44,7 @@ public class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return ChatFormatting.stripFormatting(component.getString());
+        return ComponentUtils.stripFormatting(component.getString());
     }
 
     public static String getCoded(String jsonString) {
@@ -177,6 +177,10 @@ public class ComponentUtils {
         }
 
         return newLore;
+    }
+
+    public static String stripFormatting(String text) {
+        return text == null ? "" : ChatFormatting.stripFormatting(text);
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {

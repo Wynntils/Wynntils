@@ -16,6 +16,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.objects.CustomColor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,7 +66,7 @@ public class ConfigManager {
 
     public static void loadConfigFile() {
         // create config directory if necessary
-        CONFIGS.mkdirs();
+        FileUtils.mkdir(CONFIGS);
 
         // set up config file based on uuid, load it if it exists
         userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
