@@ -6,6 +6,7 @@ package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
@@ -42,7 +43,14 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
                 ? powderNumeral
                 : String.valueOf(MathUtils.integerFromRoman(powderNumeral));
 
-        textOverlay = new TextOverlay(text, highlightColor, ItemTextOverlayFeature.powderTierShadow, -1, 1, 0.75f);
+        textOverlay = new TextOverlay(
+                text,
+                highlightColor,
+                FontRenderer.TextAlignment.LEFT_ALIGNED,
+                ItemTextOverlayFeature.powderTierShadow,
+                -1,
+                1,
+                0.75f);
     }
 
     @Override

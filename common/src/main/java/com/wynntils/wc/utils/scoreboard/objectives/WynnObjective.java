@@ -4,10 +4,10 @@
  */
 package com.wynntils.wc.utils.scoreboard.objectives;
 
+import com.wynntils.mc.utils.ComponentUtils;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 
 /*
  *  This class is an info holder for Wynncraft's daily and guild objectives
@@ -31,7 +31,7 @@ public final class WynnObjective {
     }
 
     public static WynnObjective parseObjectiveLine(String objectiveLine) {
-        String stripped = ChatFormatting.stripFormatting(objectiveLine);
+        String stripped = ComponentUtils.stripFormatting(objectiveLine);
 
         assert stripped != null;
 

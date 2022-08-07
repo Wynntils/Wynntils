@@ -4,12 +4,12 @@
  */
 package com.wynntils.wc.custom.item;
 
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.type.PropertyType;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag.Default;
@@ -23,7 +23,7 @@ public class WynnItemStack extends ItemStack {
         if (stack.getTag() != null) setTag(stack.getTag());
 
         itemName = WynnUtils.normalizeBadString(
-                ChatFormatting.stripFormatting(super.getHoverName().getString()));
+                ComponentUtils.stripFormatting(super.getHoverName().getString()));
     }
 
     public String getSimpleName() {

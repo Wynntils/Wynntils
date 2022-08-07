@@ -5,6 +5,8 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
@@ -33,7 +35,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
         Component itemName = item.getHoverName();
         Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(itemName);
         if (nameMatcher.find()) {
-            location = ChatFormatting.stripFormatting(nameMatcher.group(1));
+            location = ComponentUtils.stripFormatting(nameMatcher.group(1));
 
             if (location.equals("Dungeon")) {
                 textColor = DUNGEON_COLOR;
@@ -57,16 +59,21 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                     Matcher locationMatcher = WynnItemMatchers.teleportScrollLocationMatcher(line);
                     if (!locationMatcher.matches()) continue;
 
-                    location = locationMatcher.group(1);
+                    location = locationMatcher.group(1).substring(0, 2);
 
                     break;
                 }
             }
-
-            location = location.substring(0, 2);
         }
 
-        textOverlay = new TextOverlay(location, textColor, ItemTextOverlayFeature.teleportScrollShadow, -1, 1, 1f);
+        textOverlay = new TextOverlay(
+                location,
+                textColor,
+                FontRenderer.TextAlignment.LEFT_ALIGNED,
+                ItemTextOverlayFeature.teleportScrollShadow,
+                0,
+                0,
+                1f);
     }
 
     @Override

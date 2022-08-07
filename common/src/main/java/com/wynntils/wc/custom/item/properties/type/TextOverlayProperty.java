@@ -27,5 +27,11 @@ public interface TextOverlayProperty extends PropertyType {
      * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
      */
     record TextOverlay(
-            String text, CustomColor color, FontRenderer.TextShadow shadow, int xOffset, int yOffset, float scale) {}
+            String text,
+            CustomColor color,
+            FontRenderer.TextAlignment alignment,
+            FontRenderer.TextShadow shadow,
+            int xOffset,
+            int yOffset,
+            float scale) {}
 }

@@ -4,9 +4,11 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -19,9 +21,25 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Inventory")
 public class DurabilityArcFeature extends UserFeature {
+    @Config
+    public static boolean renderDurabilityArcInventories = true;
+
+    @Config
+    public static boolean renderDurabilityArcHotbar = true;
+
+    @SubscribeEvent
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
+        if (!renderDurabilityArcHotbar) return;
+        drawDurabilityArc(e.getStack(), e.getX(), e.getY(), true);
+    }
+
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        ItemStack item = e.getSlot().getItem();
+        if (!renderDurabilityArcInventories) return;
+        drawDurabilityArc(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+    }
+
+    private void drawDurabilityArc(ItemStack item, int slotX, int slotY, boolean hotbar) {
         if (!(item instanceof WynnItemStack wynnItem)) return;
 
         if (!wynnItem.hasProperty(ItemProperty.DURABILITY)) return; // no durability info
@@ -33,6 +51,6 @@ public class DurabilityArcFeature extends UserFeature {
         CustomColor color = CustomColor.fromInt(colorInt).setAlpha(160);
 
         // draw
-        RenderUtils.drawArc(color, e.getSlot().x, e.getSlot().y, 200, durabilityPercent, 8);
+        RenderUtils.drawArc(color, slotX, slotY, hotbar ? 0 : 200, durabilityPercent, 8);
     }
 }
