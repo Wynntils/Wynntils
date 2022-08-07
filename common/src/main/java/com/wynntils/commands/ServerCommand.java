@@ -13,7 +13,6 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +111,7 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        HashMap<String, List<String>> onlinePlayers;
+        Map<String, List<String>> onlinePlayers;
         try {
             onlinePlayers = WebManager.getOnlinePlayers();
         } catch (IOException e) {

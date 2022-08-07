@@ -31,7 +31,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ObjectivesOverlayFeature extends UserFeature {
-    private final static float SPACE_BETWEEN = 10;
+    private static final float SPACE_BETWEEN = 10;
 
     @Config
     public static boolean disableObjectiveTrackingOnScoreboard = true;

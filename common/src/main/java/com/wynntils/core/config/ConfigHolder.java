@@ -45,7 +45,8 @@ public class ConfigHolder {
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
         Object valueTemp = this.getValue();
-        Type fieldTypeTemp = typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
+        Type fieldTypeTemp =
+                typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes

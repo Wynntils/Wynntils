@@ -107,7 +107,7 @@ public class ChatManager {
     }
 
     private static void handleMultilineMessage(String msg) {
-        LinkedList<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
+        List<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
         LinkedList<String> newLines = new LinkedList<>();
