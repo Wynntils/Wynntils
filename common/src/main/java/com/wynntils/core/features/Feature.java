@@ -33,9 +33,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
-    private List<KeyHolder> keyMappings = new ArrayList<>();
-    private List<ConfigHolder> configOptions = new ArrayList<>();
-    private List<Overlay> overlays = new ArrayList<>();
+    private final List<KeyHolder> keyMappings = new ArrayList<>();
+    private final List<ConfigHolder> configOptions = new ArrayList<>();
+    private final List<Overlay> overlays = new ArrayList<>();
 
     protected boolean enabled = false;
 

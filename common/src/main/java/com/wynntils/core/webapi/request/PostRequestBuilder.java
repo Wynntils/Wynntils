@@ -53,7 +53,7 @@ public class PostRequestBuilder extends RequestBuilder {
     /** Sets the writer to one that writes multipart/form-data. */
     public PostRequestBuilder postMultipart(Iterable<? extends IMultipartFormPart> parts) {
         return setWriter(conn -> {
-            String boundary = "----" + UUID.randomUUID().toString();
+            String boundary = "----" + UUID.randomUUID();
             conn.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
             boundary = "--" + boundary;
             byte[] boundaryBytes = ("\r\n" + boundary).getBytes(StandardCharsets.US_ASCII);

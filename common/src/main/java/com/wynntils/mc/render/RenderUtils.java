@@ -691,7 +691,7 @@ public class RenderUtils {
 
     public static void copyImageToClipboard(BufferedImage bi) {
         class ClipboardImage implements Transferable {
-            Image image;
+            private final Image image;
 
             public ClipboardImage(Image image) {
                 this.image = image;

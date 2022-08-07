@@ -60,7 +60,7 @@ public class InventoryUtils {
 
     public enum MouseClickType {
         LEFT_CLICK,
-        RIGHT_CLICK;
+        RIGHT_CLICK
     }
 
     public static class EmeraldPouch {
