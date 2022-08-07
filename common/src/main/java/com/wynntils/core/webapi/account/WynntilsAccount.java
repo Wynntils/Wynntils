@@ -24,15 +24,14 @@ import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
-
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
 
     String token;
     boolean ready = false;
 
-    HashMap<String, String> encodedConfigs = new HashMap<>();
-    HashMap<String, String> md5Verifications = new HashMap<>();
+    final HashMap<String, String> encodedConfigs = new HashMap<>();
+    final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public WynntilsAccount() {}
 
@@ -58,7 +57,7 @@ public class WynntilsAccount {
         RequestHandler handler = WebManager.getHandler();
 
         String baseUrl = WebManager.getApiUrls().get("Athena");
-        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set it's value
+        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
 

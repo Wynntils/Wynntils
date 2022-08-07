@@ -12,7 +12,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TODO: Draw compass beam
 public class CompassManager {
-
     private static Location compassLocation = null;
 
     public static void init() {

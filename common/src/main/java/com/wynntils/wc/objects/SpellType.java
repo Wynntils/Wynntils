@@ -51,12 +51,12 @@ public enum SpellType {
         {11, 23, 36, 51, 68, 89, 114, 147}
     };
 
-    private ClassType classType;
-    private int spellNumber;
-    private String name;
-    private String reskinnedName;
-    private int startManaCost;
-    private int gradeManaChange;
+    private final ClassType classType;
+    private final int spellNumber;
+    private final String name;
+    private final String reskinnedName;
+    private final int startManaCost;
+    private final int gradeManaChange;
 
     public ClassType getClassType() {
         return classType;

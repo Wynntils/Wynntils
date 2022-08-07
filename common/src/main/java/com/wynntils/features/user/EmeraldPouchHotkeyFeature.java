@@ -27,7 +27,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
-
     @RegisterKeyBind
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",
@@ -50,7 +49,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
             if (emeraldPouch != null) {
                 // We found exactly one usable emerald pouch
-                Integer slotNumber = emeraldPouch.getSlotNumber();
+                int slotNumber = emeraldPouch.getSlotNumber();
 
                 if (slotNumber < 9) {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
@@ -77,7 +76,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                 }
             } else {
                 if (foundNonEmpty != null) {
-                    // Multiple filled pouches found, we can't chose between them
+                    // Multiple filled pouches found, we can't choose between them
                     return null;
                 } else {
                     foundNonEmpty = pouch;

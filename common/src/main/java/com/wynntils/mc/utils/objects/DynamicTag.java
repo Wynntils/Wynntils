@@ -28,16 +28,15 @@ public class DynamicTag implements Tag {
 
         // FIXME: Implement these
         @Override
-        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor)
-                throws IOException {
+        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor) {
             return null;
         }
 
         @Override
-        public void skip(DataInput dataInput, int i) throws IOException {}
+        public void skip(DataInput dataInput, int i) {}
 
         @Override
-        public void skip(DataInput dataInput) throws IOException {}
+        public void skip(DataInput dataInput) {}
 
         public String getName() {
             return "STRING";

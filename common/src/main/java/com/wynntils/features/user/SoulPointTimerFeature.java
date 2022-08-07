@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class SoulPointTimerFeature extends UserFeature {
-
     @SubscribeEvent
     public void onItemsReceived(ItemsReceivedEvent e) {
         if (!WynnUtils.onServer()) return;

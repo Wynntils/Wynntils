@@ -14,7 +14,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class GammabrightFeature extends UserFeature {
-
     private double lastGamma = 1f;
 
     @RegisterKeyBind

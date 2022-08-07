@@ -19,7 +19,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Inventory")
 public class DurabilityArcFeature extends UserFeature {
-
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();

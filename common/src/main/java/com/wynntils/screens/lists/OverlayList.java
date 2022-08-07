@@ -27,8 +27,6 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
             new TextComponent("Left click on the overlay to edit it."),
             new TextComponent("Right click on the overlay to disable/enable it."));
 
-    private final List<Overlay> overlays;
-
     public OverlayList(OverlaySelectionScreen screen) {
         super(
                 McUtils.mc(),
@@ -38,10 +36,10 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 ITEM_HEIGHT);
 
-        this.overlays =
+        List<Overlay> overlays =
                 OverlayManager.getOverlays().stream().sorted(Overlay::compareTo).toList();
 
-        for (Overlay overlay : this.overlays) {
+        for (Overlay overlay : overlays) {
             this.addEntry(new OverlayEntry(overlay));
         }
 
