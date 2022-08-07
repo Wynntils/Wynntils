@@ -67,7 +67,7 @@ public class PlayerInteractEvent extends PlayerEvent {
     public static class RightClickBlock extends PlayerInteractEvent {
         private Event.Result useBlock = Event.Result.DEFAULT;
         private Event.Result useItem = Event.Result.DEFAULT;
-        private BlockHitResult hitVec;
+        private final BlockHitResult hitVec;
 
         public RightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
             super(player, hand, pos, hitVec.getDirection());

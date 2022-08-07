@@ -29,7 +29,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "overlays")
 public class CustomBarsFeature extends UserFeature {
-
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
@@ -54,7 +53,6 @@ public class CustomBarsFeature extends UserFeature {
     private final Overlay manaBarOverlay = new ManaBarOverlay();
 
     public static class HealthBarOverlay extends Overlay {
-
         @Config
         public HealthTexture healthTexture = HealthTexture.a;
 
@@ -122,7 +120,6 @@ public class CustomBarsFeature extends UserFeature {
     }
 
     public static class ManaBarOverlay extends Overlay {
-
         @Config
         public ManaTexture manaTexture = ManaTexture.a;
 

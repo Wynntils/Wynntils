@@ -19,7 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ItemGuessProfile {
-
     String range;
     Map<ItemType, Map<ItemTier, List<String>>> items = new HashMap<>();
 
@@ -36,7 +35,6 @@ public class ItemGuessProfile {
     }
 
     public static class ItemGuessDeserializer implements JsonDeserializer<HashMap<?, ?>> {
-
         @Override
         public HashMap<String, ItemGuessProfile> deserialize(
                 JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

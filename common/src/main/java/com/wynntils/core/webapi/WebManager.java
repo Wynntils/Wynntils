@@ -96,7 +96,7 @@ public class WebManager {
         updateTerritoryThreadStatus(false);
     }
 
-    public static void setupUserAccount() {
+    private static void setupUserAccount() {
         if (isLoggedIn()) return;
 
         account = new WynntilsAccount();
@@ -236,7 +236,7 @@ public class WebManager {
         return isItemListLoaded();
     }
 
-    public static boolean tryReloadApiUrls(boolean async) {
+    private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
                 .handleWebReader(reader -> {
@@ -251,8 +251,6 @@ public class WebManager {
                 .build());
 
         handler.dispatch(async);
-
-        return setup;
     }
 
     /**

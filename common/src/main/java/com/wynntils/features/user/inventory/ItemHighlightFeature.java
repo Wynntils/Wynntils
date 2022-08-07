@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Inventory")
 public class ItemHighlightFeature extends UserFeature {
-
     @Config
     public static boolean normalHighlightEnabled = true;
 

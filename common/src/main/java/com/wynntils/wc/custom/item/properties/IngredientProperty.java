@@ -12,7 +12,6 @@ import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 
 public class IngredientProperty extends ItemProperty implements HighlightProperty {
-
     private final IngredientTier tier;
 
     public IngredientProperty(WynnItemStack item) {

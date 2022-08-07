@@ -24,40 +24,19 @@ public class MathUtils {
     }
 
     public static int integerFromRoman(String numeral) {
-        int num = 0;
-        switch (numeral.toUpperCase(Locale.ROOT)) {
-            case "I":
-                num = 1;
-                break;
-            case "II":
-                num = 2;
-                break;
-            case "III":
-                num = 3;
-                break;
-            case "IV":
-                num = 4;
-                break;
-            case "V":
-                num = 5;
-                break;
-            case "VI":
-                num = 6;
-                break;
-            case "VII":
-                num = 7;
-                break;
-            case "VIII":
-                num = 8;
-                break;
-            case "IX":
-                num = 9;
-                break;
-            case "X":
-                num = 10;
-                break;
-        }
-        return num;
+        return switch (numeral.toUpperCase(Locale.ROOT)) {
+            case "I" -> 1;
+            case "II" -> 2;
+            case "III" -> 3;
+            case "IV" -> 4;
+            case "V" -> 5;
+            case "VI" -> 6;
+            case "VII" -> 7;
+            case "VIII" -> 8;
+            case "IX" -> 9;
+            case "X" -> 10;
+            default -> 0;
+        };
     }
 
     public static double map(double sourceNumber, double fromA, double fromB, double toA, double toB) {
@@ -66,7 +45,6 @@ public class MathUtils {
         double scale = deltaB / deltaA;
         double negA = -1 * fromA;
         double offset = (negA * scale) + toA;
-        double finalNumber = (sourceNumber * scale) + offset;
-        return finalNumber;
+        return (sourceNumber * scale) + offset;
     }
 }

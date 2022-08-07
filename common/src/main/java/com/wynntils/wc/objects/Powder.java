@@ -83,18 +83,12 @@ public enum Powder {
     }
 
     public Powder getOpposingElement() {
-        switch (this) {
-            case EARTH:
-                return Powder.AIR;
-            case THUNDER:
-                return Powder.EARTH;
-            case WATER:
-                return Powder.THUNDER;
-            case FIRE:
-                return Powder.WATER;
-            case AIR:
-                return Powder.FIRE;
-        }
-        return null;
+        return switch (this) {
+            case EARTH -> Powder.AIR;
+            case THUNDER -> Powder.EARTH;
+            case WATER -> Powder.THUNDER;
+            case FIRE -> Powder.WATER;
+            case AIR -> Powder.FIRE;
+        };
     }
 }

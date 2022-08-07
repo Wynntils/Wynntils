@@ -23,7 +23,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatItemFeature extends InternalFeature {
-
     private final Map<String, String> chatItems = new HashMap<>();
 
     @Override
