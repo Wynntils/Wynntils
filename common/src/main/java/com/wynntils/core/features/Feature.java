@@ -221,7 +221,7 @@ public abstract class Feature implements Translatable, Configurable {
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-    public class WebLoadedCondition extends Condition {
+    public static class WebLoadedCondition extends Condition {
         @Override
         public void init() {
             if (WebManager.isSetup()) {

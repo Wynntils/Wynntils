@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.net.URL;
@@ -75,7 +76,10 @@ public class WebReader {
 
         for (String str : data.split("\\r?\\n")) {
             Matcher result = LINE_MATCHER.matcher(str);
-            result.find();
+            if (!result.find()) {
+                WynntilsMod.error("Malformed data line: " + str);
+                continue;
+            }
 
             String key = result.group("Key");
             String value = result.group("Value");

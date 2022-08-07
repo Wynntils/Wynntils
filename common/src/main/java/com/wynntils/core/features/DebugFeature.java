@@ -24,7 +24,7 @@ public abstract class DebugFeature extends Feature {
         onConfigUpdate(configHolder);
     }
 
-    public class DevelopmentCondition extends Condition {
+    public static class DevelopmentCondition extends Condition {
 
         @Override
         public void init() {

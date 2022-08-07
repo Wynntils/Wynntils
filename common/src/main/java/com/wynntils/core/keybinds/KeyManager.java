@@ -92,7 +92,9 @@ public class KeyManager {
                     k.onPress();
                 }
 
-                while (k.getKeybind().consumeClick()) {}
+                while (k.getKeybind().consumeClick()) {
+                    // do nothing
+                }
 
                 return;
             }
