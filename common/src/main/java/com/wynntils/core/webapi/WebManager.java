@@ -242,13 +242,13 @@ public class WebManager {
     public static CompletableFuture<Boolean> tryLoadMaps() {
         if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
 
-        File mapDirectory = new File(API_CACHE_ROOT, "map");
+        File mapDirectory = new File(API_CACHE_ROOT, "maps");
 
         String url = apiUrls.get("AMainMap");
 
         CompletableFuture<Boolean> result = new CompletableFuture<>();
 
-        handler.addAndDispatch(new RequestBuilder(url, "map")
+        handler.addAndDispatch(new RequestBuilder(url, "maps")
                 .cacheTo(new File(mapDirectory, "maps.json"))
                 .handleJson(json -> {
                     String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
