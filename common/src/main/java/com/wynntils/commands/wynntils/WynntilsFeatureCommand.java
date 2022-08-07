@@ -22,7 +22,9 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
-public abstract class WynntilsFeatureCommand {
+public final class WynntilsFeatureCommand {
+    private WynntilsFeatureCommand() {}
+
     private static final SuggestionProvider<CommandSourceStack> userFeatureSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream()

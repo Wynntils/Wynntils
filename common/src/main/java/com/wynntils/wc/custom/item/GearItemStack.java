@@ -225,9 +225,9 @@ public class GearItemStack extends WynnItemStack {
 
             long time = System.currentTimeMillis();
             for (int i = 0; i < name.length(); i++) {
-                int cycle = 1000;
+                float cycle = 1000.0f;
                 Style color = Style.EMPTY
-                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7.0f) % cycle) / (float) cycle, 0.8F, 0.8F))
+                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7.0f) % cycle) / cycle, 0.8F, 0.8F))
                         .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));

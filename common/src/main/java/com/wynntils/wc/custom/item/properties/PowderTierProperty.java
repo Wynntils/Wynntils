@@ -40,7 +40,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
         // convert from roman to arabic if necessary
         String text = ItemTextOverlayFeature.powderTierRomanNumerals
                 ? powderNumeral
-                : "" + MathUtils.integerFromRoman(powderNumeral);
+                : String.valueOf(MathUtils.integerFromRoman(powderNumeral));
 
         textOverlay = new TextOverlay(text, highlightColor, ItemTextOverlayFeature.powderTierShadow, -1, 1, 0.75f);
     }

@@ -712,7 +712,7 @@ public final class RenderUtils {
     private static class ClipboardImage implements Transferable {
         private final Image image;
 
-        public ClipboardImage(Image image) {
+        private ClipboardImage(Image image) {
             this.image = image;
         }
 

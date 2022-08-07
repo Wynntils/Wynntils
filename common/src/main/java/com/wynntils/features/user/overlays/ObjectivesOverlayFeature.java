@@ -239,7 +239,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        public ObjectiveOverlayBase(
+        protected ObjectiveOverlayBase(
                 OverlayPosition position,
                 OverlaySize size,
                 HorizontalAlignment horizontalAlignmentOverride,

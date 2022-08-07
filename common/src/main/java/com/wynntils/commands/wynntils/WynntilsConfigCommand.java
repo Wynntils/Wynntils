@@ -30,7 +30,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class WynntilsConfigCommand {
+public final class WynntilsConfigCommand {
+    private WynntilsConfigCommand() {}
+
     private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);

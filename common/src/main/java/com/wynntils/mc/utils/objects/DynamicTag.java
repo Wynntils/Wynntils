@@ -79,11 +79,6 @@ public class DynamicTag implements Tag {
         return null;
     }
 
-    @Override
-    public void acceptAsRoot(StreamTagVisitor streamTagVisitor) {
-        Tag.super.acceptAsRoot(streamTagVisitor);
-    }
-
     public static String quoteAndEscape(String text) {
         StringBuilder stringBuilder = new StringBuilder(" ");
         char c = 0;

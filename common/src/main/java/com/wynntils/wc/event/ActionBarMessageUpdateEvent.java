@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class ActionBarMessageUpdateEvent extends Event {
     private String message;
 
-    public ActionBarMessageUpdateEvent(String message) {
+    protected ActionBarMessageUpdateEvent(String message) {
         this.message = message;
     }
 

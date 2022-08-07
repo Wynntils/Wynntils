@@ -13,6 +13,7 @@ import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class ItemGuessProfile {
     String range;
-    Map<ItemType, Map<ItemTier, List<String>>> items = new HashMap<>();
+    Map<ItemType, Map<ItemTier, List<String>>> items = new EnumMap<>(ItemType.class);
 
     public ItemGuessProfile(String range) {
         this.range = range;
@@ -45,7 +46,7 @@ public class ItemGuessProfile {
 
                 for (Map.Entry<String, JsonElement> weaponType :
                         itemGuesses.getValue().getAsJsonObject().entrySet()) {
-                    Map<ItemTier, List<String>> raritiesMap = new HashMap<>();
+                    Map<ItemTier, List<String>> raritiesMap = new EnumMap<>(ItemTier.class);
                     for (Map.Entry<String, JsonElement> rarity :
                             weaponType.getValue().getAsJsonObject().entrySet()) {
 

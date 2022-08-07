@@ -16,14 +16,14 @@ public abstract class OverlaySize {
     protected float height;
 
     // For GSON
-    public OverlaySize() {}
+    protected OverlaySize() {}
 
-    public OverlaySize(float width, float height) {
+    protected OverlaySize(float width, float height) {
         this.width = width;
         this.height = height;
     }
 
-    public OverlaySize(String string) {
+    protected OverlaySize(String string) {
         Matcher matcher = SIZE_REGEX.matcher(string.replaceAll(" ", ""));
 
         if (!matcher.matches()) {

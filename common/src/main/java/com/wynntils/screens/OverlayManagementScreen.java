@@ -25,7 +25,7 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.objects.Pair;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,11 +75,11 @@ public class OverlayManagementScreen extends Screen {
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
-    private final Map<Edge, Double> edgeAlignmentSnapMap = new HashMap<>();
-    private final Map<Edge, Float> alignmentLinesToRender = new HashMap<>();
+    private final Map<Edge, Double> edgeAlignmentSnapMap = new EnumMap<>(Edge.class);
+    private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
 
     private SelectionMode selectionMode = SelectionMode.None;
-    private Overlay selectedOverlay = null;
+    private Overlay selectedOverlay;
     private Corner selectedCorner = null;
     private Edge selectedEdge = null;
 

@@ -62,7 +62,7 @@ public class MD5Verification {
         return md5;
     }
 
-    public boolean equals(String other) {
+    public boolean equalsHashString(String other) {
         return md5 != null && md5.equalsIgnoreCase(other);
     }
 
