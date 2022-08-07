@@ -87,7 +87,7 @@ public final class KeyManager {
         }
     }
 
-    public static void triggerKeybinds() {
+    private static void triggerKeybinds() {
         keyHolders.forEach(k -> {
             if (k.isFirstPress()) {
                 if (k.getKeybind().consumeClick()) {

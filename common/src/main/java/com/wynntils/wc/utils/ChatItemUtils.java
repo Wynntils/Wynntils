@@ -133,7 +133,7 @@ public final class ChatItemUtils {
         return encoded.toString();
     }
 
-    public static GearItemStack decodeItem(String encoded) {
+    private static GearItemStack decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 

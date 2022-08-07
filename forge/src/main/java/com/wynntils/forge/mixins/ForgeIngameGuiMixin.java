@@ -19,19 +19,19 @@ public abstract class ForgeIngameGuiMixin {
     // so we have to use the instance.
 
     @Inject(method = "render", at = @At("HEAD"))
-    public void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPre(
                 poseStack, partialTick, Minecraft.getInstance().getWindow());
     }
 
     @Inject(method = "render", at = @At("RETURN"))
-    public void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPost(
                 poseStack, partialTick, Minecraft.getInstance().getWindow());
     }
 
     @Inject(method = "renderFood", at = @At("HEAD"), cancellable = true, remap = false)
-    public void onRenderFoodPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
+    private void onRenderFoodPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
         if (EventFactory.onRenderFoodPre(poseStack, Minecraft.getInstance().getWindow())
                 .isCanceled()) {
             ci.cancel();
@@ -40,7 +40,7 @@ public abstract class ForgeIngameGuiMixin {
 
     // The render food mixin above does not get called when riding a horse, we need this as a replacement.
     @Inject(method = "renderHealthMount", at = @At("HEAD"), cancellable = true, remap = false)
-    public void onRenderHealthMountPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
+    private void onRenderHealthMountPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
         if (EventFactory.onRenderFoodPre(poseStack, Minecraft.getInstance().getWindow())
                 .isCanceled()) {
             ci.cancel();

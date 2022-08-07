@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 /** Handles and dispatches {@link Request} */
 public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
-    public static final boolean CACHE_ONLY = false;
+    private static final boolean CACHE_ONLY = false;
 
     private final ExecutorService pool = Executors.newFixedThreadPool(
             4,

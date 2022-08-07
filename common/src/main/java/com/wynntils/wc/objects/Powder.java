@@ -17,9 +17,11 @@ public enum Powder {
     FIRE('✹', 9, 1, ChatFormatting.RED, ChatFormatting.DARK_RED),
     AIR('❋', 8, 7, ChatFormatting.WHITE, ChatFormatting.GRAY);
 
-    final char symbol;
-    final int lowTierDamage, highTierDamage;
-    final ChatFormatting lightColor, darkColor;
+    private final char symbol;
+    private final int lowTierDamage;
+    private final int highTierDamage;
+    private final ChatFormatting lightColor;
+    private final ChatFormatting darkColor;
 
     Powder(char symbol, int lowTierDamage, int highTierDamage, ChatFormatting lightColor, ChatFormatting darkColor) {
         this.symbol = symbol;

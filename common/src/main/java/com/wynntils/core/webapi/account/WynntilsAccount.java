@@ -27,11 +27,11 @@ public class WynntilsAccount {
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
 
-    String token;
-    boolean ready = false;
+    private String token;
+    private boolean ready = false;
 
-    final HashMap<String, String> encodedConfigs = new HashMap<>();
-    final HashMap<String, String> md5Verifications = new HashMap<>();
+    private final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public String getToken() {
         return token;

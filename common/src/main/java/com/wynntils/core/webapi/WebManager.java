@@ -43,13 +43,13 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager {
-    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
+    private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    public static WebReader apiUrls = null;
+    private static WebReader apiUrls = null;
 
     private static final Gson gson = new Gson();
 
@@ -153,7 +153,7 @@ public final class WebManager {
         return isTerritoryListLoaded();
     }
 
-    public static void updateTerritoryThreadStatus(boolean start) {
+    private static void updateTerritoryThreadStatus(boolean start) {
         if (start) {
             if (territoryUpdateThread == null) {
                 territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");

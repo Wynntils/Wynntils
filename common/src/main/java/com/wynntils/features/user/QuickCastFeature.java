@@ -59,8 +59,8 @@ public class QuickCastFeature extends UserFeature {
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
     private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
+    private static final SpellDirection[] NO_SPELL = new SpellDirection[0];
 
-    public static final SpellDirection[] NO_SPELL = new SpellDirection[0];
     private SpellDirection[] spellInProgress = NO_SPELL;
 
     private final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();

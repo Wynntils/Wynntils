@@ -11,7 +11,7 @@ public enum IdentificationModifier {
     THREE_SECONDS("/3s"),
     TIER(" tier");
 
-    final String inGame;
+    private final String inGame;
 
     IdentificationModifier(String inGame) {
         this.inGame = inGame;

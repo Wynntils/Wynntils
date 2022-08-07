@@ -113,7 +113,7 @@ public final class ClientCommandManager {
         return new ClientCommandSourceStack(player);
     }
 
-    public static boolean executeCommand(StringReader reader, String command) {
+    private static boolean executeCommand(StringReader reader, String command) {
         ClientCommandSourceStack source = getSource();
 
         if (source == null) return false;

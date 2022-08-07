@@ -22,7 +22,7 @@ public class FontRenderer {
     private static final int NEWLINE_OFFSET = 10;
     private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
-    public FontRenderer() {
+    private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
     }
 

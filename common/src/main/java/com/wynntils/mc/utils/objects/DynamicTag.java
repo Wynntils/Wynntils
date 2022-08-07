@@ -18,7 +18,7 @@ import net.minecraft.nbt.TagVisitor;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
-    public static final TagType<StringTag> TYPE = new DynamicTagType();
+    private static final TagType<StringTag> TYPE = new DynamicTagType();
     private static final StringTag EMPTY = StringTag.valueOf("");
     private final Supplier<String> data;
 

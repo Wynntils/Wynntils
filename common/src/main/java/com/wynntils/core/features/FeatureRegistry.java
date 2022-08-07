@@ -60,7 +60,7 @@ public final class FeatureRegistry {
 
     private FeatureRegistry() {}
 
-    public static void registerFeature(Feature feature) {
+    private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
 
         initializeFeature(feature);

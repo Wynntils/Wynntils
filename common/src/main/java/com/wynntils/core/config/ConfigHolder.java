@@ -85,12 +85,12 @@ public class ConfigHolder {
         return getNameCamelCase() + "." + field.getName();
     }
 
-    protected String getNameCamelCase() {
+    private String getNameCamelCase() {
         String name = parent.getClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    protected String getDeclaringFeatureNameCamelCase() {
+    private String getDeclaringFeatureNameCamelCase() {
         String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }

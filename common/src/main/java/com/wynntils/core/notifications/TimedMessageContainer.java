@@ -7,8 +7,8 @@ package com.wynntils.core.notifications;
 import com.wynntils.mc.render.TextRenderTask;
 
 public class TimedMessageContainer {
-    MessageContainer messageContainer;
-    long endTime;
+    private MessageContainer messageContainer;
+    private long endTime;
 
     public TimedMessageContainer(MessageContainer messageContainer, long messageDisplayLength) {
         this.messageContainer = messageContainer;

@@ -8,9 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class OverlaySize {
-    protected static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
-    protected static final float MINIMUM_HEIGHT = 3f;
-    protected static final float MINIMUM_WIDTH = 3f;
+    private static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
+    private static final float MINIMUM_HEIGHT = 3f;
+    private static final float MINIMUM_WIDTH = 3f;
 
     protected float width;
     protected float height;

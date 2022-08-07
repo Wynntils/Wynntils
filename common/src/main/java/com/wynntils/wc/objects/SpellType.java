@@ -38,7 +38,7 @@ public enum SpellType {
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", "4th Spell", 0, 0);
 
-    static final int[][] MANA_REDUCTION_LEVELS = {
+    private static final int[][] MANA_REDUCTION_LEVELS = {
         {},
         {68},
         {41, 105},
