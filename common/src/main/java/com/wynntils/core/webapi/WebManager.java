@@ -408,6 +408,10 @@ public class WebManager {
         return territories;
     }
 
+    public static MapProfile getMap() {
+        return map;
+    }
+
     public static boolean isSetup() {
         return setup;
     }
