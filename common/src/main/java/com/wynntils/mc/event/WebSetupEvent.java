@@ -6,5 +6,5 @@ package com.wynntils.mc.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-/** Fired on initalization of loading of apiurls in {@link com.wynntils.core.webapi.WebManager} */
+/** Fired on initialization of loading of apiurls in {@link com.wynntils.core.webapi.WebManager} */
 public class WebSetupEvent extends Event {}

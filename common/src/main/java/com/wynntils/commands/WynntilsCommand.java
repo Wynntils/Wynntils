@@ -164,7 +164,7 @@ public class WynntilsCommand extends CommandBase {
             MutableComponent text, String prefix, List<String> suffix, String description) {
         text.append("\n");
 
-        StringBuilder suffixString = new StringBuilder("");
+        StringBuilder suffixString = new StringBuilder();
 
         for (String argument : suffix) {
             suffixString.append(" ").append(argument);

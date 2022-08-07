@@ -181,7 +181,7 @@ public class ChatManager {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(line -> handleFakeChatLine(line));
+        newChatLines.forEach(ChatManager::handleFakeChatLine);
 
         // Update the new dialog
         handleNpcDialog(dialog);

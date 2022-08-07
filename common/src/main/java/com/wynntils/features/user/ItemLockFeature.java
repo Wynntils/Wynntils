@@ -37,7 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ItemLockFeature extends UserFeature {
-
     @RegisterKeyBind
     private final KeyHolder lockSlotKeybind = new KeyHolder(
             "Lock Slot", GLFW.GLFW_KEY_H, "Wynntils", true, ItemLockFeature::tryChangeLockStateOnHoveredSlot);

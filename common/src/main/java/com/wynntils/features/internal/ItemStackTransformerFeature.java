@@ -30,7 +30,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemStackTransformerFeature extends InternalFeature {
-
     private final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
     private final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
 

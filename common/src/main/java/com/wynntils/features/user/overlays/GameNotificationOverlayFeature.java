@@ -57,13 +57,11 @@ public class GameNotificationOverlayFeature extends UserFeature {
                 .filter(timedMessageContainer ->
                         timedMessageContainer.getMessageContainer().hashCode() == newContainer.hashCode())
                 .findFirst()
-                .ifPresent(timedMessageContainer -> {
-                    timedMessageContainer.update(newContainer, (long) GameNotificationOverlay.messageTimeLimit * 1000);
-                });
+                .ifPresent(timedMessageContainer -> timedMessageContainer.update(
+                        newContainer, (long) GameNotificationOverlay.messageTimeLimit * 1000));
     }
 
     public static class GameNotificationOverlay extends Overlay {
-
         @Config
         public static float messageTimeLimit = 10f;
 

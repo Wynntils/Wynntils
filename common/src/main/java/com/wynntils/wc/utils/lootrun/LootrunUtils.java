@@ -53,7 +53,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class LootrunUtils {
-
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -562,7 +561,7 @@ public class LootrunUtils {
     }
 
     public static void stopRecording() {
-        // At this point, we already have LootrunFeature registed to the event bus
+        // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
         lootrun = recordingCompiled;
         uncompiled = recording;

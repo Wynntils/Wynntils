@@ -15,7 +15,6 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TradeMarketAutoOpenChatFeature extends UserFeature {
-
     // Type the price in emeralds or type 'cancel' to cancel:
     // Type the amount you wish to buy or type 'cancel' to cancel:
     // Type the item name or type 'cancel' to cancel:

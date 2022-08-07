@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 
 public class CustomRenderType extends RenderType {
-
     // Copied from RenderType.LINE_STRIP and changed the line width from the default
     // to 3
     public static final RenderType LOOTRUN_LINE = RenderType.create(

@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ItemProfile {
-
     String displayName;
     ItemTier tier;
     boolean identified;

@@ -22,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class Character implements Model {
-
     private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
 
@@ -56,7 +55,7 @@ public class Character implements Model {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.State.WORLD) {
             currentCharacter = null;
-            // This should not be needed, but have it as a safe-guard
+            // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
         if (e.getNewState() == WorldState.State.CHARACTER_SELECTION) {

@@ -56,7 +56,7 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version)));
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version)))
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

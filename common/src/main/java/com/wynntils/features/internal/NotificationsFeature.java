@@ -12,7 +12,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NotificationsFeature extends InternalFeature {
-
     // Handles both edit and queue
     @SubscribeEvent
     public void onGameNotification(NotificationEvent event) {

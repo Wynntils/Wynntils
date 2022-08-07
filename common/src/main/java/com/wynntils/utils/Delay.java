@@ -9,7 +9,6 @@ import com.wynntils.mc.event.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class Delay {
-
     private final Runnable function;
     private int delay;
     private boolean isRunning = true;
