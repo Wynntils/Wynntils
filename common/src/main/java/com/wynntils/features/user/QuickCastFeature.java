@@ -8,6 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ItemUtils;
@@ -205,7 +206,7 @@ public class QuickCastFeature extends UserFeature {
     }
 
     private static void sendCancelReason(MutableComponent reason) {
-        McUtils.sendMessageToClient(reason.withStyle(ChatFormatting.RED));
+        NotificationManager.queueMessage(reason.withStyle(ChatFormatting.RED));
     }
 
     public enum SpellUnit {

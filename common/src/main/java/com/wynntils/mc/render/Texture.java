@@ -13,6 +13,7 @@ public enum Texture {
     HEALTH_BAR("bars_health.png", 256, 256),
     HIGHLIGHT("highlight.png", 256, 256),
     ITEM_LOCK("item_lock.png", 16, 16),
+    LOOTRUN_LINE("path_arrow.png", 16, 16),
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64);
