@@ -59,13 +59,11 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                     Matcher locationMatcher = WynnItemMatchers.teleportScrollLocationMatcher(line);
                     if (!locationMatcher.matches()) continue;
 
-                    location = locationMatcher.group(1);
+                    location = locationMatcher.group(1).substring(0, 2);
 
                     break;
                 }
             }
-
-            location = location.substring(0, 2);
         }
 
         textOverlay = new TextOverlay(
@@ -73,8 +71,8 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                 textColor,
                 FontRenderer.TextAlignment.LEFT_ALIGNED,
                 ItemTextOverlayFeature.teleportScrollShadow,
-                -1,
-                1,
+                0,
+                0,
                 1f);
     }
 
