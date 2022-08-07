@@ -18,7 +18,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
 
-public class ComponentUtils {
+public final class ComponentUtils {
+    private ComponentUtils() {}
+
     // Text with formatting codes "§cTest §1Text"
     public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();

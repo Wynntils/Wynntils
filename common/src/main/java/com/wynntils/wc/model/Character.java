@@ -74,7 +74,7 @@ public class Character implements Model {
 
     // TODO: We don't have a way to parse CharacterInfo if auto select class is on for the player
     //       Fix this by storing last selected class in WebAPI.
-    public static class CharacterInfo {
+    public static final class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;

@@ -52,7 +52,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class LootrunUtils {
+public final class LootrunUtils {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -72,6 +72,8 @@ public class LootrunUtils {
     private static LootrunUncompiled recording = null;
 
     private static RecordingInformation recordingInformation = null;
+
+    private LootrunUtils() {}
 
     public static LootrunState getState() {
         return state;

@@ -12,11 +12,13 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 /** Tools for retrieving information about emerald pouches */
-public class EmeraldPouchParser {
+public final class EmeraldPouchParser {
     private static final Pattern POUCH_USAGE_PATTERN =
             Pattern.compile("§6§l(\\d* ?\\d* ?\\d*)" + EmeraldSymbols.E_STRING);
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
+
+    private EmeraldPouchParser() {}
 
     public static int getPouchUsage(ItemStack stack) {
         String lore = ItemUtils.getStringLore(stack);

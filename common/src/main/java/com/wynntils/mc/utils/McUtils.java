@@ -19,7 +19,9 @@ import net.minecraft.world.inventory.InventoryMenu;
  * This is a "high-quality misc" class for Minecraft utilities without an aspect on Wynntils
  * commonly used. Tags used more often should be moved elsewhere Keep the names short, but distinct.
  */
-public class McUtils {
+public final class McUtils {
+    private McUtils() {}
+
     public static Minecraft mc() {
         return Minecraft.getInstance();
     }

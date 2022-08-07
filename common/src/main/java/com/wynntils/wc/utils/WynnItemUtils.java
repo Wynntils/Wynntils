@@ -26,10 +26,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
 
-public class WynnItemUtils {
+public final class WynnItemUtils {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
+
+    private WynnItemUtils() {}
 
     /**
      * Parse the item ID lore line from a given item, and convert it into an ItemIdentificationContainer

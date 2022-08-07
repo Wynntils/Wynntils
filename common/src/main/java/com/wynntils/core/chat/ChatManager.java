@@ -69,13 +69,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * a different formatting. This could be done, but requires extra logic, and most
  * importantly, a way to update already printed chat lines.
  */
-public class ChatManager {
+public final class ChatManager {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
 
     private static boolean extractDialog = false;
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
+
+    private ChatManager() {}
 
     public static void init() {
         WynntilsMod.getEventBus().register(ChatManager.class);

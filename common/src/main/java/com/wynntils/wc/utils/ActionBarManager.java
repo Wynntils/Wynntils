@@ -16,7 +16,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ActionBarManager {
+public final class ActionBarManager {
     private static final Pattern ACTIONBAR_PATTERN =
             StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 
@@ -26,6 +26,8 @@ public class ActionBarManager {
     private static int maxHealth = -1;
     private static int currentMana = -1;
     private static int maxMana = -1;
+
+    private ActionBarManager() {}
 
     @SubscribeEvent
     public static void onActionBarUpdate(ChatPacketReceivedEvent e) {

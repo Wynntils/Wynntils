@@ -10,8 +10,10 @@ import java.util.Locale;
  * This is a "high-quality misc" class. Helper methods that are commonly used throughout the project
  * without an aspect on minecraft can be put here. Keep the names short, but distinct.
  */
-public class Utils {
+public final class Utils {
     private static final Locale gameLocale = Locale.ROOT;
+
+    private Utils() {}
 
     public static Locale getGameLocale() {
         return gameLocale;

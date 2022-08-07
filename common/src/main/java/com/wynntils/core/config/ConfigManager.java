@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigManager {
+public final class ConfigManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
@@ -40,6 +40,8 @@ public class ConfigManager {
     private static final File defaultConfig = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static JsonObject configObject;
     private static Gson gson;
+
+    private ConfigManager() {}
 
     public static void registerFeature(Feature feature) {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);

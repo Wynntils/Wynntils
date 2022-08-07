@@ -11,7 +11,9 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
-public class EntityUtils {
+public final class EntityUtils {
+    private EntityUtils() {}
+
     private static boolean isPlayersHorse(AbstractHorse horse, Player player) {
         if (horse == null) return false;
         Component horseName = horse.getCustomName();

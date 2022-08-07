@@ -38,7 +38,7 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ScoreboardManager {
+public final class ScoreboardManager {
     private static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
     private static final Pattern QUEST_TRACK_PATTERN = Pattern.compile("Tracked Quest:");
     private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
@@ -156,6 +156,8 @@ public class ScoreboardManager {
 
         handleScoreboardReconstruction();
     };
+
+    private ScoreboardManager() {}
 
     private static void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {

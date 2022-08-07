@@ -37,8 +37,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public class ClientCommandManager {
+public final class ClientCommandManager {
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
+
+    private ClientCommandManager() {}
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
         return clientDispatcher;

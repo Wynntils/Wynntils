@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
-public class StringUtils {
+public final class StringUtils {
+    private StringUtils() {}
+
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *

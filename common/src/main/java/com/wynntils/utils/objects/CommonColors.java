@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.objects;
 
-public class CommonColors {
+public final class CommonColors {
     public static final CustomColor BLACK = CustomColor.fromInt(0x000000).withAlpha(255);
     public static final CustomColor RED = CustomColor.fromInt(0xff0000).withAlpha(255);
     public static final CustomColor GREEN = CustomColor.fromInt(0x00ff00).withAlpha(255);
@@ -22,6 +22,8 @@ public class CommonColors {
     public static final CustomColor MAGENTA = CustomColor.fromInt(0xff0083).withAlpha(255);
     public static final CustomColor ORANGE = CustomColor.fromInt(0xff9000).withAlpha(255);
     public static final CustomColor WHITE = CustomColor.fromInt(0xffffff).withAlpha(255);
+
+    private CommonColors() {}
 
     // TODO Add rainbow
 }

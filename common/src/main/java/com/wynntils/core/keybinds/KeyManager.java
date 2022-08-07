@@ -17,8 +17,10 @@ import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
-public class KeyManager {
+public final class KeyManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
+
+    private KeyManager() {}
 
     public static void init() {
         WynntilsMod.getEventBus().register(KeyManager.class);

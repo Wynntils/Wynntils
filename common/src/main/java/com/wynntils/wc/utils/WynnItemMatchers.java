@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
-public class WynnItemMatchers {
+public final class WynnItemMatchers {
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
@@ -32,6 +32,8 @@ public class WynnItemMatchers {
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
     private static final Pattern INGREDIENT_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
+
+    private WynnItemMatchers() {}
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()

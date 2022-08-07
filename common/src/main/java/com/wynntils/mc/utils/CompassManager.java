@@ -11,8 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TODO: Draw compass beam
-public class CompassManager {
+public final class CompassManager {
     private static Location compassLocation = null;
+
+    private CompassManager() {}
 
     public static void init() {
         WynntilsMod.getEventBus().register(CompassManager.class);
