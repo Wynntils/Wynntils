@@ -17,7 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FixSpellOverwriteFeature extends InternalFeature {
-    private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast!§3 \\[§b-([0-9]+) ✺§3\\]$");
+    private static final Pattern SPELL_CAST = Pattern.compile(
+            "^(§7(.*) spell cast!§3 \\[§b-([0-9]+) ✺§3\\]|§4You don't have enough mana to do that spell!)$");
 
     private int overwriteHighlightTimer;
     private ItemStack overwriteHighlightItem = ItemStack.EMPTY;
