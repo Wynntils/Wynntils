@@ -31,6 +31,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ObjectivesOverlayFeature extends UserFeature {
+    private final static float SPACE_BETWEEN = 10;
+
     @Config
     public static boolean disableObjectiveTrackingOnScoreboard = true;
 
@@ -87,8 +89,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
                     return;
                 }
             }
-
-            final float SPACE_BETWEEN = 10;
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;

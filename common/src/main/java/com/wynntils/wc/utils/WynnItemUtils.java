@@ -81,8 +81,6 @@ public class WynnItemUtils {
         if (type == null) return null; // not a valid id
 
         MutableComponent percentLine = new TextComponent("");
-        MutableComponent rangeLine;
-        MutableComponent rerollLine;
 
         MutableComponent statInfo = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(shortIdName));
         statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
@@ -98,8 +96,8 @@ public class WynnItemUtils {
 
         if (isNew) percentLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
-        rangeLine = percentLine.copy();
-        rerollLine = percentLine.copy();
+        MutableComponent rangeLine = percentLine.copy();
+        MutableComponent rerollLine = percentLine.copy();
 
         float percentage = -1;
         if (!isNew && !idProfile.hasConstantValue()) {

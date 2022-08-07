@@ -98,10 +98,7 @@ public class ConfigManager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value;
-
-            value = gson.fromJson(holderJson, holder.getType());
-
+            Object value = gson.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
     }

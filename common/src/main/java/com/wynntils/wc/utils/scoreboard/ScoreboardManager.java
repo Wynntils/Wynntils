@@ -67,8 +67,6 @@ public class ScoreboardManager {
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
 
-        Set<String> changedLines = new HashSet<>();
-
         for (ScoreboardLineChange queuedChange : queuedChanges) {
             if (queuedChange.method() == ServerScoreboard.Method.REMOVE) {
                 scoreboardCopy.removeIf(
@@ -76,6 +74,7 @@ public class ScoreboardManager {
             }
         }
 
+        Set<String> changedLines = new HashSet<>();
         while (!queuedChanges.isEmpty()) {
             ScoreboardLineChange processed = queuedChanges.pop();
 
