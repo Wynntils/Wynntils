@@ -4,14 +4,17 @@
  */
 package com.wynntils.core.webapi.profiles;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapProfile {
 
-    DynamicTexture texture;
+    NativeImage texture;
     ResourceLocation mapResource;
+
+    boolean registered = false;
 
     int x1;
     int z1;
@@ -21,18 +24,29 @@ public class MapProfile {
     int textureWidth;
     int textureHeight;
 
-    public MapProfile(DynamicTexture texture, int x1, int z1, int x2, int z2, int textureWidth, int textureHeight) {
+    public MapProfile(String name, NativeImage texture, int x1, int z1, int x2, int z2) {
         this.texture = texture;
         this.x1 = x1;
         this.z1 = z1;
         this.x2 = x2;
         this.z2 = z2;
-        this.textureWidth = textureWidth;
-        this.textureHeight = textureHeight;
+        this.textureWidth = texture.getWidth();
+        this.textureHeight = texture.getHeight();
+
+        this.mapResource = new ResourceLocation("wynntils", "/maps/" + name);
 
         // Remove this if we ever have non 1 to 1 maps
         assert x2 - x1 == textureWidth;
         assert z2 - z1 == textureHeight;
+    }
+
+    public ResourceLocation resource() {
+        if (!registered) {
+            registered = true;
+            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(texture));
+        }
+
+        return mapResource;
     }
 
     public float getTextureXPosition(double posX) {
@@ -49,16 +63,6 @@ public class MapProfile {
 
     public int getWorldZPosition(double textureY) {
         return (int) Math.round(textureY + z1);
-    }
-
-    public ResourceLocation resource() {
-        if (mapResource == null) {
-            mapResource = new ResourceLocation("wynntils", "main-map.png");
-
-            McUtils.mc().getTextureManager().register(mapResource, texture);
-        }
-
-        return mapResource;
     }
 
     public int getX1() {

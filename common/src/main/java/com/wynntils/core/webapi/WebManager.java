@@ -7,6 +7,8 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -35,12 +37,12 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -71,7 +73,7 @@ public class WebManager {
 
     private static WynntilsAccount account = null;
 
-    private static MapProfile map = null;
+    private static List<MapProfile> maps = null;
 
     public static void init() {
         tryReloadApiUrls(false);
@@ -237,57 +239,66 @@ public class WebManager {
         return isItemListLoaded();
     }
 
-    public static CompletableFuture<Boolean> tryLoadMap() {
+    public static CompletableFuture<Boolean> tryLoadMaps() {
         if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
 
-        final File mapDirectory = new File(API_CACHE_ROOT, "map");
+        File mapDirectory = new File(API_CACHE_ROOT, "map");
 
-        mapDirectory.mkdirs();
+        String url = apiUrls.get("AMainMap");
 
-        final CompletableFuture<Boolean> result = new CompletableFuture<>();
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
 
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("AMainMap"), "map")
+        handler.addAndDispatch(new RequestBuilder(url, "map")
                 .cacheTo(new File(mapDirectory, "maps.json"))
                 .handleJson(json -> {
-                    JsonObject mapData = json.getAsJsonArray().get(0).getAsJsonObject();
+                    String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
 
-                    int x1 = mapData.get("x1").getAsInt();
-                    int z1 = mapData.get("z1").getAsInt();
-                    int x2 = mapData.get("x2").getAsInt();
-                    int z2 = mapData.get("z2").getAsInt();
+                    JsonArray mapArray = json.getAsJsonArray();
 
-                    final String md5 = mapData.get("hash").getAsString();
+                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
 
-                    // TODO DownloaderManager?8 + Overlay
-                    handler.addAndDispatchAsync(
-                            new RequestBuilder(mapData.get("download").getAsString(), "main_map.png")
-                                    .onError(() -> result.complete(false))
-                                    .cacheTo(new File(mapDirectory, "main-map.png"))
-                                    .cacheMD5Validator(md5)
-                                    .useCacheAsBackup()
-                                    .handle(bytes -> {
-                                        NativeImage nativeImage;
+                    for (JsonElement mapData : mapArray) {
+                        JsonObject mapObject = mapData.getAsJsonObject();
 
-                                        try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                            nativeImage = NativeImage.read(in);
+                        // Final since used in closure
+                        final int x1 = mapObject.get("x1").getAsInt();
+                        final int z1 = mapObject.get("z1").getAsInt();
+                        final int x2 = mapObject.get("x2").getAsInt();
+                        final int z2 = mapObject.get("z2").getAsInt();
 
-                                            map = new MapProfile(
-                                                    new DynamicTexture(nativeImage),
-                                                    x1,
-                                                    z1,
-                                                    x2,
-                                                    z2,
-                                                    nativeImage.getWidth(),
-                                                    nativeImage.getHeight());
-                                            result.complete(true);
-                                        } catch (IOException e) {
-                                            WynntilsMod.info("IOException occured while loading map image");
-                                            result.complete(false);
-                                        }
+                        final String file = mapObject.get("file").getAsString();
 
-                                        return true;
-                                    })
-                                    .build());
+                        String md5 = mapObject.get("hash").getAsString();
+
+                        // TODO DownloaderManager? + Overlay
+                        handler.addRequest(new RequestBuilder(fileBase + file, file)
+                                .cacheTo(new File(mapDirectory, file))
+                                .cacheMD5Validator(md5)
+                                .useCacheAsBackup()
+                                .handle(bytes -> {
+                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                        NativeImage nativeImage = NativeImage.read(in);
+
+                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
+                                    } catch (IOException e) {
+                                        WynntilsMod.info("IOException occurred while loading map image of " + file);
+                                        return false; // don't cache
+                                    }
+
+                                    return true;
+                                })
+                                .build());
+                    }
+
+                    // hacky way to know when handler has finished dispatching
+                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
+                        if (syncList.size() == mapArray.size()) {
+                            result.complete(true);
+                            maps = syncList;
+                        } else {
+                            result.complete(false);
+                        }
+                    });
 
                     return true;
                 })
@@ -312,7 +323,7 @@ public class WebManager {
 
         handler.dispatch(async);
 
-        tryLoadMap();
+        tryLoadMaps();
     }
 
     /**
@@ -370,7 +381,7 @@ public class WebManager {
     }
 
     public static boolean isMapLoaded() {
-        return map != null;
+        return !maps.isEmpty();
     }
 
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
@@ -405,8 +416,8 @@ public class WebManager {
         return territories;
     }
 
-    public static MapProfile getMap() {
-        return map;
+    public static List<MapProfile> getMaps() {
+        return maps;
     }
 
     public static boolean isSetup() {
