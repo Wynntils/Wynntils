@@ -239,7 +239,7 @@ public class WebManager {
     }
 
     public static CompletableFuture<Boolean> tryLoadMap() {
-        if (apiUrls == null || !apiUrls.hasKey("MainMap")) return CompletableFuture.completedFuture(false);
+        if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
 
         final File mapDirectory = new File(API_CACHE_ROOT, "map");
 
@@ -247,17 +247,20 @@ public class WebManager {
 
         final CompletableFuture<Boolean> result = new CompletableFuture<>();
 
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("MainMap"), "main_map.info")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("AMainMap"), "main_map.info")
                 .cacheTo(new File(mapDirectory, "main-map.txt"))
-                .handleWebReader(reader -> {
-                    // TODO change
-                    double rightX = Double.parseDouble(reader.get("CenterX"));
-                    double rightZ = Double.parseDouble(reader.get("CenterZ"));
+                .handleJson(json -> {
+                    JsonObject mapData = json.getAsJsonArray().get(0).getAsJsonObject();
 
-                    final String md5 = reader.get("MD5");
+                    int x1 = mapData.get("x1").getAsInt();
+                    int z1 = mapData.get("z1").getAsInt();
+                    int x2 = mapData.get("x2").getAsInt();
+                    int z2 = mapData.get("z2").getAsInt();
+
+                    final String md5 = mapData.get("hash").getAsString();
 
                     // TODO DownloaderManager?
-                    handler.addAndDispatchAsync(new RequestBuilder(reader.get("DownloadLocation"), "main_map.png")
+                    handler.addAndDispatchAsync(new RequestBuilder(mapData.get("download").getAsString(), "main_map.png")
                             .onError(() -> result.complete(false))
                             .cacheTo(new File(mapDirectory, "main-map.png"))
                             .cacheMD5Validator(md5)
@@ -270,8 +273,10 @@ public class WebManager {
 
                                     map = new MapProfile(
                                             new DynamicTexture(nativeImage),
-                                            rightX,
-                                            rightZ,
+                                            x1,
+                                            z1,
+                                            x2,
+                                            z2,
                                             nativeImage.getWidth(),
                                             nativeImage.getHeight());
                                     result.complete(true);

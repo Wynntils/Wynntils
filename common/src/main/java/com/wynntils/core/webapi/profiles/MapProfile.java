@@ -13,33 +13,43 @@ public class MapProfile {
     DynamicTexture texture;
     ResourceLocation mapResource;
 
-    double rightX;
-    double rightZ;
-    int imageWidth;
-    int imageHeight;
+    int x1;
+    int z1;
+    int x2;
+    int z2;
 
-    public MapProfile(DynamicTexture texture, double rightX, double rightZ, int imageWidth, int imageHeight) {
+    int textureWidth;
+    int textureHeight;
+
+    public MapProfile(DynamicTexture texture, int x1, int z1, int x2, int z2, int textureWidth, int textureHeight) {
         this.texture = texture;
-        this.rightX = rightX;
-        this.rightZ = rightZ;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
+        this.x1 = x1;
+        this.z1 = z1;
+        this.x2 = x2;
+        this.z2 = z2;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
+
+
+        // Remove this if we ever have non 1 to 1 maps
+        assert x2 - x1 == textureWidth;
+        assert z2 - z1 == textureHeight;
     }
 
     public float getTextureXPosition(double posX) {
-        return (float) (posX - rightX + imageWidth);
+        return (float) (posX - x1);
     }
 
     public float getTextureZPosition(double posZ) {
-        return (float) (posZ - rightZ + imageHeight);
+        return (float) (posZ - z2);
     }
 
     public int getWorldXPosition(double textureX) {
-        return (int) Math.round(textureX + rightX - imageWidth);
+        return (int) Math.round(textureX + x1);
     }
 
     public int getWorldZPosition(double textureY) {
-        return (int) Math.round(textureY + rightZ - imageHeight);
+        return (int) Math.round(textureY + z1);
     }
 
     public ResourceLocation resource() {
@@ -52,19 +62,27 @@ public class MapProfile {
         return mapResource;
     }
 
-    public double getRightX() {
-        return rightX;
+    public int getX1() {
+        return x1;
     }
 
-    public double getRightZ() {
-        return rightZ;
+    public int getZ1() {
+        return z1;
     }
 
-    public int getImageHeight() {
-        return imageHeight;
+    public double getX2() {
+        return x2;
     }
 
-    public int getImageWidth() {
-        return imageWidth;
+    public double getZ2() {
+        return z2;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
+    }
+
+    public int getTextureWidth() {
+        return textureWidth;
     }
 }
