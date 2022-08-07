@@ -17,9 +17,9 @@ import java.util.Map;
 public class IdentificationProfile {
     private static final Map<String, IdentificationModifier> typeMap = new HashMap<>();
 
-    private final IdentificationModifier type;
-    private final int baseValue;
-    private final boolean isFixed;
+    private IdentificationModifier type;
+    private int baseValue;
+    private boolean isFixed;
     private transient int min;
     private transient int max;
 
