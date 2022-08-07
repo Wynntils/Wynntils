@@ -76,8 +76,6 @@ public final class ChatManager {
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
-    private ChatManager() {}
-
     public static void init() {
         WynntilsMod.getEventBus().register(ChatManager.class);
     }

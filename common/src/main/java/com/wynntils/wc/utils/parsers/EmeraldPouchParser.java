@@ -18,8 +18,6 @@ public final class EmeraldPouchParser {
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
 
-    private EmeraldPouchParser() {}
-
     public static int getPouchUsage(ItemStack stack) {
         String lore = ItemUtils.getStringLore(stack);
         Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore);

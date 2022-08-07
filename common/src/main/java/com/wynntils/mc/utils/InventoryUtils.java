@@ -20,8 +20,6 @@ public final class InventoryUtils {
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
-    private InventoryUtils() {}
-
     public static List<EmeraldPouch> getEmeraldPouches(Inventory inventory) {
         List<EmeraldPouch> emeraldPouches = new ArrayList<>();
 

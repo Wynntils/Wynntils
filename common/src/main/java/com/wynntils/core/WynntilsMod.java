@@ -37,8 +37,6 @@ public final class WynntilsMod {
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
 
-    private WynntilsMod() {}
-
     public static IEventBus getEventBus() {
         return EVENT_BUS;
     }

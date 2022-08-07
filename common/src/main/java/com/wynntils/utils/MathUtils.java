@@ -7,8 +7,6 @@ package com.wynntils.utils;
 import java.util.Locale;
 
 public final class MathUtils {
-    private MathUtils() {}
-
     public static float lerp(float a, float b, float t) {
         return a + (b - a) * t;
     }

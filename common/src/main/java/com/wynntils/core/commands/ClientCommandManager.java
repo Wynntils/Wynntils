@@ -40,8 +40,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ClientCommandManager {
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
-    private ClientCommandManager() {}
-
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
         return clientDispatcher;
     }

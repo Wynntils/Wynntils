@@ -58,8 +58,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 public final class FeatureRegistry {
     private static final List<Feature> FEATURES = new ArrayList<>();
 
-    private FeatureRegistry() {}
-
     private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
 

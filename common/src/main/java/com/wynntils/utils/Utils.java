@@ -13,8 +13,6 @@ import java.util.Locale;
 public final class Utils {
     private static final Locale gameLocale = Locale.ROOT;
 
-    private Utils() {}
-
     public static Locale getGameLocale() {
         return gameLocale;
     }

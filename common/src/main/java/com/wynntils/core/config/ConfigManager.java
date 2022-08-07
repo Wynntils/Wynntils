@@ -42,8 +42,6 @@ public final class ConfigManager {
     private static JsonObject configObject;
     private static Gson gson;
 
-    private ConfigManager() {}
-
     public static void registerFeature(Feature feature) {
         List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
 

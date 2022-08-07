@@ -73,8 +73,6 @@ public final class LootrunUtils {
 
     private static RecordingInformation recordingInformation = null;
 
-    private LootrunUtils() {}
-
     public static LootrunState getState() {
         return state;
     }

@@ -31,8 +31,6 @@ public final class WynnItemUtils {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private WynnItemUtils() {}
-
     /**
      * Parse the item ID lore line from a given item, and convert it into an ItemIdentificationContainer
      * Returns null if the given lore line is not a valid ID

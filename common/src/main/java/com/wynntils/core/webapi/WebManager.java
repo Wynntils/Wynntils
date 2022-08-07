@@ -74,8 +74,6 @@ public final class WebManager {
 
     private static WynntilsAccount account = null;
 
-    private WebManager() {}
-
     private static List<MapProfile> maps = null;
 
     public static void init() {

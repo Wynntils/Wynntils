@@ -11,8 +11,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 public final class ContainerUtils {
-    private ContainerUtils() {}
-
     public static boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen containerScreen
                 && containerScreen.getTitle().getString().contains("Loot Chest ");

@@ -27,8 +27,6 @@ public final class ActionBarManager {
     private static int currentMana = -1;
     private static int maxMana = -1;
 
-    private ActionBarManager() {}
-
     @SubscribeEvent
     public static void onActionBarUpdate(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;

@@ -39,8 +39,6 @@ public final class RenderUtils {
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
 
-    private RenderUtils() {}
-
     // See https://github.com/MinecraftForge/MinecraftForge/issues/8083 as to why this uses TRIANGLE_STRIPS.
     // TLDR: New OpenGL only supports TRIANGLES and Minecraft patched QUADS to be usable ATM, but LINES patch is broken
     // and you can't use it.

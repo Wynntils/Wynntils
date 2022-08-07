@@ -20,8 +20,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class KeyManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
-    private KeyManager() {}
-
     public static void init() {
         WynntilsMod.getEventBus().register(KeyManager.class);
     }

@@ -10,8 +10,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class Formatter {
-    private Formatter() {}
-
     public static <T> void doFormat(
             String format, Consumer<T> consumer, Function<String, T> mapper, Map<String, T> infoVariableMap) {
         Set<String> infoVariables = infoVariableMap.keySet();

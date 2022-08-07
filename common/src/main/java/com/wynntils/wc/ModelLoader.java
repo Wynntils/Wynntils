@@ -10,8 +10,6 @@ import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
 public final class ModelLoader {
-    private ModelLoader() {}
-
     private static final WorldState worldState = new WorldState();
     private static final Character character = new Character();
 

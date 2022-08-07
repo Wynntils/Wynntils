@@ -28,8 +28,6 @@ public final class OverlayManager {
 
     private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
-    private OverlayManager() {}
-
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
         overlayInfoMap.put(overlay, overlayInfo);
     }

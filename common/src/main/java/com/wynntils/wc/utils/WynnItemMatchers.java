@@ -39,8 +39,6 @@ public final class WynnItemMatchers {
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
     private static final Pattern INGREDIENT_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
-    private WynnItemMatchers() {}
-
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
                 && (itemStack.getItem() == Items.NETHER_STAR || itemStack.getItem() == Items.SNOW)

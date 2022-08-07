@@ -41,8 +41,6 @@ public final class ChatItemUtils {
     private static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>"
             + RANGE + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
 
-    private ChatItemUtils() {}
-
     /**
      * Encodes the given item, as long as it is a standard gear item, into the following format
      *

@@ -14,8 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class CompassManager {
     private static Location compassLocation = null;
 
-    private CompassManager() {}
-
     public static void init() {
         WynntilsMod.getEventBus().register(CompassManager.class);
     }

@@ -11,8 +11,6 @@ import net.minecraft.world.scores.Team;
 public final class WynnPlayerUtils {
     private static final Pattern PLAYER_GHOST_REGEX = Pattern.compile("_\\d+");
 
-    private WynnPlayerUtils() {}
-
     public static boolean isPlayerGhost(Player player) {
         Team team = player.getTeam();
 

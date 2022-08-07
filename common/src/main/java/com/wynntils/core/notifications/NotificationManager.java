@@ -13,8 +13,6 @@ import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.chat.Component;
 
 public final class NotificationManager {
-    private NotificationManager() {}
-
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }

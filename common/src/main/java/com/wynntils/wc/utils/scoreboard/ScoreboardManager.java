@@ -158,8 +158,6 @@ public final class ScoreboardManager {
         handleScoreboardReconstruction();
     };
 
-    private ScoreboardManager() {}
-
     private static void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {
             Scoreboard scoreboard = McUtils.player().getScoreboard();
