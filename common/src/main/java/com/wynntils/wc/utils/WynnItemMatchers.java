@@ -159,6 +159,10 @@ public class WynnItemMatchers {
         return false;
     }
 
+    public static boolean isDailyRewardsChest(ItemStack itemStack) {
+        return "§aDaily Rewards".equals(itemStack.getHoverName().getString());
+    }
+
     public static boolean isPowder(ItemStack itemStack) {
         return powderNameMatcher(itemStack.getHoverName()).matches();
     }

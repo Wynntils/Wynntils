@@ -13,6 +13,7 @@ import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
 import com.wynntils.wc.custom.item.properties.ConsumableChargeProperty;
 import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
+import com.wynntils.wc.custom.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wc.custom.item.properties.DungeonKeyProperty;
 import com.wynntils.wc.custom.item.properties.DurabilityProperty;
 import com.wynntils.wc.custom.item.properties.IngredientProperty;
@@ -59,6 +60,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
+        registerProperty(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
         registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
         registerProperty(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
         registerProperty(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
