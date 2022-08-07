@@ -244,7 +244,7 @@ public abstract class Feature implements Translatable, Configurable {
         }
     }
 
-    public abstract class Condition {
+    public abstract static class Condition {
         boolean satisfied = false;
 
         public boolean isSatisfied() {

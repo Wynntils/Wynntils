@@ -1,6 +1,6 @@
 <div align="center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=30%>
-<p><i align="center">(Image in public domain)</i></p>
+<p align="center"><i>(Image in public domain)</i></p>
 <br>
 <a href="https://discord.gg/ve49m9J"><img src="https://discordapp.com/api/guilds/394189072635133952/widget.png"></a>
 <a href="https://ci.wynntils.com/job/Artemis/"><img src="http://ci.wynntils.com/buildStatus/icon?job=Artemis"></a>

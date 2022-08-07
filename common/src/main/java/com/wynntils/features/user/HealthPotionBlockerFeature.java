@@ -29,7 +29,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
     @SubscribeEvent
     public void onPotionUse(PacketSentEvent<ServerboundUseItemPacket> e) {
-        Component response = getBlockResponse(e);
+        Component response = getBlockResponse();
         if (response != null) {
             e.setCanceled(true);
             McUtils.sendMessageToClient(response);
@@ -38,10 +38,10 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
     @SubscribeEvent
     public void onPotionUseOn(PacketSentEvent<ServerboundUseItemOnPacket> e) {
-        if (getBlockResponse(e) != null) e.setCanceled(true);
+        if (getBlockResponse() != null) e.setCanceled(true);
     }
 
-    private Component getBlockResponse(PacketSentEvent<?> e) {
+    private Component getBlockResponse() {
         if (!WynnUtils.onWorld()) return null;
 
         ItemStack stack = McUtils.inventory().getSelected();

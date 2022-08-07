@@ -15,8 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TerritoryProfile {
-
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     String name;
     String friendlyName;
@@ -153,7 +152,7 @@ public class TerritoryProfile {
 
             Date acquired = null;
             try {
-                acquired = dateFormat.parse(territory.get("acquired").getAsString());
+                acquired = DATE_FORMAT.parse(territory.get("acquired").getAsString());
             } catch (ParseException e) {
                 e.printStackTrace();
             }

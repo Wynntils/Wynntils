@@ -23,8 +23,6 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /**
      * Set a consumer that will write to a HttpURLConnection
-     *
-     * @return
      */
     public PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
         this.writer = writer;

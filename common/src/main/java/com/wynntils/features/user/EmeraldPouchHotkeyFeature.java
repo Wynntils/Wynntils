@@ -50,7 +50,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
             if (emeraldPouch != null) {
                 // We found exactly one usable emerald pouch
-                Integer slotNumber = emeraldPouch.getSlotNumber();
+                int slotNumber = emeraldPouch.getSlotNumber();
 
                 if (slotNumber < 9) {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar

@@ -31,8 +31,8 @@ public class WynntilsAccount {
     String token;
     boolean ready = false;
 
-    HashMap<String, String> encodedConfigs = new HashMap<>();
-    HashMap<String, String> md5Verifications = new HashMap<>();
+    final HashMap<String, String> encodedConfigs = new HashMap<>();
+    final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public WynntilsAccount() {}
 

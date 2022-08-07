@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 /** Handles and dispatches {@link Request} */
 public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
-    public static boolean cacheOnly = false;
+    public static final boolean CACHE_ONLY = false;
 
     public RequestHandler() {}
 
@@ -151,7 +151,7 @@ public class RequestHandler {
                     }
                 }
 
-                boolean result = cacheOnly || handleHttpConnection(req);
+                boolean result = CACHE_ONLY || handleHttpConnection(req);
 
                 if (!result) {
                     if (req.useCacheAsBackup) {
