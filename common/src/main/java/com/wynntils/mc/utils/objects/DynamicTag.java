@@ -15,7 +15,6 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagType;
 import net.minecraft.nbt.TagVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
@@ -108,12 +107,12 @@ public class DynamicTag implements Tag {
 
     // FIXME: Implement
     @Override
-    public StreamTagVisitor.ValueResult accept(@NotNull StreamTagVisitor streamTagVisitor) {
+    public StreamTagVisitor.ValueResult accept(StreamTagVisitor streamTagVisitor) {
         return null;
     }
 
     @Override
-    public void acceptAsRoot(@NotNull StreamTagVisitor streamTagVisitor) {
+    public void acceptAsRoot(StreamTagVisitor streamTagVisitor) {
         Tag.super.acceptAsRoot(streamTagVisitor);
     }
 
