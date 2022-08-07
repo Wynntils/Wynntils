@@ -10,6 +10,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlayManagementScreen;
 import java.util.ArrayList;
@@ -96,6 +97,28 @@ public class OverlayManager {
 
     public static void init() {
         WynntilsMod.getEventBus().register(OverlayManager.class);
+
+        addCrashCallbacks();
+    }
+
+    private static void addCrashCallbacks() {
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
+            @Override
+            public String name() {
+                return "Loaded Overlays";
+            }
+
+            @Override
+            public Object generate() {
+                StringBuilder result = new StringBuilder();
+
+                for (Overlay overlay : enabledOverlays) {
+                    result.append("\n\t\t").append(overlay.getTranslatedName());
+                }
+
+                return result.toString();
+            }
+        });
     }
 
     @SubscribeEvent
