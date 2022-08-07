@@ -184,7 +184,7 @@ public class RequestBuilder {
         return cacheMD5Validator(() -> expectedHash);
     }
 
-    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside of a thread). */
+    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside a thread). */
     public RequestBuilder cacheMD5Validator(Supplier<String> expectedHashSupplier) {
         return cacheValidator(data -> {
             String expectedHash = expectedHashSupplier.get();

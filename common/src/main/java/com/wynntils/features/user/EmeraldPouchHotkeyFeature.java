@@ -77,7 +77,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                 }
             } else {
                 if (foundNonEmpty != null) {
-                    // Multiple filled pouches found, we can't chose between them
+                    // Multiple filled pouches found, we can't choose between them
                     return null;
                 } else {
                     foundNonEmpty = pouch;

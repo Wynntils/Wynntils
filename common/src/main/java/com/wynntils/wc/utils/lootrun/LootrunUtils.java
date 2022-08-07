@@ -562,7 +562,7 @@ public class LootrunUtils {
     }
 
     public static void stopRecording() {
-        // At this point, we already have LootrunFeature registed to the event bus
+        // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
         lootrun = recordingCompiled;
         uncompiled = recording;

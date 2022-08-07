@@ -58,7 +58,7 @@ public class WynntilsAccount {
         RequestHandler handler = WebManager.getHandler();
 
         String baseUrl = WebManager.getApiUrls().get("Athena");
-        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set it's value
+        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
 

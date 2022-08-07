@@ -42,7 +42,7 @@ public class ItemUtils {
     }
 
     /**
-     * Get the lore from an item, combined together into one string.
+     * Get the lore from an item, combined into one string.
      * Relies on {@link #getLore(ItemStack)}. See the aforementioned
      * for a list format
      *

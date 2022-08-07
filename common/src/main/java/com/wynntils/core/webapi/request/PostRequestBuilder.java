@@ -40,7 +40,7 @@ public class PostRequestBuilder extends RequestBuilder {
         });
     }
 
-    /** Sets the write to a json string from a json element */
+    /** Sets the writer to a json string from a json element */
     public PostRequestBuilder postJsonElement(JsonElement element) {
         return postBytes(element.toString().getBytes(), "application/json");
     }

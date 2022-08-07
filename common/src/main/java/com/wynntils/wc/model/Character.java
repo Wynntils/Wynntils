@@ -56,7 +56,7 @@ public class Character implements Model {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.State.WORLD) {
             currentCharacter = null;
-            // This should not be needed, but have it as a safe-guard
+            // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
         if (e.getNewState() == WorldState.State.CHARACTER_SELECTION) {

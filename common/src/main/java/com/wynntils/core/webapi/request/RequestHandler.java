@@ -73,7 +73,7 @@ public class RequestHandler {
         dispatch(false);
     }
 
-    /** Send all enqueued requests inside of a new thread and return that thread */
+    /** Send all enqueued requests inside a new thread and return that thread */
     public Thread dispatchAsync() {
         return dispatch(true);
     }
