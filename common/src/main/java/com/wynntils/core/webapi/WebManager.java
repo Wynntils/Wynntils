@@ -248,7 +248,7 @@ public class WebManager {
         final CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("AMainMap"), "map")
-                .cacheTo(new File(mapDirectory, "main-map.txt"))
+                .cacheTo(new File(mapDirectory, "maps.json"))
                 .handleJson(json -> {
                     JsonObject mapData = json.getAsJsonArray().get(0).getAsJsonObject();
 
