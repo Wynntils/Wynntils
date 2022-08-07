@@ -29,7 +29,10 @@ public class WynnItemMatchers {
             Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
     private static final Pattern PROFESSION_LEVEL_NAME_PATTERN =
             Pattern.compile("§f(.) §6(\\w+?) Profession §8\\[(Gathering|Crafting)\\]");
-    private static final Pattern SKILL_POINT_NAME_PATTERN = Pattern.compile("§dUpgrade your §[2ebcf].+?§d skill");
+    private static final Pattern SKILL_POINT_NAME_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf]. \\w+?§d skill$");
+
+    private static final Pattern SKILL_ICON_PATTERN =
+            Pattern.compile(".*?§([2ebcf])([✤✦❉✹❋]) (Strength|Dexterity|Intelligence|Defence|Agility).*?");
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile(".*§b(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
@@ -172,6 +175,10 @@ public class WynnItemMatchers {
         return professionLevelMatcher(itemStack.getHoverName()).matches();
     }
 
+    public static boolean isSkillTyped(ItemStack itemStack) {
+        return skillIconMatcher(itemStack.getHoverName()).matches();
+    }
+
     public static boolean isSkillPoint(ItemStack itemStack) {
         return skillPointNameMatcher(itemStack.getHoverName()).matches();
     }
@@ -224,7 +231,11 @@ public class WynnItemMatchers {
         return PROFESSION_LEVEL_NAME_PATTERN.matcher(ComponentUtils.getCoded(text));
     }
 
-    private static Matcher skillPointNameMatcher(Component text) {
+    public static Matcher skillIconMatcher(Component text) {
+        return SKILL_ICON_PATTERN.matcher(ComponentUtils.getCoded(text));
+    }
+
+    public static Matcher skillPointNameMatcher(Component text) {
         return SKILL_POINT_NAME_PATTERN.matcher(ComponentUtils.getCoded(text));
     }
 
