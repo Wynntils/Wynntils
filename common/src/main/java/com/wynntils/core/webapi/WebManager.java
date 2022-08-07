@@ -381,7 +381,7 @@ public class WebManager {
     }
 
     public static boolean isMapLoaded() {
-        return !maps.isEmpty();
+        return map != null;
     }
 
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
