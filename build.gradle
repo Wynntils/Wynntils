@@ -85,9 +85,9 @@ allprojects {
                     throw new AssertionError("Do not use wildcard imports.  'spotlessApply' cannot resolve this issue.")
                 }
             }
-            custom 'Refuse @Nullable annotations', {
-                if (it =~ /@Nullable/) {
-                    throw new AssertionError("Do not use @Nullable annotations.  'spotlessApply' cannot resolve this issue.")
+            custom 'Refuse IntelliJ annotations', {
+                if (it =~ /\nimport org\.jetbrains\.annotations\./) {
+                    throw new AssertionError("Do not use IntelliJ annotations.  'spotlessApply' cannot resolve this issue.")
                 }
             }
             licenseHeader '/*\n' +
