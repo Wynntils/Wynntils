@@ -23,7 +23,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FixPacketBugsFeature extends InternalFeature {
-
     private static final int METHOD_ADD = 0;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -62,7 +62,6 @@ public class GameNotificationOverlayFeature extends UserFeature {
     }
 
     public static class GameNotificationOverlay extends Overlay {
-
         @Config
         public static float messageTimeLimit = 10f;
 

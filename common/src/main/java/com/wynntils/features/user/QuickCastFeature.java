@@ -39,7 +39,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE)
 public class QuickCastFeature extends UserFeature {
-
     @RegisterKeyBind
     private final KeyHolder castFirstSpell =
             new KeyHolder("Cast 1st Spell", GLFW.GLFW_KEY_Z, "Wynntils", true, QuickCastFeature::castFirstSpell);

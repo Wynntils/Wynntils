@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class PostRequestBuilder extends RequestBuilder {
-
     private ThrowingConsumer<HttpURLConnection, IOException> writer;
 
     public PostRequestBuilder(String url, String id) {

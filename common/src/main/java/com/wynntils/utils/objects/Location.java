@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 
 public class Location extends Vector3d {
-
     public Location(double x, double y, double z) {
         super(x, y, z);
     }

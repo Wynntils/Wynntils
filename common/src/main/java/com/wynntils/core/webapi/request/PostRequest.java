@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class PostRequest extends Request {
-
     private final ThrowingConsumer<HttpURLConnection, IOException> writer;
 
     PostRequest(

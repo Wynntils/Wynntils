@@ -30,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class RenderUtils {
-
     // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
     // these colors were chosen to best match how tooltips are displayed in-game
     private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);

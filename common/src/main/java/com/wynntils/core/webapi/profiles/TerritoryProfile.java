@@ -127,7 +127,6 @@ public class TerritoryProfile {
     }
 
     public static class TerritoryDeserializer implements JsonDeserializer<TerritoryProfile> {
-
         @Override
         public TerritoryProfile deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {

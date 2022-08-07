@@ -21,7 +21,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.TooltipFlag.Default;
 
 public class ItemUtils {
-
     /**
      * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
      * ComponentUtils}
