@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
@@ -314,7 +313,6 @@ public class LootrunUtils {
         return recompileLootrun(true);
     }
 
-    @Nullable
     public static LootrunUncompiled getActiveLootrun() {
         LootrunUncompiled instance = null;
         if (recording != null) instance = recording;
