@@ -169,7 +169,7 @@ public class IdentificationProfile {
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d).flipIf(isInverted);
+            return new ReidentificationChances((130 - avg) / 61d, 1 / 61d, (avg - 70) / 61d).flipIf(isInverted);
         }
     }
 
