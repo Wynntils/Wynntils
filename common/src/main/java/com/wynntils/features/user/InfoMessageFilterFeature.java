@@ -13,6 +13,7 @@ import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
@@ -36,7 +37,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$");
 
     private static final Pattern LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^§.\\[§r§.[A-Z+]+§r§.\\] §r§..*§r§. has just logged in!$");
+            Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
@@ -53,7 +54,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
     private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^(§r§8)?\\[§r§7[A-Z+]+§r§8\\] §r§7.*§r§8 has just logged in!$");
+            Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
     @Config
     private boolean hideWelcome = true;
@@ -65,10 +66,10 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean hideLevelUp = true;
 
     @Config
-    private boolean hideLoginAnnouncements = true;
+    private FilterType loginAnnouncements = FilterType.REDIRECT;
 
     @Config
-    private boolean redirectSoulPoint = true;
+    private FilterType soulPoint = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -85,9 +86,18 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideLoginAnnouncements) {
-                if (LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
+            if (loginAnnouncements != FilterType.KEEP) {
+                Matcher matcher = LOGIN_ANNOUNCEMENT.matcher(msg);
+                if (matcher.find()) {
                     e.setCanceled(true);
+                    if (loginAnnouncements == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group(2);
+                    String rank = matcher.group(1);
+
+                    sendLoginMessage(playerName, rank);
                     return;
                 }
             }
@@ -115,7 +125,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (redirectSoulPoint) {
+            if (soulPoint != FilterType.KEEP) {
                 if (SOUL_POINT_1.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
@@ -124,8 +134,12 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
+                    if (soulPoint == FilterType.HIDE) {
+                        return;
+                    }
+
                     // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(m.group(1));
+                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
                     return;
                 }
             }
@@ -153,14 +167,23 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideLoginAnnouncements) {
-                if (BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg).find()) {
+            if (loginAnnouncements != FilterType.KEEP) {
+                Matcher matcher = BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg);
+                if (matcher.find()) {
                     e.setCanceled(true);
+                    if (loginAnnouncements == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group(3);
+                    String rank = matcher.group(2);
+
+                    sendLoginMessage(playerName, rank);
                     return;
                 }
             }
 
-            if (redirectSoulPoint) {
+            if (soulPoint != FilterType.KEEP) {
                 if (BACKGROUND_SOUL_POINT_1.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
@@ -169,11 +192,50 @@ public class InfoMessageFilterFeature extends UserFeature {
                 Matcher m = BACKGROUND_SOUL_POINT_2.matcher(msg);
                 if (m.find()) {
                     e.setCanceled(true);
+                    if (soulPoint == FilterType.HIDE) {
+                        return;
+                    }
+
                     // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
                     NotificationManager.queueMessage(m.group(1));
                     return;
                 }
             }
         }
+    }
+
+    private static void sendLoginMessage(String playerName, String rank) {
+        ChatFormatting primary;
+        ChatFormatting secondary;
+        switch (rank) {
+            case "VIP" -> {
+                primary = ChatFormatting.DARK_GREEN;
+                secondary = ChatFormatting.GREEN;
+            }
+            case "VIP+" -> {
+                primary = ChatFormatting.DARK_AQUA;
+                secondary = ChatFormatting.AQUA;
+            }
+            case "HERO" -> {
+                primary = ChatFormatting.DARK_PURPLE;
+                secondary = ChatFormatting.LIGHT_PURPLE;
+            }
+            case "CHAMPION" -> {
+                primary = ChatFormatting.YELLOW;
+                secondary = ChatFormatting.GOLD;
+            }
+            default -> {
+                return;
+            }
+        }
+
+        NotificationManager.queueMessage(ChatFormatting.GREEN + "→ " + primary + "[" + secondary + rank + primary + "] "
+                + secondary + playerName);
+    }
+
+    public enum FilterType {
+        KEEP,
+        HIDE,
+        REDIRECT
     }
 }
