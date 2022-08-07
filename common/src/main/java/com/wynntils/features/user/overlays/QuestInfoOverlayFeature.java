@@ -34,7 +34,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
 public class QuestInfoOverlayFeature extends UserFeature {
-
     @Config
     public static boolean disableQuestTrackingOnScoreboard = true;
 
@@ -51,7 +50,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
-
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 

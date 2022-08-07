@@ -120,10 +120,6 @@ public class FeatureRegistry {
         }
     }
 
-    public static void registerFeatures(List<Feature> features) {
-        features.forEach(FeatureRegistry::registerFeature);
-    }
-
     public static List<Feature> getFeatures() {
         return FEATURES;
     }

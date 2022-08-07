@@ -19,7 +19,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WynncraftPauseScreenFeature extends UserFeature {
-
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
         if (!WynnUtils.onServer()) return;

@@ -101,24 +101,25 @@ public class ServerIcon {
             return;
         }
 
-        NativeImage nativeImage;
         try {
-            nativeImage = NativeImage.fromBase64(iconString);
+            try (NativeImage nativeImage = NativeImage.fromBase64(iconString)) {
+                Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
+                Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
+
+                synchronized (this) {
+                    RenderSystem.recordRenderCall(() -> {
+                        Minecraft.getInstance()
+                                .getTextureManager()
+                                .register(destination, new DynamicTexture(nativeImage));
+                        serverIconLocation = destination;
+                    });
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             WynntilsMod.error("Unable to convert image from base64: " + iconString);
             serverIconLocation = FALLBACK;
             return;
-        }
-
-        Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
-        Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
-
-        synchronized (this) {
-            RenderSystem.recordRenderCall(() -> {
-                Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
-                serverIconLocation = destination;
-            });
         }
     }
 }

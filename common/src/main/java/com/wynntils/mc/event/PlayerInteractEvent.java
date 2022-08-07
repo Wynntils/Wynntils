@@ -6,7 +6,6 @@ package com.wynntils.mc.event;
 
 import com.google.common.base.Preconditions;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -22,12 +21,11 @@ public class PlayerInteractEvent extends PlayerEvent {
     private final InteractionHand hand;
     private final BlockPos pos;
 
-    @Nullable
     private final Direction face;
 
     private InteractionResult cancellationResult = InteractionResult.PASS;
 
-    private PlayerInteractEvent(Player player, InteractionHand hand, BlockPos pos, @Nullable Direction face) {
+    private PlayerInteractEvent(Player player, InteractionHand hand, BlockPos pos, Direction face) {
         super(Preconditions.checkNotNull(player, "Null player in PlayerInteractEvent!"));
         this.hand = Preconditions.checkNotNull(hand, "Null hand in PlayerInteractEvent!");
         this.pos = Preconditions.checkNotNull(pos, "Null position in PlayerInteractEvent!");
@@ -49,7 +47,6 @@ public class PlayerInteractEvent extends PlayerEvent {
         return this.pos;
     }
 
-    @Nullable
     public Direction getFace() {
         return this.face;
     }
@@ -70,7 +67,7 @@ public class PlayerInteractEvent extends PlayerEvent {
     public static class RightClickBlock extends PlayerInteractEvent {
         private Event.Result useBlock = Event.Result.DEFAULT;
         private Event.Result useItem = Event.Result.DEFAULT;
-        private BlockHitResult hitVec;
+        private final BlockHitResult hitVec;
 
         public RightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
             super(player, hand, pos, hitVec.getDirection());

@@ -45,7 +45,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
 public class WebManager {
@@ -55,22 +54,22 @@ public class WebManager {
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    public static @Nullable WebReader apiUrls = null;
+    public static WebReader apiUrls = null;
 
     private static final Gson gson = new Gson();
 
-    private static @Nullable HashMap<String, ItemProfile> items = null;
-    private static @Nullable Collection<ItemProfile> directItems = null;
-    private static @Nullable HashMap<String, ItemGuessProfile> itemGuesses = null;
-    private static @Nullable HashMap<String, String> translatedReferences = null;
-    private static @Nullable HashMap<String, String> internalIdentifications = null;
-    private static @Nullable HashMap<String, MajorIdentification> majorIds = null;
-    private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
+    private static HashMap<String, ItemProfile> items = null;
+    private static Collection<ItemProfile> directItems = null;
+    private static HashMap<String, ItemGuessProfile> itemGuesses = null;
+    private static HashMap<String, String> translatedReferences = null;
+    private static HashMap<String, String> internalIdentifications = null;
+    private static HashMap<String, MajorIdentification> majorIds = null;
+    private static HashMap<ItemType, String[]> materialTypes = null;
 
     private static TerritoryUpdateThread territoryUpdateThread;
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
-    private static @Nullable WynntilsAccount account = null;
+    private static WynntilsAccount account = null;
 
     private static @Nullable MapProfile map = null;
 
@@ -104,7 +103,7 @@ public class WebManager {
         updateTerritoryThreadStatus(false);
     }
 
-    public static void setupUserAccount() {
+    private static void setupUserAccount() {
         if (isLoggedIn()) return;
 
         account = new WynntilsAccount();
@@ -297,7 +296,7 @@ public class WebManager {
         return result;
     }
 
-    public static boolean tryReloadApiUrls(boolean async) {
+    private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
                 .handleWebReader(reader -> {
@@ -314,8 +313,6 @@ public class WebManager {
         handler.dispatch(async);
 
         tryLoadMap();
-
-        return setup;
     }
 
     /**
@@ -376,31 +373,31 @@ public class WebManager {
         return map != null;
     }
 
-    public static @Nullable HashMap<String, ItemGuessProfile> getItemGuesses() {
+    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
 
-    public static @Nullable Collection<ItemProfile> getItemsCollection() {
+    public static Collection<ItemProfile> getItemsCollection() {
         return directItems;
     }
 
-    public static @Nullable HashMap<String, ItemProfile> getItemsMap() {
+    public static HashMap<String, ItemProfile> getItemsMap() {
         return items;
     }
 
-    public static @Nullable HashMap<ItemType, String[]> getMaterialTypes() {
+    public static HashMap<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
 
-    public static @Nullable HashMap<String, MajorIdentification> getMajorIds() {
+    public static HashMap<String, MajorIdentification> getMajorIds() {
         return majorIds;
     }
 
-    public static @Nullable HashMap<String, String> getInternalIdentifications() {
+    public static HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
 
-    public static @Nullable HashMap<String, String> getTranslatedReferences() {
+    public static HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
     }
 
@@ -416,11 +413,11 @@ public class WebManager {
         return setup;
     }
 
-    public static @Nullable WebReader getApiUrls() {
+    public static WebReader getApiUrls() {
         return apiUrls;
     }
 
-    public static @Nullable WynntilsAccount getAccount() {
+    public static WynntilsAccount getAccount() {
         return account;
     }
 

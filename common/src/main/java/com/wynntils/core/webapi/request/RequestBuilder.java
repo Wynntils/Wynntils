@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 
 /** Helper class for building a {@link Request} */
 public class RequestBuilder {
-    String url;
-    String id;
+    final String url;
+    final String id;
     int parallelGroup = 0;
     ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
     Request.RequestErrorHandler onError;
-    Map<String, String> headers = new HashMap<>();
+    final Map<String, String> headers = new HashMap<>();
     File cacheFile;
     Predicate<byte[]> cacheValidator = null;
     boolean useCacheAsBackup;
@@ -170,7 +170,7 @@ public class RequestBuilder {
      * Allows using the cache as back up if no result has been achieved from either the cache
      * validator if set or the connection.
      *
-     * <p>Naturally, if {@link RequestHandler#cacheOnly} is set to true, then the connection does
+     * <p>Naturally, if {@link RequestHandler#CACHE_ONLY} is set to true, then the connection does
      * not yield a result
      */
     public RequestBuilder useCacheAsBackup() {
@@ -184,7 +184,7 @@ public class RequestBuilder {
         return cacheMD5Validator(() -> expectedHash);
     }
 
-    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside of a thread). */
+    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside a thread). */
     public RequestBuilder cacheMD5Validator(Supplier<String> expectedHashSupplier) {
         return cacheValidator(data -> {
             String expectedHash = expectedHashSupplier.get();

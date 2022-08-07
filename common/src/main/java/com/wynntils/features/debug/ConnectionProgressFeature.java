@@ -12,7 +12,6 @@ import com.wynntils.wc.model.WorldState.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {
-
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         WynntilsMod.info("Connection confirmed");

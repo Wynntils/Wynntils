@@ -39,7 +39,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class ItemScreenshotFeature extends UserFeature {
-
     @RegisterKeyBind
     private final KeyHolder itemScreenshotKeybind =
             new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});

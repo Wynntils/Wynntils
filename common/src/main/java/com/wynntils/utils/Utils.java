@@ -11,13 +11,9 @@ import java.util.Locale;
  * without an aspect on minecraft can be put here. Keep the names short, but distinct.
  */
 public class Utils {
-    private static Locale gameLocale = Locale.ROOT;
+    private static final Locale gameLocale = Locale.ROOT;
 
     public static Locale getGameLocale() {
         return gameLocale;
-    }
-
-    public static void setGameLocale(Locale gameLocale) {
-        Utils.gameLocale = gameLocale;
     }
 }
