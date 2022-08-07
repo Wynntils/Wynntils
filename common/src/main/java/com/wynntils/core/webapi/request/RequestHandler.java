@@ -149,7 +149,7 @@ public class RequestHandler {
                         }
                     } catch (FileNotFoundException ignore) {
                     } catch (Exception e) {
-                        WynntilsMod.warn("Error occurred whilst trying to use validated cache for " + req.id + " at "
+                        WynntilsMod.warn("Error occurred whilst trying to validate cache for " + req.id + " at "
                                 + req.cacheFile.getPath());
                         e.printStackTrace();
                     }
@@ -167,6 +167,8 @@ public class RequestHandler {
                                 req.onError();
                             }
                         } catch (FileNotFoundException ignore) {
+                            WynntilsMod.warn("Could not find file while trying to use cache as backup");
+                            req.onError();
                         } catch (Exception e) {
                             WynntilsMod.warn("Error occurred whilst trying to use cache for " + req.id + " at "
                                     + req.cacheFile.getPath());
@@ -175,10 +177,11 @@ public class RequestHandler {
                             req.onError();
                         }
                     } else {
-                        WynntilsMod.warn("Unable to satisfy request");
+                        WynntilsMod.warn("Request was not satisfied before and using cache as backup is not set");
                         req.onError();
                     }
                 }
+
                 req.currentlyHandling = LoadingPhase.LOADED;
                 return null;
             });

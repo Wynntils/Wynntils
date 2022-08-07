@@ -259,7 +259,7 @@ public class WebManager {
 
                     final String md5 = mapData.get("hash").getAsString();
 
-                    // TODO DownloaderManager?
+                    // TODO DownloaderManager?8 + Overlay
                     handler.addAndDispatchAsync(
                             new RequestBuilder(mapData.get("download").getAsString(), "main_map.png")
                                     .onError(() -> result.complete(false))
