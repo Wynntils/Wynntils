@@ -13,10 +13,13 @@ public class ProfessionLevelProperty extends CustomStackCountProperty {
     public ProfessionLevelProperty(WynnItemStack item) {
         super(item);
 
-        // Level is always at line index 2.
-        String levelLine = ItemUtils.getLore(item).get(2);
-        String value = levelLine.substring(levelLine.indexOf('f') + 1);
+        try {
+            // Level is always at line index 2.
+            String levelLine = ItemUtils.getLore(item).get(2);
+            String value = levelLine.substring(levelLine.indexOf('f') + 1);
 
-        setCustomStackCount(value, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
+            setCustomStackCount(value, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
+        } catch (IndexOutOfBoundsException ignored) {
+        }
     }
 }

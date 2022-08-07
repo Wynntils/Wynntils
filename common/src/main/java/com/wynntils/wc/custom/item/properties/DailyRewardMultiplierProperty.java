@@ -12,9 +12,11 @@ import com.wynntils.wc.custom.item.WynnItemStack;
 public class DailyRewardMultiplierProperty extends CustomStackCountProperty {
     public DailyRewardMultiplierProperty(WynnItemStack item) {
         super(item);
-        // Multiplier line is always on index 3
-        String value = String.valueOf(ItemUtils.getLore(item).get(3).charAt(25));
-
-        this.setCustomStackCount(value, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
+        try {
+            // Multiplier line is always on index 3
+            String value = String.valueOf(ItemUtils.getLore(item).get(3).charAt(25));
+            this.setCustomStackCount(value, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
+        } catch (IndexOutOfBoundsException ignored) {
+        }
     }
 }
