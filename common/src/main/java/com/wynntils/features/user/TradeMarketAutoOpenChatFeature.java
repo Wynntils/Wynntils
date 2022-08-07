@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.utils.WynnUtils;
@@ -18,7 +19,7 @@ public class TradeMarketAutoOpenChatFeature extends UserFeature {
     // Type the price in emeralds or type 'cancel' to cancel:
     // Type the amount you wish to buy or type 'cancel' to cancel:
     // Type the item name or type 'cancel' to cancel:
-    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile("§6Type the .* or type 'cancel' to cancel:");
+    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile("^§6Type the .* or type 'cancel' to cancel:$");
 
     private boolean openChatWhenContainerClosed = false;
 
@@ -32,10 +33,15 @@ public class TradeMarketAutoOpenChatFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onContainerClose(ScreenClosedEvent event) {
+    public void onScreenClose(ScreenClosedEvent event) {
         if (!openChatWhenContainerClosed) return;
 
         openChatWhenContainerClosed = false;
         McUtils.mc().setScreen(new ChatScreen(""));
+    }
+
+    @SubscribeEvent
+    public void onScreenOpen(ScreenOpenedEvent event) {
+        openChatWhenContainerClosed = false;
     }
 }
