@@ -19,7 +19,7 @@ public class TradeMarketAutoOpenChatFeature extends UserFeature {
     // Type the price in emeralds or type 'cancel' to cancel:
     // Type the amount you wish to buy or type 'cancel' to cancel:
     // Type the item name or type 'cancel' to cancel:
-    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile("§6Type the .* or type 'cancel' to cancel:");
+    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile("^§6Type the .* or type 'cancel' to cancel:$");
 
     private boolean openChatWhenContainerClosed = false;
 
