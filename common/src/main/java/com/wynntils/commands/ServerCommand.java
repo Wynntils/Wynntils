@@ -99,7 +99,7 @@ public class ServerCommand extends CommandBase {
         MutableComponent message = new TextComponent("Online players on " + server + ": " + players.size() + "\n")
                 .withStyle(ChatFormatting.DARK_AQUA);
 
-        if (players.size() == 0) {
+        if (players.isEmpty()) {
             message.append(new TextComponent("No players!").withStyle(ChatFormatting.AQUA));
         } else {
             message.append(new TextComponent(String.join(", ", players)).withStyle(ChatFormatting.AQUA));

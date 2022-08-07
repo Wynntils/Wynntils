@@ -33,12 +33,12 @@ public final class StringUtils {
     }
 
     public static String capitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toUpperCase(input.charAt(0)) + input.substring(1);
     }
 
     public static String uncapitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
     }
 
@@ -58,7 +58,7 @@ public final class StringUtils {
                     result.append('\n');
                     length = 0;
                 }
-                if (line.length() > 0) {
+                if (!line.isEmpty()) {
                     result.append(line).append(' ');
                     length += font.width(line) + spaceSize;
                 }

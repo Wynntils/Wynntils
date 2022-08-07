@@ -38,7 +38,7 @@ public enum SpellType {
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", "4th Spell", 0, 0);
 
-    static final int[][] MANA_REDUCTION_LEVELS = new int[][] {
+    static final int[][] MANA_REDUCTION_LEVELS = {
         {},
         {68},
         {41, 105},
@@ -152,7 +152,7 @@ public enum SpellType {
 
     public static SpellType forClass(ClassType classRequired, int spellNumber) {
         for (SpellType spellType : values()) {
-            if (spellType.classType.equals(classRequired) && spellType.spellNumber == spellNumber) {
+            if (spellType.classType == classRequired && spellType.spellNumber == spellNumber) {
                 return spellType;
             }
         }

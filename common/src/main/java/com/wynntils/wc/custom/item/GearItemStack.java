@@ -397,7 +397,7 @@ public class GearItemStack extends WynnItemStack {
         baseTooltip.add(new TextComponent(""));
 
         // elemental damages
-        if (itemProfile.getDamageTypes().size() > 0) {
+        if (!itemProfile.getDamageTypes().isEmpty()) {
             Map<DamageType, String> damages = itemProfile.getDamages();
             for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
                 DamageType type = entry.getKey();
@@ -414,7 +414,7 @@ public class GearItemStack extends WynnItemStack {
         }
 
         // elemental defenses
-        if (itemProfile.getDefenseTypes().size() > 0) {
+        if (!itemProfile.getDefenseTypes().isEmpty()) {
             int health = itemProfile.getHealth();
             if (health != 0) {
                 MutableComponent healthComp =
@@ -447,13 +447,13 @@ public class GearItemStack extends WynnItemStack {
         }
 
         // ids
-        if (itemProfile.getStatuses().size() > 0) {
+        if (!itemProfile.getStatuses().isEmpty()) {
             baseTooltip.add(ID_PLACEHOLDER);
             baseTooltip.add(new TextComponent(""));
         }
 
         // major ids
-        if (itemProfile.getMajorIds() != null && itemProfile.getMajorIds().size() > 0) {
+        if (itemProfile.getMajorIds() != null && !itemProfile.getMajorIds().isEmpty()) {
             for (MajorIdentification majorId : itemProfile.getMajorIds()) {
                 Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
                         .forEach(c -> baseTooltip.add(new TextComponent(c).withStyle(ChatFormatting.DARK_AQUA)));
@@ -470,11 +470,11 @@ public class GearItemStack extends WynnItemStack {
                 MutableComponent powderLine = new TextComponent(
                                 "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
-                if (powders.size() > 0) {
+                if (!powders.isEmpty()) {
                     MutableComponent powderList = new TextComponent("[");
                     for (Powder p : powders) {
                         String symbol = p.getColoredSymbol();
-                        if (powderList.getSiblings().size() > 0) symbol = " " + symbol;
+                        if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(new TextComponent(symbol));
                     }
                     powderList.append(new TextComponent("]"));

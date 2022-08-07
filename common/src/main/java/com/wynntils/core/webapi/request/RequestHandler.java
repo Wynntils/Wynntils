@@ -28,8 +28,6 @@ public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
     public static final boolean CACHE_ONLY = false;
 
-    public RequestHandler() {}
-
     private final ExecutorService pool = Executors.newFixedThreadPool(
             4,
             new ThreadFactoryBuilder()
@@ -117,7 +115,7 @@ public class RequestHandler {
 
     private void handleDispatch(int dispatchId, List<List<Request>> groupedRequests, int currentGroupIndex) {
         List<Request> currentGroup = groupedRequests.get(currentGroupIndex);
-        if (currentGroup.size() == 0) {
+        if (currentGroup.isEmpty()) {
             nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
             return;
         }

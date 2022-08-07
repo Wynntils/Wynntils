@@ -719,7 +719,7 @@ public final class LootrunUtils {
             return null;
         }
 
-        if (activeLootrun.path == null || activeLootrun.path.points().size() == 0) return null;
+        if (activeLootrun.path == null || activeLootrun.path.points().isEmpty()) return null;
 
         return activeLootrun.path.points().get(0);
     }

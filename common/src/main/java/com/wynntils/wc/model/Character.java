@@ -114,16 +114,16 @@ public class Character implements Model {
             ClassType classType = null;
 
             for (String line : lore) {
-                Matcher matcher = LEVEL_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    level = Integer.parseInt(matcher.group(1));
+                Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
+                if (levelMatcher.matches()) {
+                    level = Integer.parseInt(levelMatcher.group(1));
                     continue;
                 }
 
-                matcher = CLASS_PATTERN.matcher(line);
+                Matcher classMatcher = CLASS_PATTERN.matcher(line);
 
-                if (matcher.matches()) {
-                    classType = ClassType.fromName(matcher.group(1));
+                if (classMatcher.matches()) {
+                    classType = ClassType.fromName(classMatcher.group(1));
                 }
             }
 
