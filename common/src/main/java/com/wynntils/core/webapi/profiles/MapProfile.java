@@ -69,11 +69,11 @@ public class MapProfile {
         return z1;
     }
 
-    public double getX2() {
+    public int getX2() {
         return x2;
     }
 
-    public double getZ2() {
+    public int getZ2() {
         return z2;
     }
 
