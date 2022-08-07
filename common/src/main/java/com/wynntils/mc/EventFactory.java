@@ -42,6 +42,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
@@ -180,6 +181,10 @@ public class EventFactory {
 
     public static void onScreenOpened(Screen screen) {
         post(new ScreenOpenedEvent(screen));
+    }
+
+    public static void onScreenClose() {
+        post(new ScreenClosedEvent());
     }
 
     public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
