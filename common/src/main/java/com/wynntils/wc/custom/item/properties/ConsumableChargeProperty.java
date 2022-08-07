@@ -5,16 +5,12 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
 
-public class ConsumableChargeProperty extends ItemProperty implements TextOverlayProperty {
-    private final TextOverlay textOverlay;
-
+public class ConsumableChargeProperty extends CustomStackCountProperty {
     public ConsumableChargeProperty(WynnItemStack item) {
         super(item);
 
@@ -25,9 +21,7 @@ public class ConsumableChargeProperty extends ItemProperty implements TextOverla
             charges = consumableMatcher.group(2);
         }
 
-        int xOffset = 17 - McUtils.mc().font.width(charges);
-        textOverlay = new TextOverlay(
-                charges, CommonColors.WHITE, ItemTextOverlayFeature.consumableChargeShadow, xOffset, 9, 1f);
+        this.setCustomStackCount(charges, CommonColors.WHITE, ItemTextOverlayFeature.consumableChargeShadow);
     }
 
     @Override
@@ -38,10 +32,5 @@ public class ConsumableChargeProperty extends ItemProperty implements TextOverla
     @Override
     public boolean isHotbarText() {
         return true;
-    }
-
-    @Override
-    public TextOverlay getTextOverlay() {
-        return textOverlay;
     }
 }
