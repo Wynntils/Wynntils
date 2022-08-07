@@ -5,6 +5,7 @@
 package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
@@ -33,7 +34,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
         Component itemName = item.getHoverName();
         Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(itemName);
         if (nameMatcher.find()) {
-            location = ChatFormatting.stripFormatting(nameMatcher.group(1));
+            location = ComponentUtils.stripFormatting(nameMatcher.group(1));
 
             if (location.equals("Dungeon")) {
                 textColor = DUNGEON_COLOR;

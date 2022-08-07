@@ -6,6 +6,7 @@ package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.Pair;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
@@ -221,7 +222,7 @@ public class ScoreboardManager {
 
         for (int i = 0; i < scoreboardCopy.size(); i++) {
             String strippedLine =
-                    ChatFormatting.stripFormatting(scoreboardCopy.get(i).line());
+                    ComponentUtils.stripFormatting(scoreboardCopy.get(i).line());
 
             if (strippedLine == null) {
                 continue;

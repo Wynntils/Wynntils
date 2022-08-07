@@ -5,11 +5,11 @@
 package com.wynntils.wc.utils.scoreboard.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 
 public class QuestManager implements ScoreboardHandler {
     private static QuestInfo currentQuest = null;
@@ -31,9 +31,9 @@ public class QuestManager implements ScoreboardHandler {
 
         for (String line : content) {
             if (line.startsWith("§e")) {
-                questName.append(ChatFormatting.stripFormatting(line)).append(" ");
+                questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
-                description.append(ChatFormatting.stripFormatting(line)).append(" ");
+                description.append(ComponentUtils.stripFormatting(line)).append(" ");
             }
         }
 
