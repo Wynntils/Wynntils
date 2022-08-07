@@ -85,6 +85,11 @@ allprojects {
                     throw new AssertionError("Do not use wildcard imports.  'spotlessApply' cannot resolve this issue.")
                 }
             }
+            custom 'Refuse @Nullable annotations', {
+                if (it =~ /@Nullable/) {
+                    throw new AssertionError("Do not use @Nullable annotations.  'spotlessApply' cannot resolve this issue.")
+                }
+            }
             licenseHeader '/*\n' +
                     ' * Copyright © Wynntils $YEAR.\n' +
                     ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
