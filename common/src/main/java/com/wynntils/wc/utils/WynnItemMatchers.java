@@ -119,7 +119,7 @@ public class WynnItemMatchers {
      */
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
-        String strippedName = WynnUtils.normalizeBadString(ChatFormatting.stripFormatting(name));
+        String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
         if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
         ItemProfile profile = WebManager.getItemsMap().get(strippedName);
         return (profile != null
