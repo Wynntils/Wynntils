@@ -24,7 +24,6 @@ import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
@@ -84,7 +83,6 @@ import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -201,10 +199,6 @@ public class EventFactory {
 
     public static void onCloseContainerPost() {
         post(new ContainerCloseEvent.Post());
-    }
-
-    public static void onItemsReceived(List<ItemStack> items, AbstractContainerMenu container) {
-        post(new ItemsReceivedEvent(container, items));
     }
 
     public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
