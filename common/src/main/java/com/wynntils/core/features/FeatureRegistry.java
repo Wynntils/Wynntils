@@ -38,6 +38,7 @@ import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.user.overlays.MiniMapOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
@@ -160,6 +161,7 @@ public final class FeatureRegistry {
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new MiniMapOverlayFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new ObjectivesOverlayFeature());
