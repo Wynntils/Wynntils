@@ -5,7 +5,7 @@
 package com.wynntils.wc.custom.item;
 
 import com.wynntils.features.user.SoulPointTimerFeature;
-import com.wynntils.wc.utils.WynnInventoryData;
+import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ public class SoulPointItemStack extends WynnItemStack {
 
             copy.add(new TextComponent(" "));
 
-            int rawSecondsUntilSoulPoint = WynnInventoryData.getTicksTillNextSoulPoint() / 20;
+            int rawSecondsUntilSoulPoint = getTicksTillNextSoulPoint() / 20;
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
@@ -44,5 +44,15 @@ public class SoulPointItemStack extends WynnItemStack {
         }
 
         return tooltip;
+    }
+
+    /**
+     * @return Time in game ticks (1/20th of a second, 50ms) until next soul point
+     *     <p>-1 if unable to determine
+     */
+    private static int getTicksTillNextSoulPoint() {
+        if (McUtils.mc().level == null) return -1;
+
+        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
     }
 }
