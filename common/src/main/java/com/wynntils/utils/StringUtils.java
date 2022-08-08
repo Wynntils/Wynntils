@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
-public class StringUtils {
+public final class StringUtils {
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *
@@ -31,12 +31,12 @@ public class StringUtils {
     }
 
     public static String capitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toUpperCase(input.charAt(0)) + input.substring(1);
     }
 
     public static String uncapitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
     }
 
@@ -56,7 +56,7 @@ public class StringUtils {
                     result.append('\n');
                     length = 0;
                 }
-                if (line.length() > 0) {
+                if (!line.isEmpty()) {
                     result.append(line).append(' ');
                     length += font.width(line) + spaceSize;
                 }

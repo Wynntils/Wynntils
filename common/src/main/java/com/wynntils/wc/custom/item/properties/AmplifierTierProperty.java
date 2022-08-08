@@ -28,7 +28,7 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
 
         String text = ItemTextOverlayFeature.amplifierTierRomanNumerals
                 ? ampNumeral
-                : "" + MathUtils.integerFromRoman(ampNumeral);
+                : String.valueOf(MathUtils.integerFromRoman(ampNumeral));
 
         textOverlay = new TextOverlay(
                 text,

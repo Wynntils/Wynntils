@@ -22,8 +22,8 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
-public abstract class WynntilsFeatureCommand {
-    public static final SuggestionProvider<CommandSourceStack> userFeatureSuggestionProvider =
+public final class WynntilsFeatureCommand {
+    private static final SuggestionProvider<CommandSourceStack> userFeatureSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream()
                             .filter(feature -> feature.getClass().getSuperclass() == UserFeature.class)

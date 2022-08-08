@@ -8,22 +8,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class OverlaySize {
-    protected static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
-    protected static final float MINIMUM_HEIGHT = 3f;
-    protected static final float MINIMUM_WIDTH = 3f;
+    private static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
+    private static final float MINIMUM_HEIGHT = 3f;
+    private static final float MINIMUM_WIDTH = 3f;
 
     protected float width;
     protected float height;
 
     // For GSON
-    public OverlaySize() {}
+    protected OverlaySize() {}
 
-    public OverlaySize(float width, float height) {
+    protected OverlaySize(float width, float height) {
         this.width = width;
         this.height = height;
     }
 
-    public OverlaySize(String string) {
+    protected OverlaySize(String string) {
         Matcher matcher = SIZE_REGEX.matcher(string.replaceAll(" ", ""));
 
         if (!matcher.matches()) {
@@ -34,7 +34,7 @@ public abstract class OverlaySize {
             this.width = Float.parseFloat(matcher.group(1));
             this.height = Float.parseFloat(matcher.group(2));
         } catch (NumberFormatException exception) {
-            throw new RuntimeException("Failed to parse OverlaySize");
+            throw new RuntimeException("Failed to parse OverlaySize", exception);
         }
     }
 

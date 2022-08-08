@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
-public class InventoryUtils {
+public final class InventoryUtils {
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
@@ -62,7 +62,7 @@ public class InventoryUtils {
         RIGHT_CLICK
     }
 
-    public static class EmeraldPouch {
+    public static final class EmeraldPouch {
         final int slotNumber;
         final ItemStack stack;
 

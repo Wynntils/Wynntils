@@ -92,7 +92,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
             MutableComponent guesses = new TextComponent("    ");
 
             guesses.append(
-                    new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level != -1 ? level : "?"));
+                    new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
 
             if (ItemGuessFeature.showGuessesPrice && level != -1) {
                 guesses.append(new TextComponent(" [")

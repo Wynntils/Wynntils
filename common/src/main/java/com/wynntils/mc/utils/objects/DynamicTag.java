@@ -18,38 +18,7 @@ import net.minecraft.nbt.TagVisitor;
 
 /** A fake StringTag that gives a dynamic value for toString */
 public class DynamicTag implements Tag {
-    public static final TagType<StringTag> TYPE = new TagType<>() {
-        public StringTag load(DataInput input, int depth, NbtAccounter accounter) throws IOException {
-            accounter.accountBits(288L);
-            String string = input.readUTF();
-            accounter.accountBits(16L * string.length());
-            return StringTag.valueOf(string);
-        }
-
-        // FIXME: Implement these
-        @Override
-        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor) {
-            return null;
-        }
-
-        @Override
-        public void skip(DataInput dataInput, int i) {}
-
-        @Override
-        public void skip(DataInput dataInput) {}
-
-        public String getName() {
-            return "STRING";
-        }
-
-        public String getPrettyName() {
-            return "TAG_String";
-        }
-
-        public boolean isValue() {
-            return true;
-        }
-    };
+    private static final TagType<StringTag> TYPE = new DynamicTagType();
     private static final StringTag EMPTY = StringTag.valueOf("");
     private final Supplier<String> data;
 
@@ -110,11 +79,6 @@ public class DynamicTag implements Tag {
         return null;
     }
 
-    @Override
-    public void acceptAsRoot(StreamTagVisitor streamTagVisitor) {
-        Tag.super.acceptAsRoot(streamTagVisitor);
-    }
-
     public static String quoteAndEscape(String text) {
         StringBuilder stringBuilder = new StringBuilder(" ");
         char c = 0;
@@ -143,5 +107,38 @@ public class DynamicTag implements Tag {
         stringBuilder.setCharAt(0, c);
         stringBuilder.append(c);
         return stringBuilder.toString();
+    }
+
+    public static class DynamicTagType implements TagType<StringTag> {
+        public StringTag load(DataInput input, int depth, NbtAccounter accounter) throws IOException {
+            accounter.accountBits(288L);
+            String string = input.readUTF();
+            accounter.accountBits(16L * string.length());
+            return StringTag.valueOf(string);
+        }
+
+        // FIXME: Implement these
+        @Override
+        public StreamTagVisitor.ValueResult parse(DataInput dataInput, StreamTagVisitor streamTagVisitor) {
+            return null;
+        }
+
+        @Override
+        public void skip(DataInput dataInput, int i) {}
+
+        @Override
+        public void skip(DataInput dataInput) {}
+
+        public String getName() {
+            return "STRING";
+        }
+
+        public String getPrettyName() {
+            return "TAG_String";
+        }
+
+        public boolean isValue() {
+            return true;
+        }
     }
 }

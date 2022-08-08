@@ -17,7 +17,7 @@ import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
-public class KeyManager {
+public final class KeyManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
     public static void init() {
@@ -85,7 +85,7 @@ public class KeyManager {
         }
     }
 
-    public static void triggerKeybinds() {
+    private static void triggerKeybinds() {
         keyHolders.forEach(k -> {
             if (k.isFirstPress()) {
                 if (k.getKeybind().consumeClick()) {

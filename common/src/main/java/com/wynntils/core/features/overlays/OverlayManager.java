@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class OverlayManager {
+public final class OverlayManager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();

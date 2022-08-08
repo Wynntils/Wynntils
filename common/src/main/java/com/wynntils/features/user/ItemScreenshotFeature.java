@@ -73,10 +73,9 @@ public class ItemScreenshotFeature extends UserFeature {
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();
-        int width = 0;
-        int height = 16;
 
         // width calculation
+        int width = 0;
         for (Component c : tooltip) {
             int w = font.width(c.getString());
             if (w > width) {
@@ -86,6 +85,7 @@ public class ItemScreenshotFeature extends UserFeature {
         width += 8;
 
         // height calculation
+        int height = 16;
         if (tooltip.size() > 1) {
             height += 2 + (tooltip.size() - 1) * 10;
         }

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigManager {
+public final class ConfigManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
@@ -99,10 +99,7 @@ public class ConfigManager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value;
-
-            value = gson.fromJson(holderJson, holder.getType());
-
+            Object value = gson.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
     }

@@ -79,8 +79,7 @@ public class CustomColor {
 
     /** "#rrggbb" or "rrggbb" */
     public static CustomColor fromHexString(String hex) {
-        hex = hex.trim();
-        Matcher hexMatcher = HEX_PATTERN.matcher(hex);
+        Matcher hexMatcher = HEX_PATTERN.matcher(hex.trim());
 
         // invalid format
         if (!hexMatcher.matches()) return CustomColor.NONE;
@@ -91,8 +90,7 @@ public class CustomColor {
 
     /** "rgba(r,g,b,a)" format as defined in toString() */
     public static CustomColor fromString(String string) {
-        string = string.trim();
-        Matcher stringMatcher = STRING_PATTERN.matcher(string);
+        Matcher stringMatcher = STRING_PATTERN.matcher(string.trim());
 
         // invalid format
         if (!stringMatcher.matches()) return CustomColor.NONE;

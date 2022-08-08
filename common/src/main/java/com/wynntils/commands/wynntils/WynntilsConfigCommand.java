@@ -30,12 +30,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class WynntilsConfigCommand {
-    public static final SuggestionProvider<CommandSourceStack> featureSuggestionProvider =
+public final class WynntilsConfigCommand {
+    private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
 
-    public static final SuggestionProvider<CommandSourceStack> overlaySuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
@@ -49,7 +49,7 @@ public abstract class WynntilsConfigCommand {
                                 .iterator();
                     },
                     builder);
-    public static final SuggestionProvider<CommandSourceStack> featureConfigSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
@@ -64,7 +64,7 @@ public abstract class WynntilsConfigCommand {
                     },
                     builder);
 
-    public static final SuggestionProvider<CommandSourceStack> overlayConfigSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
@@ -97,16 +97,16 @@ public abstract class WynntilsConfigCommand {
         // /wynntils config get <feature> overlay <overlay>
         // /wynntils config get <feature> overlay <overlay> <field>
         getConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(featureSuggestionProvider)
+                .suggests(FEATURE_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
-                                .suggests(overlaySuggestionProvider)
+                                .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
-                                        .suggests(overlayConfigSuggestionProvider)
+                                        .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .executes(WynntilsConfigCommand::getSpecificOverlayConfigOption))
                                 .executes(WynntilsConfigCommand::listAllOverlayConfigs)))
                 .then(Commands.argument("config", StringArgumentType.word())
-                        .suggests(featureConfigSuggestionProvider)
+                        .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .executes(WynntilsConfigCommand::getSpecificConfigOption))
                 .executes(WynntilsConfigCommand::listAllConfigOptions));
 
@@ -119,16 +119,16 @@ public abstract class WynntilsConfigCommand {
         // /wynntils config set <feature> <field> <newValue>
         // /wynntils config set <feature> overlay <overlay> <field> <newValue>
         setConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(featureSuggestionProvider)
+                .suggests(FEATURE_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
-                                .suggests(overlaySuggestionProvider)
+                                .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
-                                        .suggests(overlayConfigSuggestionProvider)
+                                        .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
                                                 .executes(WynntilsConfigCommand::changeOverlayConfig)))))
                 .then(Commands.argument("config", StringArgumentType.word())
-                        .suggests(featureConfigSuggestionProvider)
+                        .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
                                 .executes(WynntilsConfigCommand::changeFeatureConfig))));
 
@@ -145,16 +145,16 @@ public abstract class WynntilsConfigCommand {
         // /wynntils config reset <feature> overlay <overlay>
         // /wynntils config reset <feature> overlay <overlay> <field>
         resetConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(featureSuggestionProvider)
+                .suggests(FEATURE_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
-                                .suggests(overlaySuggestionProvider)
+                                .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
-                                        .suggests(overlayConfigSuggestionProvider)
+                                        .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .executes(WynntilsConfigCommand::resetOverlayConfigOption))
                                 .executes(WynntilsConfigCommand::resetAllOverlayConfigOptions)))
                 .then(Commands.argument("config", StringArgumentType.word())
-                        .suggests(featureConfigSuggestionProvider)
+                        .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .executes(WynntilsConfigCommand::resetFeatureConfigOption))
                 .executes(WynntilsConfigCommand::resetAllConfigOptions));
 

@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
 
-public class WynnItemUtils {
+public final class WynnItemUtils {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
@@ -81,8 +81,6 @@ public class WynnItemUtils {
         if (type == null) return null; // not a valid id
 
         MutableComponent percentLine = new TextComponent("");
-        MutableComponent rangeLine;
-        MutableComponent rerollLine;
 
         MutableComponent statInfo = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(shortIdName));
         statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
@@ -98,8 +96,8 @@ public class WynnItemUtils {
 
         if (isNew) percentLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
 
-        rangeLine = percentLine.copy();
-        rerollLine = percentLine.copy();
+        MutableComponent rangeLine = percentLine.copy();
+        MutableComponent rerollLine = percentLine.copy();
 
         float percentage = -1;
         if (!isNew && !idProfile.hasConstantValue()) {

@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TODO: Draw compass beam
-public class CompassManager {
+public final class CompassManager {
     private static Location compassLocation = null;
 
     public static void init() {

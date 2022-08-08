@@ -9,8 +9,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemsReceivedEvent;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.utils.objects.DynamicTag;
-import com.wynntils.wc.utils.WynnInventoryData;
 import com.wynntils.wc.utils.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
@@ -39,7 +39,7 @@ public class SoulPointTimerFeature extends UserFeature {
         }
 
         lore.add(new DynamicTag(() -> {
-            int rawSecondsUntilSoulPoint = WynnInventoryData.getTicksTillNextSoulPoint() / 20;
+            int rawSecondsUntilSoulPoint = getTicksTillNextSoulPoint() / 20;
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
@@ -52,5 +52,17 @@ public class SoulPointTimerFeature extends UserFeature {
 
     private static ItemStack findSoulPointStack(List<ItemStack> items) {
         return items.stream().filter(WynnItemMatchers::isSoulPoint).findFirst().orElse(null);
+    }
+
+    /**
+     * @return Time in game ticks (1/20th of a second, 50ms) until next soul point
+     *     <p>-1 if unable to determine
+     *     <p>Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}}, in
+     *     which case soul points are already full
+     */
+    private static int getTicksTillNextSoulPoint() {
+        if (McUtils.mc().level == null) return -1;
+
+        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
     }
 }

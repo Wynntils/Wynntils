@@ -55,13 +55,13 @@ public class ChatItemFeature extends InternalFeature {
         Matcher m = ChatItemUtils.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
-            String name = m.group("Name");
+            StringBuilder name = new StringBuilder(m.group("Name"));
             while (chatItems.containsKey(name)) { // avoid overwriting entries
-                name += "_";
+                name.append("_");
             }
 
             chatInput.setValue(chatInput.getValue().replace(encodedItem, "<" + name + ">"));
-            chatItems.put(name, encodedItem);
+            chatItems.put(name.toString(), encodedItem);
         }
     }
 

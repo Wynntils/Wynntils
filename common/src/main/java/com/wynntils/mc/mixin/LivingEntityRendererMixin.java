@@ -23,7 +23,7 @@ public abstract class LivingEntityRendererMixin {
     protected abstract RenderType getRenderType(LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
 
     // Can't find an impl without saving args
-    float overrideTranslucence;
+    private float overrideTranslucence;
 
     @Redirect(
             method =
