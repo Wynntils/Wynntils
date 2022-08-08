@@ -4,8 +4,10 @@
  */
 package com.wynntils.wc.event;
 
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class NpcDialogEvent extends Event {
     private final String codedDialog;
 
