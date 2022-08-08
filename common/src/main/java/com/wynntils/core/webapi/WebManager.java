@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -49,14 +50,14 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
-public class WebManager {
-    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
+public final class WebManager {
+    private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    public static WebReader apiUrls = null;
+    private static WebReader apiUrls = null;
 
     private static final Gson gson = new Gson();
 
@@ -158,7 +159,7 @@ public class WebManager {
         return isTerritoryListLoaded();
     }
 
-    public static void updateTerritoryThreadStatus(boolean start) {
+    private static void updateTerritoryThreadStatus(boolean start) {
         if (start) {
             if (territoryUpdateThread == null) {
                 territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
@@ -213,6 +214,7 @@ public class WebManager {
                     Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
                     materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
+                    // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
                     IdentificationOrderer.INSTANCE =
                             gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
@@ -333,7 +335,7 @@ public class WebManager {
      *     players on it
      * @throws IOException thrown by URLConnection
      */
-    public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
+    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
         if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));

@@ -25,7 +25,7 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.utils.objects.Pair;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,15 +73,15 @@ public class OverlayManagementScreen extends Screen {
     private static final List<Component> APPLY_TOOLTIP_LINES =
             List.of(new TextComponent("Click here to apply changes to current overlay."));
 
-    private static final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
-    private static final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
-    private static final Map<Edge, Double> edgeAlignmentSnapMap = new HashMap<>();
-    private static final Map<Edge, Float> alignmentLinesToRender = new HashMap<>();
+    private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
+    private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
+    private final Map<Edge, Double> edgeAlignmentSnapMap = new EnumMap<>(Edge.class);
+    private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
 
-    private static SelectionMode selectionMode = SelectionMode.None;
-    private static Overlay selectedOverlay = null;
-    private static Corner selectedCorner = null;
-    private static Edge selectedEdge = null;
+    private SelectionMode selectionMode = SelectionMode.None;
+    private final Overlay selectedOverlay;
+    private Corner selectedCorner = null;
+    private Edge selectedEdge = null;
 
     private boolean testMode = false;
 
@@ -511,10 +511,10 @@ public class OverlayManagementScreen extends Screen {
         }
 
         List<Edge> edgesToSnapTo =
-                switch (OverlayManagementScreen.selectionMode) {
+                switch (this.selectionMode) {
                     case None -> List.of();
-                    case Corner -> OverlayManagementScreen.selectedCorner.getEdges();
-                    case Edge -> List.of(OverlayManagementScreen.selectedEdge);
+                    case Corner -> this.selectedCorner.getEdges();
+                    case Edge -> List.of(this.selectedEdge);
                     case Area -> Arrays.stream(Edge.values()).toList();
                 };
 

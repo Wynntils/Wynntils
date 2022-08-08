@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
-public class ContainerUtils {
+public final class ContainerUtils {
     public static boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen containerScreen
                 && containerScreen.getTitle().getString().contains("Loot Chest ");

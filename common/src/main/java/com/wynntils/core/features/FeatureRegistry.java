@@ -55,10 +55,10 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
-public class FeatureRegistry {
+public final class FeatureRegistry {
     private static final List<Feature> FEATURES = new ArrayList<>();
 
-    public static void registerFeature(Feature feature) {
+    private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
 
         initializeFeature(feature);

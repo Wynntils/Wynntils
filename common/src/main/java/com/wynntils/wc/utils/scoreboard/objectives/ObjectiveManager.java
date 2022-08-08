@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
 
 public class ObjectiveManager implements ScoreboardHandler {
     // §b is guild objective, §a is normal objective and §c is daily objective
-    public static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
+    private static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
 
     private static WynnObjective guildWynnObjective = null;
 
     private static final List<WynnObjective> WYNN_OBJECTIVES = new ArrayList<>();
 
-    public static void tryRemoveObjective(WynnObjective parsed) {
+    private static void tryRemoveObjective(WynnObjective parsed) {
         if (parsed.getGoal() == null) {
             return;
         }

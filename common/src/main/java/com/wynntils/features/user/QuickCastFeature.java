@@ -41,33 +41,33 @@ import org.lwjgl.glfw.GLFW;
 public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyHolder castFirstSpell =
-            new KeyHolder("Cast 1st Spell", GLFW.GLFW_KEY_Z, "Wynntils", true, QuickCastFeature::castFirstSpell);
+            new KeyHolder("Cast 1st Spell", GLFW.GLFW_KEY_Z, "Wynntils", true, this::castFirstSpell);
 
     @RegisterKeyBind
     private final KeyHolder castSecondSpell =
-            new KeyHolder("Cast 2nd Spell", GLFW.GLFW_KEY_X, "Wynntils", true, QuickCastFeature::castSecondSpell);
+            new KeyHolder("Cast 2nd Spell", GLFW.GLFW_KEY_X, "Wynntils", true, this::castSecondSpell);
 
     @RegisterKeyBind
     private final KeyHolder castThirdSpell =
-            new KeyHolder("Cast 3rd Spell", GLFW.GLFW_KEY_C, "Wynntils", true, QuickCastFeature::castThirdSpell);
+            new KeyHolder("Cast 3rd Spell", GLFW.GLFW_KEY_C, "Wynntils", true, this::castThirdSpell);
 
     @RegisterKeyBind
     private final KeyHolder castFourthSpell =
-            new KeyHolder("Cast 4th Spell", GLFW.GLFW_KEY_V, "Wynntils", true, QuickCastFeature::castFourthSpell);
+            new KeyHolder("Cast 4th Spell", GLFW.GLFW_KEY_V, "Wynntils", true, this::castFourthSpell);
 
     private static final Pattern SPELL_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
     private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
+    private static final SpellDirection[] NO_SPELL = new SpellDirection[0];
 
-    public static final SpellDirection[] NO_SPELL = new SpellDirection[0];
-    private static SpellDirection[] spellInProgress = NO_SPELL;
+    private SpellDirection[] spellInProgress = NO_SPELL;
 
-    private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
+    private final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
 
-    private static int packetCountdown = 0;
-    private static int spellCountdown = 0;
-    private static int lastSelectedSlot = 0;
+    private int packetCountdown = 0;
+    private int spellCountdown = 0;
+    private int lastSelectedSlot = 0;
 
     @SubscribeEvent
     public void onSubtitleUpdate(SubtitleSetTextEvent e) {
@@ -82,7 +82,7 @@ public class QuickCastFeature extends UserFeature {
         tryUpdateSpell(e.getMessage());
     }
 
-    public static void tryUpdateSpell(String text) {
+    private void tryUpdateSpell(String text) {
         SpellDirection[] spell = getSpellFromString(text);
         if (spell == null) return;
         if (Arrays.equals(spellInProgress, spell)) return;
@@ -112,24 +112,23 @@ public class QuickCastFeature extends UserFeature {
         return spell;
     }
 
-    private static void castFirstSpell() {
+    private void castFirstSpell() {
         tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.PRIMARY);
     }
 
-    private static void castSecondSpell() {
+    private void castSecondSpell() {
         tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.PRIMARY);
     }
 
-    private static void castThirdSpell() {
+    private void castThirdSpell() {
         tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.SECONDARY);
     }
 
-    private static void castFourthSpell() {
+    private void castFourthSpell() {
         tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.SECONDARY);
     }
 
-    private static void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-
+    private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
         if (!SPELL_PACKET_QUEUE.isEmpty()) {
             sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.anotherInProgress"));
             return;

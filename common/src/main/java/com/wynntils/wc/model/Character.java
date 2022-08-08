@@ -74,7 +74,7 @@ public class Character implements Model {
 
     // TODO: We don't have a way to parse CharacterInfo if auto select class is on for the player
     //       Fix this by storing last selected class in WebAPI.
-    public static class CharacterInfo {
+    public static final class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;
@@ -114,16 +114,16 @@ public class Character implements Model {
             ClassType classType = null;
 
             for (String line : lore) {
-                Matcher matcher = LEVEL_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    level = Integer.parseInt(matcher.group(1));
+                Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
+                if (levelMatcher.matches()) {
+                    level = Integer.parseInt(levelMatcher.group(1));
                     continue;
                 }
 
-                matcher = CLASS_PATTERN.matcher(line);
+                Matcher classMatcher = CLASS_PATTERN.matcher(line);
 
-                if (matcher.matches()) {
-                    classType = ClassType.fromName(matcher.group(1));
+                if (classMatcher.matches()) {
+                    classType = ClassType.fromName(classMatcher.group(1));
                 }
             }
 

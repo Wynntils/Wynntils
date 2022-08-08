@@ -95,7 +95,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
-public class EventFactory {
+public final class EventFactory {
     private static <T extends Event> T post(T event) {
         WynntilsMod.getEventBus().post(event);
         return event;

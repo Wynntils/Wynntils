@@ -19,8 +19,8 @@ public class IdentificationOrderer {
     public static IdentificationOrderer INSTANCE = new IdentificationOrderer(null, null, null);
 
     private final Map<String, Integer> order = new HashMap<>();
-    private final ArrayList<String> groups = new ArrayList<>();
-    private final ArrayList<String> inverted = new ArrayList<>();
+    private final List<String> groups = new ArrayList<>();
+    private final List<String> inverted = new ArrayList<>();
 
     private transient Map<Integer, Integer> organizedGroups = null;
 

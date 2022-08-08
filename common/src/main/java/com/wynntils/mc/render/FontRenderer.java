@@ -15,14 +15,14 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 
-public class FontRenderer {
+public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
     private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
-    public FontRenderer() {
+    private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
     }
 
@@ -180,9 +180,10 @@ public class FontRenderer {
     }
 
     public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
+        float currentY = y;
         for (TextRenderTask line : lines) {
-            renderText(poseStack, x, y, line);
-            y += calculateRenderHeight(List.of(line));
+            renderText(poseStack, x, currentY, line);
+            currentY += calculateRenderHeight(List.of(line));
         }
     }
 

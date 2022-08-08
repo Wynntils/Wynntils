@@ -23,7 +23,7 @@ public abstract class ItemProperty {
 
     protected final WynnItemStack item;
 
-    public ItemProperty(WynnItemStack item) {
+    protected ItemProperty(WynnItemStack item) {
         this.item = item;
 
         // attach property to the itemstack

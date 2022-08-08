@@ -52,7 +52,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class LootrunUtils {
+public final class LootrunUtils {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -416,7 +416,6 @@ public class LootrunUtils {
                 sample(raw, sampleRate).stream().map(Path::points).toList();
         List<Vec3> vec3s = sampled.stream().flatMap(List::stream).toList();
 
-        ChunkPos lastChunkPos = null;
         ColoredPath locationsList = new ColoredPath(new ArrayList<>());
 
         Iterator<Integer> colorIterator = COLORS.iterator();
@@ -469,6 +468,7 @@ public class LootrunUtils {
 
         ColoredPath lastLocationList = null;
         Long2ObjectMap<List<ColoredPath>> sampleByChunk = new Long2ObjectOpenHashMap<>();
+        ChunkPos lastChunkPos = null;
         for (int i = 0; i < locationsList.points().size(); i++) {
             Vec3 location = locationsList.points().get(i).vec3();
             ChunkPos currentChunkPos = new ChunkPos(Mth.fastFloor(location.x()) >> 4, Mth.fastFloor(location.z()) >> 4);
@@ -581,9 +581,8 @@ public class LootrunUtils {
         String lootrun = fileName + ".json";
         File lootrunFile = new File(LOOTRUNS, lootrun);
         if (lootrunFile.exists()) {
-            FileReader file;
             try {
-                file = new FileReader(lootrunFile);
+                FileReader file = new FileReader(lootrunFile);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
                 LootrunUtils.lootrun = compile(uncompiled, false);
@@ -718,7 +717,7 @@ public class LootrunUtils {
             return null;
         }
 
-        if (activeLootrun.path == null || activeLootrun.path.points().size() == 0) return null;
+        if (activeLootrun.path == null || activeLootrun.path.points().isEmpty()) return null;
 
         return activeLootrun.path.points().get(0);
     }

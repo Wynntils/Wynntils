@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.CrashReportCategory;
 
-public class CrashReportManager {
+public final class CrashReportManager {
     private static final List<ICrashContext> crashContexts = new ArrayList<>();
 
     public static void registerCrashContext(ICrashContext context) {

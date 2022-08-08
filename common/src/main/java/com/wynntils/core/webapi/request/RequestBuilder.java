@@ -157,7 +157,7 @@ public class RequestBuilder {
         this.cacheValidator = data -> {
             try {
                 return validator.test(data);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 WynntilsMod.warn("Unable to validate cache");
                 e.printStackTrace();
                 return false;
@@ -191,7 +191,7 @@ public class RequestBuilder {
             if (!MD5Verification.isMd5Digest(expectedHash)) return false;
             MD5Verification verification = new MD5Verification(data);
             if (verification.getMd5() == null) return false;
-            boolean passed = verification.equals(expectedHash);
+            boolean passed = verification.equalsHashString(expectedHash);
             if (!passed) {
                 // TODO
                 WynntilsMod.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""

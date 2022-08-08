@@ -20,7 +20,7 @@ import org.apache.commons.lang3.Validate;
 
 /** Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods */
 public class ServerIcon {
-    public static final ResourceLocation FALLBACK;
+    private static final ResourceLocation FALLBACK;
 
     private final ServerData server;
     private ResourceLocation serverIconLocation;
@@ -35,7 +35,7 @@ public class ServerIcon {
      * @param allowStale flag whether if an already existing icon should be used
      * @param onDone consumer when done, can be null if none
      */
-    public ServerIcon(ServerData server, boolean allowStale, Consumer<ServerIcon> onDone) {
+    private ServerIcon(ServerData server, boolean allowStale, Consumer<ServerIcon> onDone) {
         this.server = server;
         this.onDone = onDone;
         this.serverIconLocation = FALLBACK;

@@ -26,9 +26,7 @@ import org.apache.commons.io.IOUtils;
 /** Handles and dispatches {@link Request} */
 public class RequestHandler {
     /** If set to true, will not make HTTP requests. */
-    public static final boolean CACHE_ONLY = false;
-
-    public RequestHandler() {}
+    private static final boolean CACHE_ONLY = false;
 
     private final ExecutorService pool = Executors.newFixedThreadPool(
             4,
@@ -121,7 +119,7 @@ public class RequestHandler {
 
     private void handleDispatch(int dispatchId, List<List<Request>> groupedRequests, int currentGroupIndex) {
         List<Request> currentGroup = groupedRequests.get(currentGroupIndex);
-        if (currentGroup.size() == 0) {
+        if (currentGroup.isEmpty()) {
             nextDispatch(dispatchId, groupedRequests, currentGroupIndex);
             return;
         }
@@ -270,7 +268,7 @@ public class RequestHandler {
         } catch (IOException e) {
             WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url + ": "
                     + (e instanceof SocketTimeoutException ? "Socket timeout (server may be down)" : e.getMessage()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             WynntilsMod.warn("Error occurred whilst fetching " + req.id + " from " + req.url);
             e.printStackTrace();
         }

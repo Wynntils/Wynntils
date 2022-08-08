@@ -46,17 +46,17 @@ public abstract class Overlay implements Translatable, Configurable {
     @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected VerticalAlignment verticalAlignmentOverride = null;
 
-    public Overlay(OverlayPosition position, float width, float height) {
+    protected Overlay(OverlayPosition position, float width, float height) {
         this.position = position;
         this.size = new GuiScaledOverlaySize(width, height);
     }
 
-    public Overlay(OverlayPosition position, OverlaySize size) {
+    protected Overlay(OverlayPosition position, OverlaySize size) {
         this.position = position;
         this.size = size;
     }
 
-    public Overlay(
+    protected Overlay(
             OverlayPosition position,
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,

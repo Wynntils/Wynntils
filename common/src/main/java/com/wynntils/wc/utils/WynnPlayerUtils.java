@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Team;
 
-public class WynnPlayerUtils {
+public final class WynnPlayerUtils {
     private static final Pattern PLAYER_GHOST_REGEX = Pattern.compile("_\\d+");
 
     public static boolean isPlayerGhost(Player player) {
