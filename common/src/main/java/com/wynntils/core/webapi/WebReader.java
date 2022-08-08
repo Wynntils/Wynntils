@@ -61,9 +61,7 @@ public class WebReader {
 
     private void parseWebsite(String url) throws Exception {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316" + " Firefox/3.6.2");
+        st.setRequestProperty("User-Agent", WebManager.getUserAgent());
 
         if (!parseData(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))) {
             throw new Exception("Invalid WebReader result");
