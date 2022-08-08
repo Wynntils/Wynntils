@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /** Helper class for getting the hex digest form of the md5 of an input */
 public class MD5Verification {
-    String md5;
+    private String md5;
 
     public MD5Verification(File f) {
         try (InputStream fis = new FileInputStream(f)) {
@@ -62,7 +62,7 @@ public class MD5Verification {
         return md5;
     }
 
-    public boolean equals(String other) {
+    public boolean equalsHashString(String other) {
         return md5 != null && md5.equalsIgnoreCase(other);
     }
 

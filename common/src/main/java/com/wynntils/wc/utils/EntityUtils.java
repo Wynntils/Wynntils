@@ -11,17 +11,15 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
-public class EntityUtils {
+public final class EntityUtils {
     private static boolean isPlayersHorse(AbstractHorse horse, Player player) {
         if (horse == null) return false;
+        Component horseName = horse.getCustomName();
+        if (horseName == null) return false;
 
         String playerName = player.getName().getString();
         String defaultName = "§f" + playerName + "§7" + "'s horse";
         String customNameSuffix = "§7" + " [" + playerName + "]";
-
-        Component horseName = horse.getCustomName();
-        if (horseName == null) return false;
-
         return defaultName.equals(horseName.getString())
                 || horseName.getString().endsWith(customNameSuffix);
     }

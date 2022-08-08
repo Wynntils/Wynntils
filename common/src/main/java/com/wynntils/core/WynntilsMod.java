@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** The common implementation of Wynntils */
-public class WynntilsMod {
+public final class WynntilsMod {
     public static final String MOD_ID = "wynntils";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);

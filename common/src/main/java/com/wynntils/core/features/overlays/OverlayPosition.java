@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.phys.Vec2;
 
 public class OverlayPosition {
-    protected static final Pattern POSITION_PATTERN = Pattern.compile(
+    private static final Pattern POSITION_PATTERN = Pattern.compile(
             "OverlayPosition\\{verticalOffset=(.+),horizontalOffset=(.+),verticalAlignment=(.+),horizontalAlignment=(.+),anchorSection=(.+)}");
 
     private final float verticalOffset;
@@ -50,7 +50,7 @@ public class OverlayPosition {
             this.horizontalAlignment = HorizontalAlignment.valueOf(matcher.group(4));
             this.anchorSection = AnchorSection.valueOf(matcher.group(5));
         } catch (IllegalArgumentException exception) {
-            throw new RuntimeException("Failed to parse OverlayPosition");
+            throw new RuntimeException("Failed to parse OverlayPosition", exception);
         }
     }
 

@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class ChatItemUtils {
+public final class ChatItemUtils {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -131,7 +131,7 @@ public class ChatItemUtils {
         return encoded.toString();
     }
 
-    public static GearItemStack decodeItem(String encoded) {
+    private static GearItemStack decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 

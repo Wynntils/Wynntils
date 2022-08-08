@@ -12,7 +12,7 @@ import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
 public abstract class CustomStackCountProperty extends ItemProperty implements TextOverlayProperty {
     private TextOverlay textOverlay;
 
-    public CustomStackCountProperty(WynnItemStack item) {
+    protected CustomStackCountProperty(WynnItemStack item) {
         super(item);
 
         item.setCount(1);

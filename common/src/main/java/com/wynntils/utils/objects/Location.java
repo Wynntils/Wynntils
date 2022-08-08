@@ -87,7 +87,7 @@ public class Location extends Vector3d {
         return this;
     }
 
-    public final BlockPos toBlockPos() {
+    public BlockPos toBlockPos() {
         return new BlockPos(x, y, z);
     }
 

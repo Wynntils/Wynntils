@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.reference;
 
-public class EmeraldSymbols {
+public final class EmeraldSymbols {
     public static final char E = '\u00B2';
     public static final char B = '\u00BD';
     public static final char L = '\u00BC';

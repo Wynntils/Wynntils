@@ -43,18 +43,18 @@ public abstract class GuiMixin {
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
-    @Inject(method = "render", at = @At(value = "HEAD"))
+    @Inject(method = "render", at = @At("HEAD"))
     public void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPre(poseStack, partialTick, this.minecraft.getWindow());
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
-    @Inject(method = "render", at = @At(value = "RETURN"))
+    @Inject(method = "render", at = @At("RETURN"))
     public void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
     }
 
-    @Inject(method = "renderCrosshair", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     public void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
         if (EventFactory.onRenderCrosshairPre(poseStack, this.minecraft.getWindow())
                 .isCanceled()) {
@@ -62,7 +62,7 @@ public abstract class GuiMixin {
         }
     }
 
-    @Inject(method = "renderHearts", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "renderHearts", at = @At("HEAD"), cancellable = true)
     public void onRenderHeartsPre(
             PoseStack poseStack,
             Player player,

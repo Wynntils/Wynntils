@@ -68,7 +68,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * a different formatting. This could be done, but requires extra logic, and most
  * importantly, a way to update already printed chat lines.
  */
-public class ChatManager {
+public final class ChatManager {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
 
@@ -106,7 +106,7 @@ public class ChatManager {
     }
 
     private static void handleMultilineMessage(String msg) {
-        LinkedList<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
+        List<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
         LinkedList<String> newLines = new LinkedList<>();

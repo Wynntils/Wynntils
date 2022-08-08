@@ -88,7 +88,7 @@ public abstract class ClientPacketListenerMixin {
                     "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
+    private void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
         if (EventFactory.onSetEntityPassengers(packet).isCanceled()) {
             ci.cancel();
         }
@@ -143,7 +143,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(method = "onDisconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
-    public void onDisconnectPre(Component reason, CallbackInfo ci) {
+    private void onDisconnectPre(Component reason, CallbackInfo ci) {
         // Unexpected disconnect
         EventFactory.onDisconnect();
     }

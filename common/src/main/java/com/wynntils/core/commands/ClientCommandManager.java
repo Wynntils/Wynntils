@@ -37,7 +37,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public class ClientCommandManager {
+public final class ClientCommandManager {
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
@@ -111,7 +111,7 @@ public class ClientCommandManager {
         return new ClientCommandSourceStack(player);
     }
 
-    public static boolean executeCommand(StringReader reader, String command) {
+    private static boolean executeCommand(StringReader reader, String command) {
         ClientCommandSourceStack source = getSource();
 
         if (source == null) return false;
@@ -148,7 +148,7 @@ public class ClientCommandManager {
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
                 ClientCommandManager.sendError(text);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             TextComponent error =
                     new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             ClientCommandManager.sendError(new TranslatableComponent("command.failed")

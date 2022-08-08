@@ -180,7 +180,7 @@ public class ItemProfile {
 
     public boolean hasRequirements() {
         parseRequirements();
-        return (parsedRequirements.size() > 0);
+        return (!parsedRequirements.isEmpty());
     }
 
     public ClassType getClassNeeded() {

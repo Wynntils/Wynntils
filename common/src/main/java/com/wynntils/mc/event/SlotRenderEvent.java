@@ -12,7 +12,7 @@ public abstract class SlotRenderEvent extends Event {
     private final Screen screen;
     private final Slot slot;
 
-    public SlotRenderEvent(Screen screen, Slot slot) {
+    protected SlotRenderEvent(Screen screen, Slot slot) {
         this.screen = screen;
         this.slot = slot;
     }

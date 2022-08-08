@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  *  This class is an info holder for Wynncraft's daily and guild objectives
  */
 public final class WynnObjective {
-    public static final Pattern OBJECTIVE_PARSER_PATTERN = Pattern.compile("^[- ] (.*): *(\\d+)/(\\d+)$");
+    private static final Pattern OBJECTIVE_PARSER_PATTERN = Pattern.compile("^[- ] (.*): *(\\d+)/(\\d+)$");
     private final String goal;
     private int score;
     private final int maxScore;

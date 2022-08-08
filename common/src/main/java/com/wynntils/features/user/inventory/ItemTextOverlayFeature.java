@@ -75,7 +75,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         drawTextOverlay(e.getStack(), e.getX(), e.getY(), true);
     }
 
-    public void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
         if (!(item instanceof WynnItemStack wynnItem)) return;
         if (!wynnItem.hasProperty(ItemProperty.TEXT_OVERLAY)) return;
 

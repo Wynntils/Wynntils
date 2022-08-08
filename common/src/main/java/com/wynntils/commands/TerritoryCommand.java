@@ -14,6 +14,7 @@ import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.utils.objects.Location;
 import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -32,7 +33,7 @@ public class TerritoryCommand extends CommandBase {
                                 return Suggestions.empty();
                             }
 
-                            HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
+                            Map<String, TerritoryProfile> territories = WebManager.getTerritories();
 
                             return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
                         })

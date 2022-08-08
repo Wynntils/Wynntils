@@ -39,15 +39,13 @@ public class ConfigHolder {
         this.category = category;
         this.metadata = metadata;
 
-        Type fieldTypeTemp;
-
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
         Object valueTemp = this.getValue();
-        fieldTypeTemp =
+        Type fieldTypeTemp =
                 typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
 
         // save default value to enable easy resetting
@@ -55,7 +53,7 @@ public class ConfigHolder {
         this.defaultValue =
                 ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
 
-        if (this.defaultValue != null) {
+        if (typeOverride == null && this.defaultValue != null) {
             fieldTypeTemp = defaultValue.getClass();
         }
 
@@ -87,12 +85,12 @@ public class ConfigHolder {
         return getNameCamelCase() + "." + field.getName();
     }
 
-    protected String getNameCamelCase() {
+    private String getNameCamelCase() {
         String name = parent.getClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    protected String getDeclaringFeatureNameCamelCase() {
+    private String getDeclaringFeatureNameCamelCase() {
         String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
@@ -155,7 +153,7 @@ public class ConfigHolder {
 
         try {
             return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
-        } catch (Exception ignored) {
+        } catch (RuntimeException ignored) {
             // Reflection equals does not always work, use deepEquals instead of assuming no change
             // Since deepEquals is already false when we reach this, we can assume change
             return true;

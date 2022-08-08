@@ -107,7 +107,7 @@ public class WorldState implements Model {
     public void remove(PlayerLogOutEvent e) {
         if (!onServer()) return;
 
-        if (e.getId().equals(currentWorldId) && currentWorldName.length() > 0) {
+        if (e.getId().equals(currentWorldId) && !currentWorldName.isEmpty()) {
             setState(State.INTERIM, "", null);
         }
     }
@@ -137,7 +137,7 @@ public class WorldState implements Model {
 
         currentTabListFooter = footer;
 
-        if (footer.length() > 0) {
+        if (!footer.isEmpty()) {
             if (HUB_NAME.matcher(footer).find()) {
                 setState(State.HUB, "", null);
             }

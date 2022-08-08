@@ -15,7 +15,7 @@ public abstract class RenderEvent extends Event {
     private final Window window;
     private final ElementType type;
 
-    public RenderEvent(PoseStack poseStack, float partialTicks, Window window, ElementType type) {
+    protected RenderEvent(PoseStack poseStack, float partialTicks, Window window, ElementType type) {
         this.poseStack = poseStack;
         this.partialTicks = partialTicks;
         this.window = window;
