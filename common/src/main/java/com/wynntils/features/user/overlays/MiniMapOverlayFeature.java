@@ -1,6 +1,9 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user.overlays;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -61,8 +64,8 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // Render Minimap
 
-            float halfMapWidth = getWidth()/2;
-            float halfMapHeight = getHeight()/2;
+            float halfMapWidth = getWidth() / 2;
+            float halfMapHeight = getHeight() / 2;
 
             float halfTextureWidth = scale * halfMapWidth;
             float halfTextureHeight = scale * halfMapHeight;
@@ -77,12 +80,18 @@ public class MiniMapOverlayFeature extends UserFeature {
 
                 // TODO tex parameters with clamping
 
-                //TODO find better alternative for rotations
+                // TODO find better alternative for rotations
                 if (followPlayerRotation) {
                     poseStack.pushPose();
                     poseStack.translate(renderX, renderY, 0);
                     // See Quaternion#fromXYZ
-                    poseStack.mulPose(new Quaternion(0F, (float) StrictMath.sin((Math.PI - Math.toRadians(McUtils.player().getYRot()) / 2F)), 0, (float) StrictMath.cos(Math.PI - Math.toRadians(McUtils.player().getYRot()) / 2F)));
+                    poseStack.mulPose(new Quaternion(
+                            0F,
+                            (float) StrictMath.sin(
+                                    (Math.PI - Math.toRadians(McUtils.player().getYRot()) / 2F)),
+                            0,
+                            (float) StrictMath.cos(
+                                    Math.PI - Math.toRadians(McUtils.player().getYRot()) / 2F)));
                     poseStack.translate(-renderX, -renderY, 0);
                 }
 
@@ -128,14 +137,9 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO Coords
 
-
-
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-        }
-
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
-
 }
