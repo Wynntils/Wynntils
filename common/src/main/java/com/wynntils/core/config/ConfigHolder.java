@@ -53,7 +53,7 @@ public class ConfigHolder {
         this.defaultValue =
                 ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
 
-        if (this.defaultValue != null) {
+        if (typeOverride == null && this.defaultValue != null) {
             fieldTypeTemp = defaultValue.getClass();
         }
 
