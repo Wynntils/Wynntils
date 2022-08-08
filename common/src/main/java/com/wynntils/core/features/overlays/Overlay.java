@@ -80,10 +80,8 @@ public abstract class Overlay implements Translatable, Configurable {
             // This is done so all state checks run in order
             OverlayManager.disableOverlays(List.of(this));
             OverlayManager.enableOverlays(List.of(this), false);
-            return;
         }
 
-        // otherwise, trigger regular config update
         onConfigUpdate(configHolder);
     }
 

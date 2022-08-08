@@ -6,6 +6,7 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.chat.ChatManager;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
@@ -79,6 +80,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
+            if (isEnabled()) {
+                ChatManager.enableNpcDialogExtraction();
+            } else {
+                ChatManager.disableNpcDialogExtraction();
+            }
             updateTextRenderSettings();
         }
 
