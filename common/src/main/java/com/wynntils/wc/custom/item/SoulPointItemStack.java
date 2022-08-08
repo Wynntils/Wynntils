@@ -7,11 +7,10 @@ package com.wynntils.wc.custom.item;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.wc.utils.WynnInventoryData;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,8 +27,7 @@ public class SoulPointItemStack extends WynnItemStack {
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         if (SoulPointTimerFeature.INSTANCE.isEnabled()) {
-            List<Component> copy = new ArrayList<>();
-            Collections.copy(copy, tooltip);
+            List<Component> copy = new ArrayList<>(tooltip);
 
             copy.add(new TextComponent(" "));
 
@@ -37,8 +35,10 @@ public class SoulPointItemStack extends WynnItemStack {
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-            copy.add(new TextComponent(ChatFormatting.AQUA + "Time until next soul point: " + ChatFormatting.WHITE
-                    + minutesUntilSoulPoint + ":" + String.format("%02d", secondsUntilSoulPoint)));
+            copy.add(new TranslatableComponent(
+                    "feature.wynntils.soulPointTimer.lore",
+                    minutesUntilSoulPoint,
+                    String.format("%02d", secondsUntilSoulPoint)));
 
             return copy;
         }
