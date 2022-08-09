@@ -6,6 +6,7 @@ package com.wynntils.features.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
 import com.wynntils.wc.custom.item.SoulPointItemStack;
@@ -73,6 +74,12 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
         registerProperty(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
         registerProperty(WynnItemMatchers::isIngredient, IngredientProperty::new);
+    }
+
+    @Override
+    protected boolean onEnable() {
+        return (WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses())
+                && (WebManager.isItemListLoaded() || WebManager.tryLoadItemList());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
