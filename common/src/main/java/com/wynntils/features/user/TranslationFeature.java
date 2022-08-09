@@ -5,8 +5,10 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.services.TranslationManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
@@ -21,7 +23,7 @@ public class TranslationFeature extends UserFeature {
     public static TranslationFeature INSTANCE;
 
     @Config
-    public String languageName = "sv";
+    public String languageName = "";
 
     @Config
     public boolean translateTrackedQuest = true;
@@ -30,7 +32,7 @@ public class TranslationFeature extends UserFeature {
     public boolean translateNpc = true;
 
     @Config
-    public boolean translateInfo = false;
+    public boolean translateInfo = true;
 
     @Config
     public boolean translatePlayerChat = false;
@@ -41,29 +43,10 @@ public class TranslationFeature extends UserFeature {
     @Config
     public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
 
-    private void sendTranslation(String message, String prefix, String suffix, String formatted) {
-        // We only want to translate the actual message, not formatting, sender, etc.
-        TranslationManager.getTranslator().translate(message, languageName, translatedMsg -> {
-            try {
-                // Don't want translation to appear before original
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                // ignore
-            }
-            String strToSend;
-            if (translatedMsg == null) {
-                strToSend = MessageFormat.format("{0}{1}", TranslationManager.UNTRANSLATED_PREFIX, formatted);
-            } else {
-                strToSend = MessageFormat.format(
-                        "{0}{1}{2}{3}", TranslationManager.TRANSLATED_PREFIX, prefix, translatedMsg, suffix);
-            }
-            // FIXME: In legacy, this was done as mc().addScheduledTask. We must probably do something similar
-            McUtils.sendMessageToClient(new TextComponent(strToSend));
-        });
-    }
-
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
+        if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat) return;
+        if (e.getRecipientType() == RecipientType.INFO && !translateInfo) return;
         if (!WynnUtils.onServer()) return;
 
         String origCoded = e.getCodedMessage();
@@ -72,6 +55,7 @@ public class TranslationFeature extends UserFeature {
         // FIXME: preserve Wynntils coding
         TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
             String unwrapped = unwrapCoding(translatedMsg);
+            // FIXME: remove debug printout
             System.out.println("ORIG:" + origCoded);
             System.out.println("WRAP:" + wrapped);
             System.out.println("TRAN:" + translatedMsg);
@@ -87,7 +71,7 @@ public class TranslationFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialgue(NpcDialogEvent e) {
-        if (!WynnUtils.onServer()) return;
+        if (!translateNpc) return;
         if (e instanceof TranslatedNpcDialogEvent) return;
 
         String origCoded = e.getCodedDialog();
@@ -95,6 +79,7 @@ public class TranslationFeature extends UserFeature {
             String wrapped = wrapCoding(origCoded);
             TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
+                // FIXME: remove debug printout
                 System.out.println("ORIG:" + origCoded);
                 System.out.println("WRAP:" + wrapped);
                 System.out.println("TRAN:" + translatedMsg);
