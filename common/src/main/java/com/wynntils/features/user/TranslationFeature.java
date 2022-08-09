@@ -9,6 +9,7 @@ import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.services.TranslationManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@StartDisabled
 public class TranslationFeature extends UserFeature {
     public static TranslationFeature INSTANCE;
 
