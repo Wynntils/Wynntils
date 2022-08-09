@@ -51,15 +51,8 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        // FIXME: preserve leading spaces
-        // FIXME: preserve Wynntils coding
         TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
             String unwrapped = unwrapCoding(translatedMsg);
-            // FIXME: remove debug printout
-            System.out.println("ORIG:" + origCoded);
-            System.out.println("WRAP:" + wrapped);
-            System.out.println("TRAN:" + translatedMsg);
-            System.out.println("UNWR:" + unwrapped);
             McUtils.mc().doRunTask(() -> {
                 McUtils.sendMessageToClient(new TextComponent(unwrapped));
             });
@@ -79,11 +72,6 @@ public class TranslationFeature extends UserFeature {
             String wrapped = wrapCoding(origCoded);
             TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
-                // FIXME: remove debug printout
-                System.out.println("ORIG:" + origCoded);
-                System.out.println("WRAP:" + wrapped);
-                System.out.println("TRAN:" + translatedMsg);
-                System.out.println("UNWR:" + unwrapped);
                 McUtils.mc().doRunTask(() -> {
                     NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);
                     WynntilsMod.getEventBus().post(translatedEvent);
