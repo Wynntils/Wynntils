@@ -51,6 +51,6 @@ public class DurabilityArcFeature extends UserFeature {
         CustomColor color = CustomColor.fromInt(colorInt).setAlpha(160);
 
         // draw
-        RenderUtils.drawArc(color, slotX, slotY, hotbar ? 0 : 200, durabilityPercent, 8);
+        RenderUtils.drawArc(color, slotX, slotY, hotbar ? 0 : 200, durabilityPercent, 6, 8);
     }
 }
