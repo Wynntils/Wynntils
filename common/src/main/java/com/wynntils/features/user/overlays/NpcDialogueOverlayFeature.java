@@ -27,7 +27,6 @@ import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
