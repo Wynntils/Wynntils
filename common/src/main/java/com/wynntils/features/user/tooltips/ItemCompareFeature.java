@@ -86,15 +86,11 @@ public class ItemCompareFeature extends UserFeature {
             itemToCompare = comparedItem;
         }
 
-        if (itemToCompare == null) {
-            return;
-        }
+        if (itemToCompare == null) return;
 
         if (itemToCompare == hoveredGearItemStack) {
-            itemToCompare = null;
+            return;
         }
-
-        if (itemToCompare == null) return;
 
         final PoseStack poseStack = new PoseStack();
         final int mouseX = event.getMouseX();
