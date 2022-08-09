@@ -76,17 +76,19 @@ public final class WebManager {
 
     private static List<MapProfile> maps = null;
 
-    private static String userAgent;
+    private static final String USER_AGENT;
 
-    public static void init() {
-        tryReloadApiUrls(false);
-        setupUserAccount();
-
-        userAgent = String.format(
+    static {
+        USER_AGENT = String.format(
                 "Wynntils Artemis\\%s-%d (%s)",
                 WynntilsMod.getVersion(),
                 WynntilsMod.getBuildNumber(),
                 WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
+    }
+
+    public static void init() {
+        tryReloadApiUrls(false);
+        setupUserAccount();
     }
 
     public static boolean isLoggedIn() {
@@ -363,7 +365,7 @@ public final class WebManager {
 
     private static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty("User-Agent", userAgent);
+        st.setRequestProperty("User-Agent", USER_AGENT);
         if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
@@ -429,7 +431,7 @@ public final class WebManager {
     }
 
     public static String getUserAgent() {
-        return userAgent;
+        return USER_AGENT;
     }
 
     public static boolean isSetup() {
