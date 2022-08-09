@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.InternalFeature;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
+import com.wynntils.wc.custom.item.SoulPointItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
@@ -57,6 +58,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
+        registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);

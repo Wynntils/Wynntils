@@ -272,6 +272,7 @@
   "feature.wynntils.quickCast.levelRequirementNotReached": "You need to reach %s %s before using this weapon.",
   "feature.wynntils.quickCast.name": "Quick Spell Cast Feature",
   "feature.wynntils.quickCast.notAWeapon": "You can only quick-cast with a weapon!",
+  "feature.wynntils.soulPointTimer.lore": "Time until next soul point: %s",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer Feature",
   "feature.wynntils.tooltipFitting.fitToScreen.description": "Whether tooltips should be scaled to always fit on the screen",
   "feature.wynntils.tooltipFitting.fitToScreen.name": "Fit to Screen",
