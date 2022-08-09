@@ -76,15 +76,11 @@ public final class WebManager {
 
     private static List<MapProfile> maps = null;
 
-    private static final String USER_AGENT;
-
-    static {
-        USER_AGENT = String.format(
-                "Wynntils Artemis\\%s-%d (%s)",
-                WynntilsMod.getVersion(),
-                WynntilsMod.getBuildNumber(),
-                WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
-    }
+    private static final String USER_AGENT = String.format(
+            "Wynntils Artemis\\%s-%d (%s)",
+            WynntilsMod.getVersion(),
+            WynntilsMod.getBuildNumber(),
+            WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
 
     public static void init() {
         tryReloadApiUrls(false);
