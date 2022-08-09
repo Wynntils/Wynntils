@@ -8,6 +8,7 @@ import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,10 +36,9 @@ public class SoulPointItemStack extends WynnItemStack {
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-            copy.add(new TranslatableComponent(
-                    "feature.wynntils.soulPointTimer.lore",
-                    minutesUntilSoulPoint,
-                    String.format("%02d", secondsUntilSoulPoint)));
+            copy.add(new TranslatableComponent("feature.wynntils.soulPointTimer.lore")
+                    .append(new TextComponent(ChatFormatting.WHITE
+                            + String.format("%02d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))));
 
             return copy;
         }
