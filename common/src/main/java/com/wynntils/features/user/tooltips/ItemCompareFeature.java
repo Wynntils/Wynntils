@@ -52,47 +52,49 @@ public class ItemCompareFeature extends UserFeature {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
         if (!COMPARE_MODE_ON) return;
 
-        if (abstractContainerScreen.hoveredSlot != null) {
-            ItemStack hoveredItemStack = abstractContainerScreen.hoveredSlot.getItem();
+        if (abstractContainerScreen.hoveredSlot == null) {
+            return;
+        }
 
-            if (event.getItemStack() != hoveredItemStack) {
-                return;
-            }
+        ItemStack hoveredItemStack = abstractContainerScreen.hoveredSlot.getItem();
 
-            if (!(hoveredItemStack instanceof GearItemStack hoveredGearItemStack)) {
-                return;
-            }
+        if (event.getItemStack() != hoveredItemStack) {
+            return;
+        }
 
-            // No compared item selected, try compare to equipped armor
-            if (COMPARED_ITEM == null) {
-                List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
+        if (!(hoveredItemStack instanceof GearItemStack hoveredGearItemStack)) {
+            return;
+        }
 
-                Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
-                        .filter(itemStack -> itemStack instanceof GearItemStack gItemStack
-                                && gItemStack.getItemProfile().getItemInfo().getType()
-                                        == hoveredGearItemStack
-                                                .getItemProfile()
-                                                .getItemInfo()
-                                                .getType())
-                        .map(itemStack -> (GearItemStack) itemStack)
-                        .findFirst();
+        // No compared item selected, try compare to equipped armor
+        if (COMPARED_ITEM == null) {
+            List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
 
-                matchingArmorItemStack.ifPresent(gearItemStack -> handleCompareTo(
-                        new PoseStack(),
-                        event.getMouseX(),
-                        event.getMouseY(),
-                        abstractContainerScreen,
-                        hoveredGearItemStack,
-                        gearItemStack));
-            } else {
-                handleCompareTo(
-                        new PoseStack(),
-                        event.getMouseX(),
-                        event.getMouseY(),
-                        abstractContainerScreen,
-                        hoveredGearItemStack,
-                        COMPARED_ITEM);
-            }
+            Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
+                    .filter(itemStack -> itemStack instanceof GearItemStack gItemStack
+                            && gItemStack.getItemProfile().getItemInfo().getType()
+                                    == hoveredGearItemStack
+                                            .getItemProfile()
+                                            .getItemInfo()
+                                            .getType())
+                    .map(itemStack -> (GearItemStack) itemStack)
+                    .findFirst();
+
+            matchingArmorItemStack.ifPresent(gearItemStack -> handleCompareTo(
+                    new PoseStack(),
+                    event.getMouseX(),
+                    event.getMouseY(),
+                    abstractContainerScreen,
+                    hoveredGearItemStack,
+                    gearItemStack));
+        } else {
+            handleCompareTo(
+                    new PoseStack(),
+                    event.getMouseX(),
+                    event.getMouseY(),
+                    abstractContainerScreen,
+                    hoveredGearItemStack,
+                    COMPARED_ITEM);
         }
     }
 
