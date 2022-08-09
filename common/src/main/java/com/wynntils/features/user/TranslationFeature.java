@@ -7,20 +7,21 @@ package com.wynntils.features.user;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.services.TranslationManager;
-import com.wynntils.mc.event.ChatReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.event.ChatMessageReceivedEvent;
+import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.utils.WynnUtils;
 import java.text.MessageFormat;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TranslationFeature extends UserFeature {
     public static TranslationFeature INSTANCE;
 
     @Config
-    public String languageName = "en";
+    public String languageName = "sv";
 
     @Config
     public boolean translateTrackedQuest = true;
@@ -38,10 +39,7 @@ public class TranslationFeature extends UserFeature {
     public boolean keepOriginal = true;
 
     @Config
-    public boolean removeAccents = false;
-
-    @Config
-    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.PIGLATIN;
+    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
 
     private void sendTranslation(String message, String prefix, String suffix, String formatted) {
         // We only want to translate the actual message, not formatting, sender, etc.
@@ -51,9 +49,6 @@ public class TranslationFeature extends UserFeature {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 // ignore
-            }
-            if (removeAccents) {
-                translatedMsg = org.apache.commons.lang3.StringUtils.stripAccents(translatedMsg);
             }
             String strToSend;
             if (translatedMsg == null) {
@@ -68,12 +63,38 @@ public class TranslationFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onChat(ChatReceivedEvent e) {
+    public void onChat(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
-        if (e.getType() == ChatType.GAME_INFO) return;
 
-        // FIXME: this is very simplistic until we get the ChatManager
-        String msg = ComponentUtils.getUnformatted(e.getMessage());
+        String origCoded = e.getCodedMessage();
+        String wrapped = wrapCoding(origCoded);
+        // FIXME: preserve leading spaces
+        // FIXME: preserve Wynntils coding
+        TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+            String unwrapped = unwrapCoding(translatedMsg);
+            System.out.println("ORIG:" + origCoded);
+            System.out.println("WRAP:" + wrapped);
+            System.out.println("TRAN:" + translatedMsg);
+            System.out.println("UNWR:" + unwrapped);
+            McUtils.mc().doRunTask(() -> {
+                McUtils.sendMessageToClient(new TextComponent(unwrapped));
+            });
+        });
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onNpcDialgue(NpcDialogEvent e) {
+        if (!WynnUtils.onServer()) return;
+
+        String msg = ComponentUtils.getUnformatted(e.getCodedDialog());
         sendTranslation(msg, "", "", "");
+    }
+
+    private String unwrapCoding(String origCoded) {
+        return origCoded.replaceAll("\\{§ ?([0-9a-fklmnor]) ?\\}", "§$1");
+    }
+
+    private String wrapCoding(String origCoded) {
+        return origCoded.replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 }

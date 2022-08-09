@@ -285,8 +285,6 @@
   "feature.wynntils.translation.keepOriginal.name": "Display Original",
   "feature.wynntils.translation.languageName.description": "What is the ISO two letter language code of the target language? (You can find a list of ISO codes by searching for `List of ISO 639-1 codes` on Wikipedia.)",
   "feature.wynntils.translation.languageName.name": "Target Language Code",
-  "feature.wynntils.translation.removeAccents.description": "Should accent marks be removed from translations? (Accent marks can cause display problems in some languages. Enabling this setting will avoid those issues.)",
-  "feature.wynntils.translation.removeAccents.name": "Remove Accent Marks",
   "feature.wynntils.translation.translateInfo.description": "Should messages such as system information, be translated?",
   "feature.wynntils.translation.translateInfo.name": "Info Messages",
   "feature.wynntils.translation.translateNpc.description": "Should messages spoken by NPCs be translated?",
