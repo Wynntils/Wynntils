@@ -64,7 +64,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.Middle),
-                    new GuiScaledOverlaySize(200, 300),
+                    new GuiScaledOverlaySize(200, 150),
                     HorizontalAlignment.Left,
                     VerticalAlignment.Top);
             updateTextRenderSettings();
@@ -126,7 +126,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)),
                             this.getRenderedWidth() - 15,
                             this.getRenderedHeight() - 15,
-                            HorizontalAlignment.Left,
+                            this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
 
