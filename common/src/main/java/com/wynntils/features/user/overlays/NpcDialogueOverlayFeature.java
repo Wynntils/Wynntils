@@ -80,12 +80,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
+            updateDialogExtractionSettings();
+            updateTextRenderSettings();
+        }
+
+        private void updateDialogExtractionSettings() {
             if (isEnabled()) {
                 ChatManager.enableNpcDialogExtraction();
             } else {
                 ChatManager.disableNpcDialogExtraction();
             }
-            updateTextRenderSettings();
         }
 
         private void renderDialogue(PoseStack poseStack, String currentDialogue) {
