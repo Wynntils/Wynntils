@@ -180,7 +180,7 @@ public final class ScoreboardManager {
                 objective = scoreboard.addObjective(
                         objectiveName,
                         ObjectiveCriteria.DUMMY,
-                        new TextComponent("play.wynncraft.com")
+                        new TextComponent(" play.wynncraft.com")
                                 .withStyle(ChatFormatting.GOLD)
                                 .withStyle(ChatFormatting.BOLD),
                         ObjectiveCriteria.RenderType.INTEGER);
