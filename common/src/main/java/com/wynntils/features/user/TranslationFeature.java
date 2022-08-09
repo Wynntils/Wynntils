@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.services.TranslationManager;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
