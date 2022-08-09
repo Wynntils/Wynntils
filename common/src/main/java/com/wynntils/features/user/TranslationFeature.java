@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.services.TranslationManager;
@@ -80,21 +81,51 @@ public class TranslationFeature extends UserFeature {
                 McUtils.sendMessageToClient(new TextComponent(unwrapped));
             });
         });
+        if (!keepOriginal) {
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialgue(NpcDialogEvent e) {
         if (!WynnUtils.onServer()) return;
+        if (e instanceof TranslatedNpcDialogEvent) return;
 
-        String msg = ComponentUtils.getUnformatted(e.getCodedDialog());
-        sendTranslation(msg, "", "", "");
+        String origCoded = e.getCodedDialog();
+        if (origCoded != null) {
+            String wrapped = wrapCoding(origCoded);
+            TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+                String unwrapped = unwrapCoding(translatedMsg);
+                System.out.println("ORIG:" + origCoded);
+                System.out.println("WRAP:" + wrapped);
+                System.out.println("TRAN:" + translatedMsg);
+                System.out.println("UNWR:" + unwrapped);
+                McUtils.mc().doRunTask(() -> {
+                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);
+                    WynntilsMod.getEventBus().post(translatedEvent);
+                });
+            });
+        } else {
+            // We must also pass on the null event to clear the dialogue
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null);
+            WynntilsMod.getEventBus().post(translatedEvent);
+        }
+        if (!keepOriginal) {
+            e.setCanceled(true);
+        }
     }
 
     private String unwrapCoding(String origCoded) {
-        return origCoded.replaceAll("\\{§ ?([0-9a-fklmnor]) ?\\}", "§$1");
+        return origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1");
     }
 
     private String wrapCoding(String origCoded) {
         return origCoded.replaceAll("(§[0-9a-fklmnor])", "{$1}");
+    }
+
+    private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
+        public TranslatedNpcDialogEvent(String codedDialog) {
+            super(codedDialog);
+        }
     }
 }
