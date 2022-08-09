@@ -49,7 +49,7 @@ public enum ItemType {
             case "wand" -> WAND;
             case "dagger" -> DAGGER;
             case "bow" -> BOW;
-            case "relik"-> RELIK;
+            case "relik" -> RELIK;
             case "ring" -> RING;
             case "necklace" -> NECKLACE;
             case "bracelet" -> BRACELET;
