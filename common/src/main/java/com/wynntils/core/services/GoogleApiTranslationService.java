@@ -22,6 +22,11 @@ public class GoogleApiTranslationService extends CachingTranslationService imple
 
     @Override
     protected void translateNew(String message, String toLanguage, Consumer<String> handleTranslation) {
+        if (toLanguage == null || toLanguage.isEmpty()) {
+            handleTranslation.accept(null);
+            return;
+        }
+
         String encodedMessage = StringUtils.encodeUrl(message);
         String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=" + toLanguage
                 + "&dt=t&q=" + encodedMessage;
@@ -43,7 +48,7 @@ public class GoogleApiTranslationService extends CachingTranslationService imple
                             return true;
                         })
                         .onError(() -> {
-                            // If Google trad return no data ( 500 error ) , display default lang
+                            // If Google translate return no data ( 500 error ), display default lang
                             handleTranslation.accept(null);
                         })
                         .build(),
