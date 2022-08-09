@@ -63,6 +63,7 @@
   "feature.wynntils.infoMessageFilter.soulPoint.description": "How should soul point messages appear?",
   "feature.wynntils.infoMessageFilter.soulPoint.name": "Soul Point Message Filtering",
   "feature.wynntils.ingredientPouchHotkey.name": "Ingredient Pouch Keybind Feature",
+  "feature.wynntils.itemCompare.name": "Item Compare Feature",
   "feature.wynntils.itemGuess.levelLine": "§a- §7Lv. %s",
   "feature.wynntils.itemGuess.name": "Item Guess Feature",
   "feature.wynntils.itemGuess.possibilities": "§a- §7Possibilities: ",
