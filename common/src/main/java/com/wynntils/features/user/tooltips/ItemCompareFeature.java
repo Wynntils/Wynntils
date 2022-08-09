@@ -48,7 +48,8 @@ public class ItemCompareFeature extends UserFeature {
 
     @SubscribeEvent
     public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Post event) {
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        if (McUtils.mc().screen == null
+                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
         if (abstractContainerScreen.hoveredSlot == null) {
             return;
