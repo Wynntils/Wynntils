@@ -35,8 +35,8 @@ public class ItemCompareFeature extends UserFeature {
     private final KeyHolder compareSelectKeybind =
             new KeyHolder("Select for comparing", GLFW.GLFW_KEY_C, "Wynntils", true, () -> {});
 
-    private static GearItemStack comparedItem = null;
-    private static boolean compareToEquipped = false;
+    private GearItemStack comparedItem = null;
+    private boolean compareToEquipped = false;
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre event) {
