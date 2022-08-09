@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 
 public abstract class CachingTranslationService implements TranslationService {
     public static final File TRANSLATION_CACHE_ROOT = WynntilsMod.getModStorageDir("translationcache");
+    private static final Gson GSON = new Gson();
 
     // Map language code (String) to a translation map (String -> String)
     private static Map<String, ConcurrentHashMap<String, String>> translationCaches = new HashMap<>();
@@ -58,8 +59,7 @@ public abstract class CachingTranslationService implements TranslationService {
             if (translationCaches == null) return;
 
             File f = new File(TRANSLATION_CACHE_ROOT, "translations.json");
-            Gson gson = new Gson();
-            String json = gson.toJson(translationCaches);
+            String json = GSON.toJson(translationCaches);
             FileUtils.writeStringToFile(f, json, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,9 +77,8 @@ public abstract class CachingTranslationService implements TranslationService {
         try {
             String json = FileUtils.readFileToString(f, "UTF-8");
 
-            Gson gson = new Gson();
             Type type = new TypeToken<HashMap<String, ConcurrentHashMap<String, String>>>() {}.getType();
-            translationCaches = gson.fromJson(json, type);
+            translationCaches = GSON.fromJson(json, type);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
