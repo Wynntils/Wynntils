@@ -70,23 +70,24 @@ public class ItemCompareFeature extends UserFeature {
                     poseStack.pushPose();
 
                     poseStack.translate(0, 0, 300);
-                    boolean secondHalf = event.getMouseX() > McUtils.mc().screen.width / 2;
 
-                    if (secondHalf) {
-                        int toBeRenderedWidth = McUtils.mc().screen.getTooltipFromItem(gearItemStack).stream()
-                                .map(component -> McUtils.mc().font.width(component))
-                                .max(Integer::compareTo)
-                                .orElse(0);
+                    int toBeRenderedWidth = McUtils.mc().screen.getTooltipFromItem(gearItemStack).stream()
+                            .map(component -> McUtils.mc().font.width(component))
+                            .max(Integer::compareTo)
+                            .orElse(0);
+
+                    int hoveredWidth = McUtils.mc().screen.getTooltipFromItem(hoveredGearItemStack).stream()
+                            .map(component -> McUtils.mc().font.width(component))
+                            .max(Integer::compareTo)
+                            .orElse(0);
+
+                    if (event.getMouseX() + toBeRenderedWidth + hoveredWidth > McUtils.mc().screen.width) {
                         inventoryScreen.renderTooltip(
                                 poseStack,
                                 gearItemStack,
                                 event.getMouseX() - toBeRenderedWidth - 10,
                                 event.getMouseY());
                     } else {
-                        int hoveredWidth = McUtils.mc().screen.getTooltipFromItem(hoveredGearItemStack).stream()
-                                .map(component -> McUtils.mc().font.width(component))
-                                .max(Integer::compareTo)
-                                .orElse(0);
                         inventoryScreen.renderTooltip(
                                 poseStack, gearItemStack, event.getMouseX() + hoveredWidth + 10, event.getMouseY());
                     }
