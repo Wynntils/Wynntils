@@ -19,7 +19,6 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.GearItemStack;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -90,46 +89,34 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
-        handleCompareTo(
-                new PoseStack(),
-                event.getMouseX(),
-                event.getMouseY(),
-                abstractContainerScreen,
-                hoveredGearItemStack,
-                itemToCompare);
-    }
+        if (itemToCompare == hoveredGearItemStack) {
+            itemToCompare = null;
+        }
 
-    private static void handleCompareTo(
-            PoseStack poseStack,
-            int mouseX,
-            int mouseY,
-            AbstractContainerScreen<?> inventoryScreen,
-            GearItemStack hoveredGearItemStack,
-            GearItemStack matchingArmorItemStack) {
-        if (hoveredGearItemStack == matchingArmorItemStack) return;
+        if (itemToCompare == null) return;
 
-        Screen screen = McUtils.mc().screen;
-
-        if (screen == null) return;
+        final PoseStack poseStack = new PoseStack();
+        final int mouseX = event.getMouseX();
+        final int mouseY = event.getMouseY();
 
         poseStack.pushPose();
 
         poseStack.translate(0, 0, 300);
 
-        int toBeRenderedWidth = screen.getTooltipFromItem(matchingArmorItemStack).stream()
+        int toBeRenderedWidth = abstractContainerScreen.getTooltipFromItem(itemToCompare).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
-        int hoveredWidth = screen.getTooltipFromItem(hoveredGearItemStack).stream()
+        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(hoveredGearItemStack).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
-        if (mouseX + toBeRenderedWidth + hoveredWidth > screen.width) {
-            inventoryScreen.renderTooltip(poseStack, matchingArmorItemStack, mouseX - toBeRenderedWidth - 10, mouseY);
+        if (mouseX + toBeRenderedWidth + hoveredWidth > abstractContainerScreen.width) {
+            abstractContainerScreen.renderTooltip(poseStack, itemToCompare, mouseX - toBeRenderedWidth - 10, mouseY);
         } else {
-            inventoryScreen.renderTooltip(poseStack, matchingArmorItemStack, mouseX + hoveredWidth + 10, mouseY);
+            abstractContainerScreen.renderTooltip(poseStack, itemToCompare, mouseX + hoveredWidth + 10, mouseY);
         }
 
         poseStack.popPose();
