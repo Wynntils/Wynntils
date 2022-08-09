@@ -63,7 +63,7 @@ public final class FontRenderer {
                 switch (shadow) {
                     case OUTLINE:
                         int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                        String strippedText = ComponentUtils.stripFormatting(text);
+                        String strippedText = ComponentUtils.stripColorFormatting(text);
 
                         // draw outline behind text
                         font.draw(poseStack, strippedText, x, y, shadowColor);
