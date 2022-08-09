@@ -45,18 +45,18 @@ public enum ItemType {
 
     public static ItemType fromString(String typeStr) {
         return switch (typeStr.toLowerCase(Locale.ROOT)) {
-            case "spear", "hammer", "scythe", "warrior", "knight", "wa" -> SPEAR;
-            case "wand", "stick", "mage", "wizard", "darkwizard", "ma" -> WAND;
-            case "dagger", "shears", "assassin", "ninja", "as" -> DAGGER;
-            case "bow", "archer", "hunter", "ar" -> BOW;
-            case "relik", "relic", "shaman", "skyseer", "sh" -> RELIK;
+            case "spear" -> SPEAR;
+            case "wand" -> WAND;
+            case "dagger" -> DAGGER;
+            case "bow" -> BOW;
+            case "relik"-> RELIK;
             case "ring" -> RING;
-            case "necklace", "amulet", "neck" -> NECKLACE;
-            case "bracelet", "bracer", "arm" -> BRACELET;
-            case "helmet", "helm" -> HELMET;
-            case "chestplate", "chest" -> CHESTPLATE;
-            case "leggings", "legs" -> LEGGINGS;
-            case "boots", "feet" -> BOOTS;
+            case "necklace" -> NECKLACE;
+            case "bracelet" -> BRACELET;
+            case "helmet" -> HELMET;
+            case "chestplate" -> CHESTPLATE;
+            case "leggings" -> LEGGINGS;
+            case "boots" -> BOOTS;
             default -> null;
         };
     }
