@@ -65,6 +65,8 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
+        GearItemStack itemToCompare = null;
+
         // No compared item selected, try compare to equipped armor
         if (compareToEquipped) {
             List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
@@ -79,22 +81,22 @@ public class ItemCompareFeature extends UserFeature {
                     .map(itemStack -> (GearItemStack) itemStack)
                     .findFirst();
 
-            matchingArmorItemStack.ifPresent(gearItemStack -> handleCompareTo(
-                    new PoseStack(),
-                    event.getMouseX(),
-                    event.getMouseY(),
-                    abstractContainerScreen,
-                    hoveredGearItemStack,
-                    gearItemStack));
+            itemToCompare = matchingArmorItemStack.orElse(null);
         } else if (comparedItem != null) {
-            handleCompareTo(
-                    new PoseStack(),
-                    event.getMouseX(),
-                    event.getMouseY(),
-                    abstractContainerScreen,
-                    hoveredGearItemStack,
-                    comparedItem);
+            itemToCompare = comparedItem;
         }
+
+        if (itemToCompare == null) {
+            return;
+        }
+
+        handleCompareTo(
+                new PoseStack(),
+                event.getMouseX(),
+                event.getMouseY(),
+                abstractContainerScreen,
+                hoveredGearItemStack,
+                itemToCompare);
     }
 
     private static void handleCompareTo(
