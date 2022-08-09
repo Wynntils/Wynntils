@@ -34,14 +34,18 @@ public final class OverlayManager {
 
     public static void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
-        if (ignoreState) {
-            enabledOverlays.addAll(overlays);
-        } else {
-            enabledOverlays.addAll(overlays.stream().filter(Overlay::isEnabled).toList());
+        if (!ignoreState) {
+            overlays = overlays.stream().filter(Overlay::isEnabled).toList();
         }
+
+        enabledOverlays.addAll(overlays);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     @SubscribeEvent
