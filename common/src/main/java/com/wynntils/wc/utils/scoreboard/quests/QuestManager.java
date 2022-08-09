@@ -10,6 +10,7 @@ import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 
 public class QuestManager implements ScoreboardHandler {
     private static QuestInfo currentQuest = null;
@@ -33,12 +34,16 @@ public class QuestManager implements ScoreboardHandler {
             if (line.startsWith("§e")) {
                 questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
-                description.append(ComponentUtils.stripFormatting(line)).append(" ");
+                description
+                        .append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                                .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
+                        .append(" ");
             }
         }
 
-        currentQuest = new QuestInfo(
-                questName.toString().trim(), description.toString().trim());
+        String descriptionTrimmed = description.toString().trim();
+
+        currentQuest = new QuestInfo(questName.toString().trim(), descriptionTrimmed);
     }
 
     @Override
