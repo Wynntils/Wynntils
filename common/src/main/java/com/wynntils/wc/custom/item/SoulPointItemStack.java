@@ -36,9 +36,11 @@ public class SoulPointItemStack extends WynnItemStack {
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-            copy.add(new TranslatableComponent("feature.wynntils.soulPointTimer.lore")
-                    .append(new TextComponent(ChatFormatting.WHITE
-                            + String.format("%02d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))));
+            copy.add(new TranslatableComponent(
+                            "feature.wynntils.soulPointTimer.lore",
+                            ChatFormatting.WHITE
+                                    + String.format("%02d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
+                    .withStyle(ChatFormatting.AQUA));
 
             return copy;
         }
