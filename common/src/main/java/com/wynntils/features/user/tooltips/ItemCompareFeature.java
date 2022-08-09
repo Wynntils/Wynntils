@@ -12,11 +12,16 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.GearItemStack;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -31,16 +36,24 @@ public class ItemCompareFeature extends UserFeature {
     private final KeyHolder compareSelectKeybind =
             new KeyHolder("Select for comparing", GLFW.GLFW_KEY_C, "Wynntils", true, () -> {});
 
-    private static ItemStack COMPARED_ITEM = null;
+    private static GearItemStack COMPARED_ITEM = null;
     private static boolean COMPARE_MODE_ON = false;
 
     @SubscribeEvent
-    public void onInventoryRenderEvent(ItemTooltipRenderEvent.Post event) {
-        if (!(McUtils.mc().screen instanceof InventoryScreen inventoryScreen)) return;
+    public void onRenderSlot(SlotRenderEvent.Pre event) {
+        Slot slot = event.getSlot();
+        if (slot.getItem() == COMPARED_ITEM) {
+            RenderUtils.drawArc(CommonColors.LIGHT_BLUE, slot.x, slot.y, 200, 1, 6, 8);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Post event) {
+        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
         if (!COMPARE_MODE_ON) return;
 
-        if (inventoryScreen.hoveredSlot != null) {
-            ItemStack hoveredItemStack = inventoryScreen.hoveredSlot.getItem();
+        if (abstractContainerScreen.hoveredSlot != null) {
+            ItemStack hoveredItemStack = abstractContainerScreen.hoveredSlot.getItem();
 
             if (event.getItemStack() != hoveredItemStack) {
                 return;
@@ -64,38 +77,59 @@ public class ItemCompareFeature extends UserFeature {
                         .map(itemStack -> (GearItemStack) itemStack)
                         .findFirst();
 
-                if (matchingArmorItemStack.isPresent() && matchingArmorItemStack.get() != hoveredGearItemStack) {
-                    GearItemStack gearItemStack = matchingArmorItemStack.get();
-                    PoseStack poseStack = event.getPoseStack();
-                    poseStack.pushPose();
-
-                    poseStack.translate(0, 0, 300);
-
-                    int toBeRenderedWidth = McUtils.mc().screen.getTooltipFromItem(gearItemStack).stream()
-                            .map(component -> McUtils.mc().font.width(component))
-                            .max(Integer::compareTo)
-                            .orElse(0);
-
-                    int hoveredWidth = McUtils.mc().screen.getTooltipFromItem(hoveredGearItemStack).stream()
-                            .map(component -> McUtils.mc().font.width(component))
-                            .max(Integer::compareTo)
-                            .orElse(0);
-
-                    if (event.getMouseX() + toBeRenderedWidth + hoveredWidth > McUtils.mc().screen.width) {
-                        inventoryScreen.renderTooltip(
-                                poseStack,
-                                gearItemStack,
-                                event.getMouseX() - toBeRenderedWidth - 10,
-                                event.getMouseY());
-                    } else {
-                        inventoryScreen.renderTooltip(
-                                poseStack, gearItemStack, event.getMouseX() + hoveredWidth + 10, event.getMouseY());
-                    }
-
-                    poseStack.popPose();
-                }
+                matchingArmorItemStack.ifPresent(gearItemStack -> handleCompareTo(
+                        new PoseStack(),
+                        event.getMouseX(),
+                        event.getMouseY(),
+                        abstractContainerScreen,
+                        hoveredGearItemStack,
+                        gearItemStack));
+            } else {
+                handleCompareTo(
+                        new PoseStack(),
+                        event.getMouseX(),
+                        event.getMouseY(),
+                        abstractContainerScreen,
+                        hoveredGearItemStack,
+                        COMPARED_ITEM);
             }
         }
+    }
+
+    private static void handleCompareTo(
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            AbstractContainerScreen<?> inventoryScreen,
+            GearItemStack hoveredGearItemStack,
+            GearItemStack matchingArmorItemStack) {
+        if (hoveredGearItemStack == matchingArmorItemStack) return;
+
+        Screen screen = McUtils.mc().screen;
+
+        if (screen == null) return;
+
+        poseStack.pushPose();
+
+        poseStack.translate(0, 0, 300);
+
+        int toBeRenderedWidth = screen.getTooltipFromItem(matchingArmorItemStack).stream()
+                .map(component -> McUtils.mc().font.width(component))
+                .max(Integer::compareTo)
+                .orElse(0);
+
+        int hoveredWidth = screen.getTooltipFromItem(hoveredGearItemStack).stream()
+                .map(component -> McUtils.mc().font.width(component))
+                .max(Integer::compareTo)
+                .orElse(0);
+
+        if (mouseX + toBeRenderedWidth + hoveredWidth > screen.width) {
+            inventoryScreen.renderTooltip(poseStack, matchingArmorItemStack, mouseX - toBeRenderedWidth - 10, mouseY);
+        } else {
+            inventoryScreen.renderTooltip(poseStack, matchingArmorItemStack, mouseX + hoveredWidth + 10, mouseY);
+        }
+
+        poseStack.popPose();
     }
 
     @SubscribeEvent
@@ -106,13 +140,26 @@ public class ItemCompareFeature extends UserFeature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (toggleCompareModeKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
-            COMPARE_MODE_ON = !COMPARE_MODE_ON;
+            if (COMPARED_ITEM != null) {
+                COMPARED_ITEM = null;
+                COMPARE_MODE_ON = true;
+            } else {
+                COMPARE_MODE_ON = !COMPARE_MODE_ON;
+            }
         } else if (compareSelectKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
             if (event.getHoveredSlot() == null) {
                 return;
             }
 
-            COMPARED_ITEM = event.getHoveredSlot().getItem();
+            if (event.getHoveredSlot().getItem() instanceof GearItemStack gearItemStack) {
+                if (COMPARED_ITEM == gearItemStack) {
+                    COMPARED_ITEM = null;
+                    COMPARE_MODE_ON = false;
+                } else {
+                    COMPARED_ITEM = gearItemStack;
+                    COMPARE_MODE_ON = true;
+                }
+            }
         }
     }
 }
