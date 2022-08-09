@@ -36,13 +36,13 @@ public class ItemCompareFeature extends UserFeature {
     private final KeyHolder compareSelectKeybind =
             new KeyHolder("Select for comparing", GLFW.GLFW_KEY_C, "Wynntils", true, () -> {});
 
-    private static GearItemStack COMPARED_ITEM = null;
-    private static boolean COMPARE_MODE_ON = false;
+    private static GearItemStack comparedItem = null;
+    private static boolean compareToEquipped = false;
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
-        if (slot.getItem() == COMPARED_ITEM) {
+        if (slot.getItem() == comparedItem) {
             RenderUtils.drawArc(CommonColors.LIGHT_BLUE, slot.x, slot.y, 200, 1, 6, 8);
         }
     }
@@ -50,7 +50,6 @@ public class ItemCompareFeature extends UserFeature {
     @SubscribeEvent
     public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Post event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
-        if (!COMPARE_MODE_ON) return;
 
         if (abstractContainerScreen.hoveredSlot == null) {
             return;
@@ -67,7 +66,7 @@ public class ItemCompareFeature extends UserFeature {
         }
 
         // No compared item selected, try compare to equipped armor
-        if (COMPARED_ITEM == null) {
+        if (compareToEquipped) {
             List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
 
             Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
@@ -87,14 +86,14 @@ public class ItemCompareFeature extends UserFeature {
                     abstractContainerScreen,
                     hoveredGearItemStack,
                     gearItemStack));
-        } else {
+        } else if (comparedItem != null) {
             handleCompareTo(
                     new PoseStack(),
                     event.getMouseX(),
                     event.getMouseY(),
                     abstractContainerScreen,
                     hoveredGearItemStack,
-                    COMPARED_ITEM);
+                    comparedItem);
         }
     }
 
@@ -136,17 +135,17 @@ public class ItemCompareFeature extends UserFeature {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent event) {
-        COMPARE_MODE_ON = false;
+        compareToEquipped = false;
     }
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (toggleCompareModeKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
-            if (COMPARED_ITEM != null) {
-                COMPARED_ITEM = null;
-                COMPARE_MODE_ON = true;
+            if (comparedItem != null) {
+                comparedItem = null;
+                compareToEquipped = true;
             } else {
-                COMPARE_MODE_ON = !COMPARE_MODE_ON;
+                compareToEquipped = !compareToEquipped;
             }
         } else if (compareSelectKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
             if (event.getHoveredSlot() == null) {
@@ -154,12 +153,11 @@ public class ItemCompareFeature extends UserFeature {
             }
 
             if (event.getHoveredSlot().getItem() instanceof GearItemStack gearItemStack) {
-                if (COMPARED_ITEM == gearItemStack) {
-                    COMPARED_ITEM = null;
-                    COMPARE_MODE_ON = false;
+                if (comparedItem == gearItemStack) {
+                    comparedItem = null;
                 } else {
-                    COMPARED_ITEM = gearItemStack;
-                    COMPARE_MODE_ON = true;
+                    comparedItem = gearItemStack;
+                    compareToEquipped = false;
                 }
             }
         }
