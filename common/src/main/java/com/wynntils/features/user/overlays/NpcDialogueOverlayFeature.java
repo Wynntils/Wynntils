@@ -27,7 +27,6 @@ import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
@@ -35,7 +34,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
     private String currentDialogue;
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onNpcDialogue(NpcDialogEvent e) {
         String msg = e.getCodedDialog();
         if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
@@ -44,8 +43,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
-        // Cancel the event so the chat fallback does not get it
-        e.setCanceled(true);
     }
 
     @SubscribeEvent
