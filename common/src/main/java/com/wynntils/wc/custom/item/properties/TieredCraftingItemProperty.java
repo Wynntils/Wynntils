@@ -21,14 +21,17 @@ public abstract class TieredCraftingItemProperty extends ItemProperty implements
     }
 
     protected IngredientTier calculateTier(String name) {
-        if (name.endsWith(getPrimaryColor(IngredientTier.ONE) + " [" + getSecondaryColor(IngredientTier.ONE) + "✫"
-                + ChatFormatting.DARK_GRAY + "✫✫" + getPrimaryColor(IngredientTier.ONE) + "]")) {
+        if (name.endsWith(
+                getPrimaryParsingColor(IngredientTier.ONE) + " [" + getSecondaryParsingColor(IngredientTier.ONE) + "✫"
+                        + ChatFormatting.DARK_GRAY + "✫✫" + getPrimaryParsingColor(IngredientTier.ONE) + "]")) {
             return IngredientTier.ONE;
-        } else if (name.endsWith(getPrimaryColor(IngredientTier.TWO) + " [" + getSecondaryColor(IngredientTier.TWO)
-                + "✫✫" + ChatFormatting.DARK_GRAY + "✫" + getPrimaryColor(IngredientTier.TWO) + "]")) {
+        } else if (name.endsWith(
+                getPrimaryParsingColor(IngredientTier.TWO) + " [" + getSecondaryParsingColor(IngredientTier.TWO) + "✫✫"
+                        + ChatFormatting.DARK_GRAY + "✫" + getPrimaryParsingColor(IngredientTier.TWO) + "]")) {
             return IngredientTier.TWO;
-        } else if (name.endsWith(getPrimaryColor(IngredientTier.THREE) + " [" + getSecondaryColor(IngredientTier.THREE)
-                + "✫✫✫" + getPrimaryColor(IngredientTier.THREE) + "]")) {
+        } else if (name.endsWith(
+                getPrimaryParsingColor(IngredientTier.THREE) + " [" + getSecondaryParsingColor(IngredientTier.THREE)
+                        + "✫✫✫" + getPrimaryParsingColor(IngredientTier.THREE) + "]")) {
             return IngredientTier.THREE;
         } else {
             return IngredientTier.ZERO;
@@ -45,9 +48,9 @@ public abstract class TieredCraftingItemProperty extends ItemProperty implements
         return false;
     }
 
-    protected abstract ChatFormatting getPrimaryColor(IngredientTier tier);
+    protected abstract ChatFormatting getPrimaryParsingColor(IngredientTier tier);
 
-    protected abstract ChatFormatting getSecondaryColor(IngredientTier tier);
+    protected abstract ChatFormatting getSecondaryParsingColor(IngredientTier tier);
 
     public enum IngredientTier {
         ZERO,

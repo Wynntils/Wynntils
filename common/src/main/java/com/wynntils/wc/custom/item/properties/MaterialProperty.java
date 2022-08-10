@@ -15,12 +15,12 @@ public class MaterialProperty extends TieredCraftingItemProperty {
     }
 
     @Override
-    protected ChatFormatting getPrimaryColor(IngredientTier tier) {
+    protected ChatFormatting getPrimaryParsingColor(IngredientTier tier) {
         return ChatFormatting.GOLD;
     }
 
     @Override
-    protected ChatFormatting getSecondaryColor(IngredientTier tier) {
+    protected ChatFormatting getSecondaryParsingColor(IngredientTier tier) {
         return ChatFormatting.YELLOW;
     }
 

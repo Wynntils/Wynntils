@@ -15,7 +15,7 @@ public class IngredientProperty extends TieredCraftingItemProperty {
     }
 
     @Override
-    protected ChatFormatting getPrimaryColor(IngredientTier tier) {
+    protected ChatFormatting getPrimaryParsingColor(IngredientTier tier) {
         return switch (tier) {
             case ZERO -> null; // should not be used
             case ONE -> ChatFormatting.GOLD;
@@ -25,7 +25,7 @@ public class IngredientProperty extends TieredCraftingItemProperty {
     }
 
     @Override
-    protected ChatFormatting getSecondaryColor(IngredientTier tier) {
+    protected ChatFormatting getSecondaryParsingColor(IngredientTier tier) {
         return switch (tier) {
             case ZERO -> null; // should not be used
             case ONE -> ChatFormatting.YELLOW;
