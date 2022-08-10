@@ -84,7 +84,7 @@ public class ObjectiveManager implements ScoreboardHandler {
     @Override
     public void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType) {
         List<WynnObjective> objectives = reparseObjectives(newValue).stream()
-                .filter(wynnObjective -> wynnObjective.getScore() != wynnObjective.getMaxScore())
+                .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
                 .toList();
 
         if (segmentType == ScoreboardManager.SegmentType.GuildObjective) {
