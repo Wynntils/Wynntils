@@ -122,6 +122,7 @@ public class ItemCompareFeature extends UserFeature {
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent event) {
         compareToEquipped = false;
+        comparedItem = null;
     }
 
     @SubscribeEvent
