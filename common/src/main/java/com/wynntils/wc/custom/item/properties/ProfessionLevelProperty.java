@@ -9,6 +9,8 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.WynnItemStack;
 
+// Remove after Spellbound goes live.
+@Deprecated
 public class ProfessionLevelProperty extends CustomStackCountProperty {
     public ProfessionLevelProperty(WynnItemStack item) {
         super(item);
