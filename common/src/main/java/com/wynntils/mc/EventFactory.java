@@ -51,6 +51,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import java.util.List;
@@ -86,6 +87,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -228,9 +230,13 @@ public final class EventFactory {
         return post(new KeyInputEvent(key, scanCode, action, modifiers));
     }
 
-    public static void onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
+    public static Event onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
         PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
-        post(event);
+        return post(event);
+    }
+
+    public static Event onUseItem(Player player, Level level, InteractionHand hand) {
+        return post(new UseItemEvent(player, level, hand));
     }
 
     public static DropHeldItemEvent onDropPre(boolean fullStack) {
