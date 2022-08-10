@@ -30,6 +30,7 @@ import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
+import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
@@ -174,6 +175,7 @@ public final class FeatureRegistry {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TranslationFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
 
