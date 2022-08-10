@@ -83,12 +83,12 @@ public interface IBoundingBox {
                     .collect(
                             () -> new Pair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
                             (acc, val) -> {
-                                acc.a = min(acc.a, val);
-                                acc.b = max(acc.b, val);
+                                acc.a = minCoords(acc.a, val);
+                                acc.b = maxCoords(acc.b, val);
                             },
                             (acc, val) -> {
-                                acc.a = min(acc.a, val.a);
-                                acc.b = max(acc.b, val.b);
+                                acc.a = minCoords(acc.a, val.a);
+                                acc.b = maxCoords(acc.b, val.b);
                             });
             this.lower = definingPoints.a;
             this.lower.scale(ONE_MINUS_EPS);
@@ -103,12 +103,12 @@ public interface IBoundingBox {
                     .collect(
                             () -> new Pair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
                             (acc, val) -> {
-                                acc.a = min(acc.a, val.a);
-                                acc.b = min(acc.b, val.b);
+                                acc.a = minCoords(acc.a, val.a);
+                                acc.b = minCoords(acc.b, val.b);
                             },
                             (acc, val) -> {
-                                acc.a = min(acc.a, val.a);
-                                acc.b = min(acc.b, val.b);
+                                acc.a = minCoords(acc.a, val.a);
+                                acc.b = minCoords(acc.b, val.b);
                             });
             this.lower = definingPoints.a;
             this.lower.scale(ONE_MINUS_EPS);
@@ -125,18 +125,20 @@ public interface IBoundingBox {
             return new AxisAlignedBoundingBox(iaabb.getLower(), iaabb.getUpper());
         }
 
-        private static Vec3 min(final Vec3 a, final Vec3 b) {
+        private static Vec3 minCoords(final Vec3 a, final Vec3 b) {
             return new Vec3(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
         }
 
-        private static Vec3 max(final Vec3 a, final Vec3 b) {
+        private static Vec3 maxCoords(final Vec3 a, final Vec3 b) {
             return new Vec3(Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
         }
 
         public static AxisAlignedBoundingBox mergeBounds(final IBoundingBox a, final IBoundingBox b) {
-            return new AxisAlignedBoundingBox(
-                    mergePoints(a.getLower(), b.getLower(), Math::min),
-                    mergePoints(a.getUpper(), b.getUpper(), Math::max));
+            final AxisAlignedBoundingBox result = new AxisAlignedBoundingBox();
+            result.lower = minCoords(a.getLower(), b.getLower());
+            result.upper = maxCoords(a.getUpper(), b.getUpper());
+            result.updateSizeAndMid();
+            return result;
         }
 
         private void updateSizeAndMid() {
@@ -147,8 +149,8 @@ public interface IBoundingBox {
         public void add(final Vec3 point) {
             final Vec3 marginLower = point.scale(ONE_MINUS_EPS);
             final Vec3 marginUpper = point.scale(ONE_PLUS_EPS);
-            this.lower = min(this.lower, marginLower);
-            this.upper = max(this.upper, marginUpper);
+            this.lower = minCoords(this.lower, marginLower);
+            this.upper = maxCoords(this.upper, marginUpper);
             this.updateSizeAndMid();
         }
 
@@ -233,8 +235,9 @@ public interface IBoundingBox {
             return "[" + this.lower + ", " + this.upper + "]";
         }
 
-        private static Vec3 mergePoints(final Vec3 a, final Vec3 b, final BinaryOperator<Double> mergeFuntion) {
-            return new Vec3(mergeFuntion.apply(a.x, b.x), mergeFuntion.apply(a.y, b.y), mergeFuntion.apply(a.z, b.z));
+        private static Vec3 mergePoints(final Vec3 a, final Vec3 b, final BinaryOperator<Double> mergeFunction) {
+            return new Vec3(
+                    mergeFunction.apply(a.x, b.x), mergeFunction.apply(a.y, b.y), mergeFunction.apply(a.z, b.z));
         }
 
         private static double squareDistance(final AxisAlignedBoundingBox bb, final Vec3 point) {
