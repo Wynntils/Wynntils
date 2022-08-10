@@ -54,7 +54,7 @@ public abstract class MultiPlayerGameModeMixin {
     }
 
     @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
-    private void useItemOnPre(
+    private void useItemPre(
             Player player, Level level, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (EventFactory.onUseItem(player, level, hand).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
