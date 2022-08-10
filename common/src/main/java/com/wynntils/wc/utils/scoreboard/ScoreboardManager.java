@@ -86,12 +86,11 @@ public final class ScoreboardManager {
                         .toList()) {
                     scoreboardLineMap.remove(lineToRemove.index());
                 }
-                continue;
+            } else {
+                ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
+                scoreboardLineMap.put(line.index(), line);
+                changedLines.add(processed.lineText());
             }
-
-            ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
-            scoreboardLineMap.put(line.index(), line);
-            changedLines.add(processed.lineText());
         }
 
         scoreboardCopy.clear();
