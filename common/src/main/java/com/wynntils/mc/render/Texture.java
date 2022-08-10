@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 public enum Texture {
     BUBBLE_BAR("bars_bubbles.png", 256, 256),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
+    GEAR_ICONS("gear_icons.png", 64, 64),
     HEALTH_BAR("bars_health.png", 256, 256),
     HIGHLIGHT("highlight.png", 256, 256),
     ITEM_LOCK("item_lock.png", 16, 16),

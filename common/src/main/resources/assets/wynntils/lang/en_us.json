@@ -308,6 +308,7 @@
   "feature.wynntils.translation.translateTrackedQuest.name": "Tracked Quest",
   "feature.wynntils.translation.translationService.description": "Which translation service should be used?",
   "feature.wynntils.translation.translationService.name": "Translation Service",
+  "feature.wynntils.unidentifiedItemIcon.name": "Unidentified Item Icon Feature",
   "feature.wynntils.userFeature.userEnabled.description": "Should this feature be enabled?",
   "feature.wynntils.userFeature.userEnabled.name": "Enabled",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button Feature",

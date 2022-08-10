@@ -30,6 +30,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
     private final List<Component> tooltip;
+    private ItemType itemType;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
@@ -43,6 +44,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
         String itemType = itemName.split(" ", 2)[1];
         if (itemType == null) return;
+        this.itemType = ItemType.fromString(itemType);
 
         String levelRange = null;
         for (Component lineComp : tooltip) {
@@ -120,5 +122,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         return tooltip;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
     }
 }
