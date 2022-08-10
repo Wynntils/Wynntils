@@ -44,20 +44,6 @@ public enum ItemType {
     }
 
     public static ItemType fromString(String typeStr) {
-        return switch (typeStr.toLowerCase(Locale.ROOT)) {
-            case "spear" -> SPEAR;
-            case "wand" -> WAND;
-            case "dagger" -> DAGGER;
-            case "bow" -> BOW;
-            case "relik" -> RELIK;
-            case "ring" -> RING;
-            case "necklace" -> NECKLACE;
-            case "bracelet" -> BRACELET;
-            case "helmet" -> HELMET;
-            case "chestplate" -> CHESTPLATE;
-            case "leggings" -> LEGGINGS;
-            case "boots" -> BOOTS;
-            default -> null;
-        };
+        return ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
     }
 }
