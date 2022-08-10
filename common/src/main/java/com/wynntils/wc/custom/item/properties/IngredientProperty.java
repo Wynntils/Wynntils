@@ -7,34 +7,31 @@ package com.wynntils.wc.custom.item.properties;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
-import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 
-public class IngredientProperty extends ItemProperty implements HighlightProperty {
-    private final IngredientTier tier;
-
+public class IngredientProperty extends TieredCraftingItemProperty {
     public IngredientProperty(WynnItemStack item) {
         super(item);
-
-        String name = WynnUtils.normalizeBadString(item.getHoverName().getString());
-
-        tier = calculateTier(name);
     }
 
-    private IngredientTier calculateTier(String name) {
-        if (name.endsWith(ChatFormatting.GOLD + " [" + ChatFormatting.YELLOW + "✫" + ChatFormatting.DARK_GRAY + "✫✫"
-                + ChatFormatting.GOLD + "]")) {
-            return IngredientTier.ONE;
-        } else if (name.endsWith(ChatFormatting.DARK_PURPLE + " [" + ChatFormatting.LIGHT_PURPLE + "✫✫"
-                + ChatFormatting.DARK_GRAY + "✫" + ChatFormatting.DARK_PURPLE + "]")) {
-            return IngredientTier.TWO;
-        } else if (name.endsWith(
-                ChatFormatting.DARK_AQUA + " [" + ChatFormatting.AQUA + "✫✫✫" + ChatFormatting.DARK_AQUA + "]")) {
-            return IngredientTier.THREE;
-        } else {
-            return IngredientTier.ZERO;
-        }
+    @Override
+    protected ChatFormatting getPrimaryColor(IngredientTier tier) {
+        return switch (tier) {
+            case ZERO -> null; // should not be used
+            case ONE -> ChatFormatting.GOLD;
+            case TWO -> ChatFormatting.DARK_PURPLE;
+            case THREE -> ChatFormatting.DARK_AQUA;
+        };
+    }
+
+    @Override
+    protected ChatFormatting getSecondaryColor(IngredientTier tier) {
+        return switch (tier) {
+            case ZERO -> null; // should not be used
+            case ONE -> ChatFormatting.YELLOW;
+            case TWO -> ChatFormatting.LIGHT_PURPLE;
+            case THREE -> ChatFormatting.AQUA;
+        };
     }
 
     @Override
@@ -55,22 +52,5 @@ public class IngredientProperty extends ItemProperty implements HighlightPropert
             case TWO -> ItemHighlightFeature.twoStarIngredientHighlightEnabled;
             case THREE -> ItemHighlightFeature.threeStarIngredientHighlightEnabled;
         };
-    }
-
-    @Override
-    public boolean isInventoryHighlight() {
-        return true;
-    }
-
-    @Override
-    public boolean isHotbarHighlight() {
-        return false;
-    }
-
-    public enum IngredientTier {
-        ZERO,
-        ONE,
-        TWO,
-        THREE
     }
 }

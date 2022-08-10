@@ -37,7 +37,7 @@ public final class WynnItemMatchers {
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
-    private static final Pattern INGREDIENT_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
+    private static final Pattern INGREDIENT_OR_MATERIAL_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
@@ -204,12 +204,24 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isIngredient(ItemStack itemStack) {
-        if (!ingredientMatcher(itemStack.getHoverName()).matches()) {
+        if (!ingredientOrMaterialMatcher(itemStack.getHoverName()).matches()) {
             return false;
         }
 
         for (Component line : ItemUtils.getTooltipLines(itemStack)) {
             if (ComponentUtils.getCoded(line).contains("§8Crafting Ingredient")) return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isMaterial(ItemStack itemStack) {
+        if (!ingredientOrMaterialMatcher(itemStack.getHoverName()).matches()) {
+            return false;
+        }
+
+        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+            if (ComponentUtils.getCoded(line).contains("§7Crafting Material")) return true;
         }
 
         return false;
@@ -259,7 +271,8 @@ public final class WynnItemMatchers {
         return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 
-    public static Matcher ingredientMatcher(Component text) {
-        return INGREDIENT_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
+    public static Matcher ingredientOrMaterialMatcher(Component text) {
+        return INGREDIENT_OR_MATERIAL_PATTERN.matcher(
+                WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
     }
 }

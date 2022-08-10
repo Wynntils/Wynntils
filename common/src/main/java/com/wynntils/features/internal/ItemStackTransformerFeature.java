@@ -21,6 +21,7 @@ import com.wynntils.wc.custom.item.properties.DurabilityProperty;
 import com.wynntils.wc.custom.item.properties.IngredientProperty;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.ItemTierProperty;
+import com.wynntils.wc.custom.item.properties.MaterialProperty;
 import com.wynntils.wc.custom.item.properties.PowderTierProperty;
 import com.wynntils.wc.custom.item.properties.ProfessionLevelProperty;
 import com.wynntils.wc.custom.item.properties.SkillIconProperty;
@@ -74,6 +75,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
         registerProperty(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
         registerProperty(WynnItemMatchers::isIngredient, IngredientProperty::new);
+        registerProperty(WynnItemMatchers::isMaterial, MaterialProperty::new);
     }
 
     @Override
