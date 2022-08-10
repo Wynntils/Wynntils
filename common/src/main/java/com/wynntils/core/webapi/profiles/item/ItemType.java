@@ -44,6 +44,10 @@ public enum ItemType {
     }
 
     public static ItemType fromString(String typeStr) {
-        return ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        try {
+            return ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
