@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,30 +68,36 @@ public final class ScoreboardManager {
         }
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
+        LinkedList<ScoreboardLineChange> queueCopy = new LinkedList<>(queuedChanges);
 
-        for (ScoreboardLineChange queuedChange : queuedChanges) {
-            if (queuedChange.method() == ServerScoreboard.Method.REMOVE) {
-                scoreboardCopy.removeIf(
-                        scoreboardLine -> Objects.equals(scoreboardLine.line(), queuedChange.lineText()));
-            }
+        Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
+
+        for (ScoreboardLine scoreboardLine : scoreboardCopy) {
+            scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
         }
 
         Set<String> changedLines = new HashSet<>();
-        while (!queuedChanges.isEmpty()) {
-            ScoreboardLineChange processed = queuedChanges.pop();
+        while (!queueCopy.isEmpty()) {
+            ScoreboardLineChange processed = queueCopy.pop();
 
             if (processed.method() == ServerScoreboard.Method.REMOVE) {
-                continue;
+                for (ScoreboardLine lineToRemove : scoreboardLineMap.values().stream()
+                        .filter(scoreboardLine -> Objects.equals(scoreboardLine.line(), processed.lineText()))
+                        .toList()) {
+                    scoreboardLineMap.remove(lineToRemove.index());
+                }
+            } else {
+                ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
+                scoreboardLineMap.put(line.index(), line);
+                changedLines.add(processed.lineText());
             }
-
-            scoreboardCopy.removeIf(scoreboardLine -> Objects.equals(scoreboardLine.line(), processed.lineText()));
-
-            ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
-            scoreboardCopy.add(line);
-            changedLines.add(processed.lineText());
         }
 
-        scoreboardCopy.sort(Comparator.comparingInt(ScoreboardLine::index).reversed());
+        scoreboardCopy.clear();
+
+        scoreboardCopy = scoreboardLineMap.values().stream()
+                .sorted(Comparator.comparing(ScoreboardLine::index).reversed())
+                .collect(Collectors.toList());
 
         List<Segment> parsedSegments = calculateSegments(scoreboardCopy);
 
@@ -180,7 +187,7 @@ public final class ScoreboardManager {
                 objective = scoreboard.addObjective(
                         objectiveName,
                         ObjectiveCriteria.DUMMY,
-                        new TextComponent("play.wynncraft.com")
+                        new TextComponent(" play.wynncraft.com")
                                 .withStyle(ChatFormatting.GOLD)
                                 .withStyle(ChatFormatting.BOLD),
                         ObjectiveCriteria.RenderType.INTEGER);
