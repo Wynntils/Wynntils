@@ -8,7 +8,9 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
+import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.utils.ActionBarManager;
 import com.wynntils.wc.utils.WynnItemMatchers;
@@ -16,8 +18,6 @@ import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -27,17 +27,21 @@ public class HealthPotionBlockerFeature extends UserFeature {
     public static int threshold = 95;
 
     @SubscribeEvent
-    public void onPotionUse(PacketSentEvent<ServerboundUseItemPacket> e) {
+    public void onPotionUse(UseItemEvent event) {
         Component response = getBlockResponse();
         if (response != null) {
-            e.setCanceled(true);
-            McUtils.sendMessageToClient(response);
+            event.setCanceled(true);
+            NotificationManager.queueMessage(response);
         }
     }
 
     @SubscribeEvent
-    public void onPotionUseOn(PacketSentEvent<ServerboundUseItemOnPacket> e) {
-        if (getBlockResponse() != null) e.setCanceled(true);
+    public void onPotionUseOn(PlayerInteractEvent.RightClickBlock event) {
+        Component response = getBlockResponse();
+        if (response != null) {
+            event.setCanceled(true);
+            NotificationManager.queueMessage(response);
+        }
     }
 
     private Component getBlockResponse() {
