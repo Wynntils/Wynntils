@@ -70,7 +70,7 @@ public abstract class Feature implements Translatable, Configurable {
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation);
+                OverlayManager.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);

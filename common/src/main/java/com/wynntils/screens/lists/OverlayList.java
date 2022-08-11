@@ -15,6 +15,7 @@ import com.wynntils.screens.OverlaySelectionScreen;
 import com.wynntils.screens.lists.entries.OverlayEntry;
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -26,6 +27,10 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             new TextComponent("Left click on the overlay to edit it."),
             new TextComponent("Right click on the overlay to disable/enable it."));
+
+    private static final List<Component> DISABLED_PARENT_TOOLTIP_LINES = List.of(
+            new TextComponent("This overlay's parent feature is disabled.").withStyle(ChatFormatting.RED),
+            new TextComponent("Enable the feature to edit this overlay.").withStyle(ChatFormatting.RED));
 
     public OverlayList(OverlaySelectionScreen screen) {
         super(
@@ -54,14 +59,25 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
         OverlayEntry hovered = this.getHovered();
 
         if (hovered != null) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    HELP_TOOLTIP_LINES,
-                    FontRenderer.getInstance().getFont(),
-                    false);
+            if (!hovered.getOverlay().isParentEnabled()) {
+                RenderUtils.drawTooltipAt(
+                        poseStack,
+                        mouseX,
+                        mouseY,
+                        100,
+                        DISABLED_PARENT_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false);
+            } else {
+                RenderUtils.drawTooltipAt(
+                        poseStack,
+                        mouseX,
+                        mouseY,
+                        100,
+                        HELP_TOOLTIP_LINES,
+                        FontRenderer.getInstance().getFont(),
+                        false);
+            }
         }
     }
 

@@ -147,6 +147,10 @@ public abstract class Overlay implements Translatable, Configurable {
         return OverlayManager.getOverlayInfo(this).enabled();
     }
 
+    public final boolean isParentEnabled() {
+        return OverlayManager.getOverlayParent(this).isEnabled();
+    }
+
     public float getWidth() {
         return this.size.getWidth();
     }
@@ -222,6 +226,7 @@ public abstract class Overlay implements Translatable, Configurable {
 
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
+                .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
                 .compare(
                         this.getDeclaringClass().getSimpleName(),
                         other.getDeclaringClass().getSimpleName())
