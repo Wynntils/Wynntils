@@ -4,14 +4,17 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
+import com.wynntils.wc.custom.item.ItemStackTransformManager;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +23,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class UnidentifiedItemIconFeature extends UserFeature {
     @Config
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+        dependencies.add(ItemStackTransformManager.class);
+    }
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.Post e) {

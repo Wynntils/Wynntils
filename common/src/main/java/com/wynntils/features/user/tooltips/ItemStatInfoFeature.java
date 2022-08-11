@@ -10,6 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Manager;
+import com.wynntils.wc.custom.item.ItemStackTransformManager;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemStatInfoFeature extends UserFeature {
@@ -41,5 +42,6 @@ public class ItemStatInfoFeature extends UserFeature {
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         conditions.add(new WebLoadedCondition());
+        dependencies.add(ItemStackTransformManager.class);
     }
 }

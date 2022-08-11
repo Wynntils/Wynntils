@@ -10,6 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Manager;
+import com.wynntils.wc.custom.item.ItemStackTransformManager;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
@@ -22,6 +23,7 @@ public class ItemGuessFeature extends UserFeature {
     public void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         conditions.add(new WebLoadedCondition());
+        dependencies.add(ItemStackTransformManager.class);
     }
 
     public static ItemGuessFeature getInstance() {

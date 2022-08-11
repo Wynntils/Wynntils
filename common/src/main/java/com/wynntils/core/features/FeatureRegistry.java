@@ -14,7 +14,6 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.stateless.ChatItemFeature;
 import com.wynntils.features.stateless.FixPacketBugsFeature;
 import com.wynntils.features.stateless.FixSpellOverwriteFeature;
-import com.wynntils.features.stateless.ItemStackTransformerFeature;
 import com.wynntils.features.stateless.LootrunFeature;
 import com.wynntils.features.stateless.NotificationsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
@@ -138,11 +137,10 @@ public final class FeatureRegistry {
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
 
-        // internal
+        // stateless
         registerFeature(new ChatItemFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixSpellOverwriteFeature());
-        registerFeature(new ItemStackTransformerFeature());
         registerFeature(new LootrunFeature());
         registerFeature(new NotificationsFeature());
 

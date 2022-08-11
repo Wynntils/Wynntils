@@ -4,11 +4,13 @@
  */
 package com.wynntils.features.user.tooltips;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -17,6 +19,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.GearItemStack;
+import com.wynntils.wc.custom.item.ItemStackTransformManager;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,6 +40,12 @@ public class ItemCompareFeature extends UserFeature {
 
     private GearItemStack comparedItem = null;
     private boolean compareToEquipped = false;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+        dependencies.add(ItemStackTransformManager.class);
+    }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre event) {
