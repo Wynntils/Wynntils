@@ -5,6 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
@@ -16,7 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ActionBarManager {
+public final class ActionBarManager extends Manager {
     private static final Pattern ACTIONBAR_PATTERN =
             StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 
@@ -63,10 +64,6 @@ public final class ActionBarManager {
         previousMessage = modified;
 
         e.setMessage(modified);
-    }
-
-    public static void init() {
-        WynntilsMod.getEventBus().register(ActionBarManager.class);
     }
 
     public static int getCurrentHealth() {

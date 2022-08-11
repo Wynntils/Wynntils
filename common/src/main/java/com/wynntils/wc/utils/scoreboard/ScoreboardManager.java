@@ -5,6 +5,7 @@
 package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -13,8 +14,8 @@ import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
 import com.wynntils.wc.utils.WynnUtils;
-import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
-import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
+import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
+import com.wynntils.wc.utils.scoreboard.quests.QuestHandler;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -40,7 +41,7 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ScoreboardManager {
+public final class ScoreboardManager extends Manager {
     private static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
     private static final Pattern QUEST_TRACK_PATTERN = Pattern.compile("Tracked Quest:");
     private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
@@ -277,10 +278,8 @@ public final class ScoreboardManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(ScoreboardManager.class);
-
-        registerHandler(new ObjectiveManager(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(new QuestManager(), SegmentType.Quest);
+        registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
+        registerHandler(new QuestHandler(), SegmentType.Quest);
     }
 
     private static void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
@@ -317,8 +316,8 @@ public final class ScoreboardManager {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        ObjectiveManager.resetObjectives();
-        QuestManager.resetCurrentQuest();
+        ObjectiveHandler.resetObjectives();
+        QuestHandler.resetCurrentQuest();
     }
 
     public enum SegmentType {

@@ -12,7 +12,7 @@ import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 
-public class QuestManager implements ScoreboardHandler {
+public class QuestHandler implements ScoreboardHandler {
     private static QuestInfo currentQuest = null;
 
     public static QuestInfo getCurrentQuest() {
@@ -24,7 +24,7 @@ public class QuestManager implements ScoreboardHandler {
         List<String> content = newValue.getContent();
 
         if (content.isEmpty()) {
-            WynntilsMod.error("QuestManager: content was empty.");
+            WynntilsMod.error("QuestHandler: content was empty.");
         }
 
         StringBuilder questName = new StringBuilder();

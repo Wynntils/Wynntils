@@ -2,13 +2,14 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.internal;
+package com.wynntils.features.stateless;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.InternalFeature;
+import com.wynntils.core.features.StatelessFeature;
 import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
-public class LootrunFeature extends InternalFeature {
+public class LootrunFeature extends StatelessFeature {
     public static LootrunFeature INSTANCE;
 
     // TODO: Add textured path type
@@ -46,7 +47,8 @@ public class LootrunFeature extends InternalFeature {
     public boolean showNotes = true;
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         FileUtils.mkdir(LootrunUtils.LOOTRUNS);
     }
 

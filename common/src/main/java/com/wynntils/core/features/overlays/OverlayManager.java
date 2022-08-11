@@ -5,8 +5,8 @@
 package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class OverlayManager {
+public final class OverlayManager extends Manager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
@@ -100,8 +100,6 @@ public final class OverlayManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(OverlayManager.class);
-
         addCrashCallbacks();
     }
 

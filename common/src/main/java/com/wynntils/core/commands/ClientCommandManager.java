@@ -14,7 +14,7 @@ import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public final class ClientCommandManager {
+public final class ClientCommandManager extends Manager {
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
@@ -45,8 +45,6 @@ public final class ClientCommandManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(ClientCommandManager.class);
-
         clientDispatcher = new CommandDispatcher<>();
 
         registerCommand(new LootrunCommand());

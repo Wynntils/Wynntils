@@ -5,7 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.google.common.collect.Lists;
-import com.wynntils.wc.ModelLoader;
+import com.wynntils.wc.ModelManager;
 import com.wynntils.wc.model.Character;
 import java.util.List;
 
@@ -28,15 +28,15 @@ public final class WynnUtils {
     }
 
     public static boolean onServer() {
-        return ModelLoader.getWorldState().onServer();
+        return ModelManager.getWorldState().onServer();
     }
 
     public static boolean onWorld() {
-        return ModelLoader.getWorldState().onWorld();
+        return ModelManager.getWorldState().onWorld();
     }
 
     public static Character getCharacter() {
-        return ModelLoader.getCharacter();
+        return ModelManager.getCharacter();
     }
 
     public static List<String> getWynnServerTypes() {

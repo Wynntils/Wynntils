@@ -5,11 +5,12 @@
 package com.wynntils.wc;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.wc.model.Character;
 import com.wynntils.wc.model.WorldState;
 import java.util.Arrays;
 
-public final class ModelLoader {
+public final class ModelManager extends Manager {
     private static final WorldState worldState = new WorldState();
     private static final Character character = new Character();
 

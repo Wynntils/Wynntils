@@ -2,10 +2,11 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.internal;
+package com.wynntils.features.stateless;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.InternalFeature;
+import com.wynntils.core.features.StatelessFeature;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
@@ -36,7 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformerFeature extends InternalFeature {
+public class ItemStackTransformerFeature extends StatelessFeature {
     private final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
     private final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
 
@@ -57,7 +58,8 @@ public class ItemStackTransformerFeature extends InternalFeature {
     }
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);

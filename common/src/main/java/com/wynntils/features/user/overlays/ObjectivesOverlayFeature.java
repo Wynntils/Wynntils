@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.overlays;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -14,6 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -24,7 +26,7 @@ import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
-import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
+import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wc.utils.scoreboard.objectives.WynnObjective;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,6 +37,12 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     @Config
     public static boolean disableObjectiveTrackingOnScoreboard = true;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+        dependencies.add(ScoreboardManager.class);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -77,7 +85,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            WynnObjective guildObjective = ObjectiveManager.getGuildObjective();
+            WynnObjective guildObjective = ObjectiveHandler.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -159,7 +167,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<WynnObjective> objectives = ObjectiveManager.getObjectives();
+            List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
 
             final float SPACE_BETWEEN = 10;
 

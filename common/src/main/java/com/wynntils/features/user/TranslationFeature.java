@@ -4,11 +4,13 @@
  */
 package com.wynntils.features.user;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.services.TranslationManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
@@ -42,6 +44,12 @@ public class TranslationFeature extends UserFeature {
 
     @Config
     public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+        dependencies.add(TranslationManager.class);
+    }
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {

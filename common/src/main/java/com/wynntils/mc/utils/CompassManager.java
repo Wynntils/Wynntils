@@ -4,19 +4,15 @@
  */
 package com.wynntils.mc.utils;
 
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.utils.objects.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TODO: Draw compass beam
-public final class CompassManager {
+public final class CompassManager extends Manager {
     private static Location compassLocation = null;
-
-    public static void init() {
-        WynntilsMod.getEventBus().register(CompassManager.class);
-    }
 
     public static Location getCompassLocation() {
         if (compassLocation != null) compassLocation.y = McUtils.player().getY();

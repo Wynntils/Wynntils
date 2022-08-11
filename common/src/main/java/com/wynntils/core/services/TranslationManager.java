@@ -4,13 +4,14 @@
  */
 package com.wynntils.core.services;
 
+import com.wynntils.core.managers.Manager;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 
-public class TranslationManager {
+public class TranslationManager extends Manager {
 
     public static final String TRANSLATED_PREFIX =
             ChatFormatting.GRAY + "[" + TranslationFeature.INSTANCE.languageName + "]" + ChatFormatting.RESET;

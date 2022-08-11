@@ -9,6 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
@@ -38,7 +39,8 @@ public class ItemStatInfoFeature extends UserFeature {
     public static boolean groupIdentifications = true;
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         conditions.add(new WebLoadedCondition());
     }
 
