@@ -7,7 +7,6 @@ package com.wynntils.features.stateless;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.StatelessFeature;
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -30,11 +29,6 @@ public class ChatItemFeature extends StatelessFeature {
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         conditions.add(new WebLoadedCondition());
-    }
-
-    @Override
-    protected boolean onEnable() {
-        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
 
     @SubscribeEvent

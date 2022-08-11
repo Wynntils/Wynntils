@@ -86,6 +86,13 @@ public final class WebManager extends Manager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        loadCommonObjects();
+    }
+
+    private static void loadCommonObjects() {
+        WebManager.tryLoadItemList();
+        WebManager.tryLoadItemGuesses();
     }
 
     public static boolean isLoggedIn() {

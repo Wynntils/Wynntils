@@ -10,7 +10,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.webapi.WebManager;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
@@ -23,15 +22,6 @@ public class ItemGuessFeature extends UserFeature {
     public void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
         conditions.add(new WebLoadedCondition());
-    }
-
-    @Override
-    protected boolean onEnable() {
-        if (!WebManager.isItemListLoaded()) {
-            WebManager.tryLoadItemList(); // Can still function if it fails
-        }
-
-        return (WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses());
     }
 
     public static ItemGuessFeature getInstance() {
