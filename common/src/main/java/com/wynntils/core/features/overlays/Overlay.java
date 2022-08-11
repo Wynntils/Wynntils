@@ -140,6 +140,10 @@ public abstract class Overlay implements Translatable, Configurable {
     }
 
     public boolean isEnabled() {
+        if (!isParentEnabled()) {
+            return false;
+        }
+
         if (this.isUserEnabled() != null) {
             return this.isUserEnabled();
         }
