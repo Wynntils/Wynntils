@@ -24,7 +24,6 @@ import com.wynntils.utils.objects.CustomColor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import net.minecraft.ChatFormatting;
 
 @FeatureInfo(category = "Overlays")
@@ -82,7 +81,10 @@ public class InfoBoxesFeature extends UserFeature {
                 char color = parsedContent.charAt(1);
                 ChatFormatting cf = ChatFormatting.getByCode(color);
                 int substringLength = 0;
-                if (cf != null && parsedContent.charAt(0) == '&') { // Update lastColor if valid color code; else it will use last valid color code or
+                if (cf != null
+                        && parsedContent.charAt(0)
+                                == '&') { // Update lastColor if valid color code; else it will use last valid color
+                    // code or
                     // white by default
                     lastColor = CustomColor.fromChatFormatting(cf);
                     substringLength = 2;
