@@ -58,7 +58,7 @@ public class ChatItemFeature extends StatelessFeature {
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
-            while (chatItems.containsKey(name)) { // avoid overwriting entries
+            while (chatItems.containsKey(name.toString())) { // avoid overwriting entries
                 name.append("_");
             }
 
