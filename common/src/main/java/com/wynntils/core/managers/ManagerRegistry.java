@@ -96,6 +96,8 @@ public class ManagerRegistry {
         if (ENABLED_MANAGERS.contains(manager)) {
             if (dependencies == null || dependencies.isEmpty()) {
                 disableManager(manager);
+
+                tryDisableManager(manager);
             }
         } else {
             if (dependencies != null && !dependencies.isEmpty()) {
@@ -121,6 +123,14 @@ public class ManagerRegistry {
     private static void tryInitManager(Class<? extends Manager> manager) {
         try {
             MethodUtils.invokeExactStaticMethod(manager, "init");
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            WynntilsMod.error(e.getMessage());
+        }
+    }
+
+    private static void tryDisableManager(Class<? extends Manager> manager) {
+        try {
+            MethodUtils.invokeExactStaticMethod(manager, "disable");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             WynntilsMod.error(e.getMessage());
         }

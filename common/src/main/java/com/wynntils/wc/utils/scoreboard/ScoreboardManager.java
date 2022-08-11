@@ -62,7 +62,11 @@ public final class ScoreboardManager extends Manager {
 
     private static ScheduledExecutorService executor = null;
 
+    private static boolean firstExecution = false;
+
     private static final Runnable changeHandlerRunnable = () -> {
+        if (!WynnUtils.onWorld() || McUtils.player() == null) return;
+
         if (queuedChanges.isEmpty()) {
             handleScoreboardReconstruction();
             return;
@@ -154,8 +158,16 @@ public final class ScoreboardManager extends Manager {
             }
         }
 
-        for (Segment segment :
-                parsedSegments.stream().filter(Segment::isChanged).toList()) {
+        List<Segment> changedSegments;
+
+        if (firstExecution) {
+            firstExecution = false;
+            changedSegments = parsedSegments.stream().toList();
+        } else {
+            changedSegments = parsedSegments.stream().filter(Segment::isChanged).toList();
+        }
+
+        for (Segment segment : changedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
                 if (scoreboardHandler.b.contains(segment.getType())) {
                     scoreboardHandler.a.onSegmentChange(segment, segment.getType());
@@ -280,6 +292,13 @@ public final class ScoreboardManager extends Manager {
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(new QuestHandler(), SegmentType.Quest);
+
+        startThread();
+    }
+
+    public static void disable() {
+        resetState();
+        scoreboardHandlers.clear();
     }
 
     private static void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
@@ -294,19 +313,26 @@ public final class ScoreboardManager extends Manager {
     public static void onSetScore(ScoreboardSetScoreEvent event) {
         if (!WynnUtils.onServer()) return;
 
-        event.setCanceled(true);
-
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
     }
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.State.WORLD) {
-            executor = Executors.newScheduledThreadPool(1);
-            executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
+            startThread();
             return;
         }
 
+        resetState();
+    }
+
+    private static void startThread() {
+        firstExecution = true;
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
+    }
+
+    private static void resetState() {
         if (executor != null) {
             executor.shutdownNow();
             executor = null;

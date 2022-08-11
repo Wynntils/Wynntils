@@ -6,4 +6,6 @@ package com.wynntils.core.managers;
 
 public abstract class Manager {
     public static void init() {}
+
+    public static void disable() {}
 }
