@@ -21,9 +21,6 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CustomColor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 @FeatureInfo(category = "Overlays")
@@ -48,15 +45,13 @@ public class InfoBoxesFeature extends UserFeature {
     private final Overlay infoBox6Overlay = new InfoBoxOverlay6();
 
     public abstract static class InfoBoxOverlay extends Overlay {
-        private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("((?=&))");
-
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
         @Config
         public String content = "";
 
-        private List<TextRenderTask> toRender = getRenderTasks();
+        private TextRenderTask toRender = getRenderTask();
 
         protected InfoBoxOverlay(int id) {
             super(
@@ -71,42 +66,41 @@ public class InfoBoxesFeature extends UserFeature {
                     VerticalAlignment.Bottom);
         }
 
-        private List<TextRenderTask> getRenderTasks() {
-            List<TextRenderTask> renderTaskList = new ArrayList<>();
-            String[] contentList = COLOR_CODE_PATTERN.split(content);
-            CustomColor lastColor = CustomColor.fromChatFormatting(ChatFormatting.WHITE);
-            for (String parsedContent : contentList) {
-                if (parsedContent.isEmpty()) continue;
-
-                char color = parsedContent.charAt(1);
-                ChatFormatting cf = ChatFormatting.getByCode(color);
-                int substringLength = 0;
-                if (cf != null
-                        && parsedContent.charAt(0)
-                                == '&') { // Update lastColor if valid color code; else it will use last valid color
-                    // code or
-                    // white by default
-                    lastColor = CustomColor.fromChatFormatting(cf);
-                    substringLength = 2;
+        private TextRenderTask getRenderTask() {
+            // For every & symbol, check if the next symbol is a color code and if so, replace it with §
+            // But don't do it if a \ precedes the &
+            String validColors = "0123456789abcdef";
+            StringBuilder sb = new StringBuilder(content);
+            for (int i = 0; i < sb.length(); i++) {
+                if (sb.charAt(i) == '&') { // char == &
+                    if (i + 1 < sb.length()
+                            && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
+                        if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
+                            sb.setCharAt(i, '§');
+                        } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
+                            sb.deleteCharAt(i - 1);
+                        }
+                    }
                 }
-                renderTaskList.add(new TextRenderTask(
-                        parsedContent.substring(substringLength),
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                        this.getWidth(), lastColor, this.getRenderHorizontalAlignment())
-                                .withTextShadow(textShadow)));
             }
-            return renderTaskList;
+            return new TextRenderTask(
+                    sb.toString(),
+                    TextRenderSetting.getWithHorizontalAlignment(
+                                    this.getWidth(),
+                                    CustomColor.fromChatFormatting(ChatFormatting.WHITE),
+                                    this.getRenderHorizontalAlignment())
+                            .withTextShadow(textShadow));
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            toRender = getRenderTasks();
+            toRender = getRenderTask();
         }
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             FontRenderer.getInstance()
-                    .renderMulticolorTextWithAlignment(
+                    .renderTextWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
@@ -120,7 +114,7 @@ public class InfoBoxesFeature extends UserFeature {
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
             FontRenderer.getInstance()
-                    .renderTextsWithAlignment(
+                    .renderTextWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),

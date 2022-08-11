@@ -187,14 +187,6 @@ public final class FontRenderer {
         }
     }
 
-    public void renderMulticoloredText(PoseStack poseStack, float x, float y, List<TextRenderTask> line) {
-        float currentX = x;
-        for (TextRenderTask task : line) {
-            renderText(poseStack, currentX, y, task);
-            currentX += calculateRenderWidth(List.of(task));
-        }
-    }
-
     public void renderTextsWithAlignment(
             PoseStack poseStack,
             float renderX,
@@ -234,34 +226,6 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment) {
         renderTextsWithAlignment(
                 poseStack, renderX, renderY, List.of(toRender), width, height, horizontalAlignment, verticalAlignment);
-    }
-
-    public void renderMulticolorTextWithAlignment(
-            PoseStack poseStack,
-            float renderX,
-            float renderY,
-            List<TextRenderTask> toRender,
-            float width,
-            float height,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment) {
-        switch (horizontalAlignment) {
-            case Center -> renderX += width / 2 / McUtils.window().getGuiScale();
-            case Right -> renderX += width / McUtils.window().getGuiScale();
-        }
-
-        if (verticalAlignment != VerticalAlignment.Top) {
-            float renderHeight = calculateRenderHeight(toRender);
-
-            switch (verticalAlignment) {
-                case Middle -> renderY +=
-                        (height - renderHeight) / 2 / McUtils.window().getGuiScale();
-                case Bottom -> renderY +=
-                        (height - renderHeight) / McUtils.window().getGuiScale();
-            }
-        }
-
-        renderMulticoloredText(poseStack, renderX, renderY, toRender);
     }
 
     public float calculateRenderHeight(List<TextRenderTask> toRender) {
