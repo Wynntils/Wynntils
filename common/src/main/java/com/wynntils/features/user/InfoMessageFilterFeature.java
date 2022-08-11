@@ -197,7 +197,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     }
 
                     // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(m.group(1));
+                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
                     return;
                 }
             }
