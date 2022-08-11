@@ -34,6 +34,7 @@ import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
+import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
@@ -154,6 +155,7 @@ public final class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new ItemCompareFeature());
