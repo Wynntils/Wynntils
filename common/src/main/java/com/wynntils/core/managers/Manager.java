@@ -4,8 +4,13 @@
  */
 package com.wynntils.core.managers;
 
-public abstract class Manager {
-    public static void init() {}
-
-    public static void disable() {}
-}
+/**
+ * Managers can have two static methods:
+ * <p>
+ * init: Called when manager is enabled
+ * <p>
+ * disable: Called when manager is disabled
+ * <p>
+ * Managers are automatically registered to event bus, use static event methods.
+ * */
+public abstract class Manager {}
