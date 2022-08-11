@@ -267,17 +267,6 @@ public final class FontRenderer {
                 .toList());
     }
 
-    public float calculateRenderWidth(List<TextRenderTask> toRender) {
-        if (toRender.isEmpty()) return 0f;
-
-        float width = 0;
-        for (TextRenderTask textRenderTask : toRender) {
-            width += font.width(textRenderTask.getText());
-        }
-
-        return width;
-    }
-
     public enum TextAlignment {
         LEFT_ALIGNED,
         CENTER_ALIGNED,
