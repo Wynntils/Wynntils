@@ -39,6 +39,7 @@ import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.user.overlays.CustomBarsFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.user.overlays.InfoBoxesFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
@@ -154,6 +155,7 @@ public final class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new InfoBoxesFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new ItemCompareFeature());

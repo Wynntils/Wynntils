@@ -27,7 +27,7 @@ import com.wynntils.wc.utils.ActionBarManager;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "overlays")
+@FeatureInfo(category = "Overlays")
 public class CustomBarsFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnActionBar = false;
