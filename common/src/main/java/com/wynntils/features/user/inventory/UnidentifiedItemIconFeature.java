@@ -5,6 +5,7 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
@@ -17,6 +18,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Inventory")
 public class UnidentifiedItemIconFeature extends UserFeature {
+    @Config
+    public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
+
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.Post e) {
         drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
@@ -39,10 +43,25 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 12,
                 12,
                 unidentifiedItem.getItemType().getIconTextureX(),
-                unidentifiedItem.getItemType().getIconTextureY(),
+                unidentifiedItem.getItemType().getIconTextureY() + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),
                 Texture.GEAR_ICONS.height());
+    }
+
+    public enum UnidentifiedItemTextures {
+        Wynn(0),
+        Outline(64);
+
+        private final int yOffset;
+
+        UnidentifiedItemTextures(int yOffset) {
+            this.yOffset = yOffset;
+        }
+
+        public int getTextureYOffset() {
+            return yOffset;
+        }
     }
 }
