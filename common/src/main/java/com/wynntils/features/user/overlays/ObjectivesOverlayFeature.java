@@ -102,18 +102,25 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         case Bottom -> this.getHeight() - renderedHeight;
                     };
 
+            final String text =
+                    guildObjective.getGoal() + ": " + guildObjective.getScore() + "/" + guildObjective.getMaxScore();
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            guildObjective.getGoal() + ": " + guildObjective.getScore() + "/"
-                                    + guildObjective.getMaxScore(),
+                            text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
-                            0,
+                            this.getWidth(),
                             this.textColor,
                             FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
                             this.textShadow);
+
+            float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+
+            if (height > 9) {
+                renderY += height - 9;
+            }
 
             if (this.enableProgressBar) {
                 RenderUtils.drawProgressBar(
@@ -186,17 +193,25 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
                 float renderY = offsetY + this.getRenderY();
 
+                final String text = objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore();
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore(),
+                                text,
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
                                 renderY,
-                                0,
+                                this.getWidth(),
                                 this.textColor,
                                 FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
                                 this.textShadow);
+
+                float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+
+                if (height > 9) {
+                    offsetY += height - 9;
+                    renderY += height - 9;
+                }
 
                 if (this.enableProgressBar) {
                     RenderUtils.drawProgressBar(
