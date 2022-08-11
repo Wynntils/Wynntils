@@ -45,6 +45,14 @@ public final class WynnItemMatchers {
                 && itemStack.getDisplayName().getString().contains("Soul Point");
     }
 
+    public static boolean isIntelligenceSkillPoints(ItemStack itemStack) {
+        if (itemStack.getItem() != Items.BOOK) return false;
+
+        Component name = itemStack.getHoverName();
+        String unformattedLoreLine = ComponentUtils.getCoded(name);
+        return unformattedLoreLine.equals("§dUpgrade your §b❉ Intelligence§d skill");
+    }
+
     public static boolean isHealingPotion(ItemStack itemStack) {
         if (!isConsumable(itemStack)) return false;
         if (itemStack.getHoverName().getString().contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")

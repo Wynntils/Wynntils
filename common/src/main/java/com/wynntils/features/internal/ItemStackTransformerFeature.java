@@ -9,6 +9,7 @@ import com.wynntils.core.features.InternalFeature;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.GearItemStack;
+import com.wynntils.wc.custom.item.IntelligenceSkillPointsItemStack;
 import com.wynntils.wc.custom.item.SoulPointItemStack;
 import com.wynntils.wc.custom.item.UnidentifiedItemStack;
 import com.wynntils.wc.custom.item.WynnItemStack;
@@ -61,6 +62,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
+        registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
@@ -108,6 +110,9 @@ public class ItemStackTransformerFeature extends InternalFeature {
             }
         }
 
+        if (stack instanceof WynnItemStack wynnItemStack) {
+            wynnItemStack.init();
+        }
         event.setItem(stack);
     }
 
