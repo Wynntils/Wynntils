@@ -9,7 +9,8 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.managers.Model;
+import com.wynntils.wc.custom.item.ItemStackTransformModel;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemGuessFeature extends UserFeature {
@@ -19,17 +20,10 @@ public class ItemGuessFeature extends UserFeature {
     public static boolean showGuessesPrice = true;
 
     @Override
-    public void onInit(ImmutableList.Builder<Condition> conditions) {
+    public void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         conditions.add(new WebLoadedCondition());
-    }
-
-    @Override
-    protected boolean onEnable() {
-        if (!WebManager.isItemListLoaded()) {
-            WebManager.tryLoadItemList(); // Can still function if it fails
-        }
-
-        return (WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses());
+        dependencies.add(ItemStackTransformModel.class);
     }
 
     public static ItemGuessFeature getInstance() {

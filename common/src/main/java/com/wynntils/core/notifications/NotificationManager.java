@@ -5,12 +5,15 @@
 package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.NotificationEvent;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public final class NotificationManager {
     public static MessageContainer queueMessage(String message) {
@@ -29,6 +32,11 @@ public final class NotificationManager {
 
         WynntilsMod.getEventBus().post(new NotificationEvent.Queue(msgContainer));
 
+        // Overlay is not enabled, send in chat
+        if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
+            sendOrEditNotification(msgContainer);
+        }
+
         return msgContainer;
     }
 
@@ -36,5 +44,17 @@ public final class NotificationManager {
         msgContainer.editMessage(newMessage);
 
         WynntilsMod.getEventBus().post(new NotificationEvent.Edit(msgContainer));
+
+        // Overlay is not enabled, send in chat
+        if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
+            sendOrEditNotification(msgContainer);
+        }
+    }
+
+    private static void sendOrEditNotification(MessageContainer msgContainer) {
+        McUtils.mc()
+                .gui
+                .getChat()
+                .addMessage(new TextComponent(msgContainer.getRenderTask().getText()), msgContainer.hashCode());
     }
 }

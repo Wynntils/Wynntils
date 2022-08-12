@@ -6,7 +6,7 @@ package com.wynntils.wc.custom.item;
 
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.SkillPointProperty;
-import com.wynntils.wc.model.Character;
+import com.wynntils.wc.model.CharacterManager;
 import com.wynntils.wc.objects.SpellType;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
     }
 
     private List<Component> getManaTables() {
-        Character.CharacterInfo characterInfo = WynnUtils.getCharacter().getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
         SkillPointProperty property = getProperty(ItemProperty.SKILL_POINT);
         int intelligencePoints = property.getSkillPoints();
 

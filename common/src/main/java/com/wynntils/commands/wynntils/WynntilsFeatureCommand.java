@@ -43,7 +43,11 @@ public final class WynntilsFeatureCommand {
 
         for (Feature feature : features) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.YELLOW));
+                    .append(new TextComponent(feature.getTranslatedName())
+                            .withStyle(
+                                    feature.getClass().getSuperclass() == UserFeature.class
+                                            ? ChatFormatting.YELLOW
+                                            : ChatFormatting.RED));
         }
 
         context.getSource().sendSuccess(response, false);

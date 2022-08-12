@@ -25,8 +25,10 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
     private static final float PADDING = 2.4f;
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
     private static final CustomColor DISABLED_COLOR = new CustomColor(60, 60, 60, 255);
+    private static final CustomColor DISABLED_FEATURE_COLOR = new CustomColor(120, 0, 0, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
     private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(0, 0, 0, 255);
+    private static final CustomColor DISABLED_FEATURE_COLOR_BORDER = new CustomColor(255, 0, 0, 255);
 
     private final Overlay overlay;
 
@@ -57,16 +59,14 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         boolean enabled = OverlayManager.isEnabled(this.overlay);
         int y = index != 0 ? 2 : 0;
 
-        RenderUtils.drawRect(
-                poseStack,
-                (enabled ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER).withAlpha(100),
-                0,
-                y,
-                0,
-                width - PADDING,
-                height - y - PADDING);
-        RenderUtils.drawRectBorders(
-                poseStack, enabled ? ENABLED_COLOR : DISABLED_COLOR, 0, y, width - PADDING, height - PADDING, 1, 2);
+        CustomColor borderColor = overlay.isParentEnabled()
+                ? (enabled ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER)
+                : DISABLED_FEATURE_COLOR_BORDER;
+        RenderUtils.drawRect(poseStack, borderColor.withAlpha(100), 0, y, 0, width - PADDING, height - y - PADDING);
+
+        CustomColor rectColor =
+                overlay.isParentEnabled() ? (enabled ? ENABLED_COLOR : DISABLED_COLOR) : DISABLED_FEATURE_COLOR;
+        RenderUtils.drawRectBorders(poseStack, rectColor, 0, y, width - PADDING, height - PADDING, 1, 2);
 
         poseStack.translate(0, 0, 1);
         String translatedName = this.overlay.getTranslatedName();
@@ -97,6 +97,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!overlay.isParentEnabled()) return false;
+
         // right click
         if (button == 1) {
             ConfigManager.getConfigHolders().stream()
