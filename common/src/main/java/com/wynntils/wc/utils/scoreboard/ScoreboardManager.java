@@ -34,6 +34,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
@@ -194,6 +195,16 @@ public final class ScoreboardManager {
             }
 
             scoreboard.setDisplayObjective(1, objective);
+
+            // Set player team display objective
+            // This fixes scoreboard gui flickering
+            PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
+            if (playerTeam != null) {
+                if (playerTeam.getColor().getId() >= 0) {
+                    int id = playerTeam.getColor().getId() + 3;
+                    scoreboard.setDisplayObjective(id, objective);
+                }
+            }
 
             for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
                 scoreMap.remove(objective);
