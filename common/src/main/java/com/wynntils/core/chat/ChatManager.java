@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
@@ -72,6 +71,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ChatManager extends Manager {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
+    private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
     private static boolean extractDialog = false;
     private static String lastRealChat = null;
@@ -134,9 +134,7 @@ public final class ChatManager extends Manager {
         LinkedList<String> newChatLines = new LinkedList<>();
         LinkedList<String> dialog = new LinkedList<>();
 
-        String trailingLine = newLines.getFirst();
-        Matcher m = NPC_FINAL_PATTERN.matcher(trailingLine);
-        if (m.find()) {
+        if (NPC_FINAL_PATTERN.matcher(newLines.getFirst()).find()) {
             // This is an NPC dialog screen.
             // First remove the "Press SHIFT to continue" trailer.
             newLines.removeFirst();
@@ -150,24 +148,24 @@ public final class ChatManager extends Manager {
             boolean dialogDone = false;
             for (String line : newLines) {
                 if (!dialogDone) {
-                    if (line.equals("§r")) {
+                    if (EMPTY_LINE_PATTERN.matcher(line).find()) {
                         dialogDone = true;
                         // Intentionally throw away this line
                     } else {
                         dialog.push(line);
                     }
                 } else {
-                    newChatLines.push(line);
+                    if (!EMPTY_LINE_PATTERN.matcher(line).find()) {
+                        newChatLines.push(line);
+                    }
                 }
             }
         } else {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
-            // We just ignore that part
-            if (trailingLine.matches("À+")) {
+            // We just ignore that part. Also, remove empty lines or lines with just the §r code
+            while (!newLines.isEmpty()
+                    && EMPTY_LINE_PATTERN.matcher(newLines.getFirst()).find()) {
                 newLines.removeFirst();
-                while (!newLines.isEmpty() && newLines.getFirst().matches("(§r)?\\s*")) {
-                    newLines.removeFirst();
-                }
             }
 
             // What remains, if any, are new chat lines

@@ -54,6 +54,7 @@ public class ItemStackTransformManager extends Manager {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
+        registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
@@ -95,6 +96,9 @@ public class ItemStackTransformManager extends Manager {
             }
         }
 
+        if (stack instanceof WynnItemStack wynnItemStack) {
+            wynnItemStack.init();
+        }
         event.setItem(stack);
     }
 

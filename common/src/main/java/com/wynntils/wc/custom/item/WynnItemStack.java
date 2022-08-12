@@ -68,4 +68,9 @@ public class WynnItemStack extends ItemStack {
         }
         return collected;
     }
+
+    /**
+     * Called when all properties are setup on this stack
+     */
+    public void init() {}
 }
