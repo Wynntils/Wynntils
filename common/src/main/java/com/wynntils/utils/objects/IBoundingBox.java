@@ -79,9 +79,9 @@ public interface IBoundingBox {
         }
 
         public AxisAlignedBoundingBox(final Vec3... points) {
-            final Pair<Vec3, Vec3> definingPoints = Arrays.stream(points)
+            final MutablePair<Vec3, Vec3> definingPoints = Arrays.stream(points)
                     .collect(
-                            () -> new Pair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
+                            () -> new MutablePair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
                             (acc, val) -> {
                                 acc.a = minCoords(acc.a, val);
                                 acc.b = maxCoords(acc.b, val);
@@ -98,10 +98,10 @@ public interface IBoundingBox {
         }
 
         public AxisAlignedBoundingBox(final Collection<IBoundingBox> points) {
-            final Pair<Vec3, Vec3> definingPoints = points.stream()
+            final MutablePair<Vec3, Vec3> definingPoints = points.stream()
                     .map(IBoundingBox::definingPoints)
                     .collect(
-                            () -> new Pair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
+                            () -> new MutablePair<>(NEUTRAL_LOWER, NEUTRAL_UPPER),
                             (acc, val) -> {
                                 acc.a = minCoords(acc.a, val.a);
                                 acc.b = minCoords(acc.b, val.b);
