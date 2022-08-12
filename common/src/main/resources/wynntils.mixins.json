@@ -19,6 +19,7 @@
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "OptionsMixin",
+    "PotionItemMixin",
     "ScoreboardMixin",
     "ScreenMixin",
     "SlotMixin",
