@@ -15,7 +15,9 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public class SkillPointProperty extends CustomStackCountProperty {
-    private static final Pattern POINT_PATTERN = Pattern.compile("^.+?(\\d+) points .+$");
+    private static final Pattern POINT_PATTERN = Pattern.compile("^§7[ À]+(\\d+) points[ À]+§r§6\\d+ points$");
+
+    private final int skillPoints;
 
     public SkillPointProperty(WynnItemStack item) {
         super(item);
@@ -29,10 +31,19 @@ public class SkillPointProperty extends CustomStackCountProperty {
                 break;
             }
         }
+        if (!points.isEmpty()) {
+            skillPoints = Integer.parseInt(points);
+        } else {
+            skillPoints = 0;
+        }
 
         this.setCustomStackCount(
                 points,
                 CustomColor.fromChatFormatting(Objects.requireNonNull(ChatFormatting.getByCode(colorCode))),
                 FontRenderer.TextShadow.NORMAL);
+    }
+
+    public int getSkillPoints() {
+        return skillPoints;
     }
 }

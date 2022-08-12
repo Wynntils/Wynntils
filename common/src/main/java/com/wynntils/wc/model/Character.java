@@ -111,7 +111,7 @@ public class Character implements Model {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
-            ClassType classType = null;
+            String className = "";
 
             for (String line : lore) {
                 Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
@@ -123,12 +123,12 @@ public class Character implements Model {
                 Matcher classMatcher = CLASS_PATTERN.matcher(line);
 
                 if (classMatcher.matches()) {
-                    classType = ClassType.fromName(classMatcher.group(1));
+                    className = classMatcher.group(1);
                 }
             }
+            ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(
-                    classType, classType != null && ClassType.isReskinned(classType.getName()), level, slotNum);
+            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
         }
 
         @Override
