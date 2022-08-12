@@ -190,7 +190,6 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         final int buckets = this.splitStrategy.bucketCount();
         this.leafCount = Math.max(Math.max(MINIMUM_LEAF_COUNT, leafCount), buckets * buckets);
         this.objectCache = new HashMap<>();
-        // force rebuild
         this.forceRebuild();
     }
 
@@ -211,8 +210,8 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         boolean changed = false;
         if (elements != null) {
             synchronized (this.dataLock) {
-                this.pendingDeletes = new HashSet<>(this.pendingDeletes);
                 this.pendingInserts = new HashSet<>(this.pendingInserts);
+                this.pendingDeletes = new HashSet<>(this.pendingDeletes);
                 for (final T e : elements) {
                     if (e == null) {
                         continue;
@@ -235,35 +234,38 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
 
     @Override
     public boolean remove(final Object element) {
-        return this.removeAll(Collections.singleton(element));
+        if (element != null) {
+            return this.removeAll(Collections.singleton(element));
+        }
+        return false;
     }
 
     @Override
-    public boolean removeAll(final Collection<?> c) {
+    public boolean removeAll(final Collection<?> elements) {
         boolean changed = false;
-        final Set<T> changedInserts = new HashSet<>(this.pendingInserts);
-        final Set<T> changedDeletes = new HashSet<>(this.pendingDeletes);
-        for (final Object element : c) {
-            if (element instanceof IBoundingBox) {
-                synchronized (this.dataLock) {
-                    if (this.objectCache.containsKey(element) && !this.pendingDeletes.contains(element)) {
+        if (elements != null) {
+            synchronized (this.dataLock) {
+                this.pendingInserts = new HashSet<>(this.pendingInserts);
+                this.pendingDeletes = new HashSet<>(this.pendingDeletes);
+                for (final Object o : elements) {
+                    if (o != null && this.objectCache.containsKey(o) && !this.pendingDeletes.contains(o)) {
                         try {
-                            @SuppressWarnings("unchecked")
-                            final T e = (T) element;
-                            changedDeletes.add(e);
+                            final T e = (T) o;
+                            this.pendingDeletes.add(e);
+                            changed = true;
                         } catch (final ClassCastException e) {
                             e.printStackTrace();
                         }
-                        changed = true;
-                    } else if (this.pendingInserts.contains(element)) {
-                        changedInserts.remove(element);
+                    } else if (this.pendingInserts.contains(o)) {
+                        this.pendingInserts.remove(o);
                         changed = true;
                     }
                 }
             }
+            if (changed) {
+                this.requestRebuild();
+            }
         }
-        this.pendingInserts = changedInserts;
-        this.pendingDeletes = changedDeletes;
         return changed;
     }
 
@@ -282,8 +284,8 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     @Override
     public boolean contains(final Object o) {
         synchronized (this.dataLock) {
-            return (this.objectCache.containsKey(o) && !this.pendingDeletes.contains(o))
-                    || this.pendingInserts.contains(o);
+            return this.pendingInserts.contains(o)
+                    || (this.objectCache.containsKey(o) && !this.pendingDeletes.contains(o));
         }
     }
 
@@ -327,17 +329,14 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         boolean changed = false;
         synchronized (this.dataLock) {
             this.pendingInserts = new HashSet<>(this.pendingInserts);
-            for (final T elem : this.pendingInserts) {
-                if (!c.contains(elem)) {
-                    this.pendingInserts.remove(elem);
-                    changed = true;
-                }
-            }
+            changed |= this.pendingInserts.retainAll(c);
             this.pendingDeletes = new HashSet<>(this.pendingDeletes);
-            for (final T elem : this.objectCache.keySet()) {
-                if (!c.contains(elem)) {
-                    this.pendingDeletes.add(elem);
-                }
+            List<T> deletes = this.objectCache.keySet().stream()
+                    .filter(e -> !c.contains(e))
+                    .toList();
+            if (!deletes.isEmpty()) {
+                pendingDeletes.addAll(deletes);
+                changed = true;
             }
         }
         return changed;
@@ -355,28 +354,25 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     /**
      * Finds the nearest element to {@code location} stored in the BVH.
      *
-     * @param location
-     *            to compare the distance to.
+     * @param location to compare the distance to.
      * @return The element closest to {@code location} or {@code null} if the BVH is empty.
      */
     public T findNearest(final Vec3 location) {
-        // prepare traversal queues
-        T nearest = null;
+        // prepare traversal queue
         final Queue<BvhNode<T>> nodeQueue = new FibonacciHeapMinQueue<>(getDistanceComparator(location));
         final Comparator<T> leafComparator = getDistanceComparator(location);
         // get initial data
         Set<T> inserts;
         Set<T> deletes;
         synchronized (this.dataLock) {
+            nodeQueue.add(this.tree);
             inserts = this.pendingInserts;
             deletes = this.pendingDeletes;
-            nodeQueue.add(this.tree);
         }
-        nearest = inserts.stream().sorted(leafComparator).findFirst().orElse(null);
+        T nearest = inserts.stream().min(leafComparator).orElse(null);
         // traverse tree
         while (!nodeQueue.isEmpty()
-                && (nearest == null
-                        || nearest.squareDistance(location) > nodeQueue.peek().squareDistance(location))) {
+                && (nearest == null || nodeQueue.peek().squareDistance(location) < nearest.squareDistance(location))) {
             final BvhNode<T> treeNode = nodeQueue.poll();
             for (final T leaf : treeNode.getLeaves()) {
                 if (!deletes.contains(leaf) && (nearest == null || leafComparator.compare(leaf, nearest) < 0)) {
@@ -722,20 +718,18 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             while (true) {
                 // wait for a node, ready to be processed
                 while ((nextNode = this.queue.poll()) == null) {
-                    if (this.queuedNodesCount.get() == 0) {
-                        // all nodes have been processed - wake up all workers to let them return
-                        synchronized (this.workers) {
+                    synchronized (this.workers) {
+                        if (this.queuedNodesCount.get() == 0) {
+                            // all nodes have been processed - wake up all workers to let them return
                             this.workers.notifyAll();
+                            return;
                         }
-                        return;
-                    }
-                    // couldn't get a node - wait for new tasks to be submitted
-                    try {
-                        synchronized (this.workers) {
+                        // couldn't get a node - wait for new tasks to be submitted
+                        try {
                             this.workers.wait();
+                        } catch (final InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    } catch (final InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
                 // create fixed reference for access in lambdas
@@ -747,7 +741,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
                             .forEach(activeNode::addChildNode);
                     activeNode.clearLeaves();
                     activeNode.getChildNodes().forEach(node -> node.setParent(activeNode));
-                    activeNode.getChildNodes().forEach(this.queue::add);
+                    this.queue.addAll(activeNode.getChildNodes());
                     synchronized (this.workers) {
                         this.workers.notifyAll();
                     }
