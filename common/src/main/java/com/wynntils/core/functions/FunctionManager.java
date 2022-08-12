@@ -12,6 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 
 /** Loads {@link Function}s */
 public final class FunctionManager {
@@ -61,6 +65,24 @@ public final class FunctionManager {
         return FunctionManager.getFunctions().stream()
                 .filter(function -> function.getName().equals(functionName))
                 .findFirst();
+    }
+
+    public static Component getSimpleValueString(
+            Function function, String argument, ChatFormatting color, boolean includeName) {
+        MutableComponent header = includeName
+                ? new TextComponent(function.getName() + ": ").withStyle(ChatFormatting.WHITE)
+                : new TextComponent("");
+
+        if (function instanceof EnableableFunction<?> enableableFunction && !isEnabled(enableableFunction)) {
+            return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
+        }
+
+        Object value = function.getValue(argument);
+        if (value == null) {
+            return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
+        }
+
+        return header.append(new TextComponent(value.toString()).withStyle(color));
     }
 
     public static void init() {

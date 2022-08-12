@@ -171,21 +171,9 @@ public final class WynntilsFunctionCommand {
             return 0;
         }
 
-        Object rawValue = function.getValue(argument.getString());
-
-        if (rawValue == null) {
-            context.getSource()
-                    .sendFailure(
-                            new TextComponent("Function could not deliver a result").withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        String value = rawValue.toString();
-
-        Component response = new TextComponent(function.getName() + " returns ")
-                .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent(value).withStyle(ChatFormatting.YELLOW));
-        context.getSource().sendSuccess(response, false);
+        Component result =
+                FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true);
+        context.getSource().sendSuccess(result, false);
         return 1;
     }
 
