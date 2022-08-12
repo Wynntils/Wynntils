@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.MapProfile;
@@ -50,7 +51,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
-public final class WebManager {
+public final class WebManager extends CoreManager {
     private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
@@ -85,6 +86,13 @@ public final class WebManager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        loadCommonObjects();
+    }
+
+    private static void loadCommonObjects() {
+        WebManager.tryLoadItemList();
+        WebManager.tryLoadItemGuesses();
     }
 
     public static boolean isLoggedIn() {

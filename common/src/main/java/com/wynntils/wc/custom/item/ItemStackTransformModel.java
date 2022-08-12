@@ -2,16 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.internal;
+package com.wynntils.wc.custom.item;
 
-import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.wc.custom.item.GearItemStack;
-import com.wynntils.wc.custom.item.SoulPointItemStack;
-import com.wynntils.wc.custom.item.UnidentifiedItemStack;
-import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
 import com.wynntils.wc.custom.item.properties.ConsumableChargeProperty;
 import com.wynntils.wc.custom.item.properties.CosmeticTierProperty;
@@ -36,11 +30,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformerFeature extends InternalFeature {
-    private final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
-    private final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
+public class ItemStackTransformModel extends Model {
+    private static final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
+    private static final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
 
-    public void registerTransformer(Predicate<ItemStack> pred, ItemStackTransformer cons) {
+    public static void registerTransformer(Predicate<ItemStack> pred, ItemStackTransformer cons) {
         TRANSFORMERS.put(pred, cons);
     }
 
@@ -48,7 +42,7 @@ public class ItemStackTransformerFeature extends InternalFeature {
         TRANSFORMERS.remove(pred, cons);
     }
 
-    public void registerProperty(Predicate<ItemStack> pred, PropertyWriter cons) {
+    public static void registerProperty(Predicate<ItemStack> pred, PropertyWriter cons) {
         PROPERTIES.put(pred, cons);
     }
 
@@ -56,11 +50,11 @@ public class ItemStackTransformerFeature extends InternalFeature {
         PROPERTIES.remove(pred, cons);
     }
 
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    public static void init() {
         registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
+        registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
@@ -78,14 +72,8 @@ public class ItemStackTransformerFeature extends InternalFeature {
         registerProperty(WynnItemMatchers::isMaterial, MaterialProperty::new);
     }
 
-    @Override
-    protected boolean onEnable() {
-        return (WebManager.isItemGuessesLoaded() || WebManager.tryLoadItemGuesses())
-                && (WebManager.isItemListLoaded() || WebManager.tryLoadItemList());
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSetSlot(SetSlotEvent event) {
+    public static void onSetSlot(SetSlotEvent event) {
         if (!WynnUtils.onServer()) return;
 
         ItemStack stack = event.getItem();
@@ -108,6 +96,9 @@ public class ItemStackTransformerFeature extends InternalFeature {
             }
         }
 
+        if (stack instanceof WynnItemStack wynnItemStack) {
+            wynnItemStack.init();
+        }
         event.setItem(stack);
     }
 

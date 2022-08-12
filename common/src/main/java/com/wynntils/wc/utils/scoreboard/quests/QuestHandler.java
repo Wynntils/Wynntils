@@ -7,12 +7,12 @@ package com.wynntils.wc.utils.scoreboard.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
 import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 
-public class QuestManager implements ScoreboardHandler {
+public class QuestHandler implements ScoreboardHandler {
     private static QuestInfo currentQuest = null;
 
     public static QuestInfo getCurrentQuest() {
@@ -20,11 +20,11 @@ public class QuestManager implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
         List<String> content = newValue.getContent();
 
         if (content.isEmpty()) {
-            WynntilsMod.error("QuestManager: content was empty.");
+            WynntilsMod.error("QuestHandler: content was empty.");
         }
 
         StringBuilder questName = new StringBuilder();
@@ -47,7 +47,7 @@ public class QuestManager implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentRemove(Segment segment, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
         resetCurrentQuest();
     }
 

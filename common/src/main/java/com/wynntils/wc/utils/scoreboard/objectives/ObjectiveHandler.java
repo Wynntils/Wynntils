@@ -6,7 +6,7 @@ package com.wynntils.wc.utils.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
 import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,11 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ObjectiveManager implements ScoreboardHandler {
+public class ObjectiveHandler implements ScoreboardHandler {
     // §b is guild objective, §a is normal objective and §c is daily objective
     private static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
+    private static final Pattern OBJECTIVE_PATTERN_START = Pattern.compile("^§([abc]).*$");
+    private static final Pattern OBJECTIVE_PATTERN_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
 
     private static WynnObjective guildWynnObjective = null;
 
@@ -82,12 +84,12 @@ public class ObjectiveManager implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
         List<WynnObjective> objectives = reparseObjectives(newValue).stream()
                 .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
                 .toList();
 
-        if (segmentType == ScoreboardManager.SegmentType.GuildObjective) {
+        if (segmentType == ScoreboardModel.SegmentType.GuildObjective) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
                     updateGuildObjective(objective);
@@ -107,7 +109,7 @@ public class ObjectiveManager implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentRemove(Segment segment, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
         List<WynnObjective> objectives = reparseObjectives(segment);
 
         for (WynnObjective objective : objectives) {
@@ -117,7 +119,42 @@ public class ObjectiveManager implements ScoreboardHandler {
 
     private List<WynnObjective> reparseObjectives(Segment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
+
+        List<String> actualContent = new ArrayList<>();
+        StringBuilder scoreLine = new StringBuilder();
+
         for (String line : segment.getContent()) {
+            if (OBJECTIVE_PATTERN.matcher(line).matches()) {
+                actualContent.add(line);
+                continue;
+            }
+
+            if (OBJECTIVE_PATTERN_START.matcher(line).matches()) {
+                if (!scoreLine.isEmpty()) {
+                    WynntilsMod.error("ObjectiveManager: Multiple objective start without and ending:");
+                    WynntilsMod.error("Already got: " + scoreLine);
+                    WynntilsMod.error("Next line: " + line);
+                }
+
+                scoreLine = new StringBuilder(line);
+                continue;
+            }
+
+            if (!scoreLine.isEmpty()) {
+                scoreLine.append(line);
+            }
+
+            if (OBJECTIVE_PATTERN_END.matcher(line).matches()) {
+                actualContent.add(scoreLine.toString().trim().replaceAll(" +", " "));
+                scoreLine = new StringBuilder();
+            }
+        }
+
+        if (!scoreLine.isEmpty()) {
+            WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + scoreLine);
+        }
+
+        for (String line : actualContent) {
             Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(line);
             if (!objectiveMatcher.matches()) {
                 continue;

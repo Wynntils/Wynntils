@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.internal;
+package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.InternalFeature;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -22,17 +22,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class ChatItemFeature extends InternalFeature {
+public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         conditions.add(new WebLoadedCondition());
-    }
-
-    @Override
-    protected boolean onEnable() {
-        return WebManager.isItemListLoaded() || WebManager.tryLoadItemList();
     }
 
     @SubscribeEvent
@@ -56,7 +52,7 @@ public class ChatItemFeature extends InternalFeature {
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
-            while (chatItems.containsKey(name)) { // avoid overwriting entries
+            while (chatItems.containsKey(name.toString())) { // avoid overwriting entries
                 name.append("_");
             }
 
