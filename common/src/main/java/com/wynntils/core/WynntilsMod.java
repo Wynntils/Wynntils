@@ -36,6 +36,7 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
+    private static boolean featuresInited = false;
 
     public static IEventBus getEventBus() {
         return EVENT_BUS;
@@ -73,7 +74,15 @@ public final class WynntilsMod {
         LOGGER.info(msg);
     }
 
+    public static void onResourcesFinishedLoading() {
+        if (featuresInited) return;
+
+        initFeatures();
+        featuresInited = true;
+    }
+
     public static void init(String modVersion, boolean isDevelopmentEnvironment) {
+        // At this point, no resources (including I18n) are available
         // Setup mod core properties
         developmentEnvironment = isDevelopmentEnvironment;
         parseVersion(modVersion);
@@ -81,8 +90,6 @@ public final class WynntilsMod {
         // MC will sometimes think it's running headless and refuse to set clipboard contents
         // making sure this is set to false will fix that
         System.setProperty("java.awt.headless", "false");
-
-        // Init all managers
 
         // Pre-Init, needed for later managers - Dependencies for other features
         ConfigManager.init();
@@ -97,7 +104,10 @@ public final class WynntilsMod {
         ChatManager.init();
         CompassManager.init();
         ModelLoader.init();
+    }
 
+    private static void initFeatures() {
+        // Init all features. Now resources (i.e I18n) are available.
         // Forced Post Init, this should be last init in almost any case.
         FeatureRegistry.init(); // Needs WebManager, ConfigManager (KeyManager, OverlayManager, ClientCommandManager,
         // ScoreboardManager indirectly)
