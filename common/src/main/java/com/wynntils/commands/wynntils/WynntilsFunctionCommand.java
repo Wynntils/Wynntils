@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.functions.EnableableFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.FunctionRegistry;
+import com.wynntils.core.functions.FunctionManager;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,11 +25,11 @@ import net.minecraft.network.chat.TextComponent;
 public final class WynntilsFunctionCommand {
     private static final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FunctionRegistry.getFunctions().stream().map(Function::getName), builder);
+                    FunctionManager.getFunctions().stream().map(Function::getName), builder);
 
     private static final SuggestionProvider<CommandSourceStack> enableableFunctionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FunctionRegistry.getFunctions().stream()
+                    FunctionManager.getFunctions().stream()
                             .filter(function -> function instanceof EnableableFunction<?>)
                             .map(Function::getName),
                     builder);
@@ -41,7 +41,7 @@ public final class WynntilsFunctionCommand {
     }
 
     private static int listFunctions(CommandContext<CommandSourceStack> context) {
-        Set<Function> functions = FunctionRegistry.getFunctions().stream().collect(Collectors.toUnmodifiableSet());
+        Set<Function> functions = FunctionManager.getFunctions().stream().collect(Collectors.toUnmodifiableSet());
 
         MutableComponent response = new TextComponent("Currently registered functions:").withStyle(ChatFormatting.AQUA);
 
@@ -66,7 +66,7 @@ public final class WynntilsFunctionCommand {
     private static int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+        Optional<Function> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
@@ -81,7 +81,7 @@ public final class WynntilsFunctionCommand {
             return 0;
         }
 
-        boolean success = FunctionRegistry.enableFunction(enableableFunction);
+        boolean success = FunctionManager.enableFunction(enableableFunction);
 
         if (!success) {
             context.getSource()
@@ -107,7 +107,7 @@ public final class WynntilsFunctionCommand {
     private static int disableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+        Optional<Function> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
@@ -121,7 +121,7 @@ public final class WynntilsFunctionCommand {
             return 0;
         }
 
-        FunctionRegistry.disableFunction(enableableFunction);
+        FunctionManager.disableFunction(enableableFunction);
 
         Component response = new TextComponent(function.getName())
                 .withStyle(ChatFormatting.AQUA)
@@ -156,7 +156,7 @@ public final class WynntilsFunctionCommand {
         }
 
         String functionName = context.getArgument("function", String.class);
-        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+        Optional<Function> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
@@ -165,7 +165,7 @@ public final class WynntilsFunctionCommand {
         Function function = functionOptional.get();
 
         if (function instanceof EnableableFunction<?> enableableFunction
-                && !FunctionRegistry.isEnabled(enableableFunction)) {
+                && !FunctionManager.isEnabled(enableableFunction)) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
@@ -199,7 +199,7 @@ public final class WynntilsFunctionCommand {
     private static int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+        Optional<Function> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /** Loads {@link Function}s */
-public final class FunctionRegistry {
+public final class FunctionManager {
     private static final List<Function> FUNCTIONS = new ArrayList<>();
     private static final Set<EnableableFunction> ENABLED_FUNCTIONS = new HashSet<>();
 
@@ -58,7 +58,7 @@ public final class FunctionRegistry {
     }
 
     public static Optional<Function> forName(String functionName) {
-        return FunctionRegistry.getFunctions().stream()
+        return FunctionManager.getFunctions().stream()
                 .filter(function -> function.getName().equals(functionName))
                 .findFirst();
     }
