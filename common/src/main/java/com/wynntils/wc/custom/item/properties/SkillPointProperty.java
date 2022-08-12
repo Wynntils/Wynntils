@@ -22,7 +22,6 @@ public class SkillPointProperty extends CustomStackCountProperty {
     public SkillPointProperty(WynnItemStack item) {
         super(item);
 
-
         char colorCode = ComponentUtils.getCoded(item.getHoverName()).charAt(16);
         String points = "";
         for (String lore : ItemUtils.getLore(item)) {
