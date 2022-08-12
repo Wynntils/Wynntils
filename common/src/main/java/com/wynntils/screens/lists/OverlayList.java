@@ -13,6 +13,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlaySelectionScreen;
 import com.wynntils.screens.lists.entries.OverlayEntry;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
@@ -60,12 +61,17 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
 
         if (hovered != null) {
             if (!hovered.getOverlay().isParentEnabled()) {
+                List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
+                helpModified.add(new TextComponent(""));
+                helpModified.add(new TextComponent("Feature: "
+                        + OverlayManager.getOverlayParent(hovered.getOverlay()).getTranslatedName()));
+
                 RenderUtils.drawTooltipAt(
                         poseStack,
                         mouseX,
                         mouseY,
                         100,
-                        DISABLED_PARENT_TOOLTIP_LINES,
+                        helpModified,
                         FontRenderer.getInstance().getFont(),
                         false);
             } else {
