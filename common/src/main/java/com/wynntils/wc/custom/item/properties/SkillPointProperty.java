@@ -15,16 +15,20 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public class SkillPointProperty extends CustomStackCountProperty {
-    private static final Pattern POINT_PATTERN = Pattern.compile("^§7    (\\d+) points      §r§6\\d+ points$");
+    private static final Pattern POINT_PATTERN = Pattern.compile("^§7[ À]+(\\d+) points[ À]+§r§6\\d+ points$");
 
     private final int skillPoints;
 
     public SkillPointProperty(WynnItemStack item) {
         super(item);
 
+
         char colorCode = ComponentUtils.getCoded(item.getHoverName()).charAt(16);
         String points = "";
         for (String lore : ItemUtils.getLore(item)) {
+            if (lore.contains("point")) {
+                System.out.println(lore);
+            }
             Matcher m = POINT_PATTERN.matcher(lore);
             if (m.find()) {
                 points = m.group(1);
