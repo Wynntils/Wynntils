@@ -71,7 +71,7 @@ public final class WynntilsFeatureCommand {
 
         if (feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getShortName() + " is already enabled!")
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " is already enabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -81,7 +81,7 @@ public final class WynntilsFeatureCommand {
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getShortName() + " could not be enabled!")
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be enabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -90,7 +90,7 @@ public final class WynntilsFeatureCommand {
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent(feature.getShortName() + " was enabled successfully.")
+                        new TextComponent(feature.getTranslatedName() + " was enabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -117,7 +117,7 @@ public final class WynntilsFeatureCommand {
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getShortName() + " is already disabled!")
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " is already disabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -127,7 +127,7 @@ public final class WynntilsFeatureCommand {
 
         if (feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getShortName() + " could not be disabled!")
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be disabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -136,7 +136,7 @@ public final class WynntilsFeatureCommand {
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent(feature.getShortName() + " was disabled successfully.")
+                        new TextComponent(feature.getTranslatedName() + " was disabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
