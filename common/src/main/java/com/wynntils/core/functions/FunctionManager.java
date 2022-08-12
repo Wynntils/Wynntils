@@ -85,6 +85,11 @@ public final class FunctionManager {
         return header.append(new TextComponent(value.toString()).withStyle(color));
     }
 
+    public static Component getStringFromTemplate(String template) {
+        // FIXME: implement template parser
+        return new TextComponent(template);
+    }
+
     public static void init() {
         // debug
         registerFunction(new TestFunction());
