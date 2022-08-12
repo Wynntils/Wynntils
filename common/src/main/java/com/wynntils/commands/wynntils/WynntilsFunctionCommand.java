@@ -66,7 +66,7 @@ public final class WynntilsFunctionCommand {
 
     private static int getValue(CommandContext<CommandSourceStack> context) {
         Component argument;
-        try{
+        try {
             argument = new TextComponent(StringArgumentType.getString(context, "argument"));
         } catch (IllegalArgumentException e) {
             argument = new TextComponent("");
