@@ -16,4 +16,9 @@ public class TestFunction implements Function {
     public String getName() {
         return "test";
     }
+
+    @Override
+    public String getDescription() {
+        return "Calculate the true value of the universe";
+    }
 }

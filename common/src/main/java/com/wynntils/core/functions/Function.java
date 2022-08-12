@@ -9,5 +9,7 @@ public interface Function {
 
     String getName();
 
+    String getDescription();
+
     default void init() {}
 }
