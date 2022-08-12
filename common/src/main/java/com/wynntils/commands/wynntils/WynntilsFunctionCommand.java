@@ -167,15 +167,16 @@ public final class WynntilsFunctionCommand {
         if (function instanceof EnableableFunction<?> enableableFunction
                 && !FunctionManager.isEnabled(enableableFunction)) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
+                    .sendFailure(new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         Object rawValue = function.getValue(argument.getString());
 
         if (rawValue == null) {
-            context.getSource().sendFailure(new TextComponent("Function could not deliver a result").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent("Function could not deliver a result").withStyle(ChatFormatting.RED));
             return 0;
         }
 
