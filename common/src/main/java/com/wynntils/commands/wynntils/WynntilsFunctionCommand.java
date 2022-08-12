@@ -85,7 +85,7 @@ public final class WynntilsFunctionCommand {
 
         if (!success) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature could not be enabled").withStyle(ChatFormatting.RED));
+                    .sendFailure(new TextComponent("Function could not be enabled").withStyle(ChatFormatting.RED));
             return 0;
         }
 
