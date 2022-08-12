@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 public class ObjectiveHandler implements ScoreboardHandler {
     // §b is guild objective, §a is normal objective and §c is daily objective
     private static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
+    private static final Pattern OBJECTIVE_PATTERN_START = Pattern.compile("^§([abc]).*$");
+    private static final Pattern OBJECTIVE_PATTERN_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
 
     private static WynnObjective guildWynnObjective = null;
 
@@ -117,7 +119,42 @@ public class ObjectiveHandler implements ScoreboardHandler {
 
     private List<WynnObjective> reparseObjectives(Segment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
+
+        List<String> actualContent = new ArrayList<>();
+        StringBuilder scoreLine = new StringBuilder();
+
         for (String line : segment.getContent()) {
+            if (OBJECTIVE_PATTERN.matcher(line).matches()) {
+                actualContent.add(line);
+                continue;
+            }
+
+            if (OBJECTIVE_PATTERN_START.matcher(line).matches()) {
+                if (!scoreLine.isEmpty()) {
+                    WynntilsMod.error("ObjectiveManager: Multiple objective start without and ending:");
+                    WynntilsMod.error("Already got: " + scoreLine);
+                    WynntilsMod.error("Next line: " + line);
+                }
+
+                scoreLine = new StringBuilder(line);
+                continue;
+            }
+
+            if (!scoreLine.isEmpty()) {
+                scoreLine.append(line);
+            }
+
+            if (OBJECTIVE_PATTERN_END.matcher(line).matches()) {
+                actualContent.add(scoreLine.toString().trim().replaceAll(" +", " "));
+                scoreLine = new StringBuilder();
+            }
+        }
+
+        if (!scoreLine.isEmpty()) {
+            WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + scoreLine);
+        }
+
+        for (String line : actualContent) {
             Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(line);
             if (!objectiveMatcher.matches()) {
                 continue;
