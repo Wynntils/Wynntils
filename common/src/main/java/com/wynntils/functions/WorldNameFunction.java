@@ -9,22 +9,12 @@ import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TestWorldNameFunction implements EnableableFunction<String> {
+public class WorldNameFunction extends EnableableFunction<String> {
     private String currentWorldName;
 
     @Override
     public String getValue(String argument) {
         return currentWorldName;
-    }
-
-    @Override
-    public String getName() {
-        return "worldname";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Get the current world name";
     }
 
     @SubscribeEvent

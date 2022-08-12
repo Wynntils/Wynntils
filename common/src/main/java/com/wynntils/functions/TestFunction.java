@@ -6,19 +6,9 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
 
-public class TestFunction implements Function<Integer> {
+public class TestFunction extends Function<Integer> {
     @Override
     public Integer getValue(String argument) {
         return 42;
-    }
-
-    @Override
-    public String getName() {
-        return "test";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Calculate the true value of the universe";
     }
 }

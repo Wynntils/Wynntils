@@ -4,12 +4,22 @@
  */
 package com.wynntils.core.functions;
 
-public interface Function<T> {
-    T getValue(String argument);
+import com.google.common.base.CaseFormat;
+import net.minecraft.client.resources.language.I18n;
 
-    // TODO: Could/should we turn this into an annotation instead?
-    String getName();
+public abstract class Function<T> {
+    public abstract T getValue(String argument);
 
-    // FIXME: this should be extracted automagically from i18n
-    String getDescription();
+    public String getName() {
+        String name = this.getClass().getSimpleName().replace("Function", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    public String getDescription() {
+        return getTranslation("description");
+    }
+
+    private String getTranslation(String keySuffix) {
+        return I18n.get("function.wynntils." + getName() + "." + keySuffix);
+    }
 }

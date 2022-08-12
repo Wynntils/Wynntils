@@ -6,7 +6,7 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.functions.TestFunction;
-import com.wynntils.functions.TestWorldNameFunction;
+import com.wynntils.functions.WorldNameFunction;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +63,7 @@ public final class FunctionManager {
 
     public static Optional<Function> forName(String functionName) {
         return FunctionManager.getFunctions().stream()
-                .filter(function -> function.getName().equals(functionName))
+                .filter(function -> function.getName().equalsIgnoreCase(functionName))
                 .findFirst();
     }
 
@@ -93,6 +93,6 @@ public final class FunctionManager {
     public static void init() {
         // debug
         registerFunction(new TestFunction());
-        registerFunction(new TestWorldNameFunction());
+        registerFunction(new WorldNameFunction());
     }
 }
