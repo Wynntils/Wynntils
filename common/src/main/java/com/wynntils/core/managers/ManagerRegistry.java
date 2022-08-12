@@ -11,7 +11,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.wc.ModelManager;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +28,6 @@ public class ManagerRegistry {
     private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
-        registerPersistentDependency(CompassManager.class);
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(ClientCommandManager.class);
         registerPersistentDependency(KeyBindManager.class);
@@ -160,5 +158,9 @@ public class ManagerRegistry {
                 return result.toString();
             }
         });
+    }
+
+    public static boolean isEnabled(Class<? extends Manager> manager) {
+        return ENABLED_MANAGERS.contains(manager) || PERSISTENT_MANAGERS.contains(manager);
     }
 }
