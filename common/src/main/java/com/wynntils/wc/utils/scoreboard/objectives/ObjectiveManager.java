@@ -145,7 +145,7 @@ public class ObjectiveManager implements ScoreboardHandler {
             }
 
             if (OBJECTIVE_PATTERN_END.matcher(line).matches()) {
-                actualContent.add(scoreLine.toString());
+                actualContent.add(scoreLine.toString().trim().replaceAll(" +", " "));
                 scoreLine = new StringBuilder();
             }
         }
