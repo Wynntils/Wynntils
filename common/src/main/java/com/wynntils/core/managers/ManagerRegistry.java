@@ -9,7 +9,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.keybinds.KeyManager;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CompassManager;
 import com.wynntils.mc.utils.CrashReportManager;
@@ -32,7 +32,7 @@ public class ManagerRegistry {
         registerPersistentDependency(CompassManager.class);
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(ClientCommandManager.class);
-        registerPersistentDependency(KeyManager.class);
+        registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(ModelManager.class);
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(WebManager.class);

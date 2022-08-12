@@ -11,8 +11,8 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.keybinds.KeyManager;
 import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.webapi.WebManager;
@@ -155,7 +155,7 @@ public abstract class Feature implements Translatable, Configurable {
         }
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyHolder key : keyMappings) {
-            KeyManager.registerKeybind(key);
+            KeyBindManager.registerKeybind(key);
         }
     }
 
@@ -174,7 +174,7 @@ public abstract class Feature implements Translatable, Configurable {
         }
         OverlayManager.disableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
-            KeyManager.unregisterKeybind(key);
+            KeyBindManager.unregisterKeybind(key);
         }
     }
 

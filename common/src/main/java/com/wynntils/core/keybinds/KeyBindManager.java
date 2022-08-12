@@ -17,7 +17,7 @@ import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
-public final class KeyManager extends Manager {
+public final class KeyBindManager extends Manager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
     @SubscribeEvent
