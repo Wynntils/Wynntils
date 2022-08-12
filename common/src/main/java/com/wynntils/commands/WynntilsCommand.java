@@ -45,6 +45,8 @@ public class WynntilsCommand extends CommandBase {
                         .then(WynntilsFeatureCommand.disableFeatureNode()))
                 .then(Commands.literal("function")
                         .then(WynntilsFunctionCommand.buildListNode())
+                        .then(WynntilsFunctionCommand.buildEnableNode())
+                        .then(WynntilsFunctionCommand.buildDisableNode())
                         .then(WynntilsFunctionCommand.buildGetValueNode())
                         .then(WynntilsFunctionCommand.buildGetValueWithArgumentNode())
                         .then(WynntilsFunctionCommand.buildHelpNode())

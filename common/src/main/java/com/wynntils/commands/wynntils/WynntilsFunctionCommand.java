@@ -8,6 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.functions.EnableableFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionRegistry;
 import java.util.Optional;
@@ -22,9 +23,16 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public final class WynntilsFunctionCommand {
-    private static final SuggestionProvider<CommandSourceStack> userFunctionSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FunctionRegistry.getFunctions().stream().map(Function::getName), builder);
+
+    private static final SuggestionProvider<CommandSourceStack> enableableFunctionSuggestionProvider =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    FunctionRegistry.getFunctions().stream()
+                            .filter(function -> function instanceof EnableableFunction<?>)
+                            .map(Function::getName),
+                    builder);
 
     public static LiteralCommandNode<CommandSourceStack> buildListNode() {
         return Commands.literal("list")
@@ -47,10 +55,85 @@ public final class WynntilsFunctionCommand {
         return 1;
     }
 
+    public static LiteralCommandNode<CommandSourceStack> buildEnableNode() {
+        return Commands.literal("enable")
+                .then(Commands.argument("function", StringArgumentType.word())
+                        .suggests(enableableFunctionSuggestionProvider)
+                        .executes(WynntilsFunctionCommand::enableFunction))
+                .build();
+    }
+
+    private static int enableFunction(CommandContext<CommandSourceStack> context) {
+        String functionName = context.getArgument("function", String.class);
+
+        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+
+        if (functionOptional.isEmpty()) {
+            context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Function function = functionOptional.get();
+        if (!(function instanceof EnableableFunction<?> enableableFunction)) {
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent("Function does not need to be enabled").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        boolean success = FunctionRegistry.enableFunction(enableableFunction);
+
+        if (!success) {
+            context.getSource()
+                    .sendFailure(new TextComponent("Feature could not be enabled").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Component response = new TextComponent(function.getName())
+                .withStyle(ChatFormatting.AQUA)
+                .append(new TextComponent(" is now enabled").withStyle(ChatFormatting.WHITE));
+        context.getSource().sendSuccess(response, false);
+        return 1;
+    }
+
+    public static LiteralCommandNode<CommandSourceStack> buildDisableNode() {
+        return Commands.literal("disable")
+                .then(Commands.argument("function", StringArgumentType.word())
+                        .suggests(enableableFunctionSuggestionProvider)
+                        .executes(WynntilsFunctionCommand::disableFunction))
+                .build();
+    }
+
+    private static int disableFunction(CommandContext<CommandSourceStack> context) {
+        String functionName = context.getArgument("function", String.class);
+
+        Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
+
+        if (functionOptional.isEmpty()) {
+            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Function function = functionOptional.get();
+        if (!(function instanceof EnableableFunction<?> enableableFunction)) {
+            context.getSource()
+                    .sendFailure(new TextComponent("Function can not be disabled").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        FunctionRegistry.disableFunction(enableableFunction);
+
+        Component response = new TextComponent(function.getName())
+                .withStyle(ChatFormatting.AQUA)
+                .append(new TextComponent(" is now disabled").withStyle(ChatFormatting.WHITE));
+        context.getSource().sendSuccess(response, false);
+        return 1;
+    }
+
     public static LiteralCommandNode<CommandSourceStack> buildGetValueNode() {
         return Commands.literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(userFunctionSuggestionProvider)
+                        .suggests(functionSuggestionProvider)
                         .executes(WynntilsFunctionCommand::getValue))
                 .build();
     }
@@ -58,7 +141,7 @@ public final class WynntilsFunctionCommand {
     public static LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
         return Commands.literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(userFunctionSuggestionProvider)
+                        .suggests(functionSuggestionProvider)
                         .then(Commands.argument("argument", StringArgumentType.greedyString())
                                 .executes(WynntilsFunctionCommand::getValue)))
                 .build();
@@ -76,12 +159,27 @@ public final class WynntilsFunctionCommand {
         Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
+            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
         Function function = functionOptional.get();
 
-        String value = function.getValue(argument.getString()).toString();
+        if (function instanceof EnableableFunction<?> enableableFunction
+                && !FunctionRegistry.isEnabled(enableableFunction)) {
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Object rawValue = function.getValue(argument.getString());
+
+        if (rawValue == null) {
+            context.getSource().sendFailure(new TextComponent("Function could not deliver a result").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        String value = rawValue.toString();
 
         Component response = new TextComponent(function.getName() + " returns ")
                 .withStyle(ChatFormatting.GRAY)
@@ -93,7 +191,7 @@ public final class WynntilsFunctionCommand {
     public static LiteralCommandNode<CommandSourceStack> buildHelpNode() {
         return Commands.literal("help")
                 .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(userFunctionSuggestionProvider)
+                        .suggests(functionSuggestionProvider)
                         .executes(WynntilsFunctionCommand::helpForFunction))
                 .build();
     }
@@ -104,7 +202,7 @@ public final class WynntilsFunctionCommand {
         Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
+            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
 

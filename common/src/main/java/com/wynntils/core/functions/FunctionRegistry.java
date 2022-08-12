@@ -4,22 +4,57 @@
  */
 package com.wynntils.core.functions;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.functions.TestFunction;
+import com.wynntils.functions.TestWorldNameFunction;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /** Loads {@link Function}s */
 public final class FunctionRegistry {
     private static final List<Function> FUNCTIONS = new ArrayList<>();
+    private static final Set<EnableableFunction> ENABLED_FUNCTIONS = new HashSet<>();
 
     private static void registerFunction(Function function) {
         FUNCTIONS.add(function);
-        function.init();
+        if (function instanceof EnableableFunction<?> enableableFunction) {
+            enableableFunction.init();
+        }
     }
 
     public static List<Function> getFunctions() {
         return FUNCTIONS;
+    }
+
+    public static boolean enableFunction(Function function) {
+        if (!(function instanceof EnableableFunction<?> enableableFunction)) return true;
+
+        WynntilsMod.getEventBus().register(enableableFunction);
+
+        boolean enableSucceeded = enableableFunction.onEnable();
+
+        if (!enableSucceeded) {
+            WynntilsMod.getEventBus().unregister(enableableFunction);
+        }
+        ENABLED_FUNCTIONS.add(enableableFunction);
+        return enableSucceeded;
+    }
+
+    public static void disableFunction(Function function) {
+        if (!(function instanceof EnableableFunction<?> enableableFunction)) return;
+
+        WynntilsMod.getEventBus().unregister(enableableFunction);
+        enableableFunction.onDisable();
+        ENABLED_FUNCTIONS.remove(enableableFunction);
+    }
+
+    public static boolean isEnabled(Function function) {
+        if (!(function instanceof EnableableFunction<?>)) return true;
+
+        return (ENABLED_FUNCTIONS.contains(function));
     }
 
     public static Optional<Function> forName(String functionName) {
@@ -31,5 +66,6 @@ public final class FunctionRegistry {
     public static void init() {
         // debug
         registerFunction(new TestFunction());
+        registerFunction(new TestWorldNameFunction());
     }
 }

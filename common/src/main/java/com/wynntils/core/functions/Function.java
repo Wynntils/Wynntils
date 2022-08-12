@@ -7,9 +7,9 @@ package com.wynntils.core.functions;
 public interface Function<T> {
     T getValue(String argument);
 
+    // TODO: Could/should we turn this into an annotation instead?
     String getName();
 
+    // FIXME: this should be extracted automagically from i18n
     String getDescription();
-
-    default void init() {}
 }
