@@ -69,7 +69,7 @@ public class InfoBoxesFeature extends UserFeature {
         private TextRenderTask getRenderTask() {
             // For every & symbol, check if the next symbol is a color code and if so, replace it with §
             // But don't do it if a \ precedes the &
-            String validColors = "0123456789abcdef";
+            String validColors = "0123456789abcdefklmnor";
             StringBuilder sb = new StringBuilder(content);
             for (int i = 0; i < sb.length(); i++) {
                 if (sb.charAt(i) == '&') { // char == &
