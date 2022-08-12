@@ -70,7 +70,7 @@ public final class FunctionManager {
     public static Component getSimpleValueString(
             Function function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
-                ? new TextComponent(function.getName() + ": ").withStyle(ChatFormatting.WHITE)
+                ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : new TextComponent("");
 
         if (function instanceof EnableableFunction<?> enableableFunction && !isEnabled(enableableFunction)) {

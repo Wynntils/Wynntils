@@ -15,6 +15,10 @@ public abstract class Function<T> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
+    public String getTranslatedName() {
+        return getTranslation("name");
+    }
+
     public String getDescription() {
         return getTranslation("description");
     }
