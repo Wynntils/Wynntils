@@ -25,9 +25,6 @@ public class SkillPointProperty extends CustomStackCountProperty {
         char colorCode = ComponentUtils.getCoded(item.getHoverName()).charAt(16);
         String points = "";
         for (String lore : ItemUtils.getLore(item)) {
-            if (lore.contains("point")) {
-                System.out.println(lore);
-            }
             Matcher m = POINT_PATTERN.matcher(lore);
             if (m.find()) {
                 points = m.group(1);
