@@ -27,6 +27,7 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
+    private static boolean featuresInited = false;
 
     public static IEventBus getEventBus() {
         return EVENT_BUS;
@@ -64,7 +65,15 @@ public final class WynntilsMod {
         LOGGER.info(msg);
     }
 
+    public static void onResourcesFinishedLoading() {
+        if (featuresInited) return;
+
+        initFeatures();
+        featuresInited = true;
+    }
+
     public static void init(String modVersion, boolean isDevelopmentEnvironment) {
+        // At this point, no resources (including I18n) are available
         // Setup mod core properties
         developmentEnvironment = isDevelopmentEnvironment;
         parseVersion(modVersion);
@@ -74,6 +83,10 @@ public final class WynntilsMod {
         System.setProperty("java.awt.headless", "false");
 
         ManagerRegistry.init();
+    }
+
+    private static void initFeatures() {
+        // Init all features. Now resources (i.e I18n) are available.
         FeatureRegistry.init();
     }
 
