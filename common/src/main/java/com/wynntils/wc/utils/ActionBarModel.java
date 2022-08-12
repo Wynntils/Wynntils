@@ -5,7 +5,7 @@
 package com.wynntils.wc.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
@@ -17,7 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ActionBarManager extends Manager {
+public final class ActionBarModel extends Model {
     private static final Pattern ACTIONBAR_PATTERN =
             StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
 

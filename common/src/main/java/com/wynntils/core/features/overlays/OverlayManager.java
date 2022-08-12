@@ -7,7 +7,7 @@ package com.wynntils.core.features.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class OverlayManager extends Manager {
+public final class OverlayManager extends CoreManager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
     private static final Map<Overlay, Feature> overlayParent = new HashMap<>();
 

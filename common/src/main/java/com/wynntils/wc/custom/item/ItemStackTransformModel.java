@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.custom.item;
 
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wc.custom.item.properties.AmplifierTierProperty;
 import com.wynntils.wc.custom.item.properties.ConsumableChargeProperty;
@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends Manager {
+public class ItemStackTransformModel extends Model {
     private static final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
     private static final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
 

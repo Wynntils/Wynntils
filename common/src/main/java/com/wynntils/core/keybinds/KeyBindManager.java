@@ -5,7 +5,7 @@
 package com.wynntils.core.keybinds;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
@@ -17,7 +17,7 @@ import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
-public final class KeyBindManager extends Manager {
+public final class KeyBindManager extends CoreManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
     @SubscribeEvent

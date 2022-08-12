@@ -12,7 +12,8 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CrashReportManager;
-import com.wynntils.wc.ModelManager;
+import com.wynntils.wc.model.CharacterManager;
+import com.wynntils.wc.model.WorldStateManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,17 +24,18 @@ import java.util.Set;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 public class ManagerRegistry {
-    private static final List<Class<? extends Manager>> PERSISTENT_MANAGERS = new ArrayList<>();
-    private static final Map<Class<? extends Manager>, List<Feature>> MANAGER_DEPENDENCIES = new HashMap<>();
+    private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
+    private static final Map<Class<? extends Model>, List<Feature>> MODEL_DEPENDENCIES = new HashMap<>();
     private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
         registerPersistentDependency(ConfigManager.class);
+        registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(ClientCommandManager.class);
         registerPersistentDependency(KeyBindManager.class);
-        registerPersistentDependency(ModelManager.class);
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(WebManager.class);
+        registerPersistentDependency(WorldStateManager.class);
 
         addCrashCallbacks();
     }
@@ -46,41 +48,42 @@ public class ManagerRegistry {
      * <p>
      * Do not use this if you don't know what you are doing. Instead, register the manager as a feature dependency.
      * */
-    private static void registerPersistentDependency(Class<? extends Manager> manager) {
-        PERSISTENT_MANAGERS.add(manager);
+    private static void registerPersistentDependency(Class<? extends CoreManager> manager) {
+        PERSISTENT_CORE_MANAGERS.add(manager);
+        ENABLED_MANAGERS.add(manager);
 
         WynntilsMod.getEventBus().register(manager);
 
         tryInitManager(manager);
     }
 
-    public static void addDependency(Feature dependant, Class<? extends Manager> dependency) {
-        if (PERSISTENT_MANAGERS.contains(dependency)) {
+    public static void addDependency(Feature dependant, Class<? extends Model> dependency) {
+        if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to register a persistent manager.");
         }
 
-        MANAGER_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
 
-        MANAGER_DEPENDENCIES.get(dependency).add(dependant);
+        MODEL_DEPENDENCIES.get(dependency).add(dependant);
 
         updateManagerState(dependency);
     }
 
-    public static void removeDependency(Feature dependant, Class<? extends Manager> dependency) {
-        if (PERSISTENT_MANAGERS.contains(dependency)) {
+    public static void removeDependency(Feature dependant, Class<? extends Model> dependency) {
+        if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to unregister a persistent manager.");
         }
 
-        MANAGER_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
 
-        MANAGER_DEPENDENCIES.get(dependency).remove(dependant);
+        MODEL_DEPENDENCIES.get(dependency).remove(dependant);
 
         updateManagerState(dependency);
     }
 
     public static void removeAllFeatureDependency(Feature dependant) {
-        for (Class<? extends Manager> manager : MANAGER_DEPENDENCIES.keySet()) {
-            boolean removed = MANAGER_DEPENDENCIES.get(manager).remove(dependant);
+        for (Class<? extends Manager> manager : MODEL_DEPENDENCIES.keySet()) {
+            boolean removed = MODEL_DEPENDENCIES.get(manager).remove(dependant);
 
             if (removed) {
                 updateManagerState(manager);
@@ -89,7 +92,7 @@ public class ManagerRegistry {
     }
 
     private static void updateManagerState(Class<? extends Manager> manager) {
-        List<Feature> dependencies = MANAGER_DEPENDENCIES.get(manager);
+        List<Feature> dependencies = MODEL_DEPENDENCIES.get(manager);
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (dependencies == null || dependencies.isEmpty()) {
@@ -137,12 +140,11 @@ public class ManagerRegistry {
             public Object generate() {
                 StringBuilder result = new StringBuilder();
 
-                for (Class<? extends Manager> persistentManager : PERSISTENT_MANAGERS) {
+                for (Class<? extends Manager> persistentManager : PERSISTENT_CORE_MANAGERS) {
                     result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
                 }
 
-                for (Map.Entry<Class<? extends Manager>, List<Feature>> dependencyEntry :
-                        MANAGER_DEPENDENCIES.entrySet()) {
+                for (Map.Entry<Class<? extends Model>, List<Feature>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
                     if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
 
                     result.append("\n\t\t")
@@ -161,6 +163,6 @@ public class ManagerRegistry {
     }
 
     public static boolean isEnabled(Class<? extends Manager> manager) {
-        return ENABLED_MANAGERS.contains(manager) || PERSISTENT_MANAGERS.contains(manager);
+        return ENABLED_MANAGERS.contains(manager);
     }
 }

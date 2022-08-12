@@ -10,8 +10,8 @@ import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.services.TranslationManager;
+import com.wynntils.core.managers.Model;
+import com.wynntils.core.services.TranslationModel;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
@@ -43,12 +43,12 @@ public class TranslationFeature extends UserFeature {
     public boolean keepOriginal = true;
 
     @Config
-    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
+    public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(TranslationManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(TranslationModel.class);
     }
 
     @SubscribeEvent
@@ -59,7 +59,7 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+        TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
             String unwrapped = unwrapCoding(translatedMsg);
             McUtils.mc().doRunTask(() -> {
                 McUtils.sendMessageToClient(new TextComponent(unwrapped));
@@ -78,7 +78,7 @@ public class TranslationFeature extends UserFeature {
         String origCoded = e.getCodedDialog();
         if (origCoded != null) {
             String wrapped = wrapCoding(origCoded);
-            TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+            TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
                 McUtils.mc().doRunTask(() -> {
                     NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);

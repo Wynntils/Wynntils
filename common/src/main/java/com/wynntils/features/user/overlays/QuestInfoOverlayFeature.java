@@ -15,7 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -25,7 +25,7 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
 import com.wynntils.wc.utils.scoreboard.quests.QuestHandler;
 import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
 import java.util.ArrayList;
@@ -41,15 +41,15 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(ScoreboardManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ScoreboardModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.isEnabled()
                 && disableQuestTrackingOnScoreboard
-                && event.getSegment().getType() == ScoreboardManager.SegmentType.Quest) {
+                && event.getSegment().getType() == ScoreboardModel.SegmentType.Quest) {
             event.setCanceled(true);
         }
     }

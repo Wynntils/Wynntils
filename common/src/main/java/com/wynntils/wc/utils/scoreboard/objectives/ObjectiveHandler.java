@@ -6,7 +6,7 @@ package com.wynntils.wc.utils.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.wc.utils.scoreboard.ScoreboardHandler;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
 import com.wynntils.wc.utils.scoreboard.Segment;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,12 +82,12 @@ public class ObjectiveHandler implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
         List<WynnObjective> objectives = reparseObjectives(newValue).stream()
                 .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
                 .toList();
 
-        if (segmentType == ScoreboardManager.SegmentType.GuildObjective) {
+        if (segmentType == ScoreboardModel.SegmentType.GuildObjective) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
                     updateGuildObjective(objective);
@@ -107,7 +107,7 @@ public class ObjectiveHandler implements ScoreboardHandler {
     }
 
     @Override
-    public void onSegmentRemove(Segment segment, ScoreboardManager.SegmentType segmentType) {
+    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
         List<WynnObjective> objectives = reparseObjectives(segment);
 
         for (WynnObjective objective : objectives) {

@@ -6,7 +6,7 @@ package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -27,7 +27,7 @@ public class ChatItemFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         conditions.add(new WebLoadedCondition());
     }
 

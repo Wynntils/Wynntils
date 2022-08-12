@@ -15,7 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -25,7 +25,7 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wc.utils.scoreboard.objectives.WynnObjective;
 import java.util.List;
@@ -40,19 +40,19 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(ScoreboardManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ScoreboardModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard) {
-            if (event.getSegment().getType() == ScoreboardManager.SegmentType.GuildObjective
+            if (event.getSegment().getType() == ScoreboardModel.SegmentType.GuildObjective
                     && guildObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (event.getSegment().getType() == ScoreboardManager.SegmentType.Objective
+            if (event.getSegment().getType() == ScoreboardModel.SegmentType.Objective
                     && dailyObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;

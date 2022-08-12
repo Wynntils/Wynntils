@@ -5,6 +5,7 @@
 package com.wynntils.wc.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -14,7 +15,6 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wc.Model;
 import com.wynntils.wc.event.WorldStateEvent;
 import java.util.Locale;
 import java.util.UUID;
@@ -26,41 +26,41 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WorldState implements Model {
+public class WorldStateManager extends CoreManager {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_SERVER_SUFFIX = ".wynncraft.com";
     private static final String WYNNCRAFT_BETA_PREFIX = "beta.";
 
-    private String currentTabListFooter = "";
-    private String currentWorldName = "";
-    private UUID currentWorldId = null;
-    private boolean onBetaServer;
+    private static String currentTabListFooter = "";
+    private static String currentWorldName = "";
+    private static UUID currentWorldId = null;
+    private static boolean onBetaServer;
 
-    private State currentState = State.NOT_CONNECTED;
+    private static State currentState = State.NOT_CONNECTED;
 
-    public boolean onServer() {
+    public static boolean onServer() {
         return currentState != State.NOT_CONNECTED;
     }
 
-    public boolean onWorld() {
+    public static boolean onWorld() {
         return currentState == State.WORLD;
     }
 
-    public boolean isInStream() {
+    public static boolean isInStream() {
         return currentWorldName.equals("-");
     }
 
-    public boolean isOnBetaServer() {
+    public static boolean isOnBetaServer() {
         return onBetaServer;
     }
 
-    public State getCurrentState() {
+    public static State getCurrentState() {
         return currentState;
     }
 
-    private void setState(State newState, String newWorldName, UUID newUuid) {
+    private static void setState(State newState, String newWorldName, UUID newUuid) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         State oldState = currentState;
@@ -72,7 +72,7 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void screenOpened(ScreenOpenedEvent e) {
+    public static void screenOpened(ScreenOpenedEvent e) {
         if (!onServer()) return;
 
         if (e.getScreen() instanceof DisconnectedScreen) {
@@ -81,14 +81,14 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void disconnected(DisconnectedEvent e) {
+    public static void disconnected(DisconnectedEvent e) {
         if (!onServer()) return;
 
         setState(State.NOT_CONNECTED, "", null);
     }
 
     @SubscribeEvent
-    public void connecting(ConnectedEvent e) {
+    public static void connecting(ConnectedEvent e) {
         if (onServer()) {
             WynntilsMod.error("Got connected event while already connected to server: " + e);
             currentState = State.NOT_CONNECTED;
@@ -104,7 +104,7 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void remove(PlayerLogOutEvent e) {
+    public static void remove(PlayerLogOutEvent e) {
         if (!onServer()) return;
 
         if (e.getId().equals(currentWorldId) && !currentWorldName.isEmpty()) {
@@ -113,14 +113,14 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void onResourcePack(ResourcePackEvent e) {
+    public static void onResourcePack(ResourcePackEvent e) {
         if (!onServer()) return;
 
         setState(State.INTERIM, "", null);
     }
 
     @SubscribeEvent
-    public void onTeleport(PlayerTeleportEvent e) {
+    public static void onTeleport(PlayerTeleportEvent e) {
         if (!onServer()) return;
 
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
@@ -129,7 +129,7 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
+    public static void onTabListFooter(PlayerInfoFooterChangedEvent e) {
         if (!onServer()) return;
 
         String footer = e.getFooter();
@@ -145,7 +145,7 @@ public class WorldState implements Model {
     }
 
     @SubscribeEvent
-    public void update(PlayerDisplayNameChangeEvent e) {
+    public static void update(PlayerDisplayNameChangeEvent e) {
         if (!onServer()) return;
 
         Component displayName = e.getDisplayName();

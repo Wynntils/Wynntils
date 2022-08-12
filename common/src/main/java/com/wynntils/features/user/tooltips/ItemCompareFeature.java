@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -19,7 +19,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.wc.custom.item.GearItemStack;
-import com.wynntils.wc.custom.item.ItemStackTransformManager;
+import com.wynntils.wc.custom.item.ItemStackTransformModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -43,8 +43,8 @@ public class ItemCompareFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(ItemStackTransformManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent

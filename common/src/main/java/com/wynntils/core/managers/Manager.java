@@ -12,5 +12,7 @@ package com.wynntils.core.managers;
  * disable: Called when manager is disabled
  * <p>
  * Managers are automatically registered to event bus, use static event methods.
+ * <p>
+ * See {@link Model} and {@link CoreManager} for the different manager types.
  * */
 public abstract class Manager {}

@@ -5,14 +5,14 @@
 package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.Pair;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wc.event.WorldStateEvent;
-import com.wynntils.wc.model.WorldState;
+import com.wynntils.wc.model.WorldStateManager;
 import com.wynntils.wc.utils.WynnUtils;
 import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wc.utils.scoreboard.quests.QuestHandler;
@@ -41,7 +41,7 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ScoreboardManager extends Manager {
+public final class ScoreboardModel extends Model {
     private static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
     private static final Pattern QUEST_TRACK_PATTERN = Pattern.compile("Tracked Quest:");
     private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
@@ -318,7 +318,7 @@ public final class ScoreboardManager extends Manager {
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.State.WORLD) {
+        if (event.getNewState() == WorldStateManager.State.WORLD) {
             startThread();
             return;
         }
@@ -347,11 +347,11 @@ public final class ScoreboardManager extends Manager {
     }
 
     public enum SegmentType {
-        Quest(ScoreboardManager.QUEST_TRACK_PATTERN),
-        Party(ScoreboardManager.PARTY_PATTERN),
-        Objective(ScoreboardManager.OBJECTIVE_HEADER_PATTERN),
-        GuildObjective(ScoreboardManager.GUILD_OBJECTIVE_HEADER_PATTERN),
-        GuildAttackTimer(ScoreboardManager.GUILD_ATTACK_UPCOMING_PATTERN);
+        Quest(ScoreboardModel.QUEST_TRACK_PATTERN),
+        Party(ScoreboardModel.PARTY_PATTERN),
+        Objective(ScoreboardModel.OBJECTIVE_HEADER_PATTERN),
+        GuildObjective(ScoreboardModel.GUILD_OBJECTIVE_HEADER_PATTERN),
+        GuildAttackTimer(ScoreboardModel.GUILD_ATTACK_UPCOMING_PATTERN);
 
         private final Pattern headerPattern;
 

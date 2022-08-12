@@ -13,8 +13,8 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import java.lang.reflect.Field;
@@ -34,7 +34,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  */
 public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
-    private ImmutableList<Class<? extends Manager>> dependencies;
+    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyHolder> keyMappings = new ArrayList<>();
     private final List<ConfigHolder> configOptions = new ArrayList<>();
@@ -46,7 +46,7 @@ public abstract class Feature implements Translatable, Configurable {
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Class<? extends Manager>> dependencies = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
         onInit(conditions, dependencies);
 
@@ -120,8 +120,7 @@ public abstract class Feature implements Translatable, Configurable {
 
     /** Called on init of Feature */
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions,
-            ImmutableList.Builder<Class<? extends Manager>> dependencies) {}
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
 
     /**
      * Called on enabling of Feature
@@ -146,7 +145,7 @@ public abstract class Feature implements Translatable, Configurable {
 
         enabled = true;
 
-        for (Class<? extends Manager> dependency : dependencies) {
+        for (Class<? extends Model> dependency : dependencies) {
             ManagerRegistry.addDependency(this, dependency);
         }
 

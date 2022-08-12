@@ -4,14 +4,14 @@
  */
 package com.wynntils.core.services;
 
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 
-public class TranslationManager extends Manager {
+public class TranslationModel extends Model {
 
     public static final String TRANSLATED_PREFIX =
             ChatFormatting.GRAY + "[" + TranslationFeature.INSTANCE.languageName + "]" + ChatFormatting.RESET;
@@ -43,9 +43,8 @@ public class TranslationManager extends Manager {
      */
     public static TranslationService getTranslator() {
         // These might not have been created yet, or reset by config changing
-        if (TranslationManager.translator == null) {
-            TranslationManager.translator =
-                    TranslationManager.getService(TranslationFeature.INSTANCE.translationService);
+        if (TranslationModel.translator == null) {
+            TranslationModel.translator = TranslationModel.getService(TranslationFeature.INSTANCE.translationService);
         }
         return translator;
     }

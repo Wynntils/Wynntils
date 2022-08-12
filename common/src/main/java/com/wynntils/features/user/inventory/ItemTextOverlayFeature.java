@@ -9,11 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.wc.custom.item.ItemStackTransformManager;
+import com.wynntils.wc.custom.item.ItemStackTransformModel;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
@@ -66,8 +66,8 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(ItemStackTransformManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent

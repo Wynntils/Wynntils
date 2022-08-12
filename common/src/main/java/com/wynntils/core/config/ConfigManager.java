@@ -15,7 +15,7 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.objects.CustomColor;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public final class ConfigManager extends Manager {
+public final class ConfigManager extends CoreManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();

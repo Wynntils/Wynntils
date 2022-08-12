@@ -15,7 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -25,7 +25,7 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wc.utils.ActionBarManager;
+import com.wynntils.wc.utils.ActionBarModel;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -36,8 +36,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
-        dependencies.add(ActionBarManager.class);
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ActionBarModel.class);
     }
 
     @SubscribeEvent
@@ -100,7 +100,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            ActionBarManager.getCurrentHealth() + " ❤ " + ActionBarManager.getMaxHealth(),
+                            ActionBarModel.getCurrentHealth() + " ❤ " + ActionBarModel.getMaxHealth(),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -119,8 +119,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     healthTexture.getTextureY1(),
                     81,
                     healthTexture.getTextureY2(),
-                    (flip ? -ActionBarManager.getCurrentHealth() : ActionBarManager.getCurrentHealth())
-                            / (float) ActionBarManager.getMaxHealth());
+                    (flip ? -ActionBarModel.getCurrentHealth() : ActionBarModel.getCurrentHealth())
+                            / (float) ActionBarModel.getMaxHealth());
         }
 
         @Override
@@ -167,7 +167,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            ActionBarManager.getCurrentMana() + " ✺ " + ActionBarManager.getMaxMana(),
+                            ActionBarModel.getCurrentMana() + " ✺ " + ActionBarModel.getMaxMana(),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -186,8 +186,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     manaTexture.getTextureY1(),
                     81,
                     manaTexture.getTextureY2(),
-                    (flip ? -ActionBarManager.getCurrentMana() : ActionBarManager.getCurrentMana())
-                            / (float) ActionBarManager.getMaxMana());
+                    (flip ? -ActionBarModel.getCurrentMana() : ActionBarModel.getCurrentMana())
+                            / (float) ActionBarModel.getMaxMana());
         }
 
         @Override

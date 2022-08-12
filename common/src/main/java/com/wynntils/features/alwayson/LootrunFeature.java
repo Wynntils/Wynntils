@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.AlwaysOnFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -48,7 +48,7 @@ public class LootrunFeature extends AlwaysOnFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Manager>> dependencies) {
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         FileUtils.mkdir(LootrunUtils.LOOTRUNS);
     }
 
