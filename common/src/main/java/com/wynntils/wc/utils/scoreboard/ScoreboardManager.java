@@ -197,6 +197,7 @@ public final class ScoreboardManager {
             scoreboard.setDisplayObjective(1, objective);
 
             // Set player team display objective
+            // This fixes scoreboard gui flickering
             PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
             if (playerTeam != null) {
                 if (playerTeam.getColor().getId() >= 0) {
