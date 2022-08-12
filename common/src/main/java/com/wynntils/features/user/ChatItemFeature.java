@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.stateless;
+package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.features.StatelessFeature;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class ChatItemFeature extends StatelessFeature {
+public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
 
     @Override
