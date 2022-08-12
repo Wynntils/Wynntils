@@ -5,9 +5,10 @@
 package com.wynntils.core.functions;
 
 import com.google.common.base.CaseFormat;
+import com.wynntils.core.features.Translatable;
 import net.minecraft.client.resources.language.I18n;
 
-public abstract class Function<T> {
+public abstract class Function<T> implements Translatable {
     public abstract T getValue(String argument);
 
     public String getName() {
@@ -23,7 +24,7 @@ public abstract class Function<T> {
         return getTranslation("description");
     }
 
-    private String getTranslation(String keySuffix) {
+    public String getTranslation(String keySuffix) {
         return I18n.get("function.wynntils." + getName() + "." + keySuffix);
     }
 }
