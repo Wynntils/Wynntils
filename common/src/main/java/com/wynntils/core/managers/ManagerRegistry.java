@@ -95,29 +95,21 @@ public class ManagerRegistry {
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (dependencies == null || dependencies.isEmpty()) {
-                disableManager(manager);
+                WynntilsMod.getEventBus().unregister(manager);
+
+                ENABLED_MANAGERS.remove(manager);
 
                 tryDisableManager(manager);
             }
         } else {
             if (dependencies != null && !dependencies.isEmpty()) {
-                enableManager(manager);
+                WynntilsMod.getEventBus().register(manager);
+
+                ENABLED_MANAGERS.add(manager);
 
                 tryInitManager(manager);
             }
         }
-    }
-
-    private static void enableManager(Class<? extends Manager> manager) {
-        WynntilsMod.getEventBus().register(manager);
-
-        ENABLED_MANAGERS.add(manager);
-    }
-
-    private static void disableManager(Class<? extends Manager> manager) {
-        WynntilsMod.getEventBus().unregister(manager);
-
-        ENABLED_MANAGERS.remove(manager);
     }
 
     private static void tryInitManager(Class<? extends Manager> manager) {
@@ -132,7 +124,7 @@ public class ManagerRegistry {
         try {
             MethodUtils.invokeExactStaticMethod(manager, "disable");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            WynntilsMod.error(e.getMessage());
+            // ignored, it is fine to not have a disable method
         }
     }
 
