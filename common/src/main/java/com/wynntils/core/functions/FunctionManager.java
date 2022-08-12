@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
-/** Loads {@link Function}s */
+/** Manage all built-in {@link Function}s */
 public final class FunctionManager {
     private static final List<Function> FUNCTIONS = new ArrayList<>();
     private static final Set<EnableableFunction> ENABLED_FUNCTIONS = new HashSet<>();
@@ -85,9 +85,21 @@ public final class FunctionManager {
         return header.append(new TextComponent(value.toString()).withStyle(color));
     }
 
+    /**
+     * Return a string, based on the template, with values filled in from the referenced
+     * functions.
+     */
     public static Component getStringFromTemplate(String template) {
         // FIXME: implement template parser
         return new TextComponent(template);
+    }
+
+    /**
+     * Return a list of all functions referenced in a template string
+     */
+    public static List<Function> getFunctionsInTemplate(String template) {
+        // FIXME: implement template parser
+        return List.of();
     }
 
     public static void init() {
