@@ -4,9 +4,10 @@
  */
 package com.wynntils.features.user.overlays;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.ChatManager;
+import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
@@ -14,6 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
@@ -33,6 +35,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class NpcDialogueOverlayFeature extends UserFeature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
     private String currentDialogue;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ChatModel.class);
+    }
 
     @SubscribeEvent
     public void onNpcDialogue(NpcDialogEvent e) {
@@ -83,9 +91,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                ChatManager.enableNpcDialogExtraction();
+                ChatModel.enableNpcDialogExtraction();
             } else {
-                ChatManager.disableNpcDialogExtraction();
+                ChatModel.disableNpcDialogExtraction();
             }
         }
 

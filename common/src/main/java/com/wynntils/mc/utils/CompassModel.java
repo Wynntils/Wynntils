@@ -4,19 +4,15 @@
  */
 package com.wynntils.mc.utils;
 
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.utils.objects.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TODO: Draw compass beam
-public final class CompassManager {
+public final class CompassModel extends Model {
     private static Location compassLocation = null;
-
-    public static void init() {
-        WynntilsMod.getEventBus().register(CompassManager.class);
-    }
 
     public static Location getCompassLocation() {
         if (compassLocation != null) compassLocation.y = McUtils.player().getY();
@@ -24,7 +20,7 @@ public final class CompassManager {
     }
 
     public static void setCompassLocation(Location compassLocation) {
-        CompassManager.compassLocation = compassLocation;
+        CompassModel.compassLocation = compassLocation;
 
         if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
     }
@@ -41,7 +37,7 @@ public final class CompassManager {
 
         if (McUtils.player() == null) {
             // Reset compass
-            CompassManager.reset();
+            CompassModel.reset();
 
             if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
 
@@ -49,7 +45,7 @@ public final class CompassManager {
         }
 
         // Cancel the event to force the compass to not change
-        if (CompassManager.getCompassLocation() != null) {
+        if (CompassModel.getCompassLocation() != null) {
             e.setCanceled(true);
         }
     }

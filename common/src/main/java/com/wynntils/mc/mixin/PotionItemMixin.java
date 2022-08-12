@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionItem.class)
 public abstract class PotionItemMixin {
-    @Inject(method = "isFoil()B", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isFoil", at = @At("HEAD"), cancellable = true)
     private void isFoilPre(CallbackInfoReturnable<Boolean> cir) {
         DrawPotionGlintEvent event = EventFactory.onPotionIsFoil((PotionItem) (Object) this);
         if (event.isCanceled()) {

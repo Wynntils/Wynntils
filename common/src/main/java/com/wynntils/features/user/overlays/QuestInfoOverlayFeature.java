@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.overlays;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -14,6 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -23,9 +25,9 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
+import com.wynntils.wc.utils.scoreboard.quests.QuestHandler;
 import com.wynntils.wc.utils.scoreboard.quests.QuestInfo;
-import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
@@ -37,11 +39,17 @@ public class QuestInfoOverlayFeature extends UserFeature {
     @Config
     public static boolean disableQuestTrackingOnScoreboard = true;
 
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ScoreboardModel.class);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.isEnabled()
                 && disableQuestTrackingOnScoreboard
-                && event.getSegment().getType() == ScoreboardManager.SegmentType.Quest) {
+                && event.getSegment().getType() == ScoreboardModel.SegmentType.Quest) {
             event.setCanceled(true);
         }
     }
@@ -101,7 +109,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestManager.getCurrentQuest();
+            QuestInfo currentQuest = QuestHandler.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;
