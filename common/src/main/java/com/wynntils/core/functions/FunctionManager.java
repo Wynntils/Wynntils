@@ -5,6 +5,7 @@
 package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.functions.TestFunction;
 import com.wynntils.functions.WorldNameFunction;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
-public final class FunctionManager {
+public final class FunctionManager extends CoreManager {
     private static final List<Function> FUNCTIONS = new ArrayList<>();
     private static final Set<EnableableFunction> ENABLED_FUNCTIONS = new HashSet<>();
 

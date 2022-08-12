@@ -5,7 +5,6 @@
 package com.wynntils.core;
 
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
@@ -88,7 +87,6 @@ public final class WynntilsMod {
 
     private static void initFeatures() {
         // Init all features. Now resources (i.e I18n) are available.
-        FunctionManager.init();
         FeatureRegistry.init();
     }
 
