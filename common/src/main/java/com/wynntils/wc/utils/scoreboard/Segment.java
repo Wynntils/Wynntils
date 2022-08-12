@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Segment {
-    private final ScoreboardManager.SegmentType type;
+    private final ScoreboardModel.SegmentType type;
     private final String header;
     private String end;
     private List<String> content = null;
@@ -17,7 +17,7 @@ public final class Segment {
 
     private boolean changed;
 
-    public Segment(ScoreboardManager.SegmentType type, String header, int startIndex) {
+    public Segment(ScoreboardModel.SegmentType type, String header, int startIndex) {
         this.type = type;
         this.header = header;
         this.startIndex = startIndex;
@@ -46,7 +46,7 @@ public final class Segment {
         return endIndex;
     }
 
-    public ScoreboardManager.SegmentType getType() {
+    public ScoreboardModel.SegmentType getType() {
         return type;
     }
 

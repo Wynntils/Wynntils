@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.keybinds.KeyManager;
+import com.wynntils.core.keybinds.KeyBindManager;
 import net.minecraft.client.Options;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class OptionsMixin {
     @Inject(method = "load()V", at = @At("HEAD"))
     public void loadPre(CallbackInfo ci) {
-        KeyManager.loadKeybinds((Options) (Object) this);
+        KeyBindManager.loadKeybinds((Options) (Object) this);
     }
 }
