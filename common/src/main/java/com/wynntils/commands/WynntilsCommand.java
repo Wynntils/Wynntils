@@ -46,6 +46,7 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("function")
                         .then(WynntilsFunctionCommand.buildListNode())
                         .then(WynntilsFunctionCommand.buildGetValueNode())
+                        .then(WynntilsFunctionCommand.buildGetValueWithArgumentNode())
                         .then(WynntilsFunctionCommand.buildHelpNode())
                         .executes(this::help)));
     }

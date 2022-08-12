@@ -55,9 +55,24 @@ public final class WynntilsFunctionCommand {
                 .build();
     }
 
-    private static int getValue(CommandContext<CommandSourceStack> context) {
-        String functionName = context.getArgument("function", String.class);
+    public static LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
+        return Commands.literal("get")
+                .then(Commands.argument("function", StringArgumentType.word())
+                        .suggests(userFunctionSuggestionProvider)
+                        .then(Commands.argument("argument", StringArgumentType.greedyString())
+                                .executes(WynntilsFunctionCommand::getValue)))
+                .build();
+    }
 
+    private static int getValue(CommandContext<CommandSourceStack> context) {
+        Component argument;
+        try{
+            argument = new TextComponent(StringArgumentType.getString(context, "argument"));
+        } catch (IllegalArgumentException e) {
+            argument = new TextComponent("");
+        }
+
+        String functionName = context.getArgument("function", String.class);
         Optional<Function> functionOptional = FunctionRegistry.forName(functionName);
 
         if (functionOptional.isEmpty()) {
@@ -66,8 +81,7 @@ public final class WynntilsFunctionCommand {
         }
         Function function = functionOptional.get();
 
-        // FIXME: arguments
-        String value = function.getValue("");
+        String value = function.getValue(argument.getString());
 
         Component response = new TextComponent(function.getName() + " returns ")
                 .withStyle(ChatFormatting.GRAY)
@@ -96,7 +110,6 @@ public final class WynntilsFunctionCommand {
 
         Function function = functionOptional.get();
 
-        // FIXME: arguments
         String helpText = function.getDescription();
 
         Component response = new TextComponent(function.getName() + ": ")
