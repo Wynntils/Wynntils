@@ -137,7 +137,7 @@ public final class FeatureRegistry {
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
 
-        // stateless
+        // always on
         registerFeature(new ChatItemFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixSpellOverwriteFeature());
