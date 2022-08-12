@@ -9,7 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 /**
  * A feature controlled from within Wynntils. Meant for implementing functionality that shouldn't be exposed to users.
  */
-public abstract class StatelessFeature extends Feature {
+public abstract class AlwaysOnFeature extends Feature {
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {
         onConfigUpdate(configHolder);
