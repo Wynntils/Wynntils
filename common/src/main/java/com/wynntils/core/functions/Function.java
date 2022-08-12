@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.functions;
 
-public interface Function {
-    String getValue(String argument);
+public interface Function<T> {
+    T getValue(String argument);
 
     String getName();
 

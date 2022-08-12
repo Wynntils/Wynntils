@@ -81,7 +81,7 @@ public final class WynntilsFunctionCommand {
         }
         Function function = functionOptional.get();
 
-        String value = function.getValue(argument.getString());
+        String value = function.getValue(argument.getString()).toString();
 
         Component response = new TextComponent(function.getName() + " returns ")
                 .withStyle(ChatFormatting.GRAY)

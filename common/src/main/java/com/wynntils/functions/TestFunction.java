@@ -6,10 +6,10 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
 
-public class TestFunction implements Function {
+public class TestFunction implements Function<Integer> {
     @Override
-    public String getValue(String argument) {
-        return "42";
+    public Integer getValue(String argument) {
+        return 42;
     }
 
     @Override
