@@ -100,8 +100,8 @@ public final class WynntilsMod {
         ModelLoader.init();
 
         // Forced Post Init, this should be last init in almost any case.
-        FeatureRegistry.init(); // Needs WebManager, ConfigManager (KeyManager, OverlayManager, ClientCommandManager,
         FunctionManager.init();
+        FeatureRegistry.init(); // Needs WebManager, ConfigManager (KeyManager, OverlayManager, ClientCommandManager,
         // ScoreboardManager indirectly)
     }
 
