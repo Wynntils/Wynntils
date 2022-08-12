@@ -15,7 +15,6 @@ import com.wynntils.features.stateless.ChatItemFeature;
 import com.wynntils.features.stateless.FixPacketBugsFeature;
 import com.wynntils.features.stateless.FixSpellOverwriteFeature;
 import com.wynntils.features.stateless.LootrunFeature;
-import com.wynntils.features.stateless.NotificationsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.GammabrightFeature;
@@ -143,7 +142,6 @@ public final class FeatureRegistry {
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
-        registerFeature(new NotificationsFeature());
 
         // user
         registerFeature(new CustomBarsOverlayFeature());
