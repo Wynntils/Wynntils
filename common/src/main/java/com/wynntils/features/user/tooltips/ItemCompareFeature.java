@@ -32,7 +32,7 @@ import org.lwjgl.glfw.GLFW;
 public class ItemCompareFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyHolder toggleCompareModeKeybind =
-            new KeyHolder("Compare mode", GLFW.GLFW_KEY_SPACE, "Wynntils", true, () -> {});
+            new KeyHolder("Compare mode", GLFW.GLFW_KEY_KP_EQUAL, "Wynntils", true, () -> {});
 
     @RegisterKeyBind
     private final KeyHolder compareSelectKeybind =
