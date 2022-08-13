@@ -84,8 +84,11 @@ public final class ChatModel extends Model {
 
         Component message = e.getMessage();
         String codedMessage = ComponentUtils.getCoded(message);
-        if (!codedMessage.contains("\n")) {
-            saveLastChat(ComponentUtils.getCoded(message));
+
+        // Sometimes there is just a trailing newline; that does not
+        // make it a multiline message
+        if (!codedMessage.contains("\n") || codedMessage.indexOf("\n") == (codedMessage.length() - 1)) {
+            saveLastChat(codedMessage);
             MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, codedMessage, messageType);
             if (updatedMessage == null) {
@@ -97,12 +100,14 @@ public final class ChatModel extends Model {
         }
 
         if (extractDialog) {
-            handleMultilineMessage(codedMessage);
+            handleMultilineMessage(message);
             e.setCanceled(true);
         }
     }
 
-    private static void handleMultilineMessage(String msg) {
+    private static void handleMultilineMessage(Component message) {
+        String msg = ComponentUtils.getCoded(message);
+
         List<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
