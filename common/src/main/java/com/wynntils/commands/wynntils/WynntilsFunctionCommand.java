@@ -8,7 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.functions.EnableableFunction;
+import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
 import java.util.Optional;
@@ -27,10 +27,10 @@ public final class WynntilsFunctionCommand {
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FunctionManager.getFunctions().stream().map(Function::getName), builder);
 
-    private static final SuggestionProvider<CommandSourceStack> enableableFunctionSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> activeFunctionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FunctionManager.getFunctions().stream()
-                            .filter(function -> function instanceof EnableableFunction<?>)
+                            .filter(function -> function instanceof ActiveFunction<?>)
                             .map(Function::getName),
                     builder);
 
@@ -58,7 +58,7 @@ public final class WynntilsFunctionCommand {
     public static LiteralCommandNode<CommandSourceStack> buildEnableNode() {
         return Commands.literal("enable")
                 .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(enableableFunctionSuggestionProvider)
+                        .suggests(activeFunctionSuggestionProvider)
                         .executes(WynntilsFunctionCommand::enableFunction))
                 .build();
     }
@@ -74,14 +74,14 @@ public final class WynntilsFunctionCommand {
         }
 
         Function function = functionOptional.get();
-        if (!(function instanceof EnableableFunction<?> enableableFunction)) {
+        if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Function does not need to be enabled").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        boolean success = FunctionManager.enableFunction(enableableFunction);
+        boolean success = FunctionManager.enableFunction(activeFunction);
 
         if (!success) {
             context.getSource()
@@ -99,7 +99,7 @@ public final class WynntilsFunctionCommand {
     public static LiteralCommandNode<CommandSourceStack> buildDisableNode() {
         return Commands.literal("disable")
                 .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(enableableFunctionSuggestionProvider)
+                        .suggests(activeFunctionSuggestionProvider)
                         .executes(WynntilsFunctionCommand::disableFunction))
                 .build();
     }
@@ -115,13 +115,13 @@ public final class WynntilsFunctionCommand {
         }
 
         Function function = functionOptional.get();
-        if (!(function instanceof EnableableFunction<?> enableableFunction)) {
+        if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
                     .sendFailure(new TextComponent("Function can not be disabled").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        FunctionManager.disableFunction(enableableFunction);
+        FunctionManager.disableFunction(activeFunction);
 
         Component response = new TextComponent(function.getName())
                 .withStyle(ChatFormatting.AQUA)
@@ -164,8 +164,8 @@ public final class WynntilsFunctionCommand {
         }
         Function function = functionOptional.get();
 
-        if (function instanceof EnableableFunction<?> enableableFunction
-                && !FunctionManager.isEnabled(enableableFunction)) {
+        if (function instanceof ActiveFunction<?> activeFunction
+                && !FunctionManager.isEnabled(activeFunction)) {
             context.getSource()
                     .sendFailure(new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
             return 0;

@@ -4,12 +4,12 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.functions.EnableableFunction;
+import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.model.WorldStateManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WorldNameFunction extends EnableableFunction<String> {
+public class WorldNameFunction extends ActiveFunction<String> {
     private String currentWorldName;
 
     @Override

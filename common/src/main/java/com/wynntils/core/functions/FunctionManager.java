@@ -21,12 +21,12 @@ import net.minecraft.network.chat.TextComponent;
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends CoreManager {
     private static final List<Function> FUNCTIONS = new ArrayList<>();
-    private static final Set<EnableableFunction> ENABLED_FUNCTIONS = new HashSet<>();
+    private static final Set<ActiveFunction> ENABLED_FUNCTIONS = new HashSet<>();
 
     private static void registerFunction(Function function) {
         FUNCTIONS.add(function);
-        if (function instanceof EnableableFunction<?> enableableFunction) {
-            enableableFunction.init();
+        if (function instanceof ActiveFunction<?> activeFunction) {
+            activeFunction.init();
         }
     }
 
@@ -35,29 +35,29 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static boolean enableFunction(Function function) {
-        if (!(function instanceof EnableableFunction<?> enableableFunction)) return true;
+        if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
-        WynntilsMod.getEventBus().register(enableableFunction);
+        WynntilsMod.getEventBus().register(activeFunction);
 
-        boolean enableSucceeded = enableableFunction.onEnable();
+        boolean enableSucceeded = activeFunction.onEnable();
 
         if (!enableSucceeded) {
-            WynntilsMod.getEventBus().unregister(enableableFunction);
+            WynntilsMod.getEventBus().unregister(activeFunction);
         }
-        ENABLED_FUNCTIONS.add(enableableFunction);
+        ENABLED_FUNCTIONS.add(activeFunction);
         return enableSucceeded;
     }
 
     public static void disableFunction(Function function) {
-        if (!(function instanceof EnableableFunction<?> enableableFunction)) return;
+        if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
-        WynntilsMod.getEventBus().unregister(enableableFunction);
-        enableableFunction.onDisable();
-        ENABLED_FUNCTIONS.remove(enableableFunction);
+        WynntilsMod.getEventBus().unregister(activeFunction);
+        activeFunction.onDisable();
+        ENABLED_FUNCTIONS.remove(activeFunction);
     }
 
     public static boolean isEnabled(Function function) {
-        if (!(function instanceof EnableableFunction<?>)) return true;
+        if (!(function instanceof ActiveFunction<?>)) return true;
 
         return (ENABLED_FUNCTIONS.contains(function));
     }
@@ -74,7 +74,7 @@ public final class FunctionManager extends CoreManager {
                 ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : new TextComponent("");
 
-        if (function instanceof EnableableFunction<?> enableableFunction && !isEnabled(enableableFunction)) {
+        if (function instanceof ActiveFunction<?> activeFunction && !isEnabled(activeFunction)) {
             return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
         }
 

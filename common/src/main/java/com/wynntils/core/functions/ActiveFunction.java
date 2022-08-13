@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.functions;
 
-public abstract class EnableableFunction<T> extends Function<T> {
+public abstract class ActiveFunction<T> extends Function<T> {
     public void init() {}
 
     /**
