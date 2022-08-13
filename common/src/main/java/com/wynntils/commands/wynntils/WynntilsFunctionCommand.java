@@ -180,7 +180,8 @@ public final class WynntilsFunctionCommand {
         }
 
         MutableComponent result = new TextComponent("");
-        result.append(FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
+        result.append(
+                FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
         if (!extraInfo.isEmpty()) {
             result.append(new TextComponent(extraInfo).withStyle(ChatFormatting.GRAY));
         }

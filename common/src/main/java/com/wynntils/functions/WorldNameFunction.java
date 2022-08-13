@@ -10,8 +10,8 @@ import com.wynntils.wc.model.WorldStateManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldNameFunction extends ActiveFunction<String> {
-    private final static String NO_DATA = "<unknown>";
-    private final static String NO_WORLD = "<not on world>";
+    private static final String NO_DATA = "<unknown>";
+    private static final String NO_WORLD = "<not on world>";
     private String currentWorldName = NO_DATA;
 
     @Override
