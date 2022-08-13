@@ -6,8 +6,9 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.functions.TestFunction;
-import com.wynntils.functions.WorldNameFunction;
+import com.wynntils.functions.EnvironmentFunctions;
+import com.wynntils.functions.MinecraftFunctions;
+import com.wynntils.functions.WorldFunction;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,8 +65,16 @@ public final class FunctionManager extends CoreManager {
 
     public static Optional<Function<?>> forName(String functionName) {
         return FunctionManager.getFunctions().stream()
-                .filter(function -> function.getName().equalsIgnoreCase(functionName))
+                .filter(function -> hasName(function, functionName))
                 .findFirst();
+    }
+
+    private static boolean hasName(Function<?> function, String name) {
+        if (function.getName().equalsIgnoreCase(name)) return true;
+        for (String alias : function.getAliases()) {
+            if (alias.equalsIgnoreCase(name)) return true;
+        }
+        return false;
     }
 
     public static Component getSimpleValueString(
@@ -100,8 +109,18 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static void init() {
-        // debug
-        registerFunction(new TestFunction());
-        registerFunction(new WorldNameFunction());
+        registerFunction(new WorldFunction());
+
+        registerFunction(new MinecraftFunctions.XFunction());
+        registerFunction(new MinecraftFunctions.YFunction());
+        registerFunction(new MinecraftFunctions.ZFunction());
+        registerFunction(new MinecraftFunctions.DirFunction());
+        registerFunction(new MinecraftFunctions.FpsFunction());
+
+        registerFunction(new EnvironmentFunctions.ClockFunction());
+        registerFunction(new EnvironmentFunctions.ClockmFunction());
+        registerFunction(new EnvironmentFunctions.MemMaxFunction());
+        registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        registerFunction(new EnvironmentFunctions.MemPctFunction());
     }
 }

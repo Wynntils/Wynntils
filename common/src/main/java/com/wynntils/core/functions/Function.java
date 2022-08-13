@@ -6,6 +6,7 @@ package com.wynntils.core.functions;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.features.Translatable;
+import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class Function<T> implements Translatable {
@@ -13,7 +14,11 @@ public abstract class Function<T> implements Translatable {
 
     public String getName() {
         String name = this.getClass().getSimpleName().replace("Function", "");
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+    }
+
+    public List<String> getAliases() {
+        return List.of();
     }
 
     public String getTranslatedName() {
