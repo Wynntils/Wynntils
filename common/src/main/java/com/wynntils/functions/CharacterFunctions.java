@@ -91,7 +91,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Current mana
     public static class ManaFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
@@ -104,7 +103,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Max mana
     public static class ManaMaxFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
@@ -117,7 +115,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Current health
     public static class HealthFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
@@ -130,7 +127,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Max health
     public static class HealthMaxFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
@@ -143,7 +139,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Health percentage
     public static class HealthPctFunction extends DependantFunction<Float> {
         @Override
         public Float getValue(String argument) {
@@ -158,7 +153,18 @@ public class CharacterFunctions {
         }
     }
 
-    // Current XP (formatted)
+    public static class LevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            return CharacterManager.getCharacterInfo().getLevel();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("lvl");
+        }
+    }
+
     public static class XpFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
@@ -167,7 +173,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Current XP (raw)
     public static class XpRawFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
@@ -175,7 +180,6 @@ public class CharacterFunctions {
         }
     }
 
-    // XP required to level up (formatted)
     public static class XpReqFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
@@ -184,7 +188,6 @@ public class CharacterFunctions {
         }
     }
 
-    // XP required to level up (raw)
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
@@ -192,7 +195,6 @@ public class CharacterFunctions {
         }
     }
 
-    // Percentage XP to next level
     public static class XpPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {

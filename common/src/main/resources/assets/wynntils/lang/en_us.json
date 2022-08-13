@@ -337,6 +337,8 @@
   "function.wynntils.healthMax.name": "Health[max]",
   "function.wynntils.healthPct.description": "Your current health as percentage of max",
   "function.wynntils.healthPct.name": "Health[%%]",
+  "function.wynntils.level.description": "Your current combat level",
+  "function.wynntils.level.name": "Lvl",
   "function.wynntils.mana.description": "Your current mana",
   "function.wynntils.mana.name": "Mana",
   "function.wynntils.manaMax.description": "Maximum possible mana",

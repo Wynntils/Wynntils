@@ -142,6 +142,7 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.XpFunction());
         registerFunction(new CharacterFunctions.XpRawFunction());
         registerFunction(new CharacterFunctions.XpReqFunction());
