@@ -29,7 +29,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
     private final List<Component> tooltip;
-    private Optional<ItemType> itemType;
+    private ItemType itemType;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
@@ -44,11 +44,12 @@ public class UnidentifiedItemStack extends WynnItemStack {
         String itemTypeStr = itemName.split(" ", 2)[1];
         if (itemTypeStr == null) return;
 
-        itemType = ItemType.fromString(itemTypeStr);
-        if (itemType.isEmpty()) {
+        Optional<ItemType> oItemType = ItemType.fromString(itemTypeStr);
+        if (oItemType.isEmpty()) {
             WynntilsMod.warn(String.format("ItemType was invalid for itemType: %s", itemTypeStr));
             return;
         }
+        itemType = oItemType.get();
 
         String levelRange = null;
         for (Component lineComp : tooltip) {
@@ -65,7 +66,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
-        Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType.get());
+        Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
         if (rarityMap == null) return;
 
         List<String> items = rarityMap.get(tier);
@@ -123,6 +124,6 @@ public class UnidentifiedItemStack extends WynnItemStack {
     }
 
     public Optional<ItemType> getItemType() {
-        return itemType;
+        return itemType == null ? Optional.empty() : Optional.of(itemType);
     }
 }
