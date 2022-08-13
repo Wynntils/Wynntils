@@ -91,9 +91,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                ChatModel.enableNpcDialogExtraction();
+                ChatModel.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
-                ChatModel.disableNpcDialogExtraction();
+                ChatModel.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             }
         }
 
