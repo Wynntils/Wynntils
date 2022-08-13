@@ -11,29 +11,28 @@ import com.wynntils.mc.event.CommandsPacketEvent;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FilterAdminCommandsFeature extends UserFeature {
-    private static final List<String> FILTERED_COMMANDS = Arrays.asList(new String[] {
-        "bungee",
-        "connect",
-        "galert",
-        "gcountdown",
-        "glist",
-        "gsend",
-        "perms",
-        "pfind",
-        "plist",
-        "pwlist",
-        "sendtoall",
-        "servers",
-        "sparkb",
-        "sparkbungee",
-        "wcl",
-        "wynnproxy"
-    });
+    private static final List<String> FILTERED_COMMANDS = Arrays.asList("bungee",
+            "connect",
+            "galert",
+            "gcountdown",
+            "glist",
+            "gsend",
+            "perms",
+            "pfind",
+            "plist",
+            "pwlist",
+            "sendtoall",
+            "servers",
+            "sparkb",
+            "sparkbungee",
+            "wcl",
+            "wynnproxy");
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onCommandPacket(CommandsPacketEvent event) {
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
