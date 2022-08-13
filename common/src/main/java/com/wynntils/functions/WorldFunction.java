@@ -12,9 +12,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class WorldFunction extends ActiveFunction<String> {
     private static final String NO_DATA = "<unknown>";
     private static final String NO_WORLD = "<not on world>";
-public class WorldNameFunction extends ActiveFunction<String> {
-    private static final String NO_DATA = "<unknown>";
-    private static final String NO_WORLD = "<not on world>";
     private String currentWorldName = NO_DATA;
 
     @Override
