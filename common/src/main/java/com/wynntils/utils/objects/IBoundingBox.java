@@ -16,10 +16,10 @@ import net.minecraft.world.phys.Vec3;
  */
 public interface IBoundingBox {
     /**
-     * Combines
+     * Combines two bounding boxes and returns a new one, containing both.
      *
-     * @param other
-     * @return
+     * @param other bounding box to merge with this one.
+     * @return the new bounding box.
      */
     default IBoundingBox mergeWith(final IBoundingBox other) {
         return AxisAlignedBoundingBox.mergeBounds(this, other);
@@ -59,7 +59,7 @@ public interface IBoundingBox {
 
     AxisAlignedBoundingBox getBounds();
 
-    public class AxisAlignedBoundingBox implements IBoundingBox {
+    class AxisAlignedBoundingBox implements IBoundingBox {
         public static final Vec3 NEUTRAL_LOWER = doubleToVec3(Double.POSITIVE_INFINITY);
         public static final Vec3 NEUTRAL_UPPER = doubleToVec3(Double.NEGATIVE_INFINITY);
         public static final double EPSILON = 1.0 / (1L << 48);

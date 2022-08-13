@@ -14,7 +14,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.utils.objects.IBoundingBox;
-import com.wynntils.utils.objects.Referenceable;
+import com.wynntils.utils.objects.Referencable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +42,6 @@ import net.minecraft.world.phys.Vec3;
  *            type of the tree's leaves.
  */
 class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
-
     /**
      * Parent node - or {@code null} for the root.
      */
@@ -50,11 +49,11 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
     /**
      * A list of all child-nodes. Never {@code null}.
      */
-    private final Set<BvhNode<T>> childNodes;
+    private final Set<BvhNode<T>> childNodes = new HashSet<>();
     /**
      * A list of all leaves. Never {@code null}.
      */
-    private final Set<T> leaves;
+    private final Set<T> leaves = new HashSet<>();
     /**
      * Bounds over all elements under this node.
      */
@@ -72,14 +71,13 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
     }
 
     /**
-     * Root-like ({@code parent == null}) node, preinitialised with leaves.
+     * Root-like ({@code parent == null}) node, pre-initialised with leaves.
      *
-     * @param elements
+     * @param elements that are the leaves of this node.
      */
     public BvhNode(final Collection<T> elements) {
         this.parent = null;
-        this.childNodes = new HashSet<>();
-        this.leaves = new HashSet<>(elements);
+        this.leaves.addAll(elements);
         this.updateOwnBounds();
         this.updateLeafCount();
     }
@@ -164,8 +162,7 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
     }
 
     /**
-     * Recurses through the child-tree to update it's bounds and propagates it up to all parents.
-     *
+     * Recurses through the child-tree to update its bounds and propagates it up to all parents.
      * This call is equivalent to calling {@link #updateBoundsRecursive()} and {@link #propagateBoundsUpwards()} in this
      * order.
      */
@@ -197,7 +194,6 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
 
     /**
      * Propagates bounds changes through all parent nodes to the top.
-     *
      * The call is equivalent to calling {@link #updateOwnBounds()} on every parent in succession.
      */
     public void propagateBoundsUpwards() {
@@ -338,10 +334,10 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
 
         @Override
         public Spliterator<E> trySplit() {
-            while (this.nodeStack.size() < 2 && !this.nodeStack.isEmpty()) {
+            while (this.nodeStack.size() == 1) {
                 final BvhNode<E> node = this.nodeStack.pop();
-                node.childNodes.forEach(this.nodeStack::add);
-                node.leaves.forEach(this.queuedElements::add);
+                this.nodeStack.addAll(node.childNodes);
+                this.queuedElements.addAll(node.leaves);
             }
             if (this.nodeStack.size() < 2) {
                 return null;
@@ -373,7 +369,7 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
      * @param <T>
      *            type of the elements in the BVH.
      */
-    static class NodeSerialiser<T extends IBoundingBox & Referenceable>
+    static class NodeSerialiser<T extends IBoundingBox & Referencable>
             implements JsonSerializer<BvhNode<T>>, JsonDeserializer<BvhNode<T>> {
         /**
          * JSON field name for the child nodes.

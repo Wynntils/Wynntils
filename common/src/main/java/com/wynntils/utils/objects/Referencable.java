@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * @author Kepler-17c
  */
-public interface Referenceable {
+public interface Referencable {
     /**
      * Returns the object's serialisation UUID.
      * <p>

@@ -17,7 +17,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.wynntils.utils.objects.IBoundingBox;
 import com.wynntils.utils.objects.Pair;
-import com.wynntils.utils.objects.Referenceable;
+import com.wynntils.utils.objects.Referencable;
 import com.wynntils.utils.objects.bvh.ISplitStrategy.StrategyFactory;
 import com.wynntils.utils.objects.minQueue.FibonacciHeapMinQueue;
 import java.io.File;
@@ -51,6 +51,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A data-structure to efficiently find elements in 3D space based on spatial sorting.
@@ -149,7 +150,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     /**
-     * Preinitialised BVH with default split setting and leaf count.
+     * Pre-initialised BVH with default split setting and leaf count.
      *
      * @param elements
      *            to build the tree from
@@ -159,7 +160,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     /**
-     * Preinitialised BVH with custom split setting and default leaf count.
+     * Pre-initialised BVH with custom split setting and default leaf count.
      *
      * @param elements
      *            to build the tree from
@@ -171,7 +172,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     /**
-     * Preinitialised BVH with custom split setting and leaf count.
+     * Pre-initialised BVH with custom split setting and leaf count.
      *
      * @param elements
      *            to build the tree from
@@ -206,28 +207,26 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     @Override
-    public boolean addAll(final Collection<? extends T> elements) {
+    public boolean addAll(final @NotNull Collection<? extends T> elements) {
         boolean changed = false;
-        if (elements != null) {
-            synchronized (this.dataLock) {
-                this.pendingInserts = new HashSet<>(this.pendingInserts);
-                this.pendingDeletes = new HashSet<>(this.pendingDeletes);
-                for (final T e : elements) {
-                    if (e == null) {
-                        continue;
-                    }
-                    if (this.pendingDeletes.contains(e)) {
-                        this.pendingDeletes.remove(e);
-                        changed = true;
-                    } else if (!this.objectCache.containsKey(e) && !this.pendingInserts.contains(e)) {
-                        this.pendingInserts.add(e);
-                        changed = true;
-                    }
+        synchronized (this.dataLock) {
+            this.pendingInserts = new HashSet<>(this.pendingInserts);
+            this.pendingDeletes = new HashSet<>(this.pendingDeletes);
+            for (final T e : elements) {
+                if (e == null) {
+                    continue;
+                }
+                if (this.pendingDeletes.contains(e)) {
+                    this.pendingDeletes.remove(e);
+                    changed = true;
+                } else if (!this.objectCache.containsKey(e) && !this.pendingInserts.contains(e)) {
+                    this.pendingInserts.add(e);
+                    changed = true;
                 }
             }
-            if (changed) {
-                this.requestRebuild();
-            }
+        }
+        if (changed) {
+            this.requestRebuild();
         }
         return changed;
     }
@@ -241,30 +240,29 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     @Override
-    public boolean removeAll(final Collection<?> elements) {
+    public boolean removeAll(final @NotNull Collection<?> elements) {
         boolean changed = false;
-        if (elements != null) {
-            synchronized (this.dataLock) {
-                this.pendingInserts = new HashSet<>(this.pendingInserts);
-                this.pendingDeletes = new HashSet<>(this.pendingDeletes);
-                for (final Object o : elements) {
-                    if (o != null && this.objectCache.containsKey(o) && !this.pendingDeletes.contains(o)) {
-                        try {
-                            final T e = (T) o;
-                            this.pendingDeletes.add(e);
-                            changed = true;
-                        } catch (final ClassCastException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (this.pendingInserts.contains(o)) {
-                        this.pendingInserts.remove(o);
+        synchronized (this.dataLock) {
+            this.pendingInserts = new HashSet<>(this.pendingInserts);
+            this.pendingDeletes = new HashSet<>(this.pendingDeletes);
+            for (final Object o : elements) {
+                if (o != null && this.objectCache.containsKey(o) && !this.pendingDeletes.contains(o)) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        final T e = (T) o;
+                        this.pendingDeletes.add(e);
                         changed = true;
+                    } catch (final ClassCastException e) {
+                        e.printStackTrace();
                     }
+                } else if (this.pendingInserts.contains(o)) {
+                    this.pendingInserts.remove(o);
+                    changed = true;
                 }
             }
-            if (changed) {
-                this.requestRebuild();
-            }
+        }
+        if (changed) {
+            this.requestRebuild();
         }
         return changed;
     }
@@ -321,11 +319,11 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         synchronized (this.dataLock) {
             cache = this.objectCache;
         }
-        return !c.stream().anyMatch(e -> !cache.containsKey(e));
+        return c.stream().allMatch(cache::containsKey);
     }
 
     @Override
-    public boolean retainAll(final Collection<?> c) {
+    public boolean retainAll(final @NotNull Collection<?> c) {
         boolean changed = false;
         synchronized (this.dataLock) {
             this.pendingInserts = new HashSet<>(this.pendingInserts);
@@ -463,7 +461,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             boolean changed = false;
             final Map<String, String> updatedSettings = new HashMap<>(this.splitStrategySettings);
             for (final Entry<String, String> e : settings.entrySet()) {
-                if (updatedSettings.get(e.getKey()) != e.getValue()) {
+                if (!updatedSettings.get(e.getKey()).equals(e.getValue())) {
                     changed = true;
                     if (e.getValue() == null) {
                         updatedSettings.remove(e.getKey());
@@ -484,7 +482,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         synchronized (this.dataLock) {
             return this.pendingInserts.isEmpty() && this.pendingDeletes.isEmpty()
                     ? this.tree.iterator()
-                    : new BvhIterator<T>(this.tree, this.pendingInserts, this.pendingDeletes);
+                    : new BvhIterator<>(this.tree, this.pendingInserts, this.pendingDeletes);
         }
     }
 
@@ -493,7 +491,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         synchronized (this.dataLock) {
             return this.pendingInserts.isEmpty() && this.pendingDeletes.isEmpty()
                     ? this.tree.spliterator()
-                    : new BvhSpliterator<T>(this.tree, this.pendingInserts, this.pendingDeletes);
+                    : new BvhSpliterator<>(this.tree, this.pendingInserts, this.pendingDeletes);
         }
     }
 
@@ -901,7 +899,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
 
         @Override
         public Spliterator<T> trySplit() {
-            while (!this.nodeStack.isEmpty() && this.nodeStack.size() < 2) {
+            while (this.nodeStack.size() == 1) {
                 final BvhNode<T> node = this.nodeStack.pop();
                 this.nodeStack.addAll(node.getChildNodes());
                 for (final T elem : node.getLeaves()) {
@@ -948,7 +946,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
      *            to be built during deserialisation.
      * @return The type adapters in a list.
      */
-    private static <T extends IBoundingBox & Referenceable> List<Pair<Class<?>, Object>> generateBaseTypeAdapters(
+    private static <T extends IBoundingBox & Referencable> List<Pair<Class<?>, Object>> generateBaseTypeAdapters(
             final Map<UUID, T> elementsMap, final Map<T, BvhNode<T>> objectCache) {
         return Arrays.asList(
                 new Pair<>(BoundingVolumeHierarchy.class, new BvhSerialiser<>()),
@@ -968,11 +966,10 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
      */
     private static GsonBuilder registerTypeAdapters(
             final GsonBuilder base, final List<Pair<Class<?>, Object>> typeAdapters) {
-        GsonBuilder result = base;
         for (final Pair<Class<?>, Object> adapter : typeAdapters) {
-            result = result.registerTypeHierarchyAdapter(adapter.a, adapter.b);
+            base.registerTypeHierarchyAdapter(adapter.a, adapter.b);
         }
-        return result;
+        return base;
     }
 
     /**
@@ -991,7 +988,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
                 return false;
             }
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder = registerTypeAdapters(gsonBuilder, generateBaseTypeAdapters(null, null));
+            registerTypeAdapters(gsonBuilder, generateBaseTypeAdapters(null, null));
             FileWriter writer;
             try {
                 writer = new FileWriter(file);
@@ -1015,7 +1012,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
      *            for resolving serialisation IDs.
      * @return The deserialised BVH, or {@code null} for IO exceptions or malformed JSON.
      */
-    public static <T extends IBoundingBox & Referenceable> BoundingVolumeHierarchy<T> fromJson(
+    public static <T extends IBoundingBox & Referencable> BoundingVolumeHierarchy<T> fromJson(
             final File file, final Map<UUID, T> elementsMap) {
         FileReader reader;
         try {
@@ -1026,7 +1023,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         }
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Map<T, BvhNode<T>> objectCache = new HashMap<>();
-        gsonBuilder = registerTypeAdapters(gsonBuilder, generateBaseTypeAdapters(elementsMap, objectCache));
+        registerTypeAdapters(gsonBuilder, generateBaseTypeAdapters(elementsMap, objectCache));
         final Type type = new TypeToken<BoundingVolumeHierarchy<T>>() {}.getType();
         BoundingVolumeHierarchy<T> result;
         try {
@@ -1034,9 +1031,9 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         } catch (final Exception e) {
             /*-
              * Parsing the JSON can result in several different exceptions, which include:
-             * - IllegalStateException (wrong type of a JsonElement)
+             * - IllegalStateException (wrong type of JsonElement)
              * - ArrayOutOfBoundsException (JsonArray too short)
-             * - ClassCastException (wrong type of a JsonElement)
+             * - ClassCastException (wrong type of JsonElement)
              */
             e.printStackTrace();
             return null;
@@ -1098,9 +1095,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             final JsonElement serialisedLeafCount = new JsonPrimitive(src.leafCount);
             final JsonElement splitStrategyFactory = new JsonPrimitive(src.splitStrategyFactory.name());
             final JsonObject splitStrategySettings = new JsonObject();
-            src.splitStrategySettings.entrySet().forEach(e -> {
-                splitStrategySettings.add(e.getKey(), new JsonPrimitive(e.getValue()));
-            });
+            src.splitStrategySettings.forEach((key, value) -> splitStrategySettings.add(key, new JsonPrimitive(value)));
             // put everything together
             final JsonObject serialisedBvh = new JsonObject();
             serialisedBvh.add(LEAF_COUNT_FIELD, serialisedLeafCount);

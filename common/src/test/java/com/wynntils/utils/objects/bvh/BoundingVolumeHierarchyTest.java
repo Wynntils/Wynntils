@@ -162,7 +162,7 @@ class BoundingVolumeHierarchyTest {
                 listTimeSum += listEndTime - listStartTime;
                 bvhTimeSum += bvhEndTime - bvhStartTime;
             }
-            timingResults.add(new Quadruple(list.size(), listTimeSum, bvhTimeSum, buildTime));
+            timingResults.add(new Quadruple<>(list.size(), listTimeSum, bvhTimeSum, buildTime));
         }
         // export data
         final File file = new File("src/test/resources/bvh_vs_linear_times.csv");
