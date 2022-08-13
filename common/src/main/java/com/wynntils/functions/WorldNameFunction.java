@@ -10,7 +10,9 @@ import com.wynntils.wc.model.WorldStateManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldNameFunction extends ActiveFunction<String> {
-    private String currentWorldName;
+    private final static String NO_DATA = "<unknown>";
+    private final static String NO_WORLD = "<not on world>";
+    private String currentWorldName = NO_DATA;
 
     @Override
     public String getValue(String argument) {
@@ -21,6 +23,10 @@ public class WorldNameFunction extends ActiveFunction<String> {
     public void onWorldStateUpdate(WorldStateEvent e) {
         if (e.getNewState() == WorldStateManager.State.WORLD) {
             currentWorldName = e.getWorldName();
+            markUpdated();
+        } else {
+            currentWorldName = NO_WORLD;
+            markUpdated();
         }
     }
 }

@@ -20,21 +20,21 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends CoreManager {
-    private static final List<Function> FUNCTIONS = new ArrayList<>();
-    private static final Set<ActiveFunction> ENABLED_FUNCTIONS = new HashSet<>();
+    private static final List<Function<?>> FUNCTIONS = new ArrayList<>();
+    private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
 
-    private static void registerFunction(Function function) {
+    private static void registerFunction(Function<?> function) {
         FUNCTIONS.add(function);
         if (function instanceof ActiveFunction<?> activeFunction) {
             activeFunction.init();
         }
     }
 
-    public static List<Function> getFunctions() {
+    public static List<Function<?>> getFunctions() {
         return FUNCTIONS;
     }
 
-    public static boolean enableFunction(Function function) {
+    public static boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
         WynntilsMod.getEventBus().register(activeFunction);
@@ -48,7 +48,7 @@ public final class FunctionManager extends CoreManager {
         return enableSucceeded;
     }
 
-    public static void disableFunction(Function function) {
+    public static void disableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
         WynntilsMod.getEventBus().unregister(activeFunction);
@@ -56,27 +56,23 @@ public final class FunctionManager extends CoreManager {
         ENABLED_FUNCTIONS.remove(activeFunction);
     }
 
-    public static boolean isEnabled(Function function) {
+    public static boolean isEnabled(Function<?> function) {
         if (!(function instanceof ActiveFunction<?>)) return true;
 
         return (ENABLED_FUNCTIONS.contains(function));
     }
 
-    public static Optional<Function> forName(String functionName) {
+    public static Optional<Function<?>> forName(String functionName) {
         return FunctionManager.getFunctions().stream()
                 .filter(function -> function.getName().equalsIgnoreCase(functionName))
                 .findFirst();
     }
 
     public static Component getSimpleValueString(
-            Function function, String argument, ChatFormatting color, boolean includeName) {
+            Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : new TextComponent("");
-
-        if (function instanceof ActiveFunction<?> activeFunction && !isEnabled(activeFunction)) {
-            return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
-        }
 
         Object value = function.getValue(argument);
         if (value == null) {
@@ -98,7 +94,7 @@ public final class FunctionManager extends CoreManager {
     /**
      * Return a list of all functions referenced in a template string
      */
-    public static List<Function> getFunctionsInTemplate(String template) {
+    public static List<Function<?>> getFunctionsInTemplate(String template) {
         // FIXME: implement template parser
         return List.of();
     }

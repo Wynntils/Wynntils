@@ -21,6 +21,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 public final class WynntilsFunctionCommand {
     private static final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
@@ -41,11 +42,11 @@ public final class WynntilsFunctionCommand {
     }
 
     private static int listFunctions(CommandContext<CommandSourceStack> context) {
-        Set<Function> functions = FunctionManager.getFunctions().stream().collect(Collectors.toUnmodifiableSet());
+        Set<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toUnmodifiableSet());
 
         MutableComponent response = new TextComponent("Currently registered functions:").withStyle(ChatFormatting.AQUA);
 
-        for (Function function : functions) {
+        for (Function<?> function : functions) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(new TextComponent(function.getName()).withStyle(ChatFormatting.YELLOW));
         }
@@ -66,14 +67,14 @@ public final class WynntilsFunctionCommand {
     private static int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Function function = functionOptional.get();
+        Function<?> function = functionOptional.get();
         if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
                     .sendFailure(
@@ -107,14 +108,14 @@ public final class WynntilsFunctionCommand {
     private static int disableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Function function = functionOptional.get();
+        Function<?> function = functionOptional.get();
         if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
                     .sendFailure(new TextComponent("Function can not be disabled").withStyle(ChatFormatting.RED));
@@ -156,22 +157,33 @@ public final class WynntilsFunctionCommand {
         }
 
         String functionName = context.getArgument("function", String.class);
-        Optional<Function> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
-        Function function = functionOptional.get();
+        Function<?> function = functionOptional.get();
 
-        if (function instanceof ActiveFunction<?> activeFunction && !FunctionManager.isEnabled(activeFunction)) {
-            context.getSource()
-                    .sendFailure(new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
-            return 0;
+        String extraInfo = "";
+        if (function instanceof ActiveFunction<?> activeFunction) {
+            StringBuilder activeInfo = new StringBuilder(" [");
+            if (!FunctionManager.isEnabled(activeFunction)) {
+                activeInfo.append("not enabled; ");
+            }
+            long updateDelay = System.currentTimeMillis() - activeFunction.lastUpdateTime();
+            String updateDelayString = DurationFormatUtils.formatDurationWords(updateDelay, true, true);
+            activeInfo.append("last updated ");
+            activeInfo.append(updateDelayString);
+            activeInfo.append(" ago]");
+            extraInfo = activeInfo.toString();
         }
 
-        Component result =
-                FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true);
+        MutableComponent result = new TextComponent("");
+        result.append(FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
+        if (!extraInfo.isEmpty()) {
+            result.append(new TextComponent(extraInfo).withStyle(ChatFormatting.GRAY));
+        }
         context.getSource().sendSuccess(result, false);
         return 1;
     }
@@ -187,14 +199,14 @@ public final class WynntilsFunctionCommand {
     private static int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Function function = functionOptional.get();
+        Function<?> function = functionOptional.get();
 
         String helpText = function.getDescription();
 

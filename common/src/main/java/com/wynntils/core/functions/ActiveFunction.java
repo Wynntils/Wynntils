@@ -5,6 +5,12 @@
 package com.wynntils.core.functions;
 
 public abstract class ActiveFunction<T> extends Function<T> {
+    protected long lastUpdated;
+
+    protected ActiveFunction() {
+        markUpdated();
+    }
+
     public void init() {}
 
     /**
@@ -18,4 +24,18 @@ public abstract class ActiveFunction<T> extends Function<T> {
 
     /** Called on disabling of Function */
     public void onDisable() {}
+
+    /**
+     * Return the time the value was last updated, as given by System.currentTimeMillis().
+     */
+    public long lastUpdateTime() {
+        return lastUpdated;
+    }
+
+    /**
+     * Mark this value as updated
+     */
+    protected void markUpdated() {
+        lastUpdated = System.currentTimeMillis();
+    }
 }
