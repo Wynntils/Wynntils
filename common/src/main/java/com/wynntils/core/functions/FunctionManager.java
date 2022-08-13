@@ -9,6 +9,7 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -88,7 +89,16 @@ public final class FunctionManager extends CoreManager {
             return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
         }
 
-        return header.append(new TextComponent(value.toString()).withStyle(color));
+        String formattedValue = format(value);
+
+        return header.append(new TextComponent(formattedValue).withStyle(color));
+    }
+
+    private static String format(Object value) {
+        if (value instanceof Number number) {
+            return NumberFormat.getInstance().format(number);
+        }
+        return value.toString();
     }
 
     /**

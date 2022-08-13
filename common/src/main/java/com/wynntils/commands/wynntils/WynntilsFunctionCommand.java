@@ -11,8 +11,9 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -42,13 +43,21 @@ public final class WynntilsFunctionCommand {
     }
 
     private static int listFunctions(CommandContext<CommandSourceStack> context) {
-        Set<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toUnmodifiableSet());
+        List<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toList());
+        functions.sort(Comparator.comparing(o -> o.getName()));
 
         MutableComponent response = new TextComponent("Currently registered functions:").withStyle(ChatFormatting.AQUA);
 
         for (Function<?> function : functions) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(new TextComponent(function.getName()).withStyle(ChatFormatting.YELLOW));
+            if (!function.getAliases().isEmpty()) {
+                String aliasList = String.join(", ", function.getAliases());
+
+                response.append(new TextComponent(" [alias: ").withStyle(ChatFormatting.GRAY))
+                        .append(new TextComponent(aliasList).withStyle(ChatFormatting.WHITE))
+                        .append(new TextComponent("]").withStyle(ChatFormatting.GRAY));
+            }
         }
 
         context.getSource().sendSuccess(response, false);
