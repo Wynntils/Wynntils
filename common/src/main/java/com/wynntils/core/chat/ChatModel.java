@@ -102,7 +102,7 @@ public final class ChatModel extends Model {
             return;
         }
 
-        if (!dialogExtractionDependents.isEmpty()) {
+        if (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled)) {
             handleMultilineMessage(message);
             e.setCanceled(true);
         }

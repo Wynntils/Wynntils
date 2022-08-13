@@ -245,6 +245,7 @@
   "feature.wynntils.mythicBlocker.closingBlocked": "You cannot close this loot chest while there is a mythic in it!",
   "feature.wynntils.mythicBlocker.name": "Mythic Chest Blocker Feature",
   "feature.wynntils.notifications.name": "Notifications Feature",
+  "feature.wynntils.npcDialogAutoProgress.name": "NPC Dialog Auto Progress Feature",
   "feature.wynntils.npcDialogueOverlay.name": "NPC Dialogue Overlay Feature",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.description": "Popup displaying the current NPC dialogue",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.name": "NPC Dialogue",
