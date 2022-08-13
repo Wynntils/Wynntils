@@ -60,9 +60,17 @@ public class TranslationFeature extends UserFeature {
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
         TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
-            String unwrapped = unwrapCoding(translatedMsg);
+            String messageToSend;
+            if (translatedMsg != null) {
+                messageToSend = unwrapCoding(translatedMsg);
+            } else {
+                if (keepOriginal) return;
+
+                // We failed to get a translation; send the original message so it's not lost
+                messageToSend = origCoded;
+            }
             McUtils.mc().doRunTask(() -> {
-                McUtils.sendMessageToClient(new TextComponent(unwrapped));
+                McUtils.sendMessageToClient(new TextComponent(messageToSend));
             });
         });
         if (!keepOriginal) {
