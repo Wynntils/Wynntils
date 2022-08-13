@@ -15,7 +15,6 @@ import com.wynntils.utils.reference.EmeraldSymbols;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -30,7 +29,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class UnidentifiedItemStack extends WynnItemStack {
     private final List<Component> tooltip;
-    private ItemType itemType;
+    private Optional<ItemType> itemType;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
@@ -42,9 +41,14 @@ public class UnidentifiedItemStack extends WynnItemStack {
         ItemTier tier = ItemTier.fromComponent(getHoverName());
         if (tier == null) return;
 
-        String itemType = itemName.split(" ", 2)[1];
-        if (itemType == null) return;
-        this.itemType = ItemType.fromString(itemType);
+        String itemTypeStr = itemName.split(" ", 2)[1];
+        if (itemTypeStr == null) return;
+
+        itemType = ItemType.fromString(itemTypeStr);
+        if (itemType.isEmpty()) {
+            WynntilsMod.warn(String.format("ItemType was invalid for itemType: %s", itemTypeStr));
+            return;
+        }
 
         String levelRange = null;
         for (Component lineComp : tooltip) {
@@ -61,13 +65,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
-        Map<ItemTier, List<String>> rarityMap;
-        try {
-            rarityMap = guessProfile.getItems().get(ItemType.valueOf(itemType.toUpperCase(Locale.ROOT)));
-        } catch (IllegalArgumentException exception) { // itemType is invalid
-            WynntilsMod.warn(String.format("ItemType was invalid for itemType: %s", itemType));
-            return;
-        }
+        Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType.get());
         if (rarityMap == null) return;
 
         List<String> items = rarityMap.get(tier);
@@ -124,7 +122,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         return tooltip;
     }
 
-    public ItemType getItemType() {
+    public Optional<ItemType> getItemType() {
         return itemType;
     }
 }
