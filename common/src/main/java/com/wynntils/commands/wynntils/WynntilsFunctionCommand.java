@@ -164,8 +164,7 @@ public final class WynntilsFunctionCommand {
         }
         Function function = functionOptional.get();
 
-        if (function instanceof ActiveFunction<?> activeFunction
-                && !FunctionManager.isEnabled(activeFunction)) {
+        if (function instanceof ActiveFunction<?> activeFunction && !FunctionManager.isEnabled(activeFunction)) {
             context.getSource()
                     .sendFailure(new TextComponent("Function needs to be enabled first").withStyle(ChatFormatting.RED));
             return 0;
