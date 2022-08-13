@@ -15,7 +15,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FilterAdminCommandsFeature extends UserFeature {
-    private static final List<String> FILTERED_COMMANDS = Arrays.asList("bungee",
+    private static final List<String> FILTERED_COMMANDS = Arrays.asList(
+            "bungee",
             "connect",
             "galert",
             "gcountdown",

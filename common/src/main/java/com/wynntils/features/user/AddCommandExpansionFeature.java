@@ -4,6 +4,9 @@
  */
 package com.wynntils.features.user;
 
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
+
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -12,12 +15,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
 
 public class AddCommandExpansionFeature extends UserFeature {
     private static final SuggestionProvider<CommandSourceStack> FRIEND_NAMESUGGESTION_PROVIDER = null;
@@ -30,14 +28,13 @@ public class AddCommandExpansionFeature extends UserFeature {
     }
 
     private CommandNode<CommandSourceStack> getFriendCommandNode() {
-        LiteralArgumentBuilder<CommandSourceStack> friendCommandBuilder =
-                literal("friend").
-                        then(literal("list"))
-                        .then(literal("online"))
-                        .then(literal("add")
-                                .then(argument("name", StringArgumentType.string()).suggests(FRIEND_NAMESUGGESTION_PROVIDER)))
-                        .then(literal("remove")
-                                .then(argument("name", StringArgumentType.string()).suggests(FRIEND_NAMESUGGESTION_PROVIDER)));
+        LiteralArgumentBuilder<CommandSourceStack> friendCommandBuilder = literal("friend")
+                .then(literal("list"))
+                .then(literal("online"))
+                .then(literal("add")
+                        .then(argument("name", StringArgumentType.string()).suggests(FRIEND_NAMESUGGESTION_PROVIDER)))
+                .then(literal("remove")
+                        .then(argument("name", StringArgumentType.string()).suggests(FRIEND_NAMESUGGESTION_PROVIDER)));
 
         return friendCommandBuilder.build();
     }
