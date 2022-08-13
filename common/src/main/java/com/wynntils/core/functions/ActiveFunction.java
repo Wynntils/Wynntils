@@ -4,11 +4,19 @@
  */
 package com.wynntils.core.functions;
 
-public abstract class ActiveFunction<T> extends Function<T> {
+import com.wynntils.core.managers.Model;
+import java.util.List;
+
+public abstract class ActiveFunction<T> extends DependantFunction<T> {
     protected long lastUpdated;
 
     protected ActiveFunction() {
         markUpdated();
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of();
     }
 
     public void init() {}

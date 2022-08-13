@@ -7,6 +7,7 @@ package com.wynntils.utils;
 import com.wynntils.mc.utils.McUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -40,6 +41,17 @@ public final class StringUtils {
     public static String uncapitalizeFirst(String input) {
         if (input.isEmpty()) return "";
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
+    }
+
+    /**
+     * Format an integer to have SI suffixes, if it is sufficiently large
+     */
+    public static String integerToShortString(int count) {
+        if (count < 1000) return Integer.toString(count);
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        DecimalFormat format = new DecimalFormat("0.#");
+        String value = format.format(count / Math.pow(1000, exp));
+        return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
     }
 
     public static String[] wrapTextBySize(String s, int maxPixels) {

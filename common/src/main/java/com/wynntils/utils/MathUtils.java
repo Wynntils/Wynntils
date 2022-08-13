@@ -23,6 +23,14 @@ public final class MathUtils {
         return (value - a) / (b - a);
     }
 
+    public static int clamp(int num, int min, int max) {
+        if (num < min) {
+            return min;
+        } else {
+            return num > max ? max : num;
+        }
+    }
+
     public static int integerFromRoman(String numeral) {
         return switch (numeral.toUpperCase(Locale.ROOT)) {
             case "I" -> 1;
