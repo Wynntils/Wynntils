@@ -29,7 +29,6 @@ import com.wynntils.wc.utils.ActionBarModel;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-
 @FeatureInfo(category = "overlays")
 public class CustomBarsOverlayFeature extends UserFeature {
     @Config
