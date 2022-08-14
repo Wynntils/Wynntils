@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
@@ -42,7 +43,6 @@ public class AddCommandExpansionFeature extends UserFeature {
             "kill",
             "msg",
             "p",
-            "particles",
             "party",
             "pet",
             "r",
@@ -71,7 +71,6 @@ public class AddCommandExpansionFeature extends UserFeature {
             "is",
             "lobby",
             "pets",
-            "pq",
             "share",
             "shop",
             "store",
@@ -92,22 +91,39 @@ public class AddCommandExpansionFeature extends UserFeature {
             root.addChild(literal(command).build());
         }
         // Add commands with structured arguments
-        root.addChild(getFriendCommandNode());
-        root.addChild(getToggleCommandNode());
+        addFriendCommandNode(root);
+        addParticlesCommandNode(root);
+        getToggleCommandNode(root);
     }
 
-    private CommandNode<CommandSourceStack> getFriendCommandNode() {
-        LiteralArgumentBuilder<CommandSourceStack> friendCommandBuilder = literal("friend")
+    private void addFriendCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("friend")
                 .then(literal("list"))
                 .then(literal("online"))
                 .then(literal("add").then(argument("name", StringArgumentType.string())))
                 .then(literal("remove").then(argument("name", StringArgumentType.string())));
 
-        return friendCommandBuilder.build();
+        root.addChild(builder.build());
     }
 
-    private CommandNode<CommandSourceStack> getToggleCommandNode() {
-        LiteralArgumentBuilder<CommandSourceStack> toggleCommandBuilder = literal("toggle")
+    private void addParticlesCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("particles")
+                .then(literal("off"))
+                .then(literal("low"))
+                .then(literal("medium"))
+                .then(literal("high"))
+                .then(literal("veryhigh"))
+                .then(literal("highest"))
+                .then(argument("particles_per_tick", IntegerArgumentType.integer()));
+
+        CommandNode<CommandSourceStack> node = builder.build();
+        root.addChild(node);
+
+        root.addChild(literal("pq").redirect(node).build());
+    }
+
+    private void getToggleCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("toggle")
                 .then(literal("100"))
                 .then(literal("attacksound"))
                 .then(literal("autojoin"))
@@ -136,6 +152,7 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("swears"))
                 .then(literal("vet"))
                 .then(literal("war"));
-        return toggleCommandBuilder.build();
+
+        root.addChild(builder.build());
     }
 }
