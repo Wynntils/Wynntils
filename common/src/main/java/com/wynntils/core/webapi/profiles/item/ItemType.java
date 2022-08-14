@@ -6,6 +6,7 @@ package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.wc.objects.ClassType;
 import java.util.Locale;
+import java.util.Optional;
 
 public enum ItemType {
     SPEAR(ClassType.Warrior, 16 * 1, 16 * 1),
@@ -43,11 +44,11 @@ public enum ItemType {
         return iconTextureY;
     }
 
-    public static ItemType fromString(String typeStr) {
+    public static Optional<ItemType> fromString(String typeStr) {
         try {
-            return ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
+            return Optional.of(ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT)));
         } catch (IllegalArgumentException e) {
-            return null;
+            return Optional.empty();
         }
     }
 }

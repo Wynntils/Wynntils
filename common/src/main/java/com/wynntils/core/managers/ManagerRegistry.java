@@ -9,6 +9,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.CrashReportManager;
@@ -29,9 +30,11 @@ public class ManagerRegistry {
     private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
+        // Bootstrapping order is important, take care if reordering
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(ClientCommandManager.class);
+        registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(WebManager.class);
