@@ -5,8 +5,9 @@
 package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -21,27 +22,33 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class OverlayManager {
+public final class OverlayManager extends CoreManager {
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
+    private static final Map<Overlay, Feature> overlayParent = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
 
     private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
-    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo) {
+    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
         overlayInfoMap.put(overlay, overlayInfo);
+        overlayParent.put(overlay, parent);
     }
 
     public static void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
-        if (ignoreState) {
-            enabledOverlays.addAll(overlays);
-        } else {
-            enabledOverlays.addAll(overlays.stream().filter(Overlay::isEnabled).toList());
+        if (!ignoreState) {
+            overlays = overlays.stream().filter(Overlay::isEnabled).toList();
         }
+
+        enabledOverlays.addAll(overlays);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     @SubscribeEvent
@@ -96,8 +103,6 @@ public final class OverlayManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(OverlayManager.class);
-
         addCrashCallbacks();
     }
 
@@ -162,6 +167,10 @@ public final class OverlayManager {
 
     public static OverlayInfo getOverlayInfo(Overlay overlay) {
         return overlayInfoMap.getOrDefault(overlay, null);
+    }
+
+    public static Feature getOverlayParent(Overlay overlay) {
+        return overlayParent.get(overlay);
     }
 
     public static boolean isEnabled(Overlay overlay) {

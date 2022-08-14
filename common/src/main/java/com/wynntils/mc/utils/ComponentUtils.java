@@ -183,6 +183,14 @@ public final class ComponentUtils {
         return text == null ? "" : ChatFormatting.stripFormatting(text);
     }
 
+    public static String stripColorFormatting(String text) {
+        if (text == null) {
+            return "";
+        }
+
+        return text.replaceAll("(§[1-9a-f])+", "");
+    }
+
     public static Component formattedTextToComponent(FormattedText formattedText) {
         MutableComponent component = new TextComponent("");
         formattedText.visit(

@@ -19,7 +19,7 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.model.Character;
+import com.wynntils.wc.model.CharacterManager;
 import com.wynntils.wc.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -61,12 +61,11 @@ public class ItemLockFeature extends UserFeature {
     public void onContainerRender(ContainerRenderEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
-        Character character = WynnUtils.getCharacter();
+        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 
-        if (character == null || character.getCharacterInfo() == null) return;
+        if (characterInfo == null) return;
 
-        for (Integer slotId :
-                classSlotLockMap.getOrDefault(character.getCharacterInfo().getId(), Set.of())) {
+        for (Integer slotId : classSlotLockMap.getOrDefault(characterInfo.getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -84,8 +83,9 @@ public class ItemLockFeature extends UserFeature {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
-        Character character = WynnUtils.getCharacter();
-        if (character == null || character.getCharacterInfo() == null) return;
+        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+
+        if (characterInfo == null) return;
 
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
                 .filter(slot -> slot.container instanceof Inventory && slot.getItem() == event.getItemStack())
@@ -96,7 +96,7 @@ public class ItemLockFeature extends UserFeature {
         }
 
         if (classSlotLockMap
-                .getOrDefault(character.getCharacterInfo().getId(), Set.of())
+                .getOrDefault(characterInfo.getId(), Set.of())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -104,9 +104,9 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        Character character = WynnUtils.getCharacter();
-        if (character == null || character.getCharacterInfo() == null) return;
+        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 
+        if (characterInfo == null) return;
         ItemStack selected = McUtils.inventory().getSelected();
         Optional<Slot> heldItemSlot = McUtils.inventoryMenu().slots.stream()
                 .filter(slot -> slot.getItem() == selected)
@@ -114,7 +114,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
-                .getOrDefault(character.getCharacterInfo().getId(), Set.of())
+                .getOrDefault(characterInfo.getId(), Set.of())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -136,10 +136,8 @@ public class ItemLockFeature extends UserFeature {
     private static void tryChangeLockStateOnHoveredSlot() {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
-        Character character = WynnUtils.getCharacter();
-        if (character == null) return;
+        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 
-        Character.CharacterInfo characterInfo = character.getCharacterInfo();
         if (characterInfo == null) return;
 
         Slot hoveredSlot = abstractContainerScreen.hoveredSlot;

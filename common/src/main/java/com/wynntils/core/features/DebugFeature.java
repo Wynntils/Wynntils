@@ -9,12 +9,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.managers.Model;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE)
 public abstract class DebugFeature extends Feature {
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         conditions.add(new DevelopmentCondition());
     }
 

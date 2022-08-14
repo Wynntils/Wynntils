@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.MapProfile;
@@ -50,7 +51,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
-public final class WebManager {
+public final class WebManager extends CoreManager {
     private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
@@ -76,9 +77,22 @@ public final class WebManager {
 
     private static List<MapProfile> maps = null;
 
+    private static final String USER_AGENT = String.format(
+            "Wynntils Artemis\\%s-%d (%s)",
+            WynntilsMod.getVersion(),
+            WynntilsMod.getBuildNumber(),
+            WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
+
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        loadCommonObjects();
+    }
+
+    private static void loadCommonObjects() {
+        WebManager.tryLoadItemList();
+        WebManager.tryLoadItemGuesses();
     }
 
     public static boolean isLoggedIn() {
@@ -355,9 +369,7 @@ public final class WebManager {
 
     private static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316" + " Firefox/3.6.2");
+        st.setRequestProperty("User-Agent", USER_AGENT);
         if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
@@ -420,6 +432,10 @@ public final class WebManager {
 
     public static List<MapProfile> getMaps() {
         return maps;
+    }
+
+    public static String getUserAgent() {
+        return USER_AGENT;
     }
 
     public static boolean isSetup() {

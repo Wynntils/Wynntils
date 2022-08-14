@@ -16,7 +16,10 @@ public abstract class ItemProperty {
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
     public static final Class<ItemTierProperty> ITEM_TIER = ItemTierProperty.class;
     public static final Class<IngredientProperty> INGREDIENT = IngredientProperty.class;
+    public static final Class<MaterialProperty> MATERIAL = MaterialProperty.class;
     public static final Class<TeleportScrollProperty> TELEPORT_SCROLL = TeleportScrollProperty.class;
+    public static final Class<SkillPointProperty> SKILL_POINT = SkillPointProperty.class;
+    public static final Class<SkillIconProperty> SKILL_ICON = SkillIconProperty.class;
 
     public static final Class<HighlightProperty> HIGHLIGHT = HighlightProperty.class;
     public static final Class<TextOverlayProperty> TEXT_OVERLAY = TextOverlayProperty.class;

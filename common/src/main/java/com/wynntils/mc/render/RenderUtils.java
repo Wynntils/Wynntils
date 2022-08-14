@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public final class RenderUtils {
     // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
@@ -337,33 +338,46 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    public static void drawArc(CustomColor color, int x, int y, int z, float fill, int radius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, radius);
+    public static void drawArc(CustomColor color, int x, int y, int z, float fill, int innerRadius, int outerRadius) {
+        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius);
     }
 
-    public static void drawArc(PoseStack poseStack, CustomColor color, int x, int y, int z, float fill, int radius) {
+    public static void drawArc(
+            PoseStack poseStack, CustomColor color, int x, int y, int z, float fill, int innerRadius, int outerRadius) {
         // keeps arc from overlapping itself
         int segments = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
+        int midX = x + outerRadius;
+        int midY = y + outerRadius;
+        Matrix4f matrix = poseStack.last().pose();
 
-        // each section of arc texture is 64 wide, ordered left to right
-        int uOffset = 64 * segments;
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
 
-        // render arc texture
-        drawTexturedRectWithColor(
-                poseStack,
-                Texture.ARC.resource(),
-                color,
-                x,
-                y,
-                z,
-                radius * 2,
-                radius * 2,
-                uOffset,
-                0,
-                64,
-                64,
-                Texture.ARC.width(),
-                Texture.ARC.height());
+        bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+
+        float angle;
+        float sinAngle;
+        float cosAngle;
+        for (int i = 0; i <= segments; i++) {
+            angle = Mth.TWO_PI * i / (MAX_CIRCLE_STEPS - 1f);
+            sinAngle = Mth.sin(angle);
+            cosAngle = Mth.cos(angle);
+
+            bufferBuilder
+                    .vertex(matrix, midX + sinAngle * outerRadius, midY - cosAngle * outerRadius, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, midX + sinAngle * innerRadius, midY - cosAngle * innerRadius, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
+        RenderSystem.disableBlend();
     }
 
     public static void drawTooltip(
@@ -535,20 +549,21 @@ public final class RenderUtils {
                 .toList();
     }
 
-    /** drawProgressBar
+    /**
+     * drawProgressBar
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
      *
      * @param poseStack poseStack to use
-     * @param texture the texture to use
-     * @param x1 left x on screen
-     * @param y1 top y on screen
-     * @param x2 right x on screen
-     * @param y2 bottom right on screen
+     * @param texture   the texture to use
+     * @param x1        left x on screen
+     * @param y1        top y on screen
+     * @param x2        right x on screen
+     * @param y2        bottom right on screen
      * @param textureX1 texture left x for the part
      * @param textureY1 texture top y for the part (top of background)
      * @param textureX2 texture right x for the part
      * @param textureY2 texture bottom y for the part (bottom of bar)
-     * @param progress progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
+     * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
      */
     public static void drawProgressBar(
             PoseStack poseStack,

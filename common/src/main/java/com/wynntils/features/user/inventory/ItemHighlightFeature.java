@@ -4,15 +4,18 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.wc.custom.item.ItemStackTransformModel;
 import com.wynntils.wc.custom.item.WynnItemStack;
 import com.wynntils.wc.custom.item.properties.ItemProperty;
 import com.wynntils.wc.custom.item.properties.type.HighlightProperty;
@@ -95,6 +98,24 @@ public class ItemHighlightFeature extends UserFeature {
     public static CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
 
     @Config
+    public static boolean oneStarMaterialHighlightEnabled = true;
+
+    @Config
+    public static CustomColor oneStarMaterialHighlightColor = new CustomColor(255, 247, 153);
+
+    @Config
+    public static boolean twoStarMaterialHighlightEnabled = true;
+
+    @Config
+    public static CustomColor twoStarMaterialHighlightColor = new CustomColor(255, 255, 0);
+
+    @Config
+    public static boolean threeStarMaterialHighlightEnabled = true;
+
+    @Config
+    public static CustomColor threeStarMaterialHighlightColor = new CustomColor(230, 77, 0);
+
+    @Config
     public static boolean cosmeticHighlightEnabled = true;
 
     @Config
@@ -111,6 +132,12 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Config
     public static float hotbarOpacity = .5f;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ItemStackTransformModel.class);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {

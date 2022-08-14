@@ -6,18 +6,15 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundCommandsPacketAccessor;
 import java.util.UUID;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
@@ -29,8 +26,6 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,6 +34,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
+    @Inject(
+            method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
+            at = @At("HEAD"))
+    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+        CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
+        ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
+    }
+
     @Inject(
             method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
             at = @At("RETURN"))
@@ -106,33 +109,6 @@ public abstract class ClientPacketListenerMixin {
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
             ci.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
-            at = @At("RETURN"))
-    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
-        List<ItemStack> items = new ArrayList<>(packet.getItems());
-        items.add(packet.getCarriedItem());
-
-        if (packet.getContainerId() == 0) {
-            EventFactory.onItemsReceived(items, McUtils.inventoryMenu());
-        } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(items, McUtils.containerMenu());
-        }
-    }
-
-    @Inject(
-            method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("RETURN"))
-    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        if (packet.getContainerId() == -1 || packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.containerMenu());
-        } else if (packet.getContainerId() == -2
-                || (packet.getContainerId() == 0 && InventoryMenu.isHotbarSlot(packet.getSlot()))) {
-            EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.inventoryMenu());
         }
     }
 

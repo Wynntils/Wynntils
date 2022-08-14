@@ -5,6 +5,8 @@
 package com.wynntils.utils;
 
 import com.wynntils.mc.utils.McUtils;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -73,5 +75,14 @@ public final class StringUtils {
      */
     public static Pattern compileCCRegex(String regex) {
         return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
+    }
+
+    public static String encodeUrl(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+            // will not happen since UTF-8 is part of core charsets
+            return null;
+        }
     }
 }

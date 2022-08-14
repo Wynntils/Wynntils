@@ -80,10 +80,8 @@ public abstract class Overlay implements Translatable, Configurable {
             // This is done so all state checks run in order
             OverlayManager.disableOverlays(List.of(this));
             OverlayManager.enableOverlays(List.of(this), false);
-            return;
         }
 
-        // otherwise, trigger regular config update
         onConfigUpdate(configHolder);
     }
 
@@ -142,11 +140,19 @@ public abstract class Overlay implements Translatable, Configurable {
     }
 
     public boolean isEnabled() {
+        if (!isParentEnabled()) {
+            return false;
+        }
+
         if (this.isUserEnabled() != null) {
             return this.isUserEnabled();
         }
 
         return OverlayManager.getOverlayInfo(this).enabled();
+    }
+
+    public final boolean isParentEnabled() {
+        return OverlayManager.getOverlayParent(this).isEnabled();
     }
 
     public float getWidth() {
@@ -224,6 +230,7 @@ public abstract class Overlay implements Translatable, Configurable {
 
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
+                .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
                 .compare(
                         this.getDeclaringClass().getSimpleName(),
                         other.getDeclaringClass().getSimpleName())
