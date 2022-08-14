@@ -6,11 +6,14 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundCommandsPacketAccessor;
 import java.util.UUID;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -31,6 +34,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
+    @Inject(
+            method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
+            at = @At("HEAD"))
+    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+        CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
+        ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
+    }
+
     @Inject(
             method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
             at = @At("RETURN"))

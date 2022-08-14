@@ -16,6 +16,7 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
+import com.wynntils.features.user.FilterAdminCommandsFeature;
 import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
@@ -148,6 +149,7 @@ public final class FeatureRegistry {
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
