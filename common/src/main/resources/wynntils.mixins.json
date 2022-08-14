@@ -26,6 +26,7 @@
     "SlotMixin",
     "accessors.ChatScreenAccessor",
     "accessors.ClientboundBossEventPacketAccessor",
+    "accessors.ClientboundCommandsPacketAccessor",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.GuiAccessor",
     "accessors.ItemStackInfoAccessor",

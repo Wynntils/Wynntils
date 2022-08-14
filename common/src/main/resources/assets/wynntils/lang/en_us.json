@@ -30,6 +30,7 @@
   "feature.wynntils.emeraldPouchHotkey.multipleFilled": "You have multiple filled emerald pouches in your inventory.",
   "feature.wynntils.emeraldPouchHotkey.name": "Emerald Pouch Hotkey Feature",
   "feature.wynntils.emeraldPouchHotkey.noPouch": "You do not have an emerald pouch in your inventory.",
+  "feature.wynntils.filterAdminCommands.name": "Filter Admin Commands Feature",
   "feature.wynntils.fixPacketBugs.name": "Fix Packet Bugs Feature",
   "feature.wynntils.gameNotificationOverlay.name": "Game Update Overlay Feature",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.description": "Display gameplay related update messages on the screen.",
