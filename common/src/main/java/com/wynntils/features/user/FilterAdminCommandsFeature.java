@@ -43,9 +43,6 @@ public class FilterAdminCommandsFeature extends UserFeature {
                 newRoot.addChild(child);
             }
         }
-
-        // We also need to add the arguments for all commands
-        newRoot.addChild(root.getChild("args"));
         event.setRoot(newRoot);
     }
 }
