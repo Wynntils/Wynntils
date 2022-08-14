@@ -8,14 +8,13 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FilterAdminCommandsFeature extends UserFeature {
-    private static final List<String> FILTERED_COMMANDS = Arrays.asList(
+    private static final Set<String> FILTERED_COMMANDS = Set.of(
             "bungee",
             "connect",
             "galert",
