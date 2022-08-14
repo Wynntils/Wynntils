@@ -2,12 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.commands.wynntils;
+package com.wynntils.commands;
 
+import static net.minecraft.commands.Commands.literal;
+
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
@@ -24,27 +28,42 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
-public final class WynntilsFunctionCommand {
-    private static final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
+public class FunctionCommand extends CommandBase {
+    @Override
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(literal("function")
+                .then(this.buildListNode())
+                .then(this.buildEnableNode())
+                .then(this.buildDisableNode())
+                .then(this.buildGetValueNode())
+                .then(this.buildGetValueWithArgumentNode())
+                .then(this.buildHelpNode())
+                .executes(this::syntaxError));
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
+    }
+
+    private final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FunctionManager.getFunctions().stream().map(Function::getName), builder);
 
-    private static final SuggestionProvider<CommandSourceStack> activeFunctionSuggestionProvider =
+    private final SuggestionProvider<CommandSourceStack> activeFunctionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FunctionManager.getFunctions().stream()
                             .filter(function -> function instanceof ActiveFunction<?>)
                             .map(Function::getName),
                     builder);
 
-    public static LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return Commands.literal("list")
-                .executes(WynntilsFunctionCommand::listFunctions)
-                .build();
+    private LiteralCommandNode<CommandSourceStack> buildListNode() {
+        return literal("list").executes(this::listFunctions).build();
     }
 
-    private static int listFunctions(CommandContext<CommandSourceStack> context) {
+    private int listFunctions(CommandContext<CommandSourceStack> context) {
         List<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toList());
-        functions.sort(Comparator.comparing(o -> o.getName()));
+        functions.sort(Comparator.comparing(Function::getName));
 
         MutableComponent response = new TextComponent("Currently registered functions:").withStyle(ChatFormatting.AQUA);
 
@@ -65,15 +84,15 @@ public final class WynntilsFunctionCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildEnableNode() {
-        return Commands.literal("enable")
+    private LiteralCommandNode<CommandSourceStack> buildEnableNode() {
+        return literal("enable")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(activeFunctionSuggestionProvider)
-                        .executes(WynntilsFunctionCommand::enableFunction))
+                        .executes(this::enableFunction))
                 .build();
     }
 
-    private static int enableFunction(CommandContext<CommandSourceStack> context) {
+    private int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
         Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
@@ -106,15 +125,15 @@ public final class WynntilsFunctionCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildDisableNode() {
-        return Commands.literal("disable")
+    private LiteralCommandNode<CommandSourceStack> buildDisableNode() {
+        return literal("disable")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(activeFunctionSuggestionProvider)
-                        .executes(WynntilsFunctionCommand::disableFunction))
+                        .executes(this::disableFunction))
                 .build();
     }
 
-    private static int disableFunction(CommandContext<CommandSourceStack> context) {
+    private int disableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
         Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
@@ -140,24 +159,24 @@ public final class WynntilsFunctionCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildGetValueNode() {
-        return Commands.literal("get")
+    private LiteralCommandNode<CommandSourceStack> buildGetValueNode() {
+        return literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
-                        .executes(WynntilsFunctionCommand::getValue))
+                        .executes(this::getValue))
                 .build();
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
-        return Commands.literal("get")
+    private LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
+        return literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
                         .then(Commands.argument("argument", StringArgumentType.greedyString())
-                                .executes(WynntilsFunctionCommand::getValue)))
+                                .executes(this::getValue)))
                 .build();
     }
 
-    private static int getValue(CommandContext<CommandSourceStack> context) {
+    private int getValue(CommandContext<CommandSourceStack> context) {
         Component argument;
         try {
             argument = new TextComponent(StringArgumentType.getString(context, "argument"));
@@ -198,15 +217,15 @@ public final class WynntilsFunctionCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildHelpNode() {
-        return Commands.literal("help")
+    private LiteralCommandNode<CommandSourceStack> buildHelpNode() {
+        return literal("help")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
-                        .executes(WynntilsFunctionCommand::helpForFunction))
+                        .executes(this::helpForFunction))
                 .build();
     }
 
-    private static int helpForFunction(CommandContext<CommandSourceStack> context) {
+    private int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
         Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);

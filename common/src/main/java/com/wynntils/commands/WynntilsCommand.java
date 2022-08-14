@@ -6,9 +6,6 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.commands.wynntils.WynntilsConfigCommand;
-import com.wynntils.commands.wynntils.WynntilsFeatureCommand;
-import com.wynntils.commands.wynntils.WynntilsFunctionCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
@@ -34,23 +31,7 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("reload").executes(this::reload))
                 .then(Commands.literal("version").executes(this::version))
-                .then(Commands.literal("config")
-                        .then(WynntilsConfigCommand.buildGetConfigNode())
-                        .then(WynntilsConfigCommand.buildSetConfigNode())
-                        .then(WynntilsConfigCommand.buildResetConfigNode())
-                        .then(WynntilsConfigCommand.buildReloadConfigNode()))
-                .then(Commands.literal("feature")
-                        .then(WynntilsFeatureCommand.buildListNode())
-                        .then(WynntilsFeatureCommand.enableFeatureNode())
-                        .then(WynntilsFeatureCommand.disableFeatureNode()))
-                .then(Commands.literal("function")
-                        .then(WynntilsFunctionCommand.buildListNode())
-                        .then(WynntilsFunctionCommand.buildEnableNode())
-                        .then(WynntilsFunctionCommand.buildDisableNode())
-                        .then(WynntilsFunctionCommand.buildGetValueNode())
-                        .then(WynntilsFunctionCommand.buildGetValueWithArgumentNode())
-                        .then(WynntilsFunctionCommand.buildHelpNode())
-                        .executes(this::help)));
+                .executes(this::help));
     }
 
     private int version(CommandContext<CommandSourceStack> context) {

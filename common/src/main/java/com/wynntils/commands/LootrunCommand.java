@@ -345,6 +345,11 @@ public class LootrunCommand extends CommandBase {
         return 1;
     }
 
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
+    }
+
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(literal("lootrun")
@@ -382,7 +387,8 @@ public class LootrunCommand extends CommandBase {
                                 .then(literal("add").executes(this::addChest)))
                         .then(literal("remove").executes(this::removeChest)))
                 .then(literal("undo").executes(this::undoLootrun))
-                .then(literal("folder").executes(this::folderLootrun)));
+                .then(literal("folder").executes(this::folderLootrun))
+                .executes(this::syntaxError));
 
         dispatcher.register(literal("lr").redirect(node));
     }

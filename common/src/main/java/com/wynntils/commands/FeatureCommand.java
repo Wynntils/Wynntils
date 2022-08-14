@@ -2,12 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.commands.wynntils;
+package com.wynntils.commands;
 
+import static net.minecraft.commands.Commands.literal;
+
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -22,21 +26,33 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
-public final class WynntilsFeatureCommand {
-    private static final SuggestionProvider<CommandSourceStack> userFeatureSuggestionProvider =
+public class FeatureCommand extends CommandBase {
+    private static final SuggestionProvider<CommandSourceStack> USER_FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream()
                             .filter(feature -> feature.getClass().getSuperclass() == UserFeature.class)
                             .map(Feature::getShortName),
                     builder);
 
-    public static LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return Commands.literal("list")
-                .executes(WynntilsFeatureCommand::listFeatures)
-                .build();
+    @Override
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(literal("feature")
+                .then(this.buildListNode())
+                .then(this.enableFeatureNode())
+                .then(this.disableFeatureNode())
+                .executes(this::syntaxError));
     }
 
-    private static int listFeatures(CommandContext<CommandSourceStack> context) {
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
+    }
+
+    private LiteralCommandNode<CommandSourceStack> buildListNode() {
+        return literal("list").executes(this::listFeatures).build();
+    }
+
+    private int listFeatures(CommandContext<CommandSourceStack> context) {
         Set<Feature> features = FeatureRegistry.getFeatures().stream().collect(Collectors.toUnmodifiableSet());
 
         MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
@@ -55,15 +71,15 @@ public final class WynntilsFeatureCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
-        return Commands.literal("enable")
+    private LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
+        return literal("enable")
                 .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(userFeatureSuggestionProvider)
-                        .executes(WynntilsFeatureCommand::enableFeature))
+                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                        .executes(this::enableFeature))
                 .build();
     }
 
-    private static int enableFeature(CommandContext<CommandSourceStack> context) {
+    private int enableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
@@ -101,15 +117,15 @@ public final class WynntilsFeatureCommand {
         return 1;
     }
 
-    public static LiteralCommandNode<CommandSourceStack> disableFeatureNode() {
-        return Commands.literal("disable")
+    private LiteralCommandNode<CommandSourceStack> disableFeatureNode() {
+        return literal("disable")
                 .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(userFeatureSuggestionProvider)
-                        .executes(WynntilsFeatureCommand::disableFeature))
+                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                        .executes(this::disableFeature))
                 .build();
     }
 
-    private static int disableFeature(CommandContext<CommandSourceStack> context) {
+    private int disableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);

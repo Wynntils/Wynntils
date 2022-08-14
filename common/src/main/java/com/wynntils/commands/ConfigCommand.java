@@ -2,14 +2,18 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.commands.wynntils;
+package com.wynntils.commands;
+
+import static net.minecraft.commands.Commands.literal;
 
 import com.google.common.base.CaseFormat;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
@@ -30,7 +34,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
-public final class WynntilsConfigCommand {
+public class ConfigCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
@@ -87,8 +91,23 @@ public final class WynntilsConfigCommand {
                     },
                     builder);
 
-    public static LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = Commands.literal("get");
+    @Override
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(literal("config")
+                .then(this.buildGetConfigNode())
+                .then(this.buildSetConfigNode())
+                .then(this.buildResetConfigNode())
+                .then(this.buildReloadConfigNode())
+                .executes(this::syntaxError));
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
+    }
+
+    private LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
+        LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = literal("get");
 
         // Feature specified, config option is not, print all configs
         // If a feature and config field is specified, print field specific info
@@ -98,45 +117,45 @@ public final class WynntilsConfigCommand {
         // /wynntils config get <feature> overlay <overlay> <field>
         getConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(Commands.literal("overlay")
+                .then(literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
                                         .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
-                                        .executes(WynntilsConfigCommand::getSpecificOverlayConfigOption))
-                                .executes(WynntilsConfigCommand::listAllOverlayConfigs)))
+                                        .executes(this::getSpecificOverlayConfigOption))
+                                .executes(this::listAllOverlayConfigs)))
                 .then(Commands.argument("config", StringArgumentType.word())
                         .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
-                        .executes(WynntilsConfigCommand::getSpecificConfigOption))
-                .executes(WynntilsConfigCommand::listAllConfigOptions));
+                        .executes(this::getSpecificConfigOption))
+                .executes(this::listAllConfigOptions));
 
         return getConfigArgBuilder.build();
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildSetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> setConfigArgBuilder = Commands.literal("set");
+    private LiteralCommandNode<CommandSourceStack> buildSetConfigNode() {
+        LiteralArgumentBuilder<CommandSourceStack> setConfigArgBuilder = literal("set");
 
         // /wynntils config set <feature> <field> <newValue>
         // /wynntils config set <feature> overlay <overlay> <field> <newValue>
         setConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(Commands.literal("overlay")
+                .then(literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
                                         .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
-                                                .executes(WynntilsConfigCommand::changeOverlayConfig)))))
+                                                .executes(this::changeOverlayConfig)))))
                 .then(Commands.argument("config", StringArgumentType.word())
                         .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
-                                .executes(WynntilsConfigCommand::changeFeatureConfig))));
+                                .executes(this::changeFeatureConfig))));
 
         return setConfigArgBuilder.build();
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildResetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = Commands.literal("reset");
+    private LiteralCommandNode<CommandSourceStack> buildResetConfigNode() {
+        LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = literal("reset");
 
         // Feature specified, config option is not, reset all configs
         // If a feature and config field is specified, reset specific field
@@ -146,32 +165,32 @@ public final class WynntilsConfigCommand {
         // /wynntils config reset <feature> overlay <overlay> <field>
         resetConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(Commands.literal("overlay")
+                .then(literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
                                         .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
-                                        .executes(WynntilsConfigCommand::resetOverlayConfigOption))
-                                .executes(WynntilsConfigCommand::resetAllOverlayConfigOptions)))
+                                        .executes(this::resetOverlayConfigOption))
+                                .executes(this::resetAllOverlayConfigOptions)))
                 .then(Commands.argument("config", StringArgumentType.word())
                         .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
-                        .executes(WynntilsConfigCommand::resetFeatureConfigOption))
-                .executes(WynntilsConfigCommand::resetAllConfigOptions));
+                        .executes(this::resetFeatureConfigOption))
+                .executes(this::resetAllConfigOptions));
 
         return resetConfigArgBuilder.build();
     }
 
-    public static LiteralCommandNode<CommandSourceStack> buildReloadConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> reloadConfigArgBuilder = Commands.literal("reload");
+    private LiteralCommandNode<CommandSourceStack> buildReloadConfigNode() {
+        LiteralArgumentBuilder<CommandSourceStack> reloadConfigArgBuilder = literal("reload");
 
         // Reload config holder values from config file and then save to "merge".
         // /wynntils config reload
-        reloadConfigArgBuilder.executes(WynntilsConfigCommand::reloadAllConfigOptions);
+        reloadConfigArgBuilder.executes(this::reloadAllConfigOptions);
 
         return reloadConfigArgBuilder.build();
     }
 
-    private static int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
+    private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
         ConfigManager.loadConfigFile();
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
         ConfigManager.saveConfig();
@@ -184,7 +203,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int resetOverlayConfigOption(CommandContext<CommandSourceStack> context) {
+    private int resetOverlayConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
@@ -212,7 +231,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int resetAllOverlayConfigOptions(CommandContext<CommandSourceStack> context) {
+    private int resetAllOverlayConfigOptions(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
 
@@ -233,7 +252,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int listAllOverlayConfigs(CommandContext<CommandSourceStack> context) {
+    private int listAllOverlayConfigs(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
 
@@ -260,7 +279,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int getSpecificOverlayConfigOption(CommandContext<CommandSourceStack> context) {
+    private int getSpecificOverlayConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
@@ -286,7 +305,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int changeOverlayConfig(CommandContext<CommandSourceStack> context) {
+    private int changeOverlayConfig(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
@@ -345,7 +364,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
+    private int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -370,7 +389,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int listAllConfigOptions(CommandContext<CommandSourceStack> context) {
+    private int listAllConfigOptions(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Feature feature = getFeatureFromArguments(context, featureName);
@@ -411,7 +430,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int changeFeatureConfig(CommandContext<CommandSourceStack> context) {
+    private int changeFeatureConfig(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -469,7 +488,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int resetFeatureConfigOption(CommandContext<CommandSourceStack> context) {
+    private int resetFeatureConfigOption(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -495,7 +514,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static int resetAllConfigOptions(CommandContext<CommandSourceStack> context) {
+    private int resetAllConfigOptions(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Feature feature = getFeatureFromArguments(context, featureName);
@@ -514,7 +533,7 @@ public final class WynntilsConfigCommand {
         return 1;
     }
 
-    private static Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
+    private Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty()) {
@@ -525,7 +544,7 @@ public final class WynntilsConfigCommand {
         return featureOptional.get();
     }
 
-    private static ConfigHolder getConfigHolderFromArguments(
+    private ConfigHolder getConfigHolderFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String configName) {
         Feature feature = getFeatureFromArguments(context, featureName);
 
@@ -541,7 +560,7 @@ public final class WynntilsConfigCommand {
         return configOptional.get();
     }
 
-    private static ConfigHolder getOverlayConfigHolderFromArguments(
+    private ConfigHolder getOverlayConfigHolderFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String overlayName, String configName) {
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
 
@@ -557,7 +576,7 @@ public final class WynntilsConfigCommand {
         return configOptional.get();
     }
 
-    private static Overlay getOverlayFromArguments(
+    private Overlay getOverlayFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String overlayName) {
         Feature feature = getFeatureFromArguments(context, featureName);
 
@@ -578,7 +597,7 @@ public final class WynntilsConfigCommand {
         return overlayOptional.get();
     }
 
-    private static MutableComponent getComponentForConfigHolder(ConfigHolder config) {
+    private MutableComponent getComponentForConfigHolder(ConfigHolder config) {
         Object value = config.getValue();
 
         String configNameString = config.getDisplayName();
@@ -602,13 +621,13 @@ public final class WynntilsConfigCommand {
                                         new TextComponent("Click here to change this setting."))))));
     }
 
-    private static MutableComponent getComponentForOverlay(Overlay overlay) {
+    private MutableComponent getComponentForOverlay(Overlay overlay) {
         return new TextComponent("\n - ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(new TextComponent(overlay.getShortName()).withStyle(ChatFormatting.AQUA));
     }
 
-    private static MutableComponent getSpecificConfigComponent(ConfigHolder config) {
+    private MutableComponent getSpecificConfigComponent(ConfigHolder config) {
         Object value = config.getValue();
 
         String valueString = value == null ? "Value is null." : value.toString();
