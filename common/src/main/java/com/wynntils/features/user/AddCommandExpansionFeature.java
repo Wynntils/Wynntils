@@ -19,6 +19,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AddCommandExpansionFeature extends UserFeature {
+    // These commands are extracted from https://wynncraft.fandom.com/wiki/Commands
+
     private static final List<String> WYNN_COMMANDS = Arrays.asList(
             "buy",
             "changetag",
