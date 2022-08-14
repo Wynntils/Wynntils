@@ -5,16 +5,17 @@
 package com.wynntils.wc.utils.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.objects.Pair;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wc.event.WorldStateEvent;
-import com.wynntils.wc.model.WorldState;
+import com.wynntils.wc.model.WorldStateManager;
 import com.wynntils.wc.utils.WynnUtils;
-import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
-import com.wynntils.wc.utils.scoreboard.quests.QuestManager;
+import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
+import com.wynntils.wc.utils.scoreboard.quests.QuestHandler;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -34,13 +35,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ScoreboardManager {
+public final class ScoreboardModel extends Model {
     private static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
     private static final Pattern QUEST_TRACK_PATTERN = Pattern.compile("Tracked Quest:");
     private static final Pattern OBJECTIVE_HEADER_PATTERN = Pattern.compile("(★ )?(Daily )?Objectives?:");
@@ -61,7 +63,11 @@ public final class ScoreboardManager {
 
     private static ScheduledExecutorService executor = null;
 
+    private static boolean firstExecution = false;
+
     private static final Runnable changeHandlerRunnable = () -> {
+        if (!WynnUtils.onWorld() || McUtils.player() == null) return;
+
         if (queuedChanges.isEmpty()) {
             handleScoreboardReconstruction();
             return;
@@ -153,8 +159,16 @@ public final class ScoreboardManager {
             }
         }
 
-        for (Segment segment :
-                parsedSegments.stream().filter(Segment::isChanged).toList()) {
+        List<Segment> changedSegments;
+
+        if (firstExecution) {
+            firstExecution = false;
+            changedSegments = parsedSegments.stream().toList();
+        } else {
+            changedSegments = parsedSegments.stream().filter(Segment::isChanged).toList();
+        }
+
+        for (Segment segment : changedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
                 if (scoreboardHandler.b.contains(segment.getType())) {
                     scoreboardHandler.a.onSegmentChange(segment, segment.getType());
@@ -194,6 +208,16 @@ public final class ScoreboardManager {
             }
 
             scoreboard.setDisplayObjective(1, objective);
+
+            // Set player team display objective
+            // This fixes scoreboard gui flickering
+            PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
+            if (playerTeam != null) {
+                if (playerTeam.getColor().getId() >= 0) {
+                    int id = playerTeam.getColor().getId() + 3;
+                    scoreboard.setDisplayObjective(id, objective);
+                }
+            }
 
             for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
                 scoreMap.remove(objective);
@@ -277,10 +301,15 @@ public final class ScoreboardManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(ScoreboardManager.class);
+        registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
+        registerHandler(new QuestHandler(), SegmentType.Quest);
 
-        registerHandler(new ObjectiveManager(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(new QuestManager(), SegmentType.Quest);
+        startThread();
+    }
+
+    public static void disable() {
+        resetState();
+        scoreboardHandlers.clear();
     }
 
     private static void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
@@ -295,19 +324,26 @@ public final class ScoreboardManager {
     public static void onSetScore(ScoreboardSetScoreEvent event) {
         if (!WynnUtils.onServer()) return;
 
-        event.setCanceled(true);
-
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
     }
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.State.WORLD) {
-            executor = Executors.newScheduledThreadPool(1);
-            executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
+        if (event.getNewState() == WorldStateManager.State.WORLD) {
+            startThread();
             return;
         }
 
+        resetState();
+    }
+
+    private static void startThread() {
+        firstExecution = true;
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
+    }
+
+    private static void resetState() {
         if (executor != null) {
             executor.shutdownNow();
             executor = null;
@@ -317,16 +353,16 @@ public final class ScoreboardManager {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        ObjectiveManager.resetObjectives();
-        QuestManager.resetCurrentQuest();
+        ObjectiveHandler.resetObjectives();
+        QuestHandler.resetCurrentQuest();
     }
 
     public enum SegmentType {
-        Quest(ScoreboardManager.QUEST_TRACK_PATTERN),
-        Party(ScoreboardManager.PARTY_PATTERN),
-        Objective(ScoreboardManager.OBJECTIVE_HEADER_PATTERN),
-        GuildObjective(ScoreboardManager.GUILD_OBJECTIVE_HEADER_PATTERN),
-        GuildAttackTimer(ScoreboardManager.GUILD_ATTACK_UPCOMING_PATTERN);
+        Quest(ScoreboardModel.QUEST_TRACK_PATTERN),
+        Party(ScoreboardModel.PARTY_PATTERN),
+        Objective(ScoreboardModel.OBJECTIVE_HEADER_PATTERN),
+        GuildObjective(ScoreboardModel.GUILD_OBJECTIVE_HEADER_PATTERN),
+        GuildAttackTimer(ScoreboardModel.GUILD_ATTACK_UPCOMING_PATTERN);
 
         private final Pattern headerPattern;
 

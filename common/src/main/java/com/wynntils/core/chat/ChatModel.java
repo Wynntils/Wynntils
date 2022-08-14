@@ -5,6 +5,7 @@
 package com.wynntils.core.chat;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -30,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * the same to users, but Wynntils put different messages in different categories.
  * Most are CHAT, but a few are SYSTEM. When we pass on the messages, we use the
  * term "NORMAL" instead of "CHAT".
- *
+ * <p>
  * Using the regexp patterns in RecipientType, we classify the incoming messages
  * according to if they are sent to the guild, party, global chat, etc. Messages
  * that do not match any of these categories are called "info" messages, and are
@@ -40,7 +41,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * (Unfortunately, there is no way to distinguish these from chat sent by a build
  * member named "WAR", or "INFO", or..., so if these need to be separated, it has
  * to happen in a later stage).
- *
+ * <p>
  * The final problem this class needs to resolve is how Wynncraft handles NPC
  * dialogs. When you enter a NPC dialog, Wynncraft start sending "screens" once a
  * second or so, which is multi-line messages that repeat the chat history, and add
@@ -50,7 +51,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * real chat message we received, and splits of the rest as the "newLines". These
  * are in turn examined, since they can contain the actual NPC dialog, or they can
  * contain new chat messages sent while the user is in the NPC dialog.
- *
+ * <p>
  * These new chat messages are the real problematic thing here. They are
  * differently formatted to be gray and tuned-down, which makes the normal regexp
  * matching fail. They are also sent as pure strings with formatting codes, instead
@@ -59,7 +60,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * Wynncraft limitation.) We send out these chat messages one by one, as they would
  * have appeared if we were not in a NPC dialog, but we tag them as BACKGROUND to
  * signal that formatting is different.
- *
+ * <p>
  * In a normal vanilla setting, the last "screen" that Wynncraft sends out, the
  * messages are re-colored to have their normal colors restored (hover and onClick
  * as still missing, though). Currently, we do not handle this, since it would mean
@@ -67,7 +68,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * a different formatting. This could be done, but requires extra logic, and most
  * importantly, a way to update already printed chat lines.
  */
-public final class ChatManager {
+public final class ChatModel extends Model {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
@@ -76,10 +77,6 @@ public final class ChatManager {
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
-    public static void init() {
-        WynntilsMod.getEventBus().register(ChatManager.class);
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
@@ -87,8 +84,11 @@ public final class ChatManager {
 
         Component message = e.getMessage();
         String codedMessage = ComponentUtils.getCoded(message);
-        if (!codedMessage.contains("\n")) {
-            saveLastChat(ComponentUtils.getCoded(message));
+
+        // Sometimes there is just a trailing newline; that does not
+        // make it a multiline message
+        if (!codedMessage.contains("\n") || codedMessage.indexOf("\n") == (codedMessage.length() - 1)) {
+            saveLastChat(codedMessage);
             MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, codedMessage, messageType);
             if (updatedMessage == null) {
@@ -100,12 +100,14 @@ public final class ChatManager {
         }
 
         if (extractDialog) {
-            handleMultilineMessage(codedMessage);
+            handleMultilineMessage(message);
             e.setCanceled(true);
         }
     }
 
-    private static void handleMultilineMessage(String msg) {
+    private static void handleMultilineMessage(Component message) {
+        String msg = ComponentUtils.getCoded(message);
+
         List<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
@@ -176,7 +178,7 @@ public final class ChatManager {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(ChatManager::handleFakeChatLine);
+        newChatLines.forEach(ChatModel::handleFakeChatLine);
 
         // Update the new dialog
         handleNpcDialog(dialog);

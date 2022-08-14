@@ -4,12 +4,14 @@
  */
 package com.wynntils.features.user;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.services.TranslationManager;
+import com.wynntils.core.managers.Model;
+import com.wynntils.core.services.TranslationModel;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.event.ChatMessageReceivedEvent;
 import com.wynntils.wc.event.NpcDialogEvent;
@@ -41,7 +43,13 @@ public class TranslationFeature extends UserFeature {
     public boolean keepOriginal = true;
 
     @Config
-    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
+    public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
+
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(TranslationModel.class);
+    }
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
@@ -51,10 +59,18 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
-            String unwrapped = unwrapCoding(translatedMsg);
+        TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+            String messageToSend;
+            if (translatedMsg != null) {
+                messageToSend = unwrapCoding(translatedMsg);
+            } else {
+                if (keepOriginal) return;
+
+                // We failed to get a translation; send the original message so it's not lost
+                messageToSend = origCoded;
+            }
             McUtils.mc().doRunTask(() -> {
-                McUtils.sendMessageToClient(new TextComponent(unwrapped));
+                McUtils.sendMessageToClient(new TextComponent(messageToSend));
             });
         });
         if (!keepOriginal) {
@@ -70,7 +86,7 @@ public class TranslationFeature extends UserFeature {
         String origCoded = e.getCodedDialog();
         if (origCoded != null) {
             String wrapped = wrapCoding(origCoded);
-            TranslationManager.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+            TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
                 McUtils.mc().doRunTask(() -> {
                     NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);

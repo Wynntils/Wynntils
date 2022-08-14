@@ -11,8 +11,10 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.keybinds.KeyManager;
+import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
 import java.lang.reflect.Field;
@@ -32,6 +34,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  */
 public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
+    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyHolder> keyMappings = new ArrayList<>();
     private final List<ConfigHolder> configOptions = new ArrayList<>();
@@ -43,10 +46,12 @@ public abstract class Feature implements Translatable, Configurable {
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
-        onInit(conditions);
+        onInit(conditions, dependencies);
 
         this.conditions = conditions.build();
+        this.dependencies = dependencies.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
@@ -65,7 +70,7 @@ public abstract class Feature implements Translatable, Configurable {
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation);
+                OverlayManager.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);
@@ -114,7 +119,8 @@ public abstract class Feature implements Translatable, Configurable {
     }
 
     /** Called on init of Feature */
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
 
     /**
      * Called on enabling of Feature
@@ -139,12 +145,16 @@ public abstract class Feature implements Translatable, Configurable {
 
         enabled = true;
 
+        for (Class<? extends Model> dependency : dependencies) {
+            ManagerRegistry.addDependency(this, dependency);
+        }
+
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyHolder key : keyMappings) {
-            KeyManager.registerKeybind(key);
+            KeyBindManager.registerKeybind(key);
         }
     }
 
@@ -156,12 +166,14 @@ public abstract class Feature implements Translatable, Configurable {
 
         enabled = false;
 
+        ManagerRegistry.removeAllFeatureDependency(this);
+
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
         }
         OverlayManager.disableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
-            KeyManager.unregisterKeybind(key);
+            KeyBindManager.unregisterKeybind(key);
         }
     }
 

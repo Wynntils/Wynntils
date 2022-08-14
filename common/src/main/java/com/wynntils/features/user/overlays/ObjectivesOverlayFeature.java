@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.overlays;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -14,6 +15,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -23,8 +25,8 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.utils.objects.CommonColors;
 import com.wynntils.utils.objects.CustomColor;
 import com.wynntils.wc.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
-import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveManager;
+import com.wynntils.wc.utils.scoreboard.ScoreboardModel;
+import com.wynntils.wc.utils.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wc.utils.scoreboard.objectives.WynnObjective;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -36,15 +38,21 @@ public class ObjectivesOverlayFeature extends UserFeature {
     @Config
     public static boolean disableObjectiveTrackingOnScoreboard = true;
 
+    @Override
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        dependencies.add(ScoreboardModel.class);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard) {
-            if (event.getSegment().getType() == ScoreboardManager.SegmentType.GuildObjective
+            if (event.getSegment().getType() == ScoreboardModel.SegmentType.GuildObjective
                     && guildObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (event.getSegment().getType() == ScoreboardManager.SegmentType.Objective
+            if (event.getSegment().getType() == ScoreboardModel.SegmentType.Objective
                     && dailyObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
@@ -77,7 +85,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            WynnObjective guildObjective = ObjectiveManager.getGuildObjective();
+            WynnObjective guildObjective = ObjectiveHandler.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -102,18 +110,25 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         case Bottom -> this.getHeight() - renderedHeight;
                     };
 
+            final String text =
+                    guildObjective.getGoal() + ": " + guildObjective.getScore() + "/" + guildObjective.getMaxScore();
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            guildObjective.getGoal() + ": " + guildObjective.getScore() + "/"
-                                    + guildObjective.getMaxScore(),
+                            text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
-                            0,
+                            this.getWidth(),
                             this.textColor,
                             FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
                             this.textShadow);
+
+            float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+
+            if (height > 9) {
+                renderY += height - 9;
+            }
 
             if (this.enableProgressBar) {
                 RenderUtils.drawProgressBar(
@@ -159,7 +174,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<WynnObjective> objectives = ObjectiveManager.getObjectives();
+            List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
 
             final float SPACE_BETWEEN = 10;
 
@@ -186,17 +201,25 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
                 float renderY = offsetY + this.getRenderY();
 
+                final String text = objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore();
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore(),
+                                text,
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
                                 renderY,
-                                0,
+                                this.getWidth(),
                                 this.textColor,
                                 FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
                                 this.textShadow);
+
+                float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+
+                if (height > 9) {
+                    offsetY += height - 9;
+                    renderY += height - 9;
+                }
 
                 if (this.enableProgressBar) {
                     RenderUtils.drawProgressBar(

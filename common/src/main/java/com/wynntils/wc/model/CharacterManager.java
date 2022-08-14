@@ -5,12 +5,12 @@
 package com.wynntils.wc.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wc.Model;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.objects.ClassType;
 import java.util.List;
@@ -21,23 +21,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class Character implements Model {
+public class CharacterManager extends CoreManager {
     private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
 
-    private CharacterInfo currentCharacter;
-    private boolean inCharacterSelection;
+    private static CharacterInfo currentCharacter;
+    private static boolean inCharacterSelection;
 
-    public boolean hasCharacter() {
+    public static boolean hasCharacter() {
         return currentCharacter != null;
     }
 
-    public CharacterInfo getCharacterInfo() {
+    public static CharacterInfo getCharacterInfo() {
         return currentCharacter;
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuOpenedEvent e) {
+    public static void onMenuOpened(MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Class")) {
             inCharacterSelection = true;
@@ -46,25 +46,25 @@ public class Character implements Model {
     }
 
     @SubscribeEvent
-    public void onMenuClosed(MenuClosedEvent e) {
+    public static void onMenuClosed(MenuClosedEvent e) {
         inCharacterSelection = false;
     }
 
     @SubscribeEvent
-    public void onWorldStateChanged(WorldStateEvent e) {
+    public static void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
-        if (e.getOldState() == WorldState.State.WORLD) {
+        if (e.getOldState() == WorldStateManager.State.WORLD) {
             currentCharacter = null;
             // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
-        if (e.getNewState() == WorldState.State.CHARACTER_SELECTION) {
+        if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
             WynntilsMod.info("Preparing for character selection");
         }
     }
 
     @SubscribeEvent
-    public void onContainerClick(ContainerClickEvent e) {
+    public static void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
             currentCharacter = CharacterInfo.parseCharacter(e.getItemStack(), e.getSlotNum());
@@ -111,7 +111,7 @@ public class Character implements Model {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
-            ClassType classType = null;
+            String className = "";
 
             for (String line : lore) {
                 Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
@@ -123,12 +123,12 @@ public class Character implements Model {
                 Matcher classMatcher = CLASS_PATTERN.matcher(line);
 
                 if (classMatcher.matches()) {
-                    classType = ClassType.fromName(classMatcher.group(1));
+                    className = classMatcher.group(1);
                 }
             }
+            ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(
-                    classType, classType != null && ClassType.isReskinned(classType.getName()), level, slotNum);
+            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
         }
 
         @Override

@@ -5,7 +5,7 @@
 package com.wynntils.wc.utils.scoreboard;
 
 public interface ScoreboardHandler {
-    void onSegmentChange(Segment newValue, ScoreboardManager.SegmentType segmentType);
+    void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType);
 
-    void onSegmentRemove(Segment segment, ScoreboardManager.SegmentType segmentType);
+    void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType);
 }

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wc.event;
 
-import com.wynntils.wc.model.WorldState.State;
+import com.wynntils.wc.model.WorldStateManager.State;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WorldStateEvent extends Event {

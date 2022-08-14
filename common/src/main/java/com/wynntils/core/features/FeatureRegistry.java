@@ -9,16 +9,15 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
+import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
-import com.wynntils.features.internal.ChatItemFeature;
-import com.wynntils.features.internal.FixPacketBugsFeature;
-import com.wynntils.features.internal.FixSpellOverwriteFeature;
-import com.wynntils.features.internal.ItemStackTransformerFeature;
-import com.wynntils.features.internal.LootrunFeature;
-import com.wynntils.features.internal.NotificationsFeature;
+import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
+import com.wynntils.features.user.FilterAdminCommandsFeature;
+import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
@@ -34,10 +33,11 @@ import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
+import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
-import com.wynntils.features.user.overlays.CustomBarsFeature;
+import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.InfoBoxesFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
@@ -139,22 +139,22 @@ public final class FeatureRegistry {
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new PacketDebuggerFeature());
 
-        // internal
+        // always on
         registerFeature(new ChatItemFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixSpellOverwriteFeature());
-        registerFeature(new ItemStackTransformerFeature());
         registerFeature(new LootrunFeature());
-        registerFeature(new NotificationsFeature());
 
         // user
-        registerFeature(new CustomBarsFeature());
+        registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxesFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());

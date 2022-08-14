@@ -7,6 +7,7 @@ package com.wynntils.mc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
@@ -14,12 +15,14 @@ import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
+import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -64,6 +67,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
@@ -87,6 +91,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
@@ -165,6 +170,10 @@ public final class EventFactory {
 
     public static void onHotbarSlotRenderPost(ItemStack stack, int x, int y) {
         post(new HotbarSlotRenderEvent.Post(stack, x, y));
+    }
+
+    public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
+        return post(new DrawPotionGlintEvent(item));
     }
     // endregion
 
@@ -265,6 +274,10 @@ public final class EventFactory {
 
     public static void onResourcePack() {
         post(new ResourcePackEvent());
+    }
+
+    public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
+        return post(new CommandsPacketEvent(root));
     }
 
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {

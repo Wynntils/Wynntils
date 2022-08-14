@@ -4,19 +4,10 @@
  */
 package com.wynntils.core;
 
-import com.wynntils.core.chat.ChatManager;
-import com.wynntils.core.commands.ClientCommandManager;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.keybinds.KeyManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.CompassManager;
+import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.utils.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.ModelLoader;
-import com.wynntils.wc.utils.ActionBarManager;
-import com.wynntils.wc.utils.scoreboard.ScoreboardManager;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +27,7 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
+    private static boolean featuresInited = false;
 
     public static IEventBus getEventBus() {
         return EVENT_BUS;
@@ -73,7 +65,15 @@ public final class WynntilsMod {
         LOGGER.info(msg);
     }
 
+    public static void onResourcesFinishedLoading() {
+        if (featuresInited) return;
+
+        initFeatures();
+        featuresInited = true;
+    }
+
     public static void init(String modVersion, boolean isDevelopmentEnvironment) {
+        // At this point, no resources (including I18n) are available
         // Setup mod core properties
         developmentEnvironment = isDevelopmentEnvironment;
         parseVersion(modVersion);
@@ -82,25 +82,12 @@ public final class WynntilsMod {
         // making sure this is set to false will fix that
         System.setProperty("java.awt.headless", "false");
 
-        // Init all managers
+        ManagerRegistry.init();
+    }
 
-        // Pre-Init, needed for later managers - Dependencies for other features
-        ConfigManager.init();
-        ClientCommandManager.init();
-        KeyManager.init();
-        OverlayManager.init();
-        ScoreboardManager.init();
-        WebManager.init();
-
-        // Init - No dependencies
-        ActionBarManager.init();
-        ChatManager.init();
-        CompassManager.init();
-        ModelLoader.init();
-
-        // Forced Post Init, this should be last init in almost any case.
-        FeatureRegistry.init(); // Needs WebManager, ConfigManager (KeyManager, OverlayManager, ClientCommandManager,
-        // ScoreboardManager indirectly)
+    private static void initFeatures() {
+        // Init all features. Now resources (i.e I18n) are available.
+        FeatureRegistry.init();
     }
 
     private static void parseVersion(String versionString) {

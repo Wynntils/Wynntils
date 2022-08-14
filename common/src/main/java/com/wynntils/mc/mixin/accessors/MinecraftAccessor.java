@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Minecraft.class)
 public interface MinecraftAccessor {
+    @Accessor("fps")
+    int getFps();
+
     @Accessor("font")
     Font getFont();
 }
