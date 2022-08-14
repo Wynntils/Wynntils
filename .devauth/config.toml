@@ -3,3 +3,6 @@ defaultAccount = "main"
 
 [accounts.main]
 type = "microsoft"
+
+[accounts.alt]
+type = "microsoft"
