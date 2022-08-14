@@ -7,6 +7,7 @@ package com.wynntils.mc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -65,6 +67,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
@@ -271,6 +274,10 @@ public final class EventFactory {
 
     public static void onResourcePack() {
         post(new ResourcePackEvent());
+    }
+
+    public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
+        return post(new CommandsPacketEvent(root));
     }
 
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
