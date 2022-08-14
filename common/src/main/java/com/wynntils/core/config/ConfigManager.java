@@ -18,7 +18,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CustomColor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

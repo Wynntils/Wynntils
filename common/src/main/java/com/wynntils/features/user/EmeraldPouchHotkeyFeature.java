@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
+import static com.wynntils.wc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -14,10 +14,10 @@ import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.utils.InventoryUtils;
-import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
+import com.wynntils.wc.utils.InventoryUtils;
+import com.wynntils.wc.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.CommonColors;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;

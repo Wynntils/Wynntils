@@ -22,10 +22,10 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wc.utils.ActionBarModel;
+import com.wynntils.wc.model.ActionBarModel;
 import com.wynntils.wc.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

@@ -48,7 +48,7 @@ import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.core.managers.CrashReportManager;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

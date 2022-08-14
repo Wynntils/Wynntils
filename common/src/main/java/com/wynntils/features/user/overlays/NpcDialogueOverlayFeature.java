@@ -24,7 +24,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.utils.objects.CommonColors;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wc.event.NpcDialogEvent;
 import com.wynntils.wc.event.WorldStateEvent;
 import java.util.List;

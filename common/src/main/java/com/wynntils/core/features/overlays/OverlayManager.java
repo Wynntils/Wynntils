@@ -11,7 +11,7 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlayManagementScreen;
 import java.util.ArrayList;

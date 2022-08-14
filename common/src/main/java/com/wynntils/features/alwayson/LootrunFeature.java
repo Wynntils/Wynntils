@@ -15,10 +15,10 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wc.utils.ContainerUtils;
-import com.wynntils.wc.utils.lootrun.LootrunUtils;
+import com.wynntils.wc.model.LootrunModel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,13 +49,13 @@ public class LootrunFeature extends AlwaysOnFeature {
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        FileUtils.mkdir(LootrunUtils.LOOTRUNS);
+        FileUtils.mkdir(LootrunModel.LOOTRUNS);
     }
 
     @SubscribeEvent
     public void recordMovement(ClientTickEvent event) {
         if (event.getTickPhase() == ClientTickEvent.Phase.START) {
-            LootrunUtils.recordMovementIfRecording();
+            LootrunModel.recordMovementIfRecording();
         }
     }
 
@@ -63,25 +63,25 @@ public class LootrunFeature extends AlwaysOnFeature {
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         BlockState block = event.getWorld().getBlockState(event.getPos());
         if (block.is(Blocks.CHEST)) {
-            LootrunUtils.setLastChestIfRecording(event.getPos());
+            LootrunModel.setLastChestIfRecording(event.getPos());
         }
     }
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
         if (ContainerUtils.isLootChest(event.getScreen())) {
-            LootrunUtils.addChestIfRecording();
+            LootrunModel.addChestIfRecording();
         }
     }
 
     @SubscribeEvent
     public void onRenderLastLevel(RenderLevelLastEvent event) {
-        LootrunUtils.render(event.getPoseStack());
+        LootrunModel.render(event.getPoseStack());
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        LootrunUtils.recompileLootrun(false);
+        LootrunModel.recompileLootrun(false);
     }
 
     public enum PathType {

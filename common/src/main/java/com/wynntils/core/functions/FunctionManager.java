@@ -13,8 +13,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -116,6 +118,43 @@ public final class FunctionManager extends CoreManager {
     public static List<Function<?>> getFunctionsInTemplate(String template) {
         // FIXME: implement template parser
         return List.of();
+    }
+
+    public static <T> void doFormat(
+            String format, Consumer<T> consumer, java.util.function.Function<String, T> mapper, Map<String, T> infoVariableMap) {
+        Set<String> infoVariables = infoVariableMap.keySet();
+
+        int index = 0;
+        // TODO: Can we get away with less calculations since we now have asymmetric delimiters?
+        while (index < format.length()) {
+            int indexStartOfNextVariable = format.indexOf('{', index);
+            if (indexStartOfNextVariable == -1) {
+                break;
+            }
+
+            int indexEndOfNextVariable = format.indexOf('}', indexStartOfNextVariable + 1);
+            if (indexEndOfNextVariable == -1) {
+                break;
+            }
+
+            if (index != indexStartOfNextVariable) { // update none done too
+                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
+            }
+
+            String toMatch = format.substring(indexStartOfNextVariable + 1, indexEndOfNextVariable);
+
+            for (String infoVariable : infoVariables) {
+                if (!toMatch.equals(infoVariable)) {
+                    continue;
+                }
+
+                index = indexEndOfNextVariable + 1; // skip ending }
+                consumer.accept(infoVariableMap.get(infoVariable));
+                break;
+            }
+        }
+
+        consumer.accept(mapper.apply(format.substring(index)));
     }
 
     public static void init() {

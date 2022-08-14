@@ -6,7 +6,7 @@ package com.wynntils.core;
 
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.mc.utils.CrashReportManager;
+import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.regex.Matcher;
