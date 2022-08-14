@@ -35,14 +35,12 @@ public class AddCommandExpansionFeature extends UserFeature {
             "fixstart",
             "forum",
             "g",
-            "guild",
-            "housing",
+            "help",
             "hub",
             "itemlock",
             "kill",
             "msg",
             "p",
-            "party",
             "pet",
             "r",
             "relore",
@@ -66,8 +64,6 @@ public class AddCommandExpansionFeature extends UserFeature {
             "gc",
             "gold",
             "goldcoins",
-            "gu",
-            "is",
             "lobby",
             "pets",
             "share",
@@ -92,8 +88,11 @@ public class AddCommandExpansionFeature extends UserFeature {
         // Add commands with structured arguments
         addChangetagCommandNode(root);
         addFriendCommandNode(root);
+        addGuildCommandNode(root);
         addIgnoreCommandNode(root);
+        addHousingCommandNode(root);
         addParticlesCommandNode(root);
+        addPartyCommandNode(root);
         getToggleCommandNode(root);
     }
 
@@ -118,12 +117,52 @@ public class AddCommandExpansionFeature extends UserFeature {
         root.addChild(builder.build());
     }
 
+    private void addGuildCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("guild")
+                .then(literal("join").then(argument("tag", StringArgumentType.greedyString())))
+                .then(literal("leaderboard"))
+                .then(literal("leave"))
+                .then(literal("list"))
+                .then(literal("log"))
+                .then(literal("manage"))
+                .then(literal("rewards"))
+                .then(literal("stats"))
+                .then(literal("territory"))
+                .then(literal("xp").then(argument("amount", IntegerArgumentType.integer())));
+        ;
+
+        CommandNode<CommandSourceStack> node = builder.build();
+        root.addChild(node);
+
+        root.addChild(literal("gu").redirect(node).build());
+    }
+
     private void addIgnoreCommandNode(RootCommandNode root) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("ignore")
                 .then(literal("add").then(argument("name", StringArgumentType.string())))
                 .then(literal("remove").then(argument("name", StringArgumentType.string())));
 
         root.addChild(builder.build());
+    }
+
+    private void addHousingCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("housing")
+                .then(literal("allowedit").then(argument("name", StringArgumentType.string())))
+                .then(literal("ban").then(argument("name", StringArgumentType.string())))
+                .then(literal("disallowedit").then(argument("name", StringArgumentType.string())))
+                .then(literal("edit"))
+                .then(literal("invite").then(argument("name", StringArgumentType.string())))
+                .then(literal("kick").then(argument("name", StringArgumentType.string())))
+                .then(literal("kickall"))
+                .then(literal("leave"))
+                .then(literal("public"))
+                .then(literal("unban").then(argument("name", StringArgumentType.string())))
+                .then(literal("visit"));
+
+        CommandNode<CommandSourceStack> node = builder.build();
+        root.addChild(node);
+
+        root.addChild(literal("is").redirect(node).build());
     }
 
     private void addParticlesCommandNode(RootCommandNode root) {
@@ -140,6 +179,23 @@ public class AddCommandExpansionFeature extends UserFeature {
         root.addChild(node);
 
         root.addChild(literal("pq").redirect(node).build());
+    }
+
+    private void addPartyCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("party")
+                .then(literal("ban").then(argument("name", StringArgumentType.string())))
+                .then(literal("create"))
+                .then(literal("disband"))
+                .then(literal("finder"))
+                .then(literal("invite").then(argument("name", StringArgumentType.string())))
+                .then(literal("join").then(argument("name", StringArgumentType.string())))
+                .then(literal("kick").then(argument("name", StringArgumentType.string())))
+                .then(literal("leave"))
+                .then(literal("list"))
+                .then(literal("promote").then(argument("name", StringArgumentType.string())))
+                .then(literal("unban").then(argument("name", StringArgumentType.string())));
+
+        root.addChild(builder.build());
     }
 
     private void getToggleCommandNode(RootCommandNode root) {
