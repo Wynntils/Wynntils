@@ -54,7 +54,6 @@ public class AddCommandExpansionFeature extends UserFeature {
             "skiptutorial",
             "stream",
             "switch",
-            "toggle",
             "totems",
             "trade",
             "use");
@@ -94,6 +93,7 @@ public class AddCommandExpansionFeature extends UserFeature {
         }
         // Add commands with structured arguments
         root.addChild(getFriendCommandNode());
+        root.addChild(getToggleCommandNode());
     }
 
     private CommandNode<CommandSourceStack> getFriendCommandNode() {
@@ -104,5 +104,38 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("remove").then(argument("name", StringArgumentType.string())));
 
         return friendCommandBuilder.build();
+    }
+
+    private CommandNode<CommandSourceStack> getToggleCommandNode() {
+        LiteralArgumentBuilder<CommandSourceStack> toggleCommandBuilder = literal("toggle")
+                .then(literal("100"))
+                .then(literal("attacksound"))
+                .then(literal("autojoin"))
+                .then(literal("autotracking"))
+                .then(literal("beacon"))
+                .then(literal("blood"))
+                .then(literal("bombbell"))
+                .then(literal("combatbar"))
+                .then(literal("friendpopups"))
+                .then(literal("ghosts")
+                        .then(literal("none"))
+                        .then(literal("low"))
+                        .then(literal("medium"))
+                        .then(literal("high")))
+                .then(literal("guildjoin"))
+                .then(literal("guildpopups"))
+                .then(literal("insults"))
+                .then(literal("music"))
+                .then(literal("outlines"))
+                .then(literal("popups"))
+                .then(literal("pouchmsg"))
+                .then(literal("pouchpickup"))
+                .then(literal("queststartbeacon"))
+                .then(literal("rpwarning"))
+                .then(literal("sb"))
+                .then(literal("swears"))
+                .then(literal("vet"))
+                .then(literal("war"));
+        return toggleCommandBuilder.build();
     }
 }
