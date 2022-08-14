@@ -9,116 +9,99 @@ import static net.minecraft.commands.Commands.literal;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+/**
+ * Set up Brigadier command structure of known Wynncraft commands. The commands in this file
+ * were extracted from https://wynncraft.fandom.com/wiki/Commands,
+ * https://wynncraft.com/help?guide=commands and from running the commands in-game.
+ */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class AddCommandExpansionFeature extends UserFeature {
-    // These commands are extracted from https://wynncraft.fandom.com/wiki/Commands
-
-    private static final List<String> WYNN_COMMANDS = Arrays.asList(
-            "buy",
-            "claimingredientbomb",
-            "claimitembomb",
-            "class",
-            "crates",
-            "daily",
-            "duel",
-            "find",
-            "fixquests",
-            "fixstart",
-            "forum",
-            "g",
-            "help",
-            "hub",
-            "itemlock",
-            "kill",
-            "msg",
-            "p",
-            "pet",
-            "r",
-            "relore",
-            "renameitem",
-            "renamepet",
-            "report",
-            "rules",
-            "skiptutorial",
-            "stream",
-            "switch",
-            "totems",
-            "trade",
-            "use");
-
-    private static final List<String> WYNN_ALIASES = Arrays.asList(
-            "cash",
-            "change",
-            "classes",
-            "die",
-            "f",
-            "gc",
-            "gold",
-            "goldcoins",
-            "lobby",
-            "pets",
-            "share",
-            "shop",
-            "store",
-            "suicide",
-            "tell",
-            "trade");
-
     @SubscribeEvent
     public void onCommandPacket(CommandsPacketEvent event) {
         RootCommandNode root = event.getRoot();
-        // Add commands with no structured arguments
-        // FIXME: Some of these can be provided with structure
-        for (String command : WYNN_COMMANDS) {
-            root.addChild(literal(command).build());
-        }
-        // Add aliases with no structured arguments
-        for (String command : WYNN_ALIASES) {
-            root.addChild(literal(command).build());
-        }
-        // Add commands with structured arguments
+
+        addArgumentlessCommandNodes(root);
         addChangetagCommandNode(root);
         addFriendCommandNode(root);
         addGuildCommandNode(root);
         addIgnoreCommandNode(root);
         addHousingCommandNode(root);
+        addMessagingCommandNodes(root);
+        addMiscCommandNodes(root);
         addParticlesCommandNode(root);
         addPartyCommandNode(root);
-        getToggleCommandNode(root);
+        addPlayerCommandNodes(root);
+        addToggleCommandNode(root);
+    }
+
+    private void addArgumentlessCommandNodes(RootCommandNode root) {
+        root.addChild(literal("buy").build());
+        root.addChild(literal("cash").build());
+        root.addChild(literal("change").build());
+        root.addChild(literal("claimingredientbomb").build());
+        root.addChild(literal("claimitembomb").build());
+        root.addChild(literal("class").build());
+        root.addChild(literal("classes").build());
+        root.addChild(literal("crates").build());
+        root.addChild(literal("daily").build());
+        root.addChild(literal("die").build());
+        root.addChild(literal("fixquests").build());
+        root.addChild(literal("fixstart").build());
+        root.addChild(literal("forum").build());
+        root.addChild(literal("gc").build());
+        root.addChild(literal("gold").build());
+        root.addChild(literal("goldcoins").build());
+        root.addChild(literal("help").build());
+        root.addChild(literal("hub").build());
+        root.addChild(literal("itemlock").build());
+        root.addChild(literal("kill").build());
+        root.addChild(literal("lobby").build());
+        root.addChild(literal("pet").build());
+        root.addChild(literal("pets").build());
+        root.addChild(literal("relore").build());
+        root.addChild(literal("renameitem").build());
+        root.addChild(literal("renamepet").build());
+        root.addChild(literal("rules").build());
+        root.addChild(literal("shop").build());
+        root.addChild(literal("skiptutorial").build());
+        root.addChild(literal("store").build());
+        root.addChild(literal("stream").build());
+        root.addChild(literal("suicide").build());
+        root.addChild(literal("totems").build());
+        root.addChild(literal("use").build());
     }
 
     private void addChangetagCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("changetag")
+        root.addChild(literal("changetag")
                 .then(literal("VIP"))
                 .then(literal("VIP+"))
                 .then(literal("HERO"))
                 .then(literal("CHAMPION"))
-                .then(literal("RESET"));
-
-        root.addChild(builder.build());
+                .then(literal("RESET"))
+                .build());
     }
 
     private void addFriendCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("friend")
+        CommandNode<CommandSourceStack> node = literal("friend")
                 .then(literal("list"))
                 .then(literal("online"))
                 .then(literal("add").then(argument("player", StringArgumentType.string())))
-                .then(literal("remove").then(argument("player", StringArgumentType.string())));
+                .then(literal("remove").then(argument("player", StringArgumentType.string())))
+                .build();
+        root.addChild(node);
 
-        root.addChild(builder.build());
+        root.addChild(literal("f").redirect(node).build());
     }
 
     private void addGuildCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("guild")
+        CommandNode<CommandSourceStack> node = literal("guild")
                 .then(literal("attack"))
                 .then(literal("contribute"))
                 .then(literal("defend"))
@@ -136,24 +119,22 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("rewards"))
                 .then(literal("stats"))
                 .then(literal("territory"))
-                .then(literal("xp").then(argument("amount", IntegerArgumentType.integer())));
-
-        CommandNode<CommandSourceStack> node = builder.build();
+                .then(literal("xp").then(argument("amount", IntegerArgumentType.integer())))
+                .build();
         root.addChild(node);
 
         root.addChild(literal("gu").redirect(node).build());
     }
 
     private void addIgnoreCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("ignore")
+        root.addChild(literal("ignore")
                 .then(literal("add").then(argument("player", StringArgumentType.string())))
-                .then(literal("remove").then(argument("player", StringArgumentType.string())));
-
-        root.addChild(builder.build());
+                .then(literal("remove").then(argument("player", StringArgumentType.string())))
+                .build());
     }
 
     private void addHousingCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("housing")
+        CommandNode<CommandSourceStack> node = literal("housing")
                 .then(literal("allowedit").then(argument("player", StringArgumentType.string())))
                 .then(literal("ban").then(argument("player", StringArgumentType.string())))
                 .then(literal("disallowedit").then(argument("player", StringArgumentType.string())))
@@ -164,32 +145,61 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("leave"))
                 .then(literal("public"))
                 .then(literal("unban").then(argument("player", StringArgumentType.string())))
-                .then(literal("visit"));
-
-        CommandNode<CommandSourceStack> node = builder.build();
+                .then(literal("visit"))
+                .build();
         root.addChild(node);
 
         root.addChild(literal("is").redirect(node).build());
     }
 
+    private void addMessagingCommandNodes(RootCommandNode root) {
+        root.addChild(literal("g")
+                .then(argument("msg", StringArgumentType.greedyString()))
+                .build());
+
+        root.addChild(literal("p")
+                .then(argument("msg", StringArgumentType.greedyString()))
+                .build());
+
+        root.addChild(literal("r")
+                .then(argument("msg", StringArgumentType.greedyString()))
+                .build());
+
+        CommandNode<CommandSourceStack> node4 = literal("msg")
+                .then(argument("player", StringArgumentType.string())
+                        .then(argument("msg", StringArgumentType.greedyString())))
+                .build();
+        root.addChild(node4);
+        root.addChild(literal("tell").redirect(node4).build());
+    }
+
+    private void addMiscCommandNodes(RootCommandNode root) {
+        root.addChild(literal("report")
+                .then(argument("player", StringArgumentType.string())
+                        .then(argument("reason", StringArgumentType.greedyString())))
+                .build());
+
+        root.addChild(literal("switch")
+                .then(argument("world_num", IntegerArgumentType.integer()))
+                .build());
+    }
+
     private void addParticlesCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("particles")
+        CommandNode<CommandSourceStack> node = literal("particles")
                 .then(literal("off"))
                 .then(literal("low"))
                 .then(literal("medium"))
                 .then(literal("high"))
                 .then(literal("veryhigh"))
                 .then(literal("highest"))
-                .then(argument("particles_per_tick", IntegerArgumentType.integer()));
-
-        CommandNode<CommandSourceStack> node = builder.build();
+                .then(argument("particles_per_tick", IntegerArgumentType.integer()))
+                .build();
         root.addChild(node);
-
         root.addChild(literal("pq").redirect(node).build());
     }
 
     private void addPartyCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("party")
+        root.addChild(literal("party")
                 .then(literal("ban").then(argument("player", StringArgumentType.string())))
                 .then(literal("create"))
                 .then(literal("disband"))
@@ -200,13 +210,30 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("leave"))
                 .then(literal("list"))
                 .then(literal("promote").then(argument("player", StringArgumentType.string())))
-                .then(literal("unban").then(argument("player", StringArgumentType.string())));
-
-        root.addChild(builder.build());
+                .then(literal("unban").then(argument("player", StringArgumentType.string())))
+                .build());
     }
 
-    private void getToggleCommandNode(RootCommandNode root) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("toggle")
+    private void addPlayerCommandNodes(RootCommandNode root) {
+        CommandNode<CommandSourceStack> duelNode = literal("duel")
+                .then(argument("player", StringArgumentType.string()))
+                .build();
+        root.addChild(duelNode);
+        root.addChild(literal("d").redirect(duelNode).build());
+
+        CommandNode<CommandSourceStack> tradeNode = literal("trade")
+                .then(argument("player", StringArgumentType.string()))
+                .build();
+        root.addChild(tradeNode);
+        root.addChild(literal("share").redirect(tradeNode).build());
+
+        root.addChild(literal("find")
+                .then(argument("player", StringArgumentType.string()))
+                .build());
+    }
+
+    private void addToggleCommandNode(RootCommandNode root) {
+        root.addChild(literal("toggle")
                 .then(literal("100"))
                 .then(literal("attacksound"))
                 .then(literal("autojoin"))
@@ -234,8 +261,7 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(literal("sb"))
                 .then(literal("swears"))
                 .then(literal("vet"))
-                .then(literal("war"));
-
-        root.addChild(builder.build());
+                .then(literal("war"))
+                .build());
     }
 }
