@@ -24,7 +24,6 @@ public class AddCommandExpansionFeature extends UserFeature {
 
     private static final List<String> WYNN_COMMANDS = Arrays.asList(
             "buy",
-            "changetag",
             "claimingredientbomb",
             "claimitembomb",
             "class",
@@ -91,15 +90,36 @@ public class AddCommandExpansionFeature extends UserFeature {
             root.addChild(literal(command).build());
         }
         // Add commands with structured arguments
+        addChangetagCommandNode(root);
         addFriendCommandNode(root);
+        addIgnoreCommandNode(root);
         addParticlesCommandNode(root);
         getToggleCommandNode(root);
+    }
+
+    private void addChangetagCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("changetag")
+                .then(literal("VIP"))
+                .then(literal("VIP+"))
+                .then(literal("HERO"))
+                .then(literal("CHAMPION"))
+                .then(literal("RESET"));
+
+        root.addChild(builder.build());
     }
 
     private void addFriendCommandNode(RootCommandNode root) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("friend")
                 .then(literal("list"))
                 .then(literal("online"))
+                .then(literal("add").then(argument("name", StringArgumentType.string())))
+                .then(literal("remove").then(argument("name", StringArgumentType.string())));
+
+        root.addChild(builder.build());
+    }
+
+    private void addIgnoreCommandNode(RootCommandNode root) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("ignore")
                 .then(literal("add").then(argument("name", StringArgumentType.string())))
                 .then(literal("remove").then(argument("name", StringArgumentType.string())));
 
