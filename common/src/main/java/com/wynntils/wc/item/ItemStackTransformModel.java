@@ -6,6 +6,7 @@ package com.wynntils.wc.item;
 
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.wc.item.parsers.WynnItemMatchers;
 import com.wynntils.wc.item.properties.AmplifierTierProperty;
 import com.wynntils.wc.item.properties.ConsumableChargeProperty;
 import com.wynntils.wc.item.properties.CosmeticTierProperty;
@@ -21,7 +22,6 @@ import com.wynntils.wc.item.properties.ProfessionLevelProperty;
 import com.wynntils.wc.item.properties.SkillIconProperty;
 import com.wynntils.wc.item.properties.SkillPointProperty;
 import com.wynntils.wc.item.properties.TeleportScrollProperty;
-import com.wynntils.wc.item.parsers.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;

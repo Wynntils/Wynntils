@@ -6,11 +6,11 @@ package com.wynntils.mc.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.Font;

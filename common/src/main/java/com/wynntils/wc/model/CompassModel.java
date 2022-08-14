@@ -6,8 +6,8 @@ package com.wynntils.wc.model;
 
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSpawnEvent;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.McUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

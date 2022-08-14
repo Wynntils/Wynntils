@@ -6,13 +6,13 @@ package com.wynntils.wc.item.properties;
 
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wc.item.WynnItemStack;
+import com.wynntils.wc.item.parsers.WynnItemMatchers;
 import com.wynntils.wc.item.properties.type.HighlightProperty;
 import com.wynntils.wc.item.properties.type.TextOverlayProperty;
-import com.wynntils.wc.item.parsers.WynnItemMatchers;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 

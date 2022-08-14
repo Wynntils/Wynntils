@@ -4,8 +4,8 @@
  */
 package com.wynntils.wc.item.properties.type;
 
-import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.render.FontRenderer;
 
 public interface TextOverlayProperty extends PropertyType {
 

@@ -4,10 +4,10 @@
  */
 package com.wynntils.wc.item.properties;
 
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wc.item.WynnItemStack;
 
 public class DailyRewardMultiplierProperty extends CustomStackCountProperty {

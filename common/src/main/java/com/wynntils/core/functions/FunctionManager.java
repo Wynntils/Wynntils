@@ -121,7 +121,10 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static <T> void doFormat(
-            String format, Consumer<T> consumer, java.util.function.Function<String, T> mapper, Map<String, T> infoVariableMap) {
+            String format,
+            Consumer<T> consumer,
+            java.util.function.Function<String, T> mapper,
+            Map<String, T> infoVariableMap) {
         Set<String> infoVariables = infoVariableMap.keySet();
 
         int index = 0;
