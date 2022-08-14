@@ -20,6 +20,7 @@ public class ObjectiveHandler implements ScoreboardHandler {
     private static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
     private static final Pattern OBJECTIVE_PATTERN_START = Pattern.compile("^§([abc]).*$");
     private static final Pattern OBJECTIVE_PATTERN_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
+    private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
     private static WynnObjective guildWynnObjective = null;
 
@@ -150,7 +151,7 @@ public class ObjectiveHandler implements ScoreboardHandler {
             }
         }
 
-        if (!scoreLine.isEmpty()) {
+        if (!scoreLine.isEmpty() && !SEGMENT_HEADER.matcher(scoreLine).matches()) {
             WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + scoreLine);
         }
 
