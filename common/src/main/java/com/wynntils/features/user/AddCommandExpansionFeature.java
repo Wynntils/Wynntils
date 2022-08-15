@@ -165,12 +165,12 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(argument("msg", StringArgumentType.greedyString()))
                 .build());
 
-        CommandNode<CommandSourceStack> node4 = literal("msg")
+        CommandNode<CommandSourceStack> node = literal("msg")
                 .then(argument("player", StringArgumentType.string())
                         .then(argument("msg", StringArgumentType.greedyString())))
                 .build();
-        root.addChild(node4);
-        root.addChild(literal("tell").redirect(node4).build());
+        root.addChild(node);
+        root.addChild(literal("tell").redirect(node).build());
     }
 
     private void addMiscCommandNodes(RootCommandNode root) {
@@ -180,7 +180,7 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .build());
 
         root.addChild(literal("switch")
-                .then(argument("world_num", IntegerArgumentType.integer()))
+                .then(argument("world", StringArgumentType.string()))
                 .build());
     }
 
