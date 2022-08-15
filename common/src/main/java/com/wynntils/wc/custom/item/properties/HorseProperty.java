@@ -17,7 +17,7 @@ public class HorseProperty extends ItemProperty {
     private int level = -1;
     private int maxLevel = -1;
     private int tier = -1;
-    private String name = null;
+    private String name = "";
 
     public HorseProperty(WynnItemStack item) {
         super(item);

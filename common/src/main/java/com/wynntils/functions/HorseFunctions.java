@@ -85,7 +85,8 @@ public class HorseFunctions {
         public String getValue(String argument) {
             WynnItemStack horse = getHorse();
             if (horse == null) return null;
-            return horse.getProperty(ItemProperty.HORSE).getName();
+            String name = horse.getProperty(ItemProperty.HORSE).getName();
+            return (name.isEmpty()) ? null : name;
         }
 
         @Override
