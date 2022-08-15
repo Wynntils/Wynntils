@@ -167,7 +167,8 @@ public class CharacterFunctions {
 
     public static class XpFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(String
+                                               argument) {
             return StringUtils.integerToShortString(
                     (int) CharacterManager.getCharacterInfo().getCurrentXp());
         }
