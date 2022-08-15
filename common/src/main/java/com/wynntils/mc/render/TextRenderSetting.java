@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.render;
 
-import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 
 public record TextRenderSetting(
         float maxWidth, CustomColor customColor, FontRenderer.TextAlignment alignment, FontRenderer.TextShadow shadow) {

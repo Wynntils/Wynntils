@@ -16,7 +16,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wc.event.WorldStateEvent;
-import com.wynntils.wc.utils.WynnItemMatchers;
+import com.wynntils.wc.item.parsers.WynnItemMatchers;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.LinkedList;

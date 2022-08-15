@@ -4,20 +4,18 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.utils.InventoryUtils;
-import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.CommonColors;
+import com.wynntils.wc.utils.InventoryUtils;
+import com.wynntils.wc.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.wc.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -55,7 +53,8 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
                 }
 
-                InventoryUtils.sendInventorySlotMouseClick(slotNumber, emeraldPouch.getStack(), RIGHT_CLICK);
+                InventoryUtils.sendInventorySlotMouseClick(
+                        slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 NotificationManager.queueMessage(new TextRenderTask(

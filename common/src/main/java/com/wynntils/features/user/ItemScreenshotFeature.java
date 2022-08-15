@@ -17,8 +17,8 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.custom.item.GearItemStack;
-import com.wynntils.wc.utils.ChatItemUtils;
+import com.wynntils.wc.item.GearItemStack;
+import com.wynntils.wc.model.ChatItemModel;
 import com.wynntils.wc.utils.WynnItemUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import java.awt.image.BufferedImage;
@@ -118,7 +118,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
         // chat item prompt
         if (stack instanceof GearItemStack gearItem) {
-            String encoded = ChatItemUtils.encodeItem(gearItem);
+            String encoded = ChatItemModel.encodeItem(gearItem);
 
             McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemMessage")
                     .withStyle(ChatFormatting.DARK_GREEN)
