@@ -54,7 +54,7 @@ public class MapProfile {
     }
 
     public float getTextureZPosition(double posZ) {
-        return (float) (posZ - z2);
+        return (float) (posZ - z1);
     }
 
     public int getWorldXPosition(double textureX) {
