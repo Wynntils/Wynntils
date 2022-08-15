@@ -90,8 +90,7 @@ public class ConfigCommand extends CommandBase {
                     builder);
 
     @Override
-    public void register(CommandDispatcher<CommandSourceStack>
-                                     dispatcher) {
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("config")
                 .then(this.buildGetConfigNode())
                 .then(this.buildSetConfigNode())
