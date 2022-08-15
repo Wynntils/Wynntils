@@ -217,7 +217,7 @@ public class CharacterManager extends CoreManager {
             if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
                 return Integer.MAX_VALUE;
             }
-            return LEVEL_UP_XP_REQUIREMENTS[getXpLevel() - 1];
+            return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
         }
     }
 }
