@@ -10,7 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.wc.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;

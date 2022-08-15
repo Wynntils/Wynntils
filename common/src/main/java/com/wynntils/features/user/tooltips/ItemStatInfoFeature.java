@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wc.item.ItemStackTransformModel;
+import com.wynntils.wynn.item.ItemStackTransformModel;
 
 @FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
 public class ItemStatInfoFeature extends UserFeature {
