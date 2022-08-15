@@ -11,7 +11,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;

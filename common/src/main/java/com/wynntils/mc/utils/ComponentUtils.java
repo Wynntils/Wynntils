@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.utils;
 
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
