@@ -12,7 +12,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.lootrun.LootrunUtils;
+import com.wynntils.wc.model.LootrunModel;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 public class LootrunCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> LOOTRUN_SUGGESTION_PROVIDER =
             (context, suggestions) -> SharedSuggestionProvider.suggest(
-                    Stream.of(LootrunUtils.LOOTRUNS.list())
+                    Stream.of(LootrunModel.LOOTRUNS.list())
                             .map((name) -> name.replaceAll("\\.json$", ""))
                             .map(StringArgumentType::escapeIfRequired),
                     suggestions);
@@ -44,8 +44,8 @@ public class LootrunCommand extends CommandBase {
     private int loadLootrun(CommandContext<CommandSourceStack> context) {
         String fileName = StringArgumentType.getString(context, "lootrun");
 
-        boolean successful = LootrunUtils.tryLoadFile(fileName);
-        Vec3 startingPoint = LootrunUtils.getStartingPoint();
+        boolean successful = LootrunModel.tryLoadFile(fileName);
+        Vec3 startingPoint = LootrunModel.getStartingPoint();
 
         if (!successful || startingPoint == null) {
             context.getSource()
@@ -68,8 +68,8 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int recordLootrun(CommandContext<CommandSourceStack> context) {
-        if (LootrunUtils.getState() != LootrunUtils.LootrunState.RECORDING) {
-            LootrunUtils.startRecording();
+        if (LootrunModel.getState() != LootrunModel.LootrunState.RECORDING) {
+            LootrunModel.startRecording();
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent(
@@ -80,7 +80,7 @@ public class LootrunCommand extends CommandBase {
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record")))),
                             false);
         } else {
-            LootrunUtils.stopRecording();
+            LootrunModel.stopRecording();
             context.getSource()
                     .sendSuccess(
                             new TranslatableComponent(
@@ -106,7 +106,7 @@ public class LootrunCommand extends CommandBase {
 
     private int saveLootrun(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
-        LootrunUtils.LootrunSaveResult lootrunSaveResult = LootrunUtils.trySaveCurrentLootrun(name);
+        LootrunModel.LootrunSaveResult lootrunSaveResult = LootrunModel.trySaveCurrentLootrun(name);
 
         if (lootrunSaveResult == null) {
             return 0;
@@ -147,7 +147,7 @@ public class LootrunCommand extends CommandBase {
                         new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
                                 .append("\n" + text),
                         false);
-        return LootrunUtils.addNote(text);
+        return LootrunModel.addNote(text);
     }
 
     private int addTextLootrunNote(CommandContext<CommandSourceStack> context) {
@@ -159,16 +159,16 @@ public class LootrunCommand extends CommandBase {
                         new TranslatableComponent("feature.wynntils.lootrunUtils.addedNote", pos.toShortString())
                                 .append("\n" + text),
                         false);
-        return LootrunUtils.addNote(text);
+        return LootrunModel.addNote(text);
     }
 
     private int listLootrunNote(CommandContext<CommandSourceStack> context) {
-        List<LootrunUtils.Note> notes = LootrunUtils.getCurrentNotes();
+        List<LootrunModel.Note> notes = LootrunModel.getCurrentNotes();
         if (notes.isEmpty()) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteNoNote"));
         } else {
             MutableComponent component = new TranslatableComponent("feature.wynntils.lootrunUtils.listNoteHeader");
-            for (LootrunUtils.Note note : notes) {
+            for (LootrunModel.Note note : notes) {
                 BlockPos pos = new BlockPos(note.position());
                 String posString = pos.toShortString();
 
@@ -191,7 +191,7 @@ public class LootrunCommand extends CommandBase {
 
     private int deleteLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
-        var removedNote = LootrunUtils.deleteNoteAt(pos);
+        var removedNote = LootrunModel.deleteNoteAt(pos);
 
         if (removedNote != null) {
             context.getSource()
@@ -207,16 +207,16 @@ public class LootrunCommand extends CommandBase {
                     .sendFailure(
                             new TranslatableComponent("feature.wynntils.lootrunUtils.noteUnableToFind", posString));
         }
-        return LootrunUtils.recompileLootrun(true);
+        return LootrunModel.recompileLootrun(true);
     }
 
     private int clearLootrun(CommandContext<CommandSourceStack> context) {
-        if (LootrunUtils.getState() == LootrunUtils.LootrunState.DISABLED) {
+        if (LootrunModel.getState() == LootrunModel.LootrunState.DISABLED) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.noActiveLootrun"));
             return 0;
         }
 
-        LootrunUtils.clearCurrentLootrun();
+        LootrunModel.clearCurrentLootrun();
 
         context.getSource()
                 .sendSuccess(
@@ -228,7 +228,7 @@ public class LootrunCommand extends CommandBase {
 
     private int deleteLootrun(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
-        File file = new File(LootrunUtils.LOOTRUNS, name + ".json");
+        File file = new File(LootrunModel.LOOTRUNS, name + ".json");
         if (!file.exists()) {
             context.getSource()
                     .sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.lootrunDoesntExist", name));
@@ -250,8 +250,8 @@ public class LootrunCommand extends CommandBase {
     private int renameLootrun(CommandContext<CommandSourceStack> context) {
         String oldName = StringArgumentType.getString(context, "old");
         String newName = StringArgumentType.getString(context, "new");
-        File oldFile = new File(LootrunUtils.LOOTRUNS, oldName + ".json");
-        File newFile = new File(LootrunUtils.LOOTRUNS, newName + ".json");
+        File oldFile = new File(LootrunModel.LOOTRUNS, oldName + ".json");
+        File newFile = new File(LootrunModel.LOOTRUNS, newName + ".json");
         if (!oldFile.exists()) {
             context.getSource()
                     .sendFailure(
@@ -274,7 +274,7 @@ public class LootrunCommand extends CommandBase {
     private int addChest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
 
-        boolean successful = LootrunUtils.addChest(pos);
+        boolean successful = LootrunModel.addChest(pos);
 
         if (successful) {
             context.getSource()
@@ -288,13 +288,13 @@ public class LootrunCommand extends CommandBase {
                             "feature.wynntils.lootrunUtils.chestAlreadyAdded", pos.toShortString()));
         }
 
-        return LootrunUtils.recompileLootrun(true);
+        return LootrunModel.recompileLootrun(true);
     }
 
     private int removeChest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
 
-        boolean successful = LootrunUtils.removeChest(pos);
+        boolean successful = LootrunModel.removeChest(pos);
 
         if (successful) {
             context.getSource()
@@ -308,14 +308,14 @@ public class LootrunCommand extends CommandBase {
                             "feature.wynntils.lootrunUtils.chestDoesNotExist", pos.toShortString()));
         }
 
-        return LootrunUtils.recompileLootrun(true);
+        return LootrunModel.recompileLootrun(true);
     }
 
     private int undoLootrun(CommandContext<CommandSourceStack> context) {
-        if (LootrunUtils.getState() != LootrunUtils.LootrunState.RECORDING) {
+        if (LootrunModel.getState() != LootrunModel.LootrunState.RECORDING) {
             context.getSource().sendFailure(new TranslatableComponent("feature.wynntils.lootrunUtils.notRecording"));
         } else {
-            LootrunUtils.LootrunUndoResult lootrunUndoResult = LootrunUtils.tryUndo();
+            LootrunModel.LootrunUndoResult lootrunUndoResult = LootrunModel.tryUndo();
             switch (lootrunUndoResult) {
                 case SUCCESSFUL -> {
                     context.getSource()
@@ -339,7 +339,7 @@ public class LootrunCommand extends CommandBase {
     }
 
     private int folderLootrun(CommandContext<CommandSourceStack> context) {
-        Util.getPlatform().openFile(LootrunUtils.LOOTRUNS);
+        Util.getPlatform().openFile(LootrunModel.LOOTRUNS);
         return 1;
     }
 
