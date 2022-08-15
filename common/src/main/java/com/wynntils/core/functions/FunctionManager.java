@@ -7,6 +7,7 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.functions.EnvironmentFunctions;
+import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import java.text.NumberFormat;
@@ -132,5 +133,10 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
+
+        registerFunction(new HorseFunctions.levelFunction());
+        registerFunction(new HorseFunctions.maxLevelFunction());
+        registerFunction(new HorseFunctions.xpFunction());
+        registerFunction(new HorseFunctions.tierFunction());
     }
 }
