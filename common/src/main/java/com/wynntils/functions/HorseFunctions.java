@@ -36,6 +36,11 @@ public class HorseFunctions {
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ItemStackTransformModel.class);
         }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_lvl");
+        }
     }
 
     public static class HorseLevelMaxFunction extends ActiveFunction<String> {
@@ -49,6 +54,11 @@ public class HorseFunctions {
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_mlvl");
         }
     }
 
@@ -64,6 +74,11 @@ public class HorseFunctions {
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ItemStackTransformModel.class);
         }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_xp");
+        }
     }
 
     public static class HorseTierFunction extends ActiveFunction<String> {
@@ -77,6 +92,11 @@ public class HorseFunctions {
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_tier");
         }
     }
 
@@ -92,6 +112,11 @@ public class HorseFunctions {
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_name");
         }
     }
 }
