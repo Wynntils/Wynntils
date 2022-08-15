@@ -25,6 +25,13 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Gradle data
+          id: cache-gradle
+          uses: actions/cache@v3
+          with:
+            path: .gradle
+            key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
@@ -52,7 +59,14 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Gradle data
+          id: cache-gradle
+          uses: actions/cache@v3
+          with:
+            path: .gradle
+            key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -x spotlessCheck --no-daemon --build-cache
+          arguments: build -x spotlessCheck --build-cache
