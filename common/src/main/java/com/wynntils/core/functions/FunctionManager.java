@@ -150,12 +150,6 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.XpReqRawFunction());
         registerFunction(new CharacterFunctions.XpPctFunction());
 
-        registerFunction(new MinecraftFunctions.XFunction());
-        registerFunction(new MinecraftFunctions.YFunction());
-        registerFunction(new MinecraftFunctions.ZFunction());
-        registerFunction(new MinecraftFunctions.DirFunction());
-        registerFunction(new MinecraftFunctions.FpsFunction());
-
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
@@ -167,5 +161,11 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new HorseFunctions.HorseXpFunction());
         registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
+
+        registerFunction(new MinecraftFunctions.XFunction());
+        registerFunction(new MinecraftFunctions.YFunction());
+        registerFunction(new MinecraftFunctions.ZFunction());
+        registerFunction(new MinecraftFunctions.DirFunction());
+        registerFunction(new MinecraftFunctions.FpsFunction());
     }
 }
