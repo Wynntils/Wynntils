@@ -26,10 +26,10 @@ jobs:
           java-version: 17
 
       - name: Cache Gradle data
-          uses: actions/cache@v3
-          with:
-            path: .gradle
-            key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+        uses: actions/cache@v3
+        with:
+          path: .gradle
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
 
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
@@ -59,10 +59,10 @@ jobs:
           java-version: 17
 
       - name: Cache Gradle data
-          uses: actions/cache@v3
-          with:
-            path: .gradle
-            key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+        uses: actions/cache@v3
+        with:
+          path: .gradle
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
