@@ -59,16 +59,15 @@ public final class ClientCommandManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onChatSend(ChatSentEvent e) {
-        String message = e.getMessage();
+    public static boolean handleCommand(String message) {
+        assert message.startsWith("/");
 
-        if (message.startsWith("/")) {
-            StringReader reader = new StringReader(message);
-            reader.skip();
-            if (ClientCommandManager.executeCommand(reader, message)) {
-                e.setCanceled(true);
-            }
+        StringReader reader = new StringReader(message);
+        reader.skip();
+        if (ClientCommandManager.executeCommand(reader, message)) {
+            return true;
         }
+        return false;
     }
 
     public static CompletableFuture<Suggestions> getCompletionSuggestions(
