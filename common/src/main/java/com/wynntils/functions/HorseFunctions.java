@@ -17,7 +17,8 @@ public class HorseFunctions {
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse = new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
+            WynnItemStack horse =
+                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
             return String.valueOf(horse.getProperty(HorseProperty.class).getLevel());
         }
     }
@@ -27,7 +28,8 @@ public class HorseFunctions {
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse = new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
+            WynnItemStack horse =
+                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
             return String.valueOf(horse.getProperty(HorseProperty.class).getMaxLevel());
         }
     }
@@ -37,7 +39,8 @@ public class HorseFunctions {
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse = new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
+            WynnItemStack horse =
+                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
             return String.valueOf(horse.getProperty(HorseProperty.class).getXp());
         }
     }
@@ -46,7 +49,8 @@ public class HorseFunctions {
         @Override
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "?";
-            WynnItemStack horse = new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
+            WynnItemStack horse =
+                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
             return String.valueOf(horse.getProperty(HorseProperty.class).getTier());
         }
     }

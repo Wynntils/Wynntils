@@ -6,7 +6,6 @@ package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
-
 import java.util.List;
 
 public class HorseProperty extends ItemProperty {
@@ -24,7 +23,7 @@ public class HorseProperty extends ItemProperty {
 
         tier = Integer.parseInt(lore.get(0).substring(7));
         level = Integer.parseInt(lore.get(1).substring(9, lore.get(1).indexOf('/')));
-        maxLevel = Integer.parseInt(lore.get(1).substring(lore.get(1).indexOf('/')+1));
+        maxLevel = Integer.parseInt(lore.get(1).substring(lore.get(1).indexOf('/') + 1));
         xp = Integer.parseInt(lore.get(4).substring(6, lore.get(4).indexOf('/')));
     }
 
@@ -43,5 +42,4 @@ public class HorseProperty extends ItemProperty {
     public int getTier() {
         return tier;
     }
-
 }
