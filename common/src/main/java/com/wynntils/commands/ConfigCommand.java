@@ -4,8 +4,6 @@
  */
 package com.wynntils.commands;
 
-import static net.minecraft.commands.Commands.literal;
-
 import com.google.common.base.CaseFormat;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -93,7 +91,7 @@ public class ConfigCommand extends CommandBase {
 
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("config")
+        dispatcher.register(Commands.literal("config")
                 .then(this.buildGetConfigNode())
                 .then(this.buildSetConfigNode())
                 .then(this.buildResetConfigNode())
@@ -107,7 +105,7 @@ public class ConfigCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = literal("get");
+        LiteralArgumentBuilder<CommandSourceStack> getConfigArgBuilder = Commands.literal("get");
 
         // Feature specified, config option is not, print all configs
         // If a feature and config field is specified, print field specific info
@@ -117,7 +115,7 @@ public class ConfigCommand extends CommandBase {
         // /wynntils config get <feature> overlay <overlay> <field>
         getConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(literal("overlay")
+                .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
@@ -133,13 +131,13 @@ public class ConfigCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildSetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> setConfigArgBuilder = literal("set");
+        LiteralArgumentBuilder<CommandSourceStack> setConfigArgBuilder = Commands.literal("set");
 
         // /wynntils config set <feature> <field> <newValue>
         // /wynntils config set <feature> overlay <overlay> <field> <newValue>
         setConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(literal("overlay")
+                .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
@@ -155,7 +153,7 @@ public class ConfigCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildResetConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = literal("reset");
+        LiteralArgumentBuilder<CommandSourceStack> resetConfigArgBuilder = Commands.literal("reset");
 
         // Feature specified, config option is not, reset all configs
         // If a feature and config field is specified, reset specific field
@@ -165,7 +163,7 @@ public class ConfigCommand extends CommandBase {
         // /wynntils config reset <feature> overlay <overlay> <field>
         resetConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
                 .suggests(FEATURE_SUGGESTION_PROVIDER)
-                .then(literal("overlay")
+                .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
                                 .then(Commands.argument("config", StringArgumentType.word())
@@ -181,7 +179,7 @@ public class ConfigCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildReloadConfigNode() {
-        LiteralArgumentBuilder<CommandSourceStack> reloadConfigArgBuilder = literal("reload");
+        LiteralArgumentBuilder<CommandSourceStack> reloadConfigArgBuilder = Commands.literal("reload");
 
         // Reload config holder values from config file and then save to "merge".
         // /wynntils config reload

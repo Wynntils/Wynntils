@@ -4,8 +4,6 @@
  */
 package com.wynntils.commands;
 
-import static net.minecraft.commands.Commands.literal;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -36,7 +34,7 @@ public class FeatureCommand extends CommandBase {
 
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("feature")
+        dispatcher.register(Commands.literal("feature")
                 .then(this.buildListNode())
                 .then(this.enableFeatureNode())
                 .then(this.disableFeatureNode())
@@ -49,7 +47,7 @@ public class FeatureCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return literal("list").executes(this::listFeatures).build();
+        return Commands.literal("list").executes(this::listFeatures).build();
     }
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
@@ -72,7 +70,7 @@ public class FeatureCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
-        return literal("enable")
+        return Commands.literal("enable")
                 .then(Commands.argument("feature", StringArgumentType.word())
                         .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
                         .executes(this::enableFeature))
@@ -118,7 +116,7 @@ public class FeatureCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> disableFeatureNode() {
-        return literal("disable")
+        return Commands.literal("disable")
                 .then(Commands.argument("feature", StringArgumentType.word())
                         .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
                         .executes(this::disableFeature))

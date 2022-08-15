@@ -4,8 +4,6 @@
  */
 package com.wynntils.commands;
 
-import static net.minecraft.commands.Commands.literal;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,7 +29,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 public class FunctionCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("function")
+        dispatcher.register(Commands.literal("function")
                 .then(this.buildListNode())
                 .then(this.buildEnableNode())
                 .then(this.buildDisableNode())
@@ -58,7 +56,7 @@ public class FunctionCommand extends CommandBase {
                     builder);
 
     private LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return literal("list").executes(this::listFunctions).build();
+        return Commands.literal("list").executes(this::listFunctions).build();
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
@@ -85,7 +83,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildEnableNode() {
-        return literal("enable")
+        return Commands.literal("enable")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(activeFunctionSuggestionProvider)
                         .executes(this::enableFunction))
@@ -126,7 +124,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildDisableNode() {
-        return literal("disable")
+        return Commands.literal("disable")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(activeFunctionSuggestionProvider)
                         .executes(this::disableFunction))
@@ -160,7 +158,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildGetValueNode() {
-        return literal("get")
+        return Commands.literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
                         .executes(this::getValue))
@@ -168,7 +166,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
-        return literal("get")
+        return Commands.literal("get")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
                         .then(Commands.argument("argument", StringArgumentType.greedyString())
@@ -218,7 +216,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildHelpNode() {
-        return literal("help")
+        return Commands.literal("help")
                 .then(Commands.argument("function", StringArgumentType.word())
                         .suggests(functionSuggestionProvider)
                         .executes(this::helpForFunction))

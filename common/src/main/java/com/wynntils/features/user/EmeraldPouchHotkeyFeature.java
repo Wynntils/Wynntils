@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -55,7 +53,8 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
                 }
 
-                InventoryUtils.sendInventorySlotMouseClick(slotNumber, emeraldPouch.getStack(), RIGHT_CLICK);
+                InventoryUtils.sendInventorySlotMouseClick(
+                        slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 NotificationManager.queueMessage(new TextRenderTask(
