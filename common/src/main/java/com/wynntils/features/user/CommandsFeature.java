@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandsFeature extends UserFeature {
     @SubscribeEvent
-    public static void onChatSend(ChatSentEvent e) {
+    public void onChatSend(ChatSentEvent e) {
         if (!WynnUtils.onServer()) return;
 
         String message = e.getMessage();
