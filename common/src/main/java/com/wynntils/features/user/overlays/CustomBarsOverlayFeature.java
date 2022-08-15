@@ -24,9 +24,9 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.wc.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wc.model.ActionBarModel;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
+import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "overlays")

@@ -8,8 +8,8 @@ import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.managers.Model;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.model.ActionBarModel;
-import com.wynntils.wc.model.CharacterManager;
+import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.model.CharacterManager;
 import java.util.List;
 
 public class CharacterFunctions {

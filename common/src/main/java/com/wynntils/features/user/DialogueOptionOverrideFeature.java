@@ -9,7 +9,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

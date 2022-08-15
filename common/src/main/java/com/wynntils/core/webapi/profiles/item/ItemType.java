@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.wynntils.wc.objects.ClassType;
+import com.wynntils.wynn.objects.ClassType;
 import java.util.Locale;
 import java.util.Optional;
 

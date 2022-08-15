@@ -7,12 +7,12 @@ package com.wynntils.features.user;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandsFeature extends UserFeature {
     @SubscribeEvent
-    public static void onChatSend(ChatSentEvent e) {
+    public void onChatSend(ChatSentEvent e) {
         if (!WynnUtils.onServer()) return;
 
         String message = e.getMessage();
