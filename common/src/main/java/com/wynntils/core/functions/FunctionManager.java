@@ -6,6 +6,9 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Model;
+import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
@@ -29,6 +32,13 @@ public final class FunctionManager extends CoreManager {
         FUNCTIONS.add(function);
         if (function instanceof ActiveFunction<?> activeFunction) {
             activeFunction.init();
+        }
+        // FIXME: This is sort of hacky. We should have these as ActiveFunctions instead,
+        // and register/unregister the model dependency when enabling/disabling
+        if (function instanceof DependantFunction dependantFunction) {
+            for (Class<? extends Model> dependency : dependantFunction.getModelDependencies()) {
+                ManagerRegistry.addFunctionDependency(dependantFunction, dependency);
+            }
         }
     }
 
@@ -120,6 +130,24 @@ public final class FunctionManager extends CoreManager {
 
     public static void init() {
         registerFunction(new WorldFunction());
+
+        registerFunction(new CharacterFunctions.SoulpointFunction());
+        registerFunction(new CharacterFunctions.SoulpointMaxFunction());
+        registerFunction(new CharacterFunctions.SoulpointTimerFunction());
+        registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
+        registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
+        registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.ManaFunction());
+        registerFunction(new CharacterFunctions.ManaMaxFunction());
+        registerFunction(new CharacterFunctions.HealthFunction());
+        registerFunction(new CharacterFunctions.HealthMaxFunction());
+        registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.LevelFunction());
+        registerFunction(new CharacterFunctions.XpFunction());
+        registerFunction(new CharacterFunctions.XpRawFunction());
+        registerFunction(new CharacterFunctions.XpReqFunction());
+        registerFunction(new CharacterFunctions.XpReqRawFunction());
+        registerFunction(new CharacterFunctions.XpPctFunction());
 
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());

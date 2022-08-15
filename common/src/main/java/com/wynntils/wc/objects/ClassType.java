@@ -54,6 +54,10 @@ public enum ClassType {
         return reskinnedName;
     }
 
+    public String getActualName(boolean isReskinned) {
+        return isReskinned ? getReskinnedName() : getName();
+    }
+
     @Override
     public String toString() {
         return name + "/" + reskinnedName;

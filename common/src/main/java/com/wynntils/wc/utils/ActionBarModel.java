@@ -28,6 +28,9 @@ public final class ActionBarModel extends Model {
     private static int currentMana = -1;
     private static int maxMana = -1;
 
+    /** Needed for all Models */
+    public static void init() {}
+
     @SubscribeEvent
     public static void onActionBarUpdate(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;

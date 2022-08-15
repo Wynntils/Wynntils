@@ -29,7 +29,12 @@ public abstract class Function<T> implements Translatable {
         return getTranslation("description");
     }
 
+    private String getTranslationKeyName() {
+        String name = this.getClass().getSimpleName().replace("Function", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     public String getTranslation(String keySuffix) {
-        return I18n.get("function.wynntils." + getName() + "." + keySuffix);
+        return I18n.get("function.wynntils." + getTranslationKeyName() + "." + keySuffix);
     }
 }
