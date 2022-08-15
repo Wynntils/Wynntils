@@ -17,8 +17,9 @@ import net.minecraft.world.item.ItemStack;
 public class HorseFunctions {
 
     private static WynnItemStack getHorse() {
-        if (InventoryUtils.findHorseSlotNum() == -1) return null;
-        ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
+        int horseSlot = InventoryUtils.findHorseSlotNum();
+        if (horseSlot == -1) return null;
+        ItemStack is = McUtils.player().getInventory().getItem(horseSlot);
         if (!(is instanceof WynnItemStack horse)) return null;
         return horse;
     }
@@ -26,8 +27,9 @@ public class HorseFunctions {
     public static class HorseLevelFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (getHorse() == null) return "??";
-            return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getLevel());
+            WynnItemStack horse = getHorse();
+            if (horse == null) return "??";
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getLevel());
         }
 
         @Override
@@ -39,8 +41,9 @@ public class HorseFunctions {
     public static class HorseLevelMaxFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (getHorse() == null) return "??";
-            return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getMaxLevel());
+            WynnItemStack horse = getHorse();
+            if (horse == null) return "??";
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getMaxLevel());
         }
 
         @Override
@@ -52,8 +55,9 @@ public class HorseFunctions {
     public static class HorseXpFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (getHorse() == null) return null;
-            return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getXp());
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getXp());
         }
 
         @Override
@@ -65,8 +69,9 @@ public class HorseFunctions {
     public static class HorseTierFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (getHorse() == null) return null;
-            return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getTier());
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getTier());
         }
 
         @Override
