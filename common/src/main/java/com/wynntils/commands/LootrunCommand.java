@@ -12,7 +12,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.model.LootrunModel;
+import com.wynntils.wynn.model.LootrunModel;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
