@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 public class HorseFunctions {
 
     private static WynnItemStack getHorse() {
+        if (InventoryUtils.findHorseSlotNum() == -1) return null;
         ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
         if (!(is instanceof WynnItemStack horse)) return null;
         return horse;
@@ -22,8 +23,6 @@ public class HorseFunctions {
     public static class HorseLevelFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (InventoryUtils.findHorseSlotNum() == -1) return "??";
-
             if (getHorse() == null) return "??";
             return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getLevel());
         }
@@ -32,8 +31,6 @@ public class HorseFunctions {
     public static class HorseLevelMaxFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (InventoryUtils.findHorseSlotNum() == -1) return "??";
-
             if (getHorse() == null) return "??";
             return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getMaxLevel());
         }
@@ -42,8 +39,6 @@ public class HorseFunctions {
     public static class HorseXpFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (InventoryUtils.findHorseSlotNum() == -1) return "??";
-
             if (getHorse() == null) return null;
             return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getXp());
         }
@@ -52,8 +47,6 @@ public class HorseFunctions {
     public static class HorseTierFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            if (InventoryUtils.findHorseSlotNum() == -1) return "?";
-
             if (getHorse() == null) return null;
             return String.valueOf(getHorse().getProperty(ItemProperty.HORSE).getTier());
         }
