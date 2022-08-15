@@ -16,6 +16,7 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.ChatItemFeature;
+import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.FilterAdminCommandsFeature;
@@ -147,6 +148,7 @@ public final class FeatureRegistry {
 
         // user
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new CommandsFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());

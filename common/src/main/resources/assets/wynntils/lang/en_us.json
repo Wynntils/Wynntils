@@ -1,4 +1,5 @@
 {
+  "feature.wynntils.commands.name": "Custom Wynntils Command Feature",
   "feature.wynntils.connectionProgress.name": "Connection Progress Feature",
   "feature.wynntils.customBarsOverlay.name": "Custom Health/Mana Bar Feature",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.flip.description": "Should the filling of the bar be flipped?",
