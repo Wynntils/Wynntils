@@ -26,7 +26,6 @@ jobs:
           java-version: 17
 
       - name: Cache Gradle data
-          id: cache-gradle
           uses: actions/cache@v3
           with:
             path: .gradle
@@ -60,7 +59,6 @@ jobs:
           java-version: 17
 
       - name: Cache Gradle data
-          id: cache-gradle
           uses: actions/cache@v3
           with:
             path: .gradle
