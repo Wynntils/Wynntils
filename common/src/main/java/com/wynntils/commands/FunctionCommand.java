@@ -65,7 +65,7 @@ public class FunctionCommand extends CommandBase {
         List<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toList());
         functions.sort(Comparator.comparing(Function::getName));
 
-        MutableComponent response = new TextComponent("Currently registered functions:").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = new TextComponent("Available functions:").withStyle(ChatFormatting.AQUA);
 
         for (Function<?> function : functions) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
