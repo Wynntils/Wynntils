@@ -194,15 +194,6 @@ public class CharacterManager extends CoreManager {
             return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
         }
 
-        public int getTicksToNextManaRegen() {
-            int spTicks = getTicksToNextSoulPoint();
-            // Mana regen procs at 14599, 14499, 14399...
-            // and lasts until     14580, 14480, 14380...
-            // Each regen proc lasts one second but effectively needs to have the player having the MR stat at
-            // 14600, 14500, 14400... (which makes this calculation a lot easier compared to xxx99)
-            return 100 - spTicks % 100; // Each percent is a tick
-        }
-
         public float getCurrentXp() {
             // We calculate our level in points by seeing how far we've progress towards our
             // current XP level's max
