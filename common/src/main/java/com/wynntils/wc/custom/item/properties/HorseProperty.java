@@ -6,25 +6,33 @@ package com.wynntils.wc.custom.item.properties;
 
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HorseProperty extends ItemProperty {
 
-    private int xp;
-    private int level;
-    private int maxLevel;
-    private int tier;
+    private final Pattern HORSE_PATTERN = Pattern.compile(
+            "§7Tier (\\d)§6Speed: (\\d+)/(\\d+)§6Jump: \\d+/\\d+§5Armour: None§bXp: (\\d+)/100(?:§cUntradable Item)?(:?§7Name: (.+))?");
+    private int xp = -1;
+    private int level = -1;
+    private int maxLevel = -1;
+    private int tier = -1;
+    private String name = null;
 
     public HorseProperty(WynnItemStack item) {
         super(item);
 
         // Parse xp, level, max level, and tier
-        List<String> lore = ItemUtils.getLore(item);
+        String lore = ItemUtils.getStringLore(item);
+        Matcher m = HORSE_PATTERN.matcher(lore);
 
-        tier = Integer.parseInt(lore.get(0).substring(7));
-        level = Integer.parseInt(lore.get(1).substring(9, lore.get(1).indexOf('/')));
-        maxLevel = Integer.parseInt(lore.get(1).substring(lore.get(1).indexOf('/') + 1));
-        xp = Integer.parseInt(lore.get(4).substring(6, lore.get(4).indexOf('/')));
+        if (m.matches()) {
+            tier = Integer.parseInt(m.group(1));
+            level = Integer.parseInt(m.group(2));
+            maxLevel = Integer.parseInt(m.group(3));
+            xp = Integer.parseInt(m.group(4));
+            name = m.group(5);
+        }
     }
 
     public int getXp() {
@@ -41,5 +49,9 @@ public class HorseProperty extends ItemProperty {
 
     public int getTier() {
         return tier;
+    }
+
+    public String getName() {
+        return name;
     }
 }

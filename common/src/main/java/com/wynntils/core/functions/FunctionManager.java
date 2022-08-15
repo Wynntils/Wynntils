@@ -166,5 +166,6 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
         registerFunction(new HorseFunctions.HorseXpFunction());
         registerFunction(new HorseFunctions.HorseTierFunction());
+        registerFunction(new HorseFunctions.HorseNameFunction());
     }
 }

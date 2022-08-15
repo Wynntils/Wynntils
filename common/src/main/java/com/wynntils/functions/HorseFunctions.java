@@ -79,4 +79,18 @@ public class HorseFunctions {
             return List.of(ItemStackTransformModel.class);
         }
     }
+
+    public static class HorseNameFunction extends ActiveFunction<String> {
+        @Override
+        public String getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getName();
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+    }
 }
