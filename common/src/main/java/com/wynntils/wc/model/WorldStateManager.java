@@ -40,6 +40,9 @@ public class WorldStateManager extends CoreManager {
 
     private static State currentState = State.NOT_CONNECTED;
 
+    /** Needed for all Models */
+    public static void init() {}
+
     public static boolean onServer() {
         return currentState != State.NOT_CONNECTED;
     }
