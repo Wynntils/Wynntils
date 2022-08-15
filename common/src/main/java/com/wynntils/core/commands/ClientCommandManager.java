@@ -15,7 +15,6 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
