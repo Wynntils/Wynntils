@@ -6,8 +6,8 @@ package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.objects.CustomColor;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.Callable;

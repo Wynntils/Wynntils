@@ -16,7 +16,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CustomColor;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;

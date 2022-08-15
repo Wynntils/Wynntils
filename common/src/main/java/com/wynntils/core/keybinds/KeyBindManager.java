@@ -20,6 +20,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class KeyBindManager extends CoreManager {
     private static final List<KeyHolder> keyHolders = new ArrayList<>();
 
+    /** Needed for all Models */
+    public static void init() {}
+
     @SubscribeEvent
     public static void onTick(ClientTickEvent e) {
         if (e.getTickPhase() == ClientTickEvent.Phase.END) {

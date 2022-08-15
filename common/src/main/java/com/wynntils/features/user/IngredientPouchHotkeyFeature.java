@@ -4,15 +4,13 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.LEFT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.utils.InventoryUtils;
 import com.wynntils.wc.utils.WynnUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,6 +26,6 @@ public class IngredientPouchHotkeyFeature extends UserFeature {
         InventoryUtils.sendInventorySlotMouseClick(
                 InventoryUtils.INGREDIENT_POUCH_SLOT_NUM,
                 McUtils.inventory().getItem(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM),
-                LEFT_CLICK);
+                InventoryUtils.MouseClickType.LEFT_CLICK);
     }
 }

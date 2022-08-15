@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.utils.objects.QuadConsumer;
+import com.wynntils.utils.QuadConsumer;
 
 public class BasicOverlay extends Overlay {
     private final QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer;

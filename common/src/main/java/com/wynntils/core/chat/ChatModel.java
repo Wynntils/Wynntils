@@ -77,6 +77,9 @@ public final class ChatModel extends Model {
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
+    /** Needed for all Models */
+    public static void init() {}
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onServer()) return;
