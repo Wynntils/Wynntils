@@ -63,7 +63,6 @@ public final class ClientCommandManager extends CoreManager {
         command.register(clientDispatcher);
     }
 
-    @SubscribeEvent
     public static boolean handleCommand(String message) {
         assert message.startsWith("/");
 
