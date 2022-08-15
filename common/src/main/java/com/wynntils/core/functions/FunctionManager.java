@@ -134,9 +134,9 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
 
-        registerFunction(new HorseFunctions.levelFunction());
-        registerFunction(new HorseFunctions.maxLevelFunction());
-        registerFunction(new HorseFunctions.xpFunction());
-        registerFunction(new HorseFunctions.tierFunction());
+        registerFunction(new HorseFunctions.horseLevelFunction());
+        registerFunction(new HorseFunctions.horseLevelMaxFunction());
+        registerFunction(new HorseFunctions.horseXpFunction());
+        registerFunction(new HorseFunctions.horseTierFunction());
     }
 }

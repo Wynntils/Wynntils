@@ -4,54 +4,60 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.custom.item.properties.HorseProperty;
+import com.wynntils.wc.custom.item.properties.ItemProperty;
+import net.minecraft.world.item.ItemStack;
 
 public class HorseFunctions {
 
-    public static class levelFunction extends Function<String> {
+    public static class horseLevelFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse =
-                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
-            return String.valueOf(horse.getProperty(HorseProperty.class).getLevel());
+            ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
+            if (!(is instanceof WynnItemStack horse)) return "??";
+
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getLevel());
         }
     }
 
-    public static class maxLevelFunction extends Function<String> {
+    public static class horseLevelMaxFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse =
-                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
-            return String.valueOf(horse.getProperty(HorseProperty.class).getMaxLevel());
+            ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
+            if (!(is instanceof WynnItemStack horse)) return "??";
+
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getMaxLevel());
         }
     }
 
-    public static class xpFunction extends Function<String> {
+    public static class horseXpFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "??";
 
-            WynnItemStack horse =
-                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
-            return String.valueOf(horse.getProperty(HorseProperty.class).getXp());
+            ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
+            if (!(is instanceof WynnItemStack horse)) return "??";
+
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getXp());
         }
     }
 
-    public static class tierFunction extends Function<String> {
+    public static class horseTierFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
             if (InventoryUtils.findHorseSlotNum() == -1) return "?";
-            WynnItemStack horse =
-                    new WynnItemStack(McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum()));
-            return String.valueOf(horse.getProperty(HorseProperty.class).getTier());
+
+            ItemStack is = McUtils.player().getInventory().getItem(InventoryUtils.findHorseSlotNum());
+            if (!(is instanceof WynnItemStack horse)) return "??";
+
+            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getTier());
         }
     }
 }
