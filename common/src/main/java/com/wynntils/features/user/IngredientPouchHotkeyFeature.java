@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.wc.utils.InventoryUtils.MouseClickType.LEFT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -28,6 +26,6 @@ public class IngredientPouchHotkeyFeature extends UserFeature {
         InventoryUtils.sendInventorySlotMouseClick(
                 InventoryUtils.INGREDIENT_POUCH_SLOT_NUM,
                 McUtils.inventory().getItem(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM),
-                LEFT_CLICK);
+                InventoryUtils.MouseClickType.LEFT_CLICK);
     }
 }
