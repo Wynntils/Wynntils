@@ -9,6 +9,8 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.functions.DependantFunction;
+import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
@@ -24,9 +26,10 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
-public class ManagerRegistry {
+public final class ManagerRegistry {
     private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
     private static final Map<Class<? extends Model>, List<Feature>> MODEL_DEPENDENCIES = new HashMap<>();
+    private static final Map<Class<? extends Model>, List<Function<?>>> FUNCTION_MODEL_DEPENDENCIES = new HashMap<>();
     private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
@@ -72,6 +75,19 @@ public class ManagerRegistry {
         updateManagerState(dependency);
     }
 
+    public static void addFunctionDependency(
+            DependantFunction<?> dependantFunction, Class<? extends Model> dependency) {
+        if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
+            throw new IllegalStateException("Tried to register a persistent manager.");
+        }
+
+        FUNCTION_MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+
+        FUNCTION_MODEL_DEPENDENCIES.get(dependency).add(dependantFunction);
+
+        updateManagerState(dependency);
+    }
+
     public static void removeDependency(Feature dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to unregister a persistent manager.");
@@ -96,9 +112,13 @@ public class ManagerRegistry {
 
     private static void updateManagerState(Class<? extends Manager> manager) {
         List<Feature> dependencies = MODEL_DEPENDENCIES.get(manager);
+        List<Function<?>> functionDependencies = FUNCTION_MODEL_DEPENDENCIES.get(manager);
+
+        boolean hasDependencies = (dependencies != null && !dependencies.isEmpty())
+                || (functionDependencies != null && !functionDependencies.isEmpty());
 
         if (ENABLED_MANAGERS.contains(manager)) {
-            if (dependencies == null || dependencies.isEmpty()) {
+            if (!hasDependencies) {
                 WynntilsMod.getEventBus().unregister(manager);
 
                 ENABLED_MANAGERS.remove(manager);
@@ -106,7 +126,7 @@ public class ManagerRegistry {
                 tryDisableManager(manager);
             }
         } else {
-            if (dependencies != null && !dependencies.isEmpty()) {
+            if (hasDependencies) {
                 WynntilsMod.getEventBus().register(manager);
 
                 ENABLED_MANAGERS.add(manager);
