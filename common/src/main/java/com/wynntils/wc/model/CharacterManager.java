@@ -11,6 +11,8 @@ import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wc.event.WorldStateEvent;
 import com.wynntils.wc.objects.ClassType;
 import java.util.List;
@@ -25,8 +27,26 @@ public class CharacterManager extends CoreManager {
     private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
 
+    /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
+     * which points to the data at https://pastebin.com/fCTfEkaC
+     * Note that the last value is the sum of all preceeding values
+     */
+    private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
+        110, 190, 275, 385, 505, 645, 790, 940, 1100, 1370, 1570, 1800, 2090, 2400, 2720, 3100, 3600, 4150, 4800, 5300,
+        5900, 6750, 7750, 8900, 10200, 11650, 13300, 15200, 17150, 19600, 22100, 24900, 28000, 31500, 35500, 39900,
+        44700, 50000, 55800, 62000, 68800, 76400, 84700, 93800, 103800, 114800, 126800, 140000, 154500, 170300, 187600,
+        206500, 227000, 249500, 274000, 300500, 329500, 361000, 395000, 432200, 472300, 515800, 562800, 613700, 668600,
+        728000, 792000, 860000, 935000, 1040400, 1154400, 1282600, 1414800, 1567500, 1730400, 1837000, 1954800, 2077600,
+        2194400, 2325600, 2455000, 2645000, 2845000, 3141100, 3404710, 3782160, 4151400, 4604100, 5057300, 5533840,
+        6087120, 6685120, 7352800, 8080800, 8725600, 9578400, 10545600, 11585600, 12740000, 14418250, 16280000,
+        21196500, 23315500, 25649000, 249232940
+    };
+
     private static CharacterInfo currentCharacter;
     private static boolean inCharacterSelection;
+
+    /** Needed for all Models */
+    public static void init() {}
 
     public static boolean hasCharacter() {
         return currentCharacter != null;
@@ -99,6 +119,12 @@ public class CharacterManager extends CoreManager {
             return reskinned;
         }
 
+        /** Returns the current class name, wrt reskinned or not.
+         */
+        public String getActualName() {
+            return classType.getActualName(reskinned);
+        }
+
         public int getLevel() {
             return level;
         }
@@ -135,6 +161,63 @@ public class CharacterManager extends CoreManager {
         public String toString() {
             return "CharacterInfo[classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + ", id="
                     + id + ']';
+        }
+
+        /**
+         * Return the maximum number of soul points the character can currently have
+         */
+        public int getMaxSoulPoints() {
+            // FIXME: If player is veteran, we should always return 15
+            int maxIfNotVeteran = 10 + MathUtils.clamp(getLevel() / 15, 0, 5);
+            if (getSoulPoints() > maxIfNotVeteran) {
+                return 15;
+            }
+            return maxIfNotVeteran;
+        }
+
+        /**
+         * Return the current number of soul points of the character, or -1 if unable to determine
+         */
+        public int getSoulPoints() {
+            ItemStack soulPoints = McUtils.player().getInventory().getItem(8);
+            if (soulPoints.getItem() != Items.NETHER_STAR) {
+                return -1;
+            }
+
+            return soulPoints.getCount();
+        }
+
+        /**
+         * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
+         *
+         * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
+         * in which case soul points are already full
+         */
+        public int getTicksToNextSoulPoint() {
+            if (McUtils.mc().level == null) return -1;
+            return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
+        }
+
+        public float getCurrentXp() {
+            // We calculate our level in points by seeing how far we've progress towards our
+            // current XP level's max
+            return getXpProgress() * getXpPointsNeededToLevelUp();
+        }
+
+        public float getXpProgress() {
+            return McUtils.player().experienceProgress;
+        }
+
+        public int getXpLevel() {
+            return McUtils.player().experienceLevel;
+        }
+
+        public int getXpPointsNeededToLevelUp() {
+            int levelIndex = getXpLevel() - 1;
+            if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+                return Integer.MAX_VALUE;
+            }
+            return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
         }
     }
 }

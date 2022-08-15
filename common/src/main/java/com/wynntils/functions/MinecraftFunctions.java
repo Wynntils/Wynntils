@@ -40,7 +40,7 @@ public class MinecraftFunctions {
     public static class FpsFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return ((MinecraftAccessor) McUtils.mc()).getFps();
+            return MinecraftAccessor.getFps();
         }
     }
 }

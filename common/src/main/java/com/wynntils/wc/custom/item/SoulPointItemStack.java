@@ -6,6 +6,7 @@ package com.wynntils.wc.custom.item;
 
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.model.CharacterManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -32,14 +33,14 @@ public class SoulPointItemStack extends WynnItemStack {
 
             copy.add(new TextComponent(" "));
 
-            int rawSecondsUntilSoulPoint = getTicksTillNextSoulPoint() / 20;
+            int rawSecondsUntilSoulPoint = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
             copy.add(new TranslatableComponent(
                             "feature.wynntils.soulPointTimer.lore",
                             ChatFormatting.WHITE
-                                    + String.format("%02d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
+                                    + String.format("%d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
                     .withStyle(ChatFormatting.AQUA));
 
             return copy;
