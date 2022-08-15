@@ -27,7 +27,7 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.IdentificationOrderer;
+import com.wynntils.wc.item.IdentificationOrderer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;

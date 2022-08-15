@@ -13,10 +13,10 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.wc.custom.item.ItemStackTransformModel;
-import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.custom.item.properties.ItemProperty;
-import com.wynntils.wc.custom.item.properties.type.TextOverlayProperty;
+import com.wynntils.wc.item.ItemStackTransformModel;
+import com.wynntils.wc.item.WynnItemStack;
+import com.wynntils.wc.item.properties.ItemProperty;
+import com.wynntils.wc.item.properties.type.TextOverlayProperty;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
