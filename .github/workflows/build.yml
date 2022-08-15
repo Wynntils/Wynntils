@@ -28,7 +28,7 @@ jobs:
       - name: Cache Gradle data
         uses: actions/cache@v3
         with:
-          path: .gradle
+          path: '.gradle'
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
 
       - name: Format with spotless
