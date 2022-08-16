@@ -62,6 +62,9 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
         for (int j = 0; j < 4; j++) {
             SpellType spell = SpellType.forClass(characterInfo.getClassType(), j + 1);
 
+            if (spell == null) {
+                continue;
+            }
             if (spell.getUnlockLevel(1) <= level) {
                 // The spell has been unlocked
                 int nextUpgrade = spell.getNextManaReduction(level, intelligencePoints);
