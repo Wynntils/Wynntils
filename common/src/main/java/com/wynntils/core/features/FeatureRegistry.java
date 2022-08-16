@@ -13,6 +13,7 @@ import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
 import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
+import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.ChatItemFeature;
@@ -138,22 +139,23 @@ public final class FeatureRegistry {
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new LogItemInfoFeature());
         registerFeature(new PacketDebuggerFeature());
 
         // always on
-        registerFeature(new ChatItemFeature());
-        registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
 
         // user
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new FilterAdminCommandsFeature());
+        registerFeature(new FixPacketBugsFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
