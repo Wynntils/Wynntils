@@ -55,6 +55,12 @@ public class CharacterManager extends CoreManager {
     }
 
     public static CharacterInfo getCharacterInfo() {
+        if (currentCharacter == null) {
+            McUtils.sendMessageToClient(new TextComponent(
+                            "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
+                    .withStyle(ChatFormatting.RED));
+            currentCharacter = new CharacterInfo(ClassType.None, false, McUtils.player().experienceLevel, 0);
+        }
         return currentCharacter;
     }
 
@@ -155,12 +161,6 @@ public class CharacterManager extends CoreManager {
                 }
             }
             ClassType classType = ClassType.fromName(className);
-
-            if (classType == ClassType.None) {
-                McUtils.sendMessageToClient(new TextComponent(
-                                "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
-                        .withStyle(ChatFormatting.RED));
-            }
 
             return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
         }
