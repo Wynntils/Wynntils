@@ -90,6 +90,7 @@ public class MiniMapOverlayFeature extends UserFeature {
             }
 
             if (followPlayerRotation) {
+                poseStack.pushPose();
                 rotateMapToPlayer(poseStack, centerX, centerZ);
             }
 
@@ -124,7 +125,6 @@ public class MiniMapOverlayFeature extends UserFeature {
         }
 
         private void rotateMapToPlayer(PoseStack poseStack, float centerX, float centerZ) {
-            poseStack.pushPose();
             poseStack.translate(centerX, centerZ, 0);
             // See Quaternion#fromXYZ
             poseStack.mulPose(new Quaternion(
