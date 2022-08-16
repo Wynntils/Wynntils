@@ -7,32 +7,26 @@ package com.wynntils.features.debug;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class LogItemInfoFeature extends DebugFeature {
     @RegisterKeyBind
-    private final KeyHolder logItemInfoKeybind =
-            new KeyHolder("Log Item Info", GLFW.GLFW_KEY_INSERT, "Wynntils", true, this::onLogItemInfoPress);
-
-    @SubscribeEvent
-    public void onKeyPress(InventoryKeyPressEvent e) {
-        if (logItemInfoKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
-            Slot hoveredSlot = e.getHoveredSlot();
-            if (hoveredSlot == null) return;
-            logItem(hoveredSlot.getItem());
-        }
-    }
+    private final KeyBind logItemInfoKeyBind = new KeyBind(
+            "Log Item Info", GLFW.GLFW_KEY_INSERT, true, this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);
 
     private void onLogItemInfoPress() {
         logItem(McUtils.mc().player.getItemBySlot(EquipmentSlot.MAINHAND));
+    }
+
+    private void onLogItemInfoInventoryPress(Slot hoveredSlot) {
+        if (hoveredSlot == null) return;
+        logItem(hoveredSlot.getItem());
     }
 
     private void logItem(ItemStack itemStack) {

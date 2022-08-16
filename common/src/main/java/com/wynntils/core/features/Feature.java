@@ -12,7 +12,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBindManager;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
@@ -36,7 +36,7 @@ public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
-    private final List<KeyHolder> keyMappings = new ArrayList<>();
+    private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<ConfigHolder> configOptions = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
@@ -87,11 +87,11 @@ public abstract class Feature implements Translatable, Configurable {
     }
 
     /**
-     * Adds a keyHolder to the feature. Called from the registry.
-     * @param keyHolder KeyHolder to add to the feature
+     * Adds a keyBind to the feature. Called from the registry.
+     * @param keyBind KeyBind to add to the feature
      */
-    public final void setupKeyHolder(KeyHolder keyHolder) {
-        keyMappings.add(keyHolder);
+    public final void setupKeyHolder(KeyBind keyBind) {
+        keyBinds.add(keyBind);
     }
 
     public List<Overlay> getOverlays() {
@@ -153,8 +153,8 @@ public abstract class Feature implements Translatable, Configurable {
             WynntilsMod.getEventBus().register(this);
         }
         OverlayManager.enableOverlays(this.overlays, false);
-        for (KeyHolder key : keyMappings) {
-            KeyBindManager.registerKeybind(key);
+        for (KeyBind keyBind : keyBinds) {
+            KeyBindManager.registerKeybind(keyBind);
         }
     }
 
@@ -172,8 +172,8 @@ public abstract class Feature implements Translatable, Configurable {
             WynntilsMod.getEventBus().unregister(this);
         }
         OverlayManager.disableOverlays(this.overlays);
-        for (KeyHolder key : keyMappings) {
-            KeyBindManager.unregisterKeybind(key);
+        for (KeyBind keyBind : keyBinds) {
+            KeyBindManager.unregisterKeybind(keyBind);
         }
     }
 

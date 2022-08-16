@@ -11,8 +11,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
@@ -40,16 +39,13 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class ItemScreenshotFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder itemScreenshotKeybind =
-            new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});
+    private final KeyBind itemScreenshotKeyBind =
+            new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
     private Slot screenshotSlot = null;
 
-    @SubscribeEvent
-    public void onKeyPress(InventoryKeyPressEvent e) {
-        if (itemScreenshotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
-            screenshotSlot = e.getHoveredSlot();
-        }
+    private void onInventoryPress(Slot hoveredSlot) {
+        screenshotSlot = hoveredSlot;
     }
 
     @SubscribeEvent

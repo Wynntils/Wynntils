@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -17,8 +17,8 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE)
 public class IngredientPouchHotkeyFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder ingredientPouchKeybind = new KeyHolder(
-            "Open Ingredient Pouch", GLFW.GLFW_KEY_UNKNOWN, "Wynntils", true, this::onOpenIngredientPouchKeyPress);
+    private final KeyBind ingredientPouchKeyBind =
+            new KeyBind("Open Ingredient Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenIngredientPouchKeyPress);
 
     private void onOpenIngredientPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
