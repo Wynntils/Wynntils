@@ -18,6 +18,8 @@ import com.wynntils.wynn.objects.ClassType;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -153,6 +155,12 @@ public class CharacterManager extends CoreManager {
                 }
             }
             ClassType classType = ClassType.fromName(className);
+
+            if (classType == ClassType.None) {
+                McUtils.sendMessageToClient(new TextComponent(
+                                "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
+                        .withStyle(ChatFormatting.RED));
+            }
 
             return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
         }

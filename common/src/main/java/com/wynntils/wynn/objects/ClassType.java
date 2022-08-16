@@ -35,7 +35,7 @@ public enum ClassType {
                 return type;
             }
         }
-        return null;
+        return ClassType.None;
     }
 
     public static boolean isReskinned(String className) {

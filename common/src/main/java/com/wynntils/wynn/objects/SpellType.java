@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 
 public enum SpellType {
@@ -157,7 +156,6 @@ public enum SpellType {
                 return spellType;
             }
         }
-        WynntilsMod.error("SpellType not found for " + classRequired + " | Spell: " + spellNumber);
         return null;
     }
 
