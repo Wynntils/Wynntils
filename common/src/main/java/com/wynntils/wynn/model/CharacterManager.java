@@ -57,10 +57,10 @@ public class CharacterManager extends CoreManager {
 
     public static CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
-            if(!hasAutojoinWarned) {
+            if (!hasAutojoinWarned) {
                 hasAutojoinWarned = true;
                 McUtils.sendMessageToClient(new TextComponent(
-                        "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
+                                "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
                         .withStyle(ChatFormatting.RED));
             }
             currentCharacter = new CharacterInfo(ClassType.None, false, McUtils.player().experienceLevel, 0);
