@@ -40,20 +40,16 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE)
 public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyBind castFirstSpell =
-            new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, true, this::castFirstSpell);
+    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, true, this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell =
-            new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, true, this::castSecondSpell);
+    private final KeyBind castSecondSpell = new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, true, this::castSecondSpell);
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell =
-            new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, true, this::castThirdSpell);
+    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, true, this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell =
-            new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
+    private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
     private static final Pattern SPELL_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
