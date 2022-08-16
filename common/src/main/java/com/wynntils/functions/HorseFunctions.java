@@ -24,12 +24,12 @@ public class HorseFunctions {
         return horse;
     }
 
-    public static class HorseLevelFunction extends ActiveFunction<String> {
+    public static class HorseLevelFunction extends ActiveFunction<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(String argument) {
             WynnItemStack horse = getHorse();
-            if (horse == null) return "??";
-            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getLevel());
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getLevel();
         }
 
         @Override
@@ -43,12 +43,12 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseLevelMaxFunction extends ActiveFunction<String> {
+    public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(String argument) {
             WynnItemStack horse = getHorse();
-            if (horse == null) return "??";
-            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getMaxLevel());
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getMaxLevel();
         }
 
         @Override
@@ -62,12 +62,12 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseXpFunction extends ActiveFunction<String> {
+    public static class HorseXpFunction extends ActiveFunction<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(String argument) {
             WynnItemStack horse = getHorse();
             if (horse == null) return null;
-            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getXp());
+            return horse.getProperty(ItemProperty.HORSE).getXp();
         }
 
         @Override
@@ -81,12 +81,12 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseTierFunction extends ActiveFunction<String> {
+    public static class HorseTierFunction extends ActiveFunction<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(String argument) {
             WynnItemStack horse = getHorse();
             if (horse == null) return null;
-            return String.valueOf(horse.getProperty(ItemProperty.HORSE).getTier());
+            return horse.getProperty(ItemProperty.HORSE).getTier();
         }
 
         @Override
