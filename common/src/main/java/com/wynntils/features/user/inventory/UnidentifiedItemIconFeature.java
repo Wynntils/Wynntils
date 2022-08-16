@@ -14,8 +14,8 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.wc.custom.item.ItemStackTransformModel;
-import com.wynntils.wc.custom.item.UnidentifiedItemStack;
+import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.item.UnidentifiedItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

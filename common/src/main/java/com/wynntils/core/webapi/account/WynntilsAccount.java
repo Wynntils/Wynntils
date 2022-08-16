@@ -13,7 +13,7 @@ import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.MD5Verification;
+import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;

@@ -5,8 +5,8 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.functions.ActiveFunction;
-import com.wynntils.wc.event.WorldStateEvent;
-import com.wynntils.wc.model.WorldStateManager;
+import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.WorldStateManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldFunction extends ActiveFunction<String> {

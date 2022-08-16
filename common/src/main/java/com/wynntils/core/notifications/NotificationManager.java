@@ -10,8 +10,8 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.event.NotificationEvent;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 

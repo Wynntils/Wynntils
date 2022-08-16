@@ -11,8 +11,8 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.ChatItemUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.model.ChatItemModel;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -48,7 +48,7 @@ public class ChatItemFeature extends UserFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = ChatItemUtils.chatItemMatcher(chatInput.getValue());
+        Matcher m = ChatItemModel.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -66,8 +66,8 @@ public class ChatItemFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
-        if (!ChatItemUtils.chatItemMatcher(message.getString()).find()) return; // no chat items to replace
+        if (!ChatItemModel.chatItemMatcher(message.getString()).find()) return; // no chat items to replace
 
-        e.setMessage(ChatItemUtils.insertItemComponents(message));
+        e.setMessage(ChatItemModel.insertItemComponents(message));
     }
 }

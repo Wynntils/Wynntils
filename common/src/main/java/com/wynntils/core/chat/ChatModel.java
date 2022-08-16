@@ -9,9 +9,9 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import com.wynntils.wc.event.NpcDialogEvent;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.event.NpcDialogEvent;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -76,6 +76,9 @@ public final class ChatModel extends Model {
     private static boolean extractDialog = false;
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
+
+    /** Needed for all Models */
+    public static void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {

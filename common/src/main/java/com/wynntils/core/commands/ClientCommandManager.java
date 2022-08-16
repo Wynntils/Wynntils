@@ -9,13 +9,15 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.wynntils.commands.ConfigCommand;
+import com.wynntils.commands.FeatureCommand;
+import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -47,6 +48,9 @@ public final class ClientCommandManager extends CoreManager {
     public static void init() {
         clientDispatcher = new CommandDispatcher<>();
 
+        registerCommand(new ConfigCommand());
+        registerCommand(new FeatureCommand());
+        registerCommand(new FunctionCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
@@ -58,17 +62,15 @@ public final class ClientCommandManager extends CoreManager {
         command.register(clientDispatcher);
     }
 
-    @SubscribeEvent
-    public static void onChatSend(ChatSentEvent e) {
-        String message = e.getMessage();
+    public static boolean handleCommand(String message) {
+        assert message.startsWith("/");
 
-        if (message.startsWith("/")) {
-            StringReader reader = new StringReader(message);
-            reader.skip();
-            if (ClientCommandManager.executeCommand(reader, message)) {
-                e.setCanceled(true);
-            }
+        StringReader reader = new StringReader(message);
+        reader.skip();
+        if (ClientCommandManager.executeCommand(reader, message)) {
+            return true;
         }
+        return false;
     }
 
     public static CompletableFuture<Suggestions> getCompletionSuggestions(
