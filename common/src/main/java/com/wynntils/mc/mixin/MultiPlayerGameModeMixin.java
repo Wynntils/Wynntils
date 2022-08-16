@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
-    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
+    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
 
@@ -33,16 +34,30 @@ public abstract class MultiPlayerGameModeMixin {
             itemStack = ItemStack.EMPTY;
         }
 
-        EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId);
+        if (EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId)
+                .isCanceled()) {
+            ci.cancel();
+        }
     }
 
-    @Inject(method = "useItemOn", at = @At("HEAD"))
+    @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
     private void useItemOnPre(
             LocalPlayer player,
             ClientLevel level,
             InteractionHand hand,
             BlockHitResult blockHitResult,
             CallbackInfoReturnable<InteractionResult> cir) {
-        EventFactory.onRightClickBlock(player, hand, blockHitResult.getBlockPos(), blockHitResult);
+        if (EventFactory.onRightClickBlock(player, hand, blockHitResult.getBlockPos(), blockHitResult)
+                .isCanceled()) {
+            cir.setReturnValue(InteractionResult.FAIL);
+        }
+    }
+
+    @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
+    private void useItemPre(
+            Player player, Level level, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        if (EventFactory.onUseItem(player, level, hand).isCanceled()) {
+            cir.setReturnValue(InteractionResult.FAIL);
+        }
     }
 }

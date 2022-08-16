@@ -7,11 +7,10 @@ package com.wynntils.features.user;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.objects.ServerIcon;
+import com.wynntils.mc.objects.ServerIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
@@ -20,12 +19,9 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.jetbrains.annotations.NotNull;
 
-@EventListener
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class WynncraftButtonFeature extends UserFeature {
-
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
@@ -50,12 +46,16 @@ public class WynncraftButtonFeature extends UserFeature {
             this.serverData = serverData;
             this.backScreen = backScreen;
 
-            this.serverIcon = new ServerIcon(serverData, true);
+            this.serverIcon = new ServerIcon(serverData, false);
         }
 
         @Override
-        public void renderButton(@NotNull PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
             super.renderButton(matrices, mouseX, mouseY, partialTicks);
+
+            if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
+                return;
+            }
 
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 

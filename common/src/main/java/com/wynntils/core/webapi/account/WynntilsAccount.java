@@ -6,14 +6,14 @@ package com.wynntils.core.webapi.account;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.PostRequestBuilder;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.MD5Verification;
+import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -24,17 +24,14 @@ import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
-
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
 
-    String token;
-    boolean ready = false;
+    private String token;
+    private boolean ready = false;
 
-    HashMap<String, String> encodedConfigs = new HashMap<>();
-    HashMap<String, String> md5Verifications = new HashMap<>();
-
-    public WynntilsAccount() {}
+    private final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public String getToken() {
         return token;
@@ -58,7 +55,7 @@ public class WynntilsAccount {
         RequestHandler handler = WebManager.getHandler();
 
         String baseUrl = WebManager.getApiUrls().get("Athena");
-        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set it's value
+        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
 
@@ -77,7 +74,7 @@ public class WynntilsAccount {
         JsonObject authParams = new JsonObject();
         authParams.addProperty("username", McUtils.mc().getUser().getName());
         authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty("version", "A" + Reference.VERSION + "_" + Reference.BUILD_NUMBER);
+        authParams.addProperty("version", "A" + WynntilsMod.getVersion() + "_" + WynntilsMod.getBuildNumber());
 
         Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
                 .postJsonElement(authParams)
@@ -94,7 +91,7 @@ public class WynntilsAccount {
                             .forEach((k) ->
                                     encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                     ready = true;
-                    Reference.LOGGER.info("Successfully connected to Athena!");
+                    WynntilsMod.info("Successfully connected to Athena!");
                     return true;
                 })
                 .build();

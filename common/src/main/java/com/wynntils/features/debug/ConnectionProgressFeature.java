@@ -4,28 +4,25 @@
  */
 package com.wynntils.features.debug;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.wc.event.WorldStateEvent;
-import com.wynntils.wc.model.WorldState.State;
+import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.WorldStateManager.State;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 public class ConnectionProgressFeature extends DebugFeature {
-
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
-        Reference.LOGGER.info("Connection confirmed");
+        WynntilsMod.info("Connection confirmed");
     }
 
     @SubscribeEvent
     public void onStateChange(WorldStateEvent e) {
         if (e.getNewState() == State.WORLD) {
-            Reference.LOGGER.info("Entering world " + e.getWorldName());
+            WynntilsMod.info("Entering world " + e.getWorldName());
         } else if (e.getOldState() == State.WORLD) {
-            Reference.LOGGER.info("Leaving world");
+            WynntilsMod.info("Leaving world");
         }
         String msg =
                 switch (e.getNewState()) {
@@ -37,7 +34,7 @@ public class ConnectionProgressFeature extends DebugFeature {
                 };
 
         if (msg != null) {
-            Reference.LOGGER.info("WorldState change: " + msg);
+            WynntilsMod.info("WorldState change: " + msg);
         }
     }
 }

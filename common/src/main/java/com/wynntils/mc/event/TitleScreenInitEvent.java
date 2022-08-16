@@ -9,7 +9,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
 
-/** Fired on initalization of {@link TitleScreen} */
+/** Fired on initialization of {@link TitleScreen} */
 public class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
     private final Consumer<AbstractWidget> addButton;

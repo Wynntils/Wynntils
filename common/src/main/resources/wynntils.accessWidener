@@ -1,7 +1,19 @@
-accessWidener v1 named
+accessWidener v2 named
 
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 extendable class net/minecraft/world/item/ItemStack
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen leftPos I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
+accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
+accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
+accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
+accessible method net/minecraft/client/gui/components/ChatComponent addMessage (Lnet/minecraft/network/chat/Component;I)V
+accessible field net/minecraft/world/scores/Scoreboard displayObjectives [Lnet/minecraft/world/scores/Objective;
+accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
+mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
+accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V

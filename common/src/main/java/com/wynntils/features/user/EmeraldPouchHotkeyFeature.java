@@ -4,26 +4,27 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.utils.InventoryUtils;
-import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
+import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
+import com.wynntils.wynn.utils.InventoryUtils.EmeraldPouch;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
-
     @RegisterKeyBind
     private final KeyHolder emeraldPouchKeybind = new KeyHolder(
             "Open Emerald Pouch",
@@ -39,26 +40,26 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         List<EmeraldPouch> emeraldPouches = InventoryUtils.getEmeraldPouches(player.getInventory());
 
         if (emeraldPouches.isEmpty()) {
-            // TODO: change sendMessageToClient to GameUpdateOverlay messages once that's available
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.noPouch")
-                    .withStyle(ChatFormatting.DARK_RED));
+            NotificationManager.queueMessage(new TextRenderTask(
+                    ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.noPouch"),
+                    TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
             if (emeraldPouch != null) {
                 // We found exactly one usable emerald pouch
-                Integer slotNumber = emeraldPouch.getSlotNumber();
+                int slotNumber = emeraldPouch.getSlotNumber();
 
                 if (slotNumber < 9) {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
                 }
 
-                InventoryUtils.sendInventorySlotMouseClick(slotNumber, emeraldPouch.getStack(), RIGHT_CLICK);
+                InventoryUtils.sendInventorySlotMouseClick(
+                        slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
-                // TODO: change sendMessageToClient to GameUpdateOverlay messages once that's available
-                McUtils.sendMessageToClient(
-                        new TranslatableComponent("feature.wynntils.emeraldPouchKeybind.multipleFilled")
-                                .withStyle(ChatFormatting.DARK_RED));
+                NotificationManager.queueMessage(new TextRenderTask(
+                        ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.multipleFilled"),
+                        TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             }
         }
     }
@@ -74,7 +75,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                 }
             } else {
                 if (foundNonEmpty != null) {
-                    // Multiple filled pouches found, we can't chose between them
+                    // Multiple filled pouches found, we can't choose between them
                     return null;
                 } else {
                     foundNonEmpty = pouch;

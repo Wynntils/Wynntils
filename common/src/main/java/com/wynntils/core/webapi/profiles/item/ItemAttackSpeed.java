@@ -15,8 +15,8 @@ public enum ItemAttackSpeed {
     VERY_SLOW("Very Slow Attack Speed", -2),
     SUPER_SLOW("Super Slow Attack Speed", -3);
 
-    final String name;
-    final int offset;
+    private final String name;
+    private final int offset;
 
     ItemAttackSpeed(String name, int offset) {
         this.name = name;

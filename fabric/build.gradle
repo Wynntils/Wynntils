@@ -24,7 +24,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 import com.wynntils.eventbustransformer.EventBusTransform
@@ -56,7 +56,7 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version));
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version)))
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
@@ -70,6 +70,7 @@ dependencies {
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
     runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.2"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}"
 }
 
 processResources {
@@ -113,7 +114,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier null
+    classifier "fabric"
 }
 
 sourcesJar {

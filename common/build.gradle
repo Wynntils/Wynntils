@@ -8,5 +8,5 @@ dependencies {
 }
 
 architectury {
-    common()
+    common(rootProject.enabled_platforms.split(","))
 }

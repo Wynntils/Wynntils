@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.webapi.request;
 
-import com.wynntils.utils.objects.ThrowingBiPredicate;
-import com.wynntils.utils.objects.ThrowingConsumer;
+import com.wynntils.utils.ThrowingBiPredicate;
+import com.wynntils.utils.ThrowingConsumer;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class PostRequest extends Request {
-
-    private ThrowingConsumer<HttpURLConnection, IOException> writer;
+    private final ThrowingConsumer<HttpURLConnection, IOException> writer;
 
     PostRequest(
             String url,

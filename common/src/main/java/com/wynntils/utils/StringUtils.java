@@ -5,12 +5,15 @@
 package com.wynntils.utils;
 
 import com.wynntils.mc.utils.McUtils;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
-public class StringUtils {
+public final class StringUtils {
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *
@@ -31,13 +34,24 @@ public class StringUtils {
     }
 
     public static String capitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toUpperCase(input.charAt(0)) + input.substring(1);
     }
 
     public static String uncapitalizeFirst(String input) {
-        if (input.length() == 0) return "";
+        if (input.isEmpty()) return "";
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
+    }
+
+    /**
+     * Format an integer to have SI suffixes, if it is sufficiently large
+     */
+    public static String integerToShortString(int count) {
+        if (count < 1000) return Integer.toString(count);
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        DecimalFormat format = new DecimalFormat("0.#");
+        String value = format.format(count / Math.pow(1000, exp));
+        return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
     }
 
     public static String[] wrapTextBySize(String s, int maxPixels) {
@@ -56,7 +70,7 @@ public class StringUtils {
                     result.append('\n');
                     length = 0;
                 }
-                if (line.length() > 0) {
+                if (!line.isEmpty()) {
                     result.append(line).append(' ');
                     length += font.width(line) + spaceSize;
                 }
@@ -64,5 +78,23 @@ public class StringUtils {
         }
 
         return result.toString().split("\n");
+    }
+
+    /**
+     * Creates a new pattern, but replaces all occurrences of '§' in the regex with an expression for detecting any color code
+     * @param regex - the expression to be modified and compiled
+     * @return a Pattern with the modified regex
+     */
+    public static Pattern compileCCRegex(String regex) {
+        return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
+    }
+
+    public static String encodeUrl(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+            // will not happen since UTF-8 is part of core charsets
+            return null;
+        }
     }
 }

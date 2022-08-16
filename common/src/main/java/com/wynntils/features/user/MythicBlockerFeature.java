@@ -5,24 +5,21 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.ContainerUtils;
-import com.wynntils.wc.utils.WynnItemMatchers;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 @FeatureInfo(stability = Stability.STABLE)
 public class MythicBlockerFeature extends UserFeature {
-
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;

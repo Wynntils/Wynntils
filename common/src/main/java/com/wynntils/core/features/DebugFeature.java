@@ -6,30 +6,29 @@ package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import com.wynntils.core.managers.Model;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE)
 public abstract class DebugFeature extends Feature {
-
     @Override
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("featureDebug.wynntils." + getNameCamelCase() + ".name");
-    }
-
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         conditions.add(new DevelopmentCondition());
     }
 
-    public class DevelopmentCondition extends Condition {
+    @Override
+    public final void updateConfigOption(ConfigHolder configHolder) {
+        onConfigUpdate(configHolder);
+    }
 
+    public static class DevelopmentCondition extends Condition {
         @Override
         public void init() {
-            setSatisfied(WynntilsMod.developmentEnvironment);
+            setSatisfied(WynntilsMod.isDevelopmentEnvironment());
         }
     }
 }

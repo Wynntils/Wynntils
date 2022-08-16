@@ -4,21 +4,23 @@
  */
 package com.wynntils.mc.utils;
 
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.chat.TextComponent;
 
-public class ComponentUtils {
-    public static String getFormatted(Component component) {
+public final class ComponentUtils {
+    // Text with formatting codes "§cTest §1Text"
+    public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(
@@ -40,24 +42,23 @@ public class ComponentUtils {
         return result.toString();
     }
 
-    public static String getUnformatted(Component msg) {
-        return msg.getString();
+    // Text without formatting codes "Test text"
+    public static String getUnformatted(Component component) {
+        return ComponentUtils.stripFormatting(component.getString());
     }
 
-    @Nullable
-    public static String getFormatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
+    public static String getCoded(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return ComponentUtils.getFormatted(component);
+        return getCoded(component);
     }
 
-    @Nullable
-    public static String getUnformatted(String loreString) {
-        MutableComponent component = Component.Serializer.fromJson(loreString);
+    public static String getUnformatted(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
-        return component.getString();
+        return getUnformatted(component);
     }
 
     /**
@@ -176,5 +177,58 @@ public class ComponentUtils {
         }
 
         return newLore;
+    }
+
+    public static String stripFormatting(String text) {
+        return text == null ? "" : ChatFormatting.stripFormatting(text);
+    }
+
+    public static String stripColorFormatting(String text) {
+        if (text == null) {
+            return "";
+        }
+
+        return text.replaceAll("(§[1-9a-f])+", "");
+    }
+
+    public static Component formattedTextToComponent(FormattedText formattedText) {
+        MutableComponent component = new TextComponent("");
+        formattedText.visit(
+                (style, string) -> {
+                    component.append(new TextComponent(string).withStyle(style));
+                    return Optional.empty();
+                },
+                Style.EMPTY);
+
+        return component;
+    }
+
+    public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
+        int tooltipWidth =
+                tooltips.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
+        int tooltipX = mouseX + 12;
+        if (tooltipX + tooltipWidth + 4 > screenWidth) {
+            tooltipX = mouseX - 16 - tooltipWidth;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > screenWidth / 2) tooltipWidth = mouseX - 12 - 8;
+                else tooltipWidth = screenWidth - 16 - mouseX;
+            }
+        }
+        return tooltipWidth;
+    }
+
+    public static List<Component> wrapTooltips(List<Component> tooltips, int maxWidth) {
+        return tooltips.stream()
+                .flatMap(x -> splitComponent(x, maxWidth).stream())
+                .toList();
+    }
+
+    public static List<Component> splitComponent(Component component, int maxWidth) {
+        List<Component> split = McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
+                .map(ComponentUtils::formattedTextToComponent)
+                .collect(Collectors.toList());
+        if (split.isEmpty()) split.add(new TextComponent(""));
+        return split;
     }
 }

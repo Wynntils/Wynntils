@@ -6,7 +6,7 @@ package com.wynntils.core.webapi.request;
 
 import com.google.gson.JsonElement;
 import com.wynntils.core.webapi.request.multipart.IMultipartFormPart;
-import com.wynntils.utils.objects.ThrowingConsumer;
+import com.wynntils.utils.ThrowingConsumer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class PostRequestBuilder extends RequestBuilder {
-
     private ThrowingConsumer<HttpURLConnection, IOException> writer;
 
     public PostRequestBuilder(String url, String id) {
@@ -23,8 +22,6 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /**
      * Set a consumer that will write to a HttpURLConnection
-     *
-     * @return
      */
     public PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
         this.writer = writer;
@@ -42,7 +39,7 @@ public class PostRequestBuilder extends RequestBuilder {
         });
     }
 
-    /** Sets the write to a json string from a json element */
+    /** Sets the writer to a json string from a json element */
     public PostRequestBuilder postJsonElement(JsonElement element) {
         return postBytes(element.toString().getBytes(), "application/json");
     }
@@ -53,7 +50,7 @@ public class PostRequestBuilder extends RequestBuilder {
     /** Sets the writer to one that writes multipart/form-data. */
     public PostRequestBuilder postMultipart(Iterable<? extends IMultipartFormPart> parts) {
         return setWriter(conn -> {
-            String boundary = "----" + UUID.randomUUID().toString();
+            String boundary = "----" + UUID.randomUUID();
             conn.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
             boundary = "--" + boundary;
             byte[] boundaryBytes = ("\r\n" + boundary).getBytes(StandardCharsets.US_ASCII);

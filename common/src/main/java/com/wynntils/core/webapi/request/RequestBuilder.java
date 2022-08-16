@@ -8,10 +8,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebReader;
-import com.wynntils.utils.objects.MD5Verification;
-import com.wynntils.utils.objects.ThrowingBiPredicate;
+import com.wynntils.utils.MD5Verification;
+import com.wynntils.utils.ThrowingBiPredicate;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 
 /** Helper class for building a {@link Request} */
 public class RequestBuilder {
-    String url;
-    String id;
+    final String url;
+    final String id;
     int parallelGroup = 0;
     ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
     Request.RequestErrorHandler onError;
-    Map<String, String> headers = new HashMap<>();
+    final Map<String, String> headers = new HashMap<>();
     File cacheFile;
     Predicate<byte[]> cacheValidator = null;
     boolean useCacheAsBackup;
@@ -94,11 +94,11 @@ public class RequestBuilder {
 
     /** As {@link #handle(Predicate) handle}, but the data is parsed as JSON */
     public RequestBuilder handleJson(Predicate<JsonElement> handler) {
-        return handleString(s -> handler.test(new JsonParser().parse(s)));
+        return handleString(s -> handler.test(JsonParser.parseString(s)));
     }
 
     public RequestBuilder handleJson(ThrowingBiPredicate<URLConnection, JsonElement, IOException> handler) {
-        return handleString((conn, s) -> handler.test(conn, new JsonParser().parse(s)));
+        return handleString((conn, s) -> handler.test(conn, JsonParser.parseString(s)));
     }
 
     /**
@@ -157,8 +157,8 @@ public class RequestBuilder {
         this.cacheValidator = data -> {
             try {
                 return validator.test(data);
-            } catch (Exception e) {
-                Reference.LOGGER.warn("Unable to validate cache");
+            } catch (RuntimeException e) {
+                WynntilsMod.warn("Unable to validate cache");
                 e.printStackTrace();
                 return false;
             }
@@ -170,7 +170,7 @@ public class RequestBuilder {
      * Allows using the cache as back up if no result has been achieved from either the cache
      * validator if set or the connection.
      *
-     * <p>Naturally, if {@link RequestHandler#cacheOnly} is set to true, then the connection does
+     * <p>Naturally, if {@link RequestHandler#CACHE_ONLY} is set to true, then the connection does
      * not yield a result
      */
     public RequestBuilder useCacheAsBackup() {
@@ -184,17 +184,17 @@ public class RequestBuilder {
         return cacheMD5Validator(() -> expectedHash);
     }
 
-    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside of a thread). */
+    /** As {@link #cacheMD5Validator(String)}, but lazily get the hash (inside a thread). */
     public RequestBuilder cacheMD5Validator(Supplier<String> expectedHashSupplier) {
         return cacheValidator(data -> {
             String expectedHash = expectedHashSupplier.get();
             if (!MD5Verification.isMd5Digest(expectedHash)) return false;
             MD5Verification verification = new MD5Verification(data);
             if (verification.getMd5() == null) return false;
-            boolean passed = verification.equals(expectedHash);
+            boolean passed = verification.equalsHashString(expectedHash);
             if (!passed) {
                 // TODO
-                Reference.LOGGER.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""
+                WynntilsMod.warn(this.id + ": MD5 verification failed. Expected: \"" + expectedHash + "\"; Got: \""
                         + verification.getMd5() + "\"");
             }
             return passed;

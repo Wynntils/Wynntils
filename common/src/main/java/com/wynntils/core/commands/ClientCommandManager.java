@@ -9,13 +9,15 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.wynntils.commands.ConfigCommand;
+import com.wynntils.commands.FeatureCommand;
+import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ChatSendMessageEvent;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +33,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public class ClientCommandManager {
-
+public final class ClientCommandManager extends CoreManager {
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
@@ -46,27 +46,31 @@ public class ClientCommandManager {
     }
 
     public static void init() {
-        WynntilsMod.getEventBus().register(ClientCommandManager.class);
-
         clientDispatcher = new CommandDispatcher<>();
-        new WynntilsCommand().register(clientDispatcher); // TODO event
-        new ServerCommand().register(clientDispatcher);
-        new TokenCommand().register(clientDispatcher);
-        new TerritoryCommand().register(clientDispatcher);
-        new LootrunCommand().register(clientDispatcher);
+
+        registerCommand(new ConfigCommand());
+        registerCommand(new FeatureCommand());
+        registerCommand(new FunctionCommand());
+        registerCommand(new LootrunCommand());
+        registerCommand(new ServerCommand());
+        registerCommand(new TerritoryCommand());
+        registerCommand(new TokenCommand());
+        registerCommand(new WynntilsCommand());
     }
 
-    @SubscribeEvent
-    public static void onChatSend(ChatSendMessageEvent e) {
-        String message = e.getMessage();
+    private static void registerCommand(CommandBase command) {
+        command.register(clientDispatcher);
+    }
 
-        if (message.startsWith("/")) {
-            StringReader reader = new StringReader(message);
-            reader.skip();
-            if (ClientCommandManager.executeCommand(reader, message)) {
-                e.setCanceled(true);
-            }
+    public static boolean handleCommand(String message) {
+        assert message.startsWith("/");
+
+        StringReader reader = new StringReader(message);
+        reader.skip();
+        if (ClientCommandManager.executeCommand(reader, message)) {
+            return true;
         }
+        return false;
     }
 
     public static CompletableFuture<Suggestions> getCompletionSuggestions(
@@ -107,7 +111,7 @@ public class ClientCommandManager {
         return new ClientCommandSourceStack(player);
     }
 
-    public static boolean executeCommand(StringReader reader, String command) {
+    private static boolean executeCommand(StringReader reader, String command) {
         ClientCommandSourceStack source = getSource();
 
         if (source == null) return false;
@@ -144,7 +148,7 @@ public class ClientCommandManager {
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
                 ClientCommandManager.sendError(text);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             TextComponent error =
                     new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             ClientCommandManager.sendError(new TranslatableComponent("command.failed")

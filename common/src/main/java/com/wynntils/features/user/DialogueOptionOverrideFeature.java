@@ -5,19 +5,16 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@EventListener
 @FeatureInfo(stability = Stability.STABLE)
 public class DialogueOptionOverrideFeature extends UserFeature {
-
     @SubscribeEvent
     public void onDialogueKeyPress(KeyInputEvent e) {
         if (!WynnUtils.onWorld() || e.getAction() != 1) return; // Only send packet on presses, not releases

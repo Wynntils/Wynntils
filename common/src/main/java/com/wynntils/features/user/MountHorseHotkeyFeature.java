@@ -9,11 +9,11 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
-import com.wynntils.wc.utils.EntityUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.EntityUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -26,7 +26,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class MountHorseHotkeyFeature extends UserFeature {
-
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 5;

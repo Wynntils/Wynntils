@@ -7,11 +7,16 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
@@ -19,55 +24,75 @@ import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.IdentificationOrderer;
+import com.wynntils.wynn.item.IdentificationOrderer;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.Nullable;
 
 /** Provides and loads web content on demand */
-public class WebManager {
-    public static final File API_CACHE_ROOT = new File(WynntilsMod.MOD_STORAGE_ROOT, "apicache");
+public final class WebManager extends CoreManager {
+    private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 16000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    public static @Nullable WebReader apiUrls = null;
+    private static WebReader apiUrls = null;
 
     private static final Gson gson = new Gson();
 
-    private static @Nullable HashMap<String, ItemProfile> items = null;
-    private static @Nullable Collection<ItemProfile> directItems = null;
-    private static @Nullable HashMap<String, ItemGuessProfile> itemGuesses = null;
-    private static @Nullable HashMap<String, String> translatedReferences = null;
-    private static @Nullable HashMap<String, String> internalIdentifications = null;
-    private static @Nullable HashMap<String, MajorIdentification> majorIds = null;
-    private static @Nullable HashMap<ItemType, String[]> materialTypes = null;
+    private static HashMap<String, ItemProfile> items = null;
+    private static Collection<ItemProfile> directItems = null;
+    private static HashMap<String, ItemGuessProfile> itemGuesses = null;
+    private static HashMap<String, String> translatedReferences = null;
+    private static HashMap<String, String> internalIdentifications = null;
+    private static HashMap<String, MajorIdentification> majorIds = null;
+    private static HashMap<ItemType, String[]> materialTypes = null;
 
     private static TerritoryUpdateThread territoryUpdateThread;
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
-    private static @Nullable WynntilsAccount account = null;
+    private static WynntilsAccount account = null;
+
+    private static List<MapProfile> maps = null;
+
+    private static final String USER_AGENT = String.format(
+            "Wynntils Artemis\\%s-%d (%s)",
+            WynntilsMod.getVersion(),
+            WynntilsMod.getBuildNumber(),
+            WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
 
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        loadCommonObjects();
+    }
+
+    private static void loadCommonObjects() {
+        WebManager.tryLoadItemList();
+        WebManager.tryLoadItemGuesses();
     }
 
     public static boolean isLoggedIn() {
@@ -95,7 +120,7 @@ public class WebManager {
         updateTerritoryThreadStatus(false);
     }
 
-    public static void setupUserAccount() {
+    private static void setupUserAccount() {
         if (isLoggedIn()) return;
 
         account = new WynntilsAccount();
@@ -111,6 +136,11 @@ public class WebManager {
                             .withColor(ChatFormatting.AQUA)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
 
+            if (McUtils.player() == null) {
+                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
+                return;
+            }
+
             McUtils.sendMessageToClient(failed);
         }
     }
@@ -122,7 +152,7 @@ public class WebManager {
     public static boolean tryLoadTerritories(RequestHandler handler) {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
         String url = apiUrls.get("Athena") + "/cache/get/territoryList";
-        handler.addRequest(new RequestBuilder(url, "territory")
+        handler.addAndDispatch(new RequestBuilder(url, "territory")
                 .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
                 .handleJsonObject(json -> {
                     if (!json.has("territories")) return false;
@@ -140,12 +170,10 @@ public class WebManager {
                 })
                 .build());
 
-        handler.dispatch(false);
-
         return isTerritoryListLoaded();
     }
 
-    public static void updateTerritoryThreadStatus(boolean start) {
+    private static void updateTerritoryThreadStatus(boolean start) {
         if (start) {
             if (territoryUpdateThread == null) {
                 territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
@@ -163,7 +191,7 @@ public class WebManager {
 
     public static boolean tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
                 .handleJsonObject(json -> {
                     Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
@@ -181,26 +209,26 @@ public class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemGuessesLoaded();
     }
 
     public static boolean tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
-        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
+        handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), HashMap.class);
+                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
                     internalIdentifications =
-                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), HashMap.class);
+                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
                     Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
                     majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
                     Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
                     materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
+                    // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
                     IdentificationOrderer.INSTANCE =
                             gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
@@ -223,13 +251,79 @@ public class WebManager {
                 .useCacheAsBackup()
                 .build());
 
-        handler.dispatch(false);
-
         // Check for success
         return isItemListLoaded();
     }
 
-    public static boolean tryReloadApiUrls(boolean async) {
+    public static CompletableFuture<Boolean> tryLoadMaps() {
+        if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
+
+        File mapDirectory = new File(API_CACHE_ROOT, "maps");
+
+        String url = apiUrls.get("AMainMap");
+
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        handler.addAndDispatch(new RequestBuilder(url, "maps")
+                .cacheTo(new File(mapDirectory, "maps.json"))
+                .handleJson(json -> {
+                    String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
+
+                    JsonArray mapArray = json.getAsJsonArray();
+
+                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
+
+                    for (JsonElement mapData : mapArray) {
+                        JsonObject mapObject = mapData.getAsJsonObject();
+
+                        // Final since used in closure
+                        final int x1 = mapObject.get("x1").getAsInt();
+                        final int z1 = mapObject.get("z1").getAsInt();
+                        final int x2 = mapObject.get("x2").getAsInt();
+                        final int z2 = mapObject.get("z2").getAsInt();
+
+                        final String file = mapObject.get("file").getAsString();
+
+                        String md5 = mapObject.get("hash").getAsString();
+
+                        // TODO DownloaderManager? + Overlay
+                        handler.addRequest(new RequestBuilder(fileBase + file, file)
+                                .cacheTo(new File(mapDirectory, file))
+                                .cacheMD5Validator(md5)
+                                .useCacheAsBackup()
+                                .handle(bytes -> {
+                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                        NativeImage nativeImage = NativeImage.read(in);
+
+                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
+                                    } catch (IOException e) {
+                                        WynntilsMod.info("IOException occurred while loading map image of " + file);
+                                        return false; // don't cache
+                                    }
+
+                                    return true;
+                                })
+                                .build());
+                    }
+
+                    // hacky way to know when handler has finished dispatching
+                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
+                        if (syncList.size() == mapArray.size()) {
+                            result.complete(true);
+                            maps = syncList;
+                        } else {
+                            result.complete(false);
+                        }
+                    });
+
+                    return true;
+                })
+                .build());
+
+        return result;
+    }
+
+    private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
                 .handleWebReader(reader -> {
@@ -237,13 +331,15 @@ public class WebManager {
                     if (!setup) {
                         setup = true;
                     }
+
+                    EventFactory.onWebSetup();
                     return true;
                 })
                 .build());
 
         handler.dispatch(async);
 
-        return setup;
+        tryLoadMaps();
     }
 
     /**
@@ -253,14 +349,13 @@ public class WebManager {
      *     players on it
      * @throws IOException thrown by URLConnection
      */
-    public static HashMap<String, List<String>> getOnlinePlayers() throws IOException {
+    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
         if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
 
         URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
+        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-        JsonObject main = new JsonParser()
-                .parse(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))
-                .getAsJsonObject();
         if (!main.has("message")) {
             main.remove("request");
 
@@ -274,9 +369,7 @@ public class WebManager {
 
     private static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316" + " Firefox/3.6.2");
+        st.setRequestProperty("User-Agent", USER_AGENT);
         if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
@@ -301,31 +394,35 @@ public class WebManager {
         return !territories.isEmpty();
     }
 
-    public static @Nullable HashMap<String, ItemGuessProfile> getItemGuesses() {
+    public static boolean isMapLoaded() {
+        return maps != null;
+    }
+
+    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
 
-    public static @Nullable Collection<ItemProfile> getItemsCollection() {
+    public static Collection<ItemProfile> getItemsCollection() {
         return directItems;
     }
 
-    public static @Nullable HashMap<String, ItemProfile> getItemsMap() {
+    public static HashMap<String, ItemProfile> getItemsMap() {
         return items;
     }
 
-    public static @Nullable HashMap<ItemType, String[]> getMaterialTypes() {
+    public static HashMap<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
 
-    public static @Nullable HashMap<String, MajorIdentification> getMajorIds() {
+    public static HashMap<String, MajorIdentification> getMajorIds() {
         return majorIds;
     }
 
-    public static @Nullable HashMap<String, String> getInternalIdentifications() {
+    public static HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
 
-    public static @Nullable HashMap<String, String> getTranslatedReferences() {
+    public static HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
     }
 
@@ -333,15 +430,23 @@ public class WebManager {
         return territories;
     }
 
+    public static List<MapProfile> getMaps() {
+        return maps;
+    }
+
+    public static String getUserAgent() {
+        return USER_AGENT;
+    }
+
     public static boolean isSetup() {
         return setup;
     }
 
-    public static @Nullable WebReader getApiUrls() {
+    public static WebReader getApiUrls() {
         return apiUrls;
     }
 
-    public static @Nullable WynntilsAccount getAccount() {
+    public static WynntilsAccount getAccount() {
         return account;
     }
 

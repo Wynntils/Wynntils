@@ -4,57 +4,68 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.config.properties.Configurable;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
+import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
+import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
-import com.wynntils.features.internal.FixPacketBugsFeature;
-import com.wynntils.features.internal.FixSpellOverwriteFeature;
-import com.wynntils.features.internal.ItemStackTransformerFeature;
-import com.wynntils.features.internal.LootrunFeature;
+import com.wynntils.features.user.AddCommandExpansionFeature;
+import com.wynntils.features.user.ChatItemFeature;
+import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
+import com.wynntils.features.user.FilterAdminCommandsFeature;
+import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
+import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
-import com.wynntils.features.user.ItemGuessFeature;
-import com.wynntils.features.user.ItemHighlightFeature;
+import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
-import com.wynntils.features.user.ItemStatInfoFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
-import com.wynntils.features.user.PlayerGhostTransparencyFeature;
+import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
-import com.wynntils.features.user.TooltipScaleFeature;
+import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
+import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
-import com.wynntils.mc.event.ClientTickEvent;
-import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.utils.CrashReportManager;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.features.user.WynncraftPauseScreenFeature;
+import com.wynntils.features.user.inventory.DurabilityArcFeature;
+import com.wynntils.features.user.inventory.HidePotionGlintFeature;
+import com.wynntils.features.user.inventory.ItemHighlightFeature;
+import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
+import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
+import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.user.overlays.MiniMapOverlayFeature;
+import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
+import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
+import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
+import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.user.redirects.PouchRedirectFeature;
+import com.wynntils.features.user.tooltips.ItemCompareFeature;
+import com.wynntils.features.user.tooltips.ItemGuessFeature;
+import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
+import com.wynntils.features.user.tooltips.TooltipFittingFeature;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
-public class FeatureRegistry {
+public final class FeatureRegistry {
     private static final List<Feature> FEATURES = new ArrayList<>();
-    private static final List<Overlay> OVERLAYS = new ArrayList<>();
 
-    public static void registerFeature(Feature feature) {
-        if (feature instanceof Overlay overlay) {
-            OVERLAYS.add(overlay);
-        }
-
+    private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
 
         initializeFeature(feature);
@@ -65,16 +76,16 @@ public class FeatureRegistry {
 
         // instance field
         try {
-            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE");
+            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
             if (instanceField != null) instanceField.set(null, feature);
         } catch (Exception e) {
-            Reference.LOGGER.error("Failed to create instance object in " + featureClass.getName());
+            WynntilsMod.error("Failed to create instance object in " + featureClass.getName());
             e.printStackTrace();
             return;
         }
 
         // flag as event listener
-        if (featureClass.isAnnotationPresent(EventListener.class)) {
+        if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
             feature.setupEventListener();
         }
 
@@ -86,7 +97,7 @@ public class FeatureRegistry {
                 KeyHolder keyHolder = (KeyHolder) FieldUtils.readField(f, feature, true);
                 feature.setupKeyHolder(keyHolder);
             } catch (Exception e) {
-                Reference.LOGGER.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
+                WynntilsMod.error("Failed to register KeyHolder " + f.getName() + " in " + featureClass.getName());
                 e.printStackTrace();
             }
         }
@@ -97,11 +108,12 @@ public class FeatureRegistry {
             userFeature.userEnabled = !startDisabled;
         }
 
-        // register & load config options
+        // init overlays before ConfigManager
+        feature.initOverlays();
+
+        // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        if (featureClass.isAnnotationPresent(Configurable.class)) {
-            ConfigManager.registerConfigurable(feature);
-        }
+        ConfigManager.registerFeature(feature);
 
         // initialize & enable
         feature.init();
@@ -115,50 +127,71 @@ public class FeatureRegistry {
         }
     }
 
-    public static void registerFeatures(List<Feature> features) {
-        features.forEach(FeatureRegistry::registerFeature);
-    }
-
     public static List<Feature> getFeatures() {
         return FEATURES;
     }
 
-    public static List<Overlay> getOverlays() {
-        return OVERLAYS;
+    public static Optional<Feature> getFeatureFromString(String featureName) {
+        return FeatureRegistry.getFeatures().stream()
+                .filter(feature -> feature.getShortName().equals(featureName))
+                .findFirst();
     }
 
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new LogItemInfoFeature());
         registerFeature(new PacketDebuggerFeature());
 
-        // internal
-        registerFeature(new LootrunFeature());
-        registerFeature(new FixPacketBugsFeature());
-        registerFeature(new ItemStackTransformerFeature());
+        // always on
         registerFeature(new FixSpellOverwriteFeature());
+        registerFeature(new LootrunFeature());
 
         // user
+        registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new ChatItemFeature());
+        registerFeature(new CommandsFeature());
+        registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new FilterAdminCommandsFeature());
+        registerFeature(new FixPacketBugsFeature());
+        registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HidePotionGlintFeature());
+        registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
+        registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
+        registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new MiniMapOverlayFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new NpcDialogueOverlayFeature());
+        registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new PouchRedirectFeature());
+        registerFeature(new QuestInfoOverlayFeature());
+        registerFeature(new QuickCastFeature());
         registerFeature(new SoulPointTimerFeature());
+        registerFeature(new TooltipFittingFeature());
+        registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TranslationFeature());
+        registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
-        registerFeature(new TooltipScaleFeature());
+        registerFeature(new WynncraftPauseScreenFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();
 
-        WynntilsMod.getEventBus().register(OverlayListener.class);
+        // save/create default config file containing all config holders
+        ConfigManager.saveDefaultConfig();
 
         addCrashCallbacks();
     }
@@ -176,101 +209,12 @@ public class FeatureRegistry {
 
                 for (Feature feature : FEATURES) {
                     if (feature.isEnabled()) {
-                        result.append("\n\t\t").append(feature.getName());
+                        result.append("\n\t\t").append(feature.getTranslatedName());
                     }
                 }
 
                 return result.toString();
             }
         });
-
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Overlays";
-            }
-
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
-
-                for (Overlay overlay : OVERLAYS) {
-                    if (overlay.isEnabled()) {
-                        result.append("\n\t\t").append(overlay.getName());
-                    }
-                }
-
-                return result.toString();
-            }
-        });
-    }
-
-    private static class OverlayListener { // TODO create a enum map for overlays instead of this
-        @SubscribeEvent
-        public static void onTick(ClientTickEvent e) {
-            if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-                for (Overlay overlay : OVERLAYS) {
-                    overlay.tick();
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onRenderPre(RenderEvent.Pre e) {
-            if (!WynnUtils.onServer()) // || !McUtils.mc().playerController.isSpectator())
-            return;
-
-            McUtils.mc().getProfiler().push("preRenOverlay");
-            for (Overlay overlay : OVERLAYS) {
-                if (!overlay.visible) continue;
-                // if (!overlay.active) continue;
-
-                if (overlay.hookElements.length != 0) {
-                    boolean contained = false;
-                    for (RenderEvent.ElementType type : overlay.hookElements) {
-                        if (e.getType() == type) {
-                            contained = true;
-                            break;
-                        }
-                    }
-
-                    if (contained && overlay.visible) {
-                        McUtils.mc().getProfiler().push(overlay.getName());
-                        overlay.render(e);
-                        McUtils.mc().getProfiler().pop();
-                    }
-                }
-            }
-
-            McUtils.mc().getProfiler().pop();
-
-            // McIf.mc().getTextureManager().bindTexture(ICONS);
-        }
-
-        @SubscribeEvent
-        public static void onRenderPost(RenderEvent.Post e) {
-            if (!WynnUtils.onServer()) // || !McUtils.mc().playerController.isSpectator())
-            return;
-
-            McUtils.mc().getProfiler().push("postRenOverlay");
-
-            for (Overlay overlay : OVERLAYS) {
-                if (!overlay.visible)
-                    // if (!overlay.active) continue;
-
-                    if (overlay.hookElements.length != 0) {
-                        for (RenderEvent.ElementType type : overlay.hookElements) {
-                            if (e.getType() == type) {
-                                McUtils.mc().getProfiler().push(overlay.getName());
-                                overlay.render(e);
-                                McUtils.mc().getProfiler().pop();
-                                break;
-                            }
-                        }
-                    }
-            }
-
-            McUtils.mc().getProfiler().pop();
-        }
     }
 }

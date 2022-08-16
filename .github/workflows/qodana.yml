@@ -1,0 +1,33 @@
+name: Qodana
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    outputs:
+      qodana: ${{ steps.qodana.outputs.result }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Rename misc file
+        run: |
+          cp ./.idea/misc-example.xml ./.idea/misc.xml
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: "gradle"
+      - name: 'Qodana Scan'
+        id: qodana
+        uses: JetBrains/qodana-action@v2022.2.1
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.wynntils.wc.objects.ClassType;
+import com.wynntils.wynn.objects.ClassType;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ItemProfile {
-
     String displayName;
     ItemTier tier;
     boolean identified;
@@ -97,7 +96,7 @@ public class ItemProfile {
             parsedRequirements.put(type, reqStr);
         }
         if (getClassNeeded() != null) {
-            parsedRequirements.put(RequirementType.CLASS, getClassNeeded().getDisplayName());
+            parsedRequirements.put(RequirementType.CLASS, getClassNeeded().toString());
         }
     }
 
@@ -181,7 +180,7 @@ public class ItemProfile {
 
     public boolean hasRequirements() {
         parseRequirements();
-        return (parsedRequirements.size() > 0);
+        return (!parsedRequirements.isEmpty());
     }
 
     public ClassType getClassNeeded() {

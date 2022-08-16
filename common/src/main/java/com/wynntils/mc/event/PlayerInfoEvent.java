@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class PlayerInfoEvent extends Event {
     private final UUID id;
 
-    public PlayerInfoEvent(UUID id) {
+    protected PlayerInfoEvent(UUID id) {
         this.id = id;
     }
 

@@ -6,7 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -39,18 +39,18 @@ public class WynntilsCommand extends CommandBase {
 
         MutableComponent buildText;
 
-        if (Reference.VERSION.isEmpty()) {
+        if (WynntilsMod.getVersion().isEmpty()) {
             buildText = new TextComponent("Unknown Version");
         } else {
-            buildText = new TextComponent("Version " + Reference.VERSION);
+            buildText = new TextComponent("Version " + WynntilsMod.getVersion());
         }
 
         buildText.append("\n");
 
-        if (Reference.BUILD_NUMBER == -1) {
+        if (WynntilsMod.getBuildNumber() == -1) {
             buildText.append(new TextComponent("Unknown Build"));
         } else {
-            buildText.append(new TextComponent("Build " + Reference.BUILD_NUMBER));
+            buildText.append(new TextComponent("Build " + WynntilsMod.getBuildNumber()));
         }
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
@@ -77,11 +77,11 @@ public class WynntilsCommand extends CommandBase {
                 if (!feature.isEnabled()) {
                     McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getName()).withStyle(ChatFormatting.AQUA)));
+                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
                 } else {
                     McUtils.sendMessageToClient(new TextComponent("Reloaded ")
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getName()).withStyle(ChatFormatting.AQUA)));
+                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
                 }
             }
         }
@@ -114,7 +114,7 @@ public class WynntilsCommand extends CommandBase {
                 text, "wynntils", List.of("help"), "This shows a list of all available commands for Wynntils.");
         addCommandDescription(
                 text, "wynntils", List.of("discord"), "This provides you with an invite to our Discord server.");
-        addCommandDescription(text, "-wynntils", List.of(" version"), "This shows the installed Wynntils version.");
+        addCommandDescription(text, "wynntils", List.of("version"), "This shows the installed Wynntils version.");
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
@@ -153,7 +153,7 @@ public class WynntilsCommand extends CommandBase {
             MutableComponent text, String prefix, List<String> suffix, String description) {
         text.append("\n");
 
-        StringBuilder suffixString = new StringBuilder("");
+        StringBuilder suffixString = new StringBuilder();
 
         for (String argument : suffix) {
             suffixString.append(" ").append(argument);

@@ -7,16 +7,24 @@ package com.wynntils.core.features;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.core.keybinds.KeyManager;
+import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
-import com.wynntils.mc.utils.ComponentUtils;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -24,28 +32,57 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature {
+public abstract class Feature implements Translatable, Configurable {
     private ImmutableList<Condition> conditions;
+    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
-    private List<KeyHolder> keyMappings = new ArrayList<>();
+    private final List<KeyHolder> keyMappings = new ArrayList<>();
+    private final List<ConfigHolder> configOptions = new ArrayList<>();
+    private final List<Overlay> overlays = new ArrayList<>();
 
     protected boolean enabled = false;
 
+    protected boolean initFinished = false;
+
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
-        onInit(conditions);
+        onInit(conditions, dependencies);
 
         this.conditions = conditions.build();
+        this.dependencies = dependencies.build();
 
-        if (this.conditions.isEmpty()) return;
-        this.conditions.forEach(Condition::init);
+        if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
+
+        initFinished = true;
+    }
+
+    public final void initOverlays() {
+        Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
+        for (Field overlayField : overlayFields) {
+
+            try {
+                Object fieldValue = FieldUtils.readField(overlayField, this, true);
+
+                if (!(fieldValue instanceof Overlay overlay)) {
+                    throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
+                }
+
+                OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
+                OverlayManager.registerOverlay(overlay, annotation, this);
+                overlays.add(overlay);
+            } catch (IllegalAccessException e) {
+                WynntilsMod.error("Unable to get field " + overlayField);
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
      * Sets up this feature as an event listener. Called from the registry.
      */
-    public void setupEventListener() {
+    public final void setupEventListener() {
         this.isListener = true;
     }
 
@@ -53,26 +90,37 @@ public abstract class Feature {
      * Adds a keyHolder to the feature. Called from the registry.
      * @param keyHolder KeyHolder to add to the feature
      */
-    public void setupKeyHolder(KeyHolder keyHolder) {
+    public final void setupKeyHolder(KeyHolder keyHolder) {
         keyMappings.add(keyHolder);
     }
 
+    public List<Overlay> getOverlays() {
+        return overlays;
+    }
+
     /** Gets the name of a feature */
-    public String getName() {
-        return ComponentUtils.getFormatted(getNameComponent());
+    @Override
+    public String getTranslatedName() {
+        return getTranslation("name");
+    }
+
+    @Override
+    public String getTranslation(String keySuffix) {
+        return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
+    }
+
+    public String getShortName() {
+        return this.getClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {
-        String name = this.getClass().getTypeName().replace("Feature", "");
+        String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public MutableComponent getNameComponent() {
-        return new TranslatableComponent("feature.wynntils." + getNameCamelCase() + ".name");
-    }
-
     /** Called on init of Feature */
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(
+            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
 
     /**
      * Called on enabling of Feature
@@ -97,11 +145,16 @@ public abstract class Feature {
 
         enabled = true;
 
+        for (Class<? extends Model> dependency : dependencies) {
+            ManagerRegistry.addDependency(this, dependency);
+        }
+
         if (isListener) {
             WynntilsMod.getEventBus().register(this);
         }
+        OverlayManager.enableOverlays(this.overlays, false);
         for (KeyHolder key : keyMappings) {
-            KeyManager.registerKeybind(key);
+            KeyBindManager.registerKeybind(key);
         }
     }
 
@@ -113,11 +166,14 @@ public abstract class Feature {
 
         enabled = false;
 
+        ManagerRegistry.removeAllFeatureDependency(this);
+
         if (isListener) {
             WynntilsMod.getEventBus().unregister(this);
         }
+        OverlayManager.disableOverlays(this.overlays);
         for (KeyHolder key : keyMappings) {
-            KeyManager.unregisterKeybind(key);
+            KeyBindManager.unregisterKeybind(key);
         }
     }
 
@@ -147,7 +203,33 @@ public abstract class Feature {
         return true;
     }
 
-    public class WebLoadedCondition extends Condition {
+    /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
+    @Override
+    public final void addConfigOptions(List<ConfigHolder> options) {
+        configOptions.addAll(options);
+    }
+
+    /** Returns all config options registered in this feature */
+    public final List<ConfigHolder> getConfigOptions() {
+        return configOptions;
+    }
+
+    /** Returns all config options registered in this feature that should be visible to the user */
+    public final List<ConfigHolder> getVisibleConfigOptions() {
+        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
+    }
+
+    /** Returns the config option matching the given name, if it exists */
+    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
+        return getVisibleConfigOptions().stream()
+                .filter(c -> c.getFieldName().equals(name))
+                .findFirst();
+    }
+
+    /** Used to react to config option updates */
+    protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+    public static class WebLoadedCondition extends Condition {
         @Override
         public void init() {
             if (WebManager.isSetup()) {
@@ -163,9 +245,14 @@ public abstract class Feature {
             setSatisfied(true);
             WynntilsMod.getEventBus().unregister(this);
         }
+
+        @Override
+        public boolean isSatisfied() {
+            return super.isSatisfied() || WebManager.isSetup();
+        }
     }
 
-    public abstract class Condition {
+    public abstract static class Condition {
         boolean satisfied = false;
 
         public boolean isSatisfied() {

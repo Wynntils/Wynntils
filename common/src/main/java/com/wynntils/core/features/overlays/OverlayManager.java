@@ -1,0 +1,179 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.core.features.overlays;
+
+import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.mc.event.DisplayResizeEvent;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.OverlayManagementScreen;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+public final class OverlayManager extends CoreManager {
+    private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
+    private static final Map<Overlay, Feature> overlayParent = new HashMap<>();
+
+    private static final Set<Overlay> enabledOverlays = new HashSet<>();
+
+    private static final List<SectionCoordinates> sections = new ArrayList<>(9);
+
+    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
+        overlayInfoMap.put(overlay, overlayInfo);
+        overlayParent.put(overlay, parent);
+    }
+
+    public static void disableOverlays(List<Overlay> overlays) {
+        enabledOverlays.removeIf(overlays::contains);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+    }
+
+    public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
+        if (!ignoreState) {
+            overlays = overlays.stream().filter(Overlay::isEnabled).toList();
+        }
+
+        enabledOverlays.addAll(overlays);
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+    }
+
+    @SubscribeEvent
+    public static void onRenderPre(RenderEvent.Pre event) {
+        McUtils.mc().getProfiler().push("preRenOverlay");
+        renderOverlays(event, OverlayInfo.RenderState.Pre);
+        McUtils.mc().getProfiler().pop();
+    }
+
+    @SubscribeEvent
+    public static void onRenderPost(RenderEvent.Post event) {
+        McUtils.mc().getProfiler().push("postRenOverlay");
+        renderOverlays(event, OverlayInfo.RenderState.Post);
+        McUtils.mc().getProfiler().pop();
+    }
+
+    private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+        boolean testMode = false;
+        boolean shouldRender = true;
+
+        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
+            testMode = screen.isTestMode();
+            shouldRender = false;
+        }
+
+        for (Overlay overlay : enabledOverlays) {
+            OverlayInfo annotation = overlayInfoMap.get(overlay);
+
+            if (annotation.renderType() != event.getType()) {
+                continue;
+            }
+
+            if (annotation.renderAt() == OverlayInfo.RenderState.Replace) {
+                if (renderState != OverlayInfo.RenderState.Pre) {
+                    continue;
+                }
+                event.setCanceled(true);
+            } else {
+                if (annotation.renderAt() != renderState) {
+                    continue;
+                }
+            }
+
+            if (testMode) {
+                overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            } else {
+                if (shouldRender) {
+                    overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                }
+            }
+        }
+    }
+
+    public static void init() {
+        addCrashCallbacks();
+    }
+
+    private static void addCrashCallbacks() {
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
+            @Override
+            public String name() {
+                return "Loaded Overlays";
+            }
+
+            @Override
+            public Object generate() {
+                StringBuilder result = new StringBuilder();
+
+                for (Overlay overlay : enabledOverlays) {
+                    result.append("\n\t\t").append(overlay.getTranslatedName());
+                }
+
+                return result.toString();
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onResizeEvent(DisplayResizeEvent event) {
+        calculateSections();
+    }
+
+    // Calculate the sections when loading is finished (this acts as a "game loaded" event)
+    @SubscribeEvent
+    public static void gameInitEvent(TitleScreenInitEvent event) {
+        calculateSections();
+    }
+
+    private static void calculateSections() {
+        Window window = McUtils.mc().getWindow();
+        int width = window.getGuiScaledWidth();
+        int height = window.getGuiScaledHeight();
+
+        int wT = width / 3;
+        int hT = height / 3;
+
+        sections.clear();
+        for (int h = 0; h < 3; h++) {
+            for (int w = 0; w < 3; w++) {
+                sections.add(new SectionCoordinates(w * wT, h * hT, (w + 1) * wT, (h + 1) * hT));
+            }
+        }
+    }
+
+    public static SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
+        return sections.get(section.getIndex());
+    }
+
+    public static List<SectionCoordinates> getSections() {
+        return sections;
+    }
+
+    public static Set<Overlay> getOverlays() {
+        return overlayInfoMap.keySet();
+    }
+
+    public static OverlayInfo getOverlayInfo(Overlay overlay) {
+        return overlayInfoMap.getOrDefault(overlay, null);
+    }
+
+    public static Feature getOverlayParent(Overlay overlay) {
+        return overlayParent.get(overlay);
+    }
+
+    public static boolean isEnabled(Overlay overlay) {
+        return enabledOverlays.contains(overlay);
+    }
+}

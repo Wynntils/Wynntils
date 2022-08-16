@@ -9,11 +9,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.mc.utils.CompassManager;
-import com.wynntils.utils.objects.Location;
+import com.wynntils.mc.objects.Location;
+import com.wynntils.wynn.model.CompassModel;
 import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -32,7 +34,7 @@ public class TerritoryCommand extends CommandBase {
                                 return Suggestions.empty();
                             }
 
-                            HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
+                            Map<String, TerritoryProfile> territories = WebManager.getTerritories();
 
                             return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
                         })
@@ -73,7 +75,17 @@ public class TerritoryCommand extends CommandBase {
         int xMiddle = (territoryProfile.getStartX() + territoryProfile.getEndX()) / 2;
         int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;
 
-        CompassManager.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
+        MutableComponent territoryComponent = new TextComponent(territoryProfile.getFriendlyName())
+                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
+
+        if (!ManagerRegistry.isEnabled(CompassModel.class)) {
+            MutableComponent success = territoryComponent
+                    .append(": ")
+                    .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
+            context.getSource().sendSuccess(success, false);
+        }
+
+        CompassModel.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
         MutableComponent separator = new TextComponent("-----------------------------------------------------")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withStrikethrough(true));
@@ -82,8 +94,6 @@ public class TerritoryCommand extends CommandBase {
 
         finalMessage.append(separator);
 
-        MutableComponent territoryComponent = new TextComponent(territoryProfile.getFriendlyName())
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
         MutableComponent success = new TextComponent("The compass is now pointing towards ")
                 .withStyle(ChatFormatting.GREEN)
                 .append(territoryComponent)

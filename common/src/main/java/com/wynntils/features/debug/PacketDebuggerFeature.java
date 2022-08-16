@@ -4,9 +4,8 @@
  */
 package com.wynntils.features.debug;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
-import com.wynntils.core.features.properties.EventListener;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
@@ -35,10 +34,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@EventListener
 public class PacketDebuggerFeature extends DebugFeature {
-
-    public static final boolean DEBUG_PACKETS = false;
+    private static final boolean DEBUG_PACKETS = false;
 
     /* These packets just spam the log; ignore them. */
     private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
@@ -82,7 +79,7 @@ public class PacketDebuggerFeature extends DebugFeature {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        Reference.LOGGER.info("SENT packet: " + describePacket(packet));
+        WynntilsMod.info("SENT packet: " + describePacket(packet));
     }
 
     @SubscribeEvent
@@ -92,6 +89,6 @@ public class PacketDebuggerFeature extends DebugFeature {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
-        Reference.LOGGER.info("RECV packet: " + describePacket(packet));
+        WynntilsMod.info("RECV packet: " + describePacket(packet));
     }
 }

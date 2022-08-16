@@ -5,32 +5,43 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundCommandsPacketAccessor;
+import java.util.UUID;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
+    @Inject(
+            method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
+            at = @At("HEAD"))
+    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+        CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
+        ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
+    }
+
     @Inject(
             method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
             at = @At("RETURN"))
@@ -49,7 +60,7 @@ public abstract class ClientPacketListenerMixin {
             method = "handleResourcePack(Lnet/minecraft/network/protocol/game/ClientboundResourcePackPacket;)V",
             at = @At("RETURN"))
     private void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
-        EventFactory.onResourcePack(packet);
+        EventFactory.onResourcePack();
     }
 
     @Inject(
@@ -70,7 +81,7 @@ public abstract class ClientPacketListenerMixin {
             method = "handleContainerClose(Lnet/minecraft/network/protocol/game/ClientboundContainerClosePacket;)V",
             at = @At("RETURN"))
     private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
-        EventFactory.onClientboundContainerClosePacket(packet);
+        EventFactory.onClientboundContainerClosePacket();
     }
 
     @Inject(
@@ -83,6 +94,17 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
+    @Inject(
+            method =
+                    "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
+        if (EventFactory.onSetEntityPassengers(packet).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
@@ -91,43 +113,49 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method =
-                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
-            at = @At("RETURN"))
-    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
-        List<ItemStack> items = new ArrayList<>(packet.getItems());
-        items.add(packet.getCarriedItem());
-
-        if (packet.getContainerId() == 0) {
-            EventFactory.onItemsReceived(items, McUtils.inventoryMenu());
-        } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(items, McUtils.containerMenu());
-        }
-    }
-
-    @Inject(
-            method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("RETURN"))
-    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        if (packet.getContainerId() == -1 || packet.getContainerId() == McUtils.containerMenu().containerId) {
-            EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.containerMenu());
-        } else if (packet.getContainerId() == -2
-                || (packet.getContainerId() == 0 && InventoryMenu.isHotbarSlot(packet.getSlot()))) {
-            EventFactory.onItemsReceived(Collections.singletonList(packet.getItem()), McUtils.inventoryMenu());
-        }
-    }
-
-    @Inject(
             method = "setTitleText(Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;)V",
-            at = @At("RETURN"))
-    private void setTitleTextPost(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
-        EventFactory.onTitleSetText(packet);
+            at = @At("HEAD"),
+            cancellable = true)
+    private void setTitleTextPre(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
+        if (EventFactory.onTitleSetText(packet).isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(
             method = "setSubtitleText(Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;)V",
-            at = @At("RETURN"))
-    private void setSubtitleTextPost(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
-        EventFactory.onSubtitleSetText(packet);
+            at = @At("HEAD"),
+            cancellable = true)
+    private void setSubtitleTextPre(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
+        if (EventFactory.onSubtitleSetText(packet).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Redirect(
+            method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
+    private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
+        if (result.isCanceled()) return;
+
+        gui.handleChat(chatType, result.getMessage(), uuid);
+    }
+
+    @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
+    private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
+        if (EventFactory.onSetScore(packet).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "onDisconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
+    private void onDisconnectPre(Component reason, CallbackInfo ci) {
+        // Unexpected disconnect
+        EventFactory.onDisconnect();
     }
 }

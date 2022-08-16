@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.wynntils.core.Reference;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
 import java.util.Locale;
@@ -15,14 +15,13 @@ import java.util.Map;
  * https://forums.wynncraft.com/threads/how-identifications-are-calculated.128923/
  */
 public class IdentificationProfile {
-
     private static final Map<String, IdentificationModifier> typeMap = new HashMap<>();
 
-    protected IdentificationModifier type;
-    private final int baseValue;
-    protected boolean isFixed;
-
-    private transient int min, max;
+    private IdentificationModifier type;
+    private int baseValue;
+    private boolean isFixed;
+    private transient int min;
+    private transient int max;
 
     public IdentificationProfile(IdentificationModifier type, int baseValue, boolean isFixed) {
         this.type = type;
@@ -33,7 +32,8 @@ public class IdentificationProfile {
 
     public void calculateMinMax() {
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
-            min = max = baseValue;
+            min = baseValue;
+            max = baseValue;
             return;
         }
 
@@ -154,7 +154,7 @@ public class IdentificationProfile {
                     starMin = 30;
                     starMax = 130;
 
-                    Reference.LOGGER.warn("Invalid star count of " + starCount);
+                    WynntilsMod.warn("Invalid star count of " + starCount);
             }
 
             double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
@@ -169,7 +169,7 @@ public class IdentificationProfile {
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return new ReidentificationChances((avg - 70) / 61d, 1 / 61d, (130 - avg) / 61d).flipIf(isInverted);
+            return new ReidentificationChances((130 - avg) / 61d, 1 / 61d, (avg - 70) / 61d).flipIf(isInverted);
         }
     }
 

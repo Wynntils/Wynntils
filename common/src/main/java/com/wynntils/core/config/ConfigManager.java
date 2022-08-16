@@ -10,14 +10,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.wynntils.core.Reference;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.objects.ConfigOptionHolder;
-import com.wynntils.core.config.objects.ConfigurableHolder;
-import com.wynntils.core.config.properties.ConfigOption;
-import com.wynntils.core.config.properties.Configurable;
+import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.CoreManager;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.utils.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,42 +26,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigManager {
-    private static final File CONFIGS = new File(WynntilsMod.MOD_STORAGE_ROOT, "configs");
-    private static final String FILE_SUFFIX = ".config";
-
-    private static final List<ConfigurableHolder> configContainers = new ArrayList<>();
+public final class ConfigManager extends CoreManager {
+    private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
+    private static final String FILE_SUFFIX = ".conf.json";
+    private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
     private static File userConfig;
+    private static final File defaultConfig = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static JsonObject configObject;
-
     private static Gson gson;
 
-    public static void registerConfigurable(Object configurableObject) {
-        ConfigurableHolder configurable = configurableFromObject(configurableObject);
-        if (configurable == null) return; // not a valid configurable
+    public static void registerFeature(Feature feature) {
+        List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
 
-        // add configurable to its corresponding category, then try to load it from file
-        configContainers.add(configurable);
-        loadConfigOptions(configurable);
+        registerConfigOptions(feature, featureConfigOptions);
+    }
+
+    private static void registerConfigOptions(Configurable configurable, List<ConfigHolder> featureConfigOptions) {
+        configurable.addConfigOptions(featureConfigOptions);
+        loadConfigOptions(featureConfigOptions, false);
+        CONFIG_HOLDERS.addAll(featureConfigOptions);
     }
 
     public static void init() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
                 .setPrettyPrinting()
+                .serializeNulls()
                 .create();
 
         loadConfigFile();
     }
 
-    private static void loadConfigFile() {
+    public static void loadConfigFile() {
         // create config directory if necessary
-        CONFIGS.mkdirs();
+        FileUtils.mkdir(CONFIGS);
 
         // set up config file based on uuid, load it if it exists
         userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
@@ -74,25 +81,27 @@ public class ConfigManager {
 
             configObject = fileElement.getAsJsonObject();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to load user config file!");
+            WynntilsMod.error("Failed to load user config file!");
             e.printStackTrace();
         }
     }
 
-    private static void loadConfigOptions(ConfigurableHolder configurable) {
+    public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) return; // nothing to load from
 
-        String prefix = configurable.getJsonName() + ".";
-        for (ConfigOptionHolder option : configurable.getOptions()) {
-            String name = prefix + option.getJsonName();
-
+        for (ConfigHolder holder : holders) {
             // option hasn't been saved to config
-            if (!configObject.has(name)) continue;
+            if (!configObject.has(holder.getJsonName())) {
+                if (resetIfNotFound) {
+                    holder.reset();
+                }
+                continue;
+            }
 
             // read value and update option
-            JsonElement optionJson = configObject.get(name);
-            Object value = gson.fromJson(optionJson, option.getType());
-            option.setValue(value);
+            JsonElement holderJson = configObject.get(holder.getJsonName());
+            Object value = gson.fromJson(holderJson, holder.getType());
+            holder.setValue(value);
         }
     }
 
@@ -102,54 +111,113 @@ public class ConfigManager {
             if (!userConfig.exists()) userConfig.createNewFile();
 
             // create json object, with entry for each option of each container
-            JsonObject configJson = new JsonObject();
-            for (ConfigurableHolder configurable : configContainers) {
-                String prefix = configurable.getJsonName() + ".";
-                for (ConfigOptionHolder option : configurable.getOptions()) {
-                    if (option.isDefault()) continue; // only save options that are non-default
+            JsonObject holderJson = new JsonObject();
+            for (ConfigHolder holder : CONFIG_HOLDERS) {
+                if (!holder.valueChanged()) continue; // only save options that have been set by the user
+                Object value = holder.getValue();
 
-                    String name = prefix + option.getJsonName();
-                    JsonElement optionElement = gson.toJsonTree(option.getValue());
-                    configJson.add(name, optionElement);
-                }
+                JsonElement holderElement = gson.toJsonTree(value);
+                holderJson.add(holder.getJsonName(), holderElement);
             }
 
             // write json to file
             OutputStreamWriter fileWriter =
                     new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-            gson.toJson(configJson, fileWriter);
+            gson.toJson(holderJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
-            Reference.LOGGER.error("Failed to save user config file!");
+            WynntilsMod.error("Failed to save user config file!");
             e.printStackTrace();
         }
     }
 
-    private static ConfigurableHolder configurableFromObject(Object configurableObject) {
-        Class<?> configurableClass = configurableObject.getClass();
+    public static void saveDefaultConfig() {
+        try {
+            // create file if necessary
+            if (!defaultConfig.exists()) defaultConfig.createNewFile();
 
-        Configurable metadata = configurableClass.getAnnotation(Configurable.class);
-        if (metadata == null || metadata.category().isEmpty()) return null; // not a valid config container
+            // create json object, with entry for each option of each container
+            JsonObject holderJson = new JsonObject();
+            for (ConfigHolder holder : CONFIG_HOLDERS) {
+                Object value = holder.getValue();
 
-        List<ConfigOptionHolder> options = new ArrayList<>();
+                JsonElement holderElement = gson.toJsonTree(value);
+                holderJson.add(holder.getJsonName(), holderElement);
+            }
 
-        // collect options
-        for (Field f : FieldUtils.getFieldsWithAnnotation(configurableClass, ConfigOption.class)) {
-            ConfigOptionHolder option = optionFromField(configurableObject, f);
-            if (option == null) continue;
-
-            options.add(option);
+            // write json to file
+            OutputStreamWriter fileWriter =
+                    new OutputStreamWriter(new FileOutputStream(defaultConfig), StandardCharsets.UTF_8);
+            gson.toJson(holderJson, fileWriter);
+            fileWriter.close();
+            WynntilsMod.info("Default config file created.");
+        } catch (IOException e) {
+            WynntilsMod.error("Failed to save user config file!");
+            e.printStackTrace();
         }
-
-        if (options.isEmpty()) return null; // configurable contains no options, so not valid
-
-        return new ConfigurableHolder(configurableClass, options, metadata);
     }
 
-    private static ConfigOptionHolder optionFromField(Object parent, Field field) {
-        ConfigOption metadata = field.getAnnotation(ConfigOption.class);
-        if (metadata == null || metadata.displayName().isEmpty()) return null; // not a valid config variable
+    private static List<ConfigHolder> collectConfigOptions(Feature feature) {
+        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
 
-        return new ConfigOptionHolder(parent, field, metadata);
+        String category = "";
+        // feature has no category defined, default to empty category
+        if (featureInfo != null) {
+            category = featureInfo.category();
+        }
+
+        loadFeatureOverlayConfigOptions(category, feature);
+
+        return getConfigOptions(category, feature);
+    }
+
+    private static void loadFeatureOverlayConfigOptions(String category, Feature feature) {
+        // collect feature's overlays' config options
+        for (Overlay overlay : feature.getOverlays()) {
+            List<ConfigHolder> options = getConfigOptions(category, overlay);
+
+            registerConfigOptions(overlay, options);
+        }
+    }
+
+    private static List<ConfigHolder> getConfigOptions(String category, Configurable parent) {
+        List<ConfigHolder> options = new ArrayList<>();
+
+        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
+            Config metadata = configField.getAnnotation(Config.class);
+
+            Optional<Field> typeField = Arrays.stream(
+                            FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
+                    .filter(field ->
+                            field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
+                    .findFirst();
+
+            if (typeField.isPresent()) {
+                try {
+                    Type type = (Type) FieldUtils.readField(typeField.get(), parent, true);
+                    options.add(new ConfigHolder(parent, configField, category, metadata, type));
+                } catch (IllegalAccessException e) {
+                    WynntilsMod.error("Unable to get field " + typeField.get().getName());
+                    e.printStackTrace();
+                }
+            } else {
+                options.add(new ConfigHolder(parent, configField, category, metadata, null));
+            }
+        }
+        return options;
+    }
+
+    public static Gson getGson() {
+        return gson;
+    }
+
+    public static List<ConfigHolder> getConfigHolders() {
+        return CONFIG_HOLDERS;
+    }
+
+    public static List<ConfigHolder> getConfigHolders(Configurable configurable) {
+        return CONFIG_HOLDERS.stream()
+                .filter(configHolder -> configHolder.getParent() == configurable)
+                .toList();
     }
 }

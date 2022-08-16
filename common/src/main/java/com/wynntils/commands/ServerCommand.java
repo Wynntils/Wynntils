@@ -11,9 +11,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -100,7 +99,7 @@ public class ServerCommand extends CommandBase {
         MutableComponent message = new TextComponent("Online players on " + server + ": " + players.size() + "\n")
                 .withStyle(ChatFormatting.DARK_AQUA);
 
-        if (players.size() == 0) {
+        if (players.isEmpty()) {
             message.append(new TextComponent("No players!").withStyle(ChatFormatting.AQUA));
         } else {
             message.append(new TextComponent(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
@@ -112,7 +111,7 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        HashMap<String, List<String>> onlinePlayers;
+        Map<String, List<String>> onlinePlayers;
         try {
             onlinePlayers = WebManager.getOnlinePlayers();
         } catch (IOException e) {

@@ -20,7 +20,7 @@ public class ItemInfoContainer {
     ItemType type;
     String set;
     ItemDropType dropType;
-    String armorColor = null;
+    String armorColor;
 
     public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {}
 
@@ -78,8 +78,6 @@ public class ItemInfoContainer {
         }
 
         Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
-        if (item.isPresent()) return new ItemStack(item.get());
-
-        return new ItemStack(Items.AIR);
+        return item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
     }
 }

@@ -17,6 +17,7 @@ import net.minecraftforge.eventbus.api.GenericEvent;
 public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
     private final T packet;
 
+    @SuppressWarnings("unchecked") // Technically an unsafe typecast, but nobody wants to pass up the packet class
     public PacketEvent(T packet) {
         super((Class<T>) packet.getClass());
         this.packet = packet;

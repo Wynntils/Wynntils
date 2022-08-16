@@ -16,7 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
     private void setScreenPostPost(Screen screen, CallbackInfo ci) {
-        EventFactory.onScreenOpened(screen);
+        if (screen == null) {
+            EventFactory.onScreenClose();
+        } else {
+            EventFactory.onScreenOpened(screen);
+        }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -27,5 +31,10 @@ public abstract class MinecraftMixin {
     @Inject(method = "tick", at = @At("RETURN"))
     public void tickPost(CallbackInfo ci) {
         EventFactory.onTickEnd();
+    }
+
+    @Inject(method = "resizeDisplay", at = @At("RETURN"))
+    public void resizeDisplayPost(CallbackInfo ci) {
+        EventFactory.onResizeDisplayPost();
     }
 }

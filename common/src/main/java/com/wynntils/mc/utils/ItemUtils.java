@@ -20,8 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.TooltipFlag.Default;
 
-public class ItemUtils {
-
+public final class ItemUtils {
     /**
      * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
      * ComponentUtils}
@@ -35,14 +34,14 @@ public class ItemUtils {
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(ComponentUtils.getFormatted(loreTag.getString(i)));
+            lore.add(ComponentUtils.getCoded(loreTag.getString(i)));
         }
 
         return lore;
     }
 
     /**
-     * Get the lore from an item, combined together into one string.
+     * Get the lore from an item, combined into one string.
      * Relies on {@link #getLore(ItemStack)}. See the aforementioned
      * for a list format
      *

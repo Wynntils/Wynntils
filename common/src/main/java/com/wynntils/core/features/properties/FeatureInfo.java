@@ -25,4 +25,10 @@ public @interface FeatureInfo {
         STABLE,
         INVARIABLE
     }
+
+    /** The parent category for options within this container. Also defines file structure. */
+    String category() default ""; // If left blank, signifies that this feature has no config options
+
+    /** Whether this container should be visible to the user */
+    boolean visible() default true;
 }
