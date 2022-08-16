@@ -97,7 +97,7 @@ public final class FunctionManager extends CoreManager {
 
         Object value = function.getValue(argument);
         if (value == null) {
-            return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
+            return header.append(new TextComponent("??"));
         }
 
         String formattedValue = format(value);
