@@ -21,6 +21,7 @@ import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
@@ -74,6 +75,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -194,14 +196,20 @@ public final class EventFactory {
         post(new ScreenClosedEvent());
     }
 
-    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
-        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()));
+    public static MenuOpenedEvent onOpenScreen(ClientboundOpenScreenPacket packet) {
+        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
     }
+
+    public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
+        return post(new ContainerSetContentEvent(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket() {
-        post(new MenuClosedEvent());
+    public static void onClientboundContainerClosePacket(int containerId) {
+        post(new MenuClosedEvent(containerId));
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {

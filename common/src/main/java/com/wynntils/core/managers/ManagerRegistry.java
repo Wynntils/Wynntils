@@ -41,6 +41,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
+        registerPersistentDependency(ContainerQueryManager.class);
 
         addCrashCallbacks();
     }

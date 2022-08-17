@@ -15,6 +15,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
@@ -72,16 +73,30 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleOpenScreen(Lnet/minecraft/network/protocol/game/ClientboundOpenScreenPacket;)V",
-            at = @At("RETURN"))
-    private void handleOpenScreenPost(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
-        EventFactory.onOpenScreen(packet);
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleOpenScreenPre(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
+        if (EventFactory.onOpenScreen(packet).isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(
             method = "handleContainerClose(Lnet/minecraft/network/protocol/game/ClientboundContainerClosePacket;)V",
             at = @At("RETURN"))
     private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
-        EventFactory.onClientboundContainerClosePacket();
+        EventFactory.onClientboundContainerClosePacket(packet.getContainerId());
+    }
+
+    @Inject(
+            method =
+                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+        if (EventFactory.onContainerSetContent(packet).isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(
