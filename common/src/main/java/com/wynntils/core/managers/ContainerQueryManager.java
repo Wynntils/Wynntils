@@ -170,5 +170,4 @@ public class ContainerQueryManager extends CoreManager {
             // FIXME: do execute query
         }
     }
-
-    }
+}
