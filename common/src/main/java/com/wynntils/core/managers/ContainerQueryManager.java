@@ -157,8 +157,18 @@ public class ContainerQueryManager extends CoreManager {
             return this;
         }
 
+        public ContainerQuery build() {
+            // FIXME: do build query
+            return new ContainerQuery(this);
+        }
+    }
+
+    public static class ContainerQuery {
+        protected ContainerQuery(ContainerQueryBuilder builder) {}
+
         public void executeQuery() {
             // FIXME: do execute query
         }
     }
-}
+
+    }

@@ -68,7 +68,7 @@ public class QuestBookFeature extends UserFeature {
     }
 
     private void onScanQuestBook2() {
-        ContainerQueryManager.ContainerQueryBuilder.start()
+        ContainerQueryManager.ContainerQuery query = ContainerQueryManager.ContainerQueryBuilder.start()
                 .expectTitle(QUESTS_TITLE)
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .processContainer((itemsPg1, titlePg1, menuTypePg1) -> {
@@ -99,7 +99,9 @@ public class QuestBookFeature extends UserFeature {
                         System.out.println("title not ok");
                     }
                 })
-                .executeQuery();
+                .build();
+
+        query.executeQuery();
     }
 
     private boolean isPage2Button(List<ItemStack> items) {
