@@ -67,6 +67,41 @@ public class QuestBookFeature extends UserFeature {
         });
     }
 
+    private void onScanQuestBook2() {
+        ContainerQueryManager.ContainerQueryBuilder.start()
+                .expectTitle(QUESTS_TITLE)
+                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .processContainer((itemsPg1, titlePg1, menuTypePg1) -> {
+                    System.out.println("GOT PAGE 1:" + titlePg1.getString() + ": " + itemsPg1);
+                    if (titlePg1.getString().equals(QUESTS_TITLE)) {
+                        System.out.println("title ok");
+                    } else {
+                        System.out.println("title not ok");
+                    }
+                })
+                .expectTitle(QUESTS_TITLE_2)
+                .clickOnSlot(8)
+                .processContainer((itemsPg2, titlePg2, menuTypePg2) -> {
+                    System.out.println("GOT PAGE 2:" + titlePg2.getString() + ": " + itemsPg2);
+                    if (titlePg2.getString().equals(QUESTS_TITLE_2)) {
+                        System.out.println("title ok");
+                    } else {
+                        System.out.println("title not ok");
+                    }
+                })
+                .expectTitle(QUESTS_TITLE_3)
+                .clickOnSlot(8)
+                .processContainer((itemsPg3, titlePg3, menuTypePg3) -> {
+                    System.out.println("GOT PAGE 3:" + titlePg3.getString() + ": " + itemsPg3);
+                    if (titlePg3.getString().equals(QUESTS_TITLE_3)) {
+                        System.out.println("title ok");
+                    } else {
+                        System.out.println("title not ok");
+                    }
+                })
+                .executeQuery();
+    }
+
     private boolean isPage2Button(List<ItemStack> items) {
         ItemStack nextPage = items.get(8);
         if (nextPage.is(Items.GOLDEN_SHOVEL)) {

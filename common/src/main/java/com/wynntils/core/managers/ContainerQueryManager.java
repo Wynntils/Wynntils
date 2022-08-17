@@ -120,4 +120,45 @@ public class ContainerQueryManager extends CoreManager {
         /** Return next title to expect, or null to quit */
         String processContainer(List<ItemStack> items, Component title, MenuType menuType);
     }
+
+    @FunctionalInterface
+    public interface ContainerAction2 {
+        /** Return next title to expect, or null to quit */
+        void processContainer(List<ItemStack> items, Component title, MenuType menuType);
+    }
+
+    public static class ContainerQueryBuilder {
+        static public ContainerQueryBuilder start() {
+            return new ContainerQueryBuilder();
+        }
+
+        public ContainerQueryBuilder expectTitle(String expectedTitle) {
+            // FIXME: append to builder
+            return this;
+        }
+
+        public ContainerQueryBuilder processContainer(ContainerAction2 action) {
+            // FIXME: append to builder
+            return this;
+        }
+
+        public ContainerQueryBuilder clickOnSlot(int clickedSlot) {
+            // FIXME: append to builder
+            return this;
+        }
+
+        public ContainerQueryBuilder useItemInHotbar(int slotNum) {
+            // FIXME: append to builder
+            return this;
+        }
+
+        public ContainerQueryBuilder openInventory(int slotNum) {
+            // FIXME: append to builder
+            return this;
+        }
+
+        public void executeQuery() {
+            // FIXME: do execute query
+        }
+    }
 }
