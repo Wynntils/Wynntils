@@ -6,12 +6,13 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.utils.InventoryUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.custom.item.ItemStackTransformModel;
-import com.wynntils.wc.custom.item.WynnItemStack;
-import com.wynntils.wc.custom.item.properties.ItemProperty;
 import java.util.List;
+
+import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.item.WynnItemStack;
+import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.wynn.utils.InventoryUtils;
 import net.minecraft.world.item.ItemStack;
 
 public class HorseFunctions {
