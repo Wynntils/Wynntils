@@ -35,7 +35,6 @@ public final class KeyBindManager extends CoreManager {
     public static void onKeyPress(InventoryKeyPressEvent e) {
         KEY_BINDS.forEach(keyBind -> {
             if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
-                e.getHoveredSlot();
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
