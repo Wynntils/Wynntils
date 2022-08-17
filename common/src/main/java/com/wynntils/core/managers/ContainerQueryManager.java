@@ -128,7 +128,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     public static class ContainerQueryBuilder {
-        static public ContainerQueryBuilder start() {
+        public static ContainerQueryBuilder start() {
             return new ContainerQueryBuilder();
         }
 
