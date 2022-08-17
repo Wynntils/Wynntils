@@ -7,13 +7,11 @@ package com.wynntils.core.managers;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.wynn.utils.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.List;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -30,20 +28,11 @@ public class ContainerQueryManager extends CoreManager {
     private static int transactionId = 0;
 
     private static String lookForTitle;
-    private static final String QUESTS_TITLE = "§0[Pg. 1] §8mag_icus'§0 Quests";
-    private static final String QUESTS_TITLE_2 = "§0[Pg. 2] §8mag_icus'§0 Quests";
-    private static final String QUESTS_TITLE_3 = "§0[Pg. 3] §8mag_icus'§0 Quests";
     private static Component actualTitle;
     private static Component lastTitle;
     private static MenuType menuType;
 
-    @SubscribeEvent
-    public static void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
-            // trigger reading at login
-            openInventory();
-        }
-    }
+    public static ContainerAction nextAction;
 
     @SubscribeEvent
     public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
@@ -81,26 +70,10 @@ public class ContainerQueryManager extends CoreManager {
 
         // FIXME: Better API here
         System.out.println("*** From " + actualTitle.getString() + " got " + e.getItems());
-        int clickedSlot = getSlotToClick(e.getItems(), actualTitle, menuType);
-        String newTitleToLookFor = getTitleToLookFor(e.getItems(), actualTitle, menuType);
+        String newTitleToLookFor = nextAction.processContainer(e.getItems(), actualTitle, menuType);
 
-        if (clickedSlot != -1) {
-            // Click on a slot; expect a new title
+        if (newTitleToLookFor != null) {
             lookForTitle = newTitleToLookFor;
-
-            Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-            changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
-
-            int mouseButtonNum = 0;
-            McUtils.sendPacket(new ServerboundContainerClickPacket(
-                    containerId,
-                    transactionId,
-                    clickedSlot,
-                    mouseButtonNum,
-                    ClickType.PICKUP,
-                    e.getItems().get(clickedSlot),
-                    changedSlots));
-            transactionId++;
         } else {
             // Done
             McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
@@ -109,60 +82,42 @@ public class ContainerQueryManager extends CoreManager {
         e.setCanceled(true);
     }
 
-    private static int getSlotToClick(List<ItemStack> items, Component title, MenuType menuType) {
-        if (title.getString().equals(QUESTS_TITLE)) {
-            ItemStack nextPage = items.get(8);
-            if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-                String dispName = nextPage.getDisplayName().getString();
-                if (dispName.equals("[§f§lPage 2§a >§2>§a>§2>§a>]")) {
-                    return 8;
-                }
-            }
-        } else if (title.getString().equals(QUESTS_TITLE_2)) {
-            ItemStack nextPage = items.get(8);
-            if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-                String dispName = nextPage.getDisplayName().getString();
-                if (dispName.equals("[§f§lPage 3§a >§2>§a>§2>§a>]")) {
-                    return 8;
-                }
-            }
-        }
+    public static void clickOnSlot(List<ItemStack> items, int clickedSlot) {
+        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
-        return -1;
+        int mouseButtonNum = 0;
+        McUtils.sendPacket(new ServerboundContainerClickPacket(
+                containerId,
+                transactionId,
+                clickedSlot,
+                mouseButtonNum,
+                ClickType.PICKUP,
+                items.get(clickedSlot),
+                changedSlots));
+        transactionId++;
     }
 
-    private static String getTitleToLookFor(List<ItemStack> items, Component title, MenuType menuType) {
-        if (title.getString().equals(QUESTS_TITLE)) {
-            ItemStack nextPage = items.get(8);
-            if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-                String dispName = nextPage.getDisplayName().getString();
-                if (dispName.equals("[§f§lPage 2§a >§2>§a>§2>§a>]")) {
-                    return QUESTS_TITLE_2;
-                }
-            }
-        } else if (title.getString().equals(QUESTS_TITLE_2)) {
-            ItemStack nextPage = items.get(8);
-            if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-                String dispName = nextPage.getDisplayName().getString();
-                if (dispName.equals("[§f§lPage 3§a >§2>§a>§2>§a>]")) {
-                    return QUESTS_TITLE_3;
-                }
-            }
-        }
-
-        return "";
+    public static void start(ContainerAction action) {
+        String firstExpectedString = action.processContainer(List.of(), TextComponent.EMPTY, null);
+        lookForTitle = firstExpectedString;
     }
 
-    private static void openInventory() {
+    public static void openInventory(int slotNum) {
         int id = McUtils.player().containerMenu.containerId;
         if (id != 0) {
             // another inventory is already open, cannot do this
             return;
         }
-        lookForTitle = QUESTS_TITLE;
         int prevItem = McUtils.inventory().selected;
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(InventoryUtils.QUEST_BOOK_SLOT_NUM));
+        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(slotNum));
         McUtils.sendPacket(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
+    }
+
+    @FunctionalInterface
+    public interface ContainerAction {
+        /** Return next title to expect, or null to quit */
+        String processContainer(List<ItemStack> items, Component title, MenuType menuType);
     }
 }
