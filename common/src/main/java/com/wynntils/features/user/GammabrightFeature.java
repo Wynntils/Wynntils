@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -17,8 +17,8 @@ public class GammabrightFeature extends UserFeature {
     private double lastGamma = 1f;
 
     @RegisterKeyBind
-    private final KeyHolder gammabrightKeybind =
-            new KeyHolder("Gammabright", GLFW.GLFW_KEY_G, "Wynntils", true, this::onGammabrightKeyPress);
+    private final KeyBind gammabrightKeyBind =
+            new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::onGammabrightKeyPress);
 
     private void onGammabrightKeyPress() {
         double currentGamma = McUtils.options().gamma;
