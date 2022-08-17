@@ -9,9 +9,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -31,12 +30,12 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = "Item Tooltips")
 public class ItemCompareFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder toggleCompareModeKeybind =
-            new KeyHolder("Compare mode", GLFW.GLFW_KEY_KP_EQUAL, "Wynntils", true, () -> {});
+    private final KeyBind toggleCompareModeKeyBind =
+            new KeyBind("Compare mode", GLFW.GLFW_KEY_KP_EQUAL, true, null, this::onCompareModeKeyPress);
 
     @RegisterKeyBind
-    private final KeyHolder compareSelectKeybind =
-            new KeyHolder("Select for comparing", GLFW.GLFW_KEY_C, "Wynntils", true, () -> {});
+    private final KeyBind compareSelectKeyBind =
+            new KeyBind("Select for comparing", GLFW.GLFW_KEY_C, true, null, this::onSelectKeyPress);
 
     private GearItemStack comparedItem = null;
     private boolean compareToEquipped = false;
@@ -133,27 +132,24 @@ public class ItemCompareFeature extends UserFeature {
         compareToEquipped = false;
     }
 
-    @SubscribeEvent
-    public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (toggleCompareModeKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
-            if (comparedItem != null) {
-                comparedItem = null;
-                compareToEquipped = true;
-            } else {
-                compareToEquipped = !compareToEquipped;
-            }
-        } else if (compareSelectKeybind.getKeybind().matches(event.getKeyCode(), event.getScanCode())) {
-            if (event.getHoveredSlot() == null) {
-                return;
-            }
+    private void onCompareModeKeyPress(Slot hoveredSlot) {
+        if (comparedItem != null) {
+            comparedItem = null;
+            compareToEquipped = true;
+        } else {
+            compareToEquipped = !compareToEquipped;
+        }
+    }
 
-            if (event.getHoveredSlot().getItem() instanceof GearItemStack gearItemStack) {
-                if (comparedItem == gearItemStack) {
-                    comparedItem = null;
-                } else {
-                    comparedItem = gearItemStack;
-                    compareToEquipped = false;
-                }
+    private void onSelectKeyPress(Slot hoveredSlot) {
+        if (hoveredSlot == null) return;
+
+        if (hoveredSlot.getItem() instanceof GearItemStack gearItemStack) {
+            if (comparedItem == gearItemStack) {
+                comparedItem = null;
+            } else {
+                comparedItem = gearItemStack;
+                compareToEquipped = false;
             }
         }
     }

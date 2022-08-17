@@ -7,6 +7,7 @@ package com.wynntils.core.keybinds;
 import com.google.common.collect.Lists;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
-    private static final List<KeyHolder> keyHolders = new ArrayList<>();
+    private static final List<KeyBind> KEY_BINDS = new ArrayList<>();
 
     /** Needed for all Models */
     public static void init() {}
@@ -30,12 +31,22 @@ public final class KeyBindManager extends CoreManager {
         }
     }
 
-    public static void registerKeybind(KeyHolder toAdd) {
+    @SubscribeEvent
+    public static void onKeyPress(InventoryKeyPressEvent e) {
+        KEY_BINDS.forEach(keyBind -> {
+            if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
+                e.getHoveredSlot();
+                keyBind.onInventoryPress(e.getHoveredSlot());
+            }
+        });
+    }
+
+    public static void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException("Can not add " + toAdd + " since the name already exists");
         }
 
-        keyHolders.add(toAdd);
+        KEY_BINDS.add(toAdd);
 
         Options options = McUtils.options();
 
@@ -48,7 +59,7 @@ public final class KeyBindManager extends CoreManager {
             KeyMapping[] keyMappings = options.keyMappings;
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-            newKeyMappings.add(toAdd.getKeybind());
+            newKeyMappings.add(toAdd.getKeyMapping());
 
             ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
         }
@@ -60,9 +71,9 @@ public final class KeyBindManager extends CoreManager {
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
 
-            for (KeyHolder holder : keyHolders) {
-                if (!newKeyMappings.contains(holder.getKeybind())) {
-                    newKeyMappings.add(holder.getKeybind());
+            for (KeyBind keyBind : KEY_BINDS) {
+                if (!newKeyMappings.contains(keyBind.getKeyMapping())) {
+                    newKeyMappings.add(keyBind.getKeyMapping());
                 }
             }
 
@@ -70,14 +81,14 @@ public final class KeyBindManager extends CoreManager {
         }
     }
 
-    public static void unregisterKeybind(KeyHolder toAdd) {
-        if (keyHolders.remove(toAdd)) {
+    public static void unregisterKeybind(KeyBind toAdd) {
+        if (KEY_BINDS.remove(toAdd)) {
             Options options = McUtils.options();
             synchronized (options) {
                 KeyMapping[] keyMappings = options.keyMappings;
 
                 List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-                newKeyMappings.remove(toAdd.getKeybind());
+                newKeyMappings.remove(toAdd.getKeyMapping());
 
                 ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
             }
@@ -85,27 +96,27 @@ public final class KeyBindManager extends CoreManager {
     }
 
     private static void triggerKeybinds() {
-        keyHolders.forEach(k -> {
-            if (k.isFirstPress()) {
-                if (k.getKeybind().consumeClick()) {
-                    k.onPress();
+        KEY_BINDS.forEach(keyBind -> {
+            if (keyBind.isFirstPress()) {
+                if (keyBind.getKeyMapping().consumeClick()) {
+                    keyBind.onPress();
                 }
 
-                while (k.getKeybind().consumeClick()) {
+                while (keyBind.getKeyMapping().consumeClick()) {
                     // do nothing
                 }
 
                 return;
             }
 
-            if (k.getKeybind().isDown()) {
-                k.onPress();
+            if (keyBind.getKeyMapping().isDown()) {
+                keyBind.onPress();
             }
         });
     }
 
     private static boolean hasName(String name) {
-        return keyHolders.stream().anyMatch(k -> k.getName().equals(name));
+        return KEY_BINDS.stream().anyMatch(k -> k.getName().equals(name));
     }
 
     public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
