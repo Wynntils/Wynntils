@@ -6,7 +6,6 @@ package com.wynntils.wynn.item.properties;
 
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.WynnItemStack;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
