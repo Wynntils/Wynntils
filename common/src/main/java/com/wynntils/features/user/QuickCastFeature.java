@@ -7,7 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
@@ -40,20 +40,16 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE)
 public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder castFirstSpell =
-            new KeyHolder("Cast 1st Spell", GLFW.GLFW_KEY_Z, "Wynntils", true, this::castFirstSpell);
+    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, true, this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyHolder castSecondSpell =
-            new KeyHolder("Cast 2nd Spell", GLFW.GLFW_KEY_X, "Wynntils", true, this::castSecondSpell);
+    private final KeyBind castSecondSpell = new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, true, this::castSecondSpell);
 
     @RegisterKeyBind
-    private final KeyHolder castThirdSpell =
-            new KeyHolder("Cast 3rd Spell", GLFW.GLFW_KEY_C, "Wynntils", true, this::castThirdSpell);
+    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, true, this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyHolder castFourthSpell =
-            new KeyHolder("Cast 4th Spell", GLFW.GLFW_KEY_V, "Wynntils", true, this::castFourthSpell);
+    private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
     private static final Pattern SPELL_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");

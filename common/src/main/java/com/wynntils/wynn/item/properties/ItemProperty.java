@@ -14,6 +14,7 @@ public abstract class ItemProperty {
     public static final Class<CosmeticTierProperty> COSMETIC_TIER = CosmeticTierProperty.class;
     public static final Class<DungeonKeyProperty> DUNGEON_KEY = DungeonKeyProperty.class;
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
+    public static final Class<HorseProperty> HORSE = HorseProperty.class;
     public static final Class<ItemTierProperty> ITEM_TIER = ItemTierProperty.class;
     public static final Class<IngredientProperty> INGREDIENT = IngredientProperty.class;
     public static final Class<MaterialProperty> MATERIAL = MaterialProperty.class;
