@@ -13,6 +13,7 @@ import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
+import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
@@ -70,6 +71,7 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
         registerProperty(WynnItemMatchers::isIngredient, IngredientProperty::new);
         registerProperty(WynnItemMatchers::isMaterial, MaterialProperty::new);
+        registerProperty(WynnItemMatchers::isHorse, HorseProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

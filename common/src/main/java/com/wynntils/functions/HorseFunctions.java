@@ -1,0 +1,122 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.functions;
+
+import com.wynntils.core.functions.ActiveFunction;
+import com.wynntils.core.managers.Model;
+import com.wynntils.mc.utils.InventoryUtils;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wc.custom.item.ItemStackTransformModel;
+import com.wynntils.wc.custom.item.WynnItemStack;
+import com.wynntils.wc.custom.item.properties.ItemProperty;
+import java.util.List;
+import net.minecraft.world.item.ItemStack;
+
+public class HorseFunctions {
+
+    private static WynnItemStack getHorse() {
+        int horseSlot = InventoryUtils.findHorseSlotNum();
+        if (horseSlot == -1) return null;
+        ItemStack is = McUtils.player().getInventory().getItem(horseSlot);
+        if (!(is instanceof WynnItemStack horse)) return null;
+        return horse;
+    }
+
+    public static class HorseLevelFunction extends ActiveFunction<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getLevel();
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_lvl");
+        }
+    }
+
+    public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getMaxLevel();
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_mlvl");
+        }
+    }
+
+    public static class HorseXpFunction extends ActiveFunction<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getXp();
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_xp");
+        }
+    }
+
+    public static class HorseTierFunction extends ActiveFunction<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            return horse.getProperty(ItemProperty.HORSE).getTier();
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_tier");
+        }
+    }
+
+    public static class HorseNameFunction extends ActiveFunction<String> {
+        @Override
+        public String getValue(String argument) {
+            WynnItemStack horse = getHorse();
+            if (horse == null) return null;
+            String name = horse.getProperty(ItemProperty.HORSE).getName();
+            return (name.isEmpty()) ? null : name;
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ItemStackTransformModel.class);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("h_name");
+        }
+    }
+}
