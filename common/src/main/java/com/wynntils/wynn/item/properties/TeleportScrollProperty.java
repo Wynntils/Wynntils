@@ -35,9 +35,9 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
         Component itemName = item.getHoverName();
         Matcher nameMatcher = WynnItemMatchers.teleportScrollNameMatcher(itemName);
         if (nameMatcher.find()) {
-            location = ComponentUtils.stripFormatting(nameMatcher.group(1));
+            String scrollName = ComponentUtils.stripFormatting(nameMatcher.group(1));
 
-            if (location.equals("Dungeon")) {
+            if (scrollName.equals("Dungeon")) {
                 textColor = DUNGEON_COLOR;
                 for (Component line : item.getOriginalTooltip()) {
                     Matcher locationMatcher = WynnItemMatchers.teleportScrollLocationMatcher(line);
@@ -55,14 +55,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                     break;
                 }
             } else {
-                for (Component line : item.getOriginalTooltip()) {
-                    Matcher locationMatcher = WynnItemMatchers.teleportScrollLocationMatcher(line);
-                    if (!locationMatcher.matches()) continue;
-
-                    location = locationMatcher.group(1).substring(0, 2);
-
-                    break;
-                }
+                location = scrollName.substring(0, 2);
             }
         }
 
