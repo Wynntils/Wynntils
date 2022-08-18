@@ -8,12 +8,12 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.utils.InventoryUtils;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
-import com.wynntils.wc.utils.EntityUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.EntityUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -34,8 +34,8 @@ public class MountHorseHotkeyFeature extends UserFeature {
     private static boolean alreadySetPrevItem = false;
 
     @RegisterKeyBind
-    private final KeyHolder mountHorseKeybind = new KeyHolder(
-            "Mount Horse", GLFW.GLFW_KEY_R, "Wynntils", true, MountHorseHotkeyFeature::onMountHorseKeyPress);
+    private final KeyBind mountHorseKeyBind =
+            new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, MountHorseHotkeyFeature::onMountHorseKeyPress);
 
     private static void onMountHorseKeyPress() {
         if (!WynnUtils.onWorld()) return;

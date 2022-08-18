@@ -11,16 +11,15 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.custom.item.GearItemStack;
-import com.wynntils.wc.utils.ChatItemUtils;
-import com.wynntils.wc.utils.WynnItemUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.model.ChatItemModel;
+import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -40,16 +39,13 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class ItemScreenshotFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder itemScreenshotKeybind =
-            new KeyHolder("Screenshot Item", GLFW.GLFW_KEY_F4, "Wynntils", true, () -> {});
+    private final KeyBind itemScreenshotKeyBind =
+            new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
     private Slot screenshotSlot = null;
 
-    @SubscribeEvent
-    public void onKeyPress(InventoryKeyPressEvent e) {
-        if (itemScreenshotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
-            screenshotSlot = e.getHoveredSlot();
-        }
+    private void onInventoryPress(Slot hoveredSlot) {
+        screenshotSlot = hoveredSlot;
     }
 
     @SubscribeEvent
@@ -118,7 +114,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
         // chat item prompt
         if (stack instanceof GearItemStack gearItem) {
-            String encoded = ChatItemUtils.encodeItem(gearItem);
+            String encoded = ChatItemModel.encodeItem(gearItem);
 
             McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemMessage")
                     .withStyle(ChatFormatting.DARK_GREEN)

@@ -11,16 +11,15 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.model.CharacterManager;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,8 +37,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class ItemLockFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder lockSlotKeybind = new KeyHolder(
-            "Lock Slot", GLFW.GLFW_KEY_H, "Wynntils", true, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
+    private final KeyBind lockSlotKeyBind =
+            new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
     private static Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
@@ -49,13 +48,6 @@ public class ItemLockFeature extends UserFeature {
 
     @Config
     public static boolean blockAllActionsOnLockedItems = false;
-
-    @SubscribeEvent
-    public void onKeyPress(InventoryKeyPressEvent e) {
-        if (lockSlotKeybind.getKeybind().matches(e.getKeyCode(), e.getScanCode())) {
-            lockSlotKeybind.onPress();
-        }
-    }
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -133,15 +125,11 @@ public class ItemLockFeature extends UserFeature {
                 Texture.ITEM_LOCK.height() / 2);
     }
 
-    private static void tryChangeLockStateOnHoveredSlot() {
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+    private static void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
+        if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
-
         if (characterInfo == null) return;
-
-        Slot hoveredSlot = abstractContainerScreen.hoveredSlot;
-        if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
         classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
 

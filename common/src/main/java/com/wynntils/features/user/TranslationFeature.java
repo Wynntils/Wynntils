@@ -13,9 +13,9 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.services.TranslationModel;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.event.ChatMessageReceivedEvent;
-import com.wynntils.wc.event.NpcDialogEvent;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.event.NpcDialogEvent;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -60,9 +60,17 @@ public class TranslationFeature extends UserFeature {
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
         TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
-            String unwrapped = unwrapCoding(translatedMsg);
+            String messageToSend;
+            if (translatedMsg != null) {
+                messageToSend = unwrapCoding(translatedMsg);
+            } else {
+                if (keepOriginal) return;
+
+                // We failed to get a translation; send the original message so it's not lost
+                messageToSend = origCoded;
+            }
             McUtils.mc().doRunTask(() -> {
-                McUtils.sendMessageToClient(new TextComponent(unwrapped));
+                McUtils.sendMessageToClient(new TextComponent(messageToSend));
             });
         });
         if (!keepOriginal) {

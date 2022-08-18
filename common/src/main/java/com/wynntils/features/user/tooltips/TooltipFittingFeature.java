@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;

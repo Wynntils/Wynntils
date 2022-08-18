@@ -14,8 +14,8 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.wc.custom.item.ItemStackTransformModel;
-import com.wynntils.wc.custom.item.UnidentifiedItemStack;
+import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.item.UnidentifiedItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -42,6 +42,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
 
     private void drawIcon(ItemStack item, int slotX, int slotY) {
         if (!(item instanceof UnidentifiedItemStack unidentifiedItem)) return;
+        if (unidentifiedItem.getItemType().isEmpty()) return;
 
         RenderUtils.drawTexturedRect(
                 new PoseStack(),
@@ -51,8 +52,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 400,
                 12,
                 12,
-                unidentifiedItem.getItemType().getIconTextureX(),
-                unidentifiedItem.getItemType().getIconTextureY() + texture.getTextureYOffset(),
+                unidentifiedItem.getItemType().get().getIconTextureX(),
+                unidentifiedItem.getItemType().get().getIconTextureY() + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),

@@ -4,21 +4,19 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.mc.utils.InventoryUtils.MouseClickType.RIGHT_CLICK;
-
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.utils.InventoryUtils;
-import com.wynntils.mc.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.CommonColors;
-import com.wynntils.wc.utils.WynnUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
+import com.wynntils.wynn.utils.InventoryUtils.EmeraldPouch;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -28,12 +26,8 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder emeraldPouchKeybind = new KeyHolder(
-            "Open Emerald Pouch",
-            GLFW.GLFW_KEY_UNKNOWN,
-            "Wynntils",
-            true,
-            EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
+    private final KeyBind emeraldPouchKeyBind = new KeyBind(
+            "Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
 
     private static void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
@@ -55,7 +49,8 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
                 }
 
-                InventoryUtils.sendInventorySlotMouseClick(slotNumber, emeraldPouch.getStack(), RIGHT_CLICK);
+                InventoryUtils.sendInventorySlotMouseClick(
+                        slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 NotificationManager.queueMessage(new TextRenderTask(

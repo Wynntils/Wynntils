@@ -1,4 +1,4 @@
-name: build
+name: Spotless and Build
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       - '**.md'
 
 jobs:
-  format:
+  format-and-build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -25,6 +25,12 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
+      - name: Cache Gradle data
+        uses: actions/cache@v3
+        with:
+          path: .gradle
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2
         with:
@@ -36,23 +42,7 @@ jobs:
           commit_user_email: 'admin@wynntils.com'
           commit_message: 'chore: spotless formatting'
 
-  build:
-    needs: format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out source code
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.head_ref }}
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: "temurin"
-          java-version: 17
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -x spotlessCheck --no-daemon --build-cache
+          arguments: build -x spotlessCheck --build-cache

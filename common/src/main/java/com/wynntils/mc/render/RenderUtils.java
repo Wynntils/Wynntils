@@ -6,6 +6,7 @@ package com.wynntils.mc.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -14,7 +15,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.wynntils.utils.objects.CustomColor;
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -720,6 +722,18 @@ public final class RenderUtils {
             bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
         }
         return bufferedimage;
+    }
+
+    /*
+       Normal GL implementation is in screen coordinates and thus y is inverted,
+       this changes it so it doesn't do that
+    */
+    public static void enableScissor(int x, int y, int width, int height) {
+        Window window = McUtils.mc().getWindow();
+        double scale = window.getGuiScale();
+        RenderSystem.enableScissor(
+                (int) (x * scale), (int) (window.getHeight() - ((y + height) * scale)), (int) (width * scale), (int)
+                        (height * scale));
     }
 
     private static final class ClipboardImage implements Transferable {

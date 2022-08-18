@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.objects.ServerIcon;
+import com.wynntils.mc.objects.ServerIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
