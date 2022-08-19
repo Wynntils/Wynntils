@@ -10,6 +10,7 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
+import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import java.text.NumberFormat;
@@ -98,7 +99,7 @@ public final class FunctionManager extends CoreManager {
 
         Object value = function.getValue(argument);
         if (value == null) {
-            return header.append(new TextComponent("N/A").withStyle(ChatFormatting.RED));
+            return header.append(new TextComponent("??"));
         }
 
         String formattedValue = format(value);
@@ -191,16 +192,22 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.XpReqRawFunction());
         registerFunction(new CharacterFunctions.XpPctFunction());
 
-        registerFunction(new MinecraftFunctions.XFunction());
-        registerFunction(new MinecraftFunctions.YFunction());
-        registerFunction(new MinecraftFunctions.ZFunction());
-        registerFunction(new MinecraftFunctions.DirFunction());
-        registerFunction(new MinecraftFunctions.FpsFunction());
-
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
+
+        registerFunction(new HorseFunctions.HorseLevelFunction());
+        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
+        registerFunction(new HorseFunctions.HorseXpFunction());
+        registerFunction(new HorseFunctions.HorseTierFunction());
+        registerFunction(new HorseFunctions.HorseNameFunction());
+
+        registerFunction(new MinecraftFunctions.XFunction());
+        registerFunction(new MinecraftFunctions.YFunction());
+        registerFunction(new MinecraftFunctions.ZFunction());
+        registerFunction(new MinecraftFunctions.DirFunction());
+        registerFunction(new MinecraftFunctions.FpsFunction());
     }
 }

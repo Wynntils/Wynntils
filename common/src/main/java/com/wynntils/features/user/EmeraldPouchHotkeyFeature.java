@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyHolder;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.TextRenderSetting;
@@ -26,12 +26,8 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyHolder emeraldPouchKeybind = new KeyHolder(
-            "Open Emerald Pouch",
-            GLFW.GLFW_KEY_UNKNOWN,
-            "Wynntils",
-            true,
-            EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
+    private final KeyBind emeraldPouchKeyBind = new KeyBind(
+            "Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
 
     private static void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
