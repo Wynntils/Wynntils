@@ -8,16 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
-import com.wynntils.functions.CharacterFunctions;
-import com.wynntils.functions.EnvironmentFunctions;
-import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.MinecraftFunctions;
-import com.wynntils.functions.WorldFunction;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends CoreManager {
@@ -182,42 +177,42 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static void init() {
-//        registerFunction(new WorldFunction());
-//
-//        registerFunction(new CharacterFunctions.SoulpointFunction());
-//        registerFunction(new CharacterFunctions.SoulpointMaxFunction());
-//        registerFunction(new CharacterFunctions.SoulpointTimerFunction());
-//        registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
-//        registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
-//        registerFunction(new CharacterFunctions.ClassFunction());
-//        registerFunction(new CharacterFunctions.ManaFunction());
-//        registerFunction(new CharacterFunctions.ManaMaxFunction());
-//        registerFunction(new CharacterFunctions.HealthFunction());
-//        registerFunction(new CharacterFunctions.HealthMaxFunction());
-//        registerFunction(new CharacterFunctions.HealthPctFunction());
-//        registerFunction(new CharacterFunctions.LevelFunction());
-//        registerFunction(new CharacterFunctions.XpFunction());
-//        registerFunction(new CharacterFunctions.XpRawFunction());
-//        registerFunction(new CharacterFunctions.XpReqFunction());
-//        registerFunction(new CharacterFunctions.XpReqRawFunction());
-//        registerFunction(new CharacterFunctions.XpPctFunction());
-//
-//        registerFunction(new EnvironmentFunctions.ClockFunction());
-//        registerFunction(new EnvironmentFunctions.ClockmFunction());
-//        registerFunction(new EnvironmentFunctions.MemMaxFunction());
-//        registerFunction(new EnvironmentFunctions.MemUsedFunction());
-//        registerFunction(new EnvironmentFunctions.MemPctFunction());
-//
-//        registerFunction(new HorseFunctions.HorseLevelFunction());
-//        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
-//        registerFunction(new HorseFunctions.HorseXpFunction());
-//        registerFunction(new HorseFunctions.HorseTierFunction());
-//        registerFunction(new HorseFunctions.HorseNameFunction());
+        //        registerFunction(new WorldFunction());
+        //
+        //        registerFunction(new CharacterFunctions.SoulpointFunction());
+        //        registerFunction(new CharacterFunctions.SoulpointMaxFunction());
+        //        registerFunction(new CharacterFunctions.SoulpointTimerFunction());
+        //        registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
+        //        registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
+        //        registerFunction(new CharacterFunctions.ClassFunction());
+        //        registerFunction(new CharacterFunctions.ManaFunction());
+        //        registerFunction(new CharacterFunctions.ManaMaxFunction());
+        //        registerFunction(new CharacterFunctions.HealthFunction());
+        //        registerFunction(new CharacterFunctions.HealthMaxFunction());
+        //        registerFunction(new CharacterFunctions.HealthPctFunction());
+        //        registerFunction(new CharacterFunctions.LevelFunction());
+        //        registerFunction(new CharacterFunctions.XpFunction());
+        //        registerFunction(new CharacterFunctions.XpRawFunction());
+        //        registerFunction(new CharacterFunctions.XpReqFunction());
+        //        registerFunction(new CharacterFunctions.XpReqRawFunction());
+        //        registerFunction(new CharacterFunctions.XpPctFunction());
+        //
+        //        registerFunction(new EnvironmentFunctions.ClockFunction());
+        //        registerFunction(new EnvironmentFunctions.ClockmFunction());
+        //        registerFunction(new EnvironmentFunctions.MemMaxFunction());
+        //        registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        //        registerFunction(new EnvironmentFunctions.MemPctFunction());
+        //
+        //        registerFunction(new HorseFunctions.HorseLevelFunction());
+        //        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
+        //        registerFunction(new HorseFunctions.HorseXpFunction());
+        //        registerFunction(new HorseFunctions.HorseTierFunction());
+        //        registerFunction(new HorseFunctions.HorseNameFunction());
 
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());
         registerFunction(new MinecraftFunctions.ZFunction());
-//        registerFunction(new MinecraftFunctions.DirFunction());
-//        registerFunction(new MinecraftFunctions.FpsFunction());
+        //        registerFunction(new MinecraftFunctions.DirFunction());
+        //        registerFunction(new MinecraftFunctions.FpsFunction());
     }
 }

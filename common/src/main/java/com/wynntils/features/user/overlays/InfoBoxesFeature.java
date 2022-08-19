@@ -25,10 +25,9 @@ import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.WynnUtils;
-import net.minecraft.ChatFormatting;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 
 @FeatureInfo(category = "Overlays")
 public class InfoBoxesFeature extends UserFeature {
@@ -51,7 +50,8 @@ public class InfoBoxesFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay infoBox6Overlay = new InfoBoxOverlay6();
 
-    private static final Pattern INFO_VARIABLE_PATTERN = Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
+    private static final Pattern INFO_VARIABLE_PATTERN =
+            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
     public abstract static class InfoBoxOverlay extends Overlay {
         @Config
