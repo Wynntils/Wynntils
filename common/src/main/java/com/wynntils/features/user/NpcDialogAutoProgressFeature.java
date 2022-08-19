@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wc.event.NpcDialogEvent;
+import com.wynntils.wynn.event.NpcDialogEvent;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +37,10 @@ public class NpcDialogAutoProgressFeature extends UserFeature {
     private ScheduledFuture<?> lastScheduledFuture = null;
 
     @Config
-    public static int dialogAutoProgressTime = 2000; // Milliseconds
+    public static int dialogAutoProgressDefaultTime = 1500; // Milliseconds
+
+    @Config
+    public static int dialogAutoProgressAdditionalTimePerWord = 200; // Milliseconds
 
     @Override
     protected void onInit(
@@ -57,7 +60,12 @@ public class NpcDialogAutoProgressFeature extends UserFeature {
 
         if (event.getCodedDialog() == null) return;
 
-        lastScheduledFuture = executor.schedule(sendShiftRunnable, dialogAutoProgressTime, TimeUnit.MILLISECONDS);
+        int words = event.getCodedDialog().split(" ").length;
+
+        lastScheduledFuture = executor.schedule(
+                sendShiftRunnable,
+                dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord),
+                TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
