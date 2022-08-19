@@ -59,6 +59,10 @@ public final class WynnObjective {
         return goal + " [" + score + "/" + maxScore + "]";
     }
 
+    public String asObjectiveString() {
+        return this.getGoal() + ": " + this.getScore() + "/" + this.getMaxScore();
+    }
+
     private void updateTimestamp() {
         this.updatedAt = System.currentTimeMillis();
     }

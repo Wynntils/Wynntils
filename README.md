@@ -11,11 +11,13 @@ About Artemis
 ========
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-This is a preliminary rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** in 1.18.2 using Architectury, to support Fabric, Forge and Quilt.
+This is a preliminary rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.18.2 using Architectury, to support Fabric, Forge and Quilt.
 
 Pull Request
 ========
-<i>TODO</i>
+All pull requests are welcome. We'll analyse it and if we determine it should a part of the mod, we'll accept it. Note that the process of a pull request getting merged here is likely more strenuous than legacy. To begin, one pull request could be porting features from legacy.
+
+We welcome all forms of assistance. =)
 
 Workspace Setup
 ========
