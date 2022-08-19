@@ -101,7 +101,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
-            final float renderedHeight = 9 + actualBarHeight;
+            final float renderedHeight = FontRenderer.getInstance()
+                            .calculateRenderHeight(List.of(guildObjective.asObjectiveString()), this.getWidth())
+                    + actualBarHeight;
 
             float renderY = this.getRenderY()
                     + switch (this.getRenderVerticalAlignment()) {
@@ -181,8 +183,13 @@ public class ObjectivesOverlayFeature extends UserFeature {
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
-            final float renderedHeight = SPACE_BETWEEN + 9 + actualBarHeight;
-            final float fullHeight = renderedHeight * objectives.size() - SPACE_BETWEEN;
+            final float renderedHeightWithoutTextHeight = SPACE_BETWEEN + actualBarHeight;
+            final float fullHeight = (float) (renderedHeightWithoutTextHeight * objectives.size()
+                    - SPACE_BETWEEN
+                    + objectives.stream()
+                            .mapToDouble(objective -> FontRenderer.getInstance()
+                                    .calculateRenderHeight(List.of(objective.asObjectiveString()), this.getWidth()))
+                            .sum());
 
             float offsetY =
                     switch (this.getRenderVerticalAlignment()) {
@@ -201,7 +208,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
                 float renderY = offsetY + this.getRenderY();
 
-                final String text = objective.getGoal() + ": " + objective.getScore() + "/" + objective.getMaxScore();
+                final String text = objective.asObjectiveString();
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
@@ -214,11 +221,11 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
                                 this.textShadow);
 
-                float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+                final float textHeight =
+                        FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
 
-                if (height > 9) {
-                    offsetY += height - 9;
-                    renderY += height - 9;
+                if (textHeight > 9) {
+                    renderY += textHeight - 9;
                 }
 
                 if (this.enableProgressBar) {
@@ -236,7 +243,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             objective.getProgress());
                 }
 
-                offsetY += renderedHeight;
+                offsetY += renderedHeightWithoutTextHeight + textHeight;
             }
         }
 
