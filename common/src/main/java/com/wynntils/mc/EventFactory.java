@@ -115,7 +115,9 @@ public final class EventFactory {
             float partialTick,
             Matrix4f projectionMatrix,
             long finishTimeNano) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano), WynnUtils.onServer());
+        post(
+                new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano),
+                WynnUtils.onServer());
     }
 
     public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
@@ -277,8 +279,9 @@ public final class EventFactory {
     }
 
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
-        return post(new SetPlayerTeamEvent(
-                ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()), true);
+        return post(
+                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()),
+                true);
     }
 
     public static AddEntityLookupEvent onAddEntityLookup(UUID uuid, Map<UUID, EntityAccess> entityMap) {
@@ -331,8 +334,10 @@ public final class EventFactory {
     }
 
     public static ScoreboardSetScoreEvent onSetScore(ClientboundSetScorePacket packet) {
-        return post(new ScoreboardSetScoreEvent(
-                packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()), true);
+        return post(
+                new ScoreboardSetScoreEvent(
+                        packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()),
+                true);
     }
     // endregion
 
