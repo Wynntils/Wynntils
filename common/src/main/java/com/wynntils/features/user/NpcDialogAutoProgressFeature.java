@@ -8,9 +8,10 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import java.util.Optional;
@@ -24,8 +25,11 @@ import org.lwjgl.glfw.GLFW;
 
 @StartDisabled
 public class NpcDialogAutoProgressFeature extends UserFeature {
-
     public static NpcDialogAutoProgressFeature INSTANCE;
+
+    @RegisterKeyBind
+    public final KeyBind cancelAutoProgressKeybind =
+            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
@@ -68,15 +72,6 @@ public class NpcDialogAutoProgressFeature extends UserFeature {
                 TimeUnit.MILLISECONDS);
     }
 
-    @SubscribeEvent
-    public void onKeyInput(KeyInputEvent event) {
-        if (event.getKey() != GLFW.GLFW_KEY_SPACE) return;
-
-        if (lastScheduledFuture != null) {
-            lastScheduledFuture.cancel(true);
-        }
-    }
-
     public Optional<Long> millisecondsUntilProgress() {
         if (lastScheduledFuture == null) {
             return Optional.empty();
@@ -87,5 +82,11 @@ public class NpcDialogAutoProgressFeature extends UserFeature {
         }
 
         return Optional.of(lastScheduledFuture.getDelay(TimeUnit.MILLISECONDS));
+    }
+
+    private void cancelAutoProgress() {
+        if (lastScheduledFuture == null) return;
+
+        lastScheduledFuture.cancel(true);
     }
 }

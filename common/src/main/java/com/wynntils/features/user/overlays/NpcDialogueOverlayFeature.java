@@ -26,6 +26,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.List;
@@ -141,7 +142,12 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             new TextRenderTask(
                                     ChatFormatting.GREEN + "Auto-progress: "
                                             + Math.max(0, Math.round(timeUntilProgress / 1000f))
-                                            + " seconds (Press SPACE to cancel)",
+                                            + " seconds (Press "
+                                            + ComponentUtils.getUnformatted(NpcDialogAutoProgressFeature.INSTANCE
+                                                    .cancelAutoProgressKeybind
+                                                    .getKeyMapping()
+                                                    .getTranslatedKeyMessage())
+                                            + " to cancel)",
                                     renderSetting)))
                     .orElseGet(() -> List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)));
 
