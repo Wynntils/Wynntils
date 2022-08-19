@@ -28,7 +28,7 @@ public class NSplitStrategy implements ISplitStrategy {
     public <T extends IBoundingBox> List<Set<T>> split(final Set<T> elements) {
         /* split n times along widest ordinate span */
         final AxisAlignedBoundingBox bounds = elements.parallelStream()
-                .map(AxisAlignedBoundingBox::fromIAABB)
+                .map(AxisAlignedBoundingBox::fromIBoundingBox)
                 .reduce(new AxisAlignedBoundingBox(), AxisAlignedBoundingBox::mergeBounds);
         // create buckets for density analysis
         final int elementCount = elements.size();

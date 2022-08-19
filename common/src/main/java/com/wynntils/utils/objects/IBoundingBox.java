@@ -42,11 +42,15 @@ public interface IBoundingBox {
     }
 
     default double squareDistance(final Vec3 point) {
-        return AxisAlignedBoundingBox.squareDistance(AxisAlignedBoundingBox.fromIAABB(this), point);
+        return AxisAlignedBoundingBox.squareDistance(AxisAlignedBoundingBox.fromIBoundingBox(this), point);
     }
 
     default boolean contains(final IBoundingBox other) {
         return this.getBounds().contains(other);
+    }
+
+    default boolean contains(final Vec3 point) {
+        return this.getBounds().contains(point);
     }
 
     default double volume() {
@@ -62,9 +66,6 @@ public interface IBoundingBox {
     class AxisAlignedBoundingBox implements IBoundingBox {
         public static final Vec3 NEUTRAL_LOWER = doubleToVec3(Double.POSITIVE_INFINITY);
         public static final Vec3 NEUTRAL_UPPER = doubleToVec3(Double.NEGATIVE_INFINITY);
-        public static final double EPSILON = 1.0 / (1L << 48);
-        public static final double ONE_PLUS_EPS = 1.0 + EPSILON;
-        public static final double ONE_MINUS_EPS = 1.0 - EPSILON;
 
         private Vec3 lower;
         private Vec3 upper;
@@ -91,13 +92,11 @@ public interface IBoundingBox {
                                 acc.b = maxCoords(acc.b, val.b);
                             });
             this.lower = definingPoints.a;
-            this.lower.scale(ONE_MINUS_EPS);
             this.upper = definingPoints.b;
-            this.upper.scale(ONE_PLUS_EPS);
             this.updateSizeAndMid();
         }
 
-        public AxisAlignedBoundingBox(final Collection<IBoundingBox> points) {
+        public AxisAlignedBoundingBox(final Collection<? extends IBoundingBox> points) {
             final MutablePair<Vec3, Vec3> definingPoints = points.stream()
                     .map(IBoundingBox::definingPoints)
                     .collect(
@@ -111,9 +110,7 @@ public interface IBoundingBox {
                                 acc.b = minCoords(acc.b, val.b);
                             });
             this.lower = definingPoints.a;
-            this.lower.scale(ONE_MINUS_EPS);
             this.upper = definingPoints.b;
-            this.upper.scale(ONE_PLUS_EPS);
             this.updateSizeAndMid();
         }
 
@@ -121,7 +118,7 @@ public interface IBoundingBox {
             return new Vec3(d, d, d);
         }
 
-        public static AxisAlignedBoundingBox fromIAABB(final IBoundingBox iaabb) {
+        public static AxisAlignedBoundingBox fromIBoundingBox(final IBoundingBox iaabb) {
             return new AxisAlignedBoundingBox(iaabb.getLower(), iaabb.getUpper());
         }
 
@@ -147,10 +144,8 @@ public interface IBoundingBox {
         }
 
         public void add(final Vec3 point) {
-            final Vec3 marginLower = point.scale(ONE_MINUS_EPS);
-            final Vec3 marginUpper = point.scale(ONE_PLUS_EPS);
-            this.lower = minCoords(this.lower, marginLower);
-            this.upper = maxCoords(this.upper, marginUpper);
+            this.lower = minCoords(this.lower, point);
+            this.upper = maxCoords(this.upper, point);
             this.updateSizeAndMid();
         }
 
@@ -218,6 +213,16 @@ public interface IBoundingBox {
                     && otherUpper.x <= this.upper.x
                     && otherUpper.y <= this.upper.y
                     && otherUpper.z <= this.upper.z;
+        }
+
+        @Override
+        public boolean contains(Vec3 point) {
+            return this.lower.x <= point.x
+                    && this.lower.y <= point.y
+                    && this.lower.z <= point.z
+                    && point.x <= this.upper.x
+                    && point.y <= this.upper.y
+                    && point.z <= this.upper.z;
         }
 
         @Override

@@ -30,7 +30,7 @@ public class BinTreeStrategy implements ISplitStrategy, ISplitStrategyFactory {
     @Override
     public <T extends IBoundingBox> List<Set<T>> split(final Set<T> elements) {
         final AxisAlignedBoundingBox bounds = elements.parallelStream()
-                .map(AxisAlignedBoundingBox::fromIAABB)
+                .map(AxisAlignedBoundingBox::fromIBoundingBox)
                 .reduce(new AxisAlignedBoundingBox(), AxisAlignedBoundingBox::mergeBounds);
         final Vec3 span = bounds.size();
         final List<Set<T>> result = Arrays.asList(new HashSet<>(), new HashSet<>());
