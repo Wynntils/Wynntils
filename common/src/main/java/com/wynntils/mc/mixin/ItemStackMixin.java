@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import net.minecraft.network.chat.Component;
