@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -34,6 +35,8 @@ public class FilterAdminCommandsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onCommandPacket(CommandsPacketEvent event) {
+        if (!WynnUtils.onServer()) return;
+
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
         RootCommandNode<SharedSuggestionProvider> newRoot = new RootCommandNode<>();
