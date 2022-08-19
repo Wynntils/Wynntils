@@ -5,6 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +24,7 @@ public abstract class ItemStackMixin {
                             target =
                                     "Lnet/minecraft/world/item/ItemStack;getHoverName()Lnet/minecraft/network/chat/Component;"))
     private Component redirectGetHoveredName(ItemStack instance) {
-        ItemTooltipHoveredNameEvent event = new ItemTooltipHoveredNameEvent(instance.getHoverName(), instance);
-        WynntilsMod.getEventBus().post(event);
+        ItemTooltipHoveredNameEvent event = EventFactory.onGetHoverName(instance.getHoverName(), instance);
         return event.getHoveredName();
     }
 }

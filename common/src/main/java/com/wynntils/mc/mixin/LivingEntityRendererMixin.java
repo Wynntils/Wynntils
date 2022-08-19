@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
@@ -34,13 +35,11 @@ public abstract class LivingEntityRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType onTranslucentCheck(
-            LivingEntityRenderer<?, ?> instance, LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3) {
-        LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(bl2, livingEntity, bl2 ? 0.15f : 1f);
-        WynntilsMod.getEventBus().post(event);
+            LivingEntityRenderer<?, ?> instance, LivingEntity livingEntity, boolean bodyVisible, boolean translucent, boolean glowing) {
+        LivingEntityRenderTranslucentCheckEvent event = EventFactory.onTranslucentCheck(translucent, livingEntity);
 
         overrideTranslucence = event.getTranslucence();
-        return getRenderType(livingEntity, bl, event.isTranslucent(), bl3);
+        return getRenderType(livingEntity, bodyVisible, event.isTranslucent(), glowing);
     }
 
     @Redirect(
