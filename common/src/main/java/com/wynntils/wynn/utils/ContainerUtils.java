@@ -47,7 +47,7 @@ public final class ContainerUtils {
     public static boolean openInventory(int slotNum) {
         int id = McUtils.player().containerMenu.containerId;
         if (id != 0) {
-            // another inventory is already open, cannot do this
+            // Another inventory is already open, cannot do this
             return false;
         }
         int prevItem = McUtils.inventory().selected;
@@ -61,7 +61,7 @@ public final class ContainerUtils {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
-        // FIXME: TO expand usage of this function, the following variables needs to
+        // FIXME: To expand usage of this function, the following variables needs to
         // be properly handled
         int mouseButtonNum = 0;
         int transactionId = 0;
