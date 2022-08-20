@@ -17,4 +17,7 @@ public interface ContainerQueryStep {
     ContainerQueryStep getNextStep(ContainerContent container);
 
     void onError(String errorMsg);
+
+    /** A way to identify this query */
+    String getName();
 }

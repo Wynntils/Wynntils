@@ -33,7 +33,7 @@ public class QuestBookFeature extends UserFeature {
     }
 
     private void scanQuestBook() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder()
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Query")
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .expectTitle(QUESTS_TITLE)
                 .processContainer(c -> {

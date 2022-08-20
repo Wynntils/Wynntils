@@ -12,7 +12,9 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
+import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,10 +80,20 @@ public class CharacterManager extends CoreManager {
 
         if (e.getNewState() == WorldStateManager.State.WORLD
                 && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
-            McUtils.sendMessageToClient(new TextComponent(
-                            "Could not find your class type. Disable auto join (/toggle autojoin) and try again.")
-                    .withStyle(ChatFormatting.DARK_RED));
+            scanCharacterInfoPage();
         }
+    }
+
+    private static void scanCharacterInfoPage() {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
+                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                .matchTitle("^§.\\d+§. skill points remaining$")
+                .processContainer(c -> {
+                    System.out.println("GOT char info:" + c.title().getString() + ": " + c.items());
+                })
+                .onError(msg -> System.out.println("error:" + msg))
+                .build();
+        query.executeQuery();
     }
 
     @SubscribeEvent

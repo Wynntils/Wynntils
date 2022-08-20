@@ -9,6 +9,7 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
+import java.util.LinkedList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -18,8 +19,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ContainerQueryManager extends CoreManager {
     private static final int NO_CONTAINER = -2;
+    private static final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
 
     private static ContainerQueryStep currentStep;
+    private static String firstStepName;
 
     private static Component currentTitle;
     private static MenuType currentMenuType;
@@ -28,7 +31,10 @@ public class ContainerQueryManager extends CoreManager {
 
     public static void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
-            firstStep.onError("Another query is already executing");
+            // Only add if it is not already enqueued
+            if (queuedQueries.stream().filter(query -> query.getName().equals(firstStepName)).findAny().isEmpty()) {
+                queuedQueries.add(firstStep);
+            }
             return;
         }
 
@@ -46,6 +52,8 @@ public class ContainerQueryManager extends CoreManager {
         }
 
         currentStep = firstStep;
+        firstStepName = firstStep.getName();
+
         if (!firstStep.startStep(null)) {
             raiseError("Cannot execute first step");
         }
@@ -62,7 +70,7 @@ public class ContainerQueryManager extends CoreManager {
             currentMenuType = e.getMenuType();
             e.setCanceled(true);
         } else {
-            raiseError("Unexpected container opened");
+            raiseError("Unexpected container opened: " + e.getTitle().getString());
         }
     }
 
@@ -117,6 +125,9 @@ public class ContainerQueryManager extends CoreManager {
             // We're done
             endQuery();
             McUtils.sendPacket(new ServerboundContainerClosePacket(id));
+            if (!queuedQueries.isEmpty()) {
+                runQuery(queuedQueries.pop());
+            }
         }
 
         e.setCanceled(true);

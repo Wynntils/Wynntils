@@ -18,9 +18,14 @@ public class ScriptedContainerQuery {
             (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
+    private String name;
 
-    public static QueryBuilder builder() {
-        return new QueryBuilder(new ScriptedContainerQuery());
+    private ScriptedContainerQuery(String name) {
+        this.name = name;
+    }
+
+    public static QueryBuilder builder(String name) {
+        return new QueryBuilder(new ScriptedContainerQuery(name));
     }
 
     public void executeQuery() {
@@ -91,6 +96,11 @@ public class ScriptedContainerQuery {
                 ScriptedContainerQuery.this.steps.removeFirst();
             }
         }
+
+        @Override
+        public String getName() {
+            return ScriptedContainerQuery.this.name;
+        }
     }
 
     public static class QueryBuilder {
@@ -114,6 +124,15 @@ public class ScriptedContainerQuery {
                 throw new IllegalStateException("Set verification twice");
             }
             this.verification = (title, type) -> title.getString().equals(expectedTitle);
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryBuilder matchTitle(String regExp) {
+            if (verification != null) {
+                throw new IllegalStateException("Set verification twice");
+            }
+            this.verification = (title, type) -> title.getString().matches(regExp);
             checkForCompletion();
             return this;
         }
