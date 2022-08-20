@@ -44,7 +44,7 @@ public class QuestBookFeature extends UserFeature {
     }
 
     private void rescanQuestBook() {
-        System.out.println("Requesting rescan");
+        WynntilsMod.info("Requesting rescan of Quest Book");
         QuestBookModel.queryQuestBook();
     }
 }

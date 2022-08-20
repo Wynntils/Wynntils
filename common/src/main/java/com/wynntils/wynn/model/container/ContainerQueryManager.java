@@ -42,7 +42,7 @@ public class ContainerQueryManager extends CoreManager {
         }
 
         Screen screen = McUtils.mc().screen;
-        if (screen != null && screen instanceof AbstractContainerScreen) {
+        if (screen instanceof AbstractContainerScreen) {
             // Another inventory screen is already open, cannot do this
             firstStep.onError("Another container screen is already open");
             return;
