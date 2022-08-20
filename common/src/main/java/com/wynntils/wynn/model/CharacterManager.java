@@ -8,8 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
@@ -20,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,15 +66,6 @@ public class CharacterManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuOpened(MenuOpenedEvent e) {
-        if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Class")) {
-            inCharacterSelection = true;
-            WynntilsMod.info("In character selection menu");
-        }
-    }
-
-    @SubscribeEvent
     public static void onMenuClosed(MenuClosedEvent e) {
         inCharacterSelection = false;
     }
@@ -90,8 +78,9 @@ public class CharacterManager extends CoreManager {
             // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
+
         if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
-            WynntilsMod.info("Preparing for character selection");
+            inCharacterSelection = true;
         }
     }
 
