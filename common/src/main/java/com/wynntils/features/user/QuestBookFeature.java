@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW;
 public class QuestBookFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind questBookKeyBind =
-            new KeyBind("Rescan Quest Book", GLFW.GLFW_KEY_UNKNOWN, true, this::rescanQuestBook);
+            new KeyBind("Rescan Quest Book", GLFW.GLFW_KEY_K, true, this::rescanQuestBook);
 
     @Override
     protected void onInit(
