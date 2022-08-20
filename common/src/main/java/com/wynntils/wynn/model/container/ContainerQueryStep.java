@@ -8,11 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 
 public interface ContainerQueryStep {
-    void startStep(ContainerContent container);
+    boolean startStep(ContainerContent container);
 
     boolean verifyContainer(Component title, MenuType menuType);
 
     void handleContent(ContainerContent container);
 
     ContainerQueryStep getNextStep(ContainerContent container);
+
+    void onError(String errorMsg);
 }

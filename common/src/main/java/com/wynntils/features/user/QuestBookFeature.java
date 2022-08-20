@@ -11,8 +11,6 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.InventoryUtils;
-import java.util.List;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -21,6 +19,7 @@ public class QuestBookFeature extends UserFeature {
     private static final String QUESTS_TITLE = "§0[Pg. 1] §8mag_icus'§0 Quests";
     private static final String QUESTS_TITLE_2 = "§0[Pg. 2] §8mag_icus'§0 Quests";
     private static final String QUESTS_TITLE_3 = "§0[Pg. 3] §8mag_icus'§0 Quests";
+    private static final int NEXT_PAGE_SLOT = 8;
 
     @RegisterKeyBind
     private final KeyBind questBookKeyBind =
@@ -38,7 +37,7 @@ public class QuestBookFeature extends UserFeature {
                         System.out.println("title not ok");
                     }
                 })
-                .clickOnSlot(8)
+                .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, "[§f§lPage 2§a >§2>§a>§2>§a>]")
                 .expectTitle(QUESTS_TITLE_2)
                 .processContainer(c -> {
                     System.out.println("GOT PAGE 2:" + c.title().getString() + ": " + c.items());
@@ -48,7 +47,7 @@ public class QuestBookFeature extends UserFeature {
                         System.out.println("title not ok");
                     }
                 })
-                .clickOnSlot(8)
+                .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, "[§f§lPage 3§a >§2>§a>§2>§a>]")
                 .expectTitle(QUESTS_TITLE_3)
                 .processContainer(c -> {
                     System.out.println("GOT PAGE 3:" + c.title().getString() + ": " + c.items());
@@ -62,28 +61,6 @@ public class QuestBookFeature extends UserFeature {
                 .build();
 
         query.executeQuery();
-    }
-
-    private boolean isPage2Button(List<ItemStack> items) {
-        ItemStack nextPage = items.get(8);
-        if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-            String dispName = nextPage.getDisplayName().getString();
-            if (dispName.equals("[§f§lPage 2§a >§2>§a>§2>§a>]")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isPage3Button(List<ItemStack> items) {
-        ItemStack nextPage = items.get(8);
-        if (nextPage.is(Items.GOLDEN_SHOVEL)) {
-            String dispName = nextPage.getDisplayName().getString();
-            if (dispName.equals("[§f§lPage 3§a >§2>§a>§2>§a>]")) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @SubscribeEvent

@@ -4,37 +4,32 @@
  */
 package com.wynntils.wynn.model.container;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ContainerQueryManager extends CoreManager {
     private static final int NO_CONTAINER = -2;
-    private static int containerId = NO_CONTAINER;
-    private static int lastHandledContentId = NO_CONTAINER;
-    private static int transactionId = 0;
-    private static Component currentTitle;
-    private static MenuType currentMenuType;
 
     private static ContainerQueryStep currentStep;
 
-    private static Consumer<String> errorHandler;
+    private static Component currentTitle;
+    private static MenuType currentMenuType;
+    private static int containerId = NO_CONTAINER;
+    private static int lastHandledContentId = NO_CONTAINER;
+
+    public static void runQuery(ContainerQueryStep firstStep) {
+        currentStep = firstStep;
+        if (!firstStep.startStep(null)) {
+            raiseError("Cannot execute first step");
+        }
+    }
 
     @SubscribeEvent
     public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
@@ -45,10 +40,9 @@ public class ContainerQueryManager extends CoreManager {
             containerId = e.getContainerId();
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
-            transactionId = 0;
             e.setCanceled(true);
         } else {
-            handleError("Unexpected container opened");
+            raiseError("Unexpected container opened");
         }
     }
 
@@ -58,7 +52,7 @@ public class ContainerQueryManager extends CoreManager {
 
         // Server closed our container window. This should not happen
         // but if it do, report failure
-        handleError("Server closed container");
+        raiseError("Server closed container");
     }
 
     @SubscribeEvent
@@ -67,81 +61,57 @@ public class ContainerQueryManager extends CoreManager {
 
         if (containerId == NO_CONTAINER) {
             // We have not registered a MenuOpenedEvent
-            handleError("Container contents without associated container open");
+            raiseError("Container contents without associated container open");
             return;
         }
 
         int id = e.getContainerId();
         if (id != containerId) {
-            handleError("Another container opened");
+            raiseError("Another container opened");
             return;
         }
 
         if (containerId == lastHandledContentId) {
-            // Wynncraft sometimes sends contents twice; drop this
+            // Wynncraft sometimes sends contents twice; just drop this silently
             e.setCanceled(true);
             return;
         }
 
         lastHandledContentId = containerId;
-        // Callback to handle this container
-        ContainerContent currentContainer = new ContainerContent(e.getItems(), currentTitle, currentMenuType);
+        ContainerContent currentContainer =
+                new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
+
+        // Now actually process this container
         currentStep.handleContent(currentContainer);
 
         ContainerQueryStep nextStep = currentStep.getNextStep(currentContainer);
-
         if (nextStep != null) {
+            // Go on and query another container
             currentStep = nextStep;
-            currentStep.startStep(currentContainer);
+            if (!currentStep.startStep(currentContainer)) {
+                raiseError("Cannot execute chained start step");
+            }
         } else {
             // We're done
-            currentStep = null;
-            containerId = NO_CONTAINER;
-            lastHandledContentId = NO_CONTAINER;
+            endQuery();
             McUtils.sendPacket(new ServerboundContainerClosePacket(id));
         }
 
         e.setCanceled(true);
     }
 
-    private static void handleError(String errorMsg) {
-        System.out.println("error: " + errorMsg);
-        errorHandler.accept(errorMsg);
+    private static void raiseError(String errorMsg) {
+        if (currentStep != null) {
+            WynntilsMod.error("Internal error in ContainerQueryManager: handleError called with no currentStep");
+            return;
+        }
+        currentStep.onError(errorMsg);
+        endQuery();
+    }
+
+    private static void endQuery() {
         containerId = NO_CONTAINER;
         lastHandledContentId = NO_CONTAINER;
         currentStep = null;
-    }
-
-    public static void clickOnSlot(List<ItemStack> items, int clickedSlot) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
-
-        int mouseButtonNum = 0;
-        McUtils.sendPacket(new ServerboundContainerClickPacket(
-                containerId,
-                transactionId,
-                clickedSlot,
-                mouseButtonNum,
-                ClickType.PICKUP,
-                items.get(clickedSlot),
-                changedSlots));
-        transactionId++;
-    }
-
-    public static void openInventory(int slotNum) {
-        int id = McUtils.player().containerMenu.containerId;
-        if (id != 0) {
-            // another inventory is already open, cannot do this
-            return;
-        }
-        int prevItem = McUtils.inventory().selected;
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(slotNum));
-        McUtils.sendPacket(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
-    }
-
-    public static void runQuery(ContainerQueryStep firstStep) {
-        currentStep = firstStep;
-        firstStep.startStep(null);
     }
 }

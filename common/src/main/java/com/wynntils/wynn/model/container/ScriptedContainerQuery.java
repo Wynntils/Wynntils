@@ -4,22 +4,23 @@
  */
 package com.wynntils.wynn.model.container;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class ScriptedContainerQuery {
-    private final LinkedList<ScriptedQueryStep> steps;
-    private final Consumer<String> errorHandler;
-
-    protected ScriptedContainerQuery(LinkedList<ScriptedQueryStep> steps, Consumer<String> errorHandler) {
-        this.steps = steps;
-        this.errorHandler = errorHandler;
-    }
+    private static final Consumer<String> DEFAULT_ERROR_HANDLER =
+            (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
+    private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
+    private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
 
     public static QueryBuilder builder() {
-        return new QueryBuilder();
+        return new QueryBuilder(new ScriptedContainerQuery());
     }
 
     public void executeQuery() {
@@ -29,36 +30,40 @@ public class ScriptedContainerQuery {
         ContainerQueryManager.runQuery(firstStep);
     }
 
+    private void setErrorHandler(Consumer<String> errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
+    @FunctionalInterface
+    private interface StartAction {
+        boolean execute(ContainerContent container);
+    }
+
+    @FunctionalInterface
+    private interface ContainerVerification {
+        boolean verify(Component title, MenuType menuType);
+    }
+
     @FunctionalInterface
     public interface ContainerAction {
         void processContainer(ContainerContent container);
     }
 
-    @FunctionalInterface
-    public interface ContainerVerification {
-        boolean verify(Component title, MenuType menuType);
-    }
-
-    public static class ScriptedQueryStep implements ContainerQueryStep {
-        final ContainerAction startAction;
+    private class ScriptedQueryStep implements ContainerQueryStep {
+        final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
-        final LinkedList<ScriptedQueryStep> restOfTheSteps;
 
-        public ScriptedQueryStep(
-                ContainerAction startAction,
-                ContainerVerification verification,
-                ContainerAction handleContent,
-                LinkedList<ScriptedQueryStep> restOfTheSteps) {
+        private ScriptedQueryStep(
+                StartAction startAction, ContainerVerification verification, ContainerAction handleContent) {
             this.startAction = startAction;
             this.verification = verification;
             this.handleContent = handleContent;
-            this.restOfTheSteps = restOfTheSteps;
         }
 
         @Override
-        public void startStep(ContainerContent container) {
-            startAction.processContainer(container);
+        public boolean startStep(ContainerContent container) {
+            return startAction.execute(container);
         }
 
         @Override
@@ -73,33 +78,35 @@ public class ScriptedContainerQuery {
 
         @Override
         public ContainerQueryStep getNextStep(ContainerContent container) {
-            if (restOfTheSteps.isEmpty()) return null;
+            if (ScriptedContainerQuery.this.steps.isEmpty()) return null;
 
-            return restOfTheSteps.pop();
+            return ScriptedContainerQuery.this.steps.pop();
+        }
+
+        @Override
+        public void onError(String errorMsg) {
+            ScriptedContainerQuery.this.errorHandler.accept(errorMsg);
+            // Remove all remaining steps
+            while (!ScriptedContainerQuery.this.steps.isEmpty()) {
+                ScriptedContainerQuery.this.steps.removeFirst();
+            }
         }
     }
 
     public static class QueryBuilder {
-        ContainerAction startAction;
+        StartAction startAction;
         ContainerVerification verification;
         ContainerAction handleContent;
 
-        LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
-        Consumer<String> errorHandler;
+        ScriptedContainerQuery query;
 
-        public QueryBuilder onError(Consumer<String> errorHandler) {
-            this.errorHandler = errorHandler;
-            return this;
+        private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
+            query = scriptedContainerQuery;
         }
 
-        private void checkForCompletion() {
-            if (startAction != null && verification != null && handleContent != null) {
-                ScriptedQueryStep nextStep = new ScriptedQueryStep(startAction, verification, handleContent, steps);
-                steps.add(nextStep);
-                startAction = null;
-                verification = null;
-                handleContent = null;
-            }
+        public QueryBuilder onError(Consumer<String> errorHandler) {
+            query.setErrorHandler(errorHandler);
+            return this;
         }
 
         public QueryBuilder expectTitle(String expectedTitle) {
@@ -125,7 +132,23 @@ public class ScriptedContainerQuery {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ContainerQueryManager.clickOnSlot(container.items(), clickedSlot);
+                ContainerUtils.clickOnSlot(clickedSlot, container.containerId(), container.items());
+                return true;
+            };
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryBuilder clickOnSlotMatching(int clickedSlot, Item itemType, String name) {
+            if (startAction != null) {
+                throw new IllegalStateException("Set startAction twice");
+            }
+            this.startAction = (container) -> {
+                ItemStack item = container.items().get(clickedSlot);
+                if (!item.is(itemType) || !item.getDisplayName().getString().equals(name)) return false;
+
+                ContainerUtils.clickOnSlot(clickedSlot, container.containerId(), container.items());
+                return true;
             };
             checkForCompletion();
             return this;
@@ -135,9 +158,7 @@ public class ScriptedContainerQuery {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }
-            this.startAction = (container) -> {
-                ContainerQueryManager.openInventory(slotNum);
-            };
+            this.startAction = (container) -> ContainerUtils.openInventory(slotNum);
             checkForCompletion();
             return this;
         }
@@ -146,7 +167,17 @@ public class ScriptedContainerQuery {
             if (startAction != null || handleContent != null || verification != null) {
                 throw new IllegalStateException("Partial contents only for last step");
             }
-            return new ScriptedContainerQuery(steps, errorHandler);
+            return query;
+        }
+
+        private void checkForCompletion() {
+            if (startAction != null && verification != null && handleContent != null) {
+                ScriptedQueryStep nextStep = query.new ScriptedQueryStep(startAction, verification, handleContent);
+                query.steps.add(nextStep);
+                startAction = null;
+                verification = null;
+                handleContent = null;
+            }
         }
     }
 }
