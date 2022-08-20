@@ -32,7 +32,10 @@ public class ContainerQueryManager extends CoreManager {
     public static void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
             // Only add if it is not already enqueued
-            if (queuedQueries.stream().filter(query -> query.getName().equals(firstStepName)).findAny().isEmpty()) {
+            if (queuedQueries.stream()
+                    .filter(query -> query.getName().equals(firstStepName))
+                    .findAny()
+                    .isEmpty()) {
                 queuedQueries.add(firstStep);
             }
             return;
