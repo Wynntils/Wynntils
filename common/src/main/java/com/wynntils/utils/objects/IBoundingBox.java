@@ -53,6 +53,18 @@ public interface IBoundingBox {
         return this.getBounds().contains(point);
     }
 
+    default boolean intersects(IBoundingBox other) {
+        return this.getBounds().intersects(other);
+    }
+
+    default boolean intersectsWithoutBorder(IBoundingBox other) {
+        return this.getBounds().intersectsWithoutBorder(other);
+    }
+
+    default boolean hasInnerPoint(final Vec3 point) {
+        return this.getBounds().hasInnerPoint(point);
+    }
+
     default double volume() {
         return this.getBounds().volume();
     }
@@ -223,6 +235,30 @@ public interface IBoundingBox {
                     && point.x <= this.upper.x
                     && point.y <= this.upper.y
                     && point.z <= this.upper.z;
+        }
+
+        public boolean intersects(IBoundingBox other) {
+            return this.contains(other.getLower())
+                    || this.contains(other.getUpper())
+                    || other.contains(this.lower)
+                    || other.contains(this.upper);
+        }
+
+        public boolean intersectsWithoutBorder(IBoundingBox other) {
+            return this.hasInnerPoint(other.getLower())
+                    || this.hasInnerPoint(other.getUpper())
+                    || other.hasInnerPoint(this.lower)
+                    || other.hasInnerPoint(this.upper);
+        }
+
+        @Override
+        public boolean hasInnerPoint(Vec3 point) {
+            return this.lower.x < point.x
+                    && this.lower.y < point.y
+                    && this.lower.z < point.z
+                    && point.x < this.upper.x
+                    && point.y < this.upper.y
+                    && point.z < this.upper.z;
         }
 
         @Override
