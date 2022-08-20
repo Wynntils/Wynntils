@@ -5,6 +5,7 @@
 package com.wynntils.core.features;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
@@ -43,6 +44,8 @@ public abstract class Feature implements Translatable, Configurable {
     protected boolean enabled = false;
 
     protected boolean initFinished = false;
+
+    private String category = null;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -228,6 +231,21 @@ public abstract class Feature implements Translatable, Configurable {
 
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+    public String getCategory() {
+        return category == null ? "" : category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int compareTo(Feature other) {
+        return ComparisonChain.start()
+                .compare(this.getCategory(), other.getCategory())
+                .compare(this.getTranslatedName(), other.getTranslatedName())
+                .result();
+    }
 
     public static class WebLoadedCondition extends Condition {
         @Override

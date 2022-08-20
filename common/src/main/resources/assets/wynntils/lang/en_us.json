@@ -420,7 +420,18 @@
   "screens.wynntils.overlayManagement.name": "Overlay Management Screen",
   "screens.wynntils.overlayManagement.testModeOn": "Test mode on",
   "screens.wynntils.overlayManagement.testSettings": "Test",
-  "screens.wynntils.overlaySelection.close": "Close",
+  "screens.wynntils.overlaySelection.close": "Done",
   "screens.wynntils.overlaySelection.name": "Overlay Selection Screen",
-  "screens.wynntils.overlaySelection.overlays": "Overlays"
+  "screens.wynntils.overlaySelection.overlays": "Overlays",
+  "screens.wynntils.searchWidget.defaultSearchText": "Search...",
+  "screens.wynntils.settingsScreen.close": "Done",
+  "screens.wynntils.settingsScreen.featureList": "Features",
+  "screens.wynntils.settingsScreen.name": "Wynntils Settings",
+  "screens.wynntils.settingsScreen.title": "Wynntils Feature Settings",
+  "screens.wynntils.settingsScreen.uncategorized": "Uncategorized",
+  "screens.wynntils.wynntilsMenu.close": "Done",
+  "screens.wynntils.wynntilsMenu.name": "Wynntils Menu",
+  "screens.wynntils.wynntilsMenu.openOverlayMenu": "Overlay Management",
+  "screens.wynntils.wynntilsMenu.openSettingMenu": "Feature Settings",
+  "screens.wynntils.wynntilsMenu.title": "Wynntils Menu"
 }

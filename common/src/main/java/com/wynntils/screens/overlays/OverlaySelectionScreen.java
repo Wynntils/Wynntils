@@ -24,9 +24,11 @@ public class OverlaySelectionScreen extends Screen {
     private static final int BUTTON_HEIGHT = 20;
 
     private OverlayList overlayList;
+    private final Screen lastScreen;
 
     public OverlaySelectionScreen() {
         super(new TranslatableComponent("screens.wynntils.overlaySelection.name"));
+        lastScreen = McUtils.mc().screen;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(null)));
+                button -> McUtils.mc().setScreen(lastScreen)));
     }
 
     @Override
