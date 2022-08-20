@@ -18,6 +18,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class QuestBookFeature extends UserFeature {
+    @RegisterKeyBind
+    private final KeyBind questBookKeyBind =
+            new KeyBind("Rescan Quest Book", GLFW.GLFW_KEY_UNKNOWN, true, this::rescanQuestBook);
 
     @Override
     protected void onInit(
@@ -25,10 +28,6 @@ public class QuestBookFeature extends UserFeature {
         super.onInit(conditions, dependencies);
         dependencies.add(QuestBookModel.class);
     }
-
-    @RegisterKeyBind
-    private final KeyBind questBookKeyBind =
-            new KeyBind("Rescan Quest Book", GLFW.GLFW_KEY_UNKNOWN, true, this::rescanQuestBook);
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {

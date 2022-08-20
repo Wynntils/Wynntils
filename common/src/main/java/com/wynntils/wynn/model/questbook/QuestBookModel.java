@@ -17,7 +17,9 @@ import net.minecraft.world.item.Items;
 
 public class QuestBookModel extends Model {
     private static final int NEXT_PAGE_SLOT = 8;
-    private static List<QuestInfo> quests = new ArrayList<>();
+
+    private static List<QuestInfo> quests = List.of();
+    private static List<QuestInfo> newQuests;
 
     public static List<QuestInfo> getQuests() {
         return quests;
@@ -44,21 +46,29 @@ public class QuestBookModel extends Model {
     }
 
     private static void processQuestBookPage(ContainerContent container, int page) {
+        // Quests are in the top-left container area
+        if (page == 1) {
+            // Build new set of quests without disturbing current set
+            newQuests = new ArrayList<>();
+        }
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
+
                 // Very first slot is chat history
                 if (slot == 0) continue;
-                ItemStack item = container.items().get(slot);
 
+                ItemStack item = container.items().get(slot);
                 QuestInfo questInfo = QuestInfo.fromItem(item);
                 if (questInfo == null) continue;
-                System.out.println("%%%% GOT: " + questInfo);
-                quests.add(questInfo);
+
+                newQuests.add(questInfo);
             }
         }
 
         if (page == 4) {
+            // Last page finished
+            quests = newQuests;
             WynntilsMod.getEventBus().post(new QuestBookReloadedEvent());
         }
     }
