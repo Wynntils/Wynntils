@@ -20,11 +20,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CharacterManager extends CoreManager {
-    private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
-    private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
+    private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
+    private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
+    private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
+    private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
+    private static final int CHARACTER_INFO_SLOT = 6;
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
@@ -63,7 +67,7 @@ public class CharacterManager extends CoreManager {
         inCharacterSelection = false;
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldStateManager.State.WORLD) {
@@ -88,7 +92,9 @@ public class CharacterManager extends CoreManager {
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("^§.\\d+§. skill points remaining$")
                 .processContainer(container -> {
-                    System.out.println("GOT char info:" + container.title().getString() + ": " + container.items());
+                    ItemStack item = container.items().get(CHARACTER_INFO_SLOT);
+                    currentCharacter = CharacterInfo.parseCharacterFromCharacterMenu(item, -1);
+                    WynntilsMod.info("Deducing character " + currentCharacter);
                 })
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
                 .build();
@@ -145,20 +151,20 @@ public class CharacterManager extends CoreManager {
             return id;
         }
 
-        public static CharacterInfo parseCharacter(ItemStack itemStack, int slotNum) {
+        public static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
             String className = "";
 
             for (String line : lore) {
-                Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
+                Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line);
                 if (levelMatcher.matches()) {
                     level = Integer.parseInt(levelMatcher.group(1));
                     continue;
                 }
 
-                Matcher classMatcher = CLASS_PATTERN.matcher(line);
+                Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line);
 
                 if (classMatcher.matches()) {
                     className = classMatcher.group(1);
@@ -166,7 +172,31 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
+            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
+        }
+
+        public static CharacterInfo parseCharacterFromCharacterMenu(ItemStack itemStack, int id) {
+            List<String> lore = ItemUtils.getLore(itemStack);
+
+            int level = 0;
+            String className = "";
+
+            for (String line : lore) {
+                Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line);
+                if (levelMatcher.matches()) {
+                    level = Integer.parseInt(levelMatcher.group(1));
+                    continue;
+                }
+
+                Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line);
+
+                if (classMatcher.matches()) {
+                    className = classMatcher.group(1);
+                }
+            }
+            ClassType classType = ClassType.fromName(className);
+
+            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
         }
 
         @Override
