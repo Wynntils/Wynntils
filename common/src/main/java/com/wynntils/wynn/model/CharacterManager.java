@@ -25,7 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CharacterManager extends CoreManager {
     private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
-    private static boolean hasAutojoinWarned = false;
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
@@ -54,13 +53,7 @@ public class CharacterManager extends CoreManager {
 
     public static CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
-            if (!hasAutojoinWarned) {
-                hasAutojoinWarned = true;
-                McUtils.sendMessageToClient(new TextComponent(
-                                "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
-                        .withStyle(ChatFormatting.RED));
-            }
-            currentCharacter = new CharacterInfo(ClassType.None, false, McUtils.player().experienceLevel, 0);
+            currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0);
         }
         return currentCharacter;
     }
@@ -81,6 +74,13 @@ public class CharacterManager extends CoreManager {
 
         if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
             inCharacterSelection = true;
+        }
+
+        if (e.getNewState() == WorldStateManager.State.WORLD
+                && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+            McUtils.sendMessageToClient(new TextComponent(
+                            "Could not find your class type. Disable auto join (/toggle autojoin) and try again.")
+                    .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
