@@ -210,42 +210,42 @@ public final class RenderUtils {
     public static void drawTexturedRect(
             PoseStack poseStack,
             ResourceLocation tex,
-            int x,
-            int y,
-            int width,
-            int height,
-            int textureWidth,
-            int textureHeight) {
+            float x,
+            float y,
+            float width,
+            float height,
+            float textureWidth,
+            float textureHeight) {
         drawTexturedRect(poseStack, tex, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
             PoseStack poseStack,
             ResourceLocation tex,
-            int x,
-            int y,
-            int z,
-            int width,
-            int height,
-            int textureWidth,
-            int textureHeight) {
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float textureWidth,
+            float textureHeight) {
         drawTexturedRect(poseStack, tex, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
             PoseStack poseStack,
             ResourceLocation tex,
-            int x,
-            int y,
-            int z,
-            int width,
-            int height,
-            int uOffset,
-            int vOffset,
-            int u,
-            int v,
-            int textureWidth,
-            int textureHeight) {
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float uOffset,
+            float vOffset,
+            float u,
+            float v,
+            float textureWidth,
+            float textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -278,13 +278,13 @@ public final class RenderUtils {
     public static void drawTexturedRectWithColor(
             ResourceLocation tex,
             CustomColor color,
-            int x,
-            int y,
-            int z,
-            int width,
-            int height,
-            int textureWidth,
-            int textureHeight) {
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float textureWidth,
+            float textureHeight) {
         drawTexturedRectWithColor(
                 new PoseStack(), tex, color, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
     }
@@ -293,17 +293,17 @@ public final class RenderUtils {
             PoseStack poseStack,
             ResourceLocation tex,
             CustomColor color,
-            int x,
-            int y,
-            int z,
-            int width,
-            int height,
-            int uOffset,
-            int vOffset,
-            int u,
-            int v,
-            int textureWidth,
-            int textureHeight) {
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float uOffset,
+            float vOffset,
+            float u,
+            float v,
+            float textureWidth,
+            float textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -340,16 +340,24 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    public static void drawArc(CustomColor color, int x, int y, int z, float fill, int innerRadius, int outerRadius) {
+    public static void drawArc(
+            CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
         drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius);
     }
 
     public static void drawArc(
-            PoseStack poseStack, CustomColor color, int x, int y, int z, float fill, int innerRadius, int outerRadius) {
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float fill,
+            int innerRadius,
+            int outerRadius) {
         // keeps arc from overlapping itself
         int segments = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
-        int midX = x + outerRadius;
-        int midY = y + outerRadius;
+        float midX = x + outerRadius;
+        float midY = y + outerRadius;
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.enableBlend();
@@ -684,10 +692,10 @@ public final class RenderUtils {
     public static void fillGradient(
             Matrix4f matrix,
             BufferBuilder builder,
-            int x1,
-            int y1,
-            int x2,
-            int y2,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
             int blitOffset,
             CustomColor colorA,
             CustomColor colorB) {
