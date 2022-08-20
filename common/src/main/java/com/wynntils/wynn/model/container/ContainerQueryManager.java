@@ -9,6 +9,8 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +27,24 @@ public class ContainerQueryManager extends CoreManager {
     private static int lastHandledContentId = NO_CONTAINER;
 
     public static void runQuery(ContainerQueryStep firstStep) {
+        if (currentStep != null) {
+            firstStep.onError("Another query is already executing");
+            return;
+        }
+
+        Screen screen = McUtils.mc().screen;
+        if (screen != null && screen instanceof AbstractContainerScreen) {
+            // Another inventory screen is already open, cannot do this
+            firstStep.onError("Another container screen is already open");
+            return;
+        }
+
+        if (McUtils.player().containerMenu.containerId != 0) {
+            // For safety, check this way too
+            firstStep.onError("Another container is already open");
+            return;
+        }
+
         currentStep = firstStep;
         if (!firstStep.startStep(null)) {
             raiseError("Cannot execute first step");
@@ -101,7 +121,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     private static void raiseError(String errorMsg) {
-        if (currentStep != null) {
+        if (currentStep == null) {
             WynntilsMod.error("Internal error in ContainerQueryManager: handleError called with no currentStep");
             return;
         }
