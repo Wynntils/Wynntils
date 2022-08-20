@@ -7,7 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.OverlaySelectionScreen;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;

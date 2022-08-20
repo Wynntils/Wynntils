@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.lists.entries;
+package com.wynntils.screens.overlays.lists.entries;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -14,8 +14,8 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.OverlayManagementScreen;
-import com.wynntils.screens.lists.OverlayList;
+import com.wynntils.screens.overlays.OverlayManagementScreen;
+import com.wynntils.screens.overlays.lists.OverlayList;
 import java.util.List;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
