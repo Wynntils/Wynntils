@@ -7,9 +7,9 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.ContainerQueryManager;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public class QuestBookFeature extends UserFeature {
             new KeyBind("Read Quest Book", GLFW.GLFW_KEY_F, true, this::onScanQuestBook2);
 
     private void onScanQuestBook2() {
-        ContainerQueryManager.ScriptedQuery query = ContainerQueryManager.ContainerQueryBuilder.start()
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder()
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .expectTitle(QUESTS_TITLE)
                 .processContainer(c -> {
