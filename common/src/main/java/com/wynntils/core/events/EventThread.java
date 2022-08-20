@@ -20,8 +20,8 @@ public @interface EventThread {
 
     enum Type {
         RENDER, // The main thread a.k.a the Render thread
-        IO,     // Any Netty Client IO thread
+        IO, // Any Netty Client IO thread
         WORKER, // A worker thread, from a Minecraft or Wynntils thread pool
-        ANY     // Any thread at all
+        ANY // Any thread at all
     }
 }
