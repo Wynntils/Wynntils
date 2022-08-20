@@ -5,6 +5,7 @@
 package com.wynntils.core.chat;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -14,8 +15,10 @@ import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
@@ -73,7 +76,7 @@ public final class ChatModel extends Model {
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
-    private static boolean extractDialog = false;
+    private static final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private static String lastRealChat = null;
     private static List<String> lastNpcDialog = List.of();
 
@@ -102,7 +105,7 @@ public final class ChatModel extends Model {
             return;
         }
 
-        if (extractDialog) {
+        if (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled)) {
             handleMultilineMessage(message);
             e.setCanceled(true);
         }
@@ -255,11 +258,11 @@ public final class ChatModel extends Model {
         }
     }
 
-    public static void enableNpcDialogExtraction() {
-        extractDialog = true;
+    public static void addNpcDialogExtractionDependent(Feature feature) {
+        dialogExtractionDependents.add(feature);
     }
 
-    public static void disableNpcDialogExtraction() {
-        extractDialog = false;
+    public static void removeNpcDialogExtractionDependent(Feature feature) {
+        dialogExtractionDependents.remove(feature);
     }
 }
