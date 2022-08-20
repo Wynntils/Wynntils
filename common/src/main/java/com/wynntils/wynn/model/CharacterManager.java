@@ -74,7 +74,6 @@ public class CharacterManager extends CoreManager {
 
         if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
             inCharacterSelection = true;
-
         }
 
         if (e.getNewState() == WorldStateManager.State.WORLD
