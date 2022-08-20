@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.features.user.NpcDialogAutoProgressFeature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
@@ -25,10 +26,14 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = "Overlays")
@@ -42,7 +47,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         dependencies.add(ChatModel.class);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
         String msg = e.getCodedDialog();
         if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
@@ -91,9 +96,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                ChatModel.enableNpcDialogExtraction();
+                ChatModel.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
-                ChatModel.disableNpcDialogExtraction();
+                ChatModel.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             }
         }
 
@@ -126,12 +131,32 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             // Render "To continue" message
             // TODO: I'd like to have this better looking, perhaps a clickable button?
+            Optional<Long> millisecondsUntilProgress =
+                    NpcDialogAutoProgressFeature.INSTANCE.millisecondsUntilProgress();
+
+            List<TextRenderTask> renderTaskList;
+
+            renderTaskList = millisecondsUntilProgress
+                    .map(timeUntilProgress -> List.of(
+                            new TextRenderTask("§cPress SNEAK to continue", renderSetting),
+                            new TextRenderTask(
+                                    ChatFormatting.GREEN + "Auto-progress: "
+                                            + Math.max(0, Math.round(timeUntilProgress / 1000f))
+                                            + " seconds (Press "
+                                            + ComponentUtils.getUnformatted(NpcDialogAutoProgressFeature.INSTANCE
+                                                    .cancelAutoProgressKeybind
+                                                    .getKeyMapping()
+                                                    .getTranslatedKeyMessage())
+                                            + " to cancel)",
+                                    renderSetting)))
+                    .orElseGet(() -> List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)));
+
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX() + 5,
                             this.getRenderY() + 20 + textHeight,
-                            List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)),
+                            renderTaskList,
                             this.getRenderedWidth() - 15,
                             this.getRenderedHeight() - 15,
                             this.getRenderHorizontalAlignment(),

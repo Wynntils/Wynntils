@@ -30,6 +30,7 @@ public class ConnectionProgressFeature extends DebugFeature {
                     case CONNECTING -> "Connecting";
                     case CHARACTER_SELECTION -> "In character selection";
                     case HUB -> "On Hub";
+                    case INTERIM -> "Between states";
                     default -> null;
                 };
 

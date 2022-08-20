@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundKeepAlivePacket;
+import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundLightUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
@@ -52,6 +53,7 @@ public class PacketDebuggerFeature extends DebugFeature {
             ClientboundForgetLevelChunkPacket.class,
             ClientboundLightUpdatePacket.class,
             ClientboundSetChunkCacheCenterPacket.class,
+            ClientboundLevelChunkWithLightPacket.class,
             // Entities
             ClientboundAddEntityPacket.class,
             ClientboundAddMobPacket.class,

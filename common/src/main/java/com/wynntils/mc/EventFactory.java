@@ -27,8 +27,10 @@ import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
@@ -89,6 +91,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -177,6 +180,11 @@ public final class EventFactory {
     public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
         return post(new DrawPotionGlintEvent(item));
     }
+
+    public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
+        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
     // endregion
 
     // region Screen Events
@@ -233,6 +241,11 @@ public final class EventFactory {
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
         return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
+
+    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+    }
+
     // endregion
 
     // region Player Input Events
