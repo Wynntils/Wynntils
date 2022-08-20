@@ -24,81 +24,41 @@ public class QuestBookFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind questBookKeyBind =
-            new KeyBind("Read Quest Book", GLFW.GLFW_KEY_F, true, this::onScanQuestBook);
-
-    private void onScanQuestBook() {
-        ContainerQueryManager.start((ignored, title, menuType) -> {
-            ContainerQueryManager.openInventory(InventoryUtils.QUEST_BOOK_SLOT_NUM);
-            ContainerQueryManager.nextAction = (itemsPg1, titlePg1, menuTypePg1) -> {
-                System.out.println("GOT PAGE 1:" + titlePg1.getString() + ": " + itemsPg1);
-                if (titlePg1.getString().equals(QUESTS_TITLE)) {
-                    System.out.println("title ok");
-                } else {
-                    System.out.println("title not ok");
-                }
-                if (isPage2Button(itemsPg1)) {
-                    ContainerQueryManager.clickOnSlot(itemsPg1, 8);
-                }
-                ContainerQueryManager.nextAction = (itemsPg2, titlePg2, menuTypePg2) -> {
-                    System.out.println("GOT PAGE 2:" + titlePg2.getString() + ": " + itemsPg2);
-                    if (titlePg2.getString().equals(QUESTS_TITLE_2)) {
-                        System.out.println("title ok");
-                    } else {
-                        System.out.println("title not ok");
-                    }
-                    if (isPage3Button(itemsPg2)) {
-                        ContainerQueryManager.clickOnSlot(itemsPg2, 8);
-                    }
-                    ContainerQueryManager.nextAction = (itemsPg3, titlePg3, menuTypePg3) -> {
-                        System.out.println("GOT PAGE 3:" + titlePg3.getString() + ": " + itemsPg3);
-                        if (titlePg3.getString().equals(QUESTS_TITLE_3)) {
-                            System.out.println("title ok");
-                        } else {
-                            System.out.println("title not ok");
-                        }
-                        return null;
-                    };
-
-                    return QUESTS_TITLE_3;
-                };
-                return QUESTS_TITLE_2;
-            };
-            return QUESTS_TITLE;
-        });
-    }
+            new KeyBind("Read Quest Book", GLFW.GLFW_KEY_F, true, this::onScanQuestBook2);
 
     private void onScanQuestBook2() {
-        ContainerQueryManager.ContainerQuery query = ContainerQueryManager.ContainerQueryBuilder.start()
-                .expectTitle(QUESTS_TITLE)
+        ContainerQueryManager.ScriptedQuery query = ContainerQueryManager.ContainerQueryBuilder.start()
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .processContainer((itemsPg1, titlePg1, menuTypePg1) -> {
-                    System.out.println("GOT PAGE 1:" + titlePg1.getString() + ": " + itemsPg1);
-                    if (titlePg1.getString().equals(QUESTS_TITLE)) {
+                .expectTitle(QUESTS_TITLE)
+                .processContainer(c -> {
+                    System.out.println("GOT PAGE 1:" + c.title().getString() + ": " + c.items());
+                    if (c.title().getString().equals(QUESTS_TITLE)) {
                         System.out.println("title ok");
                     } else {
                         System.out.println("title not ok");
                     }
                 })
+                .clickOnSlot(8)
                 .expectTitle(QUESTS_TITLE_2)
-                .clickOnSlot(8)
-                .processContainer((itemsPg2, titlePg2, menuTypePg2) -> {
-                    System.out.println("GOT PAGE 2:" + titlePg2.getString() + ": " + itemsPg2);
-                    if (titlePg2.getString().equals(QUESTS_TITLE_2)) {
+                .processContainer(c -> {
+                    System.out.println("GOT PAGE 2:" + c.title().getString() + ": " + c.items());
+                    if (c.title().getString().equals(QUESTS_TITLE_2)) {
                         System.out.println("title ok");
                     } else {
                         System.out.println("title not ok");
                     }
                 })
+                .clickOnSlot(8)
                 .expectTitle(QUESTS_TITLE_3)
-                .clickOnSlot(8)
-                .processContainer((itemsPg3, titlePg3, menuTypePg3) -> {
-                    System.out.println("GOT PAGE 3:" + titlePg3.getString() + ": " + itemsPg3);
-                    if (titlePg3.getString().equals(QUESTS_TITLE_3)) {
+                .processContainer(c -> {
+                    System.out.println("GOT PAGE 3:" + c.title().getString() + ": " + c.items());
+                    if (c.title().getString().equals(QUESTS_TITLE_3)) {
                         System.out.println("title ok");
                     } else {
                         System.out.println("title not ok");
                     }
                 })
+                .onError(msg -> System.out.println("error:" + msg))
                 .build();
 
         query.executeQuery();
