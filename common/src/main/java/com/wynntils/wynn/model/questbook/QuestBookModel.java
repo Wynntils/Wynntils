@@ -59,7 +59,7 @@ public class QuestBookModel extends Model {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.fromItem(item);
+                QuestInfo questInfo = QuestInfo.parseItem(item);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);

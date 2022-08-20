@@ -6,30 +6,42 @@ package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.Pair;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
-    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l(.*)֎?À $");
+    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ $");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
-    private static final Pattern LEVEL_MATCHER = Pattern.compile("^\"§a.§r§7 Combat Lv. Min: §r§f(\\d+)\"$");
+    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
+    private static final Pattern REQ_MATCHER = Pattern.compile("^§..§r§7 (.*) Lv. Min: §r§f(\\d+)$");
 
     private final String name;
     private final QuestStatus status;
     private final QuestLength length;
-    private final String minLevel;
+    private final int level;
     private final String nextTask;
+    /** Additional requirements as pairs of <"profession name", minLevel> */
+    private final List<Pair<String, Integer>> additionalRequirements;
 
-    public QuestInfo(String name, QuestStatus status, QuestLength length, String minLevel, String nextTask) {
+    public QuestInfo(
+            String name,
+            QuestStatus status,
+            QuestLength length,
+            int level,
+            String nextTask,
+            List<Pair<String, Integer>> additionalRequirements) {
         this.name = name;
         this.status = status;
         this.length = length;
-        this.minLevel = minLevel;
+        this.level = level;
         this.nextTask = nextTask;
+        this.additionalRequirements = additionalRequirements;
     }
 
     public String getName() {
@@ -44,12 +56,16 @@ public class QuestInfo {
         return length;
     }
 
-    public String getMinLevel() {
-        return minLevel;
+    public int getLevel() {
+        return level;
     }
 
     public String getNextTask() {
         return nextTask;
+    }
+
+    public List<Pair<String, Integer>> getAdditionalRequirements() {
+        return additionalRequirements;
     }
 
     @Override
@@ -58,32 +74,39 @@ public class QuestInfo {
                 + name + "\", " + "status="
                 + status + ", " + "length="
                 + length + ", " + "minLevel="
-                + minLevel + ", " + "nextTask=\""
-                + nextTask + "\"]";
+                + level + ", " + "nextTask=\""
+                + nextTask + "\", " + "additionalRequirements="
+                + additionalRequirements + "]";
     }
 
-    public static QuestInfo fromItem(ItemStack item) {
-        String name = getQuestName(item);
-        if (name == null) return null;
+    public static QuestInfo parseItem(ItemStack item) {
+        try {
+            String name = getQuestName(item);
+            if (name == null) return null;
 
-        LinkedList<String> lore = ItemUtils.getLore(item);
+            LinkedList<String> lore = ItemUtils.getLore(item);
 
-        QuestStatus status = getQuestStatus(lore);
-        if (status == null) return null;
+            QuestStatus status = getQuestStatus(lore);
+            if (status == null) return null;
 
-        if (!skipEmptyLine(lore)) return null;
+            if (!skipEmptyLine(lore)) return null;
 
-        String combatLevel = getRequirements(lore);
+            int level = getLevel(lore);
+            List<Pair<String, Integer>> additionalRequirements = getAdditionalRequirements(lore);
 
-        QuestLength questLength = getQuestLength(lore);
-        if (questLength == null) return null;
+            QuestLength questLength = getQuestLength(lore);
+            if (questLength == null) return null;
 
-        if (!skipEmptyLine(lore)) return null;
+            if (!skipEmptyLine(lore)) return null;
 
-        String description = getDescription(lore);
+            String description = getDescription(lore);
 
-        QuestInfo questInfo = new QuestInfo(name, status, questLength, combatLevel, description);
-        return questInfo;
+            QuestInfo questInfo = new QuestInfo(name, status, questLength, level, description, additionalRequirements);
+            return questInfo;
+        } catch (NoSuchElementException e) {
+            WynntilsMod.warn("Failed to parse quest book item: " + item);
+            return null;
+        }
     }
 
     private static String getQuestName(ItemStack item) {
@@ -118,32 +141,33 @@ public class QuestInfo {
         return true;
     }
 
-    private static String getRequirements(LinkedList<String> lore) {
-        // FIXME: not done
-        String loreLine;
-        String combatLevel = "";
-        loreLine = lore.getFirst();
-        while (loreLine.contains("Lv. Min")) {
-            lore.pop();
-            if (loreLine.contains("Combat Lv. Min")) {
-                //    System.out.println("got  level req:" + loreLine);
-                combatLevel = loreLine;
-                // §a✔§r§7 Combat Lv. Min: §r§f4
-                // §c✖§r§7 Combat Lv. Min: §r§f54
-            } else {
-                //         System.out.println("####### GOT OTHER REQ:" + loreLine);
-                // §a✔§r§7 Fishing Lv. Min: §r§f1
-                // §c✖§r§7 Mining Lv. Min: §r§f15
-                // §c✖§r§7 Farming Lv. Min: §r§f20
-
-                // ####### GOT OTHER REQ:§c✖§r§7 Mining Lv. Min: §r§f20
-                // ####### GOT OTHER REQ:§c✖§r§7 Woodcutting Lv. Min: §r§f20
-                // ####### GOT OTHER REQ:§c✖§r§7 Fishing Lv. Min: §r§f20
-                // Note: one quest can have multiple!!!
-            }
-            loreLine = lore.getFirst();
+    private static int getLevel(LinkedList<String> lore) {
+        String rawLevel = lore.getFirst();
+        Matcher m = LEVEL_MATCHER.matcher(rawLevel);
+        if (!m.find()) {
+            // This can happen for the very first quests; accept without error
+            // and interpret level requirement as 1
+            return 1;
         }
-        return combatLevel;
+        lore.pop();
+        return Integer.parseInt(m.group(1));
+    }
+
+    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<String> lore) {
+        List<Pair<String, Integer>> requirements = new LinkedList<>();
+        Matcher m;
+
+        m = REQ_MATCHER.matcher(lore.getFirst());
+        while (m.matches()) {
+            lore.pop();
+            String profession = m.group(1);
+            int level = Integer.parseInt(m.group(2));
+            Pair<String, Integer> requirement = new Pair<>(profession, level);
+            requirements.add(requirement);
+
+            m = REQ_MATCHER.matcher(lore.getFirst());
+        }
+        return requirements;
     }
 
     private static QuestLength getQuestLength(LinkedList<String> lore) {
