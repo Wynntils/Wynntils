@@ -79,7 +79,7 @@ public class CharacterManager extends CoreManager {
         if (e.getNewState() == WorldStateManager.State.WORLD
                 && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
             McUtils.sendMessageToClient(new TextComponent(
-                            "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
+                            "Could not find your class type. Disable auto join (/toggle autojoin) and try again.")
                     .withStyle(ChatFormatting.DARK_RED));
         }
     }
