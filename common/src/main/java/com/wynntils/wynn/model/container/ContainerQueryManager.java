@@ -78,6 +78,8 @@ public class ContainerQueryManager extends CoreManager {
     @SubscribeEvent
     public static void onContainerSetContent(ContainerSetContentEvent e) {
         if (currentStep == null) return;
+        // We got an inventory update, can happen all the time
+        if (e.getContainerId() == 0) return;
 
         if (containerId == NO_CONTAINER) {
             // We have not registered a MenuOpenedEvent
