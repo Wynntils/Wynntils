@@ -146,27 +146,28 @@ public class ScriptedContainerQuery {
             return this;
         }
 
-        public QueryBuilder clickOnSlot(int clickedSlot) {
+        public QueryBuilder clickOnSlot(int slotNum) {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ContainerUtils.clickOnSlot(clickedSlot, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
                 return true;
             };
             checkForCompletion();
             return this;
         }
 
-        public QueryBuilder clickOnSlotMatching(int clickedSlot, Item itemType, String name) {
+        public QueryBuilder clickOnSlotMatching(int slotNum, Item expectedItemType, String expectedItemName) {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ItemStack item = container.items().get(clickedSlot);
-                if (!item.is(itemType) || !item.getDisplayName().getString().equals(name)) return false;
+                ItemStack item = container.items().get(slotNum);
+                if (!item.is(expectedItemType)
+                        || !item.getDisplayName().getString().equals(expectedItemName)) return false;
 
-                ContainerUtils.clickOnSlot(clickedSlot, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
                 return true;
             };
             checkForCompletion();

@@ -78,6 +78,7 @@ public class CharacterManager extends CoreManager {
 
         if (e.getNewState() == WorldStateManager.State.WORLD
                 && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+            WynntilsMod.info("Scheduling character info query");
             scanCharacterInfoPage();
         }
     }
@@ -86,10 +87,10 @@ public class CharacterManager extends CoreManager {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("^§.\\d+§. skill points remaining$")
-                .processContainer(c -> {
-                    System.out.println("GOT char info:" + c.title().getString() + ": " + c.items());
+                .processContainer(container -> {
+                    System.out.println("GOT char info:" + container.title().getString() + ": " + container.items());
                 })
-                .onError(msg -> System.out.println("error:" + msg))
+                .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
                 .build();
         query.executeQuery();
     }
