@@ -126,12 +126,12 @@ public class QuestInfo {
         while (loreLine.contains("Lv. Min")) {
             lore.pop();
             if (loreLine.contains("Combat Lv. Min")) {
-            //    System.out.println("got  level req:" + loreLine);
+                //    System.out.println("got  level req:" + loreLine);
                 combatLevel = loreLine;
                 // §a✔§r§7 Combat Lv. Min: §r§f4
                 // §c✖§r§7 Combat Lv. Min: §r§f54
             } else {
-       //         System.out.println("####### GOT OTHER REQ:" + loreLine);
+                //         System.out.println("####### GOT OTHER REQ:" + loreLine);
                 // §a✔§r§7 Fishing Lv. Min: §r§f1
                 // §c✖§r§7 Mining Lv. Min: §r§f15
                 // §c✖§r§7 Farming Lv. Min: §r§f20
