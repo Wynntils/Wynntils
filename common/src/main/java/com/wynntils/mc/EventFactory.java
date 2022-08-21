@@ -180,7 +180,7 @@ public final class EventFactory {
     }
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
-        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f), true);
     }
 
     // endregion
@@ -207,8 +207,10 @@ public final class EventFactory {
     }
 
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
-        return post(new ContainerSetContentEvent(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+        return post(
+                new ContainerSetContentEvent(
+                        packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()),
+                true);
     }
 
     // endregion
@@ -241,7 +243,7 @@ public final class EventFactory {
     }
 
     public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
-        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack), true);
     }
 
     // endregion
