@@ -37,12 +37,12 @@ public final class ManagerRegistry {
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(ClientCommandManager.class);
+        registerPersistentDependency(ContainerQueryManager.class);
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
-        registerPersistentDependency(ContainerQueryManager.class);
 
         addCrashCallbacks();
     }
