@@ -103,6 +103,16 @@ public class ScriptedContainerQuery {
         }
     }
 
+    /**
+     The QueryBuilder builds a ScriptedContainerQuery, which is a sequence of ContainerQueryStep,
+     which are executed one after another. Each step requires three parts:
+     1) a startAction (to open the container)
+     2) a verification (to check that we got the right container)
+     3) a handleContent (to actually consume the content of the container)
+
+     The builder will accept these three in any order, and create a ContainerQueryStep for each
+     such triplet. It will not allow the creation of a step where one of them are missing.
+     */
     public static class QueryBuilder {
         StartAction startAction;
         ContainerVerification verification;
