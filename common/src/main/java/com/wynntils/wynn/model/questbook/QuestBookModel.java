@@ -26,23 +26,21 @@ public class QuestBookModel extends Model {
     }
 
     public static void queryQuestBook() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Query")
+        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
+                .onError(msg -> WynntilsMod.warn("Error querying Quest Book:" + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1))
-                .processContainer(c -> processQuestBookPage(c, 1))
-                .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(2))
-                .matchTitle(getQuestBookTitle(2))
-                .processContainer(c -> processQuestBookPage(c, 2))
-                .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(3))
-                .matchTitle(getQuestBookTitle(3))
-                .processContainer(c -> processQuestBookPage(c, 3))
-                .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(4))
-                .matchTitle(getQuestBookTitle(4))
-                .processContainer(c -> processQuestBookPage(c, 4))
-                .onError(msg -> WynntilsMod.warn("Error querying Quest Book:" + msg))
-                .build();
+                .processContainer(c -> processQuestBookPage(c, 1));
 
-        query.executeQuery();
+        for (int i = 2; i < 5; i++) {
+            final int page = i; // Lambdas need final variables
+            queryBuilder
+                    .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
+                    .matchTitle(getQuestBookTitle(page))
+                    .processContainer(c -> processQuestBookPage(c, page));
+        }
+
+        queryBuilder.build().executeQuery();
     }
 
     private static void processQuestBookPage(ContainerContent container, int page) {
