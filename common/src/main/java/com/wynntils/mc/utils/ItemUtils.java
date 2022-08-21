@@ -27,10 +27,10 @@ public final class ItemUtils {
      *
      * @return an {@link List} containing all item lore
      */
-    public static List<String> getLore(ItemStack item) {
+    public static LinkedList<String> getLore(ItemStack item) {
         ListTag loreTag = getLoreTag(item);
 
-        List<String> lore = new LinkedList<>();
+        LinkedList<String> lore = new LinkedList<>();
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {

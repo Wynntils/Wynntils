@@ -16,6 +16,7 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.container.ContainerQueryManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(ClientCommandManager.class);
+        registerPersistentDependency(ContainerQueryManager.class);
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
