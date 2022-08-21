@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.EventThread;
 import net.minecraft.network.protocol.Packet;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.GenericEvent;
@@ -28,6 +29,7 @@ public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
     }
 
     @Cancelable
+    @EventThread(EventThread.Type.ANY)
     public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> {
         public PacketSentEvent(T packet) {
             super(packet);
@@ -35,6 +37,7 @@ public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
     }
 
     @Cancelable
+    @EventThread(EventThread.Type.ANY)
     public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> {
         public PacketReceivedEvent(T packet) {
             super(packet);

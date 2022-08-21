@@ -21,13 +21,16 @@ import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
@@ -74,6 +77,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -87,6 +91,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -173,6 +178,11 @@ public final class EventFactory {
     public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
         return post(new DrawPotionGlintEvent(item), true);
     }
+
+    public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
+        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
     // endregion
 
     // region Screen Events
@@ -192,14 +202,20 @@ public final class EventFactory {
         post(new ScreenClosedEvent(), true);
     }
 
-    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
-        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()), true);
+    public static MenuOpenedEvent onOpenScreen(ClientboundOpenScreenPacket packet) {
+        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()), true);
     }
+
+    public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
+        return post(new ContainerSetContentEvent(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket() {
-        post(new MenuClosedEvent(), true);
+    public static void onClientboundContainerClosePacket(int containerId) {
+        post(new MenuClosedEvent(containerId), true);
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {
@@ -223,6 +239,11 @@ public final class EventFactory {
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
         return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum), true);
     }
+
+    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+    }
+
     // endregion
 
     // region Player Input Events
