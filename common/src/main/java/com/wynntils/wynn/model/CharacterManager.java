@@ -82,6 +82,10 @@ public class CharacterManager extends CoreManager {
 
         if (e.getNewState() == WorldStateManager.State.WORLD
                 && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+            // We went directly to a world without coming from the character selection
+            // menu. This means the player has "autojoin" enabled, and that we did not
+            // get a chance to read the character info from the character selection menu.
+            // Instead, we send a container query to read it from the character (compass) menu.
             WynntilsMod.info("Scheduling character info query");
             scanCharacterInfoPage();
         }
