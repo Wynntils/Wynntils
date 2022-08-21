@@ -39,8 +39,7 @@ public class QuestBookFeature extends UserFeature {
 
     @SubscribeEvent
     public void onQuestBookReloadedEvent(QuestBookReloadedEvent e) {
-        System.out.println("All quests after reload:");
-        QuestBookModel.getQuests().forEach(System.out::println);
+        // FIXME: placeholder for doing something serious with the quests
     }
 
     private void rescanQuestBook() {
