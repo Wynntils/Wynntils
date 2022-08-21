@@ -189,7 +189,7 @@ public class QuestInfo {
         String description = String.join(
                         " ",
                         descriptionLines.stream().map(line -> line.substring(2)).toList())
-                .replaceAll("  ", " ")
+                .replaceAll("\\s+", " ")
                 .trim();
         return description;
     }
