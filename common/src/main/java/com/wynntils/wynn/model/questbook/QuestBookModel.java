@@ -21,10 +21,10 @@ public class QuestBookModel extends Model {
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
 
-    public static List<QuestInfo> getQuests() {
-        return quests;
-    }
-
+    /**
+     * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
+     * be sent. The available quests are then available using getQuests.
+     */
     public static void queryQuestBook() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
                 .onError(msg -> WynntilsMod.warn("Error querying Quest Book:" + msg))
@@ -77,5 +77,9 @@ public class QuestBookModel extends Model {
 
     private static String getQuestBookTitle(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
+    }
+
+    public static List<QuestInfo> getQuests() {
+        return quests;
     }
 }
