@@ -242,6 +242,8 @@ public abstract class Feature implements Translatable, Configurable {
 
     public int compareTo(Feature other) {
         return ComparisonChain.start()
+                .compareFalseFirst(
+                        this.getCategory().isEmpty(), other.getCategory().isEmpty())
                 .compare(this.getCategory(), other.getCategory())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();

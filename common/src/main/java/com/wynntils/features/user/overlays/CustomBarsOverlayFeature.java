@@ -29,7 +29,7 @@ import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "overlays")
+@FeatureInfo(category = "Overlays")
 public class CustomBarsOverlayFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnActionBar = false;

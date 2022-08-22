@@ -47,7 +47,7 @@ public class WynntilsSettingsScreen extends Screen {
                 button -> McUtils.mc().setScreen(lastScreen)));
 
         this.addRenderableWidget(
-                new SearchWidget(this.width / 90, (int) (BAR_HEIGHT + 25), (int) (this.width / 8f), SEARCH_BAR_HEIGHT));
+                new SearchWidget(this.width / 90, (int) (BAR_HEIGHT + 25), (int) (this.width / 6f), SEARCH_BAR_HEIGHT));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class WynntilsSettingsScreen extends Screen {
                         poseStack,
                         I18n.get("screens.wynntils.settingsScreen.featureList"),
                         0,
-                        this.width / 6.5f,
+                        this.width / 5f,
                         BAR_HEIGHT + 7.5f,
                         0,
                         CommonColors.WHITE,

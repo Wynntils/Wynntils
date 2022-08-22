@@ -6,11 +6,14 @@ package com.wynntils.screens.settings.lists.entries;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.render.FontRenderer;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 
 public class FeatureCategoryEntry extends Entry {
+    private static final int ITEM_HEIGHT = 15;
     private final String category;
 
     public FeatureCategoryEntry(String category) {
@@ -33,7 +36,26 @@ public class FeatureCategoryEntry extends Entry {
             int mouseX,
             int mouseY,
             boolean isMouseOver,
-            float partialTick) {}
+            float partialTick) {
+
+        poseStack.pushPose();
+
+        poseStack.translate(left, top, 0);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        this.category,
+                        0,
+                        width,
+                        0,
+                        width - 10,
+                        CommonColors.WHITE,
+                        FontRenderer.TextAlignment.CENTER_ALIGNED,
+                        FontRenderer.TextShadow.OUTLINE);
+
+        poseStack.popPose();
+    }
 
     @Override
     public List<? extends GuiEventListener> children() {
@@ -42,5 +64,9 @@ public class FeatureCategoryEntry extends Entry {
 
     public String getCategory() {
         return category;
+    }
+
+    public static int getItemHeight() {
+        return ITEM_HEIGHT;
     }
 }
