@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
+import org.apache.commons.lang3.StringUtils;
 
 public class FeatureList extends ContainerObjectSelectionList<Entry> {
     private final WynntilsSettingsScreen settingsScreen;
@@ -35,23 +36,7 @@ public class FeatureList extends ContainerObjectSelectionList<Entry> {
 
         this.settingsScreen = screen;
 
-        String lastCategory = "";
-
-        for (Feature feature : FeatureRegistry.getFeatures().stream()
-                .sorted(Feature::compareTo)
-                .toList()) {
-            if (!Objects.equals(lastCategory, feature.getCategory())) {
-                lastCategory = feature.getCategory();
-
-                if (lastCategory.isEmpty()) {
-                    this.addEntry(new FeatureCategoryEntry(I18n.get("screens.wynntils.settingsScreen.uncategorized")));
-                } else {
-                    this.addEntry(new FeatureCategoryEntry(lastCategory));
-                }
-            }
-
-            this.addEntry(new FeatureEntry(feature));
-        }
+        this.reAddEntriesWithSearchFilter("");
 
         this.setRenderBackground(false);
         this.setRenderTopAndBottom(false);
@@ -128,6 +113,8 @@ public class FeatureList extends ContainerObjectSelectionList<Entry> {
                 Texture.FEATURE_LIST_BACKGROUND.height());
     }
 
+    // FIXME: This is incorrect, entries have different heights
+    //        Consider not using this in renderList
     @Override
     protected int getRowTop(int index) {
         return this.y0 - (int) this.getScrollAmount() + index * this.itemHeight + this.headerHeight + 1;
@@ -141,5 +128,28 @@ public class FeatureList extends ContainerObjectSelectionList<Entry> {
     @Override
     public int getRowLeft() {
         return this.x0 + settingsScreen.width / 90;
+    }
+
+    public void reAddEntriesWithSearchFilter(String searchText) {
+        this.clearEntries();
+
+        String lastCategory = "";
+
+        for (Feature feature : FeatureRegistry.getFeatures().stream()
+                .filter(feature -> StringUtils.startsWithIgnoreCase(feature.getTranslatedName(), searchText))
+                .sorted(Feature::compareTo)
+                .toList()) {
+            if (!Objects.equals(lastCategory, feature.getCategory())) {
+                lastCategory = feature.getCategory();
+
+                if (lastCategory.isEmpty()) {
+                    this.addEntry(new FeatureCategoryEntry(I18n.get("screens.wynntils.settingsScreen.uncategorized")));
+                } else {
+                    this.addEntry(new FeatureCategoryEntry(lastCategory));
+                }
+            }
+
+            this.addEntry(new FeatureEntry(feature));
+        }
     }
 }

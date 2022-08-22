@@ -12,10 +12,12 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.widgets.SearchWidget;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
+import org.lwjgl.glfw.GLFW;
 
 public class WynntilsSettingsScreen extends Screen {
     private static final int BUTTON_WIDTH = 160;
@@ -29,6 +31,8 @@ public class WynntilsSettingsScreen extends Screen {
     private final Screen lastScreen;
 
     private FeatureList featureList;
+
+    private SearchWidget searchWidget;
 
     public WynntilsSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
@@ -46,8 +50,9 @@ public class WynntilsSettingsScreen extends Screen {
                 new TranslatableComponent("screens.wynntils.settingsScreen.close"),
                 button -> McUtils.mc().setScreen(lastScreen)));
 
-        this.addRenderableWidget(
-                new SearchWidget(this.width / 90, (int) (BAR_HEIGHT + 25), (int) (this.width / 6f), SEARCH_BAR_HEIGHT));
+        this.searchWidget =
+                new SearchWidget(this.width / 90, (int) (BAR_HEIGHT + 25), (int) (this.width / 6f), SEARCH_BAR_HEIGHT);
+        this.addRenderableWidget(this.searchWidget);
     }
 
     @Override
@@ -87,6 +92,47 @@ public class WynntilsSettingsScreen extends Screen {
 
         RenderUtils.drawRect(poseStack, FOREGROUND_COLOR, 0, 0, 0, this.width, BAR_HEIGHT);
         RenderUtils.drawRect(poseStack, FOREGROUND_COLOR, 0, this.height - BAR_HEIGHT, 0, this.width, BAR_HEIGHT);
+    }
+
+    @Override
+    public void resize(Minecraft minecraft, int width, int height) {
+        this.init();
+        super.resize(minecraft, width, height);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        return featureList.mouseScrolled(mouseX, mouseY, delta);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        return featureList.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        return featureList.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return featureList.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+            this.onClose();
+            return true;
+        }
+
+        super.keyPressed(keyCode, scanCode, modifiers);
+
+        featureList.reAddEntriesWithSearchFilter(this.searchWidget.getSearchText());
+
+        return featureList.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public float getBarHeight() {
