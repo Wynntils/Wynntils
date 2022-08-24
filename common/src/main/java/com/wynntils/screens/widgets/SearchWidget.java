@@ -19,11 +19,15 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: This is a very basic text box. Selection, and cursor does not work.
+// FIXME: This is a very basic text box. Selection does not work.
 public class SearchWidget extends AbstractWidget {
+    private static char CURSOR_CHAR = '_';
+
     private final Component DEFAULT_TEXT = new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
     private String searchText = "";
+
+    private int cursorPosition = 0;
 
     public SearchWidget(int x, int y, int width, int height) {
         super(x, y, width, height, new TextComponent("Search..."));
@@ -36,7 +40,11 @@ public class SearchWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        Objects.equals(searchText, "") ? DEFAULT_TEXT.getString() : searchText,
+                        Objects.equals(searchText, "")
+                                ? DEFAULT_TEXT.getString()
+                                : (searchText.substring(0, cursorPosition)
+                                        + CURSOR_CHAR
+                                        + searchText.substring(cursorPosition)),
                         this.x + 5,
                         this.x + this.width - 5,
                         this.y + 6.5f,
@@ -76,7 +84,8 @@ public class SearchWidget extends AbstractWidget {
                 searchText = "";
             }
 
-            searchText += codePoint;
+            searchText = searchText.substring(0, cursorPosition) + codePoint + searchText.substring(cursorPosition);
+            cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
             return true;
         }
 
@@ -90,7 +99,20 @@ public class SearchWidget extends AbstractWidget {
                 return false;
             }
 
-            searchText = searchText.substring(0, searchText.length() - 1);
+            searchText =
+                    searchText.substring(0, Math.max(0, cursorPosition - 1)) + searchText.substring(cursorPosition);
+            cursorPosition = Math.max(0, cursorPosition - 1);
+            return false;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            cursorPosition = Math.max(0, cursorPosition - 1);
+            return false;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
+            return false;
         }
 
         return false;
