@@ -6,6 +6,8 @@ package com.wynntils.screens.settings.lists.entries;
 
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 
-public abstract class Entry extends ContainerObjectSelectionList.Entry<Entry> {
-    public Entry() {}
+public abstract class FeatureListEntryBase extends ContainerObjectSelectionList.Entry<FeatureListEntryBase> {
+    public FeatureListEntryBase() {}
+
+    public abstract int getRenderHeight();
 }

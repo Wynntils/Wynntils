@@ -15,17 +15,20 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.screens.settings.lists.FeatureList;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 
-public class FeatureEntry extends Entry {
+public class FeatureEntry extends FeatureListEntryBase {
     private static final int ITEM_HEIGHT = 25;
 
     private final Feature feature;
+    private final FeatureList featureList;
 
-    public FeatureEntry(Feature feature) {
+    public FeatureEntry(Feature feature, FeatureList featureList) {
         this.feature = feature;
+        this.featureList = featureList;
     }
 
     @Override
@@ -96,5 +99,14 @@ public class FeatureEntry extends Entry {
 
     public static int getItemHeight() {
         return ITEM_HEIGHT;
+    }
+
+    @Override
+    public int getRenderHeight() {
+        return (int) FontRenderer.getInstance()
+                        .calculateRenderHeight(
+                                List.of(this.feature.getTranslatedName()), featureList.getRowWidth() - 10)
+                / FontRenderer.getInstance().getFont().lineHeight
+                * FeatureEntry.getItemHeight();
     }
 }

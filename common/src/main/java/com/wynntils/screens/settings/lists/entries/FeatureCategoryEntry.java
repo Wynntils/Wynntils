@@ -12,7 +12,7 @@ import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 
-public class FeatureCategoryEntry extends Entry {
+public class FeatureCategoryEntry extends FeatureListEntryBase {
     private static final int ITEM_HEIGHT = 15;
     private final String category;
 
@@ -68,5 +68,10 @@ public class FeatureCategoryEntry extends Entry {
 
     public static int getItemHeight() {
         return ITEM_HEIGHT;
+    }
+
+    @Override
+    public int getRenderHeight() {
+        return FeatureCategoryEntry.getItemHeight();
     }
 }
