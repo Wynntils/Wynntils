@@ -5,6 +5,7 @@
 package com.wynntils.screens.settings.lists;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.mc.render.RenderUtils;
@@ -231,6 +232,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         String lastCategory = "";
 
         for (Feature feature : FeatureRegistry.getFeatures().stream()
+                .filter(feature -> !(feature instanceof DebugFeature))
                 .filter(feature -> StringUtils.partialMatch(feature.getTranslatedName(), searchText))
                 .sorted(Feature::compareTo)
                 .toList()) {
