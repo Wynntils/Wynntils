@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user.overlays;
+package com.wynntils.features.user.overlays.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -143,40 +143,15 @@ public class MiniMapOverlayFeature extends UserFeature {
         }
 
         // TODO move most of the buffer builder code into RenderUtils, maybe separate each map border into different
-        // files to avoid insanity involving tx1/ty1/tx2/ty2 + remove magic constant
+        // files to avoid insanity involving tx1/ty1/tx2/ty2
         private void renderRectangularMapBorder(
                 PoseStack poseStack, float renderX, float renderY, float width, float height) {
-            Texture texture = null;
-            int grooves = 0;
-            int tx1 = 0;
-            int ty1 = 0;
-            int tx2 = 0;
-            int ty2 = 0;
-
-            switch (borderType) {
-                case Wynn -> {
-                    texture = Texture.WYNN_MAP_TEXTURES;
-                    grooves = 3;
-
-                    tx2 = 112;
-                    ty2 = 112;
-                }
-                case Gilded -> {
-                    texture = Texture.GILDED_MAP_TEXTURES;
-                    grooves = 1;
-
-                    ty1 = 262; // not 0 for some reason
-                    tx2 = 262;
-                    ty2 = 524;
-                }
-                case Paper -> {
-                    texture = Texture.PAPER_MAP_TEXTURES;
-                    grooves = 3;
-
-                    tx2 = 217;
-                    ty2 = 217;
-                }
-            }
+            Texture texture = borderType.texture();
+            int grooves = borderType.groovesSize();
+            int tx1 = borderType.tx1();
+            int ty1 = borderType.ty1();
+            int tx2 = borderType.tx2();
+            int ty2 = borderType.ty2();
 
             float uScale = 1f / texture.width();
             float vScale = 1f / texture.height();
@@ -285,14 +260,4 @@ public class MiniMapOverlayFeature extends UserFeature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public enum MapMaskType {
-        Rectangular,
-        // Circle
-    }
-
-    public enum MapBorderType {
-        Wynn,
-        Gilded,
-        Paper
-    }
 }
