@@ -140,8 +140,6 @@ public class MiniMapOverlayFeature extends UserFeature {
             poseStack.translate(-centerX, -centerZ, 0);
         }
 
-        // TODO move most of the buffer builder code into RenderUtils, maybe separate each map border into different
-        // files to avoid insanity involving tx1/ty1/tx2/ty2
         private void renderRectangularMapBorder(
                 PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
@@ -163,26 +161,21 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             Matrix4f matrix = poseStack.last().pose();
 
-            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            bufferBuilder
-                    .vertex(matrix, (renderX - groovesWidth), (renderY + height + groovesHeight), 0)
-                    .uv((tx1) * uScale, (ty2) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (renderX + width + groovesWidth), (renderY + height + groovesHeight), 0)
-                    .uv((tx2) * uScale, (ty2) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (renderX + width + groovesWidth), (renderY - groovesHeight), 0)
-                    .uv((tx2) * uScale, (ty1) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (renderX - groovesWidth), (renderY - groovesHeight), 0)
-                    .uv((tx1) * uScale, (ty1) * vScale)
-                    .endVertex();
-            bufferBuilder.end();
-            BufferUploader.end(bufferBuilder);
+            // TODO remove int casts with settings pr merge
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    texture.resource(),
+                    (int) (renderX - groovesWidth),
+                    (int) (renderY - groovesHeight),
+                    0,
+                    (int) (width + 2 * groovesWidth),
+                    (int) (height + 2 * groovesHeight),
+                    tx1,
+                    ty1,
+                    tx2 - tx1,
+                    ty2 - ty1,
+                    texture.width(),
+                    texture.height());
         }
 
         private void renderCircularMapBorder(float renderX, float renderY, float width, float height) {
@@ -232,6 +225,7 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             Matrix4f matrix = poseStack.last().pose();
 
+            // TODO replace with RenderUtils after settings pr is merged
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder
