@@ -18,9 +18,10 @@ public enum Texture {
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
-    WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256),
+    // Map related
     GILDED_MAP_TEXTURES("map/gilded_map_textures.png", 262, 524),
-    PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512);
+    PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
+    WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256);
 
     private final ResourceLocation resource;
     private final int width;

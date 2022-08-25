@@ -7,10 +7,9 @@ package com.wynntils.features.user.overlays.map;
 import com.wynntils.mc.render.Texture;
 
 public enum MapBorderType {
-    Wynn(Texture.WYNN_MAP_TEXTURES, 0, 0, 112, 112, 3),
     Gilded(Texture.GILDED_MAP_TEXTURES, 0, 262, 262, 524, 1),
-    Paper(Texture.PAPER_MAP_TEXTURES, 0, 0, 217, 217, 3);
-
+    Paper(Texture.PAPER_MAP_TEXTURES, 0, 0, 217, 217, 3),
+    Wynn(Texture.WYNN_MAP_TEXTURES, 0, 0, 112, 112, 3);
     private final Texture texture;
     private final int tx1;
     private final int ty1;
