@@ -108,20 +108,18 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO compass icon
 
-            // disable mask
-            switch (maskType) {
-                case Rectangular -> RenderSystem.disableScissor();
-                    // case Circle -> {
-                    // TODO
-                    // }
-            }
-
             // TODO cursor
 
-            // render border
+            // disable mask & render border
             switch (maskType) {
-                case Rectangular -> renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
-                    // case Circle -> renderCircularMapBorder();
+                case Rectangular -> {
+                    RenderSystem.disableScissor();
+                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
+                }
+                    // case Circle -> {
+                    // TODO
+                    // renderCircularMapBorder();
+                    // }
             }
 
             // TODO Directional Text
