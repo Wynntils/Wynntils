@@ -19,6 +19,7 @@ public enum Texture {
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
     SEARCH_BAR("search_bar.png", 90, 10),
+    SCROLL_BUTTON("scroll_circle.png", 9, 9),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64);
 
     private final ResourceLocation resource;

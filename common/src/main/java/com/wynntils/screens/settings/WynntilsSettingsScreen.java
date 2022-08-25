@@ -57,7 +57,10 @@ public class WynntilsSettingsScreen extends Screen {
                 (int) (this.width / 6f),
                 SEARCH_BAR_HEIGHT,
                 newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
+
         this.addRenderableWidget(this.searchWidget);
+
+        this.setFocused(searchWidget);
     }
 
     @Override

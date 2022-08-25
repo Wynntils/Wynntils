@@ -14,6 +14,7 @@ import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.lists.entries.FeatureCategoryEntry;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
 import com.wynntils.screens.settings.lists.entries.FeatureListEntryBase;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -25,12 +26,14 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     private float cachedRenderHeight = 0;
 
+    private boolean draggingScrollButton = false;
+
     public FeatureList(WynntilsSettingsScreen screen) {
         super(
                 McUtils.mc(),
                 screen.width,
                 screen.height,
-                screen.height / 10 + 15,
+                (int) (screen.getBarHeight() + 50),
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 25);
 
@@ -50,6 +53,8 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         int y = this.y0 + 4 - (int) this.getScrollAmount();
 
         this.renderList(poseStack, x, y, mouseX, mouseY, partialTick);
+
+        renderScrollButton(poseStack);
     }
 
     @Override
@@ -89,7 +94,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
     @Override
     protected void renderBackground(PoseStack poseStack) {
         float width = settingsScreen.width / 5f;
-        float height = settingsScreen.height - settingsScreen.getBarHeight() * 2;
+        float height = getRenderHeight();
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.FEATURE_LIST_BACKGROUND.resource(),
@@ -140,6 +145,81 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
     @Override
     public int getRowLeft() {
         return this.x0 + settingsScreen.width / 90;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        float scrollButtonXPos = getScrollButtonXPos();
+        float scrollButtonYPos = getScrollButtonYPos();
+
+        int size = (int) (settingsScreen.width / 65f);
+
+        // Check if we clicked on the scroll button
+        if (mouseX >= scrollButtonXPos
+                && mouseX <= scrollButtonXPos + size
+                && mouseY >= scrollButtonYPos
+                && mouseY <= scrollButtonYPos + size) {
+            draggingScrollButton = true;
+            return false;
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (draggingScrollButton) {
+            float height = getRenderHeight();
+
+            this.setScrollAmount(
+                    this.getScrollAmount() + MathUtils.map((float) dragY, 0, height, 0, this.getMaxScroll()));
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScrollButton = false;
+
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private void renderScrollButton(PoseStack poseStack) {
+        float xPos = getScrollButtonXPos();
+        float yPos = getScrollButtonYPos();
+
+        int size = (int) (settingsScreen.width / 65f);
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.SCROLL_BUTTON.resource(),
+                xPos,
+                yPos,
+                0,
+                size,
+                size,
+                0,
+                0,
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height(),
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height());
+    }
+
+    private float getRenderHeight() {
+        return settingsScreen.height - settingsScreen.getBarHeight() * 2;
+    }
+
+    private float getScrollButtonYPos() {
+        float height = getRenderHeight();
+
+        return MathUtils.map(
+                (float) this.getScrollAmount(), 0, this.getMaxScroll(), settingsScreen.getBarHeight() + 4, height - 4);
+    }
+
+    private float getScrollButtonXPos() {
+        return settingsScreen.width / 5.515f;
     }
 
     public void reAddEntriesWithSearchFilter(String searchText) {

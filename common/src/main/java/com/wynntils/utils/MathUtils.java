@@ -47,12 +47,12 @@ public final class MathUtils {
         };
     }
 
-    public static double map(double sourceNumber, double fromA, double fromB, double toA, double toB) {
-        double deltaA = fromB - fromA;
-        double deltaB = toB - toA;
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromA;
-        double offset = (negA * scale) + toA;
+    public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {
+        float deltaA = fromB - fromA;
+        float deltaB = toB - toA;
+        float scale = deltaB / deltaA;
+        float negA = -1 * fromA;
+        float offset = (negA * scale) + toA;
         return (sourceNumber * scale) + offset;
     }
 }
