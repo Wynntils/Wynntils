@@ -37,11 +37,12 @@ public class WynntilsSettingsScreen extends Screen {
     public WynntilsSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
         lastScreen = McUtils.mc().screen;
-        featureList = new FeatureList(this);
     }
 
     @Override
     protected void init() {
+        featureList = new FeatureList(this);
+
         this.addRenderableWidget(new Button(
                 this.width / 2 - BUTTON_WIDTH / 2,
                 this.height - BUTTON_HEIGHT - 5,
@@ -50,8 +51,12 @@ public class WynntilsSettingsScreen extends Screen {
                 new TranslatableComponent("screens.wynntils.settingsScreen.close"),
                 button -> McUtils.mc().setScreen(lastScreen)));
 
-        this.searchWidget =
-                new SearchWidget(this.width / 90, (int) (BAR_HEIGHT + 25), (int) (this.width / 6f), SEARCH_BAR_HEIGHT);
+        this.searchWidget = new SearchWidget(
+                this.width / 90,
+                (int) (BAR_HEIGHT + 25),
+                (int) (this.width / 6f),
+                SEARCH_BAR_HEIGHT,
+                newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
         this.addRenderableWidget(this.searchWidget);
     }
 
@@ -132,8 +137,6 @@ public class WynntilsSettingsScreen extends Screen {
         }
 
         super.keyPressed(keyCode, scanCode, modifiers);
-
-        featureList.reAddEntriesWithSearchFilter(this.searchWidget.getSearchText());
 
         return featureList.keyPressed(keyCode, scanCode, modifiers);
     }

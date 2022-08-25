@@ -23,6 +23,8 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
     private final WynntilsSettingsScreen settingsScreen;
     private static final int PADDING = 5;
 
+    private float cachedRenderHeight = 0;
+
     public FeatureList(WynntilsSettingsScreen screen) {
         super(
                 McUtils.mc(),
@@ -58,12 +60,12 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         int renderedCount = 0;
 
         for (int i = 0; i < itemCount; i++) {
-            int top =
-                    (int) (this.y0 + 1 + heightOffset + settingsScreen.getBarHeight() + 35) + (renderedCount * PADDING);
-            int bottom = top + this.itemHeight;
-            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
-
             FeatureListEntryBase entry = this.getEntry(i);
+
+            int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
+            int bottom = top + this.itemHeight;
+
+            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
 
             int renderHeight = entry.getRenderHeight();
 
@@ -106,7 +108,28 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     @Override
     protected int getRowTop(int index) {
-        return this.y0 - (int) this.getScrollAmount() + index * this.itemHeight + this.headerHeight + 1;
+        int itemCount = this.getItemCount();
+
+        int height = 0;
+
+        for (int i = 0; i < Math.min(index, itemCount); i++) {
+            FeatureListEntryBase entry = this.getEntry(i);
+
+            height += entry.getRenderHeight();
+        }
+
+        return this.y0 - (int) this.getScrollAmount() + height + this.headerHeight + 1;
+    }
+
+    @Override
+    protected int getMaxPosition() {
+        return (int) cachedRenderHeight;
+    }
+
+    @Override
+    public int getMaxScroll() {
+        float maxScroll = this.getMaxPosition() - (settingsScreen.height - settingsScreen.getBarHeight() * 2) + 170;
+        return (int) Math.max(0, maxScroll);
     }
 
     @Override
@@ -121,24 +144,37 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     public void reAddEntriesWithSearchFilter(String searchText) {
         this.clearEntries();
+        this.setScrollAmount(0);
+
+        float renderHeight = 0;
 
         String lastCategory = "";
 
         for (Feature feature : FeatureRegistry.getFeatures().stream()
-                .filter(feature -> StringUtils.startsWithIgnoreCase(feature.getTranslatedName(), searchText))
+                .filter(feature -> StringUtils.containsIgnoreCase(feature.getTranslatedName(), searchText))
                 .sorted(Feature::compareTo)
                 .toList()) {
             if (!Objects.equals(lastCategory, feature.getCategory())) {
                 lastCategory = feature.getCategory();
 
+                FeatureCategoryEntry entry;
+
                 if (lastCategory.isEmpty()) {
-                    this.addEntry(new FeatureCategoryEntry(I18n.get("screens.wynntils.settingsScreen.uncategorized")));
+                    entry = new FeatureCategoryEntry(I18n.get("screens.wynntils.settingsScreen.uncategorized"));
                 } else {
-                    this.addEntry(new FeatureCategoryEntry(lastCategory));
+                    entry = new FeatureCategoryEntry(lastCategory);
                 }
+
+                this.addEntry(entry);
+
+                renderHeight += entry.getRenderHeight();
             }
 
-            this.addEntry(new FeatureEntry(feature, this));
+            FeatureEntry entry = new FeatureEntry(feature, this);
+            this.addEntry(entry);
+            renderHeight += entry.getRenderHeight();
         }
+
+        cachedRenderHeight = renderHeight;
     }
 }

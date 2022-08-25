@@ -11,6 +11,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -29,8 +30,15 @@ public class SearchWidget extends AbstractWidget {
 
     private int cursorPosition = 0;
 
+    private Consumer<String> onUpdateConsumer;
+
     public SearchWidget(int x, int y, int width, int height) {
         super(x, y, width, height, new TextComponent("Search..."));
+    }
+
+    public SearchWidget(int x, int y, int width, int height, Consumer<String> onUpdateConsumer) {
+        super(x, y, width, height, new TextComponent("Search..."));
+        this.onUpdateConsumer = onUpdateConsumer;
     }
 
     @Override
@@ -86,6 +94,7 @@ public class SearchWidget extends AbstractWidget {
 
             searchText = searchText.substring(0, cursorPosition) + codePoint + searchText.substring(cursorPosition);
             cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
+            this.onUpdateConsumer.accept(this.getSearchText());
             return true;
         }
 
@@ -102,16 +111,19 @@ public class SearchWidget extends AbstractWidget {
             searchText =
                     searchText.substring(0, Math.max(0, cursorPosition - 1)) + searchText.substring(cursorPosition);
             cursorPosition = Math.max(0, cursorPosition - 1);
+            this.onUpdateConsumer.accept(this.getSearchText());
             return false;
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
             cursorPosition = Math.max(0, cursorPosition - 1);
+            this.onUpdateConsumer.accept(this.getSearchText());
             return false;
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
             cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
+            this.onUpdateConsumer.accept(this.getSearchText());
             return false;
         }
 

@@ -76,7 +76,7 @@ public class FeatureEntry extends FeatureListEntryBase {
                         new TextRenderTask(
                                 this.feature.getTranslatedName(),
                                 new TextRenderSetting(
-                                        width - 10,
+                                        width - 15,
                                         CommonColors.WHITE,
                                         FontRenderer.TextAlignment.LEFT_ALIGNED,
                                         FontRenderer.TextShadow.OUTLINE)),
@@ -105,7 +105,7 @@ public class FeatureEntry extends FeatureListEntryBase {
     public int getRenderHeight() {
         return (int) FontRenderer.getInstance()
                         .calculateRenderHeight(
-                                List.of(this.feature.getTranslatedName()), featureList.getRowWidth() - 10)
+                                List.of(this.feature.getTranslatedName()), featureList.getRowWidth() - 15)
                 / FontRenderer.getInstance().getFont().lineHeight
                 * FeatureEntry.getItemHeight();
     }
