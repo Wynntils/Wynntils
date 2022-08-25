@@ -259,5 +259,4 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
-
 }
