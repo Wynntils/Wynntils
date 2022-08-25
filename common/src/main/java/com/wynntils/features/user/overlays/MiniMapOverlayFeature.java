@@ -26,6 +26,7 @@ import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.renderer.GameRenderer;
@@ -37,6 +38,8 @@ public class MiniMapOverlayFeature extends UserFeature {
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
     public static class MiniMapOverlay extends Overlay {
+
+        private static final int DEFAULT_SIZE = 150;
 
         @Config
         public float scale = 1f;
@@ -50,6 +53,9 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Config
         public MapMaskType maskType = MapMaskType.Rectangular;
 
+        @Config
+        public MapBorderType borderType = MapBorderType.Wynn;
+
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
@@ -58,7 +64,7 @@ public class MiniMapOverlayFeature extends UserFeature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
-                    new GuiScaledOverlaySize(150, 150));
+                    new GuiScaledOverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
         }
 
         @Override
@@ -81,9 +87,7 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // enable mask
             switch (maskType) {
-                case Rectangular -> {
-                    RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                }
+                case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
                     // case Circle -> {
                     // TODO
                     // }
@@ -106,9 +110,7 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // disable mask
             switch (maskType) {
-                case Rectangular -> {
-                    RenderSystem.disableScissor();
-                }
+                case Rectangular -> RenderSystem.disableScissor();
                     // case Circle -> {
                     // TODO
                     // }
@@ -116,7 +118,11 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO cursor
 
-            // TODO Border rendering
+            // render border
+            switch (maskType) {
+                case Rectangular -> renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
+                    // case Circle -> renderCircularMapBorder();
+            }
 
             // TODO Directional Text
 
@@ -134,6 +140,80 @@ public class MiniMapOverlayFeature extends UserFeature {
                     (float) StrictMath.cos(
                             -Math.toRadians(180 - McUtils.player().getYRot()) / 2)));
             poseStack.translate(-centerX, -centerZ, 0);
+        }
+
+        // TODO move most of the buffer builder code into RenderUtils, maybe separate each map border into different
+        // files to avoid insanity involving tx1/ty1/tx2/ty2 + remove magic constant
+        private void renderRectangularMapBorder(
+                PoseStack poseStack, float renderX, float renderY, float width, float height) {
+            Texture texture = null;
+            int grooves = 0;
+            int tx1 = 0;
+            int ty1 = 0;
+            int tx2 = 0;
+            int ty2 = 0;
+
+            switch (borderType) {
+                case Wynn -> {
+                    texture = Texture.WYNN_MAP_TEXTURES;
+                    grooves = 3;
+
+                    tx2 = 112;
+                    ty2 = 112;
+                }
+                case Gilded -> {
+                    texture = Texture.GILDED_MAP_TEXTURES;
+                    grooves = 1;
+
+                    ty1 = 262; // not 0 for some reason
+                    tx2 = 262;
+                    ty2 = 524;
+                }
+                case Paper -> {
+                    texture = Texture.PAPER_MAP_TEXTURES;
+                    grooves = 3;
+
+                    tx2 = 217;
+                    ty2 = 217;
+                }
+            }
+
+            float uScale = 1f / texture.width();
+            float vScale = 1f / texture.height();
+
+            // Scale to stay the same.
+            float groovesWidth = grooves * width / DEFAULT_SIZE;
+            float groovesHeight = grooves * height / DEFAULT_SIZE;
+
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, texture.resource());
+
+            Matrix4f matrix = poseStack.last().pose();
+
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferBuilder
+                    .vertex(matrix, (renderX - groovesWidth), (renderY + height + groovesHeight), 0)
+                    .uv((tx1) * uScale, (ty2) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, (renderX + width + groovesWidth), (renderY + height + groovesHeight), 0)
+                    .uv((tx2) * uScale, (ty2) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, (renderX + width + groovesWidth), (renderY - groovesHeight), 0)
+                    .uv((tx2) * uScale, (ty1) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, (renderX - groovesWidth), (renderY - groovesHeight), 0)
+                    .uv((tx1) * uScale, (ty1) * vScale)
+                    .endVertex();
+            bufferBuilder.end();
+            BufferUploader.end(bufferBuilder);
+        }
+
+        private void renderCircularMapBorder(float renderX, float renderY, float width, float height) {
+            // TODO
         }
 
         private void renderMapQuad(
@@ -207,6 +287,12 @@ public class MiniMapOverlayFeature extends UserFeature {
 
     public enum MapMaskType {
         Rectangular,
-        // Circle;
+        // Circle
+    }
+
+    public enum MapBorderType {
+        Wynn,
+        Gilded,
+        Paper
     }
 }
