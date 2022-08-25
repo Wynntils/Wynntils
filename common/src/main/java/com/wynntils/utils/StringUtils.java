@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
@@ -96,5 +97,29 @@ public final class StringUtils {
             // will not happen since UTF-8 is part of core charsets
             return null;
         }
+    }
+
+    /**
+     * Matches a string to a specific search term
+     */
+    public static boolean partialMatch(String toMatch, String searchTerm) {
+        searchTerm = searchTerm.toLowerCase(Locale.ROOT);
+        toMatch = toMatch.toLowerCase(Locale.ROOT);
+
+        int lastMatchIndex = 0;
+
+        for (int i = 0; i < searchTerm.length(); i++) {
+            char currentChar = searchTerm.charAt(i);
+
+            int indexOfFirstMatch = toMatch.indexOf(currentChar, lastMatchIndex);
+
+            if (indexOfFirstMatch == -1) {
+                return false;
+            }
+
+            lastMatchIndex = indexOfFirstMatch;
+        }
+
+        return true;
     }
 }

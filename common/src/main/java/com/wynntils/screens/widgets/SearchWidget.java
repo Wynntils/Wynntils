@@ -87,7 +87,7 @@ public class SearchWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        if (Character.isLetterOrDigit(codePoint)) {
+        if (Character.isLetterOrDigit(codePoint) || codePoint == GLFW.GLFW_KEY_SPACE) {
             if (searchText == null) {
                 searchText = "";
             }

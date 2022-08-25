@@ -14,10 +14,10 @@ import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.lists.entries.FeatureCategoryEntry;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
 import com.wynntils.screens.settings.lists.entries.FeatureListEntryBase;
+import com.wynntils.utils.StringUtils;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
-import org.apache.commons.lang3.StringUtils;
 
 public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBase> {
     private final WynntilsSettingsScreen settingsScreen;
@@ -151,7 +151,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         String lastCategory = "";
 
         for (Feature feature : FeatureRegistry.getFeatures().stream()
-                .filter(feature -> StringUtils.containsIgnoreCase(feature.getTranslatedName(), searchText))
+                .filter(feature -> StringUtils.partialMatch(feature.getTranslatedName(), searchText))
                 .sorted(Feature::compareTo)
                 .toList()) {
             if (!Objects.equals(lastCategory, feature.getCategory())) {
