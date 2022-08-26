@@ -5,33 +5,34 @@
 package com.wynntils.screens.settings.entries;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.RenderUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 
 public final class FeatureSettingWidget extends AbstractWidget {
+    private static final CustomColor BORDER_COLOR = new CustomColor(86, 75, 61, 255);
+    private static final CustomColor FOREGROUND_COLOR = new CustomColor(177, 152, 120, 255);
+
     public FeatureSettingWidget(int x, int y, int width, int height) {
         super(x, y, width, height, new TextComponent("Feature Setting Widget"));
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        //        RenderUtils.drawRectBorders(poseStack, CommonColors.WHITE, this.x, this.y, this.x + this.width, this.y
-        // + this.height, 0, 2);
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
-                CommonColors.WHITE,
-                CommonColors.BLACK,
-                this.x,
-                this.y,
+                BORDER_COLOR,
+                FOREGROUND_COLOR,
+                this.x + 2,
+                this.y + 2,
                 0,
-                this.width,
-                this.height,
+                this.width - 4,
+                this.height - 4,
                 2,
-                8,
-                10);
+                6,
+                8);
     }
 
     @Override
