@@ -342,7 +342,7 @@ public final class RenderUtils {
 
     public static void drawArc(
             CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius);
+        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius, 0);
     }
 
     public static void drawArc(
@@ -353,7 +353,8 @@ public final class RenderUtils {
             float z,
             float fill,
             int innerRadius,
-            int outerRadius) {
+            int outerRadius,
+            float angleOffset) {
         // keeps arc from overlapping itself
         int segments = (int) Math.min(fill * MAX_CIRCLE_STEPS, MAX_CIRCLE_STEPS - 1);
         float midX = x + outerRadius;
@@ -371,7 +372,7 @@ public final class RenderUtils {
         float sinAngle;
         float cosAngle;
         for (int i = 0; i <= segments; i++) {
-            angle = Mth.TWO_PI * i / (MAX_CIRCLE_STEPS - 1f);
+            angle = Mth.TWO_PI * i / (MAX_CIRCLE_STEPS - 1f) + angleOffset;
             sinAngle = Mth.sin(angle);
             cosAngle = Mth.cos(angle);
 
@@ -430,11 +431,14 @@ public final class RenderUtils {
         drawLine(poseStack, borderColor, x, y + offset, x, y2 - offset, z, lineWidth);
 
         // Corners
+        poseStack.pushPose();
+        poseStack.translate(-1, -1, 0);
         drawRoundedCorner(poseStack, borderColor, x, y, z, innerRadius, outerRadius, Mth.HALF_PI * 3);
         drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 2);
         drawRoundedCorner(
                 poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 1);
         drawRoundedCorner(poseStack, borderColor, x2 - offset * 2, y, z, innerRadius, outerRadius, 0);
+        poseStack.popPose();
     }
 
     private static void drawRoundedCorner(
@@ -446,40 +450,7 @@ public final class RenderUtils {
             int innerRadius,
             int outerRadius,
             float angleOffset) {
-        // keeps half round from overlapping itself
-        final int segments = 4;
-        float midX = x + outerRadius - 1;
-        float midY = y + outerRadius - 1;
-        Matrix4f matrix = poseStack.last().pose();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-
-        bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-
-        float angle;
-        float sinAngle;
-        float cosAngle;
-        for (int i = 0; i <= segments; i++) {
-            angle = Mth.TWO_PI * i / (MAX_CIRCLE_STEPS - 1f) + angleOffset;
-            sinAngle = Mth.sin(angle);
-            cosAngle = Mth.cos(angle);
-
-            bufferBuilder
-                    .vertex(matrix, midX + sinAngle * outerRadius, midY - cosAngle * outerRadius, z)
-                    .color(color.r, color.g, color.b, color.a)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, midX + sinAngle * innerRadius, midY - cosAngle * innerRadius, z)
-                    .color(color.r, color.g, color.b, color.a)
-                    .endVertex();
-        }
-
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
-        RenderSystem.disableBlend();
+        drawArc(poseStack, color, x, y, z, 0.25f, innerRadius, outerRadius, angleOffset);
     }
 
     public static void drawTooltip(
