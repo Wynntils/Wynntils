@@ -390,6 +390,98 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
+    public static void drawRoundedRectWithBorder(
+            PoseStack poseStack,
+            CustomColor borderColor,
+            CustomColor fillColor,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float lineWidth,
+            int innerRadius,
+            int outerRadius) {
+
+        float x2 = x + width;
+        float y2 = y + height;
+
+        // Fill the rect
+        final int fillOffset = (int) lineWidth;
+        drawRect(
+                poseStack,
+                fillColor,
+                x + fillOffset,
+                y + fillOffset,
+                z,
+                width - fillOffset * 2,
+                height - fillOffset * 2);
+        drawLine(poseStack, fillColor, x + fillOffset, y + fillOffset, x2 - fillOffset, y + fillOffset, z, lineWidth);
+        drawLine(poseStack, fillColor, x2 - fillOffset, y + fillOffset, x2 - fillOffset, y2 - fillOffset, z, lineWidth);
+        drawLine(poseStack, fillColor, x + fillOffset, y2 - fillOffset, x2 - fillOffset, y2 - fillOffset, z, lineWidth);
+        drawLine(poseStack, fillColor, x + fillOffset, y + fillOffset, x + fillOffset, y2 - fillOffset, z, lineWidth);
+
+        float offset = outerRadius - 1;
+
+        // Edges
+        drawLine(poseStack, borderColor, x + offset, y, x2 - offset, y, z, lineWidth);
+        drawLine(poseStack, borderColor, x2, y + offset, x2, y2 - offset, z, lineWidth);
+        drawLine(poseStack, borderColor, x + offset, y2, x2 - offset, y2, z, lineWidth);
+        drawLine(poseStack, borderColor, x, y + offset, x, y2 - offset, z, lineWidth);
+
+        // Corners
+        drawRoundedCorner(poseStack, borderColor, x, y, z, innerRadius, outerRadius, Mth.HALF_PI * 3);
+        drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 2);
+        drawRoundedCorner(
+                poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 1);
+        drawRoundedCorner(poseStack, borderColor, x2 - offset * 2, y, z, innerRadius, outerRadius, 0);
+    }
+
+    private static void drawRoundedCorner(
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            int innerRadius,
+            int outerRadius,
+            float angleOffset) {
+        // keeps half round from overlapping itself
+        final int segments = 4;
+        float midX = x + outerRadius - 1;
+        float midY = y + outerRadius - 1;
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+
+        bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+
+        float angle;
+        float sinAngle;
+        float cosAngle;
+        for (int i = 0; i <= segments; i++) {
+            angle = Mth.TWO_PI * i / (MAX_CIRCLE_STEPS - 1f) + angleOffset;
+            sinAngle = Mth.sin(angle);
+            cosAngle = Mth.cos(angle);
+
+            bufferBuilder
+                    .vertex(matrix, midX + sinAngle * outerRadius, midY - cosAngle * outerRadius, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, midX + sinAngle * innerRadius, midY - cosAngle * innerRadius, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
+        RenderSystem.disableBlend();
+    }
+
     public static void drawTooltip(
             PoseStack poseStack, List<Component> componentLines, Font font, boolean firstLineHasPlusHeight) {
         List<ClientTooltipComponent> lines = componentToClientTooltipComponent(componentLines);

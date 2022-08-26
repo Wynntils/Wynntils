@@ -10,6 +10,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.settings.entries.FeatureSettingWidget;
 import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.widgets.SearchWidget;
 import net.minecraft.client.Minecraft;
@@ -33,6 +34,7 @@ public class WynntilsSettingsScreen extends Screen {
     private FeatureList featureList;
 
     private SearchWidget searchWidget;
+    private FeatureSettingWidget featureSettingWidget;
 
     public WynntilsSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
@@ -58,7 +60,11 @@ public class WynntilsSettingsScreen extends Screen {
                 SEARCH_BAR_HEIGHT,
                 newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
 
+        this.featureSettingWidget = new FeatureSettingWidget(
+                this.width / 5, (int) this.BAR_HEIGHT, this.width / 5 * 4, (int) (this.height - this.BAR_HEIGHT * 2));
+
         this.addRenderableWidget(this.searchWidget);
+        this.addRenderableWidget(this.featureSettingWidget);
 
         this.setFocused(searchWidget);
     }
