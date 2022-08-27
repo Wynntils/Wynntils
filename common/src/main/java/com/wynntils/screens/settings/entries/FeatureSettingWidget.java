@@ -34,6 +34,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
         poseStack.translate(this.x, this.y, 0);
 
         renderBackground(poseStack);
+        renderScrollbar(poseStack);
 
         Feature selectedFeature = settingsScreen.getSelectedFeature();
         if (selectedFeature == null) return;
@@ -51,6 +52,17 @@ public final class FeatureSettingWidget extends AbstractWidget {
                         FontRenderer.TextShadow.OUTLINE);
 
         poseStack.popPose();
+    }
+
+    private void renderScrollbar(PoseStack poseStack) {
+        final float biggerWidth = this.width / 70f;
+        final float smallerWidth = this.width / 140f;
+
+        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, 10, 9, 0, biggerWidth, this.height - 18);
+
+        float offset = (biggerWidth - smallerWidth) / 2;
+
+        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, 10 + offset, 6, 0, smallerWidth, this.height - 12);
     }
 
     private void renderBackground(PoseStack poseStack) {
