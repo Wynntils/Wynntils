@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -74,6 +73,7 @@ public class MiniMapOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WebManager.isMapLoaded()) return;
 
+            // TODO replace with generalized maps whenever that is done
             MapProfile map = WebManager.getMaps().get(0);
 
             float width = getWidth();
@@ -99,7 +99,7 @@ public class MiniMapOverlayFeature extends UserFeature {
             // enable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.pushPose();
-                rotateMap(poseStack, centerX, centerZ, 180 - yRot);
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - yRot);
             }
 
             renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
@@ -116,7 +116,7 @@ public class MiniMapOverlayFeature extends UserFeature {
             // cursor
             if (!followPlayerRotation) {
                 poseStack.pushPose();
-                rotateMap(poseStack, centerX, centerZ, 180 + yRot);
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + yRot);
             }
 
             // TODO cursor color?
@@ -157,14 +157,6 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         }
 
-        private void rotateMap(PoseStack poseStack, float centerX, float centerZ, float angle) {
-            poseStack.translate(centerX, centerZ, 0);
-            // See Quaternion#fromXYZ
-            poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
-                    StrictMath.cos(-Math.toRadians(angle) / 2)));
-            poseStack.translate(-centerX, -centerZ, 0);
-        }
-
         private void renderRectangularMapBorder(
                 PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
@@ -174,17 +166,12 @@ public class MiniMapOverlayFeature extends UserFeature {
             int tx2 = borderType.tx2();
             int ty2 = borderType.ty2();
 
-            float uScale = 1f / texture.width();
-            float vScale = 1f / texture.height();
-
             // Scale to stay the same.
             float groovesWidth = grooves * width / DEFAULT_SIZE;
             float groovesHeight = grooves * height / DEFAULT_SIZE;
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, texture.resource());
-
-            Matrix4f matrix = poseStack.last().pose();
 
             // TODO remove int casts with settings pr merge
             RenderUtils.drawTexturedRect(
