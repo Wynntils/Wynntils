@@ -56,6 +56,9 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Config
         public MapBorderType borderType = MapBorderType.Wynn;
 
+        @Config
+        public PointerType pointerType = PointerType.ARROW;
+
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
@@ -83,7 +86,7 @@ public class MiniMapOverlayFeature extends UserFeature {
             float textureX = map.getTextureXPosition(McUtils.player().getX());
             float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
-            // Render Minimap
+            float yRot = McUtils.player().getYRot();
 
             // enable mask
             switch (maskType) {
@@ -93,13 +96,15 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
+            // enable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.pushPose();
-                rotateMapToPlayer(poseStack, centerX, centerZ);
+                rotateMap(poseStack, centerX, centerZ, 180 - yRot);
             }
 
             renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
 
+            // disable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.popPose();
             }
@@ -108,7 +113,31 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO compass icon
 
-            // TODO cursor
+            // cursor
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                rotateMap(poseStack, centerX, centerZ, 180 + yRot);
+            }
+
+            // TODO cursor color?
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    Texture.MAP_POINTERS.resource(),
+                    (int) (centerX - pointerType.width / 2),
+                    (int) (centerZ - pointerType.height / 2),
+                    0,
+                    pointerType.width,
+                    pointerType.height,
+                    0,
+                    pointerType.textureY,
+                    pointerType.width,
+                    pointerType.height,
+                    Texture.MAP_POINTERS.width(),
+                    Texture.MAP_POINTERS.height());
+
+            if (!followPlayerRotation) {
+                poseStack.popPose();
+            }
 
             // disable mask & render border
             switch (maskType) {
@@ -128,15 +157,11 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         }
 
-        private void rotateMapToPlayer(PoseStack poseStack, float centerX, float centerZ) {
+        private void rotateMap(PoseStack poseStack, float centerX, float centerZ, float angle) {
             poseStack.translate(centerX, centerZ, 0);
             // See Quaternion#fromXYZ
-            poseStack.mulPose(new Quaternion(
-                    0F,
-                    0,
-                    (float) StrictMath.sin(Math.toRadians(180 - McUtils.player().getYRot()) / 2),
-                    (float) StrictMath.cos(
-                            -Math.toRadians(180 - McUtils.player().getYRot()) / 2)));
+            poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
+                    StrictMath.cos(-Math.toRadians(angle) / 2)));
             poseStack.translate(-centerX, -centerZ, 0);
         }
 
