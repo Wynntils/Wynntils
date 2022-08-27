@@ -27,7 +27,7 @@ public class WynntilsSettingsScreen extends Screen {
     private static final int BUTTON_WIDTH = 160;
     private static final int BUTTON_HEIGHT = 20;
     private static final int SEARCH_BAR_HEIGHT = 20;
-    private final float BAR_HEIGHT = 30f;
+    private static final float BAR_HEIGHT = 30f;
 
     private static final CustomColor BACKGROUND_COLOR = new CustomColor(56, 42, 27, 255);
     private static final CustomColor FOREGROUND_COLOR = new CustomColor(126, 111, 83, 255);
