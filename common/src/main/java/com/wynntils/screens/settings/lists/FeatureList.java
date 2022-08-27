@@ -18,10 +18,12 @@ import com.wynntils.screens.settings.lists.entries.FeatureListEntryBase;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
+import org.apache.logging.log4j.util.TriConsumer;
 
 public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBase> {
     private final WynntilsSettingsScreen settingsScreen;
@@ -62,36 +64,19 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     @Override
     protected void renderList(PoseStack poseStack, int x, int y, int mouseX, int mouseY, float partialTick) {
-        int itemCount = this.getItemCount();
-
-        int heightOffset = 0;
-        int renderedCount = 0;
-
-        for (int i = 0; i < itemCount; i++) {
-            FeatureListEntryBase entry = this.getEntry(i);
-
-            int renderHeight = entry.getRenderHeight();
-
-            int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
-            int bottom = top + renderHeight;
-
-            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
-
-            entry.render(
+        iterateOnRenderedEntries((featureListEntryBase, index, top) -> {
+            featureListEntryBase.render(
                     poseStack,
-                    i,
+                    index,
                     top + 1,
                     this.getRowLeft(),
                     this.getRowWidth(),
-                    renderHeight,
+                    featureListEntryBase.getRenderHeight(),
                     mouseX,
                     mouseY,
-                    Objects.equals(this.getHovered(), entry),
+                    Objects.equals(this.getHovered(), featureListEntryBase),
                     partialTick);
-
-            heightOffset += renderHeight;
-            renderedCount++;
-        }
+        });
     }
 
     @Override
@@ -123,32 +108,17 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     @Override
     protected FeatureListEntryBase getEntryAtPosition(double mouseX, double mouseY) {
-        if (mouseX > getRenderWidth()) return null;
+        AtomicReference<FeatureEntry> returnValue = new AtomicReference<>(null);
 
-        int itemCount = this.getItemCount();
-
-        int heightOffset = 0;
-        int renderedCount = 0;
-
-        for (int i = 0; i < itemCount; i++) {
-            FeatureListEntryBase entry = this.getEntry(i);
-
-            int renderHeight = entry.getRenderHeight();
-
-            int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
-            int bottom = top + renderHeight;
-
-            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
-
-            if (entry instanceof FeatureEntry && top <= mouseY && bottom >= mouseY) {
-                return entry;
+        iterateOnRenderedEntries((entry, index, top) -> {
+            if (entry instanceof FeatureEntry featureEntry
+                    && top <= mouseY
+                    && top + entry.getRenderHeight() >= mouseY) {
+                returnValue.set(featureEntry);
             }
+        });
 
-            heightOffset += renderHeight;
-            renderedCount++;
-        }
-
-        return null;
+        return returnValue.get();
     }
 
     @Override
@@ -298,6 +268,29 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     private float getScrollButtonXPos() {
         return settingsScreen.width / 5.515f;
+    }
+
+    private void iterateOnRenderedEntries(TriConsumer<FeatureListEntryBase, Integer, Integer> consumer) {
+        int itemCount = this.getItemCount();
+
+        int heightOffset = 0;
+        int renderedCount = 0;
+
+        for (int i = 0; i < itemCount; i++) {
+            FeatureListEntryBase entry = this.getEntry(i);
+
+            int renderHeight = entry.getRenderHeight();
+
+            int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
+            int bottom = top + renderHeight;
+
+            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
+
+            consumer.accept(entry, i, top);
+
+            heightOffset += renderHeight;
+            renderedCount++;
+        }
     }
 
     public void reAddEntriesWithSearchFilter(String searchText) {

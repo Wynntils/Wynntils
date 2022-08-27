@@ -20,7 +20,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private static final CustomColor FOREGROUND_COLOR = new CustomColor(177, 152, 120, 255);
     private static final CustomColor SCROLLBAR_COLOR = new CustomColor(137, 117, 92, 255);
 
-    private WynntilsSettingsScreen settingsScreen;
+    private final WynntilsSettingsScreen settingsScreen;
 
     public FeatureSettingWidget(int x, int y, int width, int height, WynntilsSettingsScreen settingsScreen) {
         super(x, y, width, height, new TextComponent("Feature Setting Widget"));
