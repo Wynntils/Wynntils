@@ -18,6 +18,7 @@ import net.minecraft.network.chat.TextComponent;
 public final class FeatureSettingWidget extends AbstractWidget {
     private static final CustomColor BORDER_COLOR = new CustomColor(86, 75, 61, 255);
     private static final CustomColor FOREGROUND_COLOR = new CustomColor(177, 152, 120, 255);
+    private static final CustomColor SCROLLBAR_COLOR = new CustomColor(137, 117, 92, 255);
 
     private WynntilsSettingsScreen settingsScreen;
 
@@ -55,6 +56,12 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private void renderBackground(PoseStack poseStack) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 2, 2, 0, this.width - 4, this.height - 4, 2, 6, 8);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.onClick(mouseX, mouseY);
+        return true;
     }
 
     @Override

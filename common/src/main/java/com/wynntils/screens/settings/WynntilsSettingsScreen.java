@@ -14,6 +14,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.settings.entries.FeatureSettingWidget;
 import com.wynntils.screens.settings.lists.FeatureList;
+import com.wynntils.screens.settings.lists.entries.FeatureEntry;
 import com.wynntils.screens.widgets.SearchWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -33,7 +34,7 @@ public class WynntilsSettingsScreen extends Screen {
 
     private final Screen lastScreen;
 
-    private Feature selectedFeature;
+    private FeatureEntry selectedFeatureEntry;
 
     private FeatureList featureList;
 
@@ -189,11 +190,15 @@ public class WynntilsSettingsScreen extends Screen {
         return BAR_HEIGHT;
     }
 
-    public Feature getSelectedFeature() {
-        return selectedFeature;
+    public FeatureEntry getSelectedFeatureEntry() {
+        return selectedFeatureEntry;
     }
 
-    public void setSelectedFeature(Feature selectedFeature) {
-        this.selectedFeature = selectedFeature;
+    public Feature getSelectedFeature() {
+        return selectedFeatureEntry == null ? null : selectedFeatureEntry.getFeature();
+    }
+
+    public void setSelectedFeature(FeatureEntry selectedFeatureEntry) {
+        this.selectedFeatureEntry = selectedFeatureEntry;
     }
 }

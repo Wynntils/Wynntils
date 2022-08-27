@@ -20,6 +20,7 @@ import com.wynntils.utils.StringUtils;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 
 public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBase> {
@@ -211,8 +212,8 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         FeatureListEntryBase hovered = this.getHovered();
 
         if (hovered instanceof FeatureEntry featureEntry) {
-            McUtils.player().playSound(SoundEvents.UI_BUTTON_CLICK, 1f, 1f);
-            settingsScreen.setSelectedFeature(featureEntry.getFeature());
+            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            settingsScreen.setSelectedFeature(featureEntry);
             return false;
         }
 
@@ -236,6 +237,26 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         draggingScrollButton = false;
 
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public FeatureListEntryBase getSelected() {
+        return settingsScreen.getSelectedFeatureEntry();
+    }
+
+    @Override
+    public void setSelected(FeatureListEntryBase selected) {
+        if (selected instanceof FeatureEntry featureEntry) {
+            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            settingsScreen.setSelectedFeature(featureEntry);
+        }
+
+        super.setSelected(selected);
+    }
+
+    @Override
+    protected void moveSelection(SelectionDirection ordering) {
+        this.moveSelection(ordering, (entry) -> entry instanceof FeatureEntry);
     }
 
     private void renderScrollButton(PoseStack poseStack) {
