@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -49,8 +50,10 @@ public class FeatureCategoryEntry extends FeatureListEntryBase {
                         0,
                         width,
                         0,
+                        ITEM_HEIGHT,
                         width - 10,
                         CommonColors.WHITE,
+                        VerticalAlignment.Middle,
                         FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
 

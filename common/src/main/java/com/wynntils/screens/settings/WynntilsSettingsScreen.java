@@ -88,17 +88,23 @@ public class WynntilsSettingsScreen extends Screen {
         // Re-render the bottom bar again, so overlaying buttons are not displayed
         RenderUtils.drawRect(poseStack, FOREGROUND_COLOR, 0, this.height - BAR_HEIGHT, 0, this.width, BAR_HEIGHT);
 
+        poseStack.pushPose();
+
+        poseStack.translate(this.width / 90f, 0, 0);
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         I18n.get("screens.wynntils.settingsScreen.featureList"),
                         0,
-                        this.width / 5f,
+                        this.width / 6f,
                         BAR_HEIGHT + 7.5f,
                         0,
                         CommonColors.WHITE,
                         FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
+
+        poseStack.popPose();
 
         super.render(poseStack, mouseX, mouseY, partialTick);
     }
