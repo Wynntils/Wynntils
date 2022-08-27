@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
@@ -15,6 +16,7 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.lists.FeatureList;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -25,10 +27,12 @@ public class FeatureEntry extends FeatureListEntryBase {
 
     private final Feature feature;
     private final FeatureList featureList;
+    private final WynntilsSettingsScreen settingsScreen;
 
-    public FeatureEntry(Feature feature, FeatureList featureList) {
+    public FeatureEntry(Feature feature, FeatureList featureList, WynntilsSettingsScreen settingsScreen) {
         this.feature = feature;
         this.featureList = featureList;
+        this.settingsScreen = settingsScreen;
     }
 
     @Override
@@ -68,6 +72,9 @@ public class FeatureEntry extends FeatureListEntryBase {
                 Texture.FEATURE_BUTTON.width(),
                 Texture.FEATURE_BUTTON.height());
 
+        CustomColor textColor = this.getFeature() == settingsScreen.getSelectedFeature()
+                ? CommonColors.LIGHT_GREEN
+                : CommonColors.WHITE;
         FontRenderer.getInstance()
                 .renderTextWithAlignment(
                         poseStack,
@@ -77,7 +84,7 @@ public class FeatureEntry extends FeatureListEntryBase {
                                 this.feature.getTranslatedName(),
                                 new TextRenderSetting(
                                         width - 15,
-                                        CommonColors.WHITE,
+                                        textColor,
                                         FontRenderer.TextAlignment.LEFT_ALIGNED,
                                         FontRenderer.TextShadow.OUTLINE)),
                         width,

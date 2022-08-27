@@ -5,6 +5,8 @@
 package com.wynntils.screens.settings;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
@@ -31,6 +33,8 @@ public class WynntilsSettingsScreen extends Screen {
 
     private final Screen lastScreen;
 
+    private Feature selectedFeature;
+
     private FeatureList featureList;
 
     private SearchWidget searchWidget;
@@ -46,12 +50,20 @@ public class WynntilsSettingsScreen extends Screen {
         featureList = new FeatureList(this);
 
         this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH / 2,
+                this.width / 2 - BUTTON_WIDTH - 5,
                 this.height - BUTTON_HEIGHT - 5,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.settingsScreen.close"),
-                button -> McUtils.mc().setScreen(lastScreen)));
+                this::exitWithoutSaving));
+
+        this.addRenderableWidget(new Button(
+                this.width / 2 + 5,
+                this.height - BUTTON_HEIGHT - 5,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                new TranslatableComponent("screens.wynntils.settingsScreen.apply"),
+                this::saveAndExit));
 
         this.searchWidget = new SearchWidget(
                 this.width / 90,
@@ -61,7 +73,11 @@ public class WynntilsSettingsScreen extends Screen {
                 newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
 
         this.featureSettingWidget = new FeatureSettingWidget(
-                this.width / 5, (int) this.BAR_HEIGHT, this.width / 5 * 4, (int) (this.height - this.BAR_HEIGHT * 2));
+                this.width / 5,
+                (int) this.BAR_HEIGHT,
+                this.width / 5 * 4,
+                (int) (this.height - this.BAR_HEIGHT * 2),
+                this);
 
         this.addRenderableWidget(this.searchWidget);
         this.addRenderableWidget(this.featureSettingWidget);
@@ -156,7 +172,28 @@ public class WynntilsSettingsScreen extends Screen {
         return featureList.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    private void saveAndExit(Button button) {
+        ConfigManager.saveConfig();
+
+        McUtils.mc().setScreen(this.lastScreen);
+    }
+
+    private void exitWithoutSaving(Button button) {
+        ConfigManager.loadConfigFile();
+        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+
+        McUtils.mc().setScreen(this.lastScreen);
+    }
+
     public float getBarHeight() {
         return BAR_HEIGHT;
+    }
+
+    public Feature getSelectedFeature() {
+        return selectedFeature;
+    }
+
+    public void setSelectedFeature(Feature selectedFeature) {
+        this.selectedFeature = selectedFeature;
     }
 }

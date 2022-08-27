@@ -20,6 +20,7 @@ import com.wynntils.utils.StringUtils;
 import java.util.Objects;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.sounds.SoundEvents;
 
 public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBase> {
     private final WynntilsSettingsScreen settingsScreen;
@@ -68,12 +69,12 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         for (int i = 0; i < itemCount; i++) {
             FeatureListEntryBase entry = this.getEntry(i);
 
+            int renderHeight = entry.getRenderHeight();
+
             int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
-            int bottom = top + this.itemHeight;
+            int bottom = top + renderHeight;
 
             if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
-
-            int renderHeight = entry.getRenderHeight();
 
             entry.render(
                     poseStack,
@@ -94,7 +95,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     @Override
     protected void renderBackground(PoseStack poseStack) {
-        float width = settingsScreen.width / 5f;
+        float width = getRenderWidth();
         float height = getRenderHeight();
         RenderUtils.drawTexturedRect(
                 poseStack,
@@ -110,6 +111,43 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 Texture.FEATURE_LIST_BACKGROUND.height(),
                 Texture.FEATURE_LIST_BACKGROUND.width(),
                 Texture.FEATURE_LIST_BACKGROUND.height());
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return mouseX <= getRenderWidth()
+                && mouseY >= this.settingsScreen.getBarHeight()
+                && mouseY <= this.settingsScreen.getBarHeight() + this.height;
+    }
+
+    @Override
+    protected FeatureListEntryBase getEntryAtPosition(double mouseX, double mouseY) {
+        if (mouseX > getRenderWidth()) return null;
+
+        int itemCount = this.getItemCount();
+
+        int heightOffset = 0;
+        int renderedCount = 0;
+
+        for (int i = 0; i < itemCount; i++) {
+            FeatureListEntryBase entry = this.getEntry(i);
+
+            int renderHeight = entry.getRenderHeight();
+
+            int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
+            int bottom = top + renderHeight;
+
+            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
+
+            if (entry instanceof FeatureEntry && top <= mouseY && bottom >= mouseY) {
+                return entry;
+            }
+
+            heightOffset += renderHeight;
+            renderedCount++;
+        }
+
+        return null;
     }
 
     @Override
@@ -164,6 +202,20 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
             return false;
         }
 
+        // Update hovered
+        // (this is usually done in super.render,
+        // but we do not call that this case, and this way,
+        // we do not calculate it when we do not use it)
+        this.hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
+
+        FeatureListEntryBase hovered = this.getHovered();
+
+        if (hovered instanceof FeatureEntry featureEntry) {
+            McUtils.player().playSound(SoundEvents.UI_BUTTON_CLICK, 1f, 1f);
+            settingsScreen.setSelectedFeature(featureEntry.getFeature());
+            return false;
+        }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -212,6 +264,10 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         return settingsScreen.height - settingsScreen.getBarHeight() * 2;
     }
 
+    private float getRenderWidth() {
+        return settingsScreen.width / 5f;
+    }
+
     private float getScrollButtonYPos() {
         float height = getRenderHeight();
 
@@ -252,7 +308,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 renderHeight += entry.getRenderHeight();
             }
 
-            FeatureEntry entry = new FeatureEntry(feature, this);
+            FeatureEntry entry = new FeatureEntry(feature, this, this.settingsScreen);
             this.addEntry(entry);
             renderHeight += entry.getRenderHeight();
         }
