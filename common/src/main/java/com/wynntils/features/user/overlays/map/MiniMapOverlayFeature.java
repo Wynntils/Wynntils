@@ -57,7 +57,7 @@ public class MiniMapOverlayFeature extends UserFeature {
         public MapBorderType borderType = MapBorderType.Wynn;
 
         @Config
-        public PointerType pointerType = PointerType.ARROW;
+        public PointerType pointerType = PointerType.Arrow;
 
         public MiniMapOverlay() {
             super(
