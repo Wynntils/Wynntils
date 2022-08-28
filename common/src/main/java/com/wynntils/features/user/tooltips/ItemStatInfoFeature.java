@@ -7,12 +7,13 @@ package com.wynntils.features.user.tooltips;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 
-@FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
+@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     @Config
     public static boolean showStars = true;

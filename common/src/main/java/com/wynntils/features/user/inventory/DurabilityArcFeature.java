@@ -7,6 +7,7 @@ package com.wynntils.features.user.inventory;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
@@ -22,7 +23,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = "Inventory")
+@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
     @Config
     public static boolean renderDurabilityArcInventories = true;
