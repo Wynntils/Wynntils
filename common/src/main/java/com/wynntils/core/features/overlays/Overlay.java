@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay implements Translatable, Configurable {
+public abstract class Overlay implements Translatable, Configurable, Comparable<Overlay> {
     private final List<ConfigHolder> configOptions = new ArrayList<>();
 
     @Config(key = "overlay.wynntils.overlay.position")
@@ -228,6 +228,7 @@ public abstract class Overlay implements Translatable, Configurable {
         };
     }
 
+    @Override
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())

@@ -164,6 +164,7 @@ public final class ConfigManager extends CoreManager {
         // feature has no category defined, default to empty category
         if (featureInfo != null) {
             category = featureInfo.category();
+            feature.setCategory(category);
         }
 
         loadFeatureOverlayConfigOptions(category, feature);

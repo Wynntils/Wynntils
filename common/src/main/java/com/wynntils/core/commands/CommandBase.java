@@ -5,8 +5,13 @@
 package com.wynntils.core.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 
 public abstract class CommandBase {
-    public abstract void register(CommandDispatcher<CommandSourceStack> dispatcher);
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(getBaseCommandBuilder());
+    }
+
+    public abstract LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder();
 }

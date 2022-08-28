@@ -4,8 +4,8 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -28,15 +28,15 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 
 public class FunctionCommand extends CommandBase {
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("function")
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("function")
                 .then(this.buildListNode())
                 .then(this.buildEnableNode())
                 .then(this.buildDisableNode())
                 .then(this.buildGetValueNode())
                 .then(this.buildGetValueWithArgumentNode())
                 .then(this.buildHelpNode())
-                .executes(this::syntaxError));
+                .executes(this::syntaxError);
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
