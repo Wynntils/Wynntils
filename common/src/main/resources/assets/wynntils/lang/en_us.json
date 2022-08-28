@@ -1,10 +1,10 @@
 {
-  "core.wynntils.category.uncategorized": "Uncategorized",
   "core.wynntils.category.inventory": "Inventory",
   "core.wynntils.category.overlays": "Overlays",
   "core.wynntils.category.players": "Players",
   "core.wynntils.category.redirects": "Game Notification Redirects",
   "core.wynntils.category.tooltips": "Item Tooltips",
+  "core.wynntils.category.uncategorized": "Uncategorized",
   "feature.wynntils.commands.name": "Custom Wynntils Command Feature",
   "feature.wynntils.connectionProgress.name": "Connection Progress Feature",
   "feature.wynntils.customBarsOverlay.name": "Custom Health/Mana Bar Feature",
