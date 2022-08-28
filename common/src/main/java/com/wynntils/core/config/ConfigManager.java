@@ -161,6 +161,7 @@ public final class ConfigManager extends CoreManager {
     private static List<ConfigHolder> collectConfigOptions(Feature feature) {
         FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
         FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        feature.setCategory(category);
         loadFeatureOverlayConfigOptions(category, feature);
         return getConfigOptions(category, feature);
     }
