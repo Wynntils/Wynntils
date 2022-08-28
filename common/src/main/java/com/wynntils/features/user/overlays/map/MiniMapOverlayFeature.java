@@ -33,7 +33,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public class MiniMapOverlayFeature extends UserFeature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
     public static class MiniMapOverlay extends Overlay {
