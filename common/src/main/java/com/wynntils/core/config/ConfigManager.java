@@ -207,6 +207,7 @@ public final class ConfigManager extends CoreManager {
             if (metadata.visible()) {
                 assert !configHolder.getDisplayName().startsWith("feature.wynntils.");
                 assert !configHolder.getDescription().startsWith("feature.wynntils.");
+                assert !configHolder.getDescription().isEmpty();
             }
             options.add(configHolder);
         }
