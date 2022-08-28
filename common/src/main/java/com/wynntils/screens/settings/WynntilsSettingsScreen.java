@@ -41,6 +41,9 @@ public class WynntilsSettingsScreen extends Screen {
     private SearchWidget searchWidget;
     private FeatureSettingWidget featureSettingWidget;
 
+    private Button exitButton;
+    private Button saveButton;
+
     public WynntilsSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
         lastScreen = McUtils.mc().screen;
@@ -50,21 +53,23 @@ public class WynntilsSettingsScreen extends Screen {
     protected void init() {
         featureList = new FeatureList(this);
 
-        this.addRenderableWidget(new Button(
+        this.exitButton = new Button(
                 this.width / 2 - BUTTON_WIDTH - 5,
                 this.height - BUTTON_HEIGHT - 5,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.settingsScreen.close"),
-                this::exitWithoutSaving));
+                this::exitWithoutSaving);
+        this.addRenderableWidget(this.exitButton);
 
-        this.addRenderableWidget(new Button(
+        this.saveButton = new Button(
                 this.width / 2 + 5,
                 this.height - BUTTON_HEIGHT - 5,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.settingsScreen.apply"),
-                this::saveAndExit));
+                this::saveAndExit);
+        this.addRenderableWidget(this.saveButton);
 
         this.searchWidget = new SearchWidget(
                 this.width / 90,
@@ -166,7 +171,7 @@ public class WynntilsSettingsScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
-            this.onClose();
+            exitWithoutSaving(this.exitButton);
             return true;
         }
 
