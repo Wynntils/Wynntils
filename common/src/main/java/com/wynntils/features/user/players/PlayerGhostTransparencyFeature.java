@@ -6,6 +6,7 @@ package com.wynntils.features.user.players;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
@@ -14,7 +15,7 @@ import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = "Players")
+@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.PLAYERS)
 public class PlayerGhostTransparencyFeature extends UserFeature {
     @Config
     public static float playerGhostTranslucenceLevel = 0.75f;
