@@ -307,8 +307,8 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 .filter(feature -> StringUtils.partialMatch(feature.getTranslatedName(), searchText))
                 .sorted(Feature::compareTo)
                 .toList()) {
-            if (!Objects.equals(lastCategory, feature.getCategory())) {
-                lastCategory = feature.getCategory();
+            if (!Objects.equals(lastCategory, feature.getCategory().toString())) {
+                lastCategory = feature.getCategory().toString();
 
                 FeatureCategoryEntry entry;
 
