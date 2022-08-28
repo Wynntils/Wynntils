@@ -14,8 +14,10 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.screens.settings.ConfigOptionElement;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.screens.settings.elements.BooleanConfigOptionElement;
+import com.wynntils.screens.settings.elements.ConfigOptionElement;
+import com.wynntils.screens.settings.elements.DummyConfigOptionElement;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     private Feature cachedFeature = null;
     private List<ConfigOptionElement> configWidgets = new ArrayList<>();
-    private boolean enabledStateChangable = false;
+    private ConfigOptionElement hoveredConfigWidget = null;
+    private boolean enabledStateChangeable = false;
     private int scrollIndexOffset = 0;
 
     public FeatureSettingWidget(int x, int y, int width, int height, WynntilsSettingsScreen settingsScreen) {
@@ -66,6 +69,50 @@ public final class FeatureSettingWidget extends AbstractWidget {
         poseStack.popPose();
     }
 
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.onClick(mouseX, mouseY);
+
+        if (hoveredConfigWidget != null) {
+            hoveredConfigWidget.mouseClicked(mouseX, mouseY, button);
+            return true;
+        }
+
+        float switchRenderX = getEnabledSwitchRenderX() + this.x;
+        float switchRenderY = getEnabledSwitchRenderY() + this.y;
+        float switchSize = getEnabledSwitchSize();
+
+        // Clicked on switch
+        if (mouseX >= switchRenderX
+                && mouseX <= switchRenderX + switchSize * 2
+                && mouseY >= switchRenderY
+                && mouseY <= switchRenderY + switchSize) {
+            if (!(cachedFeature instanceof UserFeature userFeature)) {
+                WynntilsMod.error(cachedFeature + " had userEnabled field, but is not a UserFeature.");
+                assert false;
+                return false;
+            }
+
+            userFeature.setUserEnabled(!userFeature.isEnabled());
+            userFeature.tryUserToggle();
+
+            return true;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        scrollIndexOffset = MathUtils.clamp(
+                scrollIndexOffset - (int) delta * 2, 0, Math.max(0, configWidgets.size() - MAX_RENDER_COUNT));
+
+        return false;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+
     private void renderTitle(PoseStack poseStack, Feature selectedFeature) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -81,7 +128,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
     }
 
     private void renderEnabledSwitch(PoseStack poseStack, Feature selectedFeature) {
-        if (!enabledStateChangable) return;
+        if (!enabledStateChangeable) return;
 
         float size = getEnabledSwitchSize();
 
@@ -110,6 +157,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         final float xOffset = this.width / 35f;
 
+        hoveredConfigWidget = null;
+
         for (int i = scrollIndexOffset; i < configWidgets.size(); i += 2) {
             ConfigOptionElement configWidgetLeft = configWidgets.get(i);
             ConfigOptionElement configWidgetRight = configWidgets.size() > i + 1 ? configWidgets.get(i + 1) : null;
@@ -118,15 +167,30 @@ public final class FeatureSettingWidget extends AbstractWidget {
             if (renderY + renderHeight > this.y + this.height) break;
 
             float fullWidth = this.width - xOffset * 1.5f;
+            float renderWidth = fullWidth / 2 - padding;
             configWidgetLeft.render(
-                    poseStack, xOffset, renderY, fullWidth / 2 - padding, renderHeight, mouseX, mouseY, partialTick);
+                    poseStack, xOffset, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
+
+            float actualRenderX = this.x + xOffset;
+            float actualRenderY = this.y + renderY;
+
+            if (isMouseOverConfigWidget(actualRenderX, actualRenderY, renderWidth, renderHeight, mouseX, mouseY)) {
+                this.hoveredConfigWidget = configWidgetLeft;
+            }
 
             if (configWidgetRight != null) {
+                actualRenderX = this.x + xOffset + fullWidth / 2;
+                renderWidth = fullWidth / 2;
+
+                if (isMouseOverConfigWidget(actualRenderX, actualRenderY, renderWidth, renderHeight, mouseX, mouseY)) {
+                    this.hoveredConfigWidget = configWidgetRight;
+                }
+
                 configWidgetRight.render(
                         poseStack,
                         xOffset + fullWidth / 2,
                         renderY,
-                        fullWidth / 2,
+                        renderWidth,
                         renderHeight,
                         mouseX,
                         mouseY,
@@ -177,44 +241,39 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 2, 2, 0, this.width - 4, this.height - 4, 2, 6, 8);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.onClick(mouseX, mouseY);
+    private boolean isMouseOverConfigWidget(
+            float actualRenderX, float actualRenderY, float renderWidth, float renderHeight, int mouseX, int mouseY) {
+        return mouseX >= actualRenderX
+                && mouseX <= actualRenderX + renderWidth
+                && mouseY >= actualRenderY
+                && mouseY < actualRenderY + renderHeight;
+    }
 
-        float switchRenderX = getEnabledSwitchRenderX() + this.x;
-        float switchRenderY = getEnabledSwitchRenderY() + this.y;
-        float switchSize = getEnabledSwitchSize();
+    private void recalculateConfigOptions() {
+        Feature selectedFeature = settingsScreen.getSelectedFeature();
 
-        // Clicked on switch
-        if (mouseX >= switchRenderX
-                && mouseX <= switchRenderX + switchSize * 2
-                && mouseY >= switchRenderY
-                && mouseY <= switchRenderY + switchSize) {
-            if (!(cachedFeature instanceof UserFeature userFeature)) {
-                WynntilsMod.error(cachedFeature + " had userEnabled field, but is not a UserFeature.");
-                assert false;
-                return false;
+        if (selectedFeature == cachedFeature) return;
+
+        configWidgets.clear();
+        scrollIndexOffset = 0;
+        enabledStateChangeable = false;
+        hoveredConfigWidget = null;
+
+        for (ConfigHolder configOption : selectedFeature.getVisibleConfigOptions()) {
+            if (configOption.getFieldName().equals("userEnabled")) {
+                enabledStateChangeable = true;
+                continue;
             }
 
-            userFeature.setUserEnabled(!userFeature.isEnabled());
-            userFeature.tryUserToggle();
-
-            return true;
+            if (configOption.getType().equals(Boolean.class)) {
+                configWidgets.add(new BooleanConfigOptionElement(configOption, this));
+            } else {
+                configWidgets.add(new DummyConfigOptionElement(configOption, this));
+            }
         }
 
-        return true;
+        cachedFeature = selectedFeature;
     }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scrollIndexOffset = MathUtils.clamp(
-                scrollIndexOffset - (int) delta * 2, 0, Math.max(0, configWidgets.size() - MAX_RENDER_COUNT));
-
-        return false;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     private float getRenderHeight() {
         return settingsScreen.height - settingsScreen.getBarHeight() * 2;
@@ -223,7 +282,12 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private float getScrollButtonYPos() {
         float height = getRenderHeight();
 
-        return MathUtils.map(this.scrollIndexOffset, 0, Math.max(0, configWidgets.size() - 3), 5, height - this.y - 2);
+        return MathUtils.map(
+                this.scrollIndexOffset,
+                0,
+                Math.max(0, configWidgets.size() - MAX_RENDER_COUNT),
+                5,
+                height - this.y - 2);
     }
 
     private float getEnabledSwitchRenderY() {
@@ -238,24 +302,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
         return this.width / 80f;
     }
 
-    private void recalculateConfigOptions() {
-        Feature selectedFeature = settingsScreen.getSelectedFeature();
-
-        if (selectedFeature == cachedFeature) return;
-
-        configWidgets.clear();
-        scrollIndexOffset = 0;
-        enabledStateChangable = false;
-
-        for (ConfigHolder configOption : selectedFeature.getVisibleConfigOptions()) {
-            if (configOption.getFieldName().equals("userEnabled")) {
-                enabledStateChangable = true;
-                continue;
-            }
-
-            configWidgets.add(new ConfigOptionElement(configOption));
-        }
-
-        cachedFeature = selectedFeature;
+    public ConfigOptionElement getHoveredConfigWidget() {
+        return hoveredConfigWidget;
     }
 }

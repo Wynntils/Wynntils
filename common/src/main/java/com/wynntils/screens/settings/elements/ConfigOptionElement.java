@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.settings;
+package com.wynntils.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
@@ -11,16 +11,19 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 
-public class ConfigOptionElement {
-    private static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
-    private static final CustomColor FOREGROUND_COLOR = new CustomColor(137, 117, 92, 255);
+public abstract class ConfigOptionElement {
+    protected static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
+    protected static final CustomColor FOREGROUND_COLOR = new CustomColor(137, 117, 92, 255);
 
-    private final ConfigHolder configHolder;
+    protected final ConfigHolder configHolder;
+    protected final FeatureSettingWidget featureSettingWidget;
 
-    public ConfigOptionElement(ConfigHolder configHolder) {
+    public ConfigOptionElement(ConfigHolder configHolder, FeatureSettingWidget featureSettingWidget) {
         this.configHolder = configHolder;
+        this.featureSettingWidget = featureSettingWidget;
     }
 
     public void render(
@@ -42,10 +45,12 @@ public class ConfigOptionElement {
 
         renderDescription(poseStack, width, height);
 
+        renderConfigAppropriateButton(poseStack, width, height);
+
         poseStack.popPose();
     }
 
-    private void renderDescription(PoseStack poseStack, float width, float height) {
+    protected void renderDescription(PoseStack poseStack, float width, float height) {
         float oneThirdOfWidth = width / 3f;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -62,7 +67,7 @@ public class ConfigOptionElement {
                         FontRenderer.TextShadow.OUTLINE);
     }
 
-    private void renderConfigTitle(PoseStack poseStack, float width, float height) {
+    protected void renderConfigTitle(PoseStack poseStack, float width, float height) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -78,10 +83,14 @@ public class ConfigOptionElement {
                         FontRenderer.TextShadow.OUTLINE);
     }
 
-    private static void renderBackground(PoseStack poseStack, float width, float height) {
+    protected static void renderBackground(PoseStack poseStack, float width, float height) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
     }
+
+    protected abstract void renderConfigAppropriateButton(PoseStack poseStack, float width, float height);
+
+    public abstract void mouseClicked(double mouseX, double mouseY, int button);
 
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }
