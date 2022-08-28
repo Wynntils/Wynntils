@@ -7,7 +7,7 @@ package com.wynntils.features.alwayson;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.AlwaysOnFeature;
+import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
-public class LootrunFeature extends AlwaysOnFeature {
+public class LootrunFeature extends StateManagedFeature {
     public static LootrunFeature INSTANCE;
 
     // TODO: Add textured path type

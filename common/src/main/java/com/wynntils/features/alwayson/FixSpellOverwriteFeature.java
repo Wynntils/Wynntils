@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.alwayson;
 
-import com.wynntils.core.features.AlwaysOnFeature;
+import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientTickEvent.Phase;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -16,7 +16,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class FixSpellOverwriteFeature extends AlwaysOnFeature {
+public class FixSpellOverwriteFeature extends StateManagedFeature {
     private static final Pattern SPELL_CAST = Pattern.compile(
             "^(§7(.*) spell cast!§3 \\[§b-([0-9]+) ✺§3\\]|§4You don't have enough mana to do that spell!)$");
 

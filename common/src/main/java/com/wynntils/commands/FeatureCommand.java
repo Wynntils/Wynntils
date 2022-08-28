@@ -12,10 +12,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.AlwaysOnFeature;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +70,7 @@ public class FeatureCommand extends CommandBase {
             ChatFormatting color = ChatFormatting.WHITE;
             String translatedName = feature.getTranslatedName();
 
-            if (superclass == UserFeature.class || superclass == AlwaysOnFeature.class) {
+            if (superclass == UserFeature.class || superclass == StateManagedFeature.class) {
                 if (feature.isEnabled()) {
                     color = ChatFormatting.GREEN;
                 } else {
