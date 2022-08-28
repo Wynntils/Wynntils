@@ -25,10 +25,8 @@ public final class KeyBindManager extends CoreManager {
     public static void init() {}
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent e) {
-        if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-            triggerKeybinds();
-        }
+    public static void onTick(ClientTickEvent.End e) {
+        triggerKeybinds();
     }
 
     @SubscribeEvent

@@ -173,8 +173,8 @@ public class QuickCastFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent e) {
-        if (!WynnUtils.onWorld() || e.getTickPhase() != ClientTickEvent.Phase.END) return;
+    public void onTick(ClientTickEvent.End e) {
+        if (!WynnUtils.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
         if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = NO_SPELL;

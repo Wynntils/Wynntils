@@ -6,19 +6,8 @@ package com.wynntils.mc.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class ClientTickEvent extends Event {
-    private final Phase phase;
+public abstract class ClientTickEvent extends Event {
+    public static class Start extends ClientTickEvent {}
 
-    public ClientTickEvent(Phase phase) {
-        this.phase = phase;
-    }
-
-    public Phase getTickPhase() {
-        return phase;
-    }
-
-    public enum Phase {
-        START,
-        END
-    }
+    public static class End extends ClientTickEvent {}
 }
