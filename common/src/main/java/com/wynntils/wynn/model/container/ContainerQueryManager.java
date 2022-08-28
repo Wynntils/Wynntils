@@ -71,18 +71,11 @@ public class ContainerQueryManager extends CoreManager {
 
     @SubscribeEvent
     public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        if (currentStep == null && lastStep == null) return;
-        if (currentStep == null && lastStep != null) {
-            // We're in a possibly bad state. We have failed a previous call, but
-            // we might still get the menu opened (perhaps after a lag spike).
-            boolean matches = lastStep.verifyContainer(e.getTitle(), e.getMenuType());
-            if (matches) {
-                WynntilsMod.warn("Closing container '" + e.getTitle().getString()
-                        + "' due to previously aborted container query");
-                lastStep = null;
-                e.setCanceled(true);
-            } else {
-                lastStep = null;
+        if (currentStep == null) {
+            if (lastStep != null) {
+                // We're in a possibly bad state. We have failed a previous call, but
+                // we might still get the menu opened (perhaps after a lag spike).
+                handleFailedOpen(e);
             }
             return;
         }
@@ -189,5 +182,19 @@ public class ContainerQueryManager extends CoreManager {
 
     private static void resetTimer() {
         ticksRemaining = OPERATION_TIMEOUT_TICKS;
+    }
+
+    private static void handleFailedOpen(MenuEvent.MenuOpenedEvent e) {
+        boolean matches = lastStep.verifyContainer(e.getTitle(), e.getMenuType());
+        if (matches) {
+            // This was the container we were supposed to be looking for
+            WynntilsMod.warn(
+                    "Closing container '" + e.getTitle().getString() + "' due to previously aborted container query");
+            lastStep = null;
+            e.setCanceled(true);
+        } else {
+            // Not the one we were looking for, stop looking
+            lastStep = null;
+        }
     }
 }
