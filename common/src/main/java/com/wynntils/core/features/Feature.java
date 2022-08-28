@@ -59,6 +59,8 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
         initFinished = true;
+
+        assert !getTranslatedName().startsWith("feature.wynntils.");
     }
 
     public final void initOverlays() {

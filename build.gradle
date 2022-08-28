@@ -32,6 +32,7 @@ subprojects {
                     vmArgs "-XX:+AllowEnhancedClassRedefinition"
                     vmArgs "-XX:HotswapAgent=fatjar"
                 }
+                vmArgs "-ea" // run dev builds with asserts
                 client()
             }
         }
