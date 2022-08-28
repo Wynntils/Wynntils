@@ -4,23 +4,27 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
@@ -33,12 +37,12 @@ public class FeatureCommand extends CommandBase {
                     builder);
 
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("feature")
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("feature")
                 .then(this.buildListNode())
                 .then(this.enableFeatureNode())
                 .then(this.disableFeatureNode())
-                .executes(this::syntaxError));
+                .executes(this::syntaxError);
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
@@ -51,17 +55,54 @@ public class FeatureCommand extends CommandBase {
     }
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
-        Set<Feature> features = FeatureRegistry.getFeatures().stream().collect(Collectors.toUnmodifiableSet());
+        List<Feature> features = FeatureRegistry.getFeatures().stream()
+                .filter(feature -> !(feature instanceof DebugFeature) || WynntilsMod.isDevelopmentEnvironment())
+                .sorted(Feature::compareTo)
+                .toList();
 
         MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
+        String lastCategory = null;
+
         for (Feature feature : features) {
+            Class<?> superclass = feature.getClass().getSuperclass();
+
+            ChatFormatting color = ChatFormatting.WHITE;
+            String translatedName = feature.getTranslatedName();
+
+            if (superclass == UserFeature.class || superclass == StateManagedFeature.class) {
+                if (feature.isEnabled()) {
+                    color = ChatFormatting.GREEN;
+                } else {
+                    color = ChatFormatting.RED;
+                }
+            } else if (superclass == DebugFeature.class) {
+                color = ChatFormatting.YELLOW;
+
+                if (feature.isEnabled()) {
+                    translatedName += " {ENABLED DEBUG}";
+                } else {
+                    translatedName += " {DISABLED DEBUG}";
+                }
+            }
+
+            System.out.println("feature.getCategory() = " + feature.getCategory());
+
+            if (!Objects.equals(lastCategory, feature.getCategory())) {
+                lastCategory = feature.getCategory();
+
+                String categoryString = lastCategory.isEmpty() ? "Uncategorized" : lastCategory;
+
+                response.append(new TextComponent("\n" + categoryString + ":")
+                        .withStyle(ChatFormatting.LIGHT_PURPLE)
+                        .withStyle(ChatFormatting.BOLD));
+            }
+
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(feature.getTranslatedName())
-                            .withStyle(
-                                    feature.getClass().getSuperclass() == UserFeature.class
-                                            ? ChatFormatting.YELLOW
-                                            : ChatFormatting.RED));
+                    .append(new TextComponent(translatedName)
+                            .withStyle(style -> style.withHoverEvent(new HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT, new TextComponent(superclass.getSimpleName()))))
+                            .withStyle(color));
         }
 
         context.getSource().sendSuccess(response, false);

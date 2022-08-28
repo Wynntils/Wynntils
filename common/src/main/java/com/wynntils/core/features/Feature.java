@@ -33,7 +33,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable {
+public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
@@ -240,6 +240,7 @@ public abstract class Feature implements Translatable, Configurable {
         this.category = category;
     }
 
+    @Override
     public int compareTo(Feature other) {
         return ComparisonChain.start()
                 .compareFalseFirst(
