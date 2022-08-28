@@ -5,7 +5,6 @@
 package com.wynntils.commands;
 
 import com.google.common.base.CaseFormat;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -89,14 +88,13 @@ public class ConfigCommand extends CommandBase {
                     },
                     builder);
 
-    @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("config")
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("config")
                 .then(this.buildGetConfigNode())
                 .then(this.buildSetConfigNode())
                 .then(this.buildResetConfigNode())
                 .then(this.buildReloadConfigNode())
-                .executes(this::syntaxError));
+                .executes(this::syntaxError);
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {

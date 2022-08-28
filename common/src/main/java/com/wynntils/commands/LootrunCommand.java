@@ -6,6 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -350,7 +351,14 @@ public class LootrunCommand extends CommandBase {
 
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("lootrun")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(getBaseCommandBuilder());
+
+        dispatcher.register(Commands.literal("lr").redirect(node));
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("lootrun")
                 .then(Commands.literal("load")
                         .then(Commands.argument("lootrun", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
@@ -387,8 +395,6 @@ public class LootrunCommand extends CommandBase {
                         .then(Commands.literal("remove").executes(this::removeChest)))
                 .then(Commands.literal("undo").executes(this::undoLootrun))
                 .then(Commands.literal("folder").executes(this::folderLootrun))
-                .executes(this::syntaxError));
-
-        dispatcher.register(Commands.literal("lr").redirect(node));
+                .executes(this::syntaxError);
     }
 }

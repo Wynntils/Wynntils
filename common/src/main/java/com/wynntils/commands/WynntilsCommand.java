@@ -5,8 +5,10 @@
 package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -25,13 +27,27 @@ import net.minecraft.network.chat.TextComponent;
 public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("wynntils")
+        LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
+
+        // Register all commands under the wynntils command as subcommands
+        for (CommandBase commandInstance : ClientCommandManager.getCommandInstanceSet()) {
+            if (commandInstance == this) continue;
+
+            builder.then(commandInstance.getBaseCommandBuilder());
+        }
+
+        dispatcher.register(builder);
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("wynntils")
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("reload").executes(this::reload))
                 .then(Commands.literal("version").executes(this::version))
-                .executes(this::help));
+                .executes(this::help);
     }
 
     private int version(CommandContext<CommandSourceStack> context) {

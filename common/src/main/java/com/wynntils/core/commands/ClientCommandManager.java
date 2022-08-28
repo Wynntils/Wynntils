@@ -20,7 +20,9 @@ import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -39,6 +41,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class ClientCommandManager extends CoreManager {
+    private static Set<CommandBase> commandInstanceSet = new HashSet<>();
     private static CommandDispatcher<CommandSourceStack> clientDispatcher;
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
@@ -59,6 +62,7 @@ public final class ClientCommandManager extends CoreManager {
     }
 
     private static void registerCommand(CommandBase command) {
+        commandInstanceSet.add(command);
         command.register(clientDispatcher);
     }
 
@@ -161,5 +165,9 @@ public final class ClientCommandManager extends CoreManager {
 
     private static void sendError(MutableComponent error) {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
+    }
+
+    public static Set<CommandBase> getCommandInstanceSet() {
+        return commandInstanceSet;
     }
 }
