@@ -193,17 +193,22 @@ public final class ConfigManager extends CoreManager {
                             field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
                     .findFirst();
 
+            Type type = null;
             if (typeField.isPresent()) {
                 try {
-                    Type type = (Type) FieldUtils.readField(typeField.get(), parent, true);
-                    options.add(new ConfigHolder(parent, configField, category, metadata, type));
+                    type = (Type) FieldUtils.readField(typeField.get(), parent, true);
                 } catch (IllegalAccessException e) {
                     WynntilsMod.error("Unable to get field " + typeField.get().getName());
                     e.printStackTrace();
                 }
-            } else {
-                options.add(new ConfigHolder(parent, configField, category, metadata, null));
             }
+
+            ConfigHolder configHolder = new ConfigHolder(parent, configField, category, metadata, type);
+            if (metadata.visible()) {
+                assert !configHolder.getDisplayName().startsWith("feature.wynntils.");
+                assert !configHolder.getDescription().startsWith("feature.wynntils.");
+            }
+            options.add(configHolder);
         }
         return options;
     }
