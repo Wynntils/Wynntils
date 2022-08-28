@@ -77,6 +77,8 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
                 OverlayManager.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
+
+                assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);
                 e.printStackTrace();
