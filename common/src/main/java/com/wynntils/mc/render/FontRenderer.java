@@ -91,26 +91,26 @@ public final class FontRenderer {
             CustomColor customColor,
             TextAlignment textAlignment,
             TextShadow textShadow) {
+
+        float width = font.width(text);
+
+        if (font.width(text) > maxWidth && maxWidth != 0) {
+            width = maxWidth;
+        }
+
         switch (textAlignment) {
             case LEFT_ALIGNED -> renderText(poseStack, text, x1, y, maxWidth, customColor, textAlignment, textShadow);
             case CENTER_ALIGNED -> renderText(
                     poseStack,
                     text,
-                    x1 + (x2 - x1 - font.width(text)) / 2,
+                    x1 + (x2 - x1 - width) / 2,
                     y,
                     maxWidth,
                     customColor,
                     TextAlignment.LEFT_ALIGNED,
                     textShadow);
             case RIGHT_ALIGNED -> renderText(
-                    poseStack,
-                    text,
-                    x2 - font.width(text),
-                    y,
-                    maxWidth,
-                    customColor,
-                    TextAlignment.LEFT_ALIGNED,
-                    textShadow);
+                    poseStack, text, x2 - width, y, maxWidth, customColor, TextAlignment.LEFT_ALIGNED, textShadow);
         }
     }
 
