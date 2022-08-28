@@ -27,7 +27,7 @@ public final class MathUtils {
         if (num < min) {
             return min;
         } else {
-            return num > max ? max : num;
+            return Math.min(num, max);
         }
     }
 

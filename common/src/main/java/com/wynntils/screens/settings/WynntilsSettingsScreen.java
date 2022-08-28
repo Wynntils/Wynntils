@@ -12,9 +12,9 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.settings.entries.FeatureSettingWidget;
 import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
+import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import com.wynntils.screens.widgets.SearchWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -74,11 +74,7 @@ public class WynntilsSettingsScreen extends Screen {
                 newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
 
         this.featureSettingWidget = new FeatureSettingWidget(
-                this.width / 5,
-                (int) this.BAR_HEIGHT,
-                this.width / 5 * 4,
-                (int) (this.height - this.BAR_HEIGHT * 2),
-                this);
+                this.width / 5, (int) BAR_HEIGHT, this.width / 5 * 4, (int) (this.height - BAR_HEIGHT * 2), this);
 
         this.addRenderableWidget(this.searchWidget);
         this.addRenderableWidget(this.featureSettingWidget);
@@ -142,7 +138,13 @@ public class WynntilsSettingsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return featureList.mouseScrolled(mouseX, mouseY, delta);
+        if (featureList.isMouseOver(mouseX, mouseY)) {
+            return featureList.mouseScrolled(mouseX, mouseY, delta);
+        } else if (featureSettingWidget.isMouseOver(mouseX, mouseY)) {
+            featureSettingWidget.mouseScrolled(mouseX, mouseY, delta);
+        }
+
+        return false;
     }
 
     @Override
