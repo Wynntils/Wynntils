@@ -7,11 +7,16 @@ package com.wynntils.screens.settings;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.VerticalAlignment;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 
 public class ConfigOptionElement {
+    private static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
+    private static final CustomColor FOREGROUND_COLOR = new CustomColor(137, 117, 92, 255);
+
     private final ConfigHolder configHolder;
 
     public ConfigOptionElement(ConfigHolder configHolder) {
@@ -31,17 +36,21 @@ public class ConfigOptionElement {
 
         poseStack.translate(x, y, 0);
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, width, height);
+        RenderUtils.drawRoundedRectWithBorder(
+                poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderAlignedTextInBox(
                         poseStack,
                         configHolder.getDisplayName(),
                         0,
-                        0,
-                        0,
+                        width,
+                        3,
+                        height,
+                        width,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
 
         poseStack.popPose();

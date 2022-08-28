@@ -11,6 +11,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
 import com.wynntils.screens.settings.ConfigOptionElement;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.utils.MathUtils;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.TextComponent;
 
 public final class FeatureSettingWidget extends AbstractWidget {
     private static final float PADDING = 5.0f;
+    private static final int MAX_RENDER_COUNT = 3;
 
     private static final CustomColor BORDER_COLOR = new CustomColor(86, 75, 61, 255);
     private static final CustomColor FOREGROUND_COLOR = new CustomColor(177, 152, 120, 255);
@@ -47,7 +49,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
         poseStack.translate(this.x, this.y, 0);
 
         renderBackground(poseStack);
-        renderScrollbar(poseStack);
 
         Feature selectedFeature = settingsScreen.getSelectedFeature();
         if (selectedFeature == null) return;
@@ -65,6 +66,10 @@ public final class FeatureSettingWidget extends AbstractWidget {
                         FontRenderer.TextShadow.OUTLINE);
 
         renderConfigWidgets(poseStack, mouseX, mouseY, partialTick);
+
+        if (configWidgets.size() > MAX_RENDER_COUNT) {
+            renderScrollbar(poseStack);
+        }
 
         poseStack.popPose();
     }
@@ -103,6 +108,26 @@ public final class FeatureSettingWidget extends AbstractWidget {
         float offset = (biggerWidth - smallerWidth) / 2;
 
         RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, 10 + offset, 6, 0, smallerWidth, this.height - 12);
+
+        int size = (int) (settingsScreen.width / 65f);
+
+        float xPos = 7.1f;
+        float yPos = getScrollButtonYPos();
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.SCROLL_BUTTON.resource(),
+                xPos,
+                yPos,
+                0,
+                size,
+                size,
+                0,
+                0,
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height(),
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height());
     }
 
     private void renderBackground(PoseStack poseStack) {
@@ -125,6 +150,16 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+
+    private float getRenderHeight() {
+        return settingsScreen.height - settingsScreen.getBarHeight() * 2;
+    }
+
+    private float getScrollButtonYPos() {
+        float height = getRenderHeight();
+
+        return MathUtils.map(this.scrollIndexOffset, 0, Math.max(0, configWidgets.size() - 3), 5, height - this.y - 2);
+    }
 
     private void recalculateConfigOptions() {
         Feature selectedFeature = settingsScreen.getSelectedFeature();

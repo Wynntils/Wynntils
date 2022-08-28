@@ -99,7 +99,7 @@ public class WynntilsSettingsScreen extends Screen {
         featureList.render(poseStack, mouseX, mouseY, partialTick);
 
         // Re-render the bottom bar again, so overlaying buttons are not displayed
-        RenderUtils.drawRect(poseStack, FOREGROUND_COLOR, 0, this.height - BAR_HEIGHT, 0, this.width, BAR_HEIGHT);
+        RenderUtils.drawRect(poseStack, FOREGROUND_COLOR, 0, this.height - BAR_HEIGHT, 10, this.width, BAR_HEIGHT);
 
         poseStack.pushPose();
 

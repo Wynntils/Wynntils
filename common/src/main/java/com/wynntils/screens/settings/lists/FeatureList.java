@@ -263,7 +263,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         float height = getRenderHeight();
 
         return MathUtils.map(
-                (float) this.getScrollAmount(), 0, this.getMaxScroll(), settingsScreen.getBarHeight() + 4, height - 4);
+                (float) this.getScrollAmount(), 0, this.getMaxScroll(), settingsScreen.getBarHeight() + 4, height - 2);
     }
 
     private float getScrollButtonXPos() {
