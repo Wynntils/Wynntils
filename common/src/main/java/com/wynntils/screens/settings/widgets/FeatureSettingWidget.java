@@ -5,8 +5,10 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
@@ -32,6 +34,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     private Feature cachedFeature = null;
     private List<ConfigOptionElement> configWidgets = new ArrayList<>();
+    private boolean enabledStateChangable = false;
     private int scrollIndexOffset = 0;
 
     public FeatureSettingWidget(int x, int y, int width, int height, WynntilsSettingsScreen settingsScreen) {
@@ -52,25 +55,52 @@ public final class FeatureSettingWidget extends AbstractWidget {
         Feature selectedFeature = settingsScreen.getSelectedFeature();
         if (selectedFeature == null) return;
 
+        renderTitle(poseStack, selectedFeature);
+
+        renderConfigWidgets(poseStack, mouseX, mouseY, partialTick);
+
+        renderScrollbar(poseStack);
+
+        renderEnabledSwitch(poseStack, selectedFeature);
+
+        poseStack.popPose();
+    }
+
+    private void renderTitle(PoseStack poseStack, Feature selectedFeature) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         selectedFeature.getTranslatedName(),
                         0,
                         this.width,
-                        8,
+                        this.height / 50f,
                         this.width,
                         CommonColors.WHITE,
                         FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
+    }
 
-        renderConfigWidgets(poseStack, mouseX, mouseY, partialTick);
+    private void renderEnabledSwitch(PoseStack poseStack, Feature selectedFeature) {
+        if (!enabledStateChangable) return;
 
-        if (configWidgets.size() > MAX_RENDER_COUNT) {
-            renderScrollbar(poseStack);
-        }
+        float size = getEnabledSwitchSize();
 
-        poseStack.popPose();
+        final Texture switchTexture = selectedFeature.isEnabled() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                switchTexture.resource(),
+                getEnabledSwitchRenderX(),
+                getEnabledSwitchRenderY(),
+                0,
+                size * 2f,
+                size,
+                0,
+                0,
+                switchTexture.width(),
+                switchTexture.height(),
+                switchTexture.width(),
+                switchTexture.height());
     }
 
     private void renderConfigWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -108,6 +138,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
     }
 
     private void renderScrollbar(PoseStack poseStack) {
+        if (configWidgets.size() <= MAX_RENDER_COUNT) return;
+
         final float biggerWidth = this.width / 70f;
         final float smallerWidth = this.width / 140f;
 
@@ -148,6 +180,28 @@ public final class FeatureSettingWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.onClick(mouseX, mouseY);
+
+        float switchRenderX = getEnabledSwitchRenderX() + this.x;
+        float switchRenderY = getEnabledSwitchRenderY() + this.y;
+        float switchSize = getEnabledSwitchSize();
+
+        // Clicked on switch
+        if (mouseX >= switchRenderX
+                && mouseX <= switchRenderX + switchSize * 2
+                && mouseY >= switchRenderY
+                && mouseY <= switchRenderY + switchSize) {
+            if (!(cachedFeature instanceof UserFeature userFeature)) {
+                WynntilsMod.error(cachedFeature + " had userEnabled field, but is not a UserFeature.");
+                assert false;
+                return false;
+            }
+
+            userFeature.setUserEnabled(!userFeature.isEnabled());
+            userFeature.tryUserToggle();
+
+            return true;
+        }
+
         return true;
     }
 
@@ -172,6 +226,18 @@ public final class FeatureSettingWidget extends AbstractWidget {
         return MathUtils.map(this.scrollIndexOffset, 0, Math.max(0, configWidgets.size() - 3), 5, height - this.y - 2);
     }
 
+    private float getEnabledSwitchRenderY() {
+        return this.height / 25f;
+    }
+
+    private float getEnabledSwitchRenderX() {
+        return this.width / 2f - getEnabledSwitchSize();
+    }
+
+    public float getEnabledSwitchSize() {
+        return this.width / 80f;
+    }
+
     private void recalculateConfigOptions() {
         Feature selectedFeature = settingsScreen.getSelectedFeature();
 
@@ -179,8 +245,14 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         configWidgets.clear();
         scrollIndexOffset = 0;
+        enabledStateChangable = false;
 
         for (ConfigHolder configOption : selectedFeature.getVisibleConfigOptions()) {
+            if (configOption.getFieldName().equals("userEnabled")) {
+                enabledStateChangable = true;
+                continue;
+            }
+
             configWidgets.add(new ConfigOptionElement(configOption));
         }
 
