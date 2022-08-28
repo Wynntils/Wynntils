@@ -4,8 +4,8 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -37,12 +37,12 @@ public class FeatureCommand extends CommandBase {
                     builder);
 
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("feature")
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("feature")
                 .then(this.buildListNode())
                 .then(this.enableFeatureNode())
                 .then(this.disableFeatureNode())
-                .executes(this::syntaxError));
+                .executes(this::syntaxError);
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {

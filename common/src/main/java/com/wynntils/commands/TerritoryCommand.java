@@ -4,8 +4,8 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
@@ -26,8 +26,8 @@ import net.minecraft.network.chat.TextComponent;
 
 public class TerritoryCommand extends CommandBase {
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("territory")
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) -> {
                             if (!WebManager.isTerritoryListLoaded() && !WebManager.tryLoadTerritories()) {
@@ -39,7 +39,7 @@ public class TerritoryCommand extends CommandBase {
                             return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
                         })
                         .executes(this::territory))
-                .executes(this::help));
+                .executes(this::help);
     }
 
     private int help(CommandContext<CommandSourceStack> context) {
