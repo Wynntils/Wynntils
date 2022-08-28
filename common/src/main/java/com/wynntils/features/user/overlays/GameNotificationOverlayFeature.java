@@ -13,6 +13,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.ListIterator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "Overlays")
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class GameNotificationOverlayFeature extends UserFeature {
     private static GameNotificationOverlayFeature INSTANCE;
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();

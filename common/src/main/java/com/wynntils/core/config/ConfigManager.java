@@ -14,6 +14,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.objects.CustomColor;
@@ -159,19 +160,12 @@ public final class ConfigManager extends CoreManager {
 
     private static List<ConfigHolder> collectConfigOptions(Feature feature) {
         FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-
-        String category = "";
-        // feature has no category defined, default to empty category
-        if (featureInfo != null) {
-            category = featureInfo.category();
-        }
-
+        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
         loadFeatureOverlayConfigOptions(category, feature);
-
         return getConfigOptions(category, feature);
     }
 
-    private static void loadFeatureOverlayConfigOptions(String category, Feature feature) {
+    private static void loadFeatureOverlayConfigOptions(FeatureCategory category, Feature feature) {
         // collect feature's overlays' config options
         for (Overlay overlay : feature.getOverlays()) {
             List<ConfigHolder> options = getConfigOptions(category, overlay);
@@ -180,7 +174,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static List<ConfigHolder> getConfigOptions(String category, Configurable parent) {
+    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
