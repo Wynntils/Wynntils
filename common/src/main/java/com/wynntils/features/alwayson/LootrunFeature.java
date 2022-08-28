@@ -53,10 +53,8 @@ public class LootrunFeature extends StateManagedFeature {
     }
 
     @SubscribeEvent
-    public void recordMovement(ClientTickEvent event) {
-        if (event.getTickPhase() == ClientTickEvent.Phase.START) {
-            LootrunModel.recordMovementIfRecording();
-        }
+    public void recordMovement(ClientTickEvent.Start event) {
+        LootrunModel.recordMovementIfRecording();
     }
 
     @SubscribeEvent
