@@ -42,7 +42,8 @@ public final class KeyBindManager extends CoreManager {
 
     public static void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
-            throw new IllegalStateException("Can not add kebind " + toAdd.getName() + " since the name already exists");
+            throw new IllegalStateException(
+                    "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
         KEY_BINDS.add(toAdd);
