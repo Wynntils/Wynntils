@@ -29,6 +29,8 @@ public class ContainerQueryManager extends CoreManager {
     private static int containerId = NO_CONTAINER;
     private static int lastHandledContentId = NO_CONTAINER;
 
+    public static void init() {}
+
     public static void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
             // Only add if it is not already enqueued

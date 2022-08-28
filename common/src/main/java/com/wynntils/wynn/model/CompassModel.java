@@ -15,6 +15,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class CompassModel extends Model {
     private static Location compassLocation = null;
 
+    public static void init() {}
+
     public static Location getCompassLocation() {
         if (compassLocation != null) compassLocation.y = McUtils.player().getY();
         return compassLocation;

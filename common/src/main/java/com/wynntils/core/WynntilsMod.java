@@ -68,7 +68,12 @@ public final class WynntilsMod {
     public static void onResourcesFinishedLoading() {
         if (featuresInited) return;
 
-        initFeatures();
+        try {
+            initFeatures();
+        } catch (Throwable t) {
+            LOGGER.error("Failed to initialize Wynntils features", t);
+            return;
+        }
         featuresInited = true;
     }
 
