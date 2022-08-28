@@ -284,7 +284,8 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
             int top = this.y0 + 1 + heightOffset + (renderedCount * PADDING);
             int bottom = top + renderHeight;
 
-            if (getRowTop(i) < this.y0 || bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) continue;
+            if (getRowTop(i) < this.y0) continue;
+            if (bottom > settingsScreen.height - settingsScreen.getBarHeight() - 10) break;
 
             consumer.accept(entry, i, top);
 

@@ -36,9 +36,33 @@ public class ConfigOptionElement {
 
         poseStack.translate(x, y, 0);
 
-        RenderUtils.drawRoundedRectWithBorder(
-                poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
+        renderBackground(poseStack, width, height);
 
+        renderConfigTitle(poseStack, width, height);
+
+        renderDescription(poseStack, width, height);
+
+        poseStack.popPose();
+    }
+
+    private void renderDescription(PoseStack poseStack, float width, float height) {
+        float oneThirdOfWidth = width / 3f;
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        configHolder.getDescription(),
+                        5,
+                        oneThirdOfWidth,
+                        0,
+                        height,
+                        oneThirdOfWidth,
+                        CommonColors.WHITE,
+                        VerticalAlignment.Middle,
+                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                        FontRenderer.TextShadow.OUTLINE);
+    }
+
+    private void renderConfigTitle(PoseStack poseStack, float width, float height) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -52,8 +76,11 @@ public class ConfigOptionElement {
                         VerticalAlignment.Top,
                         FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
+    }
 
-        poseStack.popPose();
+    private static void renderBackground(PoseStack poseStack, float width, float height) {
+        RenderUtils.drawRoundedRectWithBorder(
+                poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
     }
 
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}

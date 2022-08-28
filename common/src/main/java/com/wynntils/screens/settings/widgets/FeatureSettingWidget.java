@@ -22,8 +22,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 
 public final class FeatureSettingWidget extends AbstractWidget {
-    private static final float PADDING = 5.0f;
-    private static final int MAX_RENDER_COUNT = 3;
+    private static final int MAX_RENDER_COUNT = 6;
 
     private static final CustomColor BORDER_COLOR = new CustomColor(86, 75, 61, 255);
     private static final CustomColor FOREGROUND_COLOR = new CustomColor(177, 152, 120, 255);
@@ -75,27 +74,36 @@ public final class FeatureSettingWidget extends AbstractWidget {
     }
 
     private void renderConfigWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        float renderY = settingsScreen.getBarHeight() + PADDING;
+        final float padding = settingsScreen.width / 100f;
+
+        float renderY = settingsScreen.getBarHeight() + padding;
 
         final float xOffset = this.width / 35f;
 
-        for (int i = scrollIndexOffset; i < configWidgets.size(); i++) {
-            ConfigOptionElement configWidget = configWidgets.get(i);
+        for (int i = scrollIndexOffset; i < configWidgets.size(); i += 2) {
+            ConfigOptionElement configWidgetLeft = configWidgets.get(i);
+            ConfigOptionElement configWidgetRight = configWidgets.size() > i + 1 ? configWidgets.get(i + 1) : null;
             float renderHeight = this.height / 4f;
 
             if (renderY + renderHeight > this.y + this.height) break;
 
-            configWidget.render(
-                    poseStack,
-                    xOffset,
-                    renderY,
-                    this.width - xOffset * 1.5f,
-                    renderHeight,
-                    mouseX,
-                    mouseY,
-                    partialTick);
+            float fullWidth = this.width - xOffset * 1.5f;
+            configWidgetLeft.render(
+                    poseStack, xOffset, renderY, fullWidth / 2 - padding, renderHeight, mouseX, mouseY, partialTick);
 
-            renderY += PADDING + renderHeight;
+            if (configWidgetRight != null) {
+                configWidgetRight.render(
+                        poseStack,
+                        xOffset + fullWidth / 2,
+                        renderY,
+                        fullWidth / 2,
+                        renderHeight,
+                        mouseX,
+                        mouseY,
+                        partialTick);
+            }
+
+            renderY += padding + renderHeight;
         }
     }
 
@@ -103,15 +111,17 @@ public final class FeatureSettingWidget extends AbstractWidget {
         final float biggerWidth = this.width / 70f;
         final float smallerWidth = this.width / 140f;
 
-        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, 10, 9, 0, biggerWidth, this.height - 18);
+        final float renderX = settingsScreen.width / 160f;
+
+        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, renderX, 9, 0, biggerWidth, this.height - 18);
 
         float offset = (biggerWidth - smallerWidth) / 2;
 
-        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, 10 + offset, 6, 0, smallerWidth, this.height - 12);
+        RenderUtils.drawRect(poseStack, SCROLLBAR_COLOR, renderX + offset, 6, 0, smallerWidth, this.height - 12);
 
         int size = (int) (settingsScreen.width / 65f);
 
-        float xPos = 7.1f;
+        float xPos = renderX / 1.45f;
         float yPos = getScrollButtonYPos();
 
         RenderUtils.drawTexturedRect(
@@ -143,7 +153,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scrollIndexOffset = MathUtils.clamp(scrollIndexOffset - (int) delta, 0, Math.max(0, configWidgets.size() - 3));
+        scrollIndexOffset = MathUtils.clamp(
+                scrollIndexOffset - (int) delta * 2, 0, Math.max(0, configWidgets.size() - MAX_RENDER_COUNT));
 
         return false;
     }
