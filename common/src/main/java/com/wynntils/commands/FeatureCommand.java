@@ -17,6 +17,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class FeatureCommand extends CommandBase {
 
         MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
-        String lastCategory = null;
+        FeatureCategory lastCategory = null;
 
         for (Feature feature : features) {
             Class<?> superclass = feature.getClass().getSuperclass();
@@ -86,14 +87,9 @@ public class FeatureCommand extends CommandBase {
                 }
             }
 
-            System.out.println("feature.getCategory() = " + feature.getCategory());
-
             if (!Objects.equals(lastCategory, feature.getCategory())) {
                 lastCategory = feature.getCategory();
-
-                String categoryString = lastCategory.isEmpty() ? "Uncategorized" : lastCategory;
-
-                response.append(new TextComponent("\n" + categoryString + ":")
+                response.append(new TextComponent("\n" + lastCategory.toString() + ":")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
                         .withStyle(ChatFormatting.BOLD));
             }

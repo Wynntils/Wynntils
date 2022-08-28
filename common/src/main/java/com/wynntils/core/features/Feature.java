@@ -12,6 +12,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
@@ -45,7 +46,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     protected boolean initFinished = false;
 
-    private String category = null;
+    private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -236,20 +237,18 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-    public String getCategory() {
-        return category == null ? "" : category;
+    public FeatureCategory getCategory() {
+        return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(FeatureCategory category) {
         this.category = category;
     }
 
     @Override
     public int compareTo(Feature other) {
         return ComparisonChain.start()
-                .compareFalseFirst(
-                        this.getCategory().isEmpty(), other.getCategory().isEmpty())
-                .compare(this.getCategory(), other.getCategory())
+                .compare(this.getCategory().toString(), other.getCategory().toString())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
     }

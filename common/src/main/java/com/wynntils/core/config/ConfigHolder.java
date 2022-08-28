@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.FeatureCategory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -22,14 +23,15 @@ public class ConfigHolder {
     private final Field field;
     private final Type fieldType;
 
-    private final String category;
+    private final FeatureCategory category;
     private final Config metadata;
 
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, String category, Config metadata, Type typeOverride) {
+    public ConfigHolder(
+            Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -95,7 +97,7 @@ public class ConfigHolder {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public String getCategory() {
+    public FeatureCategory getCategory() {
         return category;
     }
 
