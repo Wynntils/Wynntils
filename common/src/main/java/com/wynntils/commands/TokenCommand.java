@@ -4,7 +4,7 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.WebManager;
@@ -19,8 +19,8 @@ import net.minecraft.network.chat.TextComponent;
 
 public class TokenCommand extends CommandBase {
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("token").executes(this::token));
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("token").executes(this::token);
     }
 
     private int token(CommandContext<CommandSourceStack> context) {

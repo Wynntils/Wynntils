@@ -21,13 +21,15 @@ public class QuestBookModel extends Model {
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
 
+    public static void init() {}
+
     /**
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
      * be sent. The available quests are then available using getQuests.
      */
     public static void queryQuestBook() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
-                .onError(msg -> WynntilsMod.warn("Error querying Quest Book:" + msg))
+                .onError(msg -> WynntilsMod.warn("Problem querying Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1))
                 .processContainer(c -> processQuestBookPage(c, 1));

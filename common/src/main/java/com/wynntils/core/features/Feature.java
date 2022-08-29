@@ -5,12 +5,14 @@
 package com.wynntils.core.features;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
@@ -32,7 +34,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable {
+public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
@@ -43,6 +45,8 @@ public abstract class Feature implements Translatable, Configurable {
     protected boolean enabled = false;
 
     protected boolean initFinished = false;
+
+    private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -56,6 +60,8 @@ public abstract class Feature implements Translatable, Configurable {
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
         initFinished = true;
+
+        assert !getTranslatedName().startsWith("feature.wynntils.");
     }
 
     public final void initOverlays() {
@@ -72,6 +78,8 @@ public abstract class Feature implements Translatable, Configurable {
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
                 OverlayManager.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
+
+                assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField);
                 e.printStackTrace();
@@ -228,6 +236,22 @@ public abstract class Feature implements Translatable, Configurable {
 
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+    public FeatureCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(FeatureCategory category) {
+        this.category = category;
+    }
+
+    @Override
+    public int compareTo(Feature other) {
+        return ComparisonChain.start()
+                .compare(this.getCategory().toString(), other.getCategory().toString())
+                .compare(this.getTranslatedName(), other.getTranslatedName())
+                .result();
+    }
 
     public static class WebLoadedCondition extends Condition {
         @Override

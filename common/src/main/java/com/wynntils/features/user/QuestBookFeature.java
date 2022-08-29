@@ -31,7 +31,6 @@ public class QuestBookFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         if (e.getNewState() == WorldStateManager.State.WORLD) {
-            WynntilsMod.info("Scheduling quest book query");
             rescanQuestBook();
         }
     }

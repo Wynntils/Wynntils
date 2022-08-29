@@ -25,10 +25,8 @@ public final class KeyBindManager extends CoreManager {
     public static void init() {}
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent e) {
-        if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-            triggerKeybinds();
-        }
+    public static void onTick(ClientTickEvent.End e) {
+        triggerKeybinds();
     }
 
     @SubscribeEvent
@@ -42,7 +40,8 @@ public final class KeyBindManager extends CoreManager {
 
     public static void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
-            throw new IllegalStateException("Can not add " + toAdd + " since the name already exists");
+            throw new IllegalStateException(
+                    "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
         KEY_BINDS.add(toAdd);

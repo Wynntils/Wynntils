@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user.overlays;
+package com.wynntils.features.user.overlays.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -26,17 +25,21 @@ import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public class MiniMapOverlayFeature extends UserFeature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
     public static class MiniMapOverlay extends Overlay {
+
+        private static final int DEFAULT_SIZE = 150;
 
         @Config
         public float scale = 1f;
@@ -50,6 +53,12 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Config
         public MapMaskType maskType = MapMaskType.Rectangular;
 
+        @Config
+        public MapBorderType borderType = MapBorderType.Wynn;
+
+        @Config
+        public PointerType pointerType = PointerType.Arrow;
+
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
@@ -58,13 +67,15 @@ public class MiniMapOverlayFeature extends UserFeature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
-                    new GuiScaledOverlaySize(150, 150));
+                    new GuiScaledOverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
         }
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WebManager.isMapLoaded()) return;
+            if (!WynnUtils.onWorld()) return;
 
+            // TODO replace with generalized maps whenever that is done
             MapProfile map = WebManager.getMaps().get(0);
 
             float width = getWidth();
@@ -77,25 +88,25 @@ public class MiniMapOverlayFeature extends UserFeature {
             float textureX = map.getTextureXPosition(McUtils.player().getX());
             float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
-            // Render Minimap
+            float yRot = McUtils.player().getYRot();
 
             // enable mask
             switch (maskType) {
-                case Rectangular -> {
-                    RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                }
+                case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
                     // case Circle -> {
                     // TODO
                     // }
             }
 
+            // enable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.pushPose();
-                rotateMapToPlayer(poseStack, centerX, centerZ);
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - yRot);
             }
 
             renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
 
+            // disable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.popPose();
             }
@@ -104,19 +115,43 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO compass icon
 
-            // disable mask
+            // cursor
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + yRot);
+            }
+
+            // TODO cursor color?
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    Texture.MAP_POINTERS.resource(),
+                    (int) (centerX - pointerType.width / 2),
+                    (int) (centerZ - pointerType.height / 2),
+                    0,
+                    pointerType.width,
+                    pointerType.height,
+                    0,
+                    pointerType.textureY,
+                    pointerType.width,
+                    pointerType.height,
+                    Texture.MAP_POINTERS.width(),
+                    Texture.MAP_POINTERS.height());
+
+            if (!followPlayerRotation) {
+                poseStack.popPose();
+            }
+
+            // disable mask & render border
             switch (maskType) {
                 case Rectangular -> {
                     RenderSystem.disableScissor();
+                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
                 }
                     // case Circle -> {
                     // TODO
+                    // renderCircularMapBorder();
                     // }
             }
-
-            // TODO cursor
-
-            // TODO Border rendering
 
             // TODO Directional Text
 
@@ -124,16 +159,41 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         }
 
-        private void rotateMapToPlayer(PoseStack poseStack, float centerX, float centerZ) {
-            poseStack.translate(centerX, centerZ, 0);
-            // See Quaternion#fromXYZ
-            poseStack.mulPose(new Quaternion(
-                    0F,
+        private void renderRectangularMapBorder(
+                PoseStack poseStack, float renderX, float renderY, float width, float height) {
+            Texture texture = borderType.texture();
+            int grooves = borderType.groovesSize();
+            int tx1 = borderType.tx1();
+            int ty1 = borderType.ty1();
+            int tx2 = borderType.tx2();
+            int ty2 = borderType.ty2();
+
+            // Scale to stay the same.
+            float groovesWidth = grooves * width / DEFAULT_SIZE;
+            float groovesHeight = grooves * height / DEFAULT_SIZE;
+
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, texture.resource());
+
+            // TODO remove int casts with settings pr merge
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    texture.resource(),
+                    (int) (renderX - groovesWidth),
+                    (int) (renderY - groovesHeight),
                     0,
-                    (float) StrictMath.sin(Math.toRadians(180 - McUtils.player().getYRot()) / 2),
-                    (float) StrictMath.cos(
-                            -Math.toRadians(180 - McUtils.player().getYRot()) / 2)));
-            poseStack.translate(-centerX, -centerZ, 0);
+                    (int) (width + 2 * groovesWidth),
+                    (int) (height + 2 * groovesHeight),
+                    tx1,
+                    ty1,
+                    tx2 - tx1,
+                    ty2 - ty1,
+                    texture.width(),
+                    texture.height());
+        }
+
+        private void renderCircularMapBorder(float renderX, float renderY, float width, float height) {
+            // TODO
         }
 
         private void renderMapQuad(
@@ -179,6 +239,7 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             Matrix4f matrix = poseStack.last().pose();
 
+            // TODO replace with RenderUtils after settings pr is merged
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder
@@ -203,10 +264,5 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
-    }
-
-    public enum MapMaskType {
-        Rectangular,
-        // Circle;
     }
 }

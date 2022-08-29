@@ -22,6 +22,7 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+        clientOnlyMinecraftJar()
 
         accessWidenerPath = file("src/main/resources/wynntils.accessWidener")
 
@@ -32,6 +33,7 @@ subprojects {
                     vmArgs "-XX:+AllowEnhancedClassRedefinition"
                     vmArgs "-XX:HotswapAgent=fatjar"
                 }
+                vmArgs "-ea" // run dev builds with asserts
                 client()
             }
         }

@@ -22,8 +22,8 @@ public class Delay {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent e) {
-        if (e.getTickPhase() == ClientTickEvent.Phase.END && !onPause && isRunning) {
+    public void onTick(ClientTickEvent.End e) {
+        if (!onPause && isRunning) {
             if (delay < 0) {
                 start();
             }

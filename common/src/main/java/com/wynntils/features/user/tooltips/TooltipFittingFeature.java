@@ -7,6 +7,7 @@ package com.wynntils.features.user.tooltips;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -19,7 +20,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
+@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
     @Config
     public static float universalScale = 1f;

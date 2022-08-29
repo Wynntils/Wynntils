@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
@@ -20,14 +21,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ContainerQueryManager extends CoreManager {
     private static final int NO_CONTAINER = -2;
     private static final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
+    public static final int OPERATION_TIMEOUT_TICKS = 30; // normal operation is ~10 ticks
 
     private static ContainerQueryStep currentStep;
     private static String firstStepName;
+    private static ContainerQueryStep lastStep;
 
     private static Component currentTitle;
     private static MenuType currentMenuType;
     private static int containerId = NO_CONTAINER;
     private static int lastHandledContentId = NO_CONTAINER;
+    private static int ticksRemaining;
+
+    public static void init() {}
 
     public static void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
@@ -56,7 +62,8 @@ public class ContainerQueryManager extends CoreManager {
 
         currentStep = firstStep;
         firstStepName = firstStep.getName();
-
+        lastStep = null;
+        resetTimer();
         if (!firstStep.startStep(null)) {
             raiseError("Cannot execute first step");
         }
@@ -64,16 +71,24 @@ public class ContainerQueryManager extends CoreManager {
 
     @SubscribeEvent
     public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        if (currentStep == null) return;
+        if (currentStep == null) {
+            if (lastStep != null) {
+                // We're in a possibly bad state. We have failed a previous call, but
+                // we might still get the menu opened (perhaps after a lag spike).
+                handleFailedOpen(e);
+            }
+            return;
+        }
 
         boolean matches = currentStep.verifyContainer(e.getTitle(), e.getMenuType());
         if (matches) {
             containerId = e.getContainerId();
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
+            resetTimer();
             e.setCanceled(true);
         } else {
-            raiseError("Unexpected container opened: " + e.getTitle().getString());
+            raiseError("Unexpected container opened: '" + e.getTitle().getString() + "'");
         }
     }
 
@@ -93,8 +108,8 @@ public class ContainerQueryManager extends CoreManager {
         if (e.getContainerId() == 0) return;
 
         if (containerId == NO_CONTAINER) {
-            // We have not registered a MenuOpenedEvent
-            raiseError("Container contents without associated container open");
+            // We have not registered a MenuOpenedEvent. Assume this means that this is the
+            // content of another container, so just pass it on
             return;
         }
 
@@ -107,12 +122,14 @@ public class ContainerQueryManager extends CoreManager {
         if (containerId == lastHandledContentId) {
             // Wynncraft sometimes sends contents twice; just drop this silently
             e.setCanceled(true);
+            resetTimer();
             return;
         }
 
         lastHandledContentId = containerId;
         ContainerContent currentContainer =
                 new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
+        resetTimer();
 
         // Now actually process this container
         currentStep.handleContent(currentContainer);
@@ -136,12 +153,24 @@ public class ContainerQueryManager extends CoreManager {
         e.setCanceled(true);
     }
 
+    @SubscribeEvent
+    public static void onTick(ClientTickEvent.Start event) {
+        if (currentStep == null) return;
+
+        ticksRemaining--;
+
+        if (ticksRemaining <= 0) {
+            raiseError("Container reply timed out");
+        }
+    }
+
     private static void raiseError(String errorMsg) {
         if (currentStep == null) {
             WynntilsMod.error("Internal error in ContainerQueryManager: handleError called with no currentStep");
             return;
         }
         currentStep.onError(errorMsg);
+        lastStep = currentStep;
         endQuery();
     }
 
@@ -149,5 +178,23 @@ public class ContainerQueryManager extends CoreManager {
         containerId = NO_CONTAINER;
         lastHandledContentId = NO_CONTAINER;
         currentStep = null;
+    }
+
+    private static void resetTimer() {
+        ticksRemaining = OPERATION_TIMEOUT_TICKS;
+    }
+
+    private static void handleFailedOpen(MenuEvent.MenuOpenedEvent e) {
+        boolean matches = lastStep.verifyContainer(e.getTitle(), e.getMenuType());
+        if (matches) {
+            // This was the container we were supposed to be looking for
+            WynntilsMod.warn(
+                    "Closing container '" + e.getTitle().getString() + "' due to previously aborted container query");
+            lastStep = null;
+            e.setCanceled(true);
+        } else {
+            // Not the one we were looking for, stop looking
+            lastStep = null;
+        }
     }
 }

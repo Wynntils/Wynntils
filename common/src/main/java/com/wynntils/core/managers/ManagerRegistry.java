@@ -142,6 +142,7 @@ public final class ManagerRegistry {
             MethodUtils.invokeExactStaticMethod(manager, "init");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             WynntilsMod.warn(e.getMessage());
+            assert false;
         }
     }
 

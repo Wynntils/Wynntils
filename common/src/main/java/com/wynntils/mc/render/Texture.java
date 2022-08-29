@@ -16,7 +16,13 @@ public enum Texture {
     LOOTRUN_LINE("path_arrow.png", 16, 16),
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
-    WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64);
+    WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
+
+    // Map related
+    GILDED_MAP_TEXTURES("map/gilded_map_textures.png", 262, 524),
+    PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
+    WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256),
+    MAP_POINTERS("map/map_pointers.png", 256, 256);
 
     private final ResourceLocation resource;
     private final int width;

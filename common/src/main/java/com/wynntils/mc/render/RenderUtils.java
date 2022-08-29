@@ -15,6 +15,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
@@ -734,6 +735,14 @@ public final class RenderUtils {
         RenderSystem.enableScissor(
                 (int) (x * scale), (int) (window.getHeight() - ((y + height) * scale)), (int) (width * scale), (int)
                         (height * scale));
+    }
+
+    public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
+        poseStack.translate(centerX, centerZ, 0);
+        // See Quaternion#fromXYZ
+        poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
+                StrictMath.cos(-Math.toRadians(angle) / 2)));
+        poseStack.translate(-centerX, -centerZ, 0);
     }
 
     private static final class ClipboardImage implements Transferable {

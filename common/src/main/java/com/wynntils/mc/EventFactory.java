@@ -376,11 +376,11 @@ public final class EventFactory {
 
     // region Game Events
     public static void onTickStart() {
-        post(new ClientTickEvent(ClientTickEvent.Phase.START), true);
+        post(new ClientTickEvent.Start(), true);
     }
 
     public static void onTickEnd() {
-        post(new ClientTickEvent(ClientTickEvent.Phase.END), true);
+        post(new ClientTickEvent.End(), true);
     }
 
     public static void onResizeDisplayPost() {
