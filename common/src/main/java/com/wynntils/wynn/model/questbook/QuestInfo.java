@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
-    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ $");
+    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
