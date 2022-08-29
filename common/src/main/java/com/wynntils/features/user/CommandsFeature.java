@@ -7,7 +7,6 @@ package com.wynntils.features.user;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandsFeature extends UserFeature {

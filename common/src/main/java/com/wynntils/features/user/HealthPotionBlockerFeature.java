@@ -14,7 +14,6 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

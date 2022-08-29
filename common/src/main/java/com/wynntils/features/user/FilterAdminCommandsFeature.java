@@ -8,7 +8,6 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
