@@ -16,41 +16,39 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
     }
 
     @Override
-    protected void renderConfigAppropriateButton(PoseStack poseStack, float width, float height) {
-        if (configHolder.getType().equals(Boolean.class)) {
-            float size = featureSettingWidget.getEnabledSwitchSize();
+    protected void renderConfigAppropriateButton(
+            PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
+        float size = featureSettingWidget.getConfigOptionElementSize() * 1.5f;
 
-            final Texture switchTexture = (boolean) configHolder.getValue() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
+        final Texture switchTexture = (boolean) configHolder.getValue() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
 
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    switchTexture.resource(),
-                    width - width / 10f,
-                    height / 2f - size / 2f,
-                    0,
-                    size * 2f,
-                    size,
-                    0,
-                    0,
-                    switchTexture.width(),
-                    switchTexture.height(),
-                    switchTexture.width(),
-                    switchTexture.height());
-        }
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                switchTexture.resource(),
+                width - width / 10f - size / 2,
+                height / 2f - size / 2f,
+                0,
+                size * 2f,
+                size,
+                0,
+                0,
+                switchTexture.width(),
+                switchTexture.height(),
+                switchTexture.width(),
+                switchTexture.height());
     }
 
     @Override
     public void mouseClicked(double mouseX, double mouseY, int button) {
         Boolean value = (Boolean) configHolder.getValue();
 
-        System.out.println("value = " + value);
-
         if (value == null) {
             configHolder.setValue(false);
         } else {
             configHolder.setValue(!value);
         }
-
-        System.out.println("configHolder.getValue() = " + configHolder.getValue());
     }
+
+    @Override
+    public void keyPressed(int keyCode, int scanCode, int modifiers) {}
 }

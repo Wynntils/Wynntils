@@ -45,7 +45,7 @@ public abstract class ConfigOptionElement {
 
         renderDescription(poseStack, width, height);
 
-        renderConfigAppropriateButton(poseStack, width, height);
+        renderConfigAppropriateButton(poseStack, width, height, mouseX, mouseY, partialTick);
 
         poseStack.popPose();
     }
@@ -88,9 +88,12 @@ public abstract class ConfigOptionElement {
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
     }
 
-    protected abstract void renderConfigAppropriateButton(PoseStack poseStack, float width, float height);
+    protected abstract void renderConfigAppropriateButton(
+            PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks);
 
     public abstract void mouseClicked(double mouseX, double mouseY, int button);
+
+    public abstract void keyPressed(int keyCode, int scanCode, int modifiers);
 
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

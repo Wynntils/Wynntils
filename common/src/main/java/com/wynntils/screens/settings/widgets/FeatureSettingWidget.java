@@ -17,7 +17,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.elements.BooleanConfigOptionElement;
 import com.wynntils.screens.settings.elements.ConfigOptionElement;
-import com.wynntils.screens.settings.elements.DummyConfigOptionElement;
+import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     private Feature cachedFeature = null;
     private List<ConfigOptionElement> configWidgets = new ArrayList<>();
-    private ConfigOptionElement hoveredConfigWidget = null;
+    private ConfigOptionElement hoveredConfigElement = null;
     private boolean enabledStateChangeable = false;
     private int scrollIndexOffset = 0;
 
@@ -73,14 +73,14 @@ public final class FeatureSettingWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.onClick(mouseX, mouseY);
 
-        if (hoveredConfigWidget != null) {
-            hoveredConfigWidget.mouseClicked(mouseX, mouseY, button);
+        if (hoveredConfigElement != null) {
+            hoveredConfigElement.mouseClicked(mouseX, mouseY, button);
             return true;
         }
 
         float switchRenderX = getEnabledSwitchRenderX() + this.x;
         float switchRenderY = getEnabledSwitchRenderY() + this.y;
-        float switchSize = getEnabledSwitchSize();
+        float switchSize = getConfigOptionElementSize();
 
         // Clicked on switch
         if (mouseX >= switchRenderX
@@ -90,7 +90,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
             if (!(cachedFeature instanceof UserFeature userFeature)) {
                 WynntilsMod.error(cachedFeature + " had userEnabled field, but is not a UserFeature.");
                 assert false;
-                return false;
+                return true;
             }
 
             userFeature.setUserEnabled(!userFeature.isEnabled());
@@ -99,7 +99,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
             return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -108,6 +108,16 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 scrollIndexOffset - (int) delta * 2, 0, Math.max(0, configWidgets.size() - MAX_RENDER_COUNT));
 
         return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (hoveredConfigElement != null) {
+            hoveredConfigElement.keyPressed(keyCode, scanCode, modifiers);
+            return true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -130,7 +140,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private void renderEnabledSwitch(PoseStack poseStack, Feature selectedFeature) {
         if (!enabledStateChangeable) return;
 
-        float size = getEnabledSwitchSize();
+        float size = getConfigOptionElementSize();
 
         final Texture switchTexture = selectedFeature.isEnabled() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
 
@@ -157,7 +167,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         final float xOffset = this.width / 35f;
 
-        hoveredConfigWidget = null;
+        hoveredConfigElement = null;
 
         for (int i = scrollIndexOffset; i < configWidgets.size(); i += 2) {
             ConfigOptionElement configWidgetLeft = configWidgets.get(i);
@@ -175,7 +185,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
             float actualRenderY = this.y + renderY;
 
             if (isMouseOverConfigWidget(actualRenderX, actualRenderY, renderWidth, renderHeight, mouseX, mouseY)) {
-                this.hoveredConfigWidget = configWidgetLeft;
+                this.hoveredConfigElement = configWidgetLeft;
             }
 
             if (configWidgetRight != null) {
@@ -183,7 +193,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 renderWidth = fullWidth / 2;
 
                 if (isMouseOverConfigWidget(actualRenderX, actualRenderY, renderWidth, renderHeight, mouseX, mouseY)) {
-                    this.hoveredConfigWidget = configWidgetRight;
+                    this.hoveredConfigElement = configWidgetRight;
                 }
 
                 configWidgetRight.render(
@@ -257,7 +267,11 @@ public final class FeatureSettingWidget extends AbstractWidget {
         configWidgets.clear();
         scrollIndexOffset = 0;
         enabledStateChangeable = false;
-        hoveredConfigWidget = null;
+        hoveredConfigElement = null;
+
+        if (settingsScreen.getFocusedTextInput() != settingsScreen.getSearchWidget()) {
+            settingsScreen.setFocusedTextInput(null);
+        }
 
         for (ConfigHolder configOption : selectedFeature.getVisibleConfigOptions()) {
             if (configOption.getFieldName().equals("userEnabled")) {
@@ -268,7 +282,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
             if (configOption.getType().equals(Boolean.class)) {
                 configWidgets.add(new BooleanConfigOptionElement(configOption, this));
             } else {
-                configWidgets.add(new DummyConfigOptionElement(configOption, this));
+                configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
             }
         }
 
@@ -295,14 +309,14 @@ public final class FeatureSettingWidget extends AbstractWidget {
     }
 
     private float getEnabledSwitchRenderX() {
-        return this.width / 2f - getEnabledSwitchSize();
+        return this.width / 2f - getConfigOptionElementSize();
     }
 
-    public float getEnabledSwitchSize() {
+    public float getConfigOptionElementSize() {
         return this.width / 80f;
     }
 
-    public ConfigOptionElement getHoveredConfigWidget() {
-        return hoveredConfigWidget;
+    public ConfigOptionElement getHoveredConfigElement() {
+        return hoveredConfigElement;
     }
 }

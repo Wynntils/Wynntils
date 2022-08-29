@@ -16,6 +16,7 @@ import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
 import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import com.wynntils.screens.widgets.SearchWidget;
+import com.wynntils.screens.widgets.TextInputBoxWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,6 +44,8 @@ public class WynntilsSettingsScreen extends Screen {
 
     private Button exitButton;
     private Button saveButton;
+
+    private TextInputBoxWidget focusedTextInput = null;
 
     public WynntilsSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
@@ -76,7 +79,8 @@ public class WynntilsSettingsScreen extends Screen {
                 (int) (BAR_HEIGHT + 25),
                 (int) (this.width / 6f),
                 SEARCH_BAR_HEIGHT,
-                newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText));
+                newSearchText -> featureList.reAddEntriesWithSearchFilter(newSearchText),
+                this);
 
         this.featureSettingWidget = new FeatureSettingWidget(
                 this.width / 5, (int) BAR_HEIGHT, this.width / 5 * 4, (int) (this.height - BAR_HEIGHT * 2), this);
@@ -159,8 +163,9 @@ public class WynntilsSettingsScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        return featureList.mouseClicked(mouseX, mouseY, button);
+        return featureList.mouseClicked(mouseX, mouseY, button)
+                || searchWidget.mouseClicked(mouseX, mouseY, button)
+                || super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -170,14 +175,25 @@ public class WynntilsSettingsScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (focusedTextInput != null) {
+            return focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
+        }
+
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
             exitWithoutSaving(this.exitButton);
             return true;
         }
 
-        super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyCode, scanCode, modifiers) || featureList.keyPressed(keyCode, scanCode, modifiers);
+    }
 
-        return featureList.keyPressed(keyCode, scanCode, modifiers);
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (focusedTextInput != null) {
+            return focusedTextInput.charTyped(codePoint, modifiers);
+        }
+
+        return super.charTyped(codePoint, modifiers);
     }
 
     private void saveAndExit(Button button) {
@@ -207,5 +223,17 @@ public class WynntilsSettingsScreen extends Screen {
 
     public void setSelectedFeature(FeatureEntry selectedFeatureEntry) {
         this.selectedFeatureEntry = selectedFeatureEntry;
+    }
+
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
+    }
+
+    public SearchWidget getSearchWidget() {
+        return searchWidget;
     }
 }

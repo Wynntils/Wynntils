@@ -10,49 +10,42 @@ import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.lwjgl.glfw.GLFW;
 
-// FIXME: This is a very basic text box. Selection does not work.
-public class SearchWidget extends AbstractWidget {
-    private static char CURSOR_CHAR = '_';
-
+public class SearchWidget extends TextInputBoxWidget {
     private final Component DEFAULT_TEXT = new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
-    private String searchText = "";
-
-    private int cursorPosition = 0;
-
-    private Consumer<String> onUpdateConsumer;
-
-    public SearchWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("Search..."));
-    }
-
-    public SearchWidget(int x, int y, int width, int height, Consumer<String> onUpdateConsumer) {
-        super(x, y, width, height, new TextComponent("Search..."));
-        this.onUpdateConsumer = onUpdateConsumer;
+    public SearchWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<String> onUpdateConsumer,
+            WynntilsSettingsScreen settingsScreen) {
+        super(x, y, width, height, new TextComponent("Search..."), onUpdateConsumer, settingsScreen);
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
+        String cursorChar = getRenderCursorChar();
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        Objects.equals(searchText, "")
+                        Objects.equals(textBoxInput, "") && !isFocused()
                                 ? DEFAULT_TEXT.getString()
-                                : (searchText.substring(0, cursorPosition)
-                                        + CURSOR_CHAR
-                                        + searchText.substring(cursorPosition)),
+                                : (textBoxInput.substring(0, cursorPosition)
+                                        + cursorChar
+                                        + textBoxInput.substring(cursorPosition)),
                         this.x + 5,
                         this.x + this.width - 5,
                         this.y + 6.5f,
@@ -81,59 +74,11 @@ public class SearchWidget extends AbstractWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        this.changeFocus(true);
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        if (Character.isLetterOrDigit(codePoint) || codePoint == GLFW.GLFW_KEY_SPACE) {
-            if (searchText == null) {
-                searchText = "";
-            }
-
-            searchText = searchText.substring(0, cursorPosition) + codePoint + searchText.substring(cursorPosition);
-            cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
-            this.onUpdateConsumer.accept(this.getSearchText());
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
-            if (searchText.length() == 0) {
-                return false;
-            }
-
-            searchText =
-                    searchText.substring(0, Math.max(0, cursorPosition - 1)) + searchText.substring(cursorPosition);
-            cursorPosition = Math.max(0, cursorPosition - 1);
-            this.onUpdateConsumer.accept(this.getSearchText());
-            return false;
-        }
-
-        if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            cursorPosition = Math.max(0, cursorPosition - 1);
-            this.onUpdateConsumer.accept(this.getSearchText());
-            return false;
-        }
-
-        if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            cursorPosition = Math.min(searchText.length(), cursorPosition + 1);
-            this.onUpdateConsumer.accept(this.getSearchText());
-            return false;
-        }
-
-        return false;
-    }
-
-    @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
-    public String getSearchText() {
-        return searchText;
+    @Override
+    protected void removeFocus() {
+        this.setTextBoxInput("");
+        super.removeFocus();
     }
 }

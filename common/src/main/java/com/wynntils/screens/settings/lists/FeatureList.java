@@ -170,7 +170,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 && mouseY >= scrollButtonYPos
                 && mouseY <= scrollButtonYPos + size) {
             draggingScrollButton = true;
-            return false;
+            return true;
         }
 
         // Update hovered
@@ -184,10 +184,10 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
         if (hovered instanceof FeatureEntry featureEntry) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             settingsScreen.setSelectedFeature(featureEntry);
-            return false;
+            return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
