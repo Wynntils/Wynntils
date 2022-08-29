@@ -55,7 +55,6 @@ public class TranslationFeature extends UserFeature {
     public void onChat(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo) return;
-        if (!WynnUtils.onServer()) return;
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);

@@ -76,8 +76,6 @@ public class ItemStackTransformModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetSlot(SetSlotEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         ItemStack stack = event.getItem();
 
         // itemstack transformers

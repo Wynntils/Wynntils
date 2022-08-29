@@ -85,7 +85,6 @@ public final class ChatModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
-        if (!WynnUtils.onServer()) return;
         if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();

@@ -106,10 +106,18 @@ import net.minecraftforge.eventbus.api.Event;
 
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
-    private static <T extends Event> T post(T event, boolean condition) {
-        if (condition) {
+    private static <T extends Event> T post(T event) {
+        if (WynnUtils.onServer()) {
             WynntilsMod.getEventBus().post(event);
         }
+        return event;
+    }
+
+    /**
+     * Post event without checking if we are connected to a Wynncraft server
+     */
+    private static <T extends Event> T postAlways(T event) {
+        WynntilsMod.getEventBus().post(event);
         return event;
     }
 
@@ -120,67 +128,65 @@ public final class EventFactory {
             float partialTick,
             Matrix4f projectionMatrix,
             long finishTimeNano) {
-        post(
-                new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano),
-                WynnUtils.onServer());
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
     }
 
     public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
-        post(new RenderEvent.Pre(poseStack, partialTicks, window, RenderEvent.ElementType.GUI), WynnUtils.onServer());
+        post(new RenderEvent.Pre(poseStack, partialTicks, window, RenderEvent.ElementType.GUI));
     }
 
     public static void onRenderGuiPost(PoseStack poseStack, float partialTicks, Window window) {
-        post(new RenderEvent.Post(poseStack, partialTicks, window, RenderEvent.ElementType.GUI), WynnUtils.onServer());
+        post(new RenderEvent.Post(poseStack, partialTicks, window, RenderEvent.ElementType.GUI));
     }
 
     public static RenderEvent.Pre onRenderCrosshairPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.Crosshair), WynnUtils.onServer());
+        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.Crosshair));
     }
 
     public static RenderEvent.Pre onRenderHearthsPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar), true);
+        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar));
     }
 
     public static RenderEvent.Pre onRenderFoodPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar), true);
+        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
     }
 
     public static void onContainerRender(
             Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
-        post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot), true);
+        post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
     public static ItemTooltipRenderEvent.Pre onItemTooltipRenderPre(
             PoseStack poseStack, ItemStack stack, List<Component> tooltips, int mouseX, int mouseY) {
-        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, tooltips, mouseX, mouseY), true);
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, tooltips, mouseX, mouseY));
     }
 
     public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY), true);
+        post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY));
     }
 
     public static void onSlotRenderPre(Screen screen, Slot slot) {
-        post(new SlotRenderEvent.Pre(screen, slot), true);
+        post(new SlotRenderEvent.Pre(screen, slot));
     }
 
     public static void onSlotRenderPost(Screen screen, Slot slot) {
-        post(new SlotRenderEvent.Post(screen, slot), true);
+        post(new SlotRenderEvent.Post(screen, slot));
     }
 
     public static void onHotbarSlotRenderPre(ItemStack stack, int x, int y) {
-        post(new HotbarSlotRenderEvent.Pre(stack, x, y), true);
+        post(new HotbarSlotRenderEvent.Pre(stack, x, y));
     }
 
     public static void onHotbarSlotRenderPost(ItemStack stack, int x, int y) {
-        post(new HotbarSlotRenderEvent.Post(stack, x, y), true);
+        post(new HotbarSlotRenderEvent.Post(stack, x, y));
     }
 
     public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
-        return post(new DrawPotionGlintEvent(item), true);
+        return post(new DrawPotionGlintEvent(item));
     }
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
-        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f), true);
+        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
     }
 
     // endregion
@@ -188,62 +194,60 @@ public final class EventFactory {
     // region Screen Events
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            post(new TitleScreenInitEvent(titleScreen, addButton), true);
+            postAlways(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
-            post(new PauseMenuInitEvent(pauseMenuScreen, addButton), true);
+            post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
         }
     }
 
     public static void onScreenOpened(Screen screen) {
-        post(new ScreenOpenedEvent(screen), true);
+        post(new ScreenOpenedEvent(screen));
     }
 
     public static void onScreenClose() {
-        post(new ScreenClosedEvent(), true);
+        post(new ScreenClosedEvent());
     }
 
     public static MenuOpenedEvent onOpenScreen(ClientboundOpenScreenPacket packet) {
-        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()), true);
+        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
     }
 
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
-        return post(
-                new ContainerSetContentEvent(
-                        packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()),
-                true);
+        return post(new ContainerSetContentEvent(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
 
     // endregion
 
     // region Container Events
     public static void onClientboundContainerClosePacket(int containerId) {
-        post(new MenuClosedEvent(containerId), true);
+        post(new MenuClosedEvent(containerId));
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {
-        return post(new ContainerCloseEvent.Pre(), true);
+        return post(new ContainerCloseEvent.Pre());
     }
 
     public static void onCloseContainerPost() {
-        post(new ContainerCloseEvent.Post(), true);
+        post(new ContainerCloseEvent.Post());
     }
 
     public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
-        return post(new SetSlotEvent(container, slot, item), true);
+        return post(new SetSlotEvent(container, slot, item));
     }
 
     public static InventoryKeyPressEvent onInventoryKeyPress(
             int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
-        return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot), true);
+        return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
     }
 
     public static ContainerClickEvent onContainerClickEvent(
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum), true);
+        return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
 
     public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
-        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack), true);
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
     }
 
     // endregion
@@ -253,79 +257,78 @@ public final class EventFactory {
         if (!packet.getRelativeArguments().isEmpty()) return;
 
         Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
-        post(new PlayerTeleportEvent(newPosition), true);
+        post(new PlayerTeleportEvent(newPosition));
     }
 
     public static KeyInputEvent onKeyInput(int key, int scanCode, int action, int modifiers) {
-        return post(new KeyInputEvent(key, scanCode, action, modifiers), true);
+        return post(new KeyInputEvent(key, scanCode, action, modifiers));
     }
 
     public static Event onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
         PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
-        return post(event, true);
+        return post(event);
     }
 
     public static Event onUseItem(Player player, Level level, InteractionHand hand) {
-        return post(new UseItemEvent(player, level, hand), true);
+        return post(new UseItemEvent(player, level, hand));
     }
 
     public static DropHeldItemEvent onDropPre(boolean fullStack) {
-        return post(new DropHeldItemEvent(fullStack), true);
+        return post(new DropHeldItemEvent(fullStack));
     }
     // endregion
 
     // region Chat Events
     public static ChatSentEvent onChatSent(String message) {
-        return post(new ChatSentEvent(message), true);
+        return post(new ChatSentEvent(message));
     }
 
     public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
-        return post(new ChatPacketReceivedEvent(type, message), true);
+        return post(new ChatPacketReceivedEvent(type, message));
     }
     // endregion
 
     // region Server Events
     public static void onDisconnect() {
-        post(new DisconnectedEvent(), true);
+        post(new DisconnectedEvent());
     }
 
     public static void onConnect(String host, int port) {
-        post(new ConnectedEvent(host, port), true);
+        postAlways(new ConnectedEvent(host, port));
     }
 
     public static void onResourcePack() {
-        post(new ResourcePackEvent(), true);
+        post(new ResourcePackEvent());
     }
 
     public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
-        return post(new CommandsPacketEvent(root), true);
+        return post(new CommandsPacketEvent(root));
     }
 
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
-        return post(
-                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()),
-                true);
+        return post(new SetPlayerTeamEvent(
+                ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
     }
 
     public static AddEntityLookupEvent onAddEntityLookup(UUID uuid, Map<UUID, EntityAccess> entityMap) {
-        return post(new AddEntityLookupEvent(uuid, entityMap), true);
+        return post(new AddEntityLookupEvent(uuid, entityMap));
     }
 
     public static SetEntityPassengersEvent onSetEntityPassengers(ClientboundSetPassengersPacket packet) {
-        return post(new SetEntityPassengersEvent(packet.getVehicle()), true);
+        return post(new SetEntityPassengersEvent(packet.getVehicle()));
     }
 
     public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
-        return post(new RemovePlayerFromTeamEvent(username, playerTeam), true);
+        return post(new RemovePlayerFromTeamEvent(username, playerTeam));
     }
 
     public static BossHealthUpdateEvent onBossHealthUpdate(
             ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
-        return post(new BossHealthUpdateEvent(packet, bossEvents), true);
+        return post(new BossHealthUpdateEvent(packet, bossEvents));
     }
 
     public static SetSpawnEvent onSetSpawn(BlockPos spawnPos) {
-        return post(new SetSpawnEvent(spawnPos), true);
+        return post(new SetSpawnEvent(spawnPos));
     }
 
     public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
@@ -336,66 +339,64 @@ public final class EventFactory {
             for (PlayerUpdate entry : entries) {
                 GameProfile profile = entry.getProfile();
                 if (entry.getDisplayName() == null) continue;
-                post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()), true);
+                post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()));
             }
         } else if (action == Action.ADD_PLAYER) {
             for (PlayerUpdate entry : entries) {
                 GameProfile profile = entry.getProfile();
-                post(new PlayerLogInEvent(profile.getId(), profile.getName()), true);
+                post(new PlayerLogInEvent(profile.getId(), profile.getName()));
             }
         } else if (action == Action.REMOVE_PLAYER) {
             for (PlayerUpdate entry : entries) {
                 GameProfile profile = entry.getProfile();
-                post(new PlayerLogOutEvent(profile.getId()), true);
+                post(new PlayerLogOutEvent(profile.getId()));
             }
         }
     }
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
         String footer = packet.getFooter().getString();
-        post(new PlayerInfoFooterChangedEvent(footer), true);
+        post(new PlayerInfoFooterChangedEvent(footer));
     }
 
     public static ScoreboardSetScoreEvent onSetScore(ClientboundSetScorePacket packet) {
-        return post(
-                new ScoreboardSetScoreEvent(
-                        packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()),
-                true);
+        return post(new ScoreboardSetScoreEvent(
+                packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()));
     }
     // endregion
 
     // region Packet Events
     public static <T extends Packet<?>> PacketSentEvent<T> onPacketSent(T packet) {
-        return post(new PacketSentEvent<>(packet), true);
+        return postAlways(new PacketSentEvent<>(packet));
     }
 
     public static <T extends Packet<?>> PacketReceivedEvent<T> onPacketReceived(T packet) {
-        return post(new PacketReceivedEvent<>(packet), true);
+        return postAlways(new PacketReceivedEvent<>(packet));
     }
     // endregion
 
     // region Game Events
     public static void onTickStart() {
-        post(new ClientTickEvent.Start(), true);
+        post(new ClientTickEvent.Start());
     }
 
     public static void onTickEnd() {
-        post(new ClientTickEvent.End(), true);
+        post(new ClientTickEvent.End());
     }
 
     public static void onResizeDisplayPost() {
-        post(new DisplayResizeEvent(), true);
+        post(new DisplayResizeEvent());
     }
 
     // endregion
 
     // region Title Events
     public static Event onTitleSetText(ClientboundSetTitleTextPacket packet) {
-        return post(new TitleSetTextEvent(packet.getText()), true);
+        return post(new TitleSetTextEvent(packet.getText()));
     }
 
     public static Event onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
-        return post(new SubtitleSetTextEvent(packet.getText()), true);
+        return post(new SubtitleSetTextEvent(packet.getText()));
     }
 
     // endregion

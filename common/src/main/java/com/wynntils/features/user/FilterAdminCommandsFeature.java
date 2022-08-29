@@ -35,8 +35,6 @@ public class FilterAdminCommandsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onCommandPacket(CommandsPacketEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
         RootCommandNode<SharedSuggestionProvider> newRoot = new RootCommandNode<>();

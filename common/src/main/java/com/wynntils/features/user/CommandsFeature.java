@@ -13,8 +13,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CommandsFeature extends UserFeature {
     @SubscribeEvent
     public void onChatSend(ChatSentEvent e) {
-        if (!WynnUtils.onServer()) return;
-
         String message = e.getMessage();
 
         if (message.startsWith("/")) {

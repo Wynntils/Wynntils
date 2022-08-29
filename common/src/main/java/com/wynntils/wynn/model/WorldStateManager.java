@@ -76,8 +76,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void screenOpened(ScreenOpenedEvent e) {
-        if (!onServer()) return;
-
         if (e.getScreen() instanceof DisconnectedScreen) {
             setState(State.NOT_CONNECTED, "");
         }
@@ -85,8 +83,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void disconnected(DisconnectedEvent e) {
-        if (!onServer()) return;
-
         setState(State.NOT_CONNECTED, "");
     }
 
@@ -108,8 +104,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void remove(PlayerLogOutEvent e) {
-        if (!onServer()) return;
-
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
             setState(State.INTERIM, "");
         }
@@ -117,8 +111,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void onTeleport(PlayerTeleportEvent e) {
-        if (!onServer()) return;
-
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
             // We get here even if the character selection menu will not show up because of autojoin
             if (getCurrentState() != State.CHARACTER_SELECTION) {
@@ -139,8 +131,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        if (!onServer()) return;
-
         String footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
@@ -155,7 +145,6 @@ public class WorldStateManager extends CoreManager {
 
     @SubscribeEvent
     public static void update(PlayerDisplayNameChangeEvent e) {
-        if (!onServer()) return;
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();

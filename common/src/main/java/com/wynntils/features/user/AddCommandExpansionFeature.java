@@ -26,8 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AddCommandExpansionFeature extends UserFeature {
     @SubscribeEvent
     public void onCommandPacket(CommandsPacketEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         RootCommandNode root = event.getRoot();
 
         addArgumentlessCommandNodes(root);
