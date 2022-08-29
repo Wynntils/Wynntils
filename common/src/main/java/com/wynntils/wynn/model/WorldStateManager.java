@@ -121,7 +121,11 @@ public class WorldStateManager extends CoreManager {
 
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
             // We get here even if the character selection menu will not show up because of autojoin
-            setState(State.INTERIM, "");
+            if (getCurrentState() != State.CHARACTER_SELECTION) {
+                // Sometimes the TP comes after the character selection menu, instead of before
+                // Don't lose the CHARACTER_SELECTION state if that is the case
+                setState(State.INTERIM, "");
+            }
         }
     }
 

@@ -28,6 +28,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -72,6 +73,7 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WebManager.isMapLoaded()) return;
+            if (!WynnUtils.onWorld()) return;
 
             // TODO replace with generalized maps whenever that is done
             MapProfile map = WebManager.getMaps().get(0);
