@@ -59,7 +59,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
     @Override
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SEARCH_BAR.resource(),
                 this.x,
@@ -67,10 +67,6 @@ public class SearchWidget extends TextInputBoxWidget {
                 0,
                 this.width,
                 this.height,
-                0,
-                0,
-                Texture.SEARCH_BAR.width(),
-                Texture.SEARCH_BAR.height(),
                 Texture.SEARCH_BAR.width(),
                 Texture.SEARCH_BAR.height());
     }

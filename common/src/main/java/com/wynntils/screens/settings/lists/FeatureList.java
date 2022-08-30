@@ -86,7 +86,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
     protected void renderBackground(PoseStack poseStack) {
         float width = getRenderWidth();
         float height = getRenderHeight();
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.FEATURE_LIST_BACKGROUND.resource(),
                 0,
@@ -94,10 +94,6 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 0,
                 width,
                 height,
-                0,
-                0,
-                Texture.FEATURE_LIST_BACKGROUND.width(),
-                Texture.FEATURE_LIST_BACKGROUND.height(),
                 Texture.FEATURE_LIST_BACKGROUND.width(),
                 Texture.FEATURE_LIST_BACKGROUND.height());
     }
@@ -260,7 +256,7 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
         int size = (int) (settingsScreen.width / 65f);
 
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
                 xPos,
@@ -268,10 +264,6 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 0,
                 size,
                 size,
-                0,
-                0,
-                Texture.SCROLL_BUTTON.width(),
-                Texture.SCROLL_BUTTON.height(),
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
     }

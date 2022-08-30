@@ -26,7 +26,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
 
         final Texture switchTexture = (boolean) configHolder.getValue() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
 
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 switchTexture.resource(),
                 width - width / 10f - size / 2,
@@ -34,10 +34,6 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
                 0,
                 size * 2f,
                 size,
-                0,
-                0,
-                switchTexture.width(),
-                switchTexture.height(),
                 switchTexture.width(),
                 switchTexture.height());
     }

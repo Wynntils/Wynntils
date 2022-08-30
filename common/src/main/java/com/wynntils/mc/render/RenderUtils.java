@@ -276,6 +276,20 @@ public final class RenderUtils {
         BufferUploader.end(bufferBuilder);
     }
 
+    public static void drawScalingTexturedRect(
+            PoseStack poseStack,
+            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float textureWidth,
+            float textureHeight) {
+        drawTexturedRect(
+                poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+    }
+
     public static void drawTexturedRectWithColor(
             ResourceLocation tex,
             CustomColor color,

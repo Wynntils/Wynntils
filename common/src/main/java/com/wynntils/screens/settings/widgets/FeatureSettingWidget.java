@@ -183,7 +183,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
         float xPos = renderX / 1.45f;
         float yPos = getScrollButtonYPos();
 
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
                 xPos,
@@ -191,10 +191,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 0,
                 size,
                 size,
-                0,
-                0,
-                Texture.SCROLL_BUTTON.width(),
-                Texture.SCROLL_BUTTON.height(),
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
     }

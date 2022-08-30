@@ -73,7 +73,7 @@ public class FeatureEntry extends FeatureListEntryBase {
 
         final Texture switchTexture = this.feature.isEnabled() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
 
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 switchTexture.resource(),
                 getEnabledSwitchRenderX(),
@@ -81,10 +81,6 @@ public class FeatureEntry extends FeatureListEntryBase {
                 0,
                 size * 2f,
                 size,
-                0,
-                0,
-                switchTexture.width(),
-                switchTexture.height(),
                 switchTexture.width(),
                 switchTexture.height());
     }
@@ -112,7 +108,7 @@ public class FeatureEntry extends FeatureListEntryBase {
     }
 
     private void renderBackground(PoseStack poseStack, int width, int height) {
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.FEATURE_BUTTON.resource(),
                 0,
@@ -120,10 +116,6 @@ public class FeatureEntry extends FeatureListEntryBase {
                 0,
                 width,
                 height,
-                0,
-                0,
-                Texture.FEATURE_BUTTON.width(),
-                Texture.FEATURE_BUTTON.height(),
                 Texture.FEATURE_BUTTON.width(),
                 Texture.FEATURE_BUTTON.height());
     }

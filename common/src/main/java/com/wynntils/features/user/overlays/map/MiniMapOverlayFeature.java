@@ -175,15 +175,14 @@ public class MiniMapOverlayFeature extends UserFeature {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, texture.resource());
 
-            // TODO remove int casts with settings pr merge
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    (int) (renderX - groovesWidth),
-                    (int) (renderY - groovesHeight),
+                    renderX - groovesWidth,
+                    renderY - groovesHeight,
                     0,
-                    (int) (width + 2 * groovesWidth),
-                    (int) (height + 2 * groovesHeight),
+                    width + 2 * groovesWidth,
+                    height + 2 * groovesHeight,
                     tx1,
                     ty1,
                     tx2 - tx1,
