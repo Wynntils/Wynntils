@@ -89,7 +89,7 @@ public abstract class ConfigOptionElement {
                         FontRenderer.TextShadow.OUTLINE);
     }
 
-    protected static void renderBackground(PoseStack poseStack, float width, float height) {
+    protected void renderBackground(PoseStack poseStack, float width, float height) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
     }

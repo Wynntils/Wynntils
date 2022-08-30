@@ -15,9 +15,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
 
 public class SearchWidget extends TextInputBoxWidget {
     private final Component DEFAULT_TEXT = new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
@@ -71,6 +73,18 @@ public class SearchWidget extends TextInputBoxWidget {
                 Texture.SEARCH_BAR.height(),
                 Texture.SEARCH_BAR.width(),
                 Texture.SEARCH_BAR.height());
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
+            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            settingsScreen.setFocusedTextInput(this);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override

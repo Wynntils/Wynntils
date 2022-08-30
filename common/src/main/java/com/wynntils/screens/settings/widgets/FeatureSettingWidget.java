@@ -15,6 +15,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.elements.BooleanConfigOptionElement;
 import com.wynntils.screens.settings.elements.ConfigOptionElement;
+import com.wynntils.screens.settings.elements.EnumConfigOptionElement;
 import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private Feature cachedFeature = null;
     private List<ConfigOptionElement> configWidgets = new ArrayList<>();
     private ConfigOptionElement hoveredConfigElement = null;
-    private boolean enabledStateChangeable = false;
     private int scrollIndexOffset = 0;
 
     public FeatureSettingWidget(int x, int y, int width, int height, WynntilsSettingsScreen settingsScreen) {
@@ -218,7 +218,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         configWidgets.clear();
         scrollIndexOffset = 0;
-        enabledStateChangeable = false;
         hoveredConfigElement = null;
 
         if (settingsScreen.getFocusedTextInput() != settingsScreen.getSearchWidget()) {
@@ -227,12 +226,13 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         for (ConfigHolder configOption : selectedFeature.getVisibleConfigOptions()) {
             if (configOption.getFieldName().equals("userEnabled")) {
-                enabledStateChangeable = true;
                 continue;
             }
 
             if (configOption.getType().equals(Boolean.class)) {
                 configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
+            } else if (configOption.getClassOfConfigField().isEnum()) {
+                configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
             } else {
                 configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
             }
