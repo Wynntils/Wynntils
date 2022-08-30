@@ -13,6 +13,7 @@ import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LootrunCommand;
+import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
@@ -55,6 +56,7 @@ public final class ClientCommandManager extends CoreManager {
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
         registerCommand(new LootrunCommand());
+        registerCommand(new QuestCommand());
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
         registerCommand(new TokenCommand());
