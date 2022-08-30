@@ -58,8 +58,8 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -107,15 +107,19 @@ import net.minecraftforge.eventbus.api.Event;
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
     private static <T extends Event> T post(T event) {
-        WynntilsMod.getEventBus().post(event);
+        if (WynnUtils.onServer()) {
+            WynntilsMod.getEventBus().post(event);
+        }
         return event;
     }
 
-    // region Wynntils Events
-    public static void onWebSetup() {
-        post(new WebSetupEvent());
+    /**
+     * Post event without checking if we are connected to a Wynncraft server
+     */
+    private static <T extends Event> T postAlways(T event) {
+        WynntilsMod.getEventBus().post(event);
+        return event;
     }
-    // endregion
 
     // region Render Events
     public static void onRenderLast(
@@ -190,7 +194,7 @@ public final class EventFactory {
     // region Screen Events
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            post(new TitleScreenInitEvent(titleScreen, addButton));
+            postAlways(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
             post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
         }
@@ -290,7 +294,7 @@ public final class EventFactory {
     }
 
     public static void onConnect(String host, int port) {
-        post(new ConnectedEvent(host, port));
+        postAlways(new ConnectedEvent(host, port));
     }
 
     public static void onResourcePack() {
@@ -363,11 +367,11 @@ public final class EventFactory {
 
     // region Packet Events
     public static <T extends Packet<?>> PacketSentEvent<T> onPacketSent(T packet) {
-        return post(new PacketSentEvent<>(packet));
+        return postAlways(new PacketSentEvent<>(packet));
     }
 
     public static <T extends Packet<?>> PacketReceivedEvent<T> onPacketReceived(T packet) {
-        return post(new PacketReceivedEvent<>(packet));
+        return postAlways(new PacketReceivedEvent<>(packet));
     }
     // endregion
 
