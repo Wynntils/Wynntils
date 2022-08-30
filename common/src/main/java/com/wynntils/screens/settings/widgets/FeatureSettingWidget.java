@@ -15,6 +15,7 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.elements.BooleanConfigOptionElement;
 import com.wynntils.screens.settings.elements.ConfigOptionElement;
+import com.wynntils.screens.settings.elements.CustomColorConfigOptionElement;
 import com.wynntils.screens.settings.elements.EnumConfigOptionElement;
 import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.MathUtils;
@@ -233,6 +234,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
             } else if (configOption.getClassOfConfigField().isEnum()) {
                 configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
+            } else if (configOption.getType().equals(CustomColor.class)) {
+                configWidgets.add(new CustomColorConfigOptionElement(configOption, this, settingsScreen));
             } else {
                 configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
             }

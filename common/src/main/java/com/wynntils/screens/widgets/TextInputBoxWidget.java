@@ -21,7 +21,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: This is a very basic text box. Selection does not work.
+// FIXME: This is a very basic text box.
 public class TextInputBoxWidget extends AbstractWidget {
     protected char defaultCursorChar = '_';
     protected Consumer<String> onUpdateConsumer;

@@ -15,10 +15,10 @@ import com.wynntils.screens.widgets.TextInputBoxWidget;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
-    private final TextInputBoxWidget textInputBoxWidget;
-    private final WynntilsSettingsScreen settingsScreen;
+    protected final TextInputBoxWidget textInputBoxWidget;
+    protected final WynntilsSettingsScreen settingsScreen;
 
-    private boolean lastParseSuccessful = false;
+    protected boolean lastParseSuccessful = false;
 
     public TextConfigOptionElement(
             ConfigHolder configHolder,
@@ -43,14 +43,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
 
         this.textInputBoxWidget.render(poseStack, mouseX, mouseY, partialTicks);
 
-        RenderUtils.drawRect(
-                poseStack,
-                lastParseSuccessful ? CommonColors.GREEN : CommonColors.RED,
-                -getTextInputHeight() - 2,
-                0,
-                0,
-                getTextInputHeight(),
-                getTextInputHeight());
+        renderSuccessState(poseStack);
 
         poseStack.popPose();
     }
@@ -63,7 +56,18 @@ public class TextConfigOptionElement extends ConfigOptionElement {
     @Override
     public void keyPressed(int keyCode, int scanCode, int modifiers) {}
 
-    private void onTextInputUpdate(String textInput) {
+    protected void renderSuccessState(PoseStack poseStack) {
+        RenderUtils.drawRect(
+                poseStack,
+                lastParseSuccessful ? CommonColors.GREEN : CommonColors.RED,
+                -getTextInputHeight() * 1.2f,
+                0,
+                0,
+                getTextInputHeight(),
+                getTextInputHeight());
+    }
+
+    protected void onTextInputUpdate(String textInput) {
         Object parsedValue = configHolder.tryParseStringValue(textInput);
 
         if (parsedValue != null) {
@@ -77,7 +81,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
         }
     }
 
-    private static int getTextInputHeight() {
+    protected static int getTextInputHeight() {
         return FontRenderer.getInstance().getFont().lineHeight + 4;
     }
 }
