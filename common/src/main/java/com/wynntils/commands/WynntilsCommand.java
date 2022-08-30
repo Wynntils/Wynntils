@@ -81,9 +81,7 @@ public class WynntilsCommand extends CommandBase {
                 .toList();
 
         for (Feature feature : enabledFeatures) { // disable all active features before resetting web
-            if (feature.isEnabled()) {
-                feature.disable();
-            }
+            feature.disable();
         }
 
         WebManager.reset();
