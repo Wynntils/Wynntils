@@ -76,7 +76,11 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int reload(CommandContext<CommandSourceStack> context) {
-        for (Feature feature : FeatureRegistry.getFeatures()) { // disable all active features before resetting web
+        List<Feature> enabledFeatures = FeatureRegistry.getFeatures().stream()
+                .filter(Feature::isEnabled)
+                .toList();
+
+        for (Feature feature : enabledFeatures) { // disable all active features before resetting web
             if (feature.isEnabled()) {
                 feature.disable();
             }
@@ -86,20 +90,22 @@ public class WynntilsCommand extends CommandBase {
 
         WebManager.init(); // reloads api urls as well as web manager
 
-        for (Feature feature : FeatureRegistry.getFeatures()) { // re-enable all features which should be
+        for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {
                 feature.enable();
 
-                if (!feature.isEnabled()) {
-                    McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
-                } else {
+                if (feature.isEnabled()) {
                     McUtils.sendMessageToClient(new TextComponent("Reloaded ")
                             .withStyle(ChatFormatting.GREEN)
                             .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
+
+                    continue;
                 }
             }
+
+            McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
         }
 
         context.getSource()
