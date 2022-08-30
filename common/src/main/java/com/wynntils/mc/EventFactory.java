@@ -209,7 +209,7 @@ public final class EventFactory {
     }
 
     public static MenuOpenedEvent onOpenScreen(ClientboundOpenScreenPacket packet) {
-        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
+        return postAlways(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
     }
 
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
@@ -257,7 +257,7 @@ public final class EventFactory {
         if (!packet.getRelativeArguments().isEmpty()) return;
 
         Position newPosition = new Vec3(packet.getX(), packet.getY(), packet.getZ());
-        post(new PlayerTeleportEvent(newPosition));
+        postAlways(new PlayerTeleportEvent(newPosition));
     }
 
     public static KeyInputEvent onKeyInput(int key, int scanCode, int action, int modifiers) {
@@ -356,7 +356,7 @@ public final class EventFactory {
 
     public static void onTabListCustomisation(ClientboundTabListPacket packet) {
         String footer = packet.getFooter().getString();
-        post(new PlayerInfoFooterChangedEvent(footer));
+        postAlways(new PlayerInfoFooterChangedEvent(footer));
     }
 
     public static ScoreboardSetScoreEvent onSetScore(ClientboundSetScorePacket packet) {
