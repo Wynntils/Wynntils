@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatModel;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
@@ -16,9 +17,10 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.features.user.NpcDialogAutoProgressFeature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
@@ -28,19 +30,49 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class NpcDialogueOverlayFeature extends UserFeature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
+
+    private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
+
     private String currentDialogue;
+
+    @Config
+    public static boolean autoProgress = false;
+
+    @Config
+    public static int dialogAutoProgressDefaultTime = 1500; // Milliseconds
+
+    @Config
+    public static int dialogAutoProgressAdditionalTimePerWord = 200; // Milliseconds
+
+    @RegisterKeyBind
+    public final KeyBind cancelAutoProgressKeybind =
+            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
+
+    private void cancelAutoProgress() {
+        if (scheduledAutoProgressKeyPress == null) return;
+
+        scheduledAutoProgressKeyPress.cancel(true);
+    }
 
     @Override
     protected void onInit(
@@ -57,6 +89,34 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
+
+        if (scheduledAutoProgressKeyPress != null) {
+            scheduledAutoProgressKeyPress.cancel(true);
+
+            // Release sneak key if currently pressed
+            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                    McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
+
+            scheduledAutoProgressKeyPress = null;
+        }
+
+        if (autoProgress) {
+            // Schedule a new sneak key press if this is not the end of the dialogue
+            if (msg != null) {
+                scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
+            }
+        }
+    }
+
+    private ScheduledFuture<?> scheduledSneakPress(String msg) {
+        int words = msg.split(" ").length;
+        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+
+        return autoProgressExecutor.schedule(
+                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                        McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                delay,
+                TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
@@ -131,26 +191,23 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderVerticalAlignment());
 
             // Render "To continue" message
-            // TODO: I'd like to have this better looking, perhaps a clickable button?
-            Optional<Long> millisecondsUntilProgress =
-                    NpcDialogAutoProgressFeature.INSTANCE.millisecondsUntilProgress();
+            List<TextRenderTask> renderTaskList = new LinkedList<>();
+            TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+            renderTaskList.add(pressSneakMessage);
 
-            List<TextRenderTask> renderTaskList;
-
-            renderTaskList = millisecondsUntilProgress
-                    .map(timeUntilProgress -> List.of(
-                            new TextRenderTask("§cPress SNEAK to continue", renderSetting),
-                            new TextRenderTask(
-                                    ChatFormatting.GREEN + "Auto-progress: "
-                                            + Math.max(0, Math.round(timeUntilProgress / 1000f))
-                                            + " seconds (Press "
-                                            + ComponentUtils.getUnformatted(NpcDialogAutoProgressFeature.INSTANCE
-                                                    .cancelAutoProgressKeybind
-                                                    .getKeyMapping()
-                                                    .getTranslatedKeyMessage())
-                                            + " to cancel)",
-                                    renderSetting)))
-                    .orElseGet(() -> List.of(new TextRenderTask("§cPress SNEAK to continue", renderSetting)));
+            if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
+                long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
+                TextRenderTask autoProgressMessage = new TextRenderTask(
+                        ChatFormatting.GREEN + "Auto-progress: "
+                                + Math.max(0, Math.round(timeUntilProgress / 1000f))
+                                + " seconds (Press "
+                                + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
+                                        .getKeyMapping()
+                                        .getTranslatedKeyMessage())
+                                + " to cancel)",
+                        renderSetting);
+                renderTaskList.add(autoProgressMessage);
+            }
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(
