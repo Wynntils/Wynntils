@@ -11,6 +11,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 
@@ -20,10 +21,15 @@ public abstract class ConfigOptionElement {
 
     protected final ConfigHolder configHolder;
     protected final FeatureSettingWidget featureSettingWidget;
+    protected final WynntilsSettingsScreen settingsScreen;
 
-    public ConfigOptionElement(ConfigHolder configHolder, FeatureSettingWidget featureSettingWidget) {
+    public ConfigOptionElement(
+            ConfigHolder configHolder,
+            FeatureSettingWidget featureSettingWidget,
+            WynntilsSettingsScreen settingsScreen) {
         this.configHolder = configHolder;
         this.featureSettingWidget = featureSettingWidget;
+        this.settingsScreen = settingsScreen;
     }
 
     public void render(
@@ -86,6 +92,10 @@ public abstract class ConfigOptionElement {
     protected static void renderBackground(PoseStack poseStack, float width, float height) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
+    }
+
+    public float getConfigOptionElementSize() {
+        return settingsScreen.width / 100f;
     }
 
     protected abstract void renderConfigAppropriateButton(

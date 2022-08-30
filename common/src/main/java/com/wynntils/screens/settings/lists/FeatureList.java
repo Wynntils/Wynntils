@@ -5,9 +5,11 @@
 package com.wynntils.screens.settings.lists;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
@@ -18,6 +20,7 @@ import com.wynntils.screens.settings.lists.entries.FeatureListEntryBase;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.resources.language.I18n;
@@ -183,6 +186,28 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
         if (hovered instanceof FeatureEntry featureEntry) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+            float switchRenderX = featureEntry.getEnabledSwitchRenderX() + getRowLeft();
+            float switchRenderY = featureEntry.getEnabledSwitchRenderY() + getEntryY(featureEntry);
+            float switchSize = featureEntry.getConfigOptionElementSize();
+
+            // Clicked on switch
+            if (mouseX >= switchRenderX
+                    && mouseX <= switchRenderX + switchSize * 2
+                    && mouseY >= switchRenderY
+                    && mouseY <= switchRenderY + switchSize) {
+                if (!(featureEntry.getFeature() instanceof UserFeature userFeature)) {
+                    WynntilsMod.error(featureEntry.getFeature() + " had userEnabled field, but is not a UserFeature.");
+                    assert false;
+                    return true;
+                }
+
+                userFeature.setUserEnabled(!userFeature.isEnabled());
+                userFeature.tryUserToggle();
+
+                return true;
+            }
+
             settingsScreen.setSelectedFeature(featureEntry);
             return true;
         }
@@ -249,6 +274,18 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
                 Texture.SCROLL_BUTTON.height(),
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
+    }
+
+    private int getEntryY(FeatureListEntryBase entry) {
+        AtomicInteger renderHeight = new AtomicInteger();
+
+        iterateOnRenderedEntries((featureListEntryBase, i, top) -> {
+            if (featureListEntryBase == entry) {
+                renderHeight.set(top);
+            }
+        });
+
+        return renderHeight.get();
     }
 
     private float getRenderHeight() {

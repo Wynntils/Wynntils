@@ -211,6 +211,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         return true;
     }
 
+    public boolean canUserEnable() {
+        return getConfigOptionFromString("userEnabled").isPresent();
+    }
+
     /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
     @Override
     public final void addConfigOptions(List<ConfigHolder> options) {

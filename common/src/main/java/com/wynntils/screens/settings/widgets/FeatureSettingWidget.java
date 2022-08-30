@@ -5,10 +5,8 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
@@ -64,8 +62,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         renderScrollbar(poseStack);
 
-        renderEnabledSwitch(poseStack, selectedFeature);
-
         poseStack.popPose();
     }
 
@@ -75,27 +71,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         if (hoveredConfigElement != null) {
             hoveredConfigElement.mouseClicked(mouseX, mouseY, button);
-            return true;
-        }
-
-        float switchRenderX = getEnabledSwitchRenderX() + this.x;
-        float switchRenderY = getEnabledSwitchRenderY() + this.y;
-        float switchSize = getConfigOptionElementSize();
-
-        // Clicked on switch
-        if (mouseX >= switchRenderX
-                && mouseX <= switchRenderX + switchSize * 2
-                && mouseY >= switchRenderY
-                && mouseY <= switchRenderY + switchSize) {
-            if (!(cachedFeature instanceof UserFeature userFeature)) {
-                WynntilsMod.error(cachedFeature + " had userEnabled field, but is not a UserFeature.");
-                assert false;
-                return true;
-            }
-
-            userFeature.setUserEnabled(!userFeature.isEnabled());
-            userFeature.tryUserToggle();
-
             return true;
         }
 
@@ -135,29 +110,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
                         CommonColors.WHITE,
                         FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
-    }
-
-    private void renderEnabledSwitch(PoseStack poseStack, Feature selectedFeature) {
-        if (!enabledStateChangeable) return;
-
-        float size = getConfigOptionElementSize();
-
-        final Texture switchTexture = selectedFeature.isEnabled() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                switchTexture.resource(),
-                getEnabledSwitchRenderX(),
-                getEnabledSwitchRenderY(),
-                0,
-                size * 2f,
-                size,
-                0,
-                0,
-                switchTexture.width(),
-                switchTexture.height(),
-                switchTexture.width(),
-                switchTexture.height());
     }
 
     private void renderConfigWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -280,7 +232,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
             }
 
             if (configOption.getType().equals(Boolean.class)) {
-                configWidgets.add(new BooleanConfigOptionElement(configOption, this));
+                configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
             } else {
                 configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
             }
@@ -302,18 +254,6 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 Math.max(0, configWidgets.size() - MAX_RENDER_COUNT),
                 5,
                 height - this.y - 2);
-    }
-
-    private float getEnabledSwitchRenderY() {
-        return this.height / 25f;
-    }
-
-    private float getEnabledSwitchRenderX() {
-        return this.width / 2f - getConfigOptionElementSize();
-    }
-
-    public float getConfigOptionElementSize() {
-        return this.width / 80f;
     }
 
     public ConfigOptionElement getHoveredConfigElement() {

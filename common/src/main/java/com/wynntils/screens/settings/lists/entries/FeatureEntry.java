@@ -57,6 +57,61 @@ public class FeatureEntry extends FeatureListEntryBase {
 
         poseStack.translate(left, top, 0);
 
+        renderBackground(poseStack, width, height);
+
+        renderFeatureName(poseStack, width, height);
+
+        renderEnabledSwitch(poseStack);
+
+        poseStack.popPose();
+    }
+
+    private void renderEnabledSwitch(PoseStack poseStack) {
+        if (!this.feature.canEnable() || !this.feature.canUserEnable()) return;
+
+        float size = getConfigOptionElementSize();
+
+        final Texture switchTexture = this.feature.isEnabled() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                switchTexture.resource(),
+                getEnabledSwitchRenderX(),
+                getEnabledSwitchRenderY(),
+                0,
+                size * 2f,
+                size,
+                0,
+                0,
+                switchTexture.width(),
+                switchTexture.height(),
+                switchTexture.width(),
+                switchTexture.height());
+    }
+
+    private void renderFeatureName(PoseStack poseStack, int width, int height) {
+        CustomColor textColor = this.getFeature() == settingsScreen.getSelectedFeature()
+                ? CommonColors.LIGHT_GREEN
+                : CommonColors.WHITE;
+        FontRenderer.getInstance()
+                .renderTextWithAlignment(
+                        poseStack,
+                        9f,
+                        4f,
+                        new TextRenderTask(
+                                this.feature.getTranslatedName(),
+                                new TextRenderSetting(
+                                        getMaxTextRenderWidth(),
+                                        textColor,
+                                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                                        FontRenderer.TextShadow.OUTLINE)),
+                        width,
+                        height,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle);
+    }
+
+    private void renderBackground(PoseStack poseStack, int width, int height) {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.FEATURE_BUTTON.resource(),
@@ -71,33 +126,23 @@ public class FeatureEntry extends FeatureListEntryBase {
                 Texture.FEATURE_BUTTON.height(),
                 Texture.FEATURE_BUTTON.width(),
                 Texture.FEATURE_BUTTON.height());
-
-        CustomColor textColor = this.getFeature() == settingsScreen.getSelectedFeature()
-                ? CommonColors.LIGHT_GREEN
-                : CommonColors.WHITE;
-        FontRenderer.getInstance()
-                .renderTextWithAlignment(
-                        poseStack,
-                        9f,
-                        4f,
-                        new TextRenderTask(
-                                this.feature.getTranslatedName(),
-                                new TextRenderSetting(
-                                        width - 15,
-                                        textColor,
-                                        FontRenderer.TextAlignment.LEFT_ALIGNED,
-                                        FontRenderer.TextShadow.OUTLINE)),
-                        width,
-                        height,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle);
-
-        poseStack.popPose();
     }
 
     @Override
     public List<? extends GuiEventListener> children() {
         return ImmutableList.of();
+    }
+
+    public float getEnabledSwitchRenderY() {
+        return (getRenderHeight() - getConfigOptionElementSize()) / 2f;
+    }
+
+    public float getEnabledSwitchRenderX() {
+        return settingsScreen.width / 7f - getConfigOptionElementSize();
+    }
+
+    public float getConfigOptionElementSize() {
+        return ITEM_HEIGHT * 0.5f;
     }
 
     public Feature getFeature() {
@@ -108,11 +153,14 @@ public class FeatureEntry extends FeatureListEntryBase {
         return ITEM_HEIGHT;
     }
 
+    private float getMaxTextRenderWidth() {
+        return featureList.getRowWidth() - getConfigOptionElementSize() * 2 - 20;
+    }
+
     @Override
     public int getRenderHeight() {
         return (int) FontRenderer.getInstance()
-                        .calculateRenderHeight(
-                                List.of(this.feature.getTranslatedName()), featureList.getRowWidth() - 15)
+                        .calculateRenderHeight(List.of(this.feature.getTranslatedName()), getMaxTextRenderWidth())
                 / FontRenderer.getInstance().getFont().lineHeight
                 * FeatureEntry.getItemHeight();
     }

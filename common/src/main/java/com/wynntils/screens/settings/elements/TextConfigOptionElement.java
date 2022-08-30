@@ -24,10 +24,10 @@ public class TextConfigOptionElement extends ConfigOptionElement {
             ConfigHolder configHolder,
             FeatureSettingWidget featureSettingWidget,
             WynntilsSettingsScreen settingsScreen) {
-        super(configHolder, featureSettingWidget);
+        super(configHolder, featureSettingWidget, settingsScreen);
         this.settingsScreen = settingsScreen;
 
-        float defaultSize = featureSettingWidget.getConfigOptionElementSize();
+        float defaultSize = getConfigOptionElementSize();
         this.textInputBoxWidget = new TextInputBoxWidget(
                 0, 0, (int) (defaultSize * 4), getTextInputHeight(), this::onTextInputUpdate, this.settingsScreen);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
@@ -38,7 +38,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
         poseStack.pushPose();
 
-        float size = featureSettingWidget.getConfigOptionElementSize();
+        float size = getConfigOptionElementSize();
         poseStack.translate(width - width / 10f - size, height / 2f - getTextInputHeight() / 2f, 0);
 
         this.textInputBoxWidget.render(poseStack, mouseX, mouseY, partialTicks);
