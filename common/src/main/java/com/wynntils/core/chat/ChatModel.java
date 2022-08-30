@@ -12,7 +12,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.NpcDialogEvent;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -85,7 +84,6 @@ public final class ChatModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatReceived(ChatPacketReceivedEvent e) {
-        if (!WynnUtils.onServer()) return;
         if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();

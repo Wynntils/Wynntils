@@ -322,8 +322,6 @@ public final class ScoreboardModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetScore(ScoreboardSetScoreEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
     }
 

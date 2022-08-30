@@ -24,7 +24,7 @@ import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.IdentificationOrderer;
@@ -332,7 +332,7 @@ public final class WebManager extends CoreManager {
                         setup = true;
                     }
 
-                    EventFactory.onWebSetup();
+                    WynntilsMod.getEventBus().post(new WebSetupEvent());
                     return true;
                 })
                 .build());
