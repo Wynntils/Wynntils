@@ -77,6 +77,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             renderedText =
                     (textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition));
         } else {
+            // This case, the input is too long, only render text that fits, and is closest to cursor
             StringBuilder builder = new StringBuilder(cursorChar);
 
             int stringPosition = Math.min(textBoxInput.length() - 1, cursorPosition);
