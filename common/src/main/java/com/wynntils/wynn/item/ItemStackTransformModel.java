@@ -23,7 +23,6 @@ import com.wynntils.wynn.item.properties.ProfessionLevelProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -76,8 +75,6 @@ public class ItemStackTransformModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetSlot(SetSlotEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         ItemStack stack = event.getItem();
 
         // itemstack transformers
