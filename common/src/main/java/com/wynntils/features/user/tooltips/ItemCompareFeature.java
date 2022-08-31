@@ -18,6 +18,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 import java.util.List;
@@ -45,6 +46,12 @@ public class ItemCompareFeature extends UserFeature {
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         dependencies.add(ItemStackTransformModel.class);
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        comparedItem = null;
+        compareToEquipped = false;
     }
 
     @SubscribeEvent
