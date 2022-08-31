@@ -42,7 +42,7 @@ public final class KeyBindManager extends CoreManager {
     @SubscribeEvent
     public static void onMousePress(InventoryMouseClickedEvent e) {
         KEY_BINDS.forEach(keyBind -> {
-            if (keyBind.getKeyMapping().key.getValue() == e.getButton()) {
+            if (keyBind.getKeyMapping().matchesMouse(e.getButton())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
