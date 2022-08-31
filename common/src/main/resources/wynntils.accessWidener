@@ -17,3 +17,4 @@ accessible field net/minecraft/world/scores/Scoreboard displayObjectives [Lnet/m
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V
+accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;

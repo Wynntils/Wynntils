@@ -48,6 +48,14 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onInventoryMouseClick(mouseX, mouseY, button, this.hoveredSlot)
+                .isCanceled()) {
+            cir.setReturnValue(true);
+        }
+    }
+
     @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
     private void onCloseContainerPre(CallbackInfo ci) {
         if (EventFactory.onCloseContainerPre().isCanceled()) {
