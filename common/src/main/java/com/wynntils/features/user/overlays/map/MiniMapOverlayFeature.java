@@ -78,6 +78,8 @@ public class MiniMapOverlayFeature extends UserFeature {
             // TODO replace with generalized maps whenever that is done
             MapProfile map = WebManager.getMaps().get(0);
 
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+
             float width = getWidth();
             float height = getHeight();
             float renderX = getRenderX();
