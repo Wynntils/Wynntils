@@ -122,6 +122,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = null;
+        cancelAutoProgress();
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

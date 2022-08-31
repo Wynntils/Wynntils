@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
 import com.wynntils.features.alwayson.LootrunFeature;
@@ -54,6 +55,7 @@ import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
+import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +196,11 @@ public final class FeatureRegistry {
 
         // save/create default config file containing all config holders
         ConfigManager.saveDefaultConfig();
+
+        // Reload Minecraft's config files so our own keybinds get loaded
+        // This is needed because we are late to register the keybinds,
+        // but we cannot move it earlier to the init process because of I18n
+        KeyBindManager.loadKeybindConfigFile(McUtils.options());
 
         addCrashCallbacks();
     }

@@ -92,9 +92,7 @@ public class ScriptedContainerQuery {
         public void onError(String errorMsg) {
             ScriptedContainerQuery.this.errorHandler.accept(errorMsg);
             // Remove all remaining steps
-            while (!ScriptedContainerQuery.this.steps.isEmpty()) {
-                ScriptedContainerQuery.this.steps.removeFirst();
-            }
+            ScriptedContainerQuery.this.steps.clear();
         }
 
         @Override

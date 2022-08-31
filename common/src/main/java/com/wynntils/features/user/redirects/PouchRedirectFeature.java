@@ -12,6 +12,7 @@ import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,12 @@ public class PouchRedirectFeature extends UserFeature {
 
     @Config
     public boolean redirectEmeraldPouch = true;
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        lastEmeraldPouchPickup = 0;
+        emeraldPouchMessage = null;
+    }
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
