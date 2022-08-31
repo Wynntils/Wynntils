@@ -29,7 +29,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
 
         float defaultSize = getConfigOptionElementSize();
         this.textInputBoxWidget = new TextInputBoxWidget(
-                0, 0, (int) (defaultSize * 4), getTextInputHeight(), this::onTextInputUpdate, this.settingsScreen);
+                0, 0, (int) (defaultSize * 6), getTextInputHeight(), this::onTextInputUpdate, this.settingsScreen);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
     }
 
@@ -38,8 +38,11 @@ public class TextConfigOptionElement extends ConfigOptionElement {
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
         poseStack.pushPose();
 
-        float size = getConfigOptionElementSize();
-        poseStack.translate(width - width / 10f - size, height / 2f - getTextInputHeight() / 2f, 0);
+        float size = this.textInputBoxWidget.getWidth();
+        poseStack.translate(
+                width - width / 10f - size / 2f - getConfigOptionElementSize(),
+                height / 2f - getTextInputHeight() / 2f,
+                0);
 
         this.textInputBoxWidget.render(poseStack, mouseX, mouseY, partialTicks);
 

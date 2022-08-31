@@ -95,7 +95,7 @@ public abstract class ConfigOptionElement {
     }
 
     public float getConfigOptionElementSize() {
-        return settingsScreen.width / 100f;
+        return settingsScreen.width / 80f;
     }
 
     protected abstract void renderConfigAppropriateButton(
