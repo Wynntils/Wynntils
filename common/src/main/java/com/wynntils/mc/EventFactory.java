@@ -27,6 +27,7 @@ import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -239,6 +240,11 @@ public final class EventFactory {
     public static InventoryKeyPressEvent onInventoryKeyPress(
             int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
         return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
+    }
+
+    public static InventoryMouseClickedEvent onInventoryMouseClick(
+            double mouseX, double mouseY, int button, Slot hoveredSlot) {
+        return post(new InventoryMouseClickedEvent(mouseX, mouseY, button, hoveredSlot));
     }
 
     public static ContainerClickEvent onContainerClickEvent(
