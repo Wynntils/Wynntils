@@ -7,6 +7,7 @@ package com.wynntils.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
@@ -21,6 +22,7 @@ import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
@@ -122,15 +124,41 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
         hoveredConfigElement = null;
 
+        Overlay lastOverlayConfigTitle = null;
+
         for (int i = scrollIndexOffset; i < configWidgets.size(); i += 2) {
             ConfigOptionElement configWidgetLeft = configWidgets.get(i);
             ConfigOptionElement configWidgetRight = configWidgets.size() > i + 1 ? configWidgets.get(i + 1) : null;
             float renderHeight = this.height / 4f;
 
-            if (renderY + renderHeight > this.y + this.height) break;
-
             float fullWidth = this.width - xOffset * 1.5f;
             float renderWidth = fullWidth / 2 - padding;
+
+            if (configWidgetLeft.getConfigHolder().getParent() instanceof Overlay overlay
+                    && configWidgetLeft.getConfigHolder().getParent() != lastOverlayConfigTitle) {
+                Font font = FontRenderer.getInstance().getFont();
+                float textRenderHeight = font.lineHeight + padding;
+
+                if (renderY + textRenderHeight > this.y + this.height) break;
+
+                lastOverlayConfigTitle = overlay;
+
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                overlay.getTranslatedName(),
+                                0,
+                                this.width,
+                                renderY,
+                                0,
+                                CommonColors.WHITE,
+                                FontRenderer.TextAlignment.CENTER_ALIGNED,
+                                FontRenderer.TextShadow.OUTLINE);
+                renderY += textRenderHeight;
+            }
+
+            if (renderY + renderHeight > this.y + this.height) break;
+
             configWidgetLeft.render(
                     poseStack, xOffset, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
 
@@ -144,20 +172,23 @@ public final class FeatureSettingWidget extends AbstractWidget {
             if (configWidgetRight != null) {
                 actualRenderX = this.x + xOffset + fullWidth / 2;
                 renderWidth = fullWidth / 2;
+                float renderX = xOffset + fullWidth / 2;
 
                 if (isMouseOverConfigWidget(actualRenderX, actualRenderY, renderWidth, renderHeight, mouseX, mouseY)) {
                     this.hoveredConfigElement = configWidgetRight;
                 }
 
+                if (configWidgetRight.getConfigHolder().getParent() instanceof Overlay
+                        && configWidgetRight.getConfigHolder().getParent() != lastOverlayConfigTitle) {
+                    renderY += renderHeight + padding;
+
+                    // render current right element on left
+                    i--;
+                    continue;
+                }
+
                 configWidgetRight.render(
-                        poseStack,
-                        xOffset + fullWidth / 2,
-                        renderY,
-                        renderWidth,
-                        renderHeight,
-                        mouseX,
-                        mouseY,
-                        partialTick);
+                        poseStack, renderX, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
             }
 
             renderY += padding + renderHeight;
@@ -226,18 +257,32 @@ public final class FeatureSettingWidget extends AbstractWidget {
                 continue;
             }
 
-            if (configOption.getType().equals(Boolean.class)) {
-                configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
-            } else if (configOption.getClassOfConfigField().isEnum()) {
-                configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
-            } else if (configOption.getType().equals(CustomColor.class)) {
-                configWidgets.add(new CustomColorConfigOptionElement(configOption, this, settingsScreen));
-            } else {
-                configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
+            getWidgetFromConfigHolder(configOption);
+        }
+
+        for (Overlay overlay : selectedFeature.getOverlays()) {
+            for (ConfigHolder configOption : overlay.getVisibleConfigOptions()) {
+                if (configOption.getFieldName().equals("userEnabled")) {
+                    continue;
+                }
+
+                getWidgetFromConfigHolder(configOption);
             }
         }
 
         cachedFeature = selectedFeature;
+    }
+
+    private void getWidgetFromConfigHolder(ConfigHolder configOption) {
+        if (configOption.getType().equals(Boolean.class)) {
+            configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
+        } else if (configOption.getClassOfConfigField().isEnum()) {
+            configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
+        } else if (configOption.getType().equals(CustomColor.class)) {
+            configWidgets.add(new CustomColorConfigOptionElement(configOption, this, settingsScreen));
+        } else {
+            configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
+        }
     }
 
     private float getRenderHeight() {

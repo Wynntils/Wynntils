@@ -24,7 +24,9 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
         float size = getConfigOptionElementSize() * 1.5f;
 
-        final Texture switchTexture = (boolean) configHolder.getValue() ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
+        Object holderValue = configHolder.getValue();
+        final Texture switchTexture =
+                (holderValue != null && (boolean) holderValue) ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,

@@ -98,6 +98,10 @@ public abstract class ConfigOptionElement {
         return settingsScreen.width / 80f;
     }
 
+    public ConfigHolder getConfigHolder() {
+        return configHolder;
+    }
+
     protected abstract void renderConfigAppropriateButton(
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks);
 
