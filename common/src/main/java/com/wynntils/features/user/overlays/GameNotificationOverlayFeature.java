@@ -25,6 +25,7 @@ import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -39,6 +40,11 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        messageQueue.clear();
+    }
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
