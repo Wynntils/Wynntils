@@ -17,6 +17,7 @@ import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.WynntilsCommand;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -41,16 +42,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class ClientCommandManager extends CoreManager {
-    private static Set<CommandBase> commandInstanceSet = new HashSet<>();
-    private static CommandDispatcher<CommandSourceStack> clientDispatcher;
+    private static final Set<CommandBase> commandInstanceSet = new HashSet<>();
+    private static final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
         return clientDispatcher;
     }
 
     public static void init() {
-        clientDispatcher = new CommandDispatcher<>();
-
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
@@ -71,10 +70,7 @@ public final class ClientCommandManager extends CoreManager {
 
         StringReader reader = new StringReader(message);
         reader.skip();
-        if (ClientCommandManager.executeCommand(reader, message)) {
-            return true;
-        }
-        return false;
+        return ClientCommandManager.executeCommand(reader, message);
     }
 
     public static CompletableFuture<Suggestions> getCompletionSuggestions(
@@ -157,7 +153,7 @@ public final class ClientCommandManager extends CoreManager {
                     new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             ClientCommandManager.sendError(new TranslatableComponent("command.failed")
                     .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
-            e.printStackTrace();
+            WynntilsMod.error("Failed to execute command.", e);
         }
 
         return true;

@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -31,7 +32,7 @@ public class MD5Verification {
 
             md5 = hexDigest(md.digest());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            WynntilsMod.error("Error when creating MD5Verification object.", ex);
         }
     }
 
@@ -42,7 +43,7 @@ public class MD5Verification {
 
             md5 = hexDigest(md.digest());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            WynntilsMod.error("Error when creating MD5Verification object.", ex);
         }
     }
 

@@ -28,7 +28,7 @@ public class ContainerQueryManager extends CoreManager {
     private static ContainerQueryStep lastStep;
 
     private static Component currentTitle;
-    private static MenuType currentMenuType;
+    private static MenuType<?> currentMenuType;
     private static int containerId = NO_CONTAINER;
     private static int lastHandledContentId = NO_CONTAINER;
     private static int ticksRemaining;

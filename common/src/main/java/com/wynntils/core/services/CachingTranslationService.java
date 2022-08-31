@@ -62,7 +62,7 @@ public abstract class CachingTranslationService implements TranslationService {
             String json = GSON.toJson(translationCaches);
             FileUtils.writeStringToFile(f, json, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            WynntilsMod.error("Error when trying to save translation cache.", e);
         }
     }
 
@@ -80,7 +80,7 @@ public abstract class CachingTranslationService implements TranslationService {
             Type type = new TypeToken<HashMap<String, ConcurrentHashMap<String, String>>>() {}.getType();
             translationCaches = GSON.fromJson(json, type);
         } catch (IOException e) {
-            e.printStackTrace();
+            WynntilsMod.error("Error when trying to load translation cache.", e);
         } finally {
             if (translationCaches == null) {
                 translationCaches = new HashMap<>();

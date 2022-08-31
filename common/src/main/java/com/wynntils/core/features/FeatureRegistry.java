@@ -55,7 +55,6 @@ import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
-import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +81,7 @@ public final class FeatureRegistry {
             Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
             if (instanceField != null) instanceField.set(null, feature);
         } catch (Exception e) {
-            WynntilsMod.error("Failed to create instance object in " + featureClass.getName());
-            e.printStackTrace();
+            WynntilsMod.error("Failed to create instance object in " + featureClass.getName(), e);
             return;
         }
 
@@ -100,8 +98,7 @@ public final class FeatureRegistry {
                 KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
                 feature.setupKeyHolder(keyBind);
             } catch (Exception e) {
-                WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName());
-                e.printStackTrace();
+                WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
             }
         }
 
@@ -200,7 +197,7 @@ public final class FeatureRegistry {
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
-        KeyBindManager.loadKeybindConfigFile(McUtils.options());
+        KeyBindManager.loadKeybindConfigFile();
 
         addCrashCallbacks();
     }

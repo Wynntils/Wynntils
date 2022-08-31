@@ -21,6 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
     private static final List<KeyBind> KEY_BINDS = new ArrayList<>();
+    private static final Object optionsLock = new Object();
 
     /** Needed for all Models */
     public static void init() {}
@@ -54,16 +55,13 @@ public final class KeyBindManager extends CoreManager {
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
-        KEY_BINDS.add(toAdd);
-
         Options options = McUtils.options();
 
-        if (options == null) { // fabric's modinitalizer runs before options init, instead this is
-            // loaded later by a mixin
-            return;
-        }
+        assert options != null;
 
-        synchronized (options) {
+        KEY_BINDS.add(toAdd);
+
+        synchronized (optionsLock) {
             KeyMapping[] keyMappings = options.keyMappings;
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
@@ -73,26 +71,13 @@ public final class KeyBindManager extends CoreManager {
         }
     }
 
-    public static void loadKeybinds(Options options) {
-        synchronized (options) {
-            KeyMapping[] keyMappings = options.keyMappings;
-
-            List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-
-            for (KeyBind keyBind : KEY_BINDS) {
-                if (!newKeyMappings.contains(keyBind.getKeyMapping())) {
-                    newKeyMappings.add(keyBind.getKeyMapping());
-                }
-            }
-
-            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
-        }
-    }
-
     public static void unregisterKeybind(KeyBind toAdd) {
+        Options options = McUtils.options();
+
+        assert options != null;
+
         if (KEY_BINDS.remove(toAdd)) {
-            Options options = McUtils.options();
-            synchronized (options) {
+            synchronized (optionsLock) {
                 KeyMapping[] keyMappings = options.keyMappings;
 
                 List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
@@ -141,7 +126,11 @@ public final class KeyBindManager extends CoreManager {
         categorySortOrder.put(category, max + 1);
     }
 
-    public static void loadKeybindConfigFile(Options options) {
+    public static void loadKeybindConfigFile() {
+        Options options = McUtils.options();
+
+        assert options != null;
+
         options.load();
     }
 }
