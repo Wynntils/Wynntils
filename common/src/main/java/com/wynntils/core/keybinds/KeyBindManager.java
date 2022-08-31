@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -33,6 +34,15 @@ public final class KeyBindManager extends CoreManager {
     public static void onKeyPress(InventoryKeyPressEvent e) {
         KEY_BINDS.forEach(keyBind -> {
             if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
+                keyBind.onInventoryPress(e.getHoveredSlot());
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onMousePress(InventoryMouseClickedEvent e) {
+        KEY_BINDS.forEach(keyBind -> {
+            if (keyBind.getKeyMapping().matchesMouse(e.getButton())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
