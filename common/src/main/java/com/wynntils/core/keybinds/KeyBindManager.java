@@ -130,4 +130,8 @@ public final class KeyBindManager extends CoreManager {
 
         categorySortOrder.put(category, max + 1);
     }
+
+    public static void loadKeybindConfigFile(Options options) {
+        options.load();
+    }
 }
