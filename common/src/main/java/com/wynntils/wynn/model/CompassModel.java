@@ -8,6 +8,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -17,9 +18,10 @@ public final class CompassModel extends Model {
 
     public static void init() {}
 
-    public static Location getCompassLocation() {
+    public static Optional<Location> getCompassLocation() {
         if (compassLocation != null) compassLocation.y = McUtils.player().getY();
-        return compassLocation;
+
+        return Optional.ofNullable(compassLocation);
     }
 
     public static void setCompassLocation(Location compassLocation) {
@@ -48,7 +50,7 @@ public final class CompassModel extends Model {
         }
 
         // Cancel the event to force the compass to not change
-        if (CompassModel.getCompassLocation() != null) {
+        if (CompassModel.getCompassLocation().isPresent()) {
             e.setCanceled(true);
         }
     }

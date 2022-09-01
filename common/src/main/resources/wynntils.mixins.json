@@ -18,7 +18,6 @@
     "LocalPlayerMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
-    "OptionsMixin",
     "PotionItemMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",

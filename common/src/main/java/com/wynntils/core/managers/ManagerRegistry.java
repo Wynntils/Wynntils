@@ -141,7 +141,7 @@ public final class ManagerRegistry {
         try {
             MethodUtils.invokeExactStaticMethod(manager, "init");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            WynntilsMod.warn(e.getMessage());
+            WynntilsMod.warn("Failed to init manager.", e);
             assert false;
         }
     }

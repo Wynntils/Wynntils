@@ -37,8 +37,8 @@ public final class FunctionManager extends CoreManager {
             activeFunction.init();
         }
         // FIXME: This is sort of hacky. We should have these as ActiveFunctions instead,
-        // and register/unregister the model dependency when enabling/disabling
-        if (function instanceof DependantFunction dependantFunction) {
+        //        and register/unregister the model dependency when enabling/disabling
+        if (function instanceof DependantFunction<?> dependantFunction) {
             for (Class<? extends Model> dependency : dependantFunction.getModelDependencies()) {
                 ManagerRegistry.addFunctionDependency(dependantFunction, dependency);
             }
