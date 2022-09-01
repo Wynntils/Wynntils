@@ -23,6 +23,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
@@ -51,6 +52,9 @@ public class MiniMapOverlayFeature extends UserFeature {
         public boolean renderUsingLinear = true;
 
         @Config
+        public CustomColor cursorColor = new CustomColor(1f, 1f, 1f, 1f);
+
+        @Config
         public MapMaskType maskType = MapMaskType.Rectangular;
 
         @Config
@@ -72,7 +76,6 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            if (!WebManager.isMapLoaded()) return;
             if (!WynnUtils.onWorld()) return;
 
             // TODO replace with generalized maps whenever that is done
@@ -90,8 +93,6 @@ public class MiniMapOverlayFeature extends UserFeature {
             float textureX = map.getTextureXPosition(McUtils.player().getX());
             float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
-            float yRot = McUtils.player().getYRot();
-
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
@@ -100,17 +101,8 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
-            // enable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - yRot);
-            }
-
-            renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
-
-            // disable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.popPose();
+            if (WebManager.isMapLoaded()) {
+                renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
             }
 
             // TODO minimap icons
@@ -118,12 +110,34 @@ public class MiniMapOverlayFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
-            if (!followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + yRot);
+            renderCursor(poseStack, centerX, centerZ);
+
+            // disable mask & render border
+            switch (maskType) {
+                case Rectangular -> {
+                    RenderSystem.disableScissor();
+                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
+                }
+                    // case Circle -> {
+                    // TODO
+                    // renderCircularMapBorder();
+                    // }
             }
 
-            // TODO cursor color?
+            // TODO Directional Text
+
+            // TODO Coords
+
+        }
+
+        private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
+            }
+
+            RenderSystem.setShaderColor(cursorColor.r, cursorColor.g, cursorColor.b, cursorColor.a);
+
             RenderUtils.drawTexturedRect(
                     poseStack,
                     Texture.MAP_POINTERS.resource(),
@@ -142,23 +156,6 @@ public class MiniMapOverlayFeature extends UserFeature {
             if (!followPlayerRotation) {
                 poseStack.popPose();
             }
-
-            // disable mask & render border
-            switch (maskType) {
-                case Rectangular -> {
-                    RenderSystem.disableScissor();
-                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
-                }
-                    // case Circle -> {
-                    // TODO
-                    // renderCircularMapBorder();
-                    // }
-            }
-
-            // TODO Directional Text
-
-            // TODO Coords
-
         }
 
         private void renderRectangularMapBorder(
@@ -207,6 +204,12 @@ public class MiniMapOverlayFeature extends UserFeature {
                 float textureZ,
                 float width,
                 float height) {
+            // enable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+            }
+
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, map.resource());
 
@@ -262,6 +265,11 @@ public class MiniMapOverlayFeature extends UserFeature {
                     .endVertex();
             bufferBuilder.end();
             BufferUploader.end(bufferBuilder);
+
+            // disable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.popPose();
+            }
         }
 
         @Override
