@@ -57,16 +57,16 @@ public final class WynntilsMod {
         LOGGER.error(msg);
     }
 
-    public static void error(String msg, Exception exception) {
-        LOGGER.error(msg, exception);
+    public static void error(String msg, Throwable t) {
+        LOGGER.error(msg, t);
     }
 
     public static void warn(String msg) {
         LOGGER.warn(msg);
     }
 
-    public static void warn(String msg, Exception exception) {
-        LOGGER.warn(msg, exception);
+    public static void warn(String msg, Throwable t) {
+        LOGGER.warn(msg, t);
     }
 
     public static void info(String msg) {
