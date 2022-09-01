@@ -6,6 +6,7 @@ package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
+import java.io.IOException;
 
 public final class FileUtils {
     /**
@@ -16,6 +17,24 @@ public final class FileUtils {
 
         if (!dir.mkdirs()) {
             WynntilsMod.error("Directory " + dir + " could not be created");
+        }
+    }
+
+    /**
+     * Wraps File#mkdirs with a log output, in case of failure
+     */
+    public static void createNewFile(File file) {
+        if (file.isFile()) {
+            assert false;
+            return;
+        }
+
+        try {
+            if (!file.createNewFile()) {
+                WynntilsMod.error("File " + file + " could not be created");
+            }
+        } catch (IOException e) {
+            WynntilsMod.error("IOException while created File " + file);
         }
     }
 }

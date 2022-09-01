@@ -128,8 +128,7 @@ public class ConfigHolder {
         try {
             return FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to get field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to get field " + getJsonName(), e);
             return null;
         }
     }
@@ -141,8 +140,7 @@ public class ConfigHolder {
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to set field " + getJsonName(), e);
             return false;
         }
     }
