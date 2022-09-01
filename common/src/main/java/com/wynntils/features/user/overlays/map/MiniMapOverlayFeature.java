@@ -133,7 +133,8 @@ public class MiniMapOverlayFeature extends UserFeature {
         private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
             if (!followPlayerRotation) {
                 poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
             }
 
             RenderSystem.setShaderColor(cursorColor.r, cursorColor.g, cursorColor.b, cursorColor.a);
@@ -207,7 +208,8 @@ public class MiniMapOverlayFeature extends UserFeature {
             // enable rotation if necessary
             if (followPlayerRotation) {
                 poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
             }
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
