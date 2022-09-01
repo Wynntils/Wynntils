@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -53,7 +54,7 @@ import net.minecraft.network.chat.TextComponent;
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
     private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
-    private static final int REQUEST_TIMEOUT_MILLIS = 16000;
+    private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
@@ -62,20 +63,20 @@ public final class WebManager extends CoreManager {
 
     private static final Gson gson = new Gson();
 
-    private static HashMap<String, ItemProfile> items = null;
-    private static Collection<ItemProfile> directItems = null;
-    private static HashMap<String, ItemGuessProfile> itemGuesses = null;
-    private static HashMap<String, String> translatedReferences = null;
-    private static HashMap<String, String> internalIdentifications = null;
-    private static HashMap<String, MajorIdentification> majorIds = null;
-    private static HashMap<ItemType, String[]> materialTypes = null;
+    private static HashMap<String, ItemProfile> items = new HashMap<>();
+    private static Collection<ItemProfile> directItems = new ArrayList<>();
+    private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
+    private static HashMap<String, String> translatedReferences = new HashMap<>();
+    private static HashMap<String, String> internalIdentifications = new HashMap<>();
+    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
+    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
 
     private static TerritoryUpdateThread territoryUpdateThread;
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static WynntilsAccount account = null;
 
-    private static List<MapProfile> maps = null;
+    private static List<MapProfile> maps = new ArrayList<>();
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s-%d (%s)",
@@ -129,7 +130,7 @@ public final class WebManager extends CoreManager {
         if (!accountSetup) {
             MutableComponent failed = new TextComponent(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, configs will not be loaded. To try this action again, run ")
+                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
                     .withStyle(ChatFormatting.GREEN);
             failed.append(new TextComponent("/wynntils reload")
                     .withStyle(Style.EMPTY
@@ -189,8 +190,8 @@ public final class WebManager extends CoreManager {
         territoryUpdateThread = null;
     }
 
-    public static boolean tryLoadItemGuesses() {
-        if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return false;
+    public static void tryLoadItemGuesses() {
+        if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
                 .handleJsonObject(json -> {
@@ -210,11 +211,10 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
-        return isItemGuessesLoaded();
     }
 
-    public static boolean tryLoadItemList() {
-        if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
+    public static void tryLoadItemList() {
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
                 .handleJsonObject(json -> {
@@ -252,7 +252,6 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
-        return isItemListLoaded();
     }
 
     public static CompletableFuture<Boolean> tryLoadMaps() {
@@ -377,25 +376,12 @@ public final class WebManager extends CoreManager {
         return st;
     }
 
-    public static boolean isItemGuessesLoaded() {
-        return itemGuesses != null;
-    }
-
-    public static boolean isItemListLoaded() {
-        return items != null
-                && directItems != null
-                && translatedReferences != null
-                && internalIdentifications != null
-                && majorIds != null
-                && materialTypes != null;
-    }
-
     public static boolean isTerritoryListLoaded() {
         return !territories.isEmpty();
     }
 
     public static boolean isMapLoaded() {
-        return maps != null;
+        return !maps.isEmpty();
     }
 
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
@@ -442,12 +428,12 @@ public final class WebManager extends CoreManager {
         return setup;
     }
 
-    public static WebReader getApiUrls() {
-        return apiUrls;
+    public static Optional<WebReader> getApiUrls() {
+        return Optional.ofNullable(apiUrls);
     }
 
-    public static WynntilsAccount getAccount() {
-        return account;
+    public static Optional<WynntilsAccount> getAccount() {
+        return Optional.ofNullable(account);
     }
 
     public static RequestHandler getHandler() {

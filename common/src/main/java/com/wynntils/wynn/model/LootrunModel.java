@@ -591,7 +591,7 @@ public final class LootrunModel {
                 file.close();
                 return true;
             } catch (IOException e) {
-                e.printStackTrace();
+                WynntilsMod.error("Error when trying to load lootrun file.", e);
                 return false;
             }
         }

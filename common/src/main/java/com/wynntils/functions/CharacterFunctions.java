@@ -40,10 +40,10 @@ public class CharacterFunctions {
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            int totalseconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
-            int seconds = totalseconds % 60;
-            int minutes = totalseconds / 60;
+            int seconds = totalSeconds % 60;
+            int minutes = totalSeconds / 60;
             return String.format("%d:%02d", minutes, seconds);
         }
 
@@ -56,10 +56,9 @@ public class CharacterFunctions {
     public static class SoulpointTimerMFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalseconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
-            int minutes = totalseconds / 60;
-            return minutes;
+            return totalSeconds / 60;
         }
 
         @Override
@@ -71,10 +70,9 @@ public class CharacterFunctions {
     public static class SoulpointTimerSFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalseconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = CharacterManager.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
-            int seconds = totalseconds % 60;
-            return seconds;
+            return totalSeconds % 60;
         }
 
         @Override

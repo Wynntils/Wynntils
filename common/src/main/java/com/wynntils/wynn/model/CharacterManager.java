@@ -32,7 +32,7 @@ public class CharacterManager extends CoreManager {
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
-     * Note that the last value is the sum of all preceeding values
+     * Note that the last value is the sum of all preceding values
      */
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
         110, 190, 275, 385, 505, 645, 790, 940, 1100, 1370, 1570, 1800, 2090, 2400, 2720, 3100, 3600, 4150, 4800, 5300,
@@ -114,8 +114,7 @@ public class CharacterManager extends CoreManager {
         }
     }
 
-    // TODO: We don't have a way to parse CharacterInfo if auto select class is on for the player
-    //       Fix this by storing last selected class in WebAPI.
+    // TODO: We don't have a way get CharacterInfo id if auto select class is on for the player.
     public static final class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
