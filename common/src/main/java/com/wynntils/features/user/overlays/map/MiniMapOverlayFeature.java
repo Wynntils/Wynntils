@@ -96,14 +96,10 @@ public class MiniMapOverlayFeature extends UserFeature {
             float renderX = getRenderX();
             float renderY = getRenderY();
 
-            float playerX = (float) McUtils.player().getX();
-            float playerY = (float) McUtils.player().getY();
-            float playerZ = (float) McUtils.player().getZ();
-
             float centerX = renderX + width / 2;
             float centerZ = renderY + height / 2;
-            float textureX = map.getTextureXPosition(playerX);
-            float textureZ = map.getTextureZPosition(playerZ);
+            float textureX = map.getTextureXPosition(McUtils.player().getX());
+            float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
             // enable mask
             switch (maskType) {
@@ -150,7 +146,7 @@ public class MiniMapOverlayFeature extends UserFeature {
                                         (int) McUtils.player().getY(),
                                         (int) McUtils.player().getZ()),
                                 centerX,
-                                centerZ + 6,
+                                renderY + height + 6,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.Center,
                                 VerticalAlignment.Middle,
@@ -192,15 +188,12 @@ public class MiniMapOverlayFeature extends UserFeature {
                                 FontRenderer.TextShadow.NONE);
 
                 if (showCompass == CompassRenderType.All) {
-                    poseStack.pushPose();
-                    poseStack.translate(centerX, centerZ, 0);
-
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
                                     "E",
-                                    -northDY,
-                                    northDX,
+                                    centerX - northDY,
+                                    centerZ + northDX,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
@@ -209,8 +202,8 @@ public class MiniMapOverlayFeature extends UserFeature {
                             .renderText(
                                     poseStack,
                                     "S",
-                                    -northDX,
-                                    -northDY,
+                                    centerX - northDX,
+                                    centerZ - northDY,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
@@ -219,8 +212,8 @@ public class MiniMapOverlayFeature extends UserFeature {
                             .renderText(
                                     poseStack,
                                     "W",
-                                    northDY,
-                                    -northDX,
+                                    centerX + northDY,
+                                    centerZ - northDX,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
