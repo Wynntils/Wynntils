@@ -218,8 +218,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
                                     FontRenderer.TextShadow.NONE);
-
-                    poseStack.popPose();
                 }
             }
         }
