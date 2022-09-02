@@ -66,7 +66,7 @@ public final class FontRenderer {
                 String strippedText = ComponentUtils.stripColorFormatting(text);
 
                 // draw outline behind text
-                font.draw(poseStack, strippedText, renderX, renderY, shadowColor);
+                font.draw(poseStack, strippedText, renderX + 1, renderY, shadowColor);
                 font.draw(poseStack, strippedText, renderX - 1, renderY, shadowColor);
                 font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
                 font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
