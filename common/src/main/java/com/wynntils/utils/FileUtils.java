@@ -13,10 +13,7 @@ public final class FileUtils {
      * Wraps File#mkdirs with a log output, in case of failure
      */
     public static void mkdir(File dir) {
-        if (dir.isDirectory()) {
-            assert false;
-            return;
-        }
+        if (dir.isDirectory()) return;
 
         if (!dir.mkdirs()) {
             WynntilsMod.error("Directory " + dir + " could not be created");
