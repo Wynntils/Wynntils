@@ -146,8 +146,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
 
         private void updateTextRenderSettings() {
-            renderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                    this.getWidth() - 5, CommonColors.WHITE, this.getRenderHorizontalAlignment());
+            renderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth() - 5)
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment());
         }
 
         @Override
