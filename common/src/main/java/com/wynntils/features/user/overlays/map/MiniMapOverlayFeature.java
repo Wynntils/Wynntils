@@ -23,7 +23,9 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
@@ -62,6 +64,9 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Config
         public PointerType pointerType = PointerType.Arrow;
+
+        @Config
+        public CompassRenderType showCompass = CompassRenderType.All;
 
         public MiniMapOverlay() {
             super(
@@ -125,6 +130,70 @@ public class MiniMapOverlayFeature extends UserFeature {
             }
 
             // TODO Directional Text
+            if (showCompass != CompassRenderType.None) {
+                float northDX;
+                float northDY;
+
+                if (followPlayerRotation) {
+                    float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
+                    northDX = (float) StrictMath.sin(yawRadians);
+                    northDY = (float) StrictMath.cos(yawRadians);
+                    if (maskType == MapMaskType.Rectangular) {
+                        // Scale as necessary
+                        double toSquareScale = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
+                        northDX *= toSquareScale;
+                        northDY *= toSquareScale;
+                    }
+
+                } else {
+                    northDX = width / 2;
+                    northDY = height / 2;
+                }
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                "N",
+                                centerX + northDX,
+                                centerZ - 3 + northDY,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.Center,
+                                VerticalAlignment.Middle,
+                                FontRenderer.TextShadow.NONE);
+
+                if (showCompass == CompassRenderType.All) {
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    poseStack,
+                                    "E",
+                                    centerX - northDY,
+                                    centerZ - 3 + northDX,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.Center,
+                                    VerticalAlignment.Middle,
+                                    FontRenderer.TextShadow.NONE);
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    poseStack,
+                                    "S",
+                                    centerX - northDX,
+                                    centerZ - 3 - northDY,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.Center,
+                                    VerticalAlignment.Middle,
+                                    FontRenderer.TextShadow.NONE);
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    poseStack,
+                                    "W",
+                                    centerX + northDY,
+                                    centerZ - 3 - northDX,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.Center,
+                                    VerticalAlignment.Middle,
+                                    FontRenderer.TextShadow.NONE);
+                }
+            }
 
             // TODO Coords
 
@@ -189,10 +258,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                     ty2 - ty1,
                     texture.width(),
                     texture.height());
-        }
-
-        private void renderCircularMapBorder(float renderX, float renderY, float width, float height) {
-            // TODO
         }
 
         private void renderMapQuad(
@@ -275,5 +340,11 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
+    }
+
+    public enum CompassRenderType {
+        None,
+        North,
+        All
     }
 }

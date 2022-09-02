@@ -86,8 +86,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
                         null,
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                        TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                                 .withTextShadow(this.textShadow)));
             }
             return renderTaskList;
@@ -97,8 +99,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
             for (int i = 0; i < 3; i++) {
                 renderTasks
                         .get(i)
-                        .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                        .setSetting(TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                                 .withTextShadow(this.textShadow));
             }
         }

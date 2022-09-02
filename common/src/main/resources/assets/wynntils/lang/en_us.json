@@ -266,6 +266,8 @@
   "feature.wynntils.miniMapOverlay.overlay.miniMap.renderUsingLinear.name": "Use Linear Rendering",
   "feature.wynntils.miniMapOverlay.overlay.miniMap.scale.description": "How zoomed in should the map be?",
   "feature.wynntils.miniMapOverlay.overlay.miniMap.scale.name": "Map Scale",
+  "feature.wynntils.miniMapOverlay.overlay.miniMap.showCompass.description": "Show Compass Directions",
+  "feature.wynntils.miniMapOverlay.overlay.miniMap.showCompass.name": "How should the cardinal directions (N/E/S/W) be displayed on the minimap?",
   "feature.wynntils.mountHorseHotkey.alreadyRiding": "You are already riding a horse.",
   "feature.wynntils.mountHorseHotkey.name": "Mount Horse Hotkey Feature",
   "feature.wynntils.mountHorseHotkey.noHorse": "Your horse was unable to be found.",

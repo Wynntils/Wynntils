@@ -40,44 +40,42 @@ public final class FontRenderer {
             float x,
             float y,
             CustomColor customColor,
-            TextAlignment alignment,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
             TextShadow shadow) {
+        float renderX;
+        float renderY;
+
         if (text == null) return 0;
 
         // TODO: Add rainbow color support
 
-        switch (alignment) {
-            case CENTER_ALIGNED:
-                return renderText(
-                        poseStack,
-                        text,
-                        x - font.width(text) / 2.0f,
-                        y,
-                        customColor,
-                        TextAlignment.LEFT_ALIGNED,
-                        shadow);
-            case RIGHT_ALIGNED:
-                return renderText(
-                        poseStack, text, x - font.width(text), y, customColor, TextAlignment.LEFT_ALIGNED, shadow);
+        renderX = switch (horizontalAlignment) {
+            case Left -> x;
+            case Center -> x - font.width(text) / 2.0f;
+            case Right -> x - font.width(text);};
+
+        renderY = switch (verticalAlignment) {
+            case Top -> y;
+            case Middle -> y - font.lineHeight / 2.0f;
+            case Bottom -> y - font.lineHeight;};
+
+        switch (shadow) {
+            case OUTLINE:
+                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
+                String strippedText = ComponentUtils.stripColorFormatting(text);
+
+                // draw outline behind text
+                font.draw(poseStack, strippedText, renderX, renderY, shadowColor);
+                font.draw(poseStack, strippedText, renderX - 1, renderY, shadowColor);
+                font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
+                font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
+
+                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+            case NORMAL:
+                return font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
             default:
-                switch (shadow) {
-                    case OUTLINE:
-                        int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                        String strippedText = ComponentUtils.stripColorFormatting(text);
-
-                        // draw outline behind text
-                        font.draw(poseStack, strippedText, x, y, shadowColor);
-                        font.draw(poseStack, strippedText, x + 1, y, shadowColor);
-                        font.draw(poseStack, strippedText, x - 1, y, shadowColor);
-                        font.draw(poseStack, strippedText, x, y + 1, shadowColor);
-                        font.draw(poseStack, strippedText, x, y - 1, shadowColor);
-
-                        return font.draw(poseStack, text, x, y, customColor.asInt());
-                    case NORMAL:
-                        return font.drawShadow(poseStack, text, x, y, customColor.asInt());
-                    default:
-                        return font.draw(poseStack, text, x, y, customColor.asInt());
-                }
+                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
         }
     }
 
@@ -89,29 +87,17 @@ public final class FontRenderer {
             float y,
             float maxWidth,
             CustomColor customColor,
-            TextAlignment textAlignment,
+            HorizontalAlignment horizontalAlignment,
             TextShadow textShadow) {
-        switch (textAlignment) {
-            case LEFT_ALIGNED -> renderText(poseStack, text, x1, y, maxWidth, customColor, textAlignment, textShadow);
-            case CENTER_ALIGNED -> renderText(
-                    poseStack,
-                    text,
-                    x1 + (x2 - x1 - font.width(text)) / 2,
-                    y,
-                    maxWidth,
-                    customColor,
-                    TextAlignment.LEFT_ALIGNED,
-                    textShadow);
-            case RIGHT_ALIGNED -> renderText(
-                    poseStack,
-                    text,
-                    x2 - font.width(text),
-                    y,
-                    maxWidth,
-                    customColor,
-                    TextAlignment.LEFT_ALIGNED,
-                    textShadow);
-        }
+
+        float renderX =
+                switch (horizontalAlignment) {
+                    case Left -> x1;
+                    case Center -> (x1 + x2) / 2f;
+                    case Right -> x2;
+                };
+
+        renderText(poseStack, text, renderX, y, customColor, horizontalAlignment, VerticalAlignment.Top, textShadow);
     }
 
     public void renderText(
@@ -121,12 +107,13 @@ public final class FontRenderer {
             float y,
             float maxWidth,
             CustomColor customColor,
-            TextAlignment alignment,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
             TextShadow shadow) {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text) < maxWidth) {
-            renderText(poseStack, text, x, y, customColor, alignment, shadow);
+            renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow);
             return;
         }
 
@@ -138,7 +125,15 @@ public final class FontRenderer {
             // copy the format codes to this part as well
             String part = getLastPartCodes(lastPart) + parts.get(i);
             lastPart = part;
-            renderText(poseStack, part, x, y + (i * font.lineHeight), customColor, alignment, shadow);
+            renderText(
+                    poseStack,
+                    part,
+                    x,
+                    y + (i * font.lineHeight),
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    shadow);
         }
     }
 
@@ -175,7 +170,8 @@ public final class FontRenderer {
                 y,
                 line.getSetting().maxWidth(),
                 line.getSetting().customColor(),
-                line.getSetting().alignment(),
+                line.getSetting().horizontalAlignment(),
+                line.getSetting().verticalAlignment(),
                 line.getSetting().shadow());
     }
 
@@ -263,22 +259,12 @@ public final class FontRenderer {
                 .map(s -> new TextRenderTask(
                         s,
                         new TextRenderSetting(
-                                maxWidth, CustomColor.NONE, TextAlignment.LEFT_ALIGNED, TextShadow.NORMAL)))
+                                maxWidth,
+                                CustomColor.NONE,
+                                HorizontalAlignment.Left,
+                                VerticalAlignment.Top,
+                                TextShadow.NORMAL)))
                 .toList());
-    }
-
-    public enum TextAlignment {
-        LEFT_ALIGNED,
-        CENTER_ALIGNED,
-        RIGHT_ALIGNED;
-
-        public static TextAlignment fromHorizontalAlignment(HorizontalAlignment alignment) {
-            return switch (alignment) {
-                case Left -> LEFT_ALIGNED;
-                case Center -> CENTER_ALIGNED;
-                case Right -> RIGHT_ALIGNED;
-            };
-        }
     }
 
     public enum TextShadow {

@@ -18,7 +18,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.TextRenderSetting;
@@ -177,8 +176,9 @@ public class GameNotificationOverlayFeature extends UserFeature {
         }
 
         private void updateTextRenderSetting() {
-            textRenderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment())
+            textRenderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth())
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
         }
     }
