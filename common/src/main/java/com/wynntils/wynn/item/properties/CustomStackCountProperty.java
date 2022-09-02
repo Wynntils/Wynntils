@@ -6,6 +6,9 @@ package com.wynntils.wynn.item.properties;
 
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 
@@ -19,7 +22,16 @@ public abstract class CustomStackCountProperty extends ItemProperty implements T
     }
 
     protected void setCustomStackCount(String value, CustomColor color, FontRenderer.TextShadow shadow) {
-        textOverlay = new TextOverlay(value, color, FontRenderer.TextAlignment.RIGHT_ALIGNED, shadow, 17, 9, 1);
+        textOverlay = new TextOverlay(
+                new TextRenderTask(
+                        value,
+                        TextRenderSetting.DEFAULT
+                                .withCustomColor(color)
+                                .withHorizontalAlignment(HorizontalAlignment.Right)
+                                .withTextShadow(shadow)),
+                17,
+                9,
+                1);
     }
 
     @Override
