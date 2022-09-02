@@ -68,6 +68,9 @@ public class MiniMapOverlayFeature extends UserFeature {
         @Config
         public CompassRenderType showCompass = CompassRenderType.All;
 
+        @Config
+        public boolean showCoords = true;
+
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
@@ -93,10 +96,14 @@ public class MiniMapOverlayFeature extends UserFeature {
             float renderX = getRenderX();
             float renderY = getRenderY();
 
+            float playerX = (float) McUtils.player().getX();
+            float playerY = (float) McUtils.player().getY();
+            float playerZ = (float) McUtils.player().getZ();
+
             float centerX = renderX + width / 2;
             float centerZ = renderY + height / 2;
-            float textureX = map.getTextureXPosition(McUtils.player().getX());
-            float textureZ = map.getTextureZPosition(McUtils.player().getZ());
+            float textureX = map.getTextureXPosition(playerX);
+            float textureZ = map.getTextureZPosition(playerZ);
 
             // enable mask
             switch (maskType) {
@@ -129,7 +136,30 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
-            // TODO Directional Text
+            // Directional Text
+            renderCardinalDirections(poseStack, width, height, centerX, centerZ);
+
+            // Coordinates
+            if (showCoords) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                String.format(
+                                        "%s, %s, %s",
+                                        (int) McUtils.player().getX(),
+                                        (int) McUtils.player().getY(),
+                                        (int) McUtils.player().getZ()),
+                                centerX,
+                                centerZ + 6,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.Center,
+                                VerticalAlignment.Middle,
+                                FontRenderer.TextShadow.NONE);
+            }
+        }
+
+        private void renderCardinalDirections(
+                PoseStack poseStack, float width, float height, float centerX, float centerZ) {
             if (showCompass != CompassRenderType.None) {
                 float northDX;
                 float northDY;
@@ -162,12 +192,15 @@ public class MiniMapOverlayFeature extends UserFeature {
                                 FontRenderer.TextShadow.NONE);
 
                 if (showCompass == CompassRenderType.All) {
+                    poseStack.pushPose();
+                    poseStack.translate(centerX, centerZ, 0);
+
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
                                     "E",
-                                    centerX - northDY,
-                                    centerZ + northDX,
+                                    -northDY,
+                                    northDX,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
@@ -176,8 +209,8 @@ public class MiniMapOverlayFeature extends UserFeature {
                             .renderText(
                                     poseStack,
                                     "S",
-                                    centerX - northDX,
-                                    centerZ - northDY,
+                                    -northDX,
+                                    -northDY,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
@@ -186,17 +219,16 @@ public class MiniMapOverlayFeature extends UserFeature {
                             .renderText(
                                     poseStack,
                                     "W",
-                                    centerX + northDY,
-                                    centerZ - northDX,
+                                    northDY,
+                                    -northDX,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Middle,
                                     FontRenderer.TextShadow.NONE);
+
+                    poseStack.popPose();
                 }
             }
-
-            // TODO Coords
-
         }
 
         private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {

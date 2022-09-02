@@ -97,7 +97,16 @@ public final class FontRenderer {
                     case Right -> x2;
                 };
 
-        renderText(poseStack, text, renderX, y, customColor, horizontalAlignment, VerticalAlignment.Top, textShadow);
+        renderText(
+                poseStack,
+                text,
+                renderX,
+                y,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                VerticalAlignment.Top,
+                textShadow);
     }
 
     public void renderText(
@@ -185,30 +194,33 @@ public final class FontRenderer {
 
     public void renderTextsWithAlignment(
             PoseStack poseStack,
-            float renderX,
-            float renderY,
+            float x,
+            float y,
             List<TextRenderTask> toRender,
             float width,
             float height,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment) {
-        switch (horizontalAlignment) {
-            case Center -> renderX += width / 2 / McUtils.window().getGuiScale();
-            case Right -> renderX += width / McUtils.window().getGuiScale();
-        }
+        float renderX =
+                switch (horizontalAlignment) {
+                    case Left -> x;
+                    case Center -> (float) (x + width / 2 / McUtils.window().getGuiScale());
+                    case Right -> (float) (x + width / McUtils.window().getGuiScale());
+                };
 
-        if (verticalAlignment != VerticalAlignment.Top) {
-            float renderHeight = calculateRenderHeight(toRender);
+        float renderY =
+                switch (verticalAlignment) {
+                    case Top -> y;
+                    case Middle -> (float) (y
+                            + (height - calculateRenderHeight(toRender))
+                                    / 2
+                                    / McUtils.window().getGuiScale());
+                    case Bottom -> (float) (y
+                            + (height - calculateRenderHeight(toRender))
+                                    / McUtils.window().getGuiScale());
+                };
 
-            switch (verticalAlignment) {
-                case Middle -> renderY +=
-                        (height - renderHeight) / 2 / McUtils.window().getGuiScale();
-                case Bottom -> renderY +=
-                        (height - renderHeight) / McUtils.window().getGuiScale();
-            }
-        }
-
-        renderTexts(poseStack, renderX, renderY, toRender);
+        renderTexts(poseStack, x, renderY, toRender);
     }
 
     public void renderTextWithAlignment(
