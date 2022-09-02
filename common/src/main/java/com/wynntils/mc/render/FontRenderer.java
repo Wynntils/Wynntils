@@ -220,7 +220,7 @@ public final class FontRenderer {
                                     / McUtils.window().getGuiScale());
                 };
 
-        renderTexts(poseStack, x, renderY, toRender);
+        renderTexts(poseStack, renderX, renderY, toRender);
     }
 
     public void renderTextWithAlignment(
