@@ -29,7 +29,7 @@ public record TextRenderSetting(
                 maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
     }
 
-    public TextRenderSetting withCustomColor(CustomColor color) {
+    public TextRenderSetting withCustomColor(CustomColor customColor) {
         return new TextRenderSetting(
                 this.maxWidth, customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
     }
