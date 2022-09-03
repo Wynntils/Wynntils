@@ -54,7 +54,7 @@ public class MiniMapOverlayFeature extends UserFeature {
         public boolean renderUsingLinear = true;
 
         @Config
-        public CustomColor cursorColor = new CustomColor(1f, 1f, 1f, 1f);
+        public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
         @Config
         public MapMaskType maskType = MapMaskType.Rectangular;
@@ -232,7 +232,7 @@ public class MiniMapOverlayFeature extends UserFeature {
             RenderUtils.drawTexturedRectWithColor(
                     poseStack,
                     Texture.MAP_POINTERS.resource(),
-                    cursorColor,
+                    pointerColor,
                     (int) (centerX - pointerType.width / 2),
                     (int) (centerZ - pointerType.height / 2),
                     0,
