@@ -126,7 +126,8 @@ public class OverlayManagementScreen extends Screen {
                     new TextRenderSetting(
                             0,
                             CommonColors.WHITE,
-                            FontRenderer.TextAlignment.CENTER_ALIGNED,
+                            HorizontalAlignment.Center,
+                            VerticalAlignment.Top,
                             FontRenderer.TextShadow.NORMAL));
             FontRenderer.getInstance().renderText(poseStack, this.width / 2f, this.height - 160, renderTask);
         } else {
@@ -180,20 +181,19 @@ public class OverlayManagementScreen extends Screen {
 
                 TextRenderTask renderTask = new TextRenderTask(
                         overlay.getTranslatedName(),
-                        new TextRenderSetting(
-                                overlay.getWidth(),
-                                color,
-                                FontRenderer.TextAlignment.fromHorizontalAlignment(
-                                        overlay.getRenderHorizontalAlignment()),
-                                FontRenderer.TextShadow.OUTLINE));
+                        TextRenderSetting.DEFAULT
+                                .withMaxWidth(overlay.getWidth())
+                                .withCustomColor(color)
+                                .withHorizontalAlignment(overlay.getRenderHorizontalAlignment())
+                                .withTextShadow(FontRenderer.TextShadow.OUTLINE));
                 FontRenderer.getInstance()
                         .renderTextWithAlignment(
                                 poseStack,
                                 overlay.getRenderX() + xOffset,
                                 overlay.getRenderY() + yOffset,
                                 renderTask,
-                                overlay.getRenderedWidth(),
-                                overlay.getRenderedHeight(),
+                                overlay.getRenderedWidth() / (float) McUtils.guiScale(),
+                                overlay.getRenderedHeight() / (float) McUtils.guiScale(),
                                 overlay.getRenderHorizontalAlignment(),
                                 overlay.getRenderVerticalAlignment());
             }

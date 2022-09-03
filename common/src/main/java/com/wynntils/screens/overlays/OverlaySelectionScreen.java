@@ -8,7 +8,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.Texture;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.overlays.lists.OverlayList;
 import net.minecraft.client.Minecraft;
@@ -75,7 +77,8 @@ public class OverlaySelectionScreen extends Screen {
                         5,
                         4,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();

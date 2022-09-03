@@ -23,8 +23,12 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
@@ -51,6 +55,9 @@ public class MiniMapOverlayFeature extends UserFeature {
         public boolean renderUsingLinear = true;
 
         @Config
+        public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
+
+        @Config
         public MapMaskType maskType = MapMaskType.Rectangular;
 
         @Config
@@ -58,6 +65,12 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Config
         public PointerType pointerType = PointerType.Arrow;
+
+        @Config
+        public CompassRenderType showCompass = CompassRenderType.All;
+
+        @Config
+        public boolean showCoords = true;
 
         public MiniMapOverlay() {
             super(
@@ -72,7 +85,6 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            if (!WebManager.isMapLoaded()) return;
             if (!WynnUtils.onWorld()) return;
 
             // TODO replace with generalized maps whenever that is done
@@ -90,8 +102,6 @@ public class MiniMapOverlayFeature extends UserFeature {
             float textureX = map.getTextureXPosition(McUtils.player().getX());
             float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
-            float yRot = McUtils.player().getYRot();
-
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
@@ -100,17 +110,8 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
-            // enable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 - yRot);
-            }
-
-            renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
-
-            // disable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.popPose();
+            if (WebManager.isMapLoaded()) {
+                renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
             }
 
             // TODO minimap icons
@@ -118,15 +119,122 @@ public class MiniMapOverlayFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
-            if (!followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, centerX, centerZ, 180 + yRot);
+            renderCursor(poseStack, centerX, centerZ);
+
+            // disable mask & render border
+            switch (maskType) {
+                case Rectangular -> {
+                    RenderSystem.disableScissor();
+                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
+                }
+                    // case Circle -> {
+                    // TODO
+                    // renderCircularMapBorder();
+                    // }
             }
 
-            // TODO cursor color?
-            RenderUtils.drawTexturedRect(
+            // Directional Text
+            renderCardinalDirections(poseStack, width, height, centerX, centerZ);
+
+            // Coordinates
+            if (showCoords) {
+                String coords = String.format(
+                        "%s, %s, %s",
+                        (int) McUtils.player().getX(), (int) McUtils.player().getY(), (int)
+                                McUtils.player().getZ());
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                centerX,
+                                renderY + height + 10 * height / DEFAULT_SIZE,
+                                new TextRenderTask(
+                                        coords,
+                                        TextRenderSetting.CENTERED.withTextShadow(FontRenderer.TextShadow.OUTLINE)));
+            }
+        }
+
+        private void renderCardinalDirections(
+                PoseStack poseStack, float width, float height, float centerX, float centerZ) {
+            if (showCompass == CompassRenderType.None) return;
+
+            float northDX;
+            float northDY;
+
+            if (followPlayerRotation) {
+                float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
+                northDX = (float) StrictMath.sin(yawRadians);
+                northDY = (float) StrictMath.cos(yawRadians);
+                if (maskType == MapMaskType.Rectangular) {
+                    // Scale as necessary
+                    double toSquareScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
+                    northDX *= toSquareScaleNorth;
+                    northDY *= toSquareScaleNorth;
+                }
+            } else {
+                northDX = 0;
+                northDY = -height / 2;
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            centerX + northDX,
+                            centerZ + northDY,
+                            new TextRenderTask("N", TextRenderSetting.CENTERED));
+
+            if (showCompass == CompassRenderType.North) return;
+
+            // we can't do manipulations from north to east as it might not be square
+            float eastDX;
+            float eastDY;
+
+            if (followPlayerRotation) {
+                eastDX = -northDY;
+                eastDY = northDX;
+
+                if (maskType == MapMaskType.Rectangular) {
+                    // Scale as necessary
+                    double toSquareScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
+                    eastDX *= toSquareScaleEast;
+                    eastDY *= toSquareScaleEast;
+                }
+            } else {
+                eastDX = width / 2;
+                eastDY = 0;
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            centerX + eastDX,
+                            centerZ + eastDY,
+                            new TextRenderTask("E", TextRenderSetting.CENTERED));
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            centerX - northDX,
+                            centerZ - northDY,
+                            new TextRenderTask("S", TextRenderSetting.CENTERED));
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            centerX - eastDX,
+                            centerZ - eastDY,
+                            new TextRenderTask("W", TextRenderSetting.CENTERED));
+        }
+
+        private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
+            }
+
+            RenderUtils.drawTexturedRectWithColor(
                     poseStack,
                     Texture.MAP_POINTERS.resource(),
+                    pointerColor,
                     (int) (centerX - pointerType.width / 2),
                     (int) (centerZ - pointerType.height / 2),
                     0,
@@ -142,23 +250,6 @@ public class MiniMapOverlayFeature extends UserFeature {
             if (!followPlayerRotation) {
                 poseStack.popPose();
             }
-
-            // disable mask & render border
-            switch (maskType) {
-                case Rectangular -> {
-                    RenderSystem.disableScissor();
-                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
-                }
-                    // case Circle -> {
-                    // TODO
-                    // renderCircularMapBorder();
-                    // }
-            }
-
-            // TODO Directional Text
-
-            // TODO Coords
-
         }
 
         private void renderRectangularMapBorder(
@@ -193,10 +284,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                     texture.height());
         }
 
-        private void renderCircularMapBorder(float renderX, float renderY, float width, float height) {
-            // TODO
-        }
-
         private void renderMapQuad(
                 MapProfile map,
                 PoseStack poseStack,
@@ -206,6 +293,13 @@ public class MiniMapOverlayFeature extends UserFeature {
                 float textureZ,
                 float width,
                 float height) {
+            // enable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+            }
+
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, map.resource());
 
@@ -261,9 +355,20 @@ public class MiniMapOverlayFeature extends UserFeature {
                     .endVertex();
             bufferBuilder.end();
             BufferUploader.end(bufferBuilder);
+
+            // disable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.popPose();
+            }
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
+    }
+
+    public enum CompassRenderType {
+        None,
+        North,
+        All
     }
 }
