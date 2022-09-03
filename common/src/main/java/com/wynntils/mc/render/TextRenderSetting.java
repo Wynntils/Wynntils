@@ -17,6 +17,13 @@ public record TextRenderSetting(
     public static final TextRenderSetting DEFAULT = new TextRenderSetting(
             0, CommonColors.WHITE, HorizontalAlignment.Left, VerticalAlignment.Top, FontRenderer.TextShadow.NORMAL);
 
+    public static final TextRenderSetting CENTERED = new TextRenderSetting(
+            0,
+            CommonColors.WHITE,
+            HorizontalAlignment.Center,
+            VerticalAlignment.Middle,
+            FontRenderer.TextShadow.NORMAL);
+
     public TextRenderSetting withMaxWidth(float maxWidth) {
         return new TextRenderSetting(
                 maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
@@ -35,6 +42,12 @@ public record TextRenderSetting(
     public TextRenderSetting withVerticalAlignment(VerticalAlignment alignment) {
         return new TextRenderSetting(
                 this.maxWidth, this.customColor, this.horizontalAlignment, verticalAlignment, this.shadow);
+    }
+
+    public TextRenderSetting withAlignment(
+            HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+        return new TextRenderSetting(
+                this.maxWidth, this.customColor, horizontalAlignment, verticalAlignment, this.shadow);
     }
 
     public TextRenderSetting withTextShadow(FontRenderer.TextShadow textShadow) {

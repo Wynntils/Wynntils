@@ -263,14 +263,7 @@ public final class FontRenderer {
 
     public float calculateRenderHeight(List<String> lines, float maxWidth) {
         return calculateRenderHeight(lines.stream()
-                .map(s -> new TextRenderTask(
-                        s,
-                        new TextRenderSetting(
-                                maxWidth,
-                                CustomColor.NONE,
-                                HorizontalAlignment.Left,
-                                VerticalAlignment.Top,
-                                TextShadow.NORMAL)))
+                .map(s -> new TextRenderTask(s, TextRenderSetting.DEFAULT.withMaxWidth(maxWidth)))
                 .toList());
     }
 

@@ -23,11 +23,12 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
@@ -137,20 +138,19 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // Coordinates
             if (showCoords) {
+                String coords = String.format(
+                        "%s, %s, %s",
+                        (int) McUtils.player().getX(), (int) McUtils.player().getY(), (int)
+                                McUtils.player().getZ());
+
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
-                                String.format(
-                                        "%s, %s, %s",
-                                        (int) McUtils.player().getX(),
-                                        (int) McUtils.player().getY(),
-                                        (int) McUtils.player().getZ()),
                                 centerX,
                                 renderY + height + 6,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.Center,
-                                VerticalAlignment.Middle,
-                                FontRenderer.TextShadow.NONE);
+                                new TextRenderTask(
+                                        coords,
+                                        TextRenderSetting.CENTERED.withTextShadow(FontRenderer.TextShadow.OUTLINE)));
             }
         }
 
@@ -179,45 +179,29 @@ public class MiniMapOverlayFeature extends UserFeature {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
-                                "N",
                                 centerX + northDX,
                                 centerZ + northDY,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.Center,
-                                VerticalAlignment.Middle,
-                                FontRenderer.TextShadow.NONE);
+                                new TextRenderTask("N", TextRenderSetting.CENTERED));
 
                 if (showCompass == CompassRenderType.All) {
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
-                                    "E",
                                     centerX - northDY,
                                     centerZ + northDX,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Middle,
-                                    FontRenderer.TextShadow.NONE);
+                                    new TextRenderTask("E", TextRenderSetting.CENTERED));
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
-                                    "S",
                                     centerX - northDX,
                                     centerZ - northDY,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Middle,
-                                    FontRenderer.TextShadow.NONE);
+                                    new TextRenderTask("S", TextRenderSetting.CENTERED));
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
-                                    "W",
                                     centerX + northDY,
                                     centerZ - northDX,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Middle,
-                                    FontRenderer.TextShadow.NONE);
+                                    new TextRenderTask("W", TextRenderSetting.CENTERED));
                 }
             }
         }
