@@ -192,8 +192,8 @@ public class OverlayManagementScreen extends Screen {
                                 overlay.getRenderX() + xOffset,
                                 overlay.getRenderY() + yOffset,
                                 renderTask,
-                                overlay.getRenderedWidth(),
-                                overlay.getRenderedHeight(),
+                                overlay.getRenderedWidth() / (float) McUtils.guiScale(),
+                                overlay.getRenderedHeight() / (float) McUtils.guiScale(),
                                 overlay.getRenderHorizontalAlignment(),
                                 overlay.getRenderVerticalAlignment());
             }

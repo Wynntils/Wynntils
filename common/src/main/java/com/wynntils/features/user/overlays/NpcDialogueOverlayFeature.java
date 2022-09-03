@@ -187,8 +187,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderX() + 5,
                             this.getRenderY() + 5,
                             dialogueRenderTask,
-                            this.getRenderedWidth() - 10,
-                            this.getRenderedHeight() - 10,
+                            (this.getRenderedWidth() - 10) / (float) McUtils.guiScale(),
+                            (this.getRenderedHeight() - 10)  / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
@@ -217,8 +217,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderX() + 5,
                             this.getRenderY() + 20 + textHeight,
                             renderTaskList,
-                            this.getRenderedWidth() - 15,
-                            this.getRenderedHeight() - 15,
+                            (this.getRenderedWidth() - 15)  / (float) McUtils.guiScale(),
+                            (this.getRenderedHeight() - 15)  / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }

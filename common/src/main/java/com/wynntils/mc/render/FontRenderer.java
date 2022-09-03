@@ -52,13 +52,15 @@ public final class FontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case Left -> x;
-            case Center -> x - font.width(text) / (2f * (float) (McUtils.guiScale()));
-            case Right -> x - font.width(text) / (float) McUtils.guiScale();};
+            case Center -> x - font.width(text) / 2;
+            case Right -> x - font.width(text);
+        };
 
         renderY = switch (verticalAlignment) {
             case Top -> y;
-            case Middle -> y - font.lineHeight / (2f * (float) (McUtils.guiScale()));
-            case Bottom -> y - font.lineHeight / (float) McUtils.guiScale();};
+            case Middle -> y - font.lineHeight / 2;
+            case Bottom -> y - font.lineHeight;
+        };
 
         switch (shadow) {
             case OUTLINE:
@@ -263,15 +265,15 @@ public final class FontRenderer {
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x;
-                    case Center -> x + width / (2f * (float) (McUtils.guiScale()));
-                    case Right -> x + width / (float) McUtils.guiScale();
+                    case Center -> x + width / 2;
+                    case Right -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
                     case Top -> y;
-                    case Middle -> y + (height - calculateRenderHeight(toRender)) / (2f * (float) (McUtils.guiScale()));
-                    case Bottom -> y + (height - calculateRenderHeight(toRender)) / (float) McUtils.guiScale();
+                    case Middle -> y + (height - calculateRenderHeight(toRender)) / 2;
+                    case Bottom -> y + (height - calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, renderX, renderY, toRender);

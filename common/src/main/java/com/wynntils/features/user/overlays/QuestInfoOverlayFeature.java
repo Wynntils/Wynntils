@@ -25,6 +25,7 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.TextRenderSetting;
 import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
@@ -133,8 +134,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRender,
-                            this.getRenderedWidth(),
-                            this.getRenderedHeight(),
+                            this.getRenderedWidth() / (float) McUtils.guiScale(),
+                            this.getRenderedHeight() / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
@@ -166,8 +167,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRenderPreview,
-                            this.getRenderedWidth(),
-                            this.getRenderedHeight(),
+                            this.getRenderedWidth() / (float) McUtils.guiScale(),
+                            this.getRenderedHeight() / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
