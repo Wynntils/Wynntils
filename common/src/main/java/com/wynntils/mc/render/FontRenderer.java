@@ -128,7 +128,6 @@ public final class FontRenderer {
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             TextShadow textShadow) {
-
         renderAlignedTextInBox(
                 poseStack,
                 text,
@@ -153,7 +152,6 @@ public final class FontRenderer {
             CustomColor customColor,
             VerticalAlignment verticalAlignment,
             TextShadow textShadow) {
-
         renderAlignedTextInBox(
                 poseStack,
                 text,
