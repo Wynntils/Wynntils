@@ -102,7 +102,7 @@ public final class FontRenderer {
         float renderY =
                 switch (verticalAlignment) {
                     case Top -> y1;
-                    case Middle -> (y2 + y1) / 2;
+                    case Middle -> (y1 + y2) / 2;
                     case Bottom -> y2;
                 };
 
