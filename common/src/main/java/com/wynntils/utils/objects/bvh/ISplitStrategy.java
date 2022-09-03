@@ -31,7 +31,7 @@ public interface ISplitStrategy {
      */
     int bucketCount();
 
-    public interface ISplitStrategyFactory {
+    interface ISplitStrategyFactory {
         /**
          * Info on available settings to configure the strategies properties.
          *
@@ -48,7 +48,7 @@ public interface ISplitStrategy {
          */
         ISplitStrategy getStrategy(Map<String, String> settings);
 
-        public class Setting {
+        class Setting {
             public String name;
             public String type;
             public String description;
@@ -61,7 +61,7 @@ public interface ISplitStrategy {
         }
     }
 
-    public enum StrategyFactory {
+    enum StrategyFactory {
         OCT_TREE(new OctTreeStrategy()),
         BIN_TREE(new BinTreeStrategy()),
         N_SPLIT(new NSplitFactory());

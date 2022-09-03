@@ -59,4 +59,19 @@ public class MathUtils {
         }
         return num;
     }
+
+    /**
+     * Calculates the integer log base 2 of a double.
+     * <p>Provides a faster alternative to {@code (int)(Math.log(value)/Math.log(2))} without floating point introduced errors.</p>
+     * @param value to calculate the log of.
+     * @return Rounded down log base 2 of value.
+     */
+    public static int log2(double value) {
+        final int exponent = Math.getExponent(value);
+        return exponent >= Double.MIN_EXPONENT
+                ? exponent
+                : (Double.MIN_EXPONENT
+                        - Long.numberOfLeadingZeros(Double.doubleToRawLongBits(value) & 0x000fffffffffffffL)
+                        + 11);
+    }
 }

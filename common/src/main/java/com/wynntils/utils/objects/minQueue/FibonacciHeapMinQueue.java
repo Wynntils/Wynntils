@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A priority queue utilising the Fibonacci heap.
@@ -69,19 +69,18 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.heap.isEmpty()
-                || this.heap.stream().filter(Objects::nonNull).count() == 0;
+        return this.heap.isEmpty() || this.heap.stream().noneMatch(Objects::nonNull);
     }
 
     /**
      * Finds the smallest heap entry and sets {@code #minIndex} accordingly ({@code -1} when the heap is empty).
      */
     private void updateMinIndex() {
-        final Optional<Tree<T>> min = this.heap.stream()
+        this.minIndex = this.heap.stream()
                 .filter(Objects::nonNull)
-                .sorted((a, b) -> this.comparator.compare(a.value, b.value))
-                .findFirst();
-        this.minIndex = min.isPresent() ? this.heap.indexOf(min.get()) : -1;
+                .min((a, b) -> this.comparator.compare(a.value, b.value))
+                .map(this.heap::indexOf)
+                .orElse(-1);
     }
 
     /**
@@ -127,13 +126,12 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
      * @return The list of all elements.
      */
     private List<T> listCopy() {
-        final List<T> result = this.heap.stream()
+        return this.heap.stream()
                 .filter(Objects::nonNull)
                 .map(Tree::listCopy)
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
-        result.sort(this.comparator);
-        return result;
+                .sorted(this.comparator)
+                .toList();
     }
 
     @Override
@@ -148,8 +146,7 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
 
     @Override
     public Iterator<T> iterator() {
-        final List<T> listCopy = this.listCopy();
-        return listCopy.iterator();
+        return new FibonacciHeapMinQueueIterator(this);
     }
 
     @Override
@@ -158,7 +155,7 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
     }
 
     @Override
-    public <E> E[] toArray(final E[] a) {
+    public <E> E[] toArray(final E @NotNull [] a) {
         return this.listCopy().toArray(a);
     }
 
@@ -168,8 +165,7 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
         if (value == null) {
             return false;
         }
-        final List<Tree<T>> nodesToReInsert = new ArrayList<>();
-        nodesToReInsert.addAll(value.childNodes);
+        final List<Tree<T>> nodesToReInsert = new ArrayList<>(value.childNodes);
         if (value.parent == null) {
             this.heap.set(this.heap.indexOf(value), null);
         } else {
@@ -203,7 +199,7 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
 
     @Override
     public boolean containsAll(final Collection<?> c) {
-        return c.stream().map(e -> this.objectCache.containsKey(e)).reduce(true, Boolean::logicalAnd);
+        return c.stream().map(this.objectCache::containsKey).reduce(true, Boolean::logicalAnd);
     }
 
     @Override
@@ -217,7 +213,7 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
     }
 
     @Override
-    public boolean retainAll(final Collection<?> c) {
+    public boolean retainAll(final @NotNull Collection<?> c) {
         final List<T> heapContents = this.listCopy();
         heapContents.retainAll(c);
         if (heapContents.size() != this.size()) {
@@ -291,5 +287,32 @@ public class FibonacciHeapMinQueue<T> implements Queue<T> {
         return this.heap.stream()
                 .map(t -> t == null ? "<>" : t.toString())
                 .collect(Collectors.joining("\n", "{\n", "\n}"));
+    }
+
+    private static class FibonacciHeapMinQueueIterator<T> implements Iterator<T> {
+        private final FibonacciHeapMinQueue<T> source;
+        private final Iterator<T> elements;
+        private T lastReturned;
+
+        public FibonacciHeapMinQueueIterator(FibonacciHeapMinQueue<T> queue) {
+            this.source = queue;
+            this.elements =
+                    queue.objectCache.keySet().stream().sorted(queue.comparator).iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.elements.hasNext();
+        }
+
+        @Override
+        public T next() {
+            return this.lastReturned = this.elements.next();
+        }
+
+        @Override
+        public void remove() {
+            this.source.remove(this.lastReturned);
+        }
     }
 }

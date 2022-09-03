@@ -18,7 +18,11 @@ import com.google.gson.JsonSerializer;
 import com.wynntils.utils.objects.IBoundingBox;
 import com.wynntils.utils.objects.Pair;
 import com.wynntils.utils.objects.Referencable;
+import com.wynntils.utils.objects.TriPredicate;
 import com.wynntils.utils.objects.bvh.ISplitStrategy.StrategyFactory;
+import com.wynntils.utils.objects.lod.LodCreator;
+import com.wynntils.utils.objects.lod.LodElement;
+import com.wynntils.utils.objects.lod.LodManager;
 import com.wynntils.utils.objects.minQueue.FibonacciHeapMinQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,8 +52,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -116,7 +123,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     /**
      * Spatial tree of the BVH.
      */
-    private BvhNode<T> tree;
+    private BvhNode<T> tree = new BvhNode<>();
     /**
      * Factory to get the concrete split strategy.
      */
@@ -136,7 +143,12 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     /**
      * Index for direct non-traversal access of elements.
      */
-    private Map<T, BvhNode<T>> objectCache;
+    private Map<T, BvhNode<T>> objectCache = new HashMap<>();
+    /**
+     * Optional attribute to enable LOD creation.
+     */
+    @Nullable
+    private LodManager<T> lodManager;
 
     // ┌──────────────┐
     // │ Constructors │
@@ -186,11 +198,19 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         if (elements != null) {
             elements.forEach(this.pendingInserts::add);
         }
-        this.tree = new BvhNode<>();
         this.splitStrategy = splitStrategy != null ? splitStrategy : DEFAULT_SPLIT_STRATEGY;
         final int buckets = this.splitStrategy.bucketCount();
         this.leafCount = Math.max(Math.max(MINIMUM_LEAF_COUNT, leafCount), buckets * buckets);
-        this.objectCache = new HashMap<>();
+        this.forceRebuild();
+    }
+
+    public BoundingVolumeHierarchy(@Nullable final Iterable<T> elements, @Nonnull final LodManager<T> lodManager) {
+        if (elements != null) {
+            elements.forEach(this.pendingInserts::add);
+        }
+        this.lodManager = lodManager;
+        this.splitStrategy = lodManager.lodCreator().splitStrategy();
+        this.leafCount = this.splitStrategy.bucketCount();
         this.forceRebuild();
     }
 
@@ -383,7 +403,45 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     /**
-     * Tell the BVH to update bounds after changing the position or size of an element.
+     * Intersects all elements with the given volume.
+     * <p>If a LOD manager is set, this method will select matching LOD elements based on {@code bounds} and {@code location}.<br/>
+     * <b>Important:</b> Note that newly inserted elements need time to be processed and may not show in the LOD immediately.</p>
+     * @param bounds to intersect with.
+     * @param location for distance-based LOD.
+     * @param contained elements only, or all intersecting ones.
+     * @return A list of the matching elements.
+     */
+    public List<T> treeCut(final IBoundingBox bounds, final Vec3 location, final boolean contained) {
+        final Predicate<T> cutter = contained ? bounds::contains : bounds::intersects;
+        LodManager<T> lod;
+        final Queue<BvhNode<T>> nodeQueue = new LinkedList<>();
+        synchronized (dataLock) {
+            lod = this.lodManager;
+            nodeQueue.add(this.tree);
+        }
+        if (lod == null) {
+            // no LOD - use leaves
+            return this.stream().filter(cutter).toList();
+        } else {
+            // active LOD - select LOD level
+            final List<T> result = new ArrayList<>();
+            final TriPredicate<Vec3, IBoundingBox, Integer> lodPredicate = lodManager.lodCreator()::testLodLevel;
+            while (!nodeQueue.isEmpty()) {
+                final BvhNode<T> node = nodeQueue.poll();
+                if (lodPredicate.test(location, node, node.getLodLevel())) {
+                    result.add(lod.getLodByUuid(node.getLodElementUuid()));
+                } else if (node.getChildNodes().isEmpty()) {
+                    result.addAll(node.getLeaves());
+                } else {
+                    nodeQueue.addAll(node.getChildNodes());
+                }
+            }
+            return result;
+        }
+    }
+
+    /**
+     * Tell the BVH to update its internal structure after changing the position or size of an element.
      *
      * @param element
      *            that has been changed.
@@ -519,6 +577,8 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
         Set<T> oldPendingDeletes;
         ISplitStrategy strategy;
         int leafCount;
+        ConcurrentHashMap<T, BvhNode<T>> objectCache = new ConcurrentHashMap<>();
+        LodManager<T> lod;
         synchronized (this.dataLock) {
             if (this.rebuildInProgress) {
                 return;
@@ -529,16 +589,24 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             oldPendingDeletes = this.pendingDeletes;
             strategy = this.splitStrategy;
             leafCount = this.leafCount;
+            lod = this.lodManager;
         }
         new Thread(() -> {
                     // build tree
-                    final Pair<BvhNode<T>, Map<T, BvhNode<T>>> rebuiltStructure =
-                            buildTree(oldTree, oldPendingInserts, oldPendingDeletes, strategy, leafCount);
+                    final BvhNode<T> rebuiltTree = buildTree(
+                            oldTree,
+                            oldPendingInserts,
+                            oldPendingDeletes,
+                            strategy,
+                            leafCount,
+                            objectCache,
+                            lod == null ? null : lod.newInstance());
                     // apply updated tree
                     synchronized (this.dataLock) {
                         this.rebuildInProgress = false;
-                        this.tree = rebuiltStructure.a;
-                        this.objectCache = rebuiltStructure.b;
+                        this.tree = rebuiltTree;
+                        this.objectCache = objectCache;
+                        this.lodManager = lod;
                         // sort out changes to pending operations during rebuild
                         final Set<T> filteredPendingInserts = new HashSet<>();
                         final Set<T> filteredPendingDeletes = new HashSet<>();
@@ -575,6 +643,26 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
                 .start();
     }
 
+    private static <T extends IBoundingBox> void buildLod(final BvhNode<T> node, final LodManager<T> lodManager) {
+        LodCreator<T> lodCreator = lodManager.lodCreator();
+        if (node.getLodElementUuid() == null || lodManager.getLodByUuid(node.getLodElementUuid()) == null) {
+            LodElement<T> lodElement;
+            if (node.getChildNodes().isEmpty()) {
+                lodElement = lodCreator.buildLod(node.getLeaves(), 0);
+            } else {
+                node.getChildNodes().forEach(n -> buildLod(n, lodManager));
+                lodElement = lodCreator.buildLod(
+                        node.getChildNodes().stream()
+                                .map(BvhNode::getLodElementUuid)
+                                .map(lodManager::getLodByUuid)
+                                .toList(),
+                        node.getChildNodes().iterator().next().getLodLevel());
+            }
+            lodManager.registerLodObject(lodElement);
+            node.setLodElement(lodElement.uuid(), lodElement.lodLevel());
+        }
+    }
+
     /**
      * Builds a new bounding-volume-hierarchy tree with object-cache.
      *
@@ -590,20 +678,23 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
      *            for bucket-sorting the elements.
      * @param leafCount
      *            is the maximum amount of leaves a node may have.
+     *         @param objectCache instance to be filled in tree building.
+     *           @param lodManager instance to be filled in tree building.
      * @return the new tree and object-cache for the given elements.
      */
-    private static <E extends IBoundingBox> Pair<BvhNode<E>, Map<E, BvhNode<E>>> buildTree(
+    private static <E extends IBoundingBox> BvhNode<E> buildTree(
             final Iterable<E> elements,
             final Collection<E> inserts,
             final Collection<E> deletes,
             final ISplitStrategy splitStrategy,
-            final int leafCount) {
+            final int leafCount,
+            final ConcurrentHashMap<E, BvhNode<E>> objectCache,
+            @Nullable final LodManager<E> lodManager) {
         // prepare result containers
         final BvhNode<E> tree = new BvhNode<>(StreamSupport.stream(elements.spliterator(), true)
                 .filter(e -> !deletes.contains(e))
                 .collect(Collectors.toList()));
         inserts.forEach(tree::addLeaf);
-        final Map<E, BvhNode<E>> objectCache = new ConcurrentHashMap<>();
         // prepare multi-threading
         final Queue<BvhNode<E>> queue = new ConcurrentLinkedQueue<>();
         queue.add(tree);
@@ -625,7 +716,10 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             }
         });
         tree.updateBounds();
-        return new Pair<>(tree, objectCache);
+        if (lodManager != null) {
+            buildLod(tree, lodManager);
+        }
+        return tree;
     }
 
     /**

@@ -15,15 +15,6 @@ import net.minecraft.world.phys.Vec3;
  * @author Kepler-17c
  */
 public interface IBoundingBox {
-    /**
-     * Combines two bounding boxes and returns a new one, containing both.
-     *
-     * @param other bounding box to merge with this one.
-     * @return the new bounding box.
-     */
-    default IBoundingBox mergeWith(final IBoundingBox other) {
-        return AxisAlignedBoundingBox.mergeBounds(this, other);
-    }
 
     default Vec3 getLower() {
         return this.getBounds().getLower();
@@ -162,11 +153,6 @@ public interface IBoundingBox {
         }
 
         @Override
-        public IBoundingBox mergeWith(final IBoundingBox boundingBox) {
-            return mergeBounds(this, boundingBox);
-        }
-
-        @Override
         public Vec3 getLower() {
             return this.lower;
         }
@@ -237,6 +223,7 @@ public interface IBoundingBox {
                     && point.z <= this.upper.z;
         }
 
+        @Override
         public boolean intersects(IBoundingBox other) {
             return this.contains(other.getLower())
                     || this.contains(other.getUpper())
@@ -244,6 +231,7 @@ public interface IBoundingBox {
                     || other.contains(this.upper);
         }
 
+        @Override
         public boolean intersectsWithoutBorder(IBoundingBox other) {
             return this.hasInnerPoint(other.getLower())
                     || this.hasInnerPoint(other.getUpper())

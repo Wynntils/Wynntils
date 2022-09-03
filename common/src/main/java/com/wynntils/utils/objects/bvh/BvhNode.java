@@ -15,6 +15,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.utils.objects.IBoundingBox;
 import com.wynntils.utils.objects.Referencable;
+import com.wynntils.utils.objects.lod.LodElement;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +31,7 @@ import java.util.Spliterator;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -47,12 +49,14 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
      */
     private BvhNode<T> parent;
     /**
-     * A list of all child-nodes. Never {@code null}.
+     * A list of all child-nodes.
      */
+    @Nonnull
     private final Set<BvhNode<T>> childNodes = new HashSet<>();
     /**
-     * A list of all leaves. Never {@code null}.
+     * A list of all leaves.
      */
+    @Nonnull
     private final Set<T> leaves = new HashSet<>();
     /**
      * Bounds over all elements under this node.
@@ -62,6 +66,15 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
      * Sum of all leaves in this node or child-nodes.
      */
     private int leafCount;
+    /**
+     * Reference to the generated LOD element. Is {@code null} if not used or not generated yet.
+     */
+    private UUID lodElement;
+    /**
+     * Cached LOD level to reduce lookups.
+     * @see LodElement#lodLevel()
+     */
+    private int lodLevel;
 
     /**
      * Root-like ({@code parent == null}), empty node.
@@ -211,6 +224,19 @@ class BvhNode<T extends IBoundingBox> implements IBoundingBox, Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return new TreeIterator<>(this);
+    }
+
+    public UUID getLodElementUuid() {
+        return this.lodElement;
+    }
+
+    public int getLodLevel() {
+        return this.lodLevel;
+    }
+
+    public void setLodElement(UUID lodElement, int lodLevel) {
+        this.lodElement = lodElement;
+        this.lodLevel = lodLevel;
     }
 
     @Override
