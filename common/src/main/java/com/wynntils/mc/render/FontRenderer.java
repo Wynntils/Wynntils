@@ -84,28 +84,87 @@ public final class FontRenderer {
             String text,
             float x1,
             float x2,
-            float y,
+            float y1,
+            float y2,
             float maxWidth,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
             TextShadow textShadow) {
 
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
+                    case Center -> (x1 + x2) / 2;
                     case Right -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case Top -> y1;
+                    case Middle -> (y2 + y1) / 2;
+                    case Bottom -> y2;
                 };
 
         renderText(
                 poseStack,
                 text,
                 renderX,
+                renderY,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow);
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            TextShadow textShadow) {
+
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y,
                 y,
                 maxWidth,
                 customColor,
                 horizontalAlignment,
                 VerticalAlignment.Top,
+                textShadow);
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow) {
+
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x,
+                x,
+                y1,
+                y2,
+                maxWidth,
+                customColor,
+                HorizontalAlignment.Left,
+                verticalAlignment,
                 textShadow);
     }
 
