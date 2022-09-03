@@ -52,13 +52,13 @@ public final class FontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case Left -> x;
-            case Center -> x - font.width(text) / 2.0f;
-            case Right -> x - font.width(text);};
+            case Center -> x - font.width(text) / (2f * (float) (McUtils.guiScale()));
+            case Right ->  x - font.width(text) / (float) McUtils.guiScale();};
 
         renderY = switch (verticalAlignment) {
             case Top -> y;
-            case Middle -> y - font.lineHeight / 2.0f;
-            case Bottom -> y - font.lineHeight;};
+            case Middle -> y - font.lineHeight / (2f * (float) (McUtils.guiScale()));
+            case Bottom -> y - font.lineHeight / (float) McUtils.guiScale();};
 
         switch (shadow) {
             case OUTLINE:
@@ -204,20 +204,19 @@ public final class FontRenderer {
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x;
-                    case Center -> (float) (x + width / 2 / McUtils.window().getGuiScale());
-                    case Right -> (float) (x + width / McUtils.window().getGuiScale());
+                    case Center -> x + width / (2f * (float) (McUtils.guiScale()));
+                    case Right ->  x + width / (float) McUtils.guiScale();
                 };
 
         float renderY =
                 switch (verticalAlignment) {
                     case Top -> y;
-                    case Middle -> (float) (y
+                    case Middle -> y
                             + (height - calculateRenderHeight(toRender))
-                                    / 2
-                                    / McUtils.window().getGuiScale());
-                    case Bottom -> (float) (y
+                                    / (2f * (float) (McUtils.guiScale()));
+                    case Bottom -> y
                             + (height - calculateRenderHeight(toRender))
-                                    / McUtils.window().getGuiScale());
+                                    / (float) McUtils.guiScale();
                 };
 
         renderTexts(poseStack, renderX, renderY, toRender);

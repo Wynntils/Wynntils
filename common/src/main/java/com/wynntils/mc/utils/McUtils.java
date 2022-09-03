@@ -44,8 +44,8 @@ public final class McUtils {
         return player().getInventory();
     }
 
-    public static Window window() {
-        return mc().getWindow();
+    public static double guiScale() {
+        return mc().getWindow().getGuiScale();
     }
 
     public static void sendMessageToClient(Component component) {
