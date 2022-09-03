@@ -126,7 +126,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             renderY,
                             this.getWidth(),
                             this.textColor,
-                            FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
+                            this.getRenderHorizontalAlignment(),
                             this.textShadow);
 
             float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
@@ -221,7 +221,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 renderY,
                                 this.getWidth(),
                                 this.textColor,
-                                FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
+                                this.getRenderHorizontalAlignment(),
                                 this.textShadow);
 
                 final float textHeight =

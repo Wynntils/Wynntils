@@ -100,15 +100,7 @@ public class ItemTextOverlayFeature extends UserFeature {
             poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
             float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
             float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            textOverlay.text(),
-                            x,
-                            y,
-                            textOverlay.color(),
-                            textOverlay.alignment(),
-                            textOverlay.shadow());
+            FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
         }
     }
 }

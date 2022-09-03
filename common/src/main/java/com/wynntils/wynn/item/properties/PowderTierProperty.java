@@ -7,7 +7,8 @@ package com.wynntils.wynn.item.properties;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
@@ -44,10 +45,11 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
                 : String.valueOf(MathUtils.integerFromRoman(powderNumeral));
 
         textOverlay = new TextOverlay(
-                text,
-                highlightColor,
-                FontRenderer.TextAlignment.LEFT_ALIGNED,
-                ItemTextOverlayFeature.powderTierShadow,
+                new TextRenderTask(
+                        text,
+                        TextRenderSetting.DEFAULT
+                                .withCustomColor(highlightColor)
+                                .withTextShadow(ItemTextOverlayFeature.powderTierShadow)),
                 -1,
                 1,
                 0.75f);
