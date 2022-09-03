@@ -204,7 +204,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                                 centerZ - northDX,
                                 new TextRenderTask("W", TextRenderSetting.CENTERED));
             }
-
         }
 
         private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
