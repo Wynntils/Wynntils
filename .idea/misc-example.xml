@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EntryPointsManager">
+    <list size="7">
+      <item index="0" class="java.lang.String" itemvalue="com.wynntils.core.config.TypeOverride" />
+      <item index="1" class="java.lang.String" itemvalue="com.wynntils.core.features.overlays.annotations.OverlayInfo" />
+      <item index="2" class="java.lang.String" itemvalue="com.wynntils.core.features.properties.RegisterKeyBind" />
+      <item index="3" class="java.lang.String" itemvalue="net.minecraftforge.eventbus.api.SubscribeEvent" />
+      <item index="4" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.Mod" />
+      <item index="5" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.Mod.EventHandler" />
+      <item index="6" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.eventhandler.SubscribeEvent" />
+    </list>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
+</project>
