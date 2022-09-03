@@ -53,14 +53,12 @@ public final class FontRenderer {
         renderX = switch (horizontalAlignment) {
             case Left -> x;
             case Center -> x - font.width(text) / 2;
-            case Right -> x - font.width(text);
-        };
+            case Right -> x - font.width(text);};
 
         renderY = switch (verticalAlignment) {
             case Top -> y;
             case Middle -> y - font.lineHeight / 2;
-            case Bottom -> y - font.lineHeight;
-        };
+            case Bottom -> y - font.lineHeight;};
 
         switch (shadow) {
             case OUTLINE:
@@ -253,6 +251,8 @@ public final class FontRenderer {
         }
     }
 
+    // TODO this is basically renderAlignedTextInBox but with tasks instead, make signatures the same and remove code
+    // dup
     public void renderTextsWithAlignment(
             PoseStack poseStack,
             float x,
