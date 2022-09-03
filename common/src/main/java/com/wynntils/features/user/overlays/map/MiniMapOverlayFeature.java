@@ -156,54 +156,55 @@ public class MiniMapOverlayFeature extends UserFeature {
 
         private void renderCardinalDirections(
                 PoseStack poseStack, float width, float height, float centerX, float centerZ) {
-            if (showCompass != CompassRenderType.None) {
-                float northDX;
-                float northDY;
+            if (showCompass == CompassRenderType.None) return;
 
-                if (followPlayerRotation) {
-                    float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
-                    northDX = (float) StrictMath.sin(yawRadians);
-                    northDY = (float) StrictMath.cos(yawRadians);
-                    if (maskType == MapMaskType.Rectangular) {
-                        // Scale as necessary
-                        double toSquareScale = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-                        northDX *= toSquareScale;
-                        northDY *= toSquareScale;
-                    }
+            float northDX;
+            float northDY;
 
-                } else {
-                    northDX = width / 2;
-                    northDY = height / 2;
+            if (followPlayerRotation) {
+                float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
+                northDX = (float) StrictMath.sin(yawRadians);
+                northDY = (float) StrictMath.cos(yawRadians);
+                if (maskType == MapMaskType.Rectangular) {
+                    // Scale as necessary
+                    double toSquareScale = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
+                    northDX *= toSquareScale;
+                    northDY *= toSquareScale;
                 }
 
+            } else {
+                northDX = width / 2;
+                northDY = height / 2;
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            centerX + northDX,
+                            centerZ + northDY,
+                            new TextRenderTask("N", TextRenderSetting.CENTERED));
+
+            if (showCompass == CompassRenderType.All) {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
-                                centerX + northDX,
-                                centerZ + northDY,
-                                new TextRenderTask("N", TextRenderSetting.CENTERED));
-
-                if (showCompass == CompassRenderType.All) {
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    poseStack,
-                                    centerX - northDY,
-                                    centerZ + northDX,
-                                    new TextRenderTask("E", TextRenderSetting.CENTERED));
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    poseStack,
-                                    centerX - northDX,
-                                    centerZ - northDY,
-                                    new TextRenderTask("S", TextRenderSetting.CENTERED));
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    poseStack,
-                                    centerX + northDY,
-                                    centerZ - northDX,
-                                    new TextRenderTask("W", TextRenderSetting.CENTERED));
-                }
+                                centerX - northDY,
+                                centerZ + northDX,
+                                new TextRenderTask("E", TextRenderSetting.CENTERED));
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                centerX - northDX,
+                                centerZ - northDY,
+                                new TextRenderTask("S", TextRenderSetting.CENTERED));
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                centerX + northDY,
+                                centerZ - northDX,
+                                new TextRenderTask("W", TextRenderSetting.CENTERED));
             }
+
         }
 
         private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
