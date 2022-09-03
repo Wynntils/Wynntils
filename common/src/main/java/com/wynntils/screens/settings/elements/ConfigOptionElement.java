@@ -15,7 +15,6 @@ import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import oshi.hardware.CentralProcessor;
 
 public abstract class ConfigOptionElement {
     protected static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
