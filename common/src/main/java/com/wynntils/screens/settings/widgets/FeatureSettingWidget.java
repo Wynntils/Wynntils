@@ -11,6 +11,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
@@ -111,7 +112,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
                         this.height / 50f,
                         this.width,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
+                        HorizontalAlignment.Center,
                         FontRenderer.TextShadow.OUTLINE);
     }
 
@@ -152,7 +153,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
                                 renderY,
                                 0,
                                 CommonColors.WHITE,
-                                FontRenderer.TextAlignment.CENTER_ALIGNED,
+                                HorizontalAlignment.Center,
                                 FontRenderer.TextShadow.OUTLINE);
                 renderY += textRenderHeight;
             }

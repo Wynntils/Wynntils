@@ -7,6 +7,7 @@ package com.wynntils.screens.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
@@ -53,7 +54,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         this.y + 6.5f,
                         this.width,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                        HorizontalAlignment.Left,
                         FontRenderer.TextShadow.NORMAL);
     }
 

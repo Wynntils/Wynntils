@@ -9,11 +9,13 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import oshi.hardware.CentralProcessor;
 
 public abstract class ConfigOptionElement {
     protected static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
@@ -68,8 +70,8 @@ public abstract class ConfigOptionElement {
                         height,
                         oneThirdOfWidth,
                         CommonColors.WHITE,
+                        HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
     }
 
@@ -84,8 +86,8 @@ public abstract class ConfigOptionElement {
                         height,
                         width,
                         CommonColors.WHITE,
+                        HorizontalAlignment.Center,
                         VerticalAlignment.Top,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
     }
 

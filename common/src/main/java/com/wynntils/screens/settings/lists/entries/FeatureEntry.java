@@ -96,11 +96,10 @@ public class FeatureEntry extends FeatureListEntryBase {
                         4f,
                         new TextRenderTask(
                                 this.feature.getTranslatedName(),
-                                new TextRenderSetting(
-                                        getMaxTextRenderWidth(),
-                                        textColor,
-                                        FontRenderer.TextAlignment.LEFT_ALIGNED,
-                                        FontRenderer.TextShadow.OUTLINE)),
+                                TextRenderSetting.DEFAULT
+                                        .withMaxWidth(getMaxTextRenderWidth())
+                                        .withCustomColor(textColor)
+                                        .withTextShadow(FontRenderer.TextShadow.OUTLINE)),
                         width,
                         height,
                         HorizontalAlignment.Left,

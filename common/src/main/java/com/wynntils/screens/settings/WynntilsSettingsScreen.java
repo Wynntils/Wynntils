@@ -10,7 +10,9 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
@@ -102,7 +104,8 @@ public class WynntilsSettingsScreen extends Screen {
                         this.width / 2f,
                         10,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
                         FontRenderer.TextShadow.OUTLINE);
 
         featureList.render(poseStack, mouseX, mouseY, partialTick);
@@ -123,7 +126,7 @@ public class WynntilsSettingsScreen extends Screen {
                         BAR_HEIGHT + 7.5f,
                         0,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
+                        VerticalAlignment.Middle,
                         FontRenderer.TextShadow.OUTLINE);
 
         poseStack.popPose();

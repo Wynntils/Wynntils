@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -53,8 +54,8 @@ public class FeatureCategoryEntry extends FeatureListEntryBase {
                         ITEM_HEIGHT,
                         width - 10,
                         CommonColors.WHITE,
+                        HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
                         FontRenderer.TextShadow.OUTLINE);
 
         poseStack.popPose();

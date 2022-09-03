@@ -7,6 +7,8 @@ package com.wynntils.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.overlays.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
@@ -64,7 +66,8 @@ public class WynntilsMenuScreen extends Screen {
                         this.width / 2f,
                         this.height / 10f,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
                         FontRenderer.TextShadow.OUTLINE);
     }
 }
