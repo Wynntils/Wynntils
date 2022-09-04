@@ -12,7 +12,9 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.OverlayManagementScreen;
 import com.wynntils.screens.lists.OverlayList;
@@ -80,7 +82,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,
                         CommonColors.WHITE,
-                        FontRenderer.TextAlignment.LEFT_ALIGNED,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();

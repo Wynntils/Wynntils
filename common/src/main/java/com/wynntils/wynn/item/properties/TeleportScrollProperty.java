@@ -6,7 +6,8 @@ package com.wynntils.wynn.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.TextRenderSetting;
+import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
@@ -60,10 +61,11 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
         }
 
         textOverlay = new TextOverlay(
-                location,
-                textColor,
-                FontRenderer.TextAlignment.LEFT_ALIGNED,
-                ItemTextOverlayFeature.teleportScrollShadow,
+                new TextRenderTask(
+                        location,
+                        TextRenderSetting.DEFAULT
+                                .withCustomColor(textColor)
+                                .withTextShadow(ItemTextOverlayFeature.teleportScrollShadow)),
                 0,
                 0,
                 1f);

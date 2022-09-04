@@ -107,7 +107,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             renderY,
                             0,
                             this.textColor,
-                            FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
+                            this.getRenderHorizontalAlignment(),
                             this.textShadow);
             RenderUtils.drawProgressBar(
                     poseStack,
@@ -174,7 +174,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             renderY,
                             0,
                             this.textColor,
-                            FontRenderer.TextAlignment.fromHorizontalAlignment(this.getRenderHorizontalAlignment()),
+                            this.getRenderHorizontalAlignment(),
                             this.textShadow);
             RenderUtils.drawProgressBar(
                     poseStack,
