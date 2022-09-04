@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 public enum Texture {
     BUBBLE_BAR("bars_bubbles.png", 256, 256),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
+    FEATURE_BUTTON("feature_button.png", 100, 12),
+    FEATURE_LIST_BACKGROUND("feature_list.png", 118, 254),
     GEAR_ICONS("gear_icons.png", 64, 128),
     HEALTH_BAR("bars_health.png", 256, 256),
     HIGHLIGHT("highlight.png", 256, 256),
@@ -16,6 +18,10 @@ public enum Texture {
     LOOTRUN_LINE("path_arrow.png", 16, 16),
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
+    SCROLL_BUTTON("scroll_circle.png", 9, 9),
+    SEARCH_BAR("search_bar.png", 90, 10),
+    SWITCH_OFF("switch_off.png", 40, 20),
+    SWITCH_ON("switch_on.png", 40, 20),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
     // Map related

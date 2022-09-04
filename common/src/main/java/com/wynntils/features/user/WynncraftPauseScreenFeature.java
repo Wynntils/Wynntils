@@ -7,7 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.OverlaySelectionScreen;
+import com.wynntils.screens.WynntilsMenuScreen;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -27,8 +27,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                 (Button) renderables.get(2),
                 new TranslatableComponent("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
                 (button) -> {
-                    // TODO: Open Wynntils menu when we add it :)
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
+                    McUtils.mc().setScreen(new WynntilsMenuScreen());
                 });
         renderables.set(2, wynntilsMenu);
 
