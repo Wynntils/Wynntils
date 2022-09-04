@@ -11,16 +11,17 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
-    private static final List<KeyBind> KEY_BINDS = new ArrayList<>();
+    private static final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
     private static final Object optionsLock = new Object();
 
     /** Needed for all Models */

@@ -19,6 +19,7 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
+import com.wynntils.features.user.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.FilterAdminCommandsFeature;
@@ -66,6 +67,72 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 /** Loads {@link Feature}s */
 public final class FeatureRegistry {
     private static final List<Feature> FEATURES = new ArrayList<>();
+
+    public static void init() {
+        // debug
+        registerFeature(new ConnectionProgressFeature());
+        registerFeature(new LogItemInfoFeature());
+        registerFeature(new PacketDebuggerFeature());
+
+        // always on
+        registerFeature(new FixSpellOverwriteFeature());
+        registerFeature(new LootrunFeature());
+
+        // user
+        registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new ChatItemFeature());
+        registerFeature(new CommandsFeature());
+        registerFeature(new CustomBarsOverlayFeature());
+        registerFeature(new CustomCommandKeybindsFeature());
+        registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new DurabilityArcFeature());
+        registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new FilterAdminCommandsFeature());
+        registerFeature(new FixPacketBugsFeature());
+        registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new GammabrightFeature());
+        registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HidePotionGlintFeature());
+        registerFeature(new InfoMessageFilterFeature());
+        registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new ItemCompareFeature());
+        registerFeature(new ItemGuessFeature());
+        registerFeature(new ItemHighlightFeature());
+        registerFeature(new ItemLockFeature());
+        registerFeature(new ItemScreenshotFeature());
+        registerFeature(new ItemStatInfoFeature());
+        registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new MiniMapOverlayFeature());
+        registerFeature(new MountHorseHotkeyFeature());
+        registerFeature(new MythicBlockerFeature());
+        registerFeature(new NpcDialogueOverlayFeature());
+        registerFeature(new ObjectivesOverlayFeature());
+        registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new PouchRedirectFeature());
+        registerFeature(new QuestBookFeature());
+        registerFeature(new QuestInfoOverlayFeature());
+        registerFeature(new QuickCastFeature());
+        registerFeature(new SoulPointTimerFeature());
+        registerFeature(new TooltipFittingFeature());
+        registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TranslationFeature());
+        registerFeature(new UnidentifiedItemIconFeature());
+        registerFeature(new WynncraftButtonFeature());
+        registerFeature(new WynncraftPauseScreenFeature());
+
+        // save/create config file after loading all features' options
+        ConfigManager.saveConfig();
+
+        // save/create default config file containing all config holders
+        ConfigManager.saveDefaultConfig();
+
+        // Reload Minecraft's config files so our own keybinds get loaded
+        // This is needed because we are late to register the keybinds,
+        // but we cannot move it earlier to the init process because of I18n
+        KeyBindManager.loadKeybindConfigFile();
+
+        addCrashCallbacks();
+    }
 
     private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
@@ -135,71 +202,6 @@ public final class FeatureRegistry {
         return FeatureRegistry.getFeatures().stream()
                 .filter(feature -> feature.getShortName().equals(featureName))
                 .findFirst();
-    }
-
-    public static void init() {
-        // debug
-        registerFeature(new ConnectionProgressFeature());
-        registerFeature(new LogItemInfoFeature());
-        registerFeature(new PacketDebuggerFeature());
-
-        // always on
-        registerFeature(new FixSpellOverwriteFeature());
-        registerFeature(new LootrunFeature());
-
-        // user
-        registerFeature(new AddCommandExpansionFeature());
-        registerFeature(new ChatItemFeature());
-        registerFeature(new CommandsFeature());
-        registerFeature(new CustomBarsOverlayFeature());
-        registerFeature(new DialogueOptionOverrideFeature());
-        registerFeature(new DurabilityArcFeature());
-        registerFeature(new EmeraldPouchHotkeyFeature());
-        registerFeature(new FilterAdminCommandsFeature());
-        registerFeature(new FixPacketBugsFeature());
-        registerFeature(new GameNotificationOverlayFeature());
-        registerFeature(new GammabrightFeature());
-        registerFeature(new HealthPotionBlockerFeature());
-        registerFeature(new HidePotionGlintFeature());
-        registerFeature(new InfoMessageFilterFeature());
-        registerFeature(new IngredientPouchHotkeyFeature());
-        registerFeature(new ItemCompareFeature());
-        registerFeature(new ItemGuessFeature());
-        registerFeature(new ItemHighlightFeature());
-        registerFeature(new ItemLockFeature());
-        registerFeature(new ItemScreenshotFeature());
-        registerFeature(new ItemStatInfoFeature());
-        registerFeature(new ItemTextOverlayFeature());
-        registerFeature(new MiniMapOverlayFeature());
-        registerFeature(new MountHorseHotkeyFeature());
-        registerFeature(new MythicBlockerFeature());
-        registerFeature(new NpcDialogueOverlayFeature());
-        registerFeature(new ObjectivesOverlayFeature());
-        registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new PouchRedirectFeature());
-        registerFeature(new QuestBookFeature());
-        registerFeature(new QuestInfoOverlayFeature());
-        registerFeature(new QuickCastFeature());
-        registerFeature(new SoulPointTimerFeature());
-        registerFeature(new TooltipFittingFeature());
-        registerFeature(new TradeMarketAutoOpenChatFeature());
-        registerFeature(new TranslationFeature());
-        registerFeature(new UnidentifiedItemIconFeature());
-        registerFeature(new WynncraftButtonFeature());
-        registerFeature(new WynncraftPauseScreenFeature());
-
-        // save/create config file after loading all features' options
-        ConfigManager.saveConfig();
-
-        // save/create default config file containing all config holders
-        ConfigManager.saveDefaultConfig();
-
-        // Reload Minecraft's config files so our own keybinds get loaded
-        // This is needed because we are late to register the keybinds,
-        // but we cannot move it earlier to the init process because of I18n
-        KeyBindManager.loadKeybindConfigFile();
-
-        addCrashCallbacks();
     }
 
     private static void addCrashCallbacks() {
