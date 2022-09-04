@@ -87,9 +87,6 @@ public class MiniMapOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            // TODO replace with generalized maps whenever that is done
-            MapProfile map = WebManager.getMaps().get(0);
-
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
             float width = getWidth();
@@ -110,8 +107,9 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
+            // TODO replace with generalized maps whenever that is done
             if (WebManager.isMapLoaded()) {
-                renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
+                renderMapQuad(WebManager.getMaps().get(0), poseStack, centerX, centerZ, textureX, textureZ, width, height);
             }
 
             // TODO minimap icons
