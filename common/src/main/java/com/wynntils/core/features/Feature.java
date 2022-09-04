@@ -211,7 +211,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     public boolean canUserEnable() {
-        return getConfigOptionFromString("userEnabled").isPresent();
+        return this instanceof UserFeature;
     }
 
     /** Registers the feature's config options. Called by ConfigManager when feature is loaded */

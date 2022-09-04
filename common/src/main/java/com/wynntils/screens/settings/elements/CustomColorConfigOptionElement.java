@@ -27,6 +27,7 @@ public class CustomColorConfigOptionElement extends TextConfigOptionElement {
         poseStack.translate(-getTextInputHeight() * 1.2f, 0, 0);
 
         if (!this.lastParseSuccessful) {
+            // Render cross
             RenderUtils.drawLine(
                     poseStack, CommonColors.RED, 0, 0, getTextInputHeight(), getTextInputHeight(), 0, 1.2f);
             RenderUtils.drawLine(

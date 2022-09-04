@@ -32,7 +32,7 @@ public class SearchWidget extends TextInputBoxWidget {
             int height,
             Consumer<String> onUpdateConsumer,
             WynntilsSettingsScreen settingsScreen) {
-        super(x, y, width, height, new TextComponent("Search..."), onUpdateConsumer, settingsScreen);
+        super(x, y, width, height, new TextComponent("SearchTextBox"), onUpdateConsumer, settingsScreen);
     }
 
     @Override
@@ -41,10 +41,11 @@ public class SearchWidget extends TextInputBoxWidget {
 
         String cursorChar = getRenderCursorChar();
 
+        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        Objects.equals(textBoxInput, "") && !isFocused()
+                        defaultText
                                 ? DEFAULT_TEXT.getString()
                                 : (textBoxInput.substring(0, cursorPosition)
                                         + cursorChar
@@ -53,7 +54,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         this.x + this.width - 5,
                         this.y + 6.5f,
                         this.width,
-                        CommonColors.WHITE,
+                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         FontRenderer.TextShadow.NORMAL);
     }
