@@ -87,9 +87,6 @@ public class MiniMapOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            // TODO replace with generalized maps whenever that is done
-            MapProfile map = WebManager.getMaps().get(0);
-
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
             float width = getWidth();
@@ -99,8 +96,6 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             float centerX = renderX + width / 2;
             float centerZ = renderY + height / 2;
-            float textureX = map.getTextureXPosition(McUtils.player().getX());
-            float textureZ = map.getTextureZPosition(McUtils.player().getZ());
 
             // enable mask
             switch (maskType) {
@@ -110,7 +105,11 @@ public class MiniMapOverlayFeature extends UserFeature {
                     // }
             }
 
+            // TODO replace with generalized maps whenever that is done
             if (WebManager.isMapLoaded()) {
+                MapProfile map = WebManager.getMaps().get(0);
+                float textureX = map.getTextureXPosition(McUtils.player().getX());
+                float textureZ = map.getTextureZPosition(McUtils.player().getZ());
                 renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
             }
 
