@@ -58,16 +58,16 @@ public abstract class ConfigOptionElement {
     }
 
     protected void renderDescription(PoseStack poseStack, float width, float height) {
-        float oneThirdOfWidth = width / 3f;
+        float twoThirdOfWidth = width / 3f * 2f;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         configHolder.getDescription(),
                         5,
-                        oneThirdOfWidth,
+                        twoThirdOfWidth,
                         0,
                         height,
-                        oneThirdOfWidth,
+                        twoThirdOfWidth,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
