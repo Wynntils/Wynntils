@@ -47,8 +47,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        int emeralds =
-                ContainerUtils.getEmeraldCountInContainer(event.getScreen().getMenu());
+        int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.containerMenu());
 
         if (event.getScreen() instanceof InventoryScreen) {
             emeralds += InventoryUtils.getEmeraldPouches(McUtils.inventory()).stream()
