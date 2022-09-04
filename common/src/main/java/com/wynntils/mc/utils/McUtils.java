@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.player.Inventory;
@@ -45,6 +46,10 @@ public final class McUtils {
 
     public static double guiScale() {
         return mc().getWindow().getGuiScale();
+    }
+
+    public static SoundManager soundManager() {
+        return mc().getSoundManager();
     }
 
     public static void sendMessageToClient(Component component) {

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens;
+package com.wynntils.screens.overlays;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,7 +12,7 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.lists.OverlayList;
+import com.wynntils.screens.overlays.lists.OverlayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,9 +26,11 @@ public class OverlaySelectionScreen extends Screen {
     private static final int BUTTON_HEIGHT = 20;
 
     private OverlayList overlayList;
+    private final Screen lastScreen;
 
     public OverlaySelectionScreen() {
         super(new TranslatableComponent("screens.wynntils.overlaySelection.name"));
+        lastScreen = McUtils.mc().screen;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(null)));
+                button -> McUtils.mc().setScreen(lastScreen)));
     }
 
     @Override

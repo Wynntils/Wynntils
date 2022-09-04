@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.lists;
+package com.wynntils.screens.overlays.lists;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.overlays.Overlay;
@@ -11,8 +11,8 @@ import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.OverlaySelectionScreen;
-import com.wynntils.screens.lists.entries.OverlayEntry;
+import com.wynntils.screens.overlays.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.lists.entries.OverlayEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

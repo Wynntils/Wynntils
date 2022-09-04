@@ -5,6 +5,7 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
+import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
@@ -64,6 +65,10 @@ public class ConfigHolder {
 
     public Type getType() {
         return fieldType;
+    }
+
+    public Class<?> getClassOfConfigField() {
+        return TypeToken.get(this.getType()).getRawType();
     }
 
     public Field getField() {
