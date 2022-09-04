@@ -5,10 +5,12 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
+import java.util.Objects;
 import org.lwjgl.glfw.GLFW;
 
 public class CustomCommandKeybindsFeature extends UserFeature {
@@ -72,13 +74,22 @@ public class CustomCommandKeybindsFeature extends UserFeature {
             true,
             () -> this.executeKeybind(keybindCommand6));
 
-    private void executeKeybind(String keybindCommand) {
-        keybindCommand = keybindCommand.trim();
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (!configHolder.getFieldName().startsWith("keybindCommand")) return;
 
-        if (!keybindCommand.startsWith("/")) {
-            keybindCommand = "/" + keybindCommand;
+        String value = (String) configHolder.getValue();
+        String newValue = value.trim();
+        if (!newValue.startsWith("/")) {
+            newValue = "/" + newValue;
         }
 
+        if (!Objects.equals(value, newValue)) {
+            configHolder.setValue(newValue);
+        }
+    }
+
+    private void executeKeybind(String keybindCommand) {
         McUtils.player().chat(keybindCommand);
     }
 }
