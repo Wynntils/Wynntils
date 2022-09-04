@@ -109,7 +109,8 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO replace with generalized maps whenever that is done
             if (WebManager.isMapLoaded()) {
-                renderMapQuad(WebManager.getMaps().get(0), poseStack, centerX, centerZ, textureX, textureZ, width, height);
+                renderMapQuad(
+                        WebManager.getMaps().get(0), poseStack, centerX, centerZ, textureX, textureZ, width, height);
             }
 
             // TODO minimap icons
