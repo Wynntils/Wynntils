@@ -4,10 +4,12 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -16,6 +18,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -74,5 +77,28 @@ public final class ContainerUtils {
                 ClickType.PICKUP,
                 items.get(clickedSlot),
                 changedSlots));
+    }
+
+    public static int getEmeraldCountInContainer(AbstractContainerMenu containerMenu) {
+        if (containerMenu == null) return 0;
+
+        int money = 0;
+
+        for (ItemStack itemStack : containerMenu.getItems()) {
+            if (itemStack.isEmpty()) continue;
+
+            String displayName = ComponentUtils.getCoded(itemStack.getHoverName());
+            if (itemStack.getItem() == Items.EMERALD && displayName.equals(ChatFormatting.GREEN + "Emerald")) {
+                money += itemStack.getCount();
+            } else if (itemStack.getItem() == Items.EMERALD_BLOCK
+                    && displayName.equals(ChatFormatting.GREEN + "Emerald Block")) {
+                money += itemStack.getCount() * 64;
+            } else if (itemStack.getItem() == Items.EXPERIENCE_BOTTLE
+                    && displayName.equals(ChatFormatting.GREEN + "Liquid Emerald")) {
+                money += itemStack.getCount() * (64 * 64);
+            }
+        }
+
+        return money;
     }
 }

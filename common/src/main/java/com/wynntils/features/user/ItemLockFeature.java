@@ -51,7 +51,7 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        if (!(event.getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 

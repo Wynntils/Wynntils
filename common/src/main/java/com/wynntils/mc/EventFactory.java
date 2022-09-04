@@ -70,6 +70,7 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
@@ -153,7 +154,12 @@ public final class EventFactory {
     }
 
     public static void onContainerRender(
-            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+            AbstractContainerScreen<?> screen,
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float partialTicks,
+            Slot hoveredSlot) {
         post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
