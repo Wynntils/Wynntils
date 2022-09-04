@@ -8,51 +8,50 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 
 public record TextRenderSetting(
-        float maxWidth, CustomColor customColor, FontRenderer.TextAlignment alignment, FontRenderer.TextShadow shadow) {
+        float maxWidth,
+        CustomColor customColor,
+        HorizontalAlignment horizontalAlignment,
+        VerticalAlignment verticalAlignment,
+        FontRenderer.TextShadow shadow) {
 
     public static final TextRenderSetting DEFAULT = new TextRenderSetting(
-            0, CommonColors.WHITE, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
+            0, CommonColors.WHITE, HorizontalAlignment.Left, VerticalAlignment.Top, FontRenderer.TextShadow.NORMAL);
 
-    public static TextRenderSetting getWithHorizontalAlignment(
-            float maxWidth, CustomColor customColor, HorizontalAlignment horizontalAlignment) {
-        switch (horizontalAlignment) {
-            case Left -> {
-                return new TextRenderSetting(
-                        maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
-            }
-            case Center -> {
-                return new TextRenderSetting(
-                        maxWidth,
-                        customColor,
-                        FontRenderer.TextAlignment.CENTER_ALIGNED,
-                        FontRenderer.TextShadow.NORMAL);
-            }
-            case Right -> {
-                return new TextRenderSetting(
-                        maxWidth,
-                        customColor,
-                        FontRenderer.TextAlignment.RIGHT_ALIGNED,
-                        FontRenderer.TextShadow.NORMAL);
-            }
-        }
+    public static final TextRenderSetting CENTERED = new TextRenderSetting(
+            0,
+            CommonColors.WHITE,
+            HorizontalAlignment.Center,
+            VerticalAlignment.Middle,
+            FontRenderer.TextShadow.NORMAL);
 
+    public TextRenderSetting withMaxWidth(float maxWidth) {
         return new TextRenderSetting(
-                maxWidth, customColor, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL);
+                maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
+    }
+
+    public TextRenderSetting withCustomColor(CustomColor customColor) {
+        return new TextRenderSetting(
+                this.maxWidth, customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
+    }
+
+    public TextRenderSetting withHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
+        return new TextRenderSetting(
+                this.maxWidth, this.customColor, horizontalAlignment, this.verticalAlignment, this.shadow);
+    }
+
+    public TextRenderSetting withVerticalAlignment(VerticalAlignment verticalAlignment) {
+        return new TextRenderSetting(
+                this.maxWidth, this.customColor, this.horizontalAlignment, verticalAlignment, this.shadow);
+    }
+
+    public TextRenderSetting withAlignment(
+            HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+        return new TextRenderSetting(
+                this.maxWidth, this.customColor, horizontalAlignment, verticalAlignment, this.shadow);
     }
 
     public TextRenderSetting withTextShadow(FontRenderer.TextShadow textShadow) {
-        return new TextRenderSetting(this.maxWidth, this.customColor, this.alignment, textShadow);
-    }
-
-    public TextRenderSetting withAlignment(FontRenderer.TextAlignment alignment) {
-        return new TextRenderSetting(this.maxWidth, this.customColor, alignment, this.shadow);
-    }
-
-    public TextRenderSetting withCustomColor(CustomColor color) {
-        return new TextRenderSetting(this.maxWidth, color, this.alignment, this.shadow);
-    }
-
-    public TextRenderSetting withMaxWidth(float maxWidth) {
-        return new TextRenderSetting(maxWidth, this.customColor, this.alignment, this.shadow);
+        return new TextRenderSetting(
+                this.maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, textShadow);
     }
 }

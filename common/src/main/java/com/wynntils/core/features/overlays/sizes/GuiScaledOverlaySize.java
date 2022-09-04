@@ -32,11 +32,11 @@ public class GuiScaledOverlaySize extends OverlaySize {
 
     @Override
     public float getRenderedWidth() {
-        return (float) (getWidth() * McUtils.window().getGuiScale());
+        return (float) (getWidth() * McUtils.guiScale());
     }
 
     @Override
     public float getRenderedHeight() {
-        return (float) (getHeight() * McUtils.window().getGuiScale());
+        return (float) (getHeight() * McUtils.guiScale());
     }
 }
