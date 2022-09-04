@@ -29,7 +29,7 @@ public record TextRenderSetting(
                 maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
     }
 
-    public TextRenderSetting withCustomColor(CustomColor color) {
+    public TextRenderSetting withCustomColor(CustomColor customColor) {
         return new TextRenderSetting(
                 this.maxWidth, customColor, this.horizontalAlignment, this.verticalAlignment, this.shadow);
     }
@@ -39,7 +39,7 @@ public record TextRenderSetting(
                 this.maxWidth, this.customColor, horizontalAlignment, this.verticalAlignment, this.shadow);
     }
 
-    public TextRenderSetting withVerticalAlignment(VerticalAlignment alignment) {
+    public TextRenderSetting withVerticalAlignment(VerticalAlignment verticalAlignment) {
         return new TextRenderSetting(
                 this.maxWidth, this.customColor, this.horizontalAlignment, verticalAlignment, this.shadow);
     }
@@ -52,6 +52,6 @@ public record TextRenderSetting(
 
     public TextRenderSetting withTextShadow(FontRenderer.TextShadow textShadow) {
         return new TextRenderSetting(
-                this.maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, shadow);
+                this.maxWidth, this.customColor, this.horizontalAlignment, this.verticalAlignment, textShadow);
     }
 }
