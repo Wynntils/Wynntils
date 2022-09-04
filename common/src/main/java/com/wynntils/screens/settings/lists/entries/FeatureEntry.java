@@ -93,7 +93,7 @@ public class FeatureEntry extends FeatureListEntryBase {
                 .renderTextWithAlignment(
                         poseStack,
                         9f,
-                        4f,
+                        0f,
                         new TextRenderTask(
                                 this.feature.getTranslatedName(),
                                 TextRenderSetting.DEFAULT

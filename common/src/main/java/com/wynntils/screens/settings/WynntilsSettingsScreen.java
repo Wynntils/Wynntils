@@ -126,7 +126,7 @@ public class WynntilsSettingsScreen extends Screen {
                         BAR_HEIGHT + 7.5f,
                         0,
                         CommonColors.WHITE,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.Center,
                         FontRenderer.TextShadow.OUTLINE);
 
         poseStack.popPose();
