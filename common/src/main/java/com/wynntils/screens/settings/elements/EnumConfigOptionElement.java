@@ -9,8 +9,8 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.settings.widgets.FeatureSettingWidget;
@@ -72,7 +72,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,
                         0,
                         CommonColors.WHITE,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.Center,
                         FontRenderer.TextShadow.OUTLINE);
     }
 
