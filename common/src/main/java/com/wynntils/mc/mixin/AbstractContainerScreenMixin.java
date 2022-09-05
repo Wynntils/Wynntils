@@ -23,7 +23,8 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
-        EventFactory.onContainerRender((Screen) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+        EventFactory.onContainerRender(
+                (AbstractContainerScreen<?>) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 
     @Inject(

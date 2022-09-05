@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
 public final class StringUtils {
+    private static final String[] suffixes = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
+    private static final DecimalFormat fractionalFormat = new DecimalFormat("#.#");
+
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *
@@ -99,6 +102,17 @@ public final class StringUtils {
         }
     }
 
+    public static String formatAmount(double value) {
+        if (value < 0.75) return null;
+
+        int suffix = 0;
+        while (suffix < suffixes.length && value >= 750) {
+            value /= 1000;
+            ++suffix;
+        }
+
+        return fractionalFormat.format(value) + suffixes[suffix];
+    }
     /**
      * Matches a string to a specific search term
      */

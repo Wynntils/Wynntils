@@ -5,13 +5,13 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on inventory render */
 public class ContainerRenderEvent extends Event {
-    private final Screen screen;
+    private final AbstractContainerScreen<?> screen;
     private final PoseStack poseStack;
     private final int mouseX;
     private final int mouseY;
@@ -19,7 +19,12 @@ public class ContainerRenderEvent extends Event {
     private final Slot hoveredSlot;
 
     public ContainerRenderEvent(
-            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+            AbstractContainerScreen<?> screen,
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float partialTicks,
+            Slot hoveredSlot) {
         this.screen = screen;
         this.poseStack = poseStack;
         this.mouseX = mouseX;
@@ -28,7 +33,7 @@ public class ContainerRenderEvent extends Event {
         this.hoveredSlot = hoveredSlot;
     }
 
-    public Screen getScreen() {
+    public AbstractContainerScreen<?> getScreen() {
         return screen;
     }
 

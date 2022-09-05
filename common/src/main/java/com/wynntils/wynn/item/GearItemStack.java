@@ -11,7 +11,7 @@ import com.wynntils.core.webapi.profiles.item.MajorIdentification;
 import com.wynntils.core.webapi.profiles.item.RequirementType;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -301,9 +301,9 @@ public class GearItemStack extends WynnItemStack {
             return tooltip;
         }
 
-        if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             tooltip.addAll(rangeTooltip);
-        } else if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL) == 1) {
+        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
             tooltip.addAll(rerollTooltip);
         } else {
             tooltip.addAll(percentTooltip);

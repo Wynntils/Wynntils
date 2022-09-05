@@ -41,6 +41,7 @@ import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
+import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
@@ -95,6 +96,7 @@ public final class FeatureRegistry {
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());

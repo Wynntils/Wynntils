@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public enum Texture {
     BUBBLE_BAR("bars_bubbles.png", 256, 256),
+    EMERALD_COUNT_BACKGROUND("emerald_count_background.png", 24, 24),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
     FEATURE_BUTTON("feature_button.png", 100, 12),
     FEATURE_LIST_BACKGROUND("feature_list.png", 118, 254),
