@@ -54,12 +54,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (emeralds == 0) return;
 
         switch (emeraldCountType) {
-            case Text -> {
-                renderTextCount(event.getPoseStack(), emeralds);
-            }
-            case Texture -> {
-                renderTexturedCount(event.getPoseStack(), emeralds);
-            }
+            case Text -> renderTextCount(event.getPoseStack(), emeralds);
+            case Texture -> renderTexturedCount(event.getPoseStack(), emeralds);
         }
     }
 
