@@ -6,6 +6,7 @@ package com.wynntils.features.user.inventory;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -94,6 +95,11 @@ public class ItemTextOverlayFeature extends UserFeature {
             if (!overlayProperty.isTextOverlayEnabled() || !contextEnabled) continue; // not enabled or wrong context
 
             TextOverlayProperty.TextOverlay textOverlay = overlayProperty.getTextOverlay();
+
+            if (textOverlay == null) {
+                WynntilsMod.error(overlayProperty + "'s textOverlay was null.");
+                continue;
+            }
 
             PoseStack poseStack = new PoseStack();
             poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
