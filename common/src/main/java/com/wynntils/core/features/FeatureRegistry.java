@@ -27,6 +27,7 @@ import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
+import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
@@ -94,6 +95,7 @@ public final class FeatureRegistry {
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoMessageFilterFeature());
+        registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());

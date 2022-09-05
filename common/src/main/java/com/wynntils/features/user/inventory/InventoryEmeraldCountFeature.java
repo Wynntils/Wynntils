@@ -17,17 +17,16 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.wynn.objects.EmeraldUnits;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.Arrays;
 import java.util.Objects;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -73,14 +72,21 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         poseStack.translate(0, 0, 200);
 
         String emeraldText;
-        if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = String.valueOf(emeralds) + EmeraldSymbols.E;
         } else {
-            String[] emeraldAmounts = Arrays.stream(calculateEmeraldAmounts(emeralds))
-                    .mapToObj(String::valueOf)
-                    .toArray(String[]::new);
-            emeraldText = emeraldAmounts[2] + EmeraldSymbols.LE + " " + emeraldAmounts[1] + EmeraldSymbols.EB + " "
-                    + emeraldAmounts[0] + EmeraldSymbols.E;
+            int[] emeraldAmounts = calculateEmeraldAmounts(emeralds);
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
+                if (emeraldAmounts[i] == 0) continue;
+
+                builder.append(emeraldAmounts[i])
+                        .append(EmeraldUnits.values()[i].getSymbol())
+                        .append(" ");
+            }
+
+            emeraldText = builder.toString().trim();
         }
 
         FontRenderer.getInstance()
@@ -107,7 +113,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         poseStack.translate(containerScreen.leftPos, containerScreen.topPos, 0);
 
         String[] emeraldAmounts = new String[3];
-        if (GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == 1) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
@@ -140,19 +146,12 @@ public class InventoryEmeraldCountFeature extends UserFeature {
                     Texture.EMERALD_COUNT_BACKGROUND.width(),
                     Texture.EMERALD_COUNT_BACKGROUND.height());
 
-            Item item =
-                    switch (i) {
-                        case 2 -> Items.EXPERIENCE_BOTTLE;
-                        case 1 -> Items.EMERALD_BLOCK;
-                        case 0 -> Items.EMERALD;
-                        default -> throw new IllegalStateException("Unexpected value: " + i);
-                    };
-
-            ItemStack itemStack = new ItemStack(item);
             McUtils.mc()
                     .getItemRenderer()
                     .renderGuiItem(
-                            itemStack, containerScreen.leftPos + renderX + 6, containerScreen.topPos + renderY + 6);
+                            EmeraldUnits.values()[i].getItemStack(),
+                            containerScreen.leftPos + renderX + 6,
+                            containerScreen.topPos + renderY + 6);
 
             poseStack.pushPose();
             poseStack.translate(0, 0, 200);
