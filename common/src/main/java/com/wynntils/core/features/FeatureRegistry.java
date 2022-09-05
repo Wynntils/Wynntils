@@ -49,6 +49,7 @@ import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
+import com.wynntils.features.user.overlays.PowderAbilityBarOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.map.MiniMapOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
@@ -111,6 +112,7 @@ public final class FeatureRegistry {
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
+        registerFeature(new PowderAbilityBarOverlayFeature());
         registerFeature(new QuestBookFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
