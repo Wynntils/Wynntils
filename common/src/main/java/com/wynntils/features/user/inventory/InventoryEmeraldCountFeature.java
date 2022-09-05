@@ -20,7 +20,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.ContainerUtils;
-import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.Arrays;
 import java.util.Objects;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,11 +48,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     public void onContainerRender(ContainerRenderEvent event) {
         int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.containerMenu());
 
-        if (event.getScreen() instanceof InventoryScreen) {
-            emeralds += InventoryUtils.getEmeraldPouches(McUtils.inventory()).stream()
-                    .mapToInt(InventoryUtils.EmeraldPouch::getUsage)
-                    .sum();
-        } else {
+        if (!(event.getScreen() instanceof InventoryScreen)) {
             emeralds -= ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
         }
 

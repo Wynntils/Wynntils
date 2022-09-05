@@ -6,6 +6,8 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.item.parsers.EmeraldPouchParser;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.List;
@@ -82,23 +84,25 @@ public final class ContainerUtils {
     public static int getEmeraldCountInContainer(AbstractContainerMenu containerMenu) {
         if (containerMenu == null) return 0;
 
-        int money = 0;
+        int emeralds = 0;
 
         for (ItemStack itemStack : containerMenu.getItems()) {
             if (itemStack.isEmpty()) continue;
 
             String displayName = ComponentUtils.getCoded(itemStack.getHoverName());
             if (itemStack.getItem() == Items.EMERALD && displayName.equals(ChatFormatting.GREEN + "Emerald")) {
-                money += itemStack.getCount();
+                emeralds += itemStack.getCount();
             } else if (itemStack.getItem() == Items.EMERALD_BLOCK
                     && displayName.equals(ChatFormatting.GREEN + "Emerald Block")) {
-                money += itemStack.getCount() * 64;
+                emeralds += itemStack.getCount() * 64;
             } else if (itemStack.getItem() == Items.EXPERIENCE_BOTTLE
                     && displayName.equals(ChatFormatting.GREEN + "Liquid Emerald")) {
-                money += itemStack.getCount() * (64 * 64);
+                emeralds += itemStack.getCount() * (64 * 64);
+            } else if (WynnItemMatchers.isEmeraldPouch(itemStack)) {
+                emeralds += EmeraldPouchParser.getPouchUsage(itemStack);
             }
         }
 
-        return money;
+        return emeralds;
     }
 }
