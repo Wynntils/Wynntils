@@ -12,14 +12,18 @@ public interface TextOverlayProperty extends PropertyType {
 
     boolean isTextOverlayEnabled();
 
-    /** Whether this highlight should be shown in inventories */
+    /**
+     * Whether this overlay is allowed to be rendered in inventories.
+     */
     default boolean isInventoryText() {
         return true;
     }
 
-    /** Whether this highlight should be shown in the hotbar */
+    /**
+     * Whether this overlay is allowed to be rendered in the hotbar.
+     */
     default boolean isHotbarText() {
-        return false;
+        return true;
     }
 
     /**
