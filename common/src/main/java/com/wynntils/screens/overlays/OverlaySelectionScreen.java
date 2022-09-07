@@ -15,6 +15,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.overlays.lists.OverlayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -26,11 +27,9 @@ public class OverlaySelectionScreen extends Screen {
     private static final int BUTTON_HEIGHT = 20;
 
     private OverlayList overlayList;
-    private final Screen lastScreen;
 
     public OverlaySelectionScreen() {
         super(new TranslatableComponent("screens.wynntils.overlaySelection.name"));
-        lastScreen = McUtils.mc().screen;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(lastScreen)));
+                button -> McUtils.mc().setScreen(new PauseScreen(true))));
     }
 
     @Override
