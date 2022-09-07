@@ -41,9 +41,4 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
     public boolean isTextOverlayEnabled() {
         return true;
     }
-
-    @Override
-    public boolean isHotbarText() {
-        return true;
-    }
 }
