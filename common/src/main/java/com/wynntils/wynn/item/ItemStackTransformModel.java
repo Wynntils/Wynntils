@@ -13,6 +13,7 @@ import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
+import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemProperty;
@@ -61,6 +62,7 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
         registerProperty(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
         registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
+        registerProperty(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
         registerProperty(WynnItemMatchers::isProfessionLevel, ProfessionLevelProperty::new);
         registerProperty(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
         registerProperty(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);

@@ -22,13 +22,7 @@ public final class EmeraldPouchParser {
         String lore = ItemUtils.getStringLore(stack);
         Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore);
         if (!usageMatcher.find()) {
-            if (lore.contains("§7Empty")) {
-                return 0;
-            }
-
-            WynntilsMod.error(
-                    "EmeraldPouchParser#getPouchUsage was called on an ItemStack that wasn't an emerald pouch");
-            return -1;
+            return 0;
         }
         return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
     }

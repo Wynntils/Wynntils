@@ -123,6 +123,9 @@ public class ItemHighlightFeature extends UserFeature {
     public static boolean powderHighlightEnabled = true;
 
     @Config
+    public static boolean emeraldPouchHighlightEnabled = true;
+
+    @Config
     public static boolean inventoryHighlightEnabled = true;
 
     @Config
