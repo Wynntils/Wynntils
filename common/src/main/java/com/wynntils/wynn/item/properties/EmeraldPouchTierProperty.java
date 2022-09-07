@@ -14,9 +14,8 @@ import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.type.HighlightProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
-import net.minecraft.ChatFormatting;
-
 import java.util.regex.Matcher;
+import net.minecraft.ChatFormatting;
 
 public class EmeraldPouchTierProperty extends ItemProperty implements HighlightProperty, TextOverlayProperty {
     private final CustomColor highlightColor = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
@@ -28,18 +27,16 @@ public class EmeraldPouchTierProperty extends ItemProperty implements HighlightP
 
         // parse tier
         Matcher emeraldPouchMatcher = WynnItemMatchers.emeraldPouchTierMatcher(item.getHoverName());
-        String numeral = emeraldPouchMatcher.find()
-            ? emeraldPouchMatcher.group(1)
-            : "I";
+        String numeral = emeraldPouchMatcher.find() ? emeraldPouchMatcher.group(1) : "I";
 
         // convert from roman to arabic if necessary
         String text = ItemTextOverlayFeature.emeraldPouchTierRomanNumerals
-            ? numeral
-            : String.valueOf(MathUtils.integerFromRoman(numeral));
+                ? numeral
+                : String.valueOf(MathUtils.integerFromRoman(numeral));
 
         TextRenderSetting style = TextRenderSetting.DEFAULT
-            .withCustomColor(highlightColor)
-            .withTextShadow(ItemTextOverlayFeature.emeraldPouchTierShadow);
+                .withCustomColor(highlightColor)
+                .withTextShadow(ItemTextOverlayFeature.emeraldPouchTierShadow);
 
         textOverlay = new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
     }

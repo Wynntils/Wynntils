@@ -10,16 +10,16 @@ import java.util.Map;
 
 public final class MathUtils {
 
-    private static final Map<Integer,Integer> romanNumeralsMap = new HashMap<>();
+    private static final Map<Integer, Integer> romanNumeralsMap = new HashMap<>();
 
     static {
-        romanNumeralsMap.put((int)'I', 1);
-        romanNumeralsMap.put((int)'V', 5);
-        romanNumeralsMap.put((int)'X', 10);
-        romanNumeralsMap.put((int)'L', 50);
-        romanNumeralsMap.put((int)'C', 100);
-        romanNumeralsMap.put((int)'D', 500);
-        romanNumeralsMap.put((int)'M', 1000);
+        romanNumeralsMap.put((int) 'I', 1);
+        romanNumeralsMap.put((int) 'V', 5);
+        romanNumeralsMap.put((int) 'X', 10);
+        romanNumeralsMap.put((int) 'L', 50);
+        romanNumeralsMap.put((int) 'C', 100);
+        romanNumeralsMap.put((int) 'D', 500);
+        romanNumeralsMap.put((int) 'M', 1000);
     }
 
     public static float lerp(float a, float b, float t) {
@@ -47,20 +47,16 @@ public final class MathUtils {
     }
 
     public static int integerFromRoman(String numeral) {
-        String normalized = numeral
-            .trim()
-            .toUpperCase(Locale.ROOT)
-            .replace("IV","IIII")
-            .replace("IX","VIIII")
-            .replace("XL","XXXX")
-            .replace("XC","LXXXX")
-            .replace("CD","CCCC")
-            .replace("CM","DCCCC");
+        String normalized = numeral.trim()
+                .toUpperCase(Locale.ROOT)
+                .replace("IV", "IIII")
+                .replace("IX", "VIIII")
+                .replace("XL", "XXXX")
+                .replace("XC", "LXXXX")
+                .replace("CD", "CCCC")
+                .replace("CM", "DCCCC");
 
-        return normalized
-            .chars()
-            .map(c -> romanNumeralsMap.getOrDefault(c, 0))
-            .sum();
+        return normalized.chars().map(c -> romanNumeralsMap.getOrDefault(c, 0)).sum();
     }
 
     public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {
