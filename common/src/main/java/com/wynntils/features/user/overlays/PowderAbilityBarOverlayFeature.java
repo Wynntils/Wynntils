@@ -16,15 +16,17 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.utils.WynnUtils;
 
 public class PowderAbilityBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -43,6 +45,12 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         @Config
         public boolean flip = false;
 
+        @Config
+        public boolean onlyIfWeaponHeld = true;
+
+        @Config
+        public boolean hideIfNoCharge = false;
+
         public PowderAbilityBarOverlay() {
             super(
                     new OverlayPosition(
@@ -57,9 +65,12 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             float powderSpecialCharge = ActionBarModel.getPowderSpecialCharge();
-            if (!WynnUtils.onServer() || powderSpecialCharge == -1) return;
+            Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
+            if (this.onlyIfWeaponHeld
+                    && !WynnItemMatchers.isWeapon(McUtils.inventory().getSelected())) return;
+            if (this.hideIfNoCharge && powderSpecialCharge == 0) return;
 
-            renderWithSpecificSpecial(poseStack, powderSpecialCharge, ActionBarModel.getPowderSpecialType());
+            renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
         }
 
         @Override
@@ -83,12 +94,20 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
                         case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
                     };
 
-            CustomColor color = powderSpecialType.getColor();
+            CustomColor color;
+            String text;
+            if (powderSpecialType == null) {
+                color = CommonColors.GRAY;
+                text = "Unknown";
+            } else {
+                color = powderSpecialType.getColor();
+                text = powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%";
+            }
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%",
+                            text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,

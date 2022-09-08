@@ -27,7 +27,7 @@ public final class ActionBarModel extends Model {
 
     private static Component previousMessage = null;
 
-    private static float powderSpecialCharge = -1;
+    private static float powderSpecialCharge = 0;
     private static Powder powderSpecialType = null;
     private static int currentHealth = -1;
     private static int maxHealth = -1;
@@ -62,7 +62,7 @@ public final class ActionBarModel extends Model {
             powderSpecialCharge = Integer.parseInt(amountStr);
             powderSpecialType = Powder.getFromSymbol(symbol);
         } else if (COORDINATES_PATTERN.matcher(centerActionString).matches()) { // This only happens if charge is lost.
-            powderSpecialCharge = -1;
+            powderSpecialCharge = 0;
             powderSpecialType = null;
         }
 
