@@ -16,6 +16,7 @@
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
+    "PlayerMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "PotionItemMixin",
