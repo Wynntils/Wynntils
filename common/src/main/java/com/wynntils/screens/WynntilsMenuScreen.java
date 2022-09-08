@@ -13,6 +13,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.overlays.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -21,11 +22,8 @@ public class WynntilsMenuScreen extends Screen {
     private static final int BUTTON_WIDTH = 160;
     private static final int BUTTON_HEIGHT = 20;
 
-    private final Screen lastScreen;
-
     public WynntilsMenuScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsMenu.name"));
-        lastScreen = McUtils.mc().screen;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class WynntilsMenuScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.wynntilsMenu.close"),
-                button -> McUtils.mc().setScreen(lastScreen)));
+                button -> McUtils.mc().setScreen(new PauseScreen(true))));
     }
 
     @Override

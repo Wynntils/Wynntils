@@ -12,10 +12,10 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.WynntilsMenuScreen;
 import com.wynntils.screens.overlays.lists.OverlayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -41,7 +41,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(new PauseScreen(true))));
+                button -> McUtils.mc().setScreen(new WynntilsMenuScreen())));
     }
 
     @Override
