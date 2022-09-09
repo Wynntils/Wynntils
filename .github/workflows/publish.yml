@@ -30,9 +30,6 @@ on:
     needs: [changelog, artifact]
     steps:
       - uses: actions/download-artifact@v3
-        with:
-          name: "${{ release_name }}"
-          path: "${{ file_path }}"
 
       - name: Upload to CurseForge
         uses: itsmeow/curseforge-upload@v3
@@ -53,9 +50,6 @@ on:
     needs: [changelog, artifact]
     steps:
       - uses: actions/download-artifact@v3
-        with:
-          name: "${{ release_name }}"
-          path: "${{ file_path }}"
 
       - name: Upload to Modrinth
         uses: RubixDev/modrinth-upload@v1.0.0
