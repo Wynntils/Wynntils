@@ -121,12 +121,17 @@ allprojects {
 class Version {
     int major, minor, patch
 
-    static String getBuild() {
-        System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?: "DEV"
-    }
-
     //If someone can find a way to access the mcVersion without using it as a param please do
     String toString(Object minecraft_version) {
-        "${major}.${minor}.${patch}+${this.build}.MC${minecraft_version}"
+        "${major}.${minor}.${patch}.MC${minecraft_version}"
     }
 }
+
+task installLocalGitHook(type: Copy) {
+    from new File(rootProject.rootDir, '.github/hooks/commit-msg')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0775
+}
+
+prepareKotlinBuildScriptModel.dependsOn installLocalGitHook
+build.dependsOn installLocalGitHook

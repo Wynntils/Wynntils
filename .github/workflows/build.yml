@@ -1,8 +1,6 @@
-name: Spotless and Build
+name: Publish Release
 
 on:
-  workflow_dispatch:
-  pull_request_target:
   push:
     branches:
       - main
@@ -10,7 +8,7 @@ on:
       - '**.md'
 
 jobs:
-  format-and-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -31,18 +29,115 @@ jobs:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
 
-      - name: Format with spotless
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: spotlessApply --build-cache
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_user_name: 'Wynntils'
-          commit_user_email: 'admin@wynntils.com'
-          commit_message: 'chore: spotless formatting'
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -x spotlessCheck --build-cache
+          arguments: build --build-cache
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            forge/build/libs/wynntils-*.MC1.18.2-forge.jar
+            fabric/build/libs/wynntils-*.MC1.18.2-fabric.jar
+            quilt/build/libs/wynntils-*.MC1.18.2-quilt.jar
+
+  changelog:
+    name: Generate Changelog
+    needs: [build]
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+
+      - name: Create changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.PRIVATE_TOKEN }}
+          preset: conventionalcommits
+          release-count: 1
+          pre-commit: .pre-commit.js
+          create-summary: true
+          version-file: ./version.json
+          skip-git-pull: true
+
+  publish-gh:
+    name: Publish to Github Releases
+    runs-on: ubuntu-latest
+    needs: [ changelog, artifact ]
+    steps:
+      - uses: actions/download-artifact@v3
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files:
+            - "forge/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-forge.jar"
+            - "fabric/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-fabric.jar"
+            - "quilt/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-quilt.jar"
+          tag_name: ${{ needs.changelog.outputs.tag }}
+          prerelease: ${{ needs.changelog.outputs.pre_release }}
+          body: ${{ needs.changelog.outputs.clean_changelog }}
+
+  # Minecraft 1.18.2: 9008
+  # Forge: 7498
+  # Java 17: 8326
+  # Java 18: 8634
+  publish-forge:
+    name: Publish Forge to Curseforge & Modrinth
+    uses: Wynntils/Artemis/.github/workflows/publish.yml@main
+    needs: [build, changelog]
+    with:
+      file_path: "forge/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-forge.jar"
+      release_name: "Wynntils (Artemis) ${{ steps.changelog.outputs.tag }}-forge"
+      tag: ${{ steps.changelog.outputs.tag }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      cf_mc_version: "9008,7498,8326,8634"
+      mr_mc_version: 1.18.2
+      mr_loader: forge
+      secrets: inherit
+
+  # Minecraft 1.18.2: 9008
+  # Forge: 7499
+  # Java 17: 8326
+  # Java 18: 8634
+  publish-fabric:
+    name: Publish Fabric to Curseforge & Modrinth
+    uses: Wynntils/Artemis/.github/workflows/publish.yml@main
+    needs: [build, changelog]
+    with:
+      file_path: "fabric/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-fabric.jar"
+      release_name: "Wynntils (Artemis) ${{ steps.changelog.outputs.tag }}-fabric"
+      tag: ${{ steps.changelog.outputs.tag }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      cf_mc_version: "9008,7499,8326,8634"
+      mr_mc_version: 1.18.2
+      mr_loader: fabric
+      secrets: inherit
+
+  # Minecraft 1.18.2: 9008
+  # Forge: 9153
+  # Java 17: 8326
+  # Java 18: 8634
+  publish-quilt:
+    name: Publish Quilt to Curseforge & Modrinth
+    uses: Wynntils/Artemis/.github/workflows/publish.yml@main
+    needs: [build, changelog]
+    with:
+      file_path: "quilt/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-quilt.jar"
+      release_name: "Wynntils (Artemis) ${{ steps.changelog.outputs.tag }}-quilt"
+      tag: ${{ steps.changelog.outputs.tag }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      cf_mc_version: "9008,9153,8326,8634"
+      mr_mc_version: 1.18.2
+      mr_loader: quilt
+      secrets: inherit
