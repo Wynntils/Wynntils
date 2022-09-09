@@ -34,13 +34,13 @@ on:
       - name: Upload to CurseForge
         uses: itsmeow/curseforge-upload@v3
         with:
-          file_path: "${{ file_path }}"
+          file_path: "${{ inputs.file_path }}"
           game_endpoint: minecraft
-          game_versions: "${{ cf_mc_version }}"
+          game_versions: "${{ inputs.cf_mc_version }}"
           project_id: 303451
           token: ${{ secrets.CF_API_TOKEN }}
           release_type: beta
-          display_name: "${{ release_name }}"
+          display_name: "${{ inputs.release_name }}"
           changelog_type: markdown
           changelog: "${{ needs.changelog.outputs.changelog }}"
 
@@ -55,12 +55,12 @@ on:
         uses: RubixDev/modrinth-upload@v1.0.0
         with:
           token: ${{ secrets.MODRINTH_API_TOKEN }}
-          file_path: "${{ file_path }}"
-          name: "${{ release_name }}"
-          version: "${{ tag }}"
-          changelog: "${{ changelog }}"
-          game_versions: "${{ mr_mc_version }}"
+          file_path: "${{ inputs.file_path }}"
+          name: "${{ inputs.release_name }}"
+          version: "${{ inputs.tag }}"
+          changelog: "${{ inputs.changelog }}"
+          game_versions: "${{ inputs.mr_mc_version }}"
           release_type: beta
-          loaders: "${{ mr_loader }}"
+          loaders: "${{ inputs.mr_loader }}"
           featured: false
           project_id: dU5Gb9Ab
