@@ -24,6 +24,7 @@ on:
         type: string
     secrets: inherit
 
+jobs:
   release-to-cf:
     name: Release to CurseForge
     runs-on: ubuntu-latest
