@@ -53,6 +53,7 @@ import com.wynntils.features.user.overlays.PowderAbilityBarOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.map.MiniMapOverlayFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.PouchRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
@@ -81,6 +82,7 @@ public final class FeatureRegistry {
         registerFeature(new LootrunFeature());
 
         // user
+        registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AddCommandExpansionFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
