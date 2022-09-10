@@ -40,7 +40,7 @@ jobs:
           game_versions: "${{ inputs.cf_mc_version }}"
           project_id: 303451
           token: ${{ secrets.CF_API_TOKEN }}
-          release_type: beta
+          release_type: alpha
           display_name: "${{ inputs.release_name }}"
           changelog_type: markdown
           changelog: "${{ needs.changelog.outputs.changelog }}"
@@ -61,7 +61,7 @@ jobs:
           version: "${{ inputs.tag }}"
           changelog: "${{ inputs.changelog }}"
           game_versions: "${{ inputs.mr_mc_version }}"
-          release_type: beta
+          release_type: alpha
           loaders: "${{ inputs.mr_loader }}"
           featured: false
           project_id: dU5Gb9Ab
