@@ -38,13 +38,14 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -76,7 +77,7 @@ public final class WebManager extends CoreManager {
 
     private static WynntilsAccount account = null;
 
-    private static List<MapProfile> maps = new ArrayList<>();
+    private static Queue<MapProfile> maps = new ConcurrentLinkedQueue<>();
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s-%d (%s)",
@@ -255,7 +256,15 @@ public final class WebManager extends CoreManager {
     }
 
     public static CompletableFuture<Boolean> tryLoadMaps() {
-        if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
+        if (apiUrls == null) {
+            WynntilsMod.error("ApiUrls was null when fetching map.");
+            return CompletableFuture.completedFuture(false);
+        }
+
+        if (!apiUrls.hasKey("AMainMap")) {
+            WynntilsMod.error("ApiUrls did not have 'AMainMap' key when fetching map.");
+            return CompletableFuture.completedFuture(false);
+        }
 
         File mapDirectory = new File(API_CACHE_ROOT, "maps");
 
@@ -270,7 +279,7 @@ public final class WebManager extends CoreManager {
 
                     JsonArray mapArray = json.getAsJsonArray();
 
-                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
+                    final Queue<MapProfile> downloadedMapProfiles = new ConcurrentLinkedQueue<>();
 
                     for (JsonElement mapData : mapArray) {
                         JsonObject mapObject = mapData.getAsJsonObject();
@@ -286,7 +295,8 @@ public final class WebManager extends CoreManager {
                         String md5 = mapObject.get("hash").getAsString();
 
                         // TODO DownloaderManager? + Overlay
-                        handler.addRequest(new RequestBuilder(fileBase + file, file)
+                        WynntilsMod.info("Starting downloading map piece: " + file);
+                        handler.addAndDispatch(new RequestBuilder(fileBase + file, file)
                                 .cacheTo(new File(mapDirectory, file))
                                 .cacheMD5Validator(md5)
                                 .useCacheAsBackup()
@@ -294,26 +304,26 @@ public final class WebManager extends CoreManager {
                                     try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
                                         NativeImage nativeImage = NativeImage.read(in);
 
-                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
+                                        downloadedMapProfiles.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
                                     } catch (IOException e) {
                                         WynntilsMod.info("IOException occurred while loading map image of " + file);
                                         return false; // don't cache
                                     }
 
+                                    WynntilsMod.info("Successfully downloaded map piece: " + file);
                                     return true;
                                 })
                                 .build());
                     }
 
-                    // hacky way to know when handler has finished dispatching
-                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
-                        if (syncList.size() == mapArray.size()) {
-                            result.complete(true);
-                            maps = syncList;
-                        } else {
-                            result.complete(false);
-                        }
-                    });
+                    if (downloadedMapProfiles.size() == mapArray.size()) {
+                        maps = downloadedMapProfiles;
+                        result.complete(true);
+                    } else {
+                        WynntilsMod.error("Expected to have" + mapArray.size() + " map parts, got "
+                                + downloadedMapProfiles.size() + " parts.");
+                        result.complete(false);
+                    }
 
                     return true;
                 })
@@ -416,7 +426,7 @@ public final class WebManager extends CoreManager {
         return territories;
     }
 
-    public static List<MapProfile> getMaps() {
+    public static Queue<MapProfile> getMaps() {
         return maps;
     }
 

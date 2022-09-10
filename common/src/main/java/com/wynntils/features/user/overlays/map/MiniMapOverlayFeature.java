@@ -107,7 +107,7 @@ public class MiniMapOverlayFeature extends UserFeature {
 
             // TODO replace with generalized maps whenever that is done
             if (WebManager.isMapLoaded()) {
-                MapProfile map = WebManager.getMaps().get(0);
+                MapProfile map = WebManager.getMaps().peek();
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
                 renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
