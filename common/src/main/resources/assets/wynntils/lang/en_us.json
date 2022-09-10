@@ -10,6 +10,7 @@
   "feature.wynntils.commands.name": "Custom Wynntils Command Feature",
   "feature.wynntils.connectionProgress.name": "Connection Progress Feature",
   "feature.wynntils.customBarsOverlay.name": "Custom Health/Mana Bar Feature",
+  "feature.wynntils.customBarsOverlay.overlay.bloodPoolBar.name": "Blood Pool Bar",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.flip.description": "Should the filling of the bar be flipped?",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.flip.name": "Flip",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture.description": "What texture should be used for the health bar?",
