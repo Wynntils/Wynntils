@@ -125,7 +125,7 @@ public class WorldStateManager extends CoreManager {
     @SubscribeEvent
     public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Class")) {
+                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
             setState(State.CHARACTER_SELECTION, "");
         }
     }
