@@ -5,6 +5,7 @@
   "core.wynntils.category.redirects": "Game Notification Redirects",
   "core.wynntils.category.tooltips": "Item Tooltips",
   "core.wynntils.category.uncategorized": "Uncategorized",
+  "feature.wynntils.abilityRefreshRedirect.name": "Ability Refresh Redirect",
   "feature.wynntils.addCommandExpansion.name": "Add Command Expansion",
   "feature.wynntils.chatItem.name": "Chat Item",
   "feature.wynntils.commands.name": "Custom Wynntils Command Feature",
