@@ -9,9 +9,9 @@ exports.preCommit = (props) => {
         }
     };
 
-    const [major, minor, revision] = props.version.split(".");
+    const [major, minor, patch] = props.version.split(".");
 
     replace("./build.gradle", /(?<=major: )\d+/g, major);
     replace("./build.gradle", /(?<=minor: )\d+/g, minor);
-    replace("./build.gradle", /(?<=revision: )\d+/g, revision);
+    replace("./build.gradle", /(?<=patch: )\d+/g, patch);
 };

@@ -35,7 +35,7 @@ jobs:
         with:
           commit_user_name: 'Wynntils'
           commit_user_email: 'admin@wynntils.com'
-          commit_message: 'chore: spotless formatting'
+          commit_message: 'chore: spotless formatting [skip ci]'
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2

@@ -80,7 +80,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          files:
+          files: |
             - "forge/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-forge.jar"
             - "fabric/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-fabric.jar"
             - "quilt/build/libs/wynntils-${{ steps.changelog.outputs.tag }}.MC1.18.2-quilt.jar"
