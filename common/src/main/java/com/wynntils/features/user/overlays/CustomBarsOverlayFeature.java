@@ -17,7 +17,6 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.LerpingBossEventRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -44,9 +43,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
-    @Config
-    public boolean shouldDisplayOnBossBar = false;
-
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
@@ -65,19 +61,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
         if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
 
         event.setMessage("");
-    }
-
-    @SubscribeEvent
-    public void onBossBarRender(LerpingBossEventRenderEvent event) {
-        if (shouldDisplayOnBossBar) return;
-
-        String codedName = ComponentUtils.getCoded(event.getBossEvent().getName());
-
-        if (MANA_BANK_PATTERN.matcher(codedName).matches() && manaBankBarOverlay.isEnabled()) {
-            event.setCanceled(true);
-        } else if (BLOOD_POOL_PATTERN.matcher(codedName).matches() && bloodPoolBarOverlay.isEnabled()) {
-            event.setCanceled(true);
-        }
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)

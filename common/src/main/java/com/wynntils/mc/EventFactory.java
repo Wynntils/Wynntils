@@ -31,7 +31,6 @@ import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
-import com.wynntils.mc.event.LerpingBossEventRenderEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
@@ -195,10 +194,6 @@ public final class EventFactory {
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
         return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
-    }
-
-    public static LerpingBossEventRenderEvent onBossEventRenderPre(LerpingBossEvent event) {
-        return post(new LerpingBossEventRenderEvent(event));
     }
 
     // endregion
