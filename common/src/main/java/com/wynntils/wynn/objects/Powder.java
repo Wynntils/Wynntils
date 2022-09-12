@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +36,12 @@ public enum Powder {
         return symbol;
     }
 
-    public String getColor() {
+    public String getColorString() {
         return lightColor.toString();
+    }
+
+    public CustomColor getColor() {
+        return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
     }
 
     public ChatFormatting getRawColor() {
@@ -91,6 +96,17 @@ public enum Powder {
             case WATER -> Powder.THUNDER;
             case FIRE -> Powder.WATER;
             case AIR -> Powder.FIRE;
+        };
+    }
+
+    public static Powder getFromSymbol(char symbol) {
+        return switch (symbol) {
+            case '✤' -> EARTH;
+            case '✦' -> THUNDER;
+            case '❉' -> WATER;
+            case '✹' -> FIRE;
+            case '❋' -> AIR;
+            default -> null;
         };
     }
 }

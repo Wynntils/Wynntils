@@ -28,7 +28,7 @@ public class CharacterManager extends CoreManager {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
-    private static final int CHARACTER_INFO_SLOT = 6;
+    private static final int CHARACTER_INFO_SLOT = 7;
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
@@ -94,7 +94,7 @@ public class CharacterManager extends CoreManager {
     private static void scanCharacterInfoPage() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .matchTitle("^§.\\d+§. skill points remaining$")
+                .matchTitle("Character Info")
                 .processContainer(container -> {
                     ItemStack item = container.items().get(CHARACTER_INFO_SLOT);
                     currentCharacter = CharacterInfo.parseCharacterFromCharacterMenu(item, -1);

@@ -23,6 +23,7 @@ public enum Texture {
     SEARCH_BAR("search_bar.png", 90, 10),
     SWITCH_OFF("switch_off.png", 40, 20),
     SWITCH_ON("switch_on.png", 40, 20),
+    UNIVERSAL_BAR("universal_bar.png", 81, 16),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
     // Map related

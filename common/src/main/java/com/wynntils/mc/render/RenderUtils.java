@@ -643,6 +643,54 @@ public final class RenderUtils {
      *
      * @param poseStack poseStack to use
      * @param texture   the texture to use
+     * @param customColor the color for the bar
+     * @param x1        left x on screen
+     * @param y1        top y on screen
+     * @param x2        right x on screen
+     * @param y2        bottom right on screen
+     * @param textureX1 texture left x for the part
+     * @param textureY1 texture top y for the part (top of background)
+     * @param textureX2 texture right x for the part
+     * @param textureY2 texture bottom y for the part (bottom of bar)
+     * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
+     */
+    public static void drawColoredProgressBar(
+            PoseStack poseStack,
+            Texture texture,
+            CustomColor customColor,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int textureX1,
+            int textureY1,
+            int textureX2,
+            int textureY2,
+            float progress) {
+
+        int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+        drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
+        drawProgressBarForegroundWithColor(
+                poseStack,
+                texture,
+                customColor,
+                x1,
+                y1,
+                x2,
+                y2,
+                textureX1,
+                half,
+                textureX2,
+                textureY2 + (textureY2 - textureY1) % 2,
+                progress);
+    }
+
+    /**
+     * drawProgressBar
+     * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
+     *
+     * @param poseStack poseStack to use
+     * @param texture   the texture to use
      * @param x1        left x on screen
      * @param y1        top y on screen
      * @param x2        right x on screen
@@ -732,6 +780,75 @@ public final class RenderUtils {
         BufferUploader.end(bufferBuilder);
     }
 
+    private static void drawProgressBarForegroundWithColor(
+            PoseStack poseStack,
+            Texture texture,
+            CustomColor customColor,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int textureX1,
+            int textureY1,
+            int textureX2,
+            int textureY2,
+            float progress) {
+        if (progress == 0f) {
+            return;
+        }
+
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, texture.resource());
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        float xMin = Math.min(x1, x2),
+                xMax = Math.max(x1, x2),
+                yMin = Math.min(y1, y2),
+                yMax = Math.max(y1, y2),
+                txMin = (float) Math.min(textureX1, textureX2) / texture.width(),
+                txMax = (float) Math.max(textureX1, textureX2) / texture.width(),
+                tyMin = (float) Math.min(textureY1, textureY2) / texture.height(),
+                tyMax = (float) Math.max(textureY1, textureY2) / texture.height();
+
+        if (progress < 1.0f && progress > -1.0f) {
+            if (progress < 0.0f) {
+                xMin += (1.0f + progress) * (xMax - xMin);
+                txMin += (1.0f + progress) * (txMax - txMin);
+            } else {
+                xMax -= (1.0f - progress) * (xMax - xMin);
+                txMax -= (1.0f - progress) * (txMax - txMin);
+            }
+        }
+
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferBuilder
+                .vertex(matrix, xMin, yMin, 0)
+                .uv(txMin, tyMin)
+                .color(customColor.asInt())
+                .endVertex();
+        bufferBuilder
+                .vertex(matrix, xMin, yMax, 0)
+                .uv(txMin, tyMax)
+                .color(customColor.asInt())
+                .endVertex();
+        bufferBuilder
+                .vertex(matrix, xMax, yMax, 0)
+                .uv(txMax, tyMax)
+                .color(customColor.asInt())
+                .endVertex();
+        bufferBuilder
+                .vertex(matrix, xMax, yMin, 0)
+                .uv(txMax, tyMin)
+                .color(customColor.asInt())
+                .endVertex();
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
+    }
+
     private static void drawProgressBarBackground(
             PoseStack poseStack,
             Texture texture,
@@ -754,7 +871,7 @@ public final class RenderUtils {
                 yMin = Math.min(y1, y2),
                 yMax = Math.max(y1, y2),
                 txMin = (float) Math.min(textureX1, textureX2) / texture.width(),
-                txMax = (float) Math.max(textureX1, textureX2) / texture.height(),
+                txMax = (float) Math.max(textureX1, textureX2) / texture.width(),
                 tyMin = (float) Math.min(textureY1, textureY2) / texture.height(),
                 tyMax = (float) Math.max(textureY1, textureY2) / texture.height();
 
