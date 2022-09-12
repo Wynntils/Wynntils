@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.features.alwayson.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
 import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
@@ -77,6 +78,7 @@ public final class FeatureRegistry {
 
         // always on
         registerFeature(new FixSpellOverwriteFeature());
+        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new LootrunFeature());
 
         // user
