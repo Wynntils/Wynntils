@@ -265,6 +265,7 @@ public final class WebManager extends CoreManager {
 
         handler.addAndDispatch(new RequestBuilder(url, "maps")
                 .cacheTo(new File(mapDirectory, "maps.json"))
+                .useCacheAsBackup()
                 .handleJson(json -> {
                     String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
 
@@ -325,6 +326,7 @@ public final class WebManager extends CoreManager {
     private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
+                .useCacheAsBackup()
                 .handleWebReader(reader -> {
                     apiUrls = reader;
                     if (!setup) {
