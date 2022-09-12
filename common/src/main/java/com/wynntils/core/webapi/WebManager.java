@@ -265,6 +265,7 @@ public final class WebManager extends CoreManager {
 
         handler.addAndDispatch(new RequestBuilder(url, "maps")
                 .cacheTo(new File(mapDirectory, "maps.json"))
+                .useCacheAsBackup()
                 .handleJson(json -> {
                     String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
 
