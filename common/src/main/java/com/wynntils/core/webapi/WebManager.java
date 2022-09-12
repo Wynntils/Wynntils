@@ -326,6 +326,7 @@ public final class WebManager extends CoreManager {
     private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
+                .useCacheAsBackup()
                 .handleWebReader(reader -> {
                     apiUrls = reader;
                     if (!setup) {
