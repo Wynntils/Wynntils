@@ -4,6 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.ArmSwingEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,13 +22,10 @@ public abstract class PlayerMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/world/entity/player/Player;swing(Lnet/minecraft/world/InteractionHand;)V"))
-    private void preventSwingOnDrop(Player player, InteractionHand interaction) {
-        /**
-         * This mixin fixes an issue where a Archers holding bows may start
-         * casting spells just by dropping items from the inventory screen.
-         *
-         * This method overrides the swing call in the function that drops items on the ground.
-         * This method is left empty intentionally, to effectively remove the swing method call.
-         */
+    private void onSwingInInventoryScreen(Player player, InteractionHand hand) {
+        if (!EventFactory.onArmSwing(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand)
+                .isCanceled()) {
+            player.swing(hand);
+        }
     }
 }
