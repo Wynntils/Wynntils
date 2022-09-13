@@ -119,6 +119,9 @@ public final class WebManager extends CoreManager {
         // tryLoadTerritories
         territories.clear();
 
+        // tryLoadMaps
+        maps.clear();
+
         updateTerritoryThreadStatus(false);
     }
 
