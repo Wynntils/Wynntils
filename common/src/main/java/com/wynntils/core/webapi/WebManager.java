@@ -79,10 +79,11 @@ public final class WebManager extends CoreManager {
     private static List<MapProfile> maps = new ArrayList<>();
 
     private static final String USER_AGENT = String.format(
-            "Wynntils Artemis\\%s-%d (%s)",
+            "Wynntils Artemis\\%s-%d (%s) %s",
             WynntilsMod.getVersion(),
             WynntilsMod.getBuildNumber(),
-            WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client");
+            WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
+            WynntilsMod.getModLoader());
 
     public static void init() {
         tryReloadApiUrls(false);

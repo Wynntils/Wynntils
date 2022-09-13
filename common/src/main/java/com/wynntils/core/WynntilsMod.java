@@ -23,11 +23,16 @@ public final class WynntilsMod {
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
 
+    private static ModLoader modLoader;
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
     private static boolean featuresInited = false;
     private static IEventBus eventBus;
+
+    public static ModLoader getModLoader() {
+        return modLoader;
+    }
 
     public static IEventBus getEventBus() {
         return eventBus;
@@ -82,26 +87,23 @@ public final class WynntilsMod {
             LOGGER.error("Failed to initialize Wynntils features", t);
             return;
         }
-        featuresInited = true;
     }
 
-    public static void init(String modVersion, boolean isDevelopmentEnvironment) {
         // At this point, no resources (including I18n) are available
+    public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment) {
+
         // Setup mod core properties
+        modLoader = loader;
         developmentEnvironment = isDevelopmentEnvironment;
         parseVersion(modVersion);
         addCrashCallbacks();
+
         // MC will sometimes think it's running headless and refuse to set clipboard contents
         // making sure this is set to false will fix that
         System.setProperty("java.awt.headless", "false");
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         ManagerRegistry.init();
-    }
-
-    private static void initFeatures() {
-        // Init all features. Now resources (i.e I18n) are available.
-        FeatureRegistry.init();
     }
 
     private static void parseVersion(String versionString) {
@@ -135,5 +137,11 @@ public final class WynntilsMod {
                 return isDevelopmentEnvironment() ? "Yes" : "No";
             }
         });
+    }
+
+    public enum ModLoader {
+        Forge,
+        Fabric,
+        Quilt
     }
 }
