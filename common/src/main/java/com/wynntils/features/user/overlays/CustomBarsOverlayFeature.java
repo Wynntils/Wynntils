@@ -25,10 +25,10 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.utils.WynnBossBarUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -176,19 +176,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            LerpingBossEvent poolEvent = null;
-            String bloodPoolPercent = "";
-            for (LerpingBossEvent event :
-                    McUtils.mc().gui.getBossOverlay().events.values()) {
-                Matcher matcher = BLOOD_POOL_PATTERN.matcher(ComponentUtils.getCoded(event.getName()));
-                if (matcher.matches()) {
-                    poolEvent = event;
-                    bloodPoolPercent = matcher.group(1);
-                    break;
-                }
-            }
+            Pair<LerpingBossEvent, Matcher> matcherPair = WynnBossBarUtils.getLerpingBossEvent(BLOOD_POOL_PATTERN);
+            LerpingBossEvent poolEvent = matcherPair.a;
 
             if (poolEvent == null) return;
+
+            String bloodPoolPercent = matcherPair.b.group(1);
 
             float renderY = getModifiedRenderY();
 
@@ -301,21 +294,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            LerpingBossEvent bankEvent = null;
-            String manaBankPercent = "";
-            String manaBankMaxPercent = "";
-            for (LerpingBossEvent event :
-                    McUtils.mc().gui.getBossOverlay().events.values()) {
-                Matcher matcher = MANA_BANK_PATTERN.matcher(ComponentUtils.getCoded(event.getName()));
-                if (matcher.matches()) {
-                    bankEvent = event;
-                    manaBankPercent = matcher.group(1);
-                    manaBankMaxPercent = matcher.group(2);
-                    break;
-                }
-            }
+            Pair<LerpingBossEvent, Matcher> matcherPair = WynnBossBarUtils.getLerpingBossEvent(MANA_BANK_PATTERN);
+            LerpingBossEvent bankEvent = matcherPair.a;
 
             if (bankEvent == null) return;
+
+            String manaBankPercent = matcherPair.b.group(1);
+            String manaBankMaxPercent = matcherPair.b.group(2);
 
             float renderY = getModifiedRenderY();
 
