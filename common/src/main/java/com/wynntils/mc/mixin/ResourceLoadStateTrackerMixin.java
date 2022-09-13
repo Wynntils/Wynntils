@@ -17,6 +17,6 @@ public abstract class ResourceLoadStateTrackerMixin {
     private void onResourceManagerReloadPost(CallbackInfo info) {
         // This is the signal that Minecraft has finished loading the initial resources,
         // or a resource pack has been reloaded
-        WynntilsMod.onResourcesFinishedLoading();
+        WynntilsMod.onResourcesLoaded();
     }
 }

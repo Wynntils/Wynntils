@@ -27,7 +27,6 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
-    private static boolean featuresInited = false;
     private static IEventBus eventBus;
 
     public static ModLoader getModLoader() {
@@ -78,19 +77,18 @@ public final class WynntilsMod {
         LOGGER.info(msg);
     }
 
-    public static void onResourcesFinishedLoading() {
-        if (featuresInited) return;
-
+    // Ran when resources (including I18n) are available
+    public static void onResourcesLoaded() {
         try {
-            initFeatures();
+            FeatureRegistry.init();
         } catch (Throwable t) {
             LOGGER.error("Failed to initialize Wynntils features", t);
             return;
         }
     }
 
-        // At this point, no resources (including I18n) are available
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment) {
+        // Note that at this point, no resources (including I18n) are available
 
         // Setup mod core properties
         modLoader = loader;
@@ -108,7 +106,7 @@ public final class WynntilsMod {
 
     private static void parseVersion(String versionString) {
         if (isDevelopmentEnvironment()) {
-            LOGGER.info("Wynntils running on version " + versionString);
+            LOGGER.info("Wynntils running on version {}", versionString);
         }
 
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
