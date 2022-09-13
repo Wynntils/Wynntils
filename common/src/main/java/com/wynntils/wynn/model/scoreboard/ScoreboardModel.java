@@ -75,6 +75,7 @@ public final class ScoreboardModel extends Model {
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
         LinkedList<ScoreboardLineChange> queueCopy = new LinkedList<>(queuedChanges);
+        queuedChanges.clear();
 
         Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
 
@@ -278,7 +279,7 @@ public final class ScoreboardModel extends Model {
                 if (currentSegment != null) {
                     if (currentSegment.getType() != value) {
                         WynntilsMod.error(
-                                "ScoreboardManager: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
+                                "ScoreboardModel: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
                     }
                     continue;
                 }
