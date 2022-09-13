@@ -93,12 +93,21 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
 
         int renderedCount = 0;
 
+        this.hovered = null;
+
         for (int i = 0; i < itemCount; i++) {
             int top = this.y0 + 1 + renderedCount * this.itemHeight + this.headerHeight;
             int bottom = top + this.itemHeight;
             if (getRowTop(i) < this.y0 || bottom > this.y1) continue;
 
             OverlayEntry entry = this.getEntry(i);
+
+            if (top + 1 <= mouseY
+                    && top + 1 + this.itemHeight >= mouseY
+                    && this.getRowLeft() <= mouseX
+                    && this.getRowLeft() + this.getRowWidth() >= mouseX) {
+                this.hovered = entry;
+            }
 
             entry.render(
                     poseStack,
@@ -114,6 +123,13 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
 
             renderedCount++;
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.updateScrollingState(mouseX, mouseY, button);
+
+        return this.hovered != null && this.hovered.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
