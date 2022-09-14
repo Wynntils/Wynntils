@@ -13,7 +13,10 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class WynnBossBarUtils {
 
-    public static Pair<LerpingBossEvent, Matcher> getLerpingBossEvent(Pattern titlePattern) {
+    private static final Pattern BLOOD_POOL_PATTERN = Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]");
+    private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
+
+    private static Pair<LerpingBossEvent, Matcher> getLerpingBossEvent(Pattern titlePattern) {
         LerpingBossEvent poolEvent = null;
         Matcher matcher = null;
 
@@ -26,5 +29,17 @@ public class WynnBossBarUtils {
         }
 
         return new Pair<>(poolEvent, matcher);
+    }
+
+    public static Pair<LerpingBossEvent, Pair<String, String>> getManaBankEvent() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(MANA_BANK_PATTERN);
+
+        return new Pair<>(pair.a, new Pair<>(pair.b.group(1), pair.b.group(2)));
+    }
+
+    public static Pair<LerpingBossEvent, String> getBloodPoolEvent() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(BLOOD_POOL_PATTERN);
+
+        return new Pair<>(pair.a, pair.b.group(1));
     }
 }
