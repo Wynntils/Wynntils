@@ -238,7 +238,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
             float progress = (this.flip ? -1 : 1) * awakenedBar.progress();
             renderColoredBar(poseStack, renderY, this.textColor, progress);
         }
-
     }
 
     public static class FocusBarOverlay extends HealthBarOverlay {
