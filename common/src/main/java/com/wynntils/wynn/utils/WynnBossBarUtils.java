@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class WynnBossBarUtils {
+    public static final ManaBank NO_MANA_BANK = new ManaBank(0, 0, -1);
+    public static final BloodPool NO_BLOOD_POOL = new BloodPool(0, -1);
 
     private static final Pattern BLOOD_POOL_PATTERN = Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]");
     private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
@@ -31,15 +33,38 @@ public class WynnBossBarUtils {
         return new Pair<>(poolEvent, matcher);
     }
 
-    public static Pair<LerpingBossEvent, Pair<String, String>> getManaBankEvent() {
+    public static ManaBank getManaBank() {
         Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(MANA_BANK_PATTERN);
 
-        return new Pair<>(pair.a, new Pair<>(pair.b.group(1), pair.b.group(2)));
+        if (pair.a == null) return NO_MANA_BANK;
+
+        try {
+            int manaBankPercent = Integer.parseInt(pair.b.group(1));
+            int manaBankMaxPercent = Integer.parseInt(pair.b.group(2));
+            float progress = pair.a.getProgress();
+
+            return new ManaBank(manaBankPercent, manaBankMaxPercent, progress);
+        } catch (NumberFormatException e) {
+            return NO_MANA_BANK;
+        }
     }
 
-    public static Pair<LerpingBossEvent, String> getBloodPoolEvent() {
+    public static BloodPool getBloodPool() {
         Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(BLOOD_POOL_PATTERN);
 
-        return new Pair<>(pair.a, pair.b.group(1));
+        if (pair.a == null) return NO_BLOOD_POOL;
+
+        try {
+            int manaBankPercent = Integer.parseInt(pair.b.group(1));
+            float progress = pair.a.getProgress();
+
+            return new BloodPool(manaBankPercent, progress);
+        } catch (NumberFormatException e) {
+            return NO_BLOOD_POOL;
+        }
     }
+
+    public record ManaBank(int percent, int maxPercent, float progress) {}
+
+    public record BloodPool(int percent, float progress) {}
 }

@@ -25,12 +25,10 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.utils.WynnBossBarUtils;
 import com.wynntils.wynn.utils.WynnUtils;
-import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -172,19 +170,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            Pair<LerpingBossEvent, String> matcherPair = WynnBossBarUtils.getBloodPoolEvent();
-            LerpingBossEvent poolEvent = matcherPair.a;
-
-            if (poolEvent == null) return;
-
-            String bloodPoolPercent = matcherPair.b;
+            WynnBossBarUtils.BloodPool bloodPool = WynnBossBarUtils.getBloodPool();
+            if (bloodPool.equals(WynnBossBarUtils.NO_BLOOD_POOL)) return;
 
             float renderY = getModifiedRenderY();
 
-            String text = "Blood Pool: " + bloodPoolPercent + "%";
+            String text = "Blood Pool: " + bloodPool.percent() + "%";
             renderText(poseStack, renderY, text);
 
-            float progress = (this.flip ? -1 : 1) * poolEvent.getProgress();
+            float progress = (this.flip ? -1 : 1) * bloodPool.progress();
             renderBar(poseStack, renderY, progress);
         }
     }
@@ -290,20 +284,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            Pair<LerpingBossEvent, Pair<String, String>> matcherPair = WynnBossBarUtils.getManaBankEvent();
-            LerpingBossEvent bankEvent = matcherPair.a;
-
-            if (bankEvent == null) return;
-
-            String manaBankPercent = matcherPair.b.a;
-            String manaBankMaxPercent = matcherPair.b.b;
+            WynnBossBarUtils.ManaBank manaBank = WynnBossBarUtils.getManaBank();
+            if (manaBank.equals(WynnBossBarUtils.NO_MANA_BANK)) return;
 
             float renderY = getModifiedRenderY();
 
-            String text = "Mana Bank: " + manaBankPercent + " ✺ " + manaBankMaxPercent;
+            String text = "Mana Bank: " + manaBank.percent() + " ✺ " + manaBank.maxPercent();
             renderText(poseStack, renderY, text);
 
-            float progress = (flip ? -1 : 1) * bankEvent.getProgress();
+            float progress = (flip ? -1 : 1) * manaBank.progress();
             renderBar(poseStack, renderY, progress);
         }
     }
