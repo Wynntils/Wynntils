@@ -191,13 +191,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class AwakenedProgressBarOverlay extends Overlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.textShadow")
+        @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.flip")
+        @Config
         public boolean flip = false;
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.textColor")
+        @Config
         public CustomColor textColor = CommonColors.WHITE;
 
         public AwakenedProgressBarOverlay() {
@@ -230,7 +230,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                         case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
                     };
 
-            String text = "Awakened: " + awakenedBar.current() + "/200";
+            String text = "Awakened: " + awakenedBar.current() + "/" + awakenedBar.max();
             renderText(poseStack, renderY, text);
 
             float progress = (this.flip ? -1 : 1) * awakenedBar.progress();
@@ -275,13 +275,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class FocusBarOverlay extends Overlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.textShadow")
+        @Config()
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.flip")
+        @Config()
         public boolean flip = false;
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.textColor")
+        @Config()
         public CustomColor textColor = CommonColors.YELLOW;
 
         public FocusBarOverlay() {
