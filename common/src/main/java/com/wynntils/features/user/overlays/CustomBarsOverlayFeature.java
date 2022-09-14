@@ -25,20 +25,16 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.utils.WynnBossBarUtils;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-    private static final Pattern BLOOD_POOL_PATTERN = Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]");
-    private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
 
     @Config
     public boolean shouldDisplayOnActionBar = false;
@@ -176,19 +172,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            LerpingBossEvent poolEvent = null;
-            String bloodPoolPercent = "";
-            for (LerpingBossEvent event :
-                    McUtils.mc().gui.getBossOverlay().events.values()) {
-                Matcher matcher = BLOOD_POOL_PATTERN.matcher(ComponentUtils.getCoded(event.getName()));
-                if (matcher.matches()) {
-                    poolEvent = event;
-                    bloodPoolPercent = matcher.group(1);
-                    break;
-                }
-            }
+            Pair<LerpingBossEvent, String> matcherPair = WynnBossBarUtils.getBloodPoolEvent();
+            LerpingBossEvent poolEvent = matcherPair.a;
 
             if (poolEvent == null) return;
+
+            String bloodPoolPercent = matcherPair.b;
 
             float renderY = getModifiedRenderY();
 
@@ -301,21 +290,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            LerpingBossEvent bankEvent = null;
-            String manaBankPercent = "";
-            String manaBankMaxPercent = "";
-            for (LerpingBossEvent event :
-                    McUtils.mc().gui.getBossOverlay().events.values()) {
-                Matcher matcher = MANA_BANK_PATTERN.matcher(ComponentUtils.getCoded(event.getName()));
-                if (matcher.matches()) {
-                    bankEvent = event;
-                    manaBankPercent = matcher.group(1);
-                    manaBankMaxPercent = matcher.group(2);
-                    break;
-                }
-            }
+            Pair<LerpingBossEvent, Pair<String, String>> matcherPair = WynnBossBarUtils.getManaBankEvent();
+            LerpingBossEvent bankEvent = matcherPair.a;
 
             if (bankEvent == null) return;
+
+            String manaBankPercent = matcherPair.b.a;
+            String manaBankMaxPercent = matcherPair.b.b;
 
             float renderY = getModifiedRenderY();
 
