@@ -187,7 +187,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
             float progress = (this.flip ? -1 : 1) * bloodPool.progress();
             renderBar(poseStack, renderY, progress);
         }
-
     }
 
     public static class AwakenedProgressBarOverlay extends Overlay {
@@ -217,7 +216,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
             WynnBossBarUtils.AwakenedBar awakenedBar = WynnBossBarUtils.getAwakenedBar();
             if (awakenedBar.equals(WynnBossBarUtils.NO_AWAKENED_PROGRESS)) return;
-
 
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
