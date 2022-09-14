@@ -238,7 +238,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+        protected void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;
             final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
 
@@ -273,13 +273,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class FocusBarOverlay extends Overlay {
-        @Config()
+        @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        @Config()
+        @Config
         public boolean flip = false;
 
-        @Config()
+        @Config
         public CustomColor textColor = CommonColors.YELLOW;
 
         public FocusBarOverlay() {
@@ -321,7 +321,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+        protected void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;
             final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
 
