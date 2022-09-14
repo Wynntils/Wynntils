@@ -29,7 +29,6 @@ import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.utils.WynnBossBarUtils;
 import com.wynntils.wynn.utils.WynnUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -146,25 +145,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     progress);
         }
 
-        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
-            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
-            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
-
-            RenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    universalBarTexture,
-                    color,
-                    this.getRenderX(),
-                    renderY + 10,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + 10 + renderedHeight,
-                    0,
-                    0,
-                    universalBarTexture.width(),
-                    universalBarTexture.height(),
-                    progress);
-        }
-
         protected void renderText(PoseStack poseStack, float renderY, String text) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -207,9 +187,19 @@ public class CustomBarsOverlayFeature extends UserFeature {
             float progress = (this.flip ? -1 : 1) * bloodPool.progress();
             renderBar(poseStack, renderY, progress);
         }
+
     }
 
-    public static class AwakenedProgressBarOverlay extends HealthBarOverlay {
+    public static class AwakenedProgressBarOverlay extends Overlay {
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.textShadow")
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.flip")
+        public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.textColor")
+        public CustomColor textColor = CommonColors.WHITE;
+
         public AwakenedProgressBarOverlay() {
             super(
                     new OverlayPosition(
@@ -219,8 +209,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
                     new GuiScaledOverlaySize(81, 21));
-
-            textColor = CustomColor.fromChatFormatting(ChatFormatting.WHITE);
         }
 
         @Override
@@ -230,7 +218,17 @@ public class CustomBarsOverlayFeature extends UserFeature {
             WynnBossBarUtils.AwakenedBar awakenedBar = WynnBossBarUtils.getAwakenedBar();
             if (awakenedBar.equals(WynnBossBarUtils.NO_AWAKENED_PROGRESS)) return;
 
-            float renderY = getModifiedRenderY();
+
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            float renderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                    };
 
             String text = "Awakened: " + awakenedBar.current() + "/200";
             renderText(poseStack, renderY, text);
@@ -239,9 +237,53 @@ public class CustomBarsOverlayFeature extends UserFeature {
             renderColoredBar(poseStack, renderY, this.textColor, progress);
         }
 
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    color,
+                    this.getRenderX(),
+                    renderY + 10,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + 10 + renderedHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            text,
+                            this.getRenderX(),
+                            this.getRenderX() + this.getWidth(),
+                            renderY,
+                            0,
+                            this.textColor,
+                            this.getRenderHorizontalAlignment(),
+                            this.textShadow);
+        }
     }
 
-    public static class FocusBarOverlay extends HealthBarOverlay {
+    public static class FocusBarOverlay extends Overlay {
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.textShadow")
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.flip")
+        public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.focusBar.textColor")
+        public CustomColor textColor = CommonColors.YELLOW;
+
         public FocusBarOverlay() {
             super(
                     new OverlayPosition(
@@ -251,7 +293,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
                     new GuiScaledOverlaySize(81, 21));
-            this.textColor = CustomColor.fromChatFormatting(ChatFormatting.YELLOW);
         }
 
         @Override
@@ -261,13 +302,58 @@ public class CustomBarsOverlayFeature extends UserFeature {
             WynnBossBarUtils.Focus focus = WynnBossBarUtils.getFocusBar();
             if (focus.equals(WynnBossBarUtils.NO_FOCUS)) return;
 
-            float renderY = getModifiedRenderY();
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            float renderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                    };
 
             String text = "Focus: " + focus.current() + "/" + focus.max();
             renderText(poseStack, renderY, text);
 
             float progress = (this.flip ? -1 : 1) * focus.progress();
-            renderColoredBar(poseStack, renderY, textColor, progress);
+            renderColoredBar(poseStack, renderY, this.textColor, progress);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    color,
+                    this.getRenderX(),
+                    renderY + 10,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + 10 + renderedHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            text,
+                            this.getRenderX(),
+                            this.getRenderX() + this.getWidth(),
+                            renderY,
+                            0,
+                            this.textColor,
+                            this.getRenderHorizontalAlignment(),
+                            this.textShadow);
         }
     }
 
