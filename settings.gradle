@@ -7,9 +7,14 @@ pluginManagement {
     }
 }
 
-include("common")
-include("fabric")
-include("quilt")
-include("forge")
+include(
+        "wynntils-features",
+        "wynntils-mc",
+        "wynntils-wynn",
+        "common",
+        "fabric",
+        "quilt",
+        "forge"
+)
 
 rootProject.name = "Wynntils"

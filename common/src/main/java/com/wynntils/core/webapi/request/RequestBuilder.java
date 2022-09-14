@@ -8,7 +8,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebReader;
 import com.wynntils.utils.MD5Verification;
 import com.wynntils.utils.ThrowingBiPredicate;

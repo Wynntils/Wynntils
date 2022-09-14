@@ -1,0 +1,11 @@
+dependencies {
+    // This dependency is provided by forge naturally and by fabric in its build.gradle
+    compileOnly "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
+
+    compileOnly(project(":common"))
+    compileOnly(project(":wynntils-mc"))
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}

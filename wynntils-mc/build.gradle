@@ -6,9 +6,9 @@ dependencies {
     // This dependency is provided by forge naturally and by fabric in its build.gradle
     compileOnly "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
 
-    implementation(project(":wynntils-features"))
+    compileOnly(project(":common"))
 }
 
-architectury {
-    common(rootProject.enabled_platforms.split(","))
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
