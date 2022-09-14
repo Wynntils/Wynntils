@@ -146,6 +146,25 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     progress);
         }
 
+        public void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    color,
+                    this.getRenderX(),
+                    renderY + 10,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + 10 + renderedHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
+
         protected void renderText(PoseStack poseStack, float renderY, String text) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -194,7 +213,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public AwakenedProgressBarOverlay() {
             super(
                     new OverlayPosition(
-                            -30,
+                            -70,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -217,8 +236,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
             renderText(poseStack, renderY, text);
 
             float progress = (this.flip ? -1 : 1) * awakenedBar.progress();
-            renderBar(poseStack, renderY, progress);
+            renderColoredBar(poseStack, renderY, this.textColor, progress);
         }
+
     }
 
     public static class FocusBarOverlay extends HealthBarOverlay {
@@ -231,7 +251,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
                     new GuiScaledOverlaySize(81, 21));
-            this.textColor = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
+            this.textColor = CustomColor.fromChatFormatting(ChatFormatting.YELLOW);
         }
 
         @Override
@@ -247,7 +267,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             renderText(poseStack, renderY, text);
 
             float progress = (this.flip ? -1 : 1) * focus.progress();
-            renderBar(poseStack, renderY, progress);
+            renderColoredBar(poseStack, renderY, textColor, progress);
         }
     }
 
