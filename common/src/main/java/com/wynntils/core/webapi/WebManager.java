@@ -27,6 +27,7 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -71,6 +72,8 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
 
+    private static String currentSplash = "";
+
     private static TerritoryUpdateThread territoryUpdateThread;
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
@@ -87,6 +90,8 @@ public final class WebManager extends CoreManager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
+
+        WebManager.updateCurrentSplash();
 
         loadCommonObjects();
     }
@@ -368,6 +373,13 @@ public final class WebManager extends CoreManager {
         }
     }
 
+    public static void updateCurrentSplash() {
+        if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
+
+        List<String> splashes = apiUrls.getList("Splashes");
+        currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
+    }
+
     private static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", USER_AGENT);
@@ -428,6 +440,10 @@ public final class WebManager extends CoreManager {
 
     public static boolean isSetup() {
         return setup;
+    }
+
+    public static String getCurrentSplash() {
+        return currentSplash;
     }
 
     public static Optional<WebReader> getApiUrls() {

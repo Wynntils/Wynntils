@@ -510,8 +510,9 @@
   "screens.wynntils.settingsScreen.title": "Wynntils Settings",
   "screens.wynntils.settingsScreen.uncategorized": "Uncategorized",
   "screens.wynntils.wynntilsMenu.close": "Done",
+  "screens.wynntils.wynntilsMenu.description": "Welcome to Wynntils! You can see your statistics on the right or select one of the options above for more features.",
   "screens.wynntils.wynntilsMenu.name": "Wynntils Menu",
   "screens.wynntils.wynntilsMenu.openOverlayMenu": "Overlay Management",
   "screens.wynntils.wynntilsMenu.openSettingMenu": "Feature Settings",
-  "screens.wynntils.wynntilsMenu.title": "Wynntils Menu"
+  "screens.wynntils.wynntilsMenu.userProfile": "User Profile"
 }

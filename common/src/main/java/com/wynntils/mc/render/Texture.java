@@ -26,6 +26,15 @@ public enum Texture {
     UNIVERSAL_BAR("universal_bar.png", 81, 16),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
+    // Quest book related
+    QUEST_BOOK_BACKGROUND("quest_book.png", 339, 220),
+    QUEST_BOOK_TITLE("quest_book_title.png", 168, 33),
+
+    // Icons
+    OVERLAYS_ICON("overlays_icon.png", 19, 38),
+    QUEST_BOOK_ICON("quests_icon.png", 24, 34),
+    SETTINGS_ICON("settings_icon.png", 17, 34),
+
     // Map related
     GILDED_MAP_TEXTURES("map/gilded_map_textures.png", 262, 524),
     PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
