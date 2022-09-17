@@ -39,6 +39,7 @@ import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
+import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
@@ -125,6 +126,7 @@ public final class FeatureRegistry {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

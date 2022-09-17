@@ -418,6 +418,7 @@
   "feature.wynntils.wynncraftPauseScreen.name": "Wynncraft Custom Pause Screen",
   "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
   "feature.wynntils.wynntilsPauseScreen.name": "Wynntils Custom Pause Screen",
+  "feature.wynntils.wynntilsQuestBook.name": "Wynncraft Custom Quest Book",
   "function.wynntils.class.description": "Name of your current class",
   "function.wynntils.class.name": "Class",
   "function.wynntils.clock.description": "The current time, formatted in the current locale style",
