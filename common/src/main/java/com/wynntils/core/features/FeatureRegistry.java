@@ -45,6 +45,7 @@ import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
+import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
@@ -125,6 +126,7 @@ public final class FeatureRegistry {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new AbilityTreeScrollFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

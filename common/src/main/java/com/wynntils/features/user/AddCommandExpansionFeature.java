@@ -62,6 +62,7 @@ public class AddCommandExpansionFeature extends UserFeature {
         root.addChild(literal("hub").build());
         root.addChild(literal("itemlock").build());
         root.addChild(literal("kill").build());
+        root.addChild(literal("hub").build());
         root.addChild(literal("lobby").build());
         root.addChild(literal("pet").build());
         root.addChild(literal("pets").build());
