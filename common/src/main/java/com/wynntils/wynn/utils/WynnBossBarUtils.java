@@ -75,7 +75,7 @@ public class WynnBossBarUtils {
 
         try {
             int currentAwakenedProgress = Integer.parseInt(pair.b.group(1));
-            int maxAwakenedProgress = Integer.parseInt(pair.b.group(1));
+            int maxAwakenedProgress = Integer.parseInt(pair.b.group(2));
             float progress = pair.a.getProgress();
 
             return new AwakenedBar(currentAwakenedProgress, maxAwakenedProgress, progress);
