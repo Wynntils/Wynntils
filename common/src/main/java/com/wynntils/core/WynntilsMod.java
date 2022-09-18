@@ -80,7 +80,7 @@ public final class WynntilsMod {
     }
 
     // Ran when resources (including I18n) are available
-    public static void onResourcesFinishedReload() {
+    public static void onFinishedInit() {
         try {
             FeatureRegistry.init();
         } catch (Throwable t) {
@@ -90,7 +90,7 @@ public final class WynntilsMod {
     }
 
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment) {
-        // Note that at this point, no resources (including I18n) are available
+        // Note that at this point, no resources (including I18n) are available, so we postpone features until then
 
         // Setup mod core properties
         modLoader = loader;
