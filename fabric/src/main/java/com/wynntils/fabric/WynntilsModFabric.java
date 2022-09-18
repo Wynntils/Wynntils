@@ -14,14 +14,14 @@ public class WynntilsModFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Optional<ModContainer> wynntilsMod = FabricLoader.getInstance().getModContainer("wynntils");
-        if (wynntilsMod.isPresent()) {
-            WynntilsMod.init(
-                    WynntilsMod.ModLoader.Fabric,
-                    wynntilsMod.get().getMetadata().getVersion().getFriendlyString(),
-                    FabricLoader.getInstance().isDevelopmentEnvironment());
+        if (wynntilsMod.isEmpty()) {
+            WynntilsMod.error("Where is my Wynntils? :(");
             return;
         }
 
-        WynntilsMod.error("Where is my Wynntils? :(");
+        WynntilsMod.init(
+                WynntilsMod.ModLoader.FABRIC,
+                wynntilsMod.get().getMetadata().getVersion().getFriendlyString(),
+                FabricLoader.getInstance().isDevelopmentEnvironment());
     }
 }

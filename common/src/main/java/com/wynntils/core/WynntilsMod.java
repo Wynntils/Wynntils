@@ -12,6 +12,8 @@ import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +80,7 @@ public final class WynntilsMod {
     }
 
     // Ran when resources (including I18n) are available
-    public static void onResourcesLoaded() {
+    public static void onResourcesFinishedReload() {
         try {
             FeatureRegistry.init();
         } catch (Throwable t) {
@@ -105,9 +107,7 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String versionString) {
-        if (isDevelopmentEnvironment()) {
-            LOGGER.info("Wynntils running on version {}", versionString);
-        }
+        LOGGER.info("Wynntils version {} (using {} on Minecraft {}) is now loaded", versionString, modLoader, Minecraft.getInstance().getLaunchedVersion());
 
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
 
@@ -138,8 +138,8 @@ public final class WynntilsMod {
     }
 
     public enum ModLoader {
-        Forge,
-        Fabric,
-        Quilt
+        FORGE,
+        FABRIC,
+        QUILT
     }
 }

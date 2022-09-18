@@ -13,6 +13,6 @@ public class WynntilsModQuilt implements ClientModInitializer {
     @Override
     public void onInitializeClient(ModContainer mod) {
         WynntilsMod.init(
-                WynntilsMod.ModLoader.Quilt, mod.metadata().version().raw(), QuiltLoader.isDevelopmentEnvironment());
+                WynntilsMod.ModLoader.QUILT, mod.metadata().version().raw(), QuiltLoader.isDevelopmentEnvironment());
     }
 }
