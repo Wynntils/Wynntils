@@ -27,11 +27,13 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.utils.WynnBossBarUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
+
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
@@ -58,20 +60,32 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay healthBarOverlay = new HealthBarOverlay();
 
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+
     @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay manaBarOverlay = new ManaBarOverlay();
 
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay manaBankBarOverlay = new ManaBankBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay focusBarOverlay = new FocusBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+
     public static class HealthBarOverlay extends Overlay {
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
         public HealthTexture healthTexture = HealthTexture.a;
 
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.textShadow")
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.flip")
         public boolean flip = false;
 
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.textColor")
         public CustomColor textColor = CommonColors.RED;
 
         public HealthBarOverlay() {
@@ -85,30 +99,38 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(81, 21));
         }
 
+        public HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
+            super(overlayPosition, guiScaledOverlaySize);
+        }
+
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
+            float renderY = getModifiedRenderY();
+
+            String text = ActionBarModel.getCurrentHealth() + " ❤ " + ActionBarModel.getMaxHealth();
+            renderText(poseStack, renderY, text);
+
+            float progress = (flip ? -ActionBarModel.getCurrentHealth() : ActionBarModel.getCurrentHealth())
+                    / (float) ActionBarModel.getMaxHealth();
+            renderBar(poseStack, renderY, progress);
+        }
+
+        protected float getModifiedRenderY() {
             final float renderedHeight = 10 + healthTexture.getHeight() * (this.getWidth() / 81);
 
-            float renderY =
-                    switch (this.getRenderVerticalAlignment()) {
-                        case Top -> this.getRenderY();
-                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
-                    };
+            return switch (this.getRenderVerticalAlignment()) {
+                case Top -> this.getRenderY();
+                case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+            };
+        }
 
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            ActionBarModel.getCurrentHealth() + " ❤ " + ActionBarModel.getMaxHealth(),
-                            this.getRenderX(),
-                            this.getRenderX() + this.getWidth(),
-                            renderY,
-                            0,
-                            this.textColor,
-                            this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        protected void renderBar(PoseStack poseStack, float renderY, float progress) {
             RenderUtils.drawProgressBar(
                     poseStack,
                     Texture.HEALTH_BAR,
@@ -120,18 +142,54 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     healthTexture.getTextureY1(),
                     81,
                     healthTexture.getTextureY2(),
-                    (flip ? -ActionBarModel.getCurrentHealth() : ActionBarModel.getCurrentHealth())
-                            / (float) ActionBarModel.getMaxHealth());
+                    progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            text,
+                            this.getRenderX(),
+                            this.getRenderX() + this.getWidth(),
+                            renderY,
+                            0,
+                            this.textColor,
+                            this.getRenderHorizontalAlignment(),
+                            this.textShadow);
+        }
+    }
+
+    public static class BloodPoolBarOverlay extends HealthBarOverlay {
+        public BloodPoolBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -30,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {}
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
+            WynnBossBarUtils.BloodPool bloodPool = WynnBossBarUtils.getBloodPool();
+            if (bloodPool.equals(WynnBossBarUtils.NO_BLOOD_POOL)) return;
+
+            float renderY = getModifiedRenderY();
+
+            String text = "Blood Pool: " + bloodPool.percent() + "%";
+            renderText(poseStack, renderY, text);
+
+            float progress = (this.flip ? -1 : 1) * bloodPool.progress();
+            renderBar(poseStack, renderY, progress);
+        }
     }
 
-    public static class ManaBarOverlay extends Overlay {
-        @Config
-        public ManaTexture manaTexture = ManaTexture.a;
-
+    public static class AwakenedProgressBarOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
@@ -139,6 +197,175 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public boolean flip = false;
 
         @Config
+        public CustomColor textColor = CommonColors.WHITE;
+
+        public AwakenedProgressBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -70,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+        }
+
+        @Override
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
+            WynnBossBarUtils.AwakenedBar awakenedBar = WynnBossBarUtils.getAwakenedBar();
+            if (awakenedBar.equals(WynnBossBarUtils.NO_AWAKENED_PROGRESS)) return;
+
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            float renderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                    };
+
+            String text = "Awakened: " + awakenedBar.current() + "/" + awakenedBar.max();
+            renderText(poseStack, renderY, text);
+
+            float progress = (this.flip ? -1 : 1) * awakenedBar.progress();
+            renderColoredBar(poseStack, renderY, this.textColor, progress);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        protected void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    color,
+                    this.getRenderX(),
+                    renderY + 10,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + 10 + renderedHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            text,
+                            this.getRenderX(),
+                            this.getRenderX() + this.getWidth(),
+                            renderY,
+                            0,
+                            this.textColor,
+                            this.getRenderHorizontalAlignment(),
+                            this.textShadow);
+        }
+    }
+
+    public static class FocusBarOverlay extends Overlay {
+        @Config
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
+        @Config
+        public boolean flip = false;
+
+        @Config
+        public CustomColor textColor = CommonColors.YELLOW;
+
+        public FocusBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -30,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+        }
+
+        @Override
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
+            WynnBossBarUtils.Focus focus = WynnBossBarUtils.getFocusBar();
+            if (focus.equals(WynnBossBarUtils.NO_FOCUS)) return;
+
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            float renderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                    };
+
+            String text = "Focus: " + focus.current() + "/" + focus.max();
+            renderText(poseStack, renderY, text);
+
+            float progress = (this.flip ? -1 : 1) * focus.progress();
+            renderColoredBar(poseStack, renderY, this.textColor, progress);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        protected void renderColoredBar(PoseStack poseStack, float renderY, CustomColor color, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+            final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    color,
+                    this.getRenderX(),
+                    renderY + 10,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + 10 + renderedHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            text,
+                            this.getRenderX(),
+                            this.getRenderX() + this.getWidth(),
+                            renderY,
+                            0,
+                            this.textColor,
+                            this.getRenderHorizontalAlignment(),
+                            this.textShadow);
+        }
+    }
+
+    public static class ManaBarOverlay extends Overlay {
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
+        public ManaTexture manaTexture = ManaTexture.a;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.textShadow")
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.flip")
+        public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.textColor")
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
 
         public ManaBarOverlay() {
@@ -152,23 +379,29 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(81, 21));
         }
 
+        public ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
+            super(overlayPosition, guiScaledOverlaySize);
+        }
+
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
-            final float renderedHeight = 10 + manaTexture.getHeight() * (this.getWidth() / 81);
+            float renderY = getModifiedRenderY();
 
-            float renderY =
-                    switch (this.getRenderVerticalAlignment()) {
-                        case Top -> this.getRenderY();
-                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
-                    };
+            String text = ActionBarModel.getCurrentMana() + " ✺ " + ActionBarModel.getMaxMana();
+            renderText(poseStack, renderY, text);
 
+            float progress = (flip ? -ActionBarModel.getCurrentMana() : ActionBarModel.getCurrentMana())
+                    / (float) ActionBarModel.getMaxMana();
+            renderBar(poseStack, renderY, progress);
+        }
+
+        protected void renderText(PoseStack poseStack, float renderY, String text) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            ActionBarModel.getCurrentMana() + " ✺ " + ActionBarModel.getMaxMana(),
+                            text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -176,6 +409,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             this.textColor,
                             this.getRenderHorizontalAlignment(),
                             this.textShadow);
+        }
+
+        protected void renderBar(PoseStack poseStack, float renderY, float progress) {
             RenderUtils.drawProgressBar(
                     poseStack,
                     Texture.MANA_BAR,
@@ -187,12 +423,50 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     manaTexture.getTextureY1(),
                     81,
                     manaTexture.getTextureY2(),
-                    (flip ? -ActionBarModel.getCurrentMana() : ActionBarModel.getCurrentMana())
-                            / (float) ActionBarModel.getMaxMana());
+                    progress);
+        }
+
+        protected float getModifiedRenderY() {
+            final float renderedHeight = 10 + manaTexture.getHeight() * (this.getWidth() / 81);
+
+            return switch (this.getRenderVerticalAlignment()) {
+                case Top -> this.getRenderY();
+                case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+            };
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
+    }
+
+    public static class ManaBankBarOverlay extends ManaBarOverlay {
+        public ManaBankBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -30,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+        }
+
+        @Override
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            if (!WynnUtils.onWorld()) return;
+
+            WynnBossBarUtils.ManaBank manaBank = WynnBossBarUtils.getManaBank();
+            if (manaBank.equals(WynnBossBarUtils.NO_MANA_BANK)) return;
+
+            float renderY = getModifiedRenderY();
+
+            String text = "Mana Bank: " + manaBank.percent() + " ✺ " + manaBank.maxPercent();
+            renderText(poseStack, renderY, text);
+
+            float progress = (flip ? -1 : 1) * manaBank.progress();
+            renderBar(poseStack, renderY, progress);
+        }
     }
 
     public enum HealthTexture {
