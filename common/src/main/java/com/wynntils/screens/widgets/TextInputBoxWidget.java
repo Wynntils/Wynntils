@@ -10,7 +10,8 @@ import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.screens.SearchableScreen;
+import com.wynntils.utils.KeyboardUtils;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -24,6 +25,9 @@ import org.lwjgl.glfw.GLFW;
 
 // FIXME: This is a very basic text box.
 public class TextInputBoxWidget extends AbstractWidget {
+    protected long lastKeyDownCheck = 0;
+    protected long firstKeyDown = 0;
+
     protected char defaultCursorChar = '_';
     protected Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
@@ -31,7 +35,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected long lastCursorSwitch = 0;
     protected boolean renderCursor = true;
 
-    protected final WynntilsSettingsScreen settingsScreen;
+    protected final SearchableScreen searchableScreen;
 
     public TextInputBoxWidget(
             int x,
@@ -40,34 +44,62 @@ public class TextInputBoxWidget extends AbstractWidget {
             int height,
             Component boxTitle,
             Consumer<String> onUpdateConsumer,
-            WynntilsSettingsScreen settingsScreen) {
+            SearchableScreen searchableScreen) {
         super(x, y, width, height, boxTitle);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.settingsScreen = settingsScreen;
+        this.searchableScreen = searchableScreen;
     }
 
     public TextInputBoxWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            Consumer<String> onUpdateConsumer,
-            WynntilsSettingsScreen settingsScreen) {
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
         super(x, y, width, height, TextComponent.EMPTY);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.settingsScreen = settingsScreen;
+        this.searchableScreen = searchableScreen;
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        checkForHeldBackspace();
+
         poseStack.pushPose();
 
         poseStack.translate(this.x, this.y, 0);
 
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
+        String renderedText = getRenderedText(this.width - 4);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        renderedText,
+                        2,
+                        this.width,
+                        2,
+                        0,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        FontRenderer.TextShadow.NORMAL);
+
+        poseStack.popPose();
+    }
+
+    protected void checkForHeldBackspace() {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_BACKSPACE)) {
+            if (firstKeyDown == 0) {
+                firstKeyDown = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() - firstKeyDown > 250
+                    && System.currentTimeMillis() - lastKeyDownCheck > 65) {
+                this.keyPressed(GLFW.GLFW_KEY_BACKSPACE, 0, 0);
+                lastKeyDownCheck = System.currentTimeMillis();
+            }
+        } else {
+            firstKeyDown = 0;
+        }
+    }
+
+    protected String getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
-        final float maxTextWidth = this.width - 4;
 
         String cursorChar = getRenderCursorChar();
 
@@ -102,20 +134,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             renderedText = builder.toString();
         }
-
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        renderedText,
-                        2,
-                        this.width,
-                        2,
-                        0,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        FontRenderer.TextShadow.NORMAL);
-
-        poseStack.popPose();
+        return renderedText;
     }
 
     @Override
@@ -127,7 +146,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-        settingsScreen.setFocusedTextInput(this);
+        searchableScreen.setFocusedTextInput(this);
 
         return false;
     }
@@ -180,7 +199,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean isFocused() {
-        return settingsScreen.getFocusedTextInput() == this;
+        return searchableScreen.getFocusedTextInput() == this;
     }
 
     @Override
@@ -198,7 +217,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void removeFocus() {
-        settingsScreen.setFocusedTextInput(null);
+        searchableScreen.setFocusedTextInput(null);
     }
 
     public void setTextBoxInput(String textBoxInput) {

@@ -44,7 +44,7 @@ public class WynntilsMenuScreen extends Screen {
 
         buttons.add(new WynntilsMenuButton(
                 Texture.QUEST_BOOK_ICON,
-                null,
+                new WynntilsQuestBookScreen(),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)

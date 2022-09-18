@@ -27,8 +27,21 @@ public enum Texture {
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
     // Quest book related
+    BACK_ARROW("back_arrow.png", 32, 9),
+    BACKWARD_ARROW("backward_arrow.png", 36, 10),
+    DIALOGUE_BUTTON("dialogue_button.png", 14, 11),
+    FORWARD_ARROW("forward_arrow.png", 36, 10),
     QUEST_BOOK_BACKGROUND("quest_book.png", 339, 220),
+    QUESTS_BUTTON("quests_button.png", 16, 16),
+    QUEST_BOOK_SEARCH("quest_book_search.png", 133, 23),
     QUEST_BOOK_TITLE("quest_book_title.png", 168, 33),
+    RELOAD_BUTTON("reload_button.png", 40, 20),
+
+    // Quest State Icons
+    QUEST_CANNOT_START("quest_cannot_start_icon.png", 7, 7),
+    QUEST_CAN_START("quest_can_start_icon.png", 11, 7),
+    QUEST_FINISHED("quest_finished_icon.png", 11, 7),
+    QUEST_STARTED("quest_started_icon.png", 7, 7),
 
     // Icons
     OVERLAYS_ICON("overlays_icon.png", 19, 38),

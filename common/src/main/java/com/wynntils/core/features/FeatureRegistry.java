@@ -32,7 +32,6 @@ import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
-import com.wynntils.features.user.QuestBookFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
@@ -116,7 +115,6 @@ public final class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
-        registerFeature(new QuestBookFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new SoulPointTimerFeature());

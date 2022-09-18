@@ -515,5 +515,9 @@
   "screens.wynntils.wynntilsMenu.name": "Wynntils Menu",
   "screens.wynntils.wynntilsMenu.openOverlayMenu": "Overlay Management",
   "screens.wynntils.wynntilsMenu.openSettingMenu": "Feature Settings",
-  "screens.wynntils.wynntilsMenu.userProfile": "User Profile"
+  "screens.wynntils.wynntilsMenu.userProfile": "User Profile",
+  "screens.wynntils.wynntilsQuestBook.description1": "Here you can see all quests available for you. You can also search for specific quests just by typing its name. You can go to the next page by clicking the two buttons or scrolling your mouse.",
+  "screens.wynntils.wynntilsQuestBook.description2": "You can pin and unpin a quest by clicking on it.",
+  "screens.wynntils.wynntilsQuestBook.name": "Wynntils Quest Book",
+  "screens.wynntils.wynntilsQuestBook.quests": "Quests"
 }

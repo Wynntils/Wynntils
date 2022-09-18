@@ -14,6 +14,7 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.SearchableScreen;
 import com.wynntils.screens.WynntilsMenuScreen;
 import com.wynntils.screens.settings.lists.FeatureList;
 import com.wynntils.screens.settings.lists.entries.FeatureEntry;
@@ -27,7 +28,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsSettingsScreen extends Screen {
+public class WynntilsSettingsScreen extends Screen implements SearchableScreen {
     private static final int BUTTON_WIDTH = 160;
     private static final int BUTTON_HEIGHT = 20;
     private static final int SEARCH_BAR_HEIGHT = 20;
@@ -226,10 +227,12 @@ public class WynntilsSettingsScreen extends Screen {
         this.selectedFeatureEntry = selectedFeatureEntry;
     }
 
+    @Override
     public TextInputBoxWidget getFocusedTextInput() {
         return focusedTextInput;
     }
 
+    @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
     }
