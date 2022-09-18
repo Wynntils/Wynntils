@@ -12,7 +12,6 @@ import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
@@ -107,7 +106,11 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String versionString) {
-        LOGGER.info("Wynntils version {} (using {} on Minecraft {}) is now loaded", versionString, modLoader, Minecraft.getInstance().getLaunchedVersion());
+        LOGGER.info(
+                "Wynntils version {} (using {} on Minecraft {}) is now loaded",
+                versionString,
+                modLoader,
+                Minecraft.getInstance().getLaunchedVersion());
 
         Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
 
