@@ -59,6 +59,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
@@ -409,6 +410,10 @@ public final class EventFactory {
 
     public static Event onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
         return post(new SubtitleSetTextEvent(packet.getText()));
+    }
+
+    public static Event onMouseScroll(double yOffset) {
+        return post(new MouseScrollEvent(yOffset > 0));
     }
 
     // endregion

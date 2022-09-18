@@ -84,6 +84,7 @@ public final class FeatureRegistry {
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
+        registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
@@ -126,7 +127,6 @@ public final class FeatureRegistry {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new AbilityTreeScrollFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

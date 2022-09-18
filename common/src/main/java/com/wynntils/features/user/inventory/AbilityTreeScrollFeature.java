@@ -30,7 +30,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         if (screen == null) return;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
-        if (!ABILITY_TREE_PATTERN.matcher(gui.getTitle().getString()).find()) return;
+        if (!ABILITY_TREE_PATTERN.matcher(gui.getTitle().getString()).matches()) return;
 
         boolean up = event.isScrollingUp() ^ invertScroll;
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
