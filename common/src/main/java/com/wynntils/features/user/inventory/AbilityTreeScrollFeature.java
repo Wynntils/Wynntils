@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.config.Config;
@@ -7,11 +11,10 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.ContainerUtils;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.regex.Pattern;
 
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class AbilityTreeScrollFeature extends UserFeature {
@@ -35,7 +38,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         boolean up = event.isScrollingUp() ^ invertScroll;
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
 
-        ContainerUtils.clickOnSlot(slot, gui.getMenu().containerId, gui.getMenu().getItems());
+        ContainerUtils.clickOnSlot(
+                slot, gui.getMenu().containerId, gui.getMenu().getItems());
     }
-
 }
