@@ -20,20 +20,32 @@ import com.wynntils.screens.widgets.QuestButton;
 import com.wynntils.screens.widgets.ReloadQuestsButton;
 import com.wynntils.screens.widgets.TextInputBoxWidget;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Pair;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.questbook.QuestStatus;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsQuestBookScreen extends Screen implements SearchableScreen {
     private static final int QUESTS_PER_PAGE = 13;
+    private static final List<Component> RELOAD_TOOLTIP = List.of(
+            new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.name").withStyle(ChatFormatting.WHITE),
+            new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.description")
+                    .withStyle(ChatFormatting.GRAY));
 
     private Widget hovered = null;
     private final QuestBookSearchWidget searchWidget;
@@ -50,7 +62,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                 0,
                 Texture.QUEST_BOOK_SEARCH.width(),
                 Texture.QUEST_BOOK_SEARCH.height(),
-                (s) -> {},
+                this::updateQuestsFilter,
                 this);
     }
 
@@ -111,6 +123,8 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         renderPageInfo(poseStack);
 
         poseStack.popPose();
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override
@@ -150,25 +164,43 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         return super.charTyped(codePoint, modifiers);
     }
 
-    private void reloadQuestButtons() {
-        for (QuestButton questButton : questButtons) {
-            this.removeWidget(questButton);
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta < 0) {
+            setCurrentPage(getCurrentPage() + 1);
+        } else if (delta > 0) {
+            setCurrentPage(getCurrentPage() - 1);
         }
 
-        questButtons.clear();
+        return true;
+    }
 
-        final int start = currentPage * QUESTS_PER_PAGE;
-        for (int i = start; i < Math.min(quests.size(), start + QUESTS_PER_PAGE); i++) {
-            int offset = i % QUESTS_PER_PAGE;
-            QuestButton questButton = new QuestButton(
-                    Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
-                    offset * 13 + 25,
-                    Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
-                    9,
-                    quests.get(i),
-                    this);
-            questButtons.add(questButton);
-            this.addRenderableWidget(questButton);
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        if (this.hovered instanceof ReloadQuestsButton) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    100,
+                    RELOAD_TOOLTIP,
+                    FontRenderer.getInstance().getFont(),
+                    true);
+            return;
+        }
+
+        if (this.hovered instanceof QuestButton questButton) {
+            QuestInfo questInfo = questButton.getQuestInfo();
+
+            List<Component> tooltipLines = getTooltipLinesForQuest(questInfo);
+
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    100,
+                    tooltipLines,
+                    FontRenderer.getInstance().getFont(),
+                    true);
         }
     }
 
@@ -285,6 +317,91 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NORMAL);
         poseStack.popPose();
+    }
+
+    private static List<Component> getTooltipLinesForQuest(QuestInfo questInfo) {
+        List<Component> tooltipLines = new ArrayList<>() {
+            {
+                add(new TextComponent(questInfo.getName())
+                        .withStyle(ChatFormatting.BOLD)
+                        .withStyle(ChatFormatting.WHITE));
+                add(questInfo.getStatus().getComponent());
+                add(new TextComponent(""));
+                add((CharacterManager.getCharacterInfo().getLevel() > questInfo.getLevel()
+                                ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
+                                : new TextComponent("✖").withStyle(ChatFormatting.RED))
+                        .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                        .append(new TextComponent(String.valueOf(questInfo.getLevel()))
+                                .withStyle(ChatFormatting.WHITE)));
+            }
+        };
+
+        for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
+            tooltipLines.add(new TextComponent("? ")
+                    .withStyle(ChatFormatting.YELLOW)
+                    .append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(new TextComponent(String.valueOf(additionalRequirement.b))
+                                    .withStyle(ChatFormatting.WHITE))));
+        }
+
+        tooltipLines.add(new TextComponent("-")
+                .withStyle(ChatFormatting.GREEN)
+                .append(new TextComponent(" Length: ").withStyle(ChatFormatting.GRAY))
+                .append(new TextComponent(StringUtils.capitalizeFirst(
+                                questInfo.getLength().toString().toLowerCase(Locale.ROOT)))
+                        .withStyle(ChatFormatting.WHITE)));
+        tooltipLines.add(new TextComponent(""));
+
+        if (questInfo.getStatus() != QuestStatus.COMPLETED) {
+            tooltipLines.add(new TextComponent(questInfo.getNextTask()).withStyle(ChatFormatting.GRAY));
+            tooltipLines.add(new TextComponent(""));
+        }
+
+        if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
+            tooltipLines.add(new TextComponent("Left click to pin it!")
+                    .withStyle(ChatFormatting.GREEN)
+                    .withStyle(ChatFormatting.BOLD));
+        }
+        tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
+                .withStyle(ChatFormatting.YELLOW)
+                .withStyle(ChatFormatting.BOLD));
+        tooltipLines.add(new TextComponent("Right to open on the wiki!")
+                .withStyle(ChatFormatting.GOLD)
+                .withStyle(ChatFormatting.BOLD));
+        return tooltipLines;
+    }
+
+    private void reloadQuestButtons() {
+        for (QuestButton questButton : questButtons) {
+            this.removeWidget(questButton);
+        }
+
+        questButtons.clear();
+
+        final int start = Math.max(0, currentPage * QUESTS_PER_PAGE);
+        for (int i = start; i < Math.min(quests.size(), start + QUESTS_PER_PAGE); i++) {
+            int offset = i % QUESTS_PER_PAGE;
+            QuestButton questButton = new QuestButton(
+                    Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                    offset * 13 + 25,
+                    Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                    9,
+                    quests.get(i),
+                    this);
+            questButtons.add(questButton);
+            this.addRenderableWidget(questButton);
+        }
+    }
+
+    public void reloadQuests() {
+        updateQuestsFilter(this.searchWidget.getTextBoxInput());
+    }
+
+    private void updateQuestsFilter(String searchText) {
+        this.setQuests(QuestBookManager.getQuests().stream()
+                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
+                .toList());
     }
 
     private float getTranslationY() {

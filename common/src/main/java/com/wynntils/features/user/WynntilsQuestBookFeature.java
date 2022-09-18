@@ -7,33 +7,45 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.WynntilsMenuScreen;
-import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsQuestBookFeature extends UserFeature {
-    private static final Pattern QUEST_BOOK_PATTERN = Pattern.compile("^§0\\[Pg. \\d+\\] §8.*§0 Quests$");
+    private static final String QUEST_BOOK_NAME = "§dQuest Book";
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
             "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(new WynntilsMenuScreen()));
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    @SubscribeEvent
+    public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown()) return;
 
-        String menuTitle = ComponentUtils.getCoded(event.getTitle());
+        tryCancelQuestBookOpen(event);
+    }
 
-        if (!QUEST_BOOK_PATTERN.matcher(menuTitle).matches()) {
-            return;
+    @SubscribeEvent
+    public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
+        if (McUtils.player().isShiftKeyDown()) return;
+
+        tryCancelQuestBookOpen(event);
+    }
+
+    private static void tryCancelQuestBookOpen(Event event) {
+        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+
+        if (itemInHand != null
+                && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
+            event.setCanceled(true);
+            McUtils.mc().setScreen(new WynntilsMenuScreen());
         }
-
-        event.setCanceled(true);
-        McUtils.mc().setScreen(new WynntilsMenuScreen());
     }
 }

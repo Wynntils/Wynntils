@@ -5,12 +5,25 @@
 package com.wynntils.wynn.model.questbook;
 
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public enum QuestStatus {
-    COMPLETED,
-    STARTED,
-    CAN_START,
-    CANNOT_START;
+    COMPLETED(new TextComponent("Completed!").withStyle(ChatFormatting.GREEN)),
+    STARTED(new TextComponent("Started...").withStyle(ChatFormatting.YELLOW)),
+    CAN_START(new TextComponent("Can start...").withStyle(ChatFormatting.YELLOW)),
+    CANNOT_START(new TextComponent("Cannot start...").withStyle(ChatFormatting.RED));
+
+    private final Component component;
+
+    QuestStatus(Component component) {
+        this.component = component;
+    }
+
+    public Component getComponent() {
+        return component;
+    }
 
     public static QuestStatus fromString(String str) {
         try {

@@ -60,7 +60,7 @@ public class ReloadQuestsButton extends AbstractButton {
     @Override
     public void onPress() {
         QuestBookManager.rescanQuestBook();
-        screen.setQuests(QuestBookManager.getQuests());
+        screen.reloadQuests();
     }
 
     @Override

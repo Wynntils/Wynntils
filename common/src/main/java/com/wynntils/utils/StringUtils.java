@@ -120,18 +120,18 @@ public final class StringUtils {
         searchTerm = searchTerm.toLowerCase(Locale.ROOT);
         toMatch = toMatch.toLowerCase(Locale.ROOT);
 
-        int lastMatchIndex = 0;
+        int firstIndexToMatch = 0;
 
         for (int i = 0; i < searchTerm.length(); i++) {
             char currentChar = searchTerm.charAt(i);
 
-            int indexOfFirstMatch = toMatch.indexOf(currentChar, lastMatchIndex);
+            int indexOfFirstMatch = toMatch.indexOf(currentChar, firstIndexToMatch);
 
             if (indexOfFirstMatch == -1) {
                 return false;
             }
 
-            lastMatchIndex = indexOfFirstMatch;
+            firstIndexToMatch = indexOfFirstMatch + 1;
         }
 
         return true;

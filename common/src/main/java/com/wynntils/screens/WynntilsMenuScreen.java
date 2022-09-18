@@ -48,39 +48,42 @@ public class WynntilsMenuScreen extends Screen {
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TextComponent("Quest Book")
+                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.questBook.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TextComponent("See and pin all your currently available quests.")
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.questBook.description")
                                 .withStyle(ChatFormatting.GRAY),
                         new TextComponent(""),
-                        new TextComponent("Left click to select").withStyle(ChatFormatting.GREEN))));
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.SETTINGS_ICON,
                 new WynntilsSettingsScreen(),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TextComponent("Configuration")
+                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.configs.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TextComponent("Change the settings the way you want.").withStyle(ChatFormatting.GRAY),
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.configs.description")
+                                .withStyle(ChatFormatting.GRAY),
                         new TextComponent(""),
-                        new TextComponent("Left click to select").withStyle(ChatFormatting.GREEN))));
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.OVERLAYS_ICON,
                 new OverlaySelectionScreen(),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TextComponent("Overlay Configuration")
+                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.overlayConfig.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TextComponent(
-                                        "Enable or disable and change the positions and sizes of various Wynntils overlays.")
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.overlayConfig.description")
                                 .withStyle(ChatFormatting.GRAY),
                         new TextComponent(""),
-                        new TextComponent("Left click to select").withStyle(ChatFormatting.GREEN))));
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
 
         assert buttons.size() <= 8;
     }
