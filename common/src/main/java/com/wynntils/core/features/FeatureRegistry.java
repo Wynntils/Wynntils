@@ -39,6 +39,7 @@ import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.WynntilsQuestBookFeature;
+import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
@@ -83,6 +84,7 @@ public final class FeatureRegistry {
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
+        registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
