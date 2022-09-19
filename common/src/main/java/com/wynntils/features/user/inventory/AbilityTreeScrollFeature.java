@@ -29,7 +29,6 @@ public class AbilityTreeScrollFeature extends UserFeature {
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {
         Screen screen = McUtils.mc().screen;
-        if (screen == null) return;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
         if (!ABILITY_TREE_PATTERN.matcher(gui.getTitle().getString()).matches()) return;
