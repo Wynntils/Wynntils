@@ -132,6 +132,10 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
 
         renderButtons(poseStack, mouseX, mouseY, partialTick);
 
+        if (quests.isEmpty()) {
+            renderNoQuestsHelper(poseStack);
+        }
+
         renderDescription(poseStack);
 
         renderPageInfo(poseStack);
@@ -208,6 +212,22 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
     @SubscribeEvent
     public void onMenuClose(MenuEvent.MenuClosedEvent event) {
         event.setCanceled(true);
+    }
+
+    private static void renderNoQuestsHelper(PoseStack poseStack) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        I18n.get("screens.wynntils.wynntilsQuestBook.tryReload"),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        0,
+                        Texture.QUEST_BOOK_BACKGROUND.height(),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Middle,
+                        FontRenderer.TextShadow.NONE);
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

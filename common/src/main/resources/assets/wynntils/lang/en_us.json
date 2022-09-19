@@ -531,5 +531,6 @@
   "screens.wynntils.wynntilsQuestBook.name": "Wynntils Quest Book",
   "screens.wynntils.wynntilsQuestBook.quests": "Quests",
   "screens.wynntils.wynntilsQuestBook.reload.description": "Reloads all quest data.",
-  "screens.wynntils.wynntilsQuestBook.reload.name": "Reload Button"
+  "screens.wynntils.wynntilsQuestBook.reload.name": "Reload Button",
+  "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner."
 }
