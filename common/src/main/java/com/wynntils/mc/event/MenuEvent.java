@@ -38,6 +38,7 @@ public abstract class MenuEvent extends Event {
     }
 
     /** Fired for Menu closed events */
+    @Cancelable
     public static class MenuClosedEvent extends MenuEvent {
         private final int containerId;
 

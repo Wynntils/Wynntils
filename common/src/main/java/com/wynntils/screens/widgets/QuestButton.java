@@ -16,32 +16,40 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.WynntilsQuestBookScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.utils.WebUtils;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.questbook.QuestStatus;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class QuestButton extends AbstractButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
-
+    private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
+    private static final CustomColor TRACKED_BUTTON_COLOR_HOVERED = new CustomColor(126, 211, 106);
     private final QuestInfo questInfo;
-    private final WynntilsQuestBookScreen screen;
+    private final WynntilsQuestBookScreen questBookScreen;
 
     public QuestButton(int x, int y, int width, int height, QuestInfo questInfo, WynntilsQuestBookScreen screen) {
         super(x, y, width, height, new TextComponent("Quest Button"));
         this.questInfo = questInfo;
-        this.screen = screen;
+        this.questBookScreen = screen;
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
+        CustomColor backgroundColor = questBookScreen.getTracked() == this.questInfo
+                ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
+                : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
 
         RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
 
@@ -87,7 +95,16 @@ public class QuestButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            // TODO pin
+            if (this.questInfo.getStatus() != QuestStatus.CANNOT_START) {
+                McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
+                QuestBookManager.trackQuest(this.questInfo);
+
+                if (questBookScreen.getTracked() != this.questInfo) {
+                    questBookScreen.setTracked(this.questInfo);
+                } else {
+                    questBookScreen.setTracked(null);
+                }
+            }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             // TODO open map
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
@@ -29,19 +30,26 @@ public class QuestInfo {
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
+    private final int pageNumber;
+    private boolean tracked;
+
     public QuestInfo(
             String name,
             QuestStatus status,
             QuestLength length,
             int level,
             String nextTask,
-            List<Pair<String, Integer>> additionalRequirements) {
+            List<Pair<String, Integer>> additionalRequirements,
+            int pageNumber,
+            boolean tracked) {
         this.name = name;
         this.status = status;
         this.length = length;
         this.level = level;
         this.nextTask = nextTask;
         this.additionalRequirements = additionalRequirements;
+        this.pageNumber = pageNumber;
+        this.tracked = tracked;
     }
 
     public String getName() {
@@ -68,6 +76,14 @@ public class QuestInfo {
         return additionalRequirements;
     }
 
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public boolean isTracked() {
+        return tracked;
+    }
+
     @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
@@ -79,7 +95,7 @@ public class QuestInfo {
                 + additionalRequirements + "]";
     }
 
-    public static QuestInfo parseItem(ItemStack item) {
+    public static QuestInfo parseItem(ItemStack item, int pageNumber) {
         try {
             String name = getQuestName(item);
             if (name == null) return null;
@@ -100,8 +116,10 @@ public class QuestInfo {
             if (!skipEmptyLine(lore)) return null;
 
             String description = getDescription(lore);
+            boolean tracked = isQuestTracked(item);
 
-            QuestInfo questInfo = new QuestInfo(name, status, questLength, level, description, additionalRequirements);
+            QuestInfo questInfo = new QuestInfo(
+                    name, status, questLength, level, description, additionalRequirements, pageNumber, tracked);
             return questInfo;
         } catch (NoSuchElementException e) {
             WynntilsMod.warn("Failed to parse quest book item: " + item);
@@ -120,6 +138,14 @@ public class QuestInfo {
             return null;
         }
         return m.group(1);
+    }
+
+    private static boolean isQuestTracked(ItemStack item) {
+        String rawName = item.getHoverName().getString();
+        if (rawName.trim().isEmpty()) {
+            return false;
+        }
+        return rawName.endsWith("§e[Tracked]");
     }
 
     private static QuestStatus getQuestStatus(LinkedList<String> lore) {
@@ -186,9 +212,12 @@ public class QuestInfo {
         List<String> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
+
         String description = String.join(
                         " ",
-                        descriptionLines.stream().map(line -> line.substring(2)).toList())
+                        descriptionLines.stream()
+                                .map(line -> ChatFormatting.stripFormatting(line))
+                                .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
         return description;

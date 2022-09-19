@@ -6,15 +6,19 @@ package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
+import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +26,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestBookManager extends CoreManager {
+    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final int NEXT_PAGE_SLOT = 8;
 
     private static List<QuestInfo> quests = List.of();
@@ -50,7 +55,7 @@ public class QuestBookManager extends CoreManager {
         for (int i = 2; i < 5; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
-                    .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
+                    .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
                     .matchTitle(getQuestBookTitle(page))
                     .processContainer(c -> processQuestBookPage(c, page));
         }
@@ -72,7 +77,7 @@ public class QuestBookManager extends CoreManager {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item);
+                QuestInfo questInfo = QuestInfo.parseItem(item, page);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -83,6 +88,46 @@ public class QuestBookManager extends CoreManager {
             // Last page finished
             quests = newQuests;
             WynntilsMod.getEventBus().post(new QuestBookReloadedEvent());
+        }
+    }
+
+    public static void trackQuest(QuestInfo questInfo) {
+        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
+                .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
+                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .matchTitle(getQuestBookTitle(1));
+
+        if (questInfo.getPageNumber() > 1) {
+            for (int i = 2; i <= questInfo.getPageNumber(); i++) {
+                queryBuilder
+                        .processContainer(container -> {}) // we ignore this because this is not the correct page
+                        .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(i))
+                        .matchTitle(getQuestBookTitle(i));
+            }
+        }
+        queryBuilder
+                .processContainer(c -> findQuestForTracking(c, questInfo))
+                .build()
+                .executeQuery();
+    }
+
+    private static void findQuestForTracking(ContainerContent container, QuestInfo questInfo) {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
+                int slot = row * 9 + col;
+
+                // Very first slot is chat history
+                if (slot == 0) continue;
+
+                ItemStack item = container.items().get(slot);
+
+                String currentItemName = ComponentUtils.getCoded(item.getHoverName());
+                Matcher matcher = QUEST_NAME_MATCHER.matcher(currentItemName);
+                if (matcher.matches() && matcher.group(1).equals(questInfo.getName())) {
+                    ContainerUtils.clickOnSlot(slot, container.containerId(), container.items());
+                    return;
+                }
+            }
         }
     }
 

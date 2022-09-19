@@ -6,6 +6,7 @@ package com.wynntils.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
@@ -22,6 +23,7 @@ import com.wynntils.screens.widgets.TextInputBoxWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
@@ -40,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsQuestBookScreen extends Screen implements SearchableScreen {
@@ -55,6 +58,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
     private int maxPage = 0;
     private List<QuestInfo> quests;
     private List<QuestButton> questButtons = new ArrayList<>();
+    private QuestInfo tracked = null;
 
     public WynntilsQuestBookScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
@@ -66,6 +70,14 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                 Texture.QUEST_BOOK_SEARCH.height(),
                 this::updateQuestsFilter,
                 this);
+
+        WynntilsMod.getEventBus().register(this);
+    }
+
+    @Override
+    public void onClose() {
+        WynntilsMod.getEventBus().unregister(this);
+        super.onClose();
     }
 
     @Override
@@ -175,6 +187,27 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         }
 
         return true;
+    }
+
+    @SubscribeEvent
+    public void onQuestsReloaded(QuestBookReloadedEvent event) {
+        this.setQuests(QuestBookManager.getQuests());
+
+        for (QuestInfo quest : quests) {
+            if (!quest.isTracked()) {
+                continue;
+            }
+
+            tracked = quest;
+            return;
+        }
+    }
+
+    // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
+    //        Adding a proper way to add quests with scripted container queries would mean this can get removed.
+    @SubscribeEvent
+    public void onMenuClose(MenuEvent.MenuClosedEvent event) {
+        event.setCanceled(true);
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
@@ -366,10 +399,17 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         }
 
         if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-            tooltipLines.add(new TextComponent("Left click to pin it!")
-                    .withStyle(ChatFormatting.GREEN)
-                    .withStyle(ChatFormatting.BOLD));
+            if (questInfo.isTracked()) {
+                tooltipLines.add(new TextComponent("Left click to unpin it!")
+                        .withStyle(ChatFormatting.RED)
+                        .withStyle(ChatFormatting.BOLD));
+            } else {
+                tooltipLines.add(new TextComponent("Left click to pin it!")
+                        .withStyle(ChatFormatting.GREEN)
+                        .withStyle(ChatFormatting.BOLD));
+            }
         }
+
         tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
                 .withStyle(ChatFormatting.YELLOW)
                 .withStyle(ChatFormatting.BOLD));
@@ -401,10 +441,6 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         }
     }
 
-    public void reloadQuests() {
-        updateQuestsFilter(this.searchWidget.getTextBoxInput());
-    }
-
     private void updateQuestsFilter(String searchText) {
         this.setQuests(QuestBookManager.getQuests().stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
@@ -432,6 +468,14 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         this.quests = quests;
         this.maxPage = (quests.size() / QUESTS_PER_PAGE + (quests.size() % QUESTS_PER_PAGE != 0 ? 1 : 0)) - 1;
         this.setCurrentPage(0);
+    }
+
+    public void setTracked(QuestInfo tracked) {
+        this.tracked = tracked;
+    }
+
+    public QuestInfo getTracked() {
+        return tracked;
     }
 
     public int getCurrentPage() {
