@@ -19,13 +19,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class AbilityTreeScrollFeature extends UserFeature {
 
-    @Config
-    private boolean invertScroll = false;
-
     private final Pattern ABILITY_TREE_PATTERN = Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
-
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
+
+    @Config
+    public boolean invertScroll = false;
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {

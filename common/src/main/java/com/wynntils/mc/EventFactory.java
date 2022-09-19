@@ -412,8 +412,8 @@ public final class EventFactory {
         return post(new SubtitleSetTextEvent(packet.getText()));
     }
 
-    public static Event onMouseScroll(double yOffset) {
-        return post(new MouseScrollEvent(yOffset > 0));
+    public static Event onMouseScroll(double windowPointer, double xOffset, double yOffset) {
+        return post(new MouseScrollEvent(windowPointer, xOffset, yOffset));
     }
 
     // endregion

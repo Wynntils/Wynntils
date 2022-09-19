@@ -16,6 +16,6 @@ public abstract class MouseHandlerMixin {
 
     @Inject(method = "onScroll", at = @At("HEAD"))
     private void onScroll(long windowPointer, double xOffset, double yOffset, CallbackInfo ci) {
-        EventFactory.onMouseScroll(yOffset);
+        EventFactory.onMouseScroll(windowPointer, xOffset, yOffset);
     }
 }

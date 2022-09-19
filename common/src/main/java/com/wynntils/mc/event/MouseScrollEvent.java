@@ -8,13 +8,17 @@ import net.minecraftforge.eventbus.api.Event;
 
 public class MouseScrollEvent extends Event {
 
-    private final boolean isScrollingUp;
+    private final double windowPointer;
+    private final double xOffset;
+    private final double yOffset;
 
-    public MouseScrollEvent(boolean isScrollingUp) {
-        this.isScrollingUp = isScrollingUp;
+    public MouseScrollEvent(double windowPointer, double xOffset, double yOffset) {
+        this.windowPointer = windowPointer;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
     }
 
     public boolean isScrollingUp() {
-        return isScrollingUp;
+        return yOffset > 0;
     }
 }
