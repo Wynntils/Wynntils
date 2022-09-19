@@ -390,6 +390,12 @@ public final class WebManager extends CoreManager {
         return st;
     }
 
+    public static String getApiUrl(String key) {
+        if (apiUrls == null) return null;
+
+        return apiUrls.get(key);
+    }
+
     public static boolean isTerritoryListLoaded() {
         return !territories.isEmpty();
     }

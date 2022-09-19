@@ -5,6 +5,10 @@
 package com.wynntils.screens.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.request.Request;
+import com.wynntils.core.webapi.request.RequestBuilder;
+import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.render.FontRenderer;
@@ -14,10 +18,13 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.screens.WynntilsQuestBookScreen;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.Utils;
+import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.model.questbook.QuestInfo;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
+import org.lwjgl.glfw.GLFW;
 
 public class QuestButton extends AbstractButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -73,8 +80,42 @@ public class QuestButton extends AbstractButton {
                 stateTexture.height());
     }
 
+    // Not called
     @Override
     public void onPress() {}
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            // TODO pin
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            // TODO open map
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            final String baseUrl = "https://wynncraft.fandom.com/wiki/";
+
+            // todo handle mini quest
+            String name = this.questInfo.getName();
+            String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
+            String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
+            Request req = new RequestBuilder(url, "WikiQuestQuery")
+                    .handleJsonArray(jsonOutput -> {
+                        String pageTitle = jsonOutput
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("_pageTitle")
+                                .getAsString();
+                        Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
+                        return true;
+                    })
+                    .build();
+
+            RequestHandler handler = new RequestHandler();
+
+            handler.addAndDispatch(req, true);
+        }
+
+        return true;
+    }
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
