@@ -374,7 +374,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         poseStack.popPose();
     }
 
-    private static List<Component> getTooltipLinesForQuest(QuestInfo questInfo) {
+    private List<Component> getTooltipLinesForQuest(QuestInfo questInfo) {
         List<Component> tooltipLines = new ArrayList<>() {
             {
                 add(new TextComponent(questInfo.getName())
@@ -419,7 +419,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         }
 
         if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-            if (questInfo.isTracked()) {
+            if (this.tracked == questInfo) {
                 tooltipLines.add(new TextComponent("Left click to unpin it!")
                         .withStyle(ChatFormatting.RED)
                         .withStyle(ChatFormatting.BOLD));
