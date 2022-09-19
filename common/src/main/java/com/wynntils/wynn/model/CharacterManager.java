@@ -14,8 +14,11 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
+import com.wynntils.wynn.objects.ProfessionInfo;
 import com.wynntils.wynn.utils.InventoryUtils;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +31,10 @@ public class CharacterManager extends CoreManager {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
+    private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
+            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[(\\d+)%\\]");
     private static final int CHARACTER_INFO_SLOT = 7;
+    private static final int PROFESSION_INFO_SLOT = 17;
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
@@ -57,7 +63,7 @@ public class CharacterManager extends CoreManager {
 
     public static CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
-            currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0);
+            currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0, new ProfessionInfo());
         }
         return currentCharacter;
     }
@@ -80,14 +86,27 @@ public class CharacterManager extends CoreManager {
             inCharacterSelection = true;
         }
 
-        if (e.getNewState() == WorldStateManager.State.WORLD
-                && e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
-            // We went directly to a world without coming from the character selection
-            // menu. This means the player has "autojoin" enabled, and that we did not
-            // get a chance to read the character info from the character selection menu.
-            // Instead, we send a container query to read it from the character (compass) menu.
-            WynntilsMod.info("Scheduling character info query");
-            scanCharacterInfoPage();
+        if (e.getNewState() == WorldStateManager.State.WORLD) {
+            if (e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+                // We went directly to a world without coming from the character selection
+                // menu. This means the player has "autojoin" enabled, and that we did not
+                // get a chance to read the character info from the character selection menu.
+                // Instead, we send a container query to read it from the character (compass) menu.
+                WynntilsMod.info("Scheduling character info query");
+
+                // This time, we need to scan character info and profession info as well.
+                scanCharacterInfoPage();
+            } else {
+                // We did not auto-join, we have a correct ID already.
+                int oldId = currentCharacter.id;
+                scanCharacterInfoPage();
+                currentCharacter = new CharacterInfo(
+                        currentCharacter.classType,
+                        currentCharacter.reskinned,
+                        currentCharacter.level,
+                        oldId,
+                        currentCharacter.professionInfo);
+            }
         }
     }
 
@@ -96,8 +115,11 @@ public class CharacterManager extends CoreManager {
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
                 .processContainer(container -> {
-                    ItemStack item = container.items().get(CHARACTER_INFO_SLOT);
-                    currentCharacter = CharacterInfo.parseCharacterFromCharacterMenu(item, -1);
+                    ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
+                    ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+
+                    currentCharacter =
+                            CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, -1);
                     WynntilsMod.info("Deducing character " + currentCharacter);
                 })
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
@@ -125,10 +147,14 @@ public class CharacterManager extends CoreManager {
         // This was implemented the same way by legacy.
         private final int id;
 
-        private CharacterInfo(ClassType classType, boolean reskinned, int level, int id) {
+        private final ProfessionInfo professionInfo;
+
+        private CharacterInfo(
+                ClassType classType, boolean reskinned, int level, int id, ProfessionInfo professionInfo) {
             this.classType = classType;
             this.reskinned = reskinned;
             this.level = level;
+            this.professionInfo = professionInfo;
             this.id = id;
         }
 
@@ -154,6 +180,10 @@ public class CharacterManager extends CoreManager {
             return id;
         }
 
+        public ProfessionInfo getProfessionInfo() {
+            return professionInfo;
+        }
+
         public static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
             List<String> lore = ItemUtils.getLore(itemStack);
 
@@ -175,11 +205,13 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
+            return new CharacterInfo(
+                    classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
         }
 
-        public static CharacterInfo parseCharacterFromCharacterMenu(ItemStack itemStack, int id) {
-            List<String> lore = ItemUtils.getLore(itemStack);
+        public static CharacterInfo parseCharacterFromCharacterMenu(
+                ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
+            List<String> lore = ItemUtils.getLore(characterInfoItem);
 
             int level = 0;
             String className = "";
@@ -199,13 +231,34 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
+            Map<ProfessionInfo.ProfessionType, Integer> levels = new HashMap<>();
+            List<String> professionLore = ItemUtils.getLore(professionInfoItem);
+            for (String line : professionLore) {
+                Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
+
+                if (matcher.matches()) {
+                    levels.put(
+                            ProfessionInfo.ProfessionType.valueOf(matcher.group(2)),
+                            Integer.parseInt(matcher.group(1)));
+                }
+            }
+
+            return new CharacterInfo(
+                    classType,
+                    classType != null && ClassType.isReskinned(className),
+                    level,
+                    id,
+                    new ProfessionInfo(levels));
         }
 
         @Override
         public String toString() {
-            return "CharacterInfo[classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + ", id="
-                    + id + ']';
+            return "CharacterInfo{" + "classType="
+                    + classType + ", reskinned="
+                    + reskinned + ", level="
+                    + level + ", id="
+                    + id + ", professionInfo="
+                    + professionInfo + '}';
         }
 
         /**
