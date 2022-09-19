@@ -26,6 +26,7 @@ import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
 import com.wynntils.wynn.model.questbook.QuestStatus;
+import com.wynntils.wynn.objects.ProfessionInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +37,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
@@ -327,7 +329,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                         .withStyle(ChatFormatting.WHITE));
                 add(questInfo.getStatus().getComponent());
                 add(new TextComponent(""));
-                add((CharacterManager.getCharacterInfo().getLevel() > questInfo.getLevel()
+                add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
                                 ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
                                 : new TextComponent("✖").withStyle(ChatFormatting.RED))
                         .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -337,12 +339,17 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         };
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            tooltipLines.add(new TextComponent("? ")
-                    .withStyle(ChatFormatting.YELLOW)
-                    .append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
-                            .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(String.valueOf(additionalRequirement.b))
-                                    .withStyle(ChatFormatting.WHITE))));
+            MutableComponent base = CharacterManager.getCharacterInfo()
+                                    .getProfessionInfo()
+                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a))
+                            >= additionalRequirement.b
+                    ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
+                    : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
+
+            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(new TextComponent(String.valueOf(additionalRequirement.b))
+                            .withStyle(ChatFormatting.WHITE))));
         }
 
         tooltipLines.add(new TextComponent("-")
