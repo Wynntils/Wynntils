@@ -28,6 +28,7 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
+    private static boolean featuresInited = false;
     private static IEventBus eventBus;
 
     public static ModLoader getModLoader() {
@@ -79,7 +80,9 @@ public final class WynntilsMod {
     }
 
     // Ran when resources (including I18n) are available
-    public static void onFinishedInit() {
+    public static void onResourcesFinishedLoading() {
+        if (featuresInited) return;
+        
         try {
             FeatureRegistry.init();
         } catch (Throwable t) {

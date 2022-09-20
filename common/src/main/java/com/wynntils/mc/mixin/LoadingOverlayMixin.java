@@ -11,11 +11,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LoadingOverlay.class)
-public abstract class LoadingOverlayMixin {
-    @Inject(method = "render", at = @At("RETURN"))
-    private void onRenderPost(CallbackInfo info) {
-        // This is the signal that Minecraft has finished initializing
-        WynntilsMod.onFinishedInit();
+@Mixin(ResourceLoadStateTracker.class)
+public abstract class ResourceLoadStateTrackerMixin {
+    @Inject(method = "finishReload()V", at = @At("RETURN"))
+    private void onResourceManagerReloadPost(CallbackInfo info) {
+        // This is the signal that Minecraft has finished loading the initial resources,
+        // or a resource pack has been reloaded
+        WynntilsMod.onResourcesFinishedLoading();
     }
 }
