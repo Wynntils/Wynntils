@@ -28,6 +28,7 @@ public final class WynntilsMod {
     private static String version = "";
     private static int buildNumber = -1;
     private static boolean developmentEnvironment;
+    private static boolean featuresInited = false;
     private static IEventBus eventBus;
 
     public static ModLoader getModLoader() {
