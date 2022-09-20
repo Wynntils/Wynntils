@@ -56,6 +56,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
     public WynntilsQuestBookScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
 
+        // Do not lose search info on re-init
         this.searchWidget = new QuestBookSearchWidget(
                 (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15),
                 0,
@@ -64,6 +65,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                 this::updateQuestsFilter,
                 this);
 
+        // Only register this once
         WynntilsMod.getEventBus().register(this);
     }
 
@@ -73,6 +75,8 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         super.onClose();
     }
 
+    /** This is called on every resize. Re-registering widgets are required, re-creating them is not.
+     * */
     @Override
     protected void init() {
         QuestBookManager.rescanQuestBook();
