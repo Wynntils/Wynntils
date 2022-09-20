@@ -21,17 +21,12 @@ import com.wynntils.screens.widgets.QuestButton;
 import com.wynntils.screens.widgets.ReloadQuestsButton;
 import com.wynntils.screens.widgets.TextInputBoxWidget;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
-import com.wynntils.wynn.model.questbook.QuestStatus;
-import com.wynntils.wynn.objects.ProfessionInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
@@ -39,8 +34,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -246,7 +239,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         if (this.hovered instanceof QuestButton questButton) {
             QuestInfo questInfo = questButton.getQuestInfo();
 
-            List<Component> tooltipLines = getTooltipLinesForQuest(questInfo);
+            List<Component> tooltipLines = QuestInfo.getTooltipLinesForQuest(questInfo, this.tracked == questInfo);
 
             RenderUtils.drawTooltipAt(
                     poseStack,
@@ -372,71 +365,6 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NORMAL);
         poseStack.popPose();
-    }
-
-    private List<Component> getTooltipLinesForQuest(QuestInfo questInfo) {
-        List<Component> tooltipLines = new ArrayList<>() {
-            {
-                add(new TextComponent(questInfo.getName())
-                        .withStyle(ChatFormatting.BOLD)
-                        .withStyle(ChatFormatting.WHITE));
-                add(questInfo.getStatus().getQuestBookComponent());
-                add(new TextComponent(""));
-                add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
-                                ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
-                                : new TextComponent("✖").withStyle(ChatFormatting.RED))
-                        .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                        .append(new TextComponent(String.valueOf(questInfo.getLevel()))
-                                .withStyle(ChatFormatting.WHITE)));
-            }
-        };
-
-        for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = CharacterManager.getCharacterInfo()
-                                    .getProfessionInfo()
-                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a))
-                            >= additionalRequirement.b
-                    ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
-                    : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
-
-            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(String.valueOf(additionalRequirement.b))
-                            .withStyle(ChatFormatting.WHITE))));
-        }
-
-        tooltipLines.add(new TextComponent("-")
-                .withStyle(ChatFormatting.GREEN)
-                .append(new TextComponent(" Length: ").withStyle(ChatFormatting.GRAY))
-                .append(new TextComponent(StringUtils.capitalizeFirst(
-                                questInfo.getLength().toString().toLowerCase(Locale.ROOT)))
-                        .withStyle(ChatFormatting.WHITE)));
-        tooltipLines.add(new TextComponent(""));
-
-        if (questInfo.getStatus() != QuestStatus.COMPLETED) {
-            tooltipLines.add(new TextComponent(questInfo.getNextTask()).withStyle(ChatFormatting.GRAY));
-            tooltipLines.add(new TextComponent(""));
-        }
-
-        if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-            if (this.tracked == questInfo) {
-                tooltipLines.add(new TextComponent("Left click to unpin it!")
-                        .withStyle(ChatFormatting.RED)
-                        .withStyle(ChatFormatting.BOLD));
-            } else {
-                tooltipLines.add(new TextComponent("Left click to pin it!")
-                        .withStyle(ChatFormatting.GREEN)
-                        .withStyle(ChatFormatting.BOLD));
-            }
-        }
-
-        tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
-                .withStyle(ChatFormatting.YELLOW)
-                .withStyle(ChatFormatting.BOLD));
-        tooltipLines.add(new TextComponent("Right to open on the wiki!")
-                .withStyle(ChatFormatting.GOLD)
-                .withStyle(ChatFormatting.BOLD));
-        return tooltipLines;
     }
 
     private void reloadQuestButtons() {
