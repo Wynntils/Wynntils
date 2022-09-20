@@ -6,7 +6,6 @@ package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -17,8 +16,7 @@ import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +24,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestBookManager extends CoreManager {
-    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final int NEXT_PAGE_SLOT = 8;
 
     private static List<QuestInfo> quests = List.of();
@@ -126,9 +123,8 @@ public class QuestBookManager extends CoreManager {
 
                 ItemStack item = container.items().get(slot);
 
-                String currentItemName = ComponentUtils.getCoded(item.getHoverName());
-                Matcher matcher = QUEST_NAME_MATCHER.matcher(currentItemName);
-                if (matcher.matches() && matcher.group(1).equals(questInfo.getName())) {
+                String questName = QuestInfo.getQuestName(item);
+                if (Objects.equals(questName, questInfo.getName())) {
                     ContainerUtils.clickOnSlot(slot, container.containerId(), container.items());
                     return;
                 }

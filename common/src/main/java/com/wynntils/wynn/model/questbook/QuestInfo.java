@@ -127,7 +127,7 @@ public class QuestInfo {
         }
     }
 
-    private static String getQuestName(ItemStack item) {
+    public static String getQuestName(ItemStack item) {
         String rawName = item.getHoverName().getString();
         if (rawName.trim().isEmpty()) {
             return null;
