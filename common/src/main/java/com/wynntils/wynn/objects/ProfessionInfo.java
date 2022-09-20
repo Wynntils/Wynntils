@@ -6,6 +6,7 @@ package com.wynntils.wynn.objects;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 public class ProfessionInfo {
     private Map<ProfessionType, Integer> levels = new HashMap<>();
@@ -22,6 +23,11 @@ public class ProfessionInfo {
 
     public int getLevel(ProfessionType type) {
         return levels.getOrDefault(type, 0);
+    }
+
+    @Override
+    public String toString() {
+        return "ProfessionInfo{" + "levels=" + StringUtils.join(levels) + '}';
     }
 
     public enum ProfessionType {
