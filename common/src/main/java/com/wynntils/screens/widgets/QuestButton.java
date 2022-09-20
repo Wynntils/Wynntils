@@ -108,30 +108,34 @@ public class QuestButton extends AbstractButton {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             // TODO open map
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            final String baseUrl = "https://wynncraft.fandom.com/wiki/";
-
-            // todo handle mini quest
-            String name = this.questInfo.getName();
-            String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
-            String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
-            Request req = new RequestBuilder(url, "WikiQuestQuery")
-                    .handleJsonArray(jsonOutput -> {
-                        String pageTitle = jsonOutput
-                                .get(0)
-                                .getAsJsonObject()
-                                .get("_pageTitle")
-                                .getAsString();
-                        Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
-                        return true;
-                    })
-                    .build();
-
-            RequestHandler handler = new RequestHandler();
-
-            handler.addAndDispatch(req, true);
+            openQuestWiki();
         }
 
         return true;
+    }
+
+    private void openQuestWiki() {
+        final String baseUrl = "https://wynncraft.fandom.com/wiki/";
+
+        // todo handle mini quest
+        String name = this.questInfo.getName();
+        String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
+        String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
+        Request req = new RequestBuilder(url, "WikiQuestQuery")
+                .handleJsonArray(jsonOutput -> {
+                    String pageTitle = jsonOutput
+                            .get(0)
+                            .getAsJsonObject()
+                            .get("_pageTitle")
+                            .getAsString();
+                    Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
+                    return true;
+                })
+                .build();
+
+        RequestHandler handler = new RequestHandler();
+
+        handler.addAndDispatch(req, true);
     }
 
     @Override
