@@ -95,11 +95,11 @@ public class CharacterManager extends CoreManager {
                 WynntilsMod.info("Scheduling character info query");
 
                 // This time, we need to scan character info and profession info as well.
-                scanCharacterInfoPage();
+                scanCharacterInfoPage(-1);
             } else {
                 // We did not auto-join, we have a correct ID already.
                 int oldId = currentCharacter.id;
-                scanCharacterInfoPage();
+                scanCharacterInfoPage(oldId);
                 currentCharacter = new CharacterInfo(
                         currentCharacter.classType,
                         currentCharacter.reskinned,
@@ -110,7 +110,7 @@ public class CharacterManager extends CoreManager {
         }
     }
 
-    private static void scanCharacterInfoPage() {
+    private static void scanCharacterInfoPage(int oldId) {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
@@ -118,8 +118,10 @@ public class CharacterManager extends CoreManager {
                     ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                     ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
 
+                    // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
+                    // default to oldId
                     currentCharacter =
-                            CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, -1);
+                            CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
                     WynntilsMod.info("Deducing character " + currentCharacter);
                 })
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
