@@ -95,16 +95,7 @@ public class QuestButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (this.questInfo.getStatus() != QuestStatus.CANNOT_START) {
-                McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
-                QuestBookManager.trackQuest(this.questInfo);
-
-                if (questBookScreen.getTracked() != this.questInfo) {
-                    questBookScreen.setTracked(this.questInfo);
-                } else {
-                    questBookScreen.setTracked(null);
-                }
-            }
+            trackQuest();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             // TODO open map
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -112,6 +103,19 @@ public class QuestButton extends AbstractButton {
         }
 
         return true;
+    }
+
+    private void trackQuest() {
+        if (this.questInfo.getStatus() != QuestStatus.CANNOT_START) {
+            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
+            QuestBookManager.trackQuest(this.questInfo);
+
+            if (questBookScreen.getTracked() != this.questInfo) {
+                questBookScreen.setTracked(this.questInfo);
+            } else {
+                questBookScreen.setTracked(null);
+            }
+        }
     }
 
     private void openQuestWiki() {
