@@ -84,7 +84,7 @@ public final class WynntilsMod {
         if (featuresInited) return;
 
         try {
-            FeatureRegistry.init();
+            initFeatures();
         } catch (Throwable t) {
             LOGGER.error("Failed to initialize Wynntils features", t);
             return;
@@ -107,6 +107,11 @@ public final class WynntilsMod {
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         ManagerRegistry.init();
+    }
+
+    private static void initFeatures() {
+        // Init all features. Now resources (i.e I18n) are available.
+        FeatureRegistry.init();
     }
 
     private static void parseVersion(String versionString) {
