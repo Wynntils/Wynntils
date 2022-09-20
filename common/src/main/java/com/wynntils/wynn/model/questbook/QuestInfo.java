@@ -103,7 +103,7 @@ public class QuestInfo {
                 + additionalRequirements + "]";
     }
 
-    public static List<Component> getTooltipLinesForQuest(QuestInfo questInfo, boolean trackedQuest) {
+    public static List<Component> getTooltipLinesForQuest(QuestInfo questInfo) {
         List<Component> tooltipLines = new ArrayList<>();
 
         tooltipLines.add(new TextComponent(questInfo.getName())
@@ -144,24 +144,6 @@ public class QuestInfo {
             tooltipLines.add(new TextComponent(""));
         }
 
-        if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-            if (trackedQuest) {
-                tooltipLines.add(new TextComponent("Left click to unpin it!")
-                        .withStyle(ChatFormatting.RED)
-                        .withStyle(ChatFormatting.BOLD));
-            } else {
-                tooltipLines.add(new TextComponent("Left click to pin it!")
-                        .withStyle(ChatFormatting.GREEN)
-                        .withStyle(ChatFormatting.BOLD));
-            }
-        }
-
-        tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
-                .withStyle(ChatFormatting.YELLOW)
-                .withStyle(ChatFormatting.BOLD));
-        tooltipLines.add(new TextComponent("Right to open on the wiki!")
-                .withStyle(ChatFormatting.GOLD)
-                .withStyle(ChatFormatting.BOLD));
         return tooltipLines;
     }
 

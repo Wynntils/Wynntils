@@ -25,6 +25,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.questbook.QuestStatus;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -34,6 +35,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -243,7 +245,26 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         if (this.hovered instanceof QuestButton questButton) {
             QuestInfo questInfo = questButton.getQuestInfo();
 
-            List<Component> tooltipLines = QuestInfo.getTooltipLinesForQuest(questInfo, this.tracked == questInfo);
+            List<Component> tooltipLines = QuestInfo.getTooltipLinesForQuest(questInfo);
+
+            if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
+                if (this.tracked == questInfo) {
+                    tooltipLines.add(new TextComponent("Left click to unpin it!")
+                            .withStyle(ChatFormatting.RED)
+                            .withStyle(ChatFormatting.BOLD));
+                } else {
+                    tooltipLines.add(new TextComponent("Left click to pin it!")
+                            .withStyle(ChatFormatting.GREEN)
+                            .withStyle(ChatFormatting.BOLD));
+                }
+            }
+
+            tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
+                    .withStyle(ChatFormatting.YELLOW)
+                    .withStyle(ChatFormatting.BOLD));
+            tooltipLines.add(new TextComponent("Right to open on the wiki!")
+                    .withStyle(ChatFormatting.GOLD)
+                    .withStyle(ChatFormatting.BOLD));
 
             RenderUtils.drawTooltipAt(
                     poseStack,
