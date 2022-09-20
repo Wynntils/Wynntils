@@ -137,11 +137,10 @@ public class QuestInfo {
                 .append(new TextComponent(StringUtils.capitalizeFirst(
                                 questInfo.getLength().toString().toLowerCase(Locale.ROOT)))
                         .withStyle(ChatFormatting.WHITE)));
-        tooltipLines.add(new TextComponent(""));
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
-            tooltipLines.add(new TextComponent(questInfo.getNextTask()).withStyle(ChatFormatting.GRAY));
             tooltipLines.add(new TextComponent(""));
+            tooltipLines.add(new TextComponent(questInfo.getNextTask()).withStyle(ChatFormatting.GRAY));
         }
 
         return tooltipLines;

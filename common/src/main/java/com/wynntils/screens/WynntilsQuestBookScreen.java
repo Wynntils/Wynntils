@@ -246,6 +246,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
             List<Component> tooltipLines = QuestInfo.getTooltipLinesForQuest(questInfo);
 
+            tooltipLines.add(new TextComponent(""));
+
             if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
                 if (this.tracked == questInfo) {
                     tooltipLines.add(new TextComponent("Left click to unpin it!")
