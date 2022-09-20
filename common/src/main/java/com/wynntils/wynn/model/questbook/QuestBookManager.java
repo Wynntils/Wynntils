@@ -8,8 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.ContainerUtils;
@@ -21,7 +19,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
@@ -31,25 +28,19 @@ public class QuestBookManager extends CoreManager {
 
     public static void init() {}
 
-    @SubscribeEvent
-    public static void onQuestsReloaded(QuestBookReloadedEvent event) {
-        McUtils.player().sendMessage(new TextComponent("Quest Book scanned.").withStyle(ChatFormatting.GRAY), null);
-    }
-
-    @SubscribeEvent
-    public static void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
-            rescanQuestBook();
-        }
-    }
-
     /**
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
      * be sent. The available quests are then available using getQuests.
      */
     private static void queryQuestBook() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
-                .onError(msg -> WynntilsMod.warn("Problem querying Quest Book: " + msg))
+                .onError(msg -> {
+                    WynntilsMod.warn("Problem querying Quest Book: " + msg);
+                    McUtils.player()
+                            .sendMessage(
+                                    new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED),
+                                    null);
+                })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1))
                 .processContainer(c -> processQuestBookPage(c, 1));
@@ -134,7 +125,6 @@ public class QuestBookManager extends CoreManager {
 
     public static void rescanQuestBook() {
         WynntilsMod.info("Requesting rescan of Quest Book");
-        McUtils.player().sendMessage(new TextComponent("Scanning Quest Book...").withStyle(ChatFormatting.GRAY), null);
         QuestBookManager.queryQuestBook();
     }
 
