@@ -34,6 +34,7 @@ import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -409,6 +410,10 @@ public final class EventFactory {
 
     public static Event onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
         return post(new SubtitleSetTextEvent(packet.getText()));
+    }
+
+    public static Event onMouseScroll(double windowPointer, double xOffset, double yOffset) {
+        return post(new MouseScrollEvent(windowPointer, xOffset, yOffset));
     }
 
     // endregion
