@@ -76,7 +76,11 @@ public class WynntilsAccount {
         JsonObject authParams = new JsonObject();
         authParams.addProperty("username", McUtils.mc().getUser().getName());
         authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty("version", "A" + WynntilsMod.getVersion() + "_" + WynntilsMod.getBuildNumber());
+        authParams.addProperty(
+                "version",
+                String.format(
+                        "A%s_%s %s",
+                        WynntilsMod.getVersion(), WynntilsMod.getBuildNumber(), WynntilsMod.getModLoader()));
 
         Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
                 .postJsonElement(authParams)
