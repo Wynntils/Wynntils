@@ -104,21 +104,18 @@ public class QuestInfo {
     }
 
     public static List<Component> getTooltipLinesForQuest(QuestInfo questInfo, boolean trackedQuest) {
-        List<Component> tooltipLines = new ArrayList<>() {
-            {
-                add(new TextComponent(questInfo.getName())
-                        .withStyle(ChatFormatting.BOLD)
-                        .withStyle(ChatFormatting.WHITE));
-                add(questInfo.getStatus().getQuestBookComponent());
-                add(new TextComponent(""));
-                add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
-                                ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
-                                : new TextComponent("✖").withStyle(ChatFormatting.RED))
-                        .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                        .append(new TextComponent(String.valueOf(questInfo.getLevel()))
-                                .withStyle(ChatFormatting.WHITE)));
-            }
-        };
+        List<Component> tooltipLines = new ArrayList<>();
+
+        tooltipLines.add(new TextComponent(questInfo.getName())
+                .withStyle(ChatFormatting.BOLD)
+                .withStyle(ChatFormatting.WHITE));
+        tooltipLines.add(questInfo.getStatus().getQuestBookComponent());
+        tooltipLines.add(new TextComponent(""));
+        tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
+                        ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
+                        : new TextComponent("✖").withStyle(ChatFormatting.RED))
+                .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
