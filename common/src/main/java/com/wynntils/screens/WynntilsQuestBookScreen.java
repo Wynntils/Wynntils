@@ -32,7 +32,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -40,7 +39,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsQuestBookScreen extends Screen implements SearchableScreen {
+public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements SearchableScreen {
     private static final int QUESTS_PER_PAGE = 13;
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.name").withStyle(ChatFormatting.WHITE),
@@ -125,7 +124,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
         final float translationY = getTranslationY();
         poseStack.translate(translationX, translationY, 1f);
 
-        renderTitle(poseStack);
+        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsQuestBook.quests"));
 
         renderVersion(poseStack);
 
@@ -291,7 +290,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                         FontRenderer.TextShadow.NONE);
     }
 
-    private static void renderDescription(PoseStack poseStack) {
+    protected void renderDescription(PoseStack poseStack) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -332,64 +331,6 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                 }
             }
         }
-    }
-
-    private void renderBackgroundTexture(PoseStack poseStack) {
-        int txWidth = Texture.QUEST_BOOK_BACKGROUND.width();
-        int txHeight = Texture.QUEST_BOOK_BACKGROUND.height();
-
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.QUEST_BOOK_BACKGROUND.resource(),
-                (this.width - txWidth) / 2f,
-                (this.height - txHeight) / 2f,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
-    }
-
-    private void renderTitle(PoseStack poseStack) {
-        int txWidth = Texture.QUEST_BOOK_TITLE.width();
-        int txHeight = Texture.QUEST_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
-
-        poseStack.pushPose();
-        poseStack.scale(2f, 2f, 0f);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.wynntilsQuestBook.quests"),
-                        5,
-                        18,
-                        CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
-        poseStack.popPose();
-    }
-
-    private void renderVersion(PoseStack poseStack) {
-        // FIXME: Replace with better scaling support
-
-        poseStack.pushPose();
-        String version = "Build " + WynntilsMod.getBuildNumber();
-        poseStack.scale(0.7f, 0.7f, 0);
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        version,
-                        0,
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 1.3f / 2f
-                                + FontRenderer.getInstance().getFont().width(version),
-                        Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
-                        0,
-                        CommonColors.YELLOW,
-                        HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NORMAL);
-        poseStack.popPose();
     }
 
     private void reloadQuestButtons() {

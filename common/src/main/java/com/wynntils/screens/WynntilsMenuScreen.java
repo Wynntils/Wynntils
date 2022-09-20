@@ -5,7 +5,6 @@
 package com.wynntils.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -13,7 +12,6 @@ import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.overlays.OverlaySelectionScreen;
@@ -24,14 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsMenuScreen extends Screen {
+public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private static final int BUTTON_SIZE = 30;
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
@@ -98,7 +95,7 @@ public class WynntilsMenuScreen extends Screen {
         final float translationY = (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
         poseStack.translate(translationX, translationY, 1f);
 
-        renderTitle(poseStack);
+        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
         renderVersion(poseStack);
 
@@ -106,7 +103,7 @@ public class WynntilsMenuScreen extends Screen {
 
         renderTooltip(poseStack, mouseX, mouseY, translationX, translationY);
 
-        renderDescription(poseStack);
+        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
         renderPlayerInfo(poseStack, mouseX, mouseY, translationX, translationY);
 
@@ -156,20 +153,6 @@ public class WynntilsMenuScreen extends Screen {
                         0,
                         CommonColors.MAGENTA,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NONE);
-    }
-
-    private static void renderDescription(PoseStack poseStack) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        I18n.get("screens.wynntils.wynntilsMenu.description"),
-                        20,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        140,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.Left,
                         FontRenderer.TextShadow.NONE);
     }
 
@@ -257,63 +240,5 @@ public class WynntilsMenuScreen extends Screen {
         }
 
         poseStack.popPose();
-    }
-
-    private void renderVersion(PoseStack poseStack) {
-        // FIXME: Replace with better scaling support
-
-        poseStack.pushPose();
-        String version = "Build " + WynntilsMod.getBuildNumber();
-        poseStack.scale(0.7f, 0.7f, 0);
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        version,
-                        0,
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 1.3f / 2f
-                                + FontRenderer.getInstance().getFont().width(version),
-                        Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
-                        0,
-                        CommonColors.YELLOW,
-                        HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NORMAL);
-        poseStack.popPose();
-    }
-
-    private void renderTitle(PoseStack poseStack) {
-        int txWidth = Texture.QUEST_BOOK_TITLE.width();
-        int txHeight = Texture.QUEST_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
-
-        poseStack.pushPose();
-        poseStack.scale(2f, 2f, 0f);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.wynntilsMenu.userProfile"),
-                        5,
-                        18,
-                        CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
-        poseStack.popPose();
-    }
-
-    private void renderBackgroundTexture(PoseStack poseStack) {
-        int txWidth = Texture.QUEST_BOOK_BACKGROUND.width();
-        int txHeight = Texture.QUEST_BOOK_BACKGROUND.height();
-
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.QUEST_BOOK_BACKGROUND.resource(),
-                (this.width - txWidth) / 2f,
-                (this.height - txHeight) / 2f,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
     }
 }
