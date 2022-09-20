@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -25,16 +26,19 @@ public class WynntilsQuestBookFeature extends UserFeature {
     private final KeyBind openQuestBook = new KeyBind(
             "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(new WynntilsMenuScreen()));
 
+    @Config
+    public boolean replaceWynncraftQuestBook = true;
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (McUtils.player().isShiftKeyDown()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        if (McUtils.player().isShiftKeyDown()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
 
         tryCancelQuestBookOpen(event);
     }

@@ -422,6 +422,8 @@
   "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
   "feature.wynntils.wynntilsPauseScreen.name": "Wynntils Custom Pause Screen",
   "feature.wynntils.wynntilsQuestBook.name": "Wynncraft Custom Quest Book",
+  "feature.wynntils.wynntilsQuestBook.replaceWynncraftQuestBook.description": "Should the Wynncraft quest book be replaced with the mod's custom one?",
+  "feature.wynntils.wynntilsQuestBook.replaceWynncraftQuestBook.name": "Replace Wynncraft Quest Book",
   "function.wynntils.class.description": "Name of your current class",
   "function.wynntils.class.name": "Class",
   "function.wynntils.clock.description": "The current time, formatted in the current locale style",
