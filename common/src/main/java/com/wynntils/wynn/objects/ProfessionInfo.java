@@ -12,6 +12,10 @@ public class ProfessionInfo {
     private Map<ProfessionType, Integer> levels = new HashMap<>();
 
     public ProfessionInfo(Map<ProfessionType, Integer> levels) {
+        for (ProfessionType value : ProfessionType.values()) {
+            levels.putIfAbsent(value, 0);
+        }
+
         this.levels = levels;
     }
 
