@@ -35,6 +35,11 @@ public class QuestBookManager extends CoreManager {
     public static void init() {}
 
     @SubscribeEvent
+    public static void onQuestsReloaded(QuestBookReloadedEvent event) {
+        McUtils.player().sendMessage(new TextComponent("Quest Book scanned.").withStyle(ChatFormatting.GRAY), null);
+    }
+
+    @SubscribeEvent
     public static void onWorldChange(WorldStateEvent e) {
         if (e.getNewState() == WorldStateManager.State.WORLD) {
             rescanQuestBook();
@@ -135,7 +140,6 @@ public class QuestBookManager extends CoreManager {
         WynntilsMod.info("Requesting rescan of Quest Book");
         McUtils.player().sendMessage(new TextComponent("Scanning Quest Book...").withStyle(ChatFormatting.GRAY), null);
         QuestBookManager.queryQuestBook();
-        McUtils.player().sendMessage(new TextComponent("Quest Book scanned.").withStyle(ChatFormatting.GRAY), null);
     }
 
     private static String getNextPageButtonName(int nextPageNum) {
