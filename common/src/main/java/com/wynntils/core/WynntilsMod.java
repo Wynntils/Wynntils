@@ -82,7 +82,7 @@ public final class WynntilsMod {
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
         if (featuresInited) return;
-        
+
         try {
             FeatureRegistry.init();
         } catch (Throwable t) {
