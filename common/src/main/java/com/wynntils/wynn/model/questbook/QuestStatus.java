@@ -15,14 +15,16 @@ public enum QuestStatus {
     CAN_START(new TextComponent("Can start...").withStyle(ChatFormatting.YELLOW)),
     CANNOT_START(new TextComponent("Cannot start...").withStyle(ChatFormatting.RED));
 
-    private final Component component;
+    /** This component is used to reconstruct quest tooltip in {@link com.wynntils.screens.WynntilsQuestBookScreen}.
+     */
+    private final Component questBookComponent;
 
     QuestStatus(Component component) {
-        this.component = component;
+        this.questBookComponent = component;
     }
 
-    public Component getComponent() {
-        return component;
+    public Component getQuestBookComponent() {
+        return questBookComponent;
     }
 
     public static QuestStatus fromString(String str) {

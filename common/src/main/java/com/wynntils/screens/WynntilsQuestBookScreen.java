@@ -380,7 +380,7 @@ public class WynntilsQuestBookScreen extends Screen implements SearchableScreen 
                 add(new TextComponent(questInfo.getName())
                         .withStyle(ChatFormatting.BOLD)
                         .withStyle(ChatFormatting.WHITE));
-                add(questInfo.getStatus().getComponent());
+                add(questInfo.getStatus().getQuestBookComponent());
                 add(new TextComponent(""));
                 add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
                                 ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
