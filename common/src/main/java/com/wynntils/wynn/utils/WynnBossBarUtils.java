@@ -65,7 +65,8 @@ public class WynnBossBarUtils {
             if (progress == 0f) {
                 maxBloodPool = -1;
             } else {
-                maxBloodPool = (int) (currentBloodPool / progress);
+                // Round to nearest 30
+                maxBloodPool = (int) ((currentBloodPool / (progress * 30))) * 30;
             }
 
             return new BarProgress(currentBloodPool, maxBloodPool, progress);

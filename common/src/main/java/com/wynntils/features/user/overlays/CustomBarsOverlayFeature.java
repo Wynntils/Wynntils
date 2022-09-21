@@ -97,7 +97,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         public abstract String icon();
 
-        public abstract WynnBossBarUtils.BarProgress defaultProgress();
+        public abstract WynnBossBarUtils.BarProgress noProgress();
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
@@ -108,7 +108,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
             WynnBossBarUtils.BarProgress barProgress = progress();
 
-            if (barProgress.equals(defaultProgress())) return;
+            if (barProgress.equals(noProgress())) return;
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);
@@ -151,7 +151,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public HealthTexture healthTexture = HealthTexture.a;
 
         public HealthBarOverlay() {
-            super(
+            this(
                     new OverlayPosition(
                             -30,
                             -52,
@@ -159,12 +159,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
                     new GuiScaledOverlaySize(81, 21));
-
-            textColor = CommonColors.RED;
         }
 
         public HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
             super(overlayPosition, guiScaledOverlaySize);
+            textColor = CommonColors.RED;
         }
 
         @Override
@@ -178,7 +177,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return null;
         }
 
@@ -228,7 +227,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return WynnBossBarUtils.NO_BLOOD_POOL;
         }
     }
@@ -238,7 +237,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public ManaTexture manaTexture = ManaTexture.a;
 
         public ManaBarOverlay() {
-            super(
+            this(
                     new OverlayPosition(
                             -30,
                             52,
@@ -246,11 +245,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
                     new GuiScaledOverlaySize(81, 21));
-            textColor = CommonColors.LIGHT_BLUE;
         }
 
         public ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
             super(overlayPosition, guiScaledOverlaySize);
+            textColor = CommonColors.LIGHT_BLUE;
         }
 
         @Override
@@ -271,7 +270,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return null;
         }
 
@@ -315,7 +314,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return WynnBossBarUtils.NO_MANA_BANK;
         }
     }
@@ -368,7 +367,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return WynnBossBarUtils.NO_AWAKENED_PROGRESS;
         }
     }
@@ -398,7 +397,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public String icon() {
-            return "\uD80C\uDC80";
+            return "🜋";
         }
 
         @Override
@@ -421,7 +420,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress defaultProgress() {
+        public WynnBossBarUtils.BarProgress noProgress() {
             return WynnBossBarUtils.NO_FOCUS;
         }
     }
