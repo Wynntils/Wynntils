@@ -342,7 +342,7 @@ public final class WebManager extends CoreManager {
                         setup = true;
                     }
 
-                    WynntilsMod.getEventBus().post(new WebSetupEvent());
+                    WynntilsMod.postEvent(new WebSetupEvent());
                     return true;
                 })
                 .build());
