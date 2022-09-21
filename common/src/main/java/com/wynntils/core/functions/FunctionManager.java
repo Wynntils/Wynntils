@@ -52,12 +52,12 @@ public final class FunctionManager extends CoreManager {
     public static boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
-        WynntilsMod.getEventBus().register(activeFunction);
+        WynntilsMod.registerEventListener(activeFunction);
 
         boolean enableSucceeded = activeFunction.onEnable();
 
         if (!enableSucceeded) {
-            WynntilsMod.getEventBus().unregister(activeFunction);
+            WynntilsMod.unregisterEventListener(activeFunction);
         }
         ENABLED_FUNCTIONS.add(activeFunction);
         return enableSucceeded;
@@ -66,7 +66,7 @@ public final class FunctionManager extends CoreManager {
     public static void disableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
-        WynntilsMod.getEventBus().unregister(activeFunction);
+        WynntilsMod.unregisterEventListener(activeFunction);
         activeFunction.onDisable();
         ENABLED_FUNCTIONS.remove(activeFunction);
     }
