@@ -219,6 +219,82 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
+    public static class ManaBarOverlay extends BaseBarOverlay {
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
+        public ManaTexture manaTexture = ManaTexture.a;
+
+        public ManaBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -20,
+                            52,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+            textColor = CommonColors.LIGHT_BLUE;
+        }
+
+        public ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
+            super(overlayPosition, guiScaledOverlaySize);
+        }
+
+        @Override
+        public float textureHeight() {
+            return manaTexture.getHeight();
+        }
+
+        @Override
+        public WynnBossBarUtils.BarProgress progress() {
+            int current = ActionBarModel.getCurrentMana();
+            int max = ActionBarModel.getMaxMana();
+            return new WynnBossBarUtils.BarProgress(current, max, current / (float) max);
+        }
+
+        @Override
+        public String icon() {
+            return "✺";
+        }
+
+        @Override
+        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+            RenderUtils.drawProgressBar(
+                    poseStack,
+                    Texture.MANA_BAR,
+                    this.getRenderX(),
+                    renderY,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + renderHeight,
+                    0,
+                    manaTexture.getTextureY1(),
+                    81,
+                    manaTexture.getTextureY2(),
+                    progress);
+        }
+    }
+
+    public static class ManaBankBarOverlay extends ManaBarOverlay {
+        public ManaBankBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -30,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+        }
+
+        @Override
+        public String icon() {
+            return "☄";
+        }
+
+        @Override
+        public WynnBossBarUtils.BarProgress progress() {
+            return WynnBossBarUtils.getManaBank();
+        }
+    }
     public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
 
         public AwakenedProgressBarOverlay() {
@@ -326,83 +402,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     universalBarTexture.width(),
                     universalBarTexture.height(),
                     progress);
-        }
-    }
-
-    public static class ManaBarOverlay extends BaseBarOverlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
-        public ManaTexture manaTexture = ManaTexture.a;
-
-        public ManaBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -20,
-                            52,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
-            textColor = CommonColors.LIGHT_BLUE;
-        }
-
-        public ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
-            super(overlayPosition, guiScaledOverlaySize);
-        }
-
-        @Override
-        public float textureHeight() {
-            return manaTexture.getHeight();
-        }
-
-        @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            int current = ActionBarModel.getCurrentMana();
-            int max = ActionBarModel.getMaxMana();
-            return new WynnBossBarUtils.BarProgress(current, max, current / (float) max);
-        }
-
-        @Override
-        public String icon() {
-            return "✺";
-        }
-
-        @Override
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
-            RenderUtils.drawProgressBar(
-                    poseStack,
-                    Texture.MANA_BAR,
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    manaTexture.getTextureY1(),
-                    81,
-                    manaTexture.getTextureY2(),
-                    progress);
-        }
-    }
-
-    public static class ManaBankBarOverlay extends ManaBarOverlay {
-        public ManaBankBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -30,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
-        }
-
-        @Override
-        public String icon() {
-            return "☄";
-        }
-
-        @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getManaBank();
         }
     }
 
