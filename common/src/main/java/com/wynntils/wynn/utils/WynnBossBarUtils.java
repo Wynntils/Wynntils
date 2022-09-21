@@ -34,7 +34,7 @@ public class WynnBossBarUtils {
             matcher = titlePattern.matcher(ComponentUtils.getCoded(event.getName()));
             if (matcher.matches()) {
                 poolEvent = event;
-                if (cancel) {
+                if (disableVanillaRendering) {
                     events.remove(event);
                 }
                 break;
