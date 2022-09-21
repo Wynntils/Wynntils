@@ -15,7 +15,11 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.scoreboard.quests.QuestInfo;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.entity.player.Player;
@@ -24,13 +28,35 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconBeamFeature extends UserFeature {
 
+    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
+
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;
+
+    @Config
+    public boolean autoTrackQuestCoordinates = true;
 
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         dependencies.add(CompassModel.class);
+    }
+
+    @SubscribeEvent
+    public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
+        if (event.getQuestInfo() == null) return;
+
+        QuestInfo questInfo = event.getQuestInfo();
+
+        Matcher matcher = COORDINATE_PATTERN.matcher(questInfo.description());
+        if (!matcher.matches()) return;
+
+        Location parsedLocation = new Location(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3)));
+
+        CompassModel.setCompassLocation(parsedLocation);
     }
 
     @SubscribeEvent
@@ -59,7 +85,7 @@ public class BeaconBeamFeature extends UserFeature {
                 1,
                 player.level.getGameTime(),
                 0,
-                64,
+                319,
                 waypointBeamColor.asFloatArray(),
                 0.166F,
                 0.33F);

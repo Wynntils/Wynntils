@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.scoreboard.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
@@ -44,6 +45,7 @@ public class QuestHandler implements ScoreboardHandler {
         String descriptionTrimmed = description.toString().trim();
 
         currentQuest = new QuestInfo(questName.toString().trim(), descriptionTrimmed);
+        WynntilsMod.getEventBus().post(new TrackedQuestUpdateEvent(currentQuest));
     }
 
     @Override
@@ -53,5 +55,6 @@ public class QuestHandler implements ScoreboardHandler {
 
     public static void resetCurrentQuest() {
         currentQuest = null;
+        WynntilsMod.getEventBus().post(new TrackedQuestUpdateEvent(currentQuest));
     }
 }

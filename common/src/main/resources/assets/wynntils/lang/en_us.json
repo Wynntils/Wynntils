@@ -10,6 +10,8 @@
   "feature.wynntils.abilityTreeScroll.invertScroll.name": "Invert scroll",
   "feature.wynntils.abilityTreeScroll.name": "Ability Tree Scroll",
   "feature.wynntils.addCommandExpansion.name": "Add Command Expansion",
+  "feature.wynntils.beaconBeam.autoTrackQuestCoordinates.description": "Should waypoints automatically be set for quest coordinates?",
+  "feature.wynntils.beaconBeam.autoTrackQuestCoordinates.name": "Auto Track Quest Coordinates",
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "What color should the beacon beam have?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
