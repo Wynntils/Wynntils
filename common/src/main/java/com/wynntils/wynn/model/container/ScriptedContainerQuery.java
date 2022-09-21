@@ -66,12 +66,17 @@ public class ScriptedContainerQuery {
         final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
+        final boolean waitForMenuReopen;
 
         private ScriptedQueryStep(
-                StartAction startAction, ContainerVerification verification, ContainerAction handleContent) {
+                StartAction startAction,
+                ContainerVerification verification,
+                ContainerAction handleContent,
+                boolean waitForMenuReopen) {
             this.startAction = startAction;
             this.verification = verification;
             this.handleContent = handleContent;
+            this.waitForMenuReopen = waitForMenuReopen;
         }
 
         @Override
@@ -112,6 +117,11 @@ public class ScriptedContainerQuery {
         public String getName() {
             return ScriptedContainerQuery.this.name;
         }
+
+        @Override
+        public boolean shouldWaitForMenuReopen() {
+            return this.waitForMenuReopen;
+        }
     }
 
     /**
@@ -128,11 +138,17 @@ public class ScriptedContainerQuery {
         StartAction startAction;
         ContainerVerification verification;
         ContainerAction handleContent;
+        boolean waitForMenuReopen = true;
 
         ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;
+        }
+
+        public QueryBuilder setWaitForMenuReopen(boolean wait) {
+            this.waitForMenuReopen = wait;
+            return this;
         }
 
         public QueryBuilder onError(Consumer<String> errorHandler) {
@@ -213,7 +229,8 @@ public class ScriptedContainerQuery {
 
         private void checkForCompletion() {
             if (startAction != null && verification != null && handleContent != null) {
-                ScriptedQueryStep nextStep = query.new ScriptedQueryStep(startAction, verification, handleContent);
+                ScriptedQueryStep nextStep =
+                        query.new ScriptedQueryStep(startAction, verification, handleContent, waitForMenuReopen);
                 query.steps.add(nextStep);
                 startAction = null;
                 verification = null;

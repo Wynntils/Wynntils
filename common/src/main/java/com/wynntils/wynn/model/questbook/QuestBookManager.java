@@ -10,6 +10,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.ContainerUtils;
@@ -23,6 +24,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
@@ -30,10 +33,16 @@ public class QuestBookManager extends CoreManager {
 
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
-    private static List<String> dialogueHistory = List.of();
-    private static List<String> newDialogueHistory;
+    private static List<List<String>> dialogueHistory = List.of();
+    private static List<List<String>> newDialogueHistory;
 
     public static void init() {}
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onWorldStateChanged(WorldStateEvent e) {
+        quests = List.of();
+        dialogueHistory = List.of();
+    }
 
     /**
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
@@ -87,7 +96,7 @@ public class QuestBookManager extends CoreManager {
         if (page == 4) {
             // Last page finished
             quests = newQuests;
-            WynntilsMod.getEventBus().post(new QuestBookReloadedEvent());
+            WynntilsMod.getEventBus().post(new QuestBookReloadedEvent.QuestsReloaded());
         }
     }
 
@@ -130,7 +139,7 @@ public class QuestBookManager extends CoreManager {
         }
     }
 
-    public static void trackDialogueHistory() {
+    public static void scanDialogueHistory() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder(
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
@@ -162,6 +171,7 @@ public class QuestBookManager extends CoreManager {
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1))
+                .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
@@ -170,30 +180,38 @@ public class QuestBookManager extends CoreManager {
 
                     newDialogueHistory = new ArrayList<>();
 
-                    newDialogueHistory.addAll(ItemUtils.getLore(dialogueHistoryItem).stream()
+                    List<String> current = ItemUtils.getLore(dialogueHistoryItem).stream()
                             .dropWhile(String::isBlank)
                             .takeWhile(s -> !s.isBlank())
-                            .toList());
+                            .toList();
+
+                    newDialogueHistory.add(current);
                 });
 
         for (int i = 2; i <= pageCount; i++) {
             int page = i;
-            queryBuilder.clickOnSlot(0).matchTitle(getQuestBookTitle(1)).processContainer((c) -> {
-                ItemStack dialogueHistoryItem = c.items().get(0);
+            queryBuilder
+                    .clickOnSlot(0)
+                    .matchTitle(getQuestBookTitle(1))
+                    .setWaitForMenuReopen(false)
+                    .processContainer((c) -> {
+                        ItemStack dialogueHistoryItem = c.items().get(0);
 
-                if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName()).equals("§bDialogue History")) return;
+                        if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
+                                .equals("§bDialogue History")) return;
 
-                newDialogueHistory = new ArrayList<>();
+                        List<String> current = ItemUtils.getLore(dialogueHistoryItem).stream()
+                                .dropWhile(String::isBlank)
+                                .takeWhile(s -> !s.isBlank())
+                                .toList();
 
-                newDialogueHistory.addAll(ItemUtils.getLore(dialogueHistoryItem).stream()
-                        .dropWhile(String::isBlank)
-                        .takeWhile(s -> !s.isBlank())
-                        .toList());
+                        newDialogueHistory.add(current);
 
-                if (page == pageCount) {
-                    dialogueHistory = newDialogueHistory;
-                }
-            });
+                        if (page == pageCount) {
+                            dialogueHistory = newDialogueHistory;
+                            WynntilsMod.getEventBus().post(new QuestBookReloadedEvent.DialogueHistoryReloaded());
+                        }
+                    });
         }
 
         queryBuilder.build().executeQuery();
@@ -216,7 +234,7 @@ public class QuestBookManager extends CoreManager {
         return quests;
     }
 
-    public static List<String> getDialogueHistory() {
+    public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
     }
 }

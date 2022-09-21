@@ -7,18 +7,17 @@ package com.wynntils.screens.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.screens.WynntilsQuestBookScreen;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 
-public class ReloadQuestsButton extends AbstractButton {
-    private final WynntilsQuestBookScreen screen;
+public class ReloadButton extends AbstractButton {
 
-    public ReloadQuestsButton(int x, int y, int width, int height, WynntilsQuestBookScreen screen) {
-        super(x, y, width, height, new TextComponent("Reload Quests Button"));
-        this.screen = screen;
+    private final Runnable onClickRunnable;
+
+    public ReloadButton(int x, int y, int width, int height, Runnable onClickRunnable) {
+        super(x, y, width, height, new TextComponent("Reload Button"));
+        this.onClickRunnable = onClickRunnable;
     }
 
     @Override
@@ -59,7 +58,7 @@ public class ReloadQuestsButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        QuestBookManager.rescanQuestBook();
+        onClickRunnable.run();
     }
 
     @Override

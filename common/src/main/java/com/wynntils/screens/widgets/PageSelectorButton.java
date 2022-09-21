@@ -7,16 +7,17 @@ package com.wynntils.screens.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
-import com.wynntils.screens.WynntilsQuestBookScreen;
+import com.wynntils.screens.WynntilsMenuPagedScreenBase;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 
 public class PageSelectorButton extends AbstractButton {
     private final boolean forward;
-    private final WynntilsQuestBookScreen screen;
+    private final WynntilsMenuPagedScreenBase screen;
 
-    public PageSelectorButton(int x, int y, int width, int height, boolean forward, WynntilsQuestBookScreen screen) {
+    public PageSelectorButton(
+            int x, int y, int width, int height, boolean forward, WynntilsMenuPagedScreenBase screen) {
         super(x, y, width, height, new TextComponent("Page Selector Button"));
         this.forward = forward;
         this.screen = screen;

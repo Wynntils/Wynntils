@@ -119,7 +119,7 @@ public class ContainerQueryManager extends CoreManager {
             return;
         }
 
-        if (containerId == lastHandledContentId) {
+        if (containerId == lastHandledContentId && currentStep.shouldWaitForMenuReopen()) {
             // Wynncraft sometimes sends contents twice; just drop this silently
             e.setCanceled(true);
             resetTimer();

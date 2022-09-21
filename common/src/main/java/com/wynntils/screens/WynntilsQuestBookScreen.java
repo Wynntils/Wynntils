@@ -15,10 +15,11 @@ import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.screens.widgets.BackButton;
+import com.wynntils.screens.widgets.DialogueHistoryButton;
 import com.wynntils.screens.widgets.PageSelectorButton;
 import com.wynntils.screens.widgets.QuestBookSearchWidget;
 import com.wynntils.screens.widgets.QuestButton;
-import com.wynntils.screens.widgets.ReloadQuestsButton;
+import com.wynntils.screens.widgets.ReloadButton;
 import com.wynntils.screens.widgets.TextInputBoxWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -36,10 +37,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements SearchableScreen {
+public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase implements SearchableScreen {
     private static final int QUESTS_PER_PAGE = 13;
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.name").withStyle(ChatFormatting.WHITE),
@@ -50,7 +52,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
     private final QuestBookSearchWidget searchWidget;
     private int currentPage = 0;
     private int maxPage = 0;
-    private List<QuestInfo> quests;
+    private List<QuestInfo> quests = new ArrayList<>();
     private List<QuestButton> questButtons = new ArrayList<>();
     private QuestInfo tracked = null;
 
@@ -68,8 +70,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
         // Only register this once
         WynntilsMod.getEventBus().register(this);
-
-        QuestBookManager.rescanQuestBook();
     }
 
     @Override
@@ -82,6 +82,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
      * */
     @Override
     protected void init() {
+        QuestBookManager.rescanQuestBook();
+
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new BackButton(
@@ -91,12 +93,12 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
                 Texture.BACK_ARROW.height(),
                 new WynntilsMenuScreen()));
 
-        this.addRenderableWidget(new ReloadQuestsButton(
+        this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                this));
+                QuestBookManager::rescanQuestBook));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -111,6 +113,11 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
                 Texture.FORWARD_ARROW.height(),
                 true,
                 this));
+        this.addRenderableWidget(new DialogueHistoryButton(
+                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30),
+                15,
+                Texture.DIALOGUE_BUTTON.width(),
+                Texture.DIALOGUE_BUTTON.height()));
     }
 
     @Override
@@ -135,7 +142,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
         renderDescription(poseStack);
 
-        renderPageInfo(poseStack);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
         poseStack.popPose();
 
@@ -191,7 +198,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
     }
 
     @SubscribeEvent
-    public void onQuestsReloaded(QuestBookReloadedEvent event) {
+    public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
         this.setQuests(QuestBookManager.getQuests());
 
         for (QuestInfo quest : quests) {
@@ -206,8 +213,10 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
     // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
     //        Adding a proper way to add quests with scripted container queries would mean this can get removed.
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onMenuClose(MenuEvent.MenuClosedEvent event) {
+        if (McUtils.mc().screen != this) return;
+
         event.setCanceled(true);
     }
 
@@ -228,7 +237,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (this.hovered instanceof ReloadQuestsButton) {
+        if (this.hovered instanceof ReloadButton) {
             RenderUtils.drawTooltipAt(
                     poseStack,
                     mouseX,
@@ -274,21 +283,31 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
                     tooltipLines,
                     FontRenderer.getInstance().getFont(),
                     true);
+            return;
         }
-    }
 
-    private void renderPageInfo(PoseStack poseStack) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        (currentPage + 1) + " / " + (maxPage + 1),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                        0,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NONE);
+        if (this.hovered instanceof DialogueHistoryButton) {
+            List<Component> tooltipLines = List.of(
+                    new TextComponent("[>] ")
+                            .withStyle(ChatFormatting.GOLD)
+                            .append(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
+                                    .withStyle(ChatFormatting.BOLD)
+                                    .withStyle(ChatFormatting.GOLD)),
+                    new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                            .withStyle(ChatFormatting.GRAY),
+                    new TextComponent(""),
+                    new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                            .withStyle(ChatFormatting.GREEN));
+
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    100,
+                    tooltipLines,
+                    FontRenderer.getInstance().getFont(),
+                    true);
+        }
     }
 
     protected void renderDescription(PoseStack poseStack) {
@@ -362,14 +381,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
                 .toList());
     }
 
-    private float getTranslationY() {
-        return (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
-    }
-
-    private float getTranslationX() {
-        return (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f;
-    }
-
     @Override
     public TextInputBoxWidget getFocusedTextInput() {
         return this.searchWidget;
@@ -393,15 +404,18 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
         return tracked;
     }
 
+    @Override
     public int getCurrentPage() {
         return currentPage;
     }
 
+    @Override
     public void setCurrentPage(int currentPage) {
         this.currentPage = MathUtils.clamp(currentPage, 0, maxPage);
         reloadQuestButtons();
     }
 
+    @Override
     public int getMaxPage() {
         return maxPage;
     }
