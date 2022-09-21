@@ -290,8 +290,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     manaTexture.getTextureY2(),
                     progress);
         }
-
-
     }
 
     public static class ManaBankBarOverlay extends ManaBarOverlay {
@@ -338,7 +336,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return Texture.UNIVERSAL_BAR.height()/2f;
+            return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
         @Override
@@ -390,7 +388,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return Texture.UNIVERSAL_BAR.height()/2f;
+            return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
         @Override
