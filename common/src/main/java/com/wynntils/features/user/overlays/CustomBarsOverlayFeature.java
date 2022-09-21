@@ -402,7 +402,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public String icon() {
-            return "⊗";
+            return "🏹";
         }
 
         @Override
