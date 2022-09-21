@@ -188,11 +188,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta < 0) {
-            setCurrentPage(getCurrentPage() + 1);
-        } else if (delta > 0) {
-            setCurrentPage(getCurrentPage() - 1);
-        }
+        setCurrentPage(getCurrentPage() + (delta > 0 ? -1 : 1));
 
         return true;
     }
