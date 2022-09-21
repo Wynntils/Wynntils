@@ -166,7 +166,7 @@ public class ScriptedContainerQuery {
             return this;
         }
 
-        public QueryBuilder clickOnSlotMatching(int slotNum, Item expectedItemType, String expectedItemName) {
+        public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, String expectedItemName) {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }

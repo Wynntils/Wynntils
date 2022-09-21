@@ -32,13 +32,13 @@ import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
-import com.wynntils.features.user.QuestBookFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
+import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
@@ -117,7 +117,6 @@ public final class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
-        registerFeature(new QuestBookFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new SoulPointTimerFeature());
@@ -127,6 +126,7 @@ public final class FeatureRegistry {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

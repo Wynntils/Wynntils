@@ -5,17 +5,22 @@
 package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.CoreManager;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
+import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class QuestBookModel extends Model {
+public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
 
     private static List<QuestInfo> quests = List.of();
@@ -27,9 +32,15 @@ public class QuestBookModel extends Model {
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
      * be sent. The available quests are then available using getQuests.
      */
-    public static void queryQuestBook() {
+    private static void queryQuestBook() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
-                .onError(msg -> WynntilsMod.warn("Problem querying Quest Book: " + msg))
+                .onError(msg -> {
+                    WynntilsMod.warn("Problem querying Quest Book: " + msg);
+                    McUtils.player()
+                            .sendMessage(
+                                    new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED),
+                                    null);
+                })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1))
                 .processContainer(c -> processQuestBookPage(c, 1));
@@ -37,7 +48,7 @@ public class QuestBookModel extends Model {
         for (int i = 2; i < 5; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
-                    .clickOnSlotMatching(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
+                    .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
                     .matchTitle(getQuestBookTitle(page))
                     .processContainer(c -> processQuestBookPage(c, page));
         }
@@ -59,7 +70,7 @@ public class QuestBookModel extends Model {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item);
+                QuestInfo questInfo = QuestInfo.parseItem(item, page);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -71,6 +82,50 @@ public class QuestBookModel extends Model {
             quests = newQuests;
             WynntilsMod.getEventBus().post(new QuestBookReloadedEvent());
         }
+    }
+
+    public static void trackQuest(QuestInfo questInfo) {
+        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
+                .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
+                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .matchTitle(getQuestBookTitle(1));
+
+        if (questInfo.getPageNumber() > 1) {
+            for (int i = 2; i <= questInfo.getPageNumber(); i++) {
+                queryBuilder
+                        .processContainer(container -> {}) // we ignore this because this is not the correct page
+                        .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(i))
+                        .matchTitle(getQuestBookTitle(i));
+            }
+        }
+        queryBuilder
+                .processContainer(c -> findQuestForTracking(c, questInfo))
+                .build()
+                .executeQuery();
+    }
+
+    private static void findQuestForTracking(ContainerContent container, QuestInfo questInfo) {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
+                int slot = row * 9 + col;
+
+                // Very first slot is chat history
+                if (slot == 0) continue;
+
+                ItemStack item = container.items().get(slot);
+
+                String questName = QuestInfo.getQuestName(item);
+                if (Objects.equals(questName, questInfo.getName())) {
+                    ContainerUtils.clickOnSlot(slot, container.containerId(), container.items());
+                    return;
+                }
+            }
+        }
+    }
+
+    public static void rescanQuestBook() {
+        WynntilsMod.info("Requesting rescan of Quest Book");
+        QuestBookManager.queryQuestBook();
     }
 
     private static String getNextPageButtonName(int nextPageNum) {

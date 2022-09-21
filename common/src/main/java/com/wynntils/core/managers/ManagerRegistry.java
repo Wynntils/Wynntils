@@ -17,6 +17,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
+        registerPersistentDependency(QuestBookManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
 

@@ -15,20 +15,11 @@ import com.wynntils.screens.SearchableScreen;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundEvents;
 
-public class SearchWidget extends TextInputBoxWidget {
-    protected final Component DEFAULT_TEXT =
-            new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
-
-    public SearchWidget(
+public class QuestBookSearchWidget extends SearchWidget {
+    public QuestBookSearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
-        super(x, y, width, height, new TextComponent("SearchTextBox"), onUpdateConsumer, searchableScreen);
+        super(x, y, width, height, onUpdateConsumer, searchableScreen);
     }
 
     @Override
@@ -45,9 +36,9 @@ public class SearchWidget extends TextInputBoxWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         defaultText ? DEFAULT_TEXT.getString() : renderedText,
-                        this.x + 5,
+                        this.x + 17,
                         this.x + this.width - 5,
-                        this.y + 6.5f,
+                        this.y + 11f,
                         this.width,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
@@ -58,34 +49,13 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.SEARCH_BAR.resource(),
+                Texture.QUEST_BOOK_SEARCH.resource(),
                 this.x,
                 this.y,
                 0,
                 this.width,
                 this.height,
-                Texture.SEARCH_BAR.width(),
-                Texture.SEARCH_BAR.height());
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
-            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            searchableScreen.setFocusedTextInput(this);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    protected void removeFocus() {
-        this.setTextBoxInput("");
-        super.removeFocus();
+                Texture.QUEST_BOOK_SEARCH.width(),
+                Texture.QUEST_BOOK_SEARCH.height());
     }
 }
