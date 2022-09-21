@@ -1,0 +1,94 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.mc.render.HorizontalAlignment;
+import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.mc.render.Texture;
+import com.wynntils.mc.render.VerticalAlignment;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+
+public abstract class WynntilsMenuScreenBase extends Screen {
+    protected WynntilsMenuScreenBase(Component component) {
+        super(component);
+    }
+
+    protected void renderBackgroundTexture(PoseStack poseStack) {
+        int txWidth = Texture.QUEST_BOOK_BACKGROUND.width();
+        int txHeight = Texture.QUEST_BOOK_BACKGROUND.height();
+
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                Texture.QUEST_BOOK_BACKGROUND.resource(),
+                (this.width - txWidth) / 2f,
+                (this.height - txHeight) / 2f,
+                0,
+                txWidth,
+                txHeight,
+                txWidth,
+                txHeight);
+    }
+
+    protected void renderVersion(PoseStack poseStack) {
+        // FIXME: Replace with better scaling support
+
+        poseStack.pushPose();
+        String version = "Build " + WynntilsMod.getBuildNumber();
+        poseStack.scale(0.7f, 0.7f, 0);
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        version,
+                        0,
+                        Texture.QUEST_BOOK_BACKGROUND.width() * 1.3f / 2f
+                                + FontRenderer.getInstance().getFont().width(version),
+                        Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
+                        0,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.Center,
+                        FontRenderer.TextShadow.NORMAL);
+        poseStack.popPose();
+    }
+
+    protected void renderTitle(PoseStack poseStack, String titleString) {
+        int txWidth = Texture.QUEST_BOOK_TITLE.width();
+        int txHeight = Texture.QUEST_BOOK_TITLE.height();
+        RenderUtils.drawScalingTexturedRect(
+                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+
+        poseStack.pushPose();
+        poseStack.scale(2f, 2f, 0f);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        titleString,
+                        5,
+                        18,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextShadow.NORMAL);
+        poseStack.popPose();
+    }
+
+    protected void renderDescription(PoseStack poseStack, String description) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        description,
+                        20,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                        140,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.Left,
+                        FontRenderer.TextShadow.NONE);
+    }
+}

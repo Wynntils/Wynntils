@@ -228,8 +228,8 @@ public final class EventFactory {
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket(int containerId) {
-        post(new MenuClosedEvent(containerId));
+    public static Event onClientboundContainerClosePacket(int containerId) {
+        return post(new MenuClosedEvent(containerId));
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {

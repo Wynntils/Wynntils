@@ -93,10 +93,14 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleContainerClose(Lnet/minecraft/network/protocol/game/ClientboundContainerClosePacket;)V",
-            at = @At("RETURN"))
-    private void handleContainerClosePost(ClientboundContainerClosePacket packet, CallbackInfo ci) {
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onClientboundContainerClosePacket(packet.getContainerId());
+        if (EventFactory.onClientboundContainerClosePacket(packet.getContainerId())
+                .isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(
