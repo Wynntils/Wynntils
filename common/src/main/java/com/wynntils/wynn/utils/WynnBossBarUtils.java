@@ -7,7 +7,6 @@ package com.wynntils.wynn.utils;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
-
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +27,8 @@ public class WynnBossBarUtils {
         LerpingBossEvent poolEvent = null;
         Matcher matcher = null;
 
-        Collection<LerpingBossEvent> events = McUtils.mc().gui.getBossOverlay().events.values();
+        Collection<LerpingBossEvent> events =
+                McUtils.mc().gui.getBossOverlay().events.values();
 
         for (LerpingBossEvent event : events) {
             matcher = titlePattern.matcher(ComponentUtils.getCoded(event.getName()));

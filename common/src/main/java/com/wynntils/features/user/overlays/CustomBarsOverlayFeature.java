@@ -36,6 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomBarsOverlayFeature extends UserFeature {
 
     public static CustomBarsOverlayFeature INSTANCE;
+
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
@@ -61,6 +62,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         event.setMessage("");
     }
+
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay healthBarOverlay = new HealthBarOverlay();
 
