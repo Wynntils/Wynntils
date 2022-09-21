@@ -38,10 +38,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
     public static CustomBarsOverlayFeature INSTANCE;
 
     @Config
-    public boolean shouldDisplayOnActionBar = true;
+    public boolean shouldDisplayOnActionBar = false;
 
     @Config
-    public boolean shouldDisplayOnBossBar = true;
+    public boolean shouldDisplayOnBossBar = false;
 
     @Override
     protected void onInit(
