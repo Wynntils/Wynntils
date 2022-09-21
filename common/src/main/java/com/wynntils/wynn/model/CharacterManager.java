@@ -100,12 +100,6 @@ public class CharacterManager extends CoreManager {
                 // We did not auto-join, we have a correct ID already.
                 int oldId = currentCharacter.id;
                 scanCharacterInfoPage(oldId);
-                currentCharacter = new CharacterInfo(
-                        currentCharacter.classType,
-                        currentCharacter.reskinned,
-                        currentCharacter.level,
-                        oldId,
-                        currentCharacter.professionInfo);
             }
         }
     }
