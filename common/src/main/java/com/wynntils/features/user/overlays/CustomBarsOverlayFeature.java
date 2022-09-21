@@ -38,10 +38,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
     public static CustomBarsOverlayFeature INSTANCE;
 
     @Config
-    public boolean shouldDisplayOnActionBar = false;
+    public boolean shouldDisplayOnActionBar = true;
 
     @Config
-    public boolean shouldDisplayOnBossBar = false;
+    public boolean shouldDisplayOnBossBar = true;
 
     @Override
     protected void onInit(
@@ -228,7 +228,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getBloodPool(INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getBloodPool(!INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -315,7 +315,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getManaBank(INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getManaBank(!INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -345,7 +345,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getAwakenedBar(INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getAwakenedBar(!INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -397,12 +397,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getFocusBar(INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getFocusBar(!INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
         public String icon() {
-            return "🜋";
+            return "⊗";
         }
 
         @Override
