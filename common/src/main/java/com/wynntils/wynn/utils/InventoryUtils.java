@@ -50,9 +50,9 @@ public final class InventoryUtils {
     }
 
     public static int findHorseSlotNum() {
-        Player player = McUtils.player();
+        Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum <= 44; slotNum++) {
-            ItemStack stack = player.getInventory().getItem(slotNum);
+            ItemStack stack = inventory.getItem(slotNum);
             if (WynnItemMatchers.isHorse(stack)) {
                 return slotNum;
             }
