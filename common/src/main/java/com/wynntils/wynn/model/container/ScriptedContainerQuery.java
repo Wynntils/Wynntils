@@ -16,8 +16,12 @@ import net.minecraft.world.item.ItemStack;
 public class ScriptedContainerQuery {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
             (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
+
+    // No op
+    private static final Runnable DEFAULT_ON_COMPLETE = () -> {};
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
+    private Runnable onComplete = DEFAULT_ON_COMPLETE;
     private String name;
 
     private ScriptedContainerQuery(String name) {
@@ -37,6 +41,10 @@ public class ScriptedContainerQuery {
 
     private void setErrorHandler(Consumer<String> errorHandler) {
         this.errorHandler = errorHandler;
+    }
+
+    private void setOnComplete(Runnable onComplete) {
+        this.onComplete = onComplete;
     }
 
     @FunctionalInterface
@@ -93,6 +101,11 @@ public class ScriptedContainerQuery {
             ScriptedContainerQuery.this.errorHandler.accept(errorMsg);
             // Remove all remaining steps
             ScriptedContainerQuery.this.steps.clear();
+        }
+
+        @Override
+        public void onComplete() {
+            ScriptedContainerQuery.this.onComplete.run();
         }
 
         @Override

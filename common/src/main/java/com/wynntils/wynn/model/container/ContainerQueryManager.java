@@ -143,8 +143,10 @@ public class ContainerQueryManager extends CoreManager {
             }
         } else {
             // We're done
+            ContainerQueryStep oldStep = currentStep;
             endQuery();
             McUtils.sendPacket(new ServerboundContainerClosePacket(id));
+            oldStep.onComplete();
             if (!queuedQueries.isEmpty()) {
                 runQuery(queuedQueries.pop());
             }

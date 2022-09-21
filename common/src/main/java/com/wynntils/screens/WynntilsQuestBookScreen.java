@@ -68,6 +68,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
         // Only register this once
         WynntilsMod.getEventBus().register(this);
+
+        QuestBookManager.rescanQuestBook();
     }
 
     @Override
@@ -80,9 +82,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
      * */
     @Override
     protected void init() {
-        QuestBookManager.rescanQuestBook();
-        this.setQuests(QuestBookManager.getQuests());
-
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new BackButton(
