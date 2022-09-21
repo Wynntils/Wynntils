@@ -35,8 +35,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
 
+    public static CustomBarsOverlayFeature INSTANCE;
     @Config
     public boolean shouldDisplayOnActionBar = false;
+
+    @Config
+    public boolean shouldDisplayOnBossBar = false;
 
     @Override
     protected void onInit(
@@ -57,7 +61,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         event.setMessage("");
     }
-
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
     private final Overlay healthBarOverlay = new HealthBarOverlay();
 
@@ -223,7 +226,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getBloodPool();
+            return WynnBossBarUtils.getBloodPool(INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -310,7 +313,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getManaBank();
+            return WynnBossBarUtils.getManaBank(INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -340,7 +343,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getAwakenedBar();
+            return WynnBossBarUtils.getAwakenedBar(INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
@@ -392,7 +395,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getFocusBar();
+            return WynnBossBarUtils.getFocusBar(INSTANCE.shouldDisplayOnBossBar);
         }
 
         @Override
