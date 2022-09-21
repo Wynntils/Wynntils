@@ -295,6 +295,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             return WynnBossBarUtils.getManaBank();
         }
     }
+
     public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
 
         public AwakenedProgressBarOverlay() {
