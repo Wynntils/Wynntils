@@ -18,7 +18,7 @@ public class Delay {
         this.function = function;
         this.delay = delay;
 
-        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.registerEventListener(this);
     }
 
     @SubscribeEvent
@@ -61,6 +61,6 @@ public class Delay {
 
     public void end() {
         isRunning = false;
-        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.unregisterEventListener(this);
     }
 }

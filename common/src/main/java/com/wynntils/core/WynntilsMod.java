@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,16 @@ public final class WynntilsMod {
         return modLoader;
     }
 
-    public static IEventBus getEventBus() {
-        return eventBus;
+    public static void unregisterEventListener(Object object) {
+        eventBus.unregister(object);
+    }
+
+    public static void registerEventListener(Object object) {
+        eventBus.register(object);
+    }
+
+    public static boolean postEvent(Event event) {
+        return eventBus.post(event);
     }
 
     public static String getVersion() {

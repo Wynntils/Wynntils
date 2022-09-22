@@ -61,7 +61,7 @@ public final class ManagerRegistry {
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
 
-        WynntilsMod.getEventBus().register(manager);
+        WynntilsMod.registerEventListener(manager);
 
         tryInitManager(manager);
     }
@@ -122,7 +122,7 @@ public final class ManagerRegistry {
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (!hasDependencies) {
-                WynntilsMod.getEventBus().unregister(manager);
+                WynntilsMod.unregisterEventListener(manager);
 
                 ENABLED_MANAGERS.remove(manager);
 
@@ -130,7 +130,7 @@ public final class ManagerRegistry {
             }
         } else {
             if (hasDependencies) {
-                WynntilsMod.getEventBus().register(manager);
+                WynntilsMod.registerEventListener(manager);
 
                 ENABLED_MANAGERS.add(manager);
 

@@ -111,7 +111,7 @@ import net.minecraftforge.eventbus.api.Event;
 public final class EventFactory {
     private static <T extends Event> T post(T event) {
         if (WynnUtils.onServer()) {
-            WynntilsMod.getEventBus().post(event);
+            WynntilsMod.postEvent(event);
         }
         return event;
     }
@@ -120,7 +120,7 @@ public final class EventFactory {
      * Post event without checking if we are connected to a Wynncraft server
      */
     private static <T extends Event> T postAlways(T event) {
-        WynntilsMod.getEventBus().post(event);
+        WynntilsMod.postEvent(event);
         return event;
     }
 

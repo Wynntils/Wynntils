@@ -187,7 +187,7 @@ public final class ScoreboardModel extends Model {
             List<String> skipped = new ArrayList<>();
 
             for (Segment parsedSegment : segments) {
-                boolean cancelled = WynntilsMod.getEventBus().post(new ScoreboardSegmentAdditionEvent(parsedSegment));
+                boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));
 
                 if (cancelled) {
                     skipped.addAll(parsedSegment.getScoreboardLines());
