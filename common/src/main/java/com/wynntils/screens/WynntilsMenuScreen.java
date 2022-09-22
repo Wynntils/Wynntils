@@ -41,6 +41,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         buttons.add(new WynntilsMenuButton(
                 Texture.QUEST_BOOK_ICON,
+                true,
                 new WynntilsQuestBookScreen(),
                 List.of(
                         new TextComponent("[>] ")
@@ -55,6 +56,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.SETTINGS_ICON,
+                true,
                 new WynntilsSettingsScreen(),
                 List.of(
                         new TextComponent("[>] ")
@@ -69,6 +71,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.OVERLAYS_ICON,
+                true,
                 new OverlaySelectionScreen(),
                 List.of(
                         new TextComponent("[>] ")
@@ -77,6 +80,22 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
                         new TranslatableComponent("screens.wynntils.wynntilsMenu.overlayConfig.description")
+                                .withStyle(ChatFormatting.GRAY),
+                        new TextComponent(""),
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
+        buttons.add(new WynntilsMenuButton(
+                Texture.DIALOGUE_BUTTON,
+                false,
+                new WynntilsDialogueHistoryScreen(),
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(new TranslatableComponent(
+                                                "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(ChatFormatting.GOLD)),
+                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
                                 .withStyle(ChatFormatting.GRAY),
                         new TextComponent(""),
                         new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
@@ -207,6 +226,27 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
             if (hovered) {
                 this.hovered = button;
+            }
+
+            if (!button.dynamicTexture()) {
+                RenderUtils.drawTexturedRect(
+                        poseStack,
+                        texture.resource(),
+                        x + (BUTTON_SIZE - texture.width()) / 2f,
+                        y + (BUTTON_SIZE - texture.height()) / 2f,
+                        1,
+                        texture.width(),
+                        texture.height(),
+                        0,
+                        0,
+                        texture.width(),
+                        texture.height(),
+                        texture.width(),
+                        texture.height());
+                continue;
+            }
+
+            if (hovered) {
                 RenderUtils.drawTexturedRect(
                         poseStack,
                         texture.resource(),
