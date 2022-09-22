@@ -144,10 +144,10 @@ public final class ChatModel extends Model {
 
         String firstNewLineCoded = ComponentUtils.getCoded(newLines.getFirst());
 
-        boolean noShiftToContinueDialog = false;
+        boolean nonBlockingDialogue = false;
 
         if (NPC_DIALOGUE_PATTERN.matcher(firstNewLineCoded).matches()) {
-            noShiftToContinueDialog = true;
+            nonBlockingDialogue = true;
             handleNpcDialog(List.of(firstNewLineCoded), false);
         } else if (NPC_FINAL_PATTERN.matcher(firstNewLineCoded).find()) {
             // This is an NPC dialog screen.
@@ -189,7 +189,7 @@ public final class ChatModel extends Model {
         // Register all new chat lines
         newChatLines.forEach(ChatModel::handleFakeChatLine);
 
-        if (!noShiftToContinueDialog) {
+        if (!nonBlockingDialogue) {
             // Update the new dialog
             handleNpcDialog(dialog, true);
         }
