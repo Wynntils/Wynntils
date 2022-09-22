@@ -17,9 +17,7 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.scoreboard.quests.QuestInfo;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.entity.player.Player;
@@ -27,9 +25,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconBeamFeature extends UserFeature {
-
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
-
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;
 
@@ -46,22 +41,17 @@ public class BeaconBeamFeature extends UserFeature {
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         if (event.getQuestInfo() == null) return;
 
-        QuestInfo questInfo = event.getQuestInfo();
+        ScoreboardQuestInfo questInfo = event.getQuestInfo();
+        Location location = questInfo.getLocation();
 
-        Matcher matcher = COORDINATE_PATTERN.matcher(questInfo.description());
-        if (!matcher.matches()) return;
+        if (location == null) return;
 
-        Location parsedLocation = new Location(
-                Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)),
-                Integer.parseInt(matcher.group(3)));
-
-        CompassModel.setCompassLocation(parsedLocation);
+        CompassModel.setCompassLocation(location);
     }
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderLevelLastEvent event) {
-        if (McUtils.player() == null || CompassModel.getCompassLocation().isEmpty()) return;
+        if (CompassModel.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =

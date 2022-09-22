@@ -4,17 +4,17 @@
  */
 package com.wynntils.wynn.event;
 
-import com.wynntils.wynn.model.scoreboard.quests.QuestInfo;
+import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import net.minecraftforge.eventbus.api.Event;
 
 public class TrackedQuestUpdateEvent extends Event {
-    private final QuestInfo questInfo;
+    private final ScoreboardQuestInfo questInfo;
 
-    public TrackedQuestUpdateEvent(QuestInfo questInfo) {
+    public TrackedQuestUpdateEvent(ScoreboardQuestInfo questInfo) {
         this.questInfo = questInfo;
     }
 
-    public QuestInfo getQuestInfo() {
+    public ScoreboardQuestInfo getQuestInfo() {
         return questInfo;
     }
 }
