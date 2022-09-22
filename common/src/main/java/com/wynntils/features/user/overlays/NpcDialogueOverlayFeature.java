@@ -51,7 +51,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
+    private ScheduledFuture<?> scheduledAutoProgress = null;
 
     private String currentDialogue;
     private boolean currentlyNeedsConfirmation;
@@ -60,19 +60,19 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public static boolean autoProgress = false;
 
     @Config
-    public static int dialogAutoProgressDefaultTime = 1500; // Milliseconds
+    public static int dialogDefaultDisplayTime = 1500; // Milliseconds
 
     @Config
-    public static int dialogAutoProgressAdditionalTimePerWord = 200; // Milliseconds
+    public static int dialogAdditionalDisplayTimePerWord = 200; // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
     private void cancelAutoProgress() {
-        if (scheduledAutoProgressKeyPress == null) return;
+        if (scheduledAutoProgress == null) return;
 
-        scheduledAutoProgressKeyPress.cancel(true);
+        scheduledAutoProgress.cancel(true);
     }
 
     @Override
@@ -92,31 +92,45 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         currentDialogue = msg;
         currentlyNeedsConfirmation = e.isNeedsConfirmation();
 
-        if (scheduledAutoProgressKeyPress != null) {
-            scheduledAutoProgressKeyPress.cancel(true);
+        if (scheduledAutoProgress != null) {
+            scheduledAutoProgress.cancel(true);
 
             // Release sneak key if currently pressed
             McUtils.sendPacket(new ServerboundPlayerCommandPacket(
                     McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
 
-            scheduledAutoProgressKeyPress = null;
+            scheduledAutoProgress = null;
         }
 
         if (autoProgress && e.isNeedsConfirmation()) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (msg != null) {
-                scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
+                scheduledAutoProgress = scheduledSneakPress(msg);
             }
+        } else if (!e.isNeedsConfirmation()) {
+            scheduledAutoProgress = scheduleContinue(msg);
         }
     }
 
     private ScheduledFuture<?> scheduledSneakPress(String msg) {
         int words = msg.split(" ").length;
-        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+        long delay = dialogDefaultDisplayTime + ((long) words * dialogAdditionalDisplayTimePerWord);
 
         return autoProgressExecutor.schedule(
                 () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
                         McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                delay,
+                TimeUnit.MILLISECONDS);
+    }
+
+    private ScheduledFuture<?> scheduleContinue(String msg) {
+        int words = msg.split(" ").length;
+        long delay = dialogDefaultDisplayTime + ((long) words * dialogAdditionalDisplayTimePerWord);
+
+        return autoProgressExecutor.schedule(
+                () -> {
+                    currentDialogue = null;
+                },
                 delay,
                 TimeUnit.MILLISECONDS);
     }
@@ -203,8 +217,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 renderTaskList.add(pressSneakMessage);
             }
 
-            if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
-                long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
+            if (scheduledAutoProgress != null && !scheduledAutoProgress.isCancelled()) {
+                long timeUntilProgress = scheduledAutoProgress.getDelay(TimeUnit.MILLISECONDS);
                 TextRenderTask autoProgressMessage = new TextRenderTask(
                         ChatFormatting.GREEN + "Auto-progress: "
                                 + Math.max(0, Math.round(timeUntilProgress / 1000f))
