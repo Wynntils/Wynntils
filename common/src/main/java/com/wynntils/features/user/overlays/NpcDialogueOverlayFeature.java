@@ -54,7 +54,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private String currentDialogue;
-    private boolean currentlyBlocking;
+    private boolean currentlyNeedsConfirmation;
 
     @Config
     public static boolean autoProgress = false;
@@ -90,7 +90,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
-        currentlyBlocking = e.isBlocking();
+        currentlyNeedsConfirmation = e.isNeedsConfirmation();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -102,7 +102,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress && !e.isBlocking()) {
+        if (autoProgress && e.isNeedsConfirmation()) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (msg != null) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
@@ -124,7 +124,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = null;
-        currentlyBlocking = true;
         cancelAutoProgress();
     }
 
@@ -199,7 +198,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             // Render "To continue" message
             List<TextRenderTask> renderTaskList = new LinkedList<>();
 
-            if (!currentlyBlocking) {
+            if (currentlyNeedsConfirmation) {
                 TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
                 renderTaskList.add(pressSneakMessage);
             }

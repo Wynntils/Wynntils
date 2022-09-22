@@ -10,18 +10,18 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class NpcDialogEvent extends Event {
     private final String codedDialog;
-    private final boolean blocking;
+    private final boolean needsConfirmation;
 
-    public NpcDialogEvent(String codedDialog, boolean blocking) {
+    public NpcDialogEvent(String codedDialog, boolean needsConfirmation) {
         this.codedDialog = codedDialog;
-        this.blocking = blocking;
+        this.needsConfirmation = needsConfirmation;
     }
 
     public String getCodedDialog() {
         return codedDialog;
     }
 
-    public boolean isBlocking() {
-        return blocking;
+    public boolean isNeedsConfirmation() {
+        return needsConfirmation;
     }
 }

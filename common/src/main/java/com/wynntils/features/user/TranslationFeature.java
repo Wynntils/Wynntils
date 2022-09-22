@@ -87,13 +87,13 @@ public class TranslationFeature extends UserFeature {
             TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped, e.isBlocking());
+                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped, e.isNeedsConfirmation());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null, e.isBlocking());
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null, e.isNeedsConfirmation());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
