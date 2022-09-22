@@ -99,7 +99,6 @@ public class CharacterManager extends CoreManager {
             } else {
                 // We did not auto-join, we have a correct ID already.
                 int oldId = currentCharacter.id;
-                System.out.println("oldId = " + oldId);
                 scanCharacterInfoPage(oldId);
             }
         }

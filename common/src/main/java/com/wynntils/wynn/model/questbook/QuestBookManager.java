@@ -209,7 +209,7 @@ public class QuestBookManager extends CoreManager {
 
                         if (page == pageCount) {
                             dialogueHistory = newDialogueHistory;
-                            WynntilsMod.getEventBus().post(new QuestBookReloadedEvent.DialogueHistoryReloaded());
+                            WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
                         }
                     });
         }
