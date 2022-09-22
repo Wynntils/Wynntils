@@ -24,6 +24,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
+    private static final int NEXT_TASK_MAX_WIDTH = 200;
     private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
@@ -140,7 +141,12 @@ public class QuestInfo {
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(new TextComponent(""));
-            tooltipLines.add(new TextComponent(questInfo.getNextTask()).withStyle(ChatFormatting.GRAY));
+            String nextTask = questInfo.getNextTask();
+            String[] lines = StringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+
+            for (String line : lines) {
+                tooltipLines.add(new TextComponent(line).withStyle(ChatFormatting.GRAY));
+            }
         }
 
         return tooltipLines;
