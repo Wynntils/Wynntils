@@ -54,6 +54,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private String currentDialogue;
+    private boolean currentlyAutoProgressing;
 
     @Config
     public static boolean autoProgress = false;
@@ -89,6 +90,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
+        currentlyAutoProgressing = e.isAutoProgressing();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -100,7 +102,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress) {
+        if (autoProgress && e.isAutoProgressing()) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (msg != null) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
@@ -122,6 +124,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = null;
+        currentlyAutoProgressing = true;
         cancelAutoProgress();
     }
 
@@ -195,8 +198,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             // Render "To continue" message
             List<TextRenderTask> renderTaskList = new LinkedList<>();
-            TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
-            renderTaskList.add(pressSneakMessage);
+
+            if (currentlyAutoProgressing) {
+                TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+                renderTaskList.add(pressSneakMessage);
+            }
 
             if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
                 long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);

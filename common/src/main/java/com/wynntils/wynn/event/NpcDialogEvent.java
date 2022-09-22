@@ -10,12 +10,18 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class NpcDialogEvent extends Event {
     private final String codedDialog;
+    private final boolean autoProgressing;
 
-    public NpcDialogEvent(String codedDialog) {
+    public NpcDialogEvent(String codedDialog, boolean autoProgressing) {
         this.codedDialog = codedDialog;
+        this.autoProgressing = autoProgressing;
     }
 
     public String getCodedDialog() {
         return codedDialog;
+    }
+
+    public boolean isAutoProgressing() {
+        return autoProgressing;
     }
 }

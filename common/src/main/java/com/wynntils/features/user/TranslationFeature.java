@@ -87,13 +87,13 @@ public class TranslationFeature extends UserFeature {
             TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);
+                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped, e.isAutoProgressing());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null);
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null, e.isAutoProgressing());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
@@ -110,8 +110,8 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        public TranslatedNpcDialogEvent(String codedDialog) {
-            super(codedDialog);
+        public TranslatedNpcDialogEvent(String codedDialog, boolean autoProgressing) {
+            super(codedDialog, autoProgressing);
         }
     }
 }

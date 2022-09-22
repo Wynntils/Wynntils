@@ -71,6 +71,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ChatModel extends Model {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue(§r)?$");
+    private static final Pattern NPC_DIALOGUE_PATTERN = Pattern.compile("§r§7\\[\\d+/\\d+\\] §r§2.+: §r§a.*");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
     private static final Set<Feature> dialogExtractionDependents = new HashSet<>();
@@ -129,7 +130,7 @@ public final class ChatModel extends Model {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNpcDialog(List.of());
+            handleNpcDialog(List.of(), true);
             return;
         }
 
@@ -141,17 +142,17 @@ public final class ChatModel extends Model {
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<String> dialog = new LinkedList<>();
 
-        if (NPC_FINAL_PATTERN
-                .matcher(ComponentUtils.getCoded(newLines.getFirst()))
-                .find()) {
+        String firstNewLineCoded = ComponentUtils.getCoded(newLines.getFirst());
+
+        boolean noShiftToContinueDialog = false;
+
+        if (NPC_DIALOGUE_PATTERN.matcher(firstNewLineCoded).matches()) {
+            noShiftToContinueDialog = true;
+            handleNpcDialog(List.of(firstNewLineCoded), false);
+        } else if (NPC_FINAL_PATTERN.matcher(firstNewLineCoded).find()) {
             // This is an NPC dialog screen.
             // First remove the "Press SHIFT to continue" trailer.
             newLines.removeFirst();
-            if (newLines.getFirst().getString().isEmpty()) {
-                newLines.removeFirst();
-            } else {
-                WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
-            }
 
             // Separate the dialog part from any potential new "real" chat lines
             boolean dialogDone = false;
@@ -188,8 +189,10 @@ public final class ChatModel extends Model {
         // Register all new chat lines
         newChatLines.forEach(ChatModel::handleFakeChatLine);
 
-        // Update the new dialog
-        handleNpcDialog(dialog);
+        if (!noShiftToContinueDialog) {
+            // Update the new dialog
+            handleNpcDialog(dialog, true);
+        }
     }
 
     private static void handleFakeChatLine(Component lineComponent) {
@@ -247,15 +250,15 @@ public final class ChatModel extends Model {
         return event.getMessage();
     }
 
-    private static void handleNpcDialog(List<String> dialog) {
+    private static void handleNpcDialog(List<String> dialog, boolean autoProgressing) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
             if (dialog.size() > 1) {
-                WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
+                WynntilsMod.warn("Malformed dialog [#1]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
+            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0), autoProgressing);
             WynntilsMod.postEvent(event);
         }
     }
