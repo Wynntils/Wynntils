@@ -36,6 +36,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -207,8 +208,10 @@ public class WynntilsQuestBookScreen extends WynntilsMenuScreenBase implements S
 
     // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
     //        Adding a proper way to add quests with scripted container queries would mean this can get removed.
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onMenuClose(MenuEvent.MenuClosedEvent event) {
+        if (McUtils.mc().screen != this) return;
+
         event.setCanceled(true);
     }
 
