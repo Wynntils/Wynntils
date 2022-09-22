@@ -9,4 +9,5 @@ import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public record WynntilsMenuButton(Texture buttonTexture, Screen openedScreen, List<Component> tooltipList) {}
+public record WynntilsMenuButton(
+        Texture buttonTexture, boolean dynamicTexture, Screen openedScreen, List<Component> tooltipList) {}

@@ -50,7 +50,7 @@ public final class ContainerUtils {
     }
 
     public static boolean openInventory(int slotNum) {
-        int id = McUtils.player().containerMenu.containerId;
+        int id = McUtils.containerMenu().containerId;
         if (id != 0) {
             // Another inventory is already open, cannot do this
             return false;

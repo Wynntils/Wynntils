@@ -6,4 +6,8 @@ package com.wynntils.wynn.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class QuestBookReloadedEvent extends Event {}
+public abstract class QuestBookReloadedEvent extends Event {
+    public static class QuestsReloaded extends QuestBookReloadedEvent {}
+
+    public static class DialogueHistoryReloaded extends QuestBookReloadedEvent {}
+}

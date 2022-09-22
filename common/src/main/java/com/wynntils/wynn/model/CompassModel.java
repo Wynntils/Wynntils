@@ -12,7 +12,6 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// TODO: Draw compass beam
 public final class CompassModel extends Model {
     private static Location compassLocation = null;
 

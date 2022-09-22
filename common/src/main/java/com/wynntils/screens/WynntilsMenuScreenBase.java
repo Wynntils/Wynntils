@@ -91,4 +91,12 @@ public abstract class WynntilsMenuScreenBase extends Screen {
                         HorizontalAlignment.Left,
                         FontRenderer.TextShadow.NONE);
     }
+
+    protected float getTranslationY() {
+        return (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
+    }
+
+    protected float getTranslationX() {
+        return (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f;
+    }
 }
