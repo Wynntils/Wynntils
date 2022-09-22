@@ -233,7 +233,7 @@ public final class ChatModel extends Model {
         return event.getMessage();
     }
 
-    private static void handleNpcDialog(List<String> dialog, boolean autoProgressing) {
+    private static void handleNpcDialog(List<String> dialog, boolean nonBlocking) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
@@ -241,7 +241,7 @@ public final class ChatModel extends Model {
                 WynntilsMod.warn("Malformed dialog [#1]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0), autoProgressing);
+            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0), !nonBlocking);
             WynntilsMod.postEvent(event);
         }
     }

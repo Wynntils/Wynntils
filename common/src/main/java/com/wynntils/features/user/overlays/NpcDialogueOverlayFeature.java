@@ -90,7 +90,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
-        currentlyBlocking = !e.isAutoProgressing();
+        currentlyBlocking = e.isBlocking();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -102,7 +102,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress && !e.isAutoProgressing()) {
+        if (autoProgress && !e.isBlocking()) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (msg != null) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
