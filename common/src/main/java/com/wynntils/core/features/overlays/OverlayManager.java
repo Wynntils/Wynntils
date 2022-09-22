@@ -5,6 +5,7 @@
 package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.managers.CoreManager;
@@ -17,9 +18,12 @@ import com.wynntils.screens.overlays.OverlayManagementScreen;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends CoreManager {
@@ -74,6 +78,7 @@ public final class OverlayManager extends CoreManager {
             shouldRender = false;
         }
 
+        List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
 
@@ -92,13 +97,28 @@ public final class OverlayManager extends CoreManager {
                 }
             }
 
-            if (testMode) {
-                overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
-            } else {
-                if (shouldRender) {
-                    overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+            try {
+                if (testMode) {
+                    overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                } else {
+                    if (shouldRender) {
+                        overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                    }
                 }
+            } catch (Throwable t) {
+                WynntilsMod.error("Exception when rendering overlay " + overlay.getTranslatedName(), t);
+                WynntilsMod.warn("This overlay will be disabled");
+                McUtils.sendMessageToClient(new TextComponent("Wynntils error: Overlay '" + overlay.getTranslatedName()
+                                + "' has crashed and will be disabled")
+                        .withStyle(ChatFormatting.RED));
+                // We can't disable it right away since that will cause ConcurrentModificationException
+                crashedOverlays.add(overlay);
             }
+        }
+
+        // Hopefully we have none :)
+        for (Overlay overlay : crashedOverlays) {
+            overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
     }
 
@@ -138,7 +158,7 @@ public final class OverlayManager extends CoreManager {
     }
 
     private static void calculateSections() {
-        Window window = McUtils.mc().getWindow();
+        Window window = McUtils.window();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
 

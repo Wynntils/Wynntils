@@ -54,7 +54,7 @@ public class ContainerQueryManager extends CoreManager {
             return;
         }
 
-        if (McUtils.player().containerMenu.containerId != 0) {
+        if (McUtils.containerMenu().containerId != 0) {
             // For safety, check this way too
             firstStep.onError("Another container is already open");
             return;
