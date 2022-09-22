@@ -40,9 +40,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
-    @Config
-    public boolean shouldDisplayOnBossBar = false;
-
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
@@ -228,7 +225,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getBloodPool(!INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getBloodPool();
         }
 
         @Override
@@ -315,7 +312,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getManaBank(!INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getManaBank();
         }
 
         @Override
@@ -345,7 +342,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getAwakenedBar(!INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getAwakenedBar();
         }
 
         @Override
@@ -397,7 +394,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getFocusBar(!INSTANCE.shouldDisplayOnBossBar);
+            return WynnBossBarUtils.getFocusBar();
         }
 
         @Override

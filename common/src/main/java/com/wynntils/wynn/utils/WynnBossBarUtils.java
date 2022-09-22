@@ -24,7 +24,7 @@ public class WynnBossBarUtils {
     private static final Pattern FOCUS_PATTERN = Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]");
 
     private static Pair<LerpingBossEvent, Matcher> getLerpingBossEvent(
-            Pattern titlePattern, boolean disableVanillaRendering) {
+            Pattern titlePattern) {
         LerpingBossEvent poolEvent = null;
         Matcher matcher = null;
 
@@ -35,9 +35,6 @@ public class WynnBossBarUtils {
             matcher = titlePattern.matcher(ComponentUtils.getCoded(event.getName()));
             if (matcher.matches()) {
                 poolEvent = event;
-                if (disableVanillaRendering) {
-                    events.remove(event);
-                }
                 break;
             }
         }
@@ -45,8 +42,8 @@ public class WynnBossBarUtils {
         return new Pair<>(poolEvent, matcher);
     }
 
-    public static BarProgress getManaBank(boolean disableVanillaRendering) {
-        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(MANA_BANK_PATTERN, disableVanillaRendering);
+    public static BarProgress getManaBank() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(MANA_BANK_PATTERN);
 
         if (pair.a == null) return NO_MANA_BANK;
 
@@ -61,8 +58,8 @@ public class WynnBossBarUtils {
         }
     }
 
-    public static BarProgress getBloodPool(boolean disableVanillaRendering) {
-        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(BLOOD_POOL_PATTERN, disableVanillaRendering);
+    public static BarProgress getBloodPool() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(BLOOD_POOL_PATTERN);
 
         if (pair.a == null) return NO_BLOOD_POOL;
 
@@ -83,8 +80,8 @@ public class WynnBossBarUtils {
         }
     }
 
-    public static BarProgress getAwakenedBar(boolean disableVanillaRendering) {
-        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(AWAKENED_PROGRESS_PATTERN, disableVanillaRendering);
+    public static BarProgress getAwakenedBar() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(AWAKENED_PROGRESS_PATTERN);
 
         if (pair.a == null) return NO_AWAKENED_PROGRESS;
 
@@ -99,8 +96,8 @@ public class WynnBossBarUtils {
         }
     }
 
-    public static BarProgress getFocusBar(boolean disableVanillaRendering) {
-        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(FOCUS_PATTERN, disableVanillaRendering);
+    public static BarProgress getFocusBar() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(FOCUS_PATTERN);
 
         if (pair.a == null) return NO_FOCUS;
 
