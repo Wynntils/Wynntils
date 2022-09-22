@@ -96,7 +96,7 @@ public class QuestBookManager extends CoreManager {
         if (page == 4) {
             // Last page finished
             quests = newQuests;
-            WynntilsMod.getEventBus().post(new QuestBookReloadedEvent.QuestsReloaded());
+            WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
         }
     }
 
