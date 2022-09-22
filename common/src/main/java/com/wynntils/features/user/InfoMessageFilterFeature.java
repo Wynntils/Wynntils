@@ -10,10 +10,12 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
@@ -38,6 +40,13 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     private static final Pattern LOGIN_ANNOUNCEMENT =
             Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
+
+    private static final Pattern UNUSED_POINTS_1 =
+            Pattern.compile("You have (\\d+) unused Skill Points! Right-Click while holding your compass to use them");
+    private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
+            "You have (\\d+) unused Ability Points! Right-Click while holding your compass to use them");
+    private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
+            "You have (\\d+) unused Skill Points and (\\d+) unused Ability Points! Right-Click while holding your compass to use them");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
@@ -72,11 +81,15 @@ public class InfoMessageFilterFeature extends UserFeature {
     @Config
     private FilterType soulPoint = FilterType.REDIRECT;
 
+    @Config
+    private FilterType unusedPoints = FilterType.REDIRECT;
+
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
         String msg = e.getCodedMessage();
+        String uncoloredMsg = ComponentUtils.stripFormatting(e.getCodedMessage());
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.NORMAL) {
@@ -142,6 +155,49 @@ public class InfoMessageFilterFeature extends UserFeature {
                     // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
                     NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
                     return;
+                }
+            }
+
+            if (unusedPoints != FilterType.KEEP) {
+
+                Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
+
+                int unusedSkillPoints = 0;
+                int unusedAbilityPoints = 0;
+                if (matcher.matches()) {
+                    unusedSkillPoints = Integer.parseInt(matcher.group(1));
+                }
+
+                matcher = UNUSED_POINTS_2.matcher(uncoloredMsg);
+                if (matcher.matches()) {
+                    unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+                }
+
+                matcher = UNUSED_POINTS_3.matcher(uncoloredMsg);
+                if (matcher.matches()) {
+                    unusedSkillPoints = Integer.parseInt(matcher.group(1));
+                    unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+                }
+
+                if (unusedPoints == FilterType.REDIRECT) {
+                    if (unusedSkillPoints != 0) {
+                        NotificationManager.queueMessage(new TextComponent("You have ")
+                                .withStyle(ChatFormatting.DARK_RED)
+                                .append(new TextComponent(String.valueOf(unusedSkillPoints))
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(ChatFormatting.DARK_RED))
+                                .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED)));
+                    }
+
+                    if (unusedAbilityPoints != 0) {
+                        NotificationManager.queueMessage(new TextComponent("You have ")
+                                .withStyle(ChatFormatting.DARK_RED)
+                                .append(new TextComponent(String.valueOf(unusedAbilityPoints))
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(ChatFormatting.DARK_RED))
+                                .append(new TextComponent(" unused ability points")
+                                        .withStyle(ChatFormatting.DARK_RED)));
+                    }
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
