@@ -11,7 +11,7 @@ import com.wynntils.mc.render.HorizontalAlignment;
 import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.screens.SearchableScreen;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
@@ -23,33 +23,28 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 
 public class SearchWidget extends TextInputBoxWidget {
-    private final Component DEFAULT_TEXT = new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
+    protected final Component DEFAULT_TEXT =
+            new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
     public SearchWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            Consumer<String> onUpdateConsumer,
-            WynntilsSettingsScreen settingsScreen) {
-        super(x, y, width, height, new TextComponent("SearchTextBox"), onUpdateConsumer, settingsScreen);
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
+        super(x, y, width, height, new TextComponent("SearchTextBox"), onUpdateConsumer, searchableScreen);
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        checkForHeldBackspace();
+
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
-        String cursorChar = getRenderCursorChar();
-
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
+
+        String renderedText = getRenderedText(this.width - 18);
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        defaultText
-                                ? DEFAULT_TEXT.getString()
-                                : (textBoxInput.substring(0, cursorPosition)
-                                        + cursorChar
-                                        + textBoxInput.substring(cursorPosition)),
+                        defaultText ? DEFAULT_TEXT.getString() : renderedText,
                         this.x + 5,
                         this.x + this.width - 5,
                         this.y + 6.5f,
@@ -77,7 +72,7 @@ public class SearchWidget extends TextInputBoxWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            settingsScreen.setFocusedTextInput(this);
+            searchableScreen.setFocusedTextInput(this);
 
             return true;
         }

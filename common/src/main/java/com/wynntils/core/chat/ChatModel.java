@@ -238,7 +238,7 @@ public final class ChatModel extends Model {
 
         ChatMessageReceivedEvent event =
                 new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
-        WynntilsMod.getEventBus().post(event);
+        WynntilsMod.postEvent(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
     }
@@ -252,7 +252,7 @@ public final class ChatModel extends Model {
                 // Keep going anyway and post the first line of the dialog
             }
             NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
-            WynntilsMod.getEventBus().post(event);
+            WynntilsMod.postEvent(event);
         }
     }
 

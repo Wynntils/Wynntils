@@ -35,6 +35,7 @@ import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -111,7 +112,7 @@ import net.minecraftforge.eventbus.api.Event;
 public final class EventFactory {
     private static <T extends Event> T post(T event) {
         if (WynnUtils.onServer()) {
-            WynntilsMod.getEventBus().post(event);
+            WynntilsMod.postEvent(event);
         }
         return event;
     }
@@ -120,7 +121,7 @@ public final class EventFactory {
      * Post event without checking if we are connected to a Wynncraft server
      */
     private static <T extends Event> T postAlways(T event) {
-        WynntilsMod.getEventBus().post(event);
+        WynntilsMod.postEvent(event);
         return event;
     }
 
@@ -228,8 +229,8 @@ public final class EventFactory {
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket(int containerId) {
-        post(new MenuClosedEvent(containerId));
+    public static Event onClientboundContainerClosePacket(int containerId) {
+        return post(new MenuClosedEvent(containerId));
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {
@@ -414,6 +415,10 @@ public final class EventFactory {
 
     public static Event onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
         return post(new SubtitleSetTextEvent(packet.getText()));
+    }
+
+    public static Event onMouseScroll(double windowPointer, double xOffset, double yOffset) {
+        return post(new MouseScrollEvent(windowPointer, xOffset, yOffset));
     }
 
     // endregion

@@ -24,6 +24,7 @@
     "ScoreboardMixin",
     "ScreenMixin",
     "SlotMixin",
+    "MouseHandlerMixin",
     "accessors.ChatScreenAccessor",
     "accessors.ClientboundBossEventPacketAccessor",
     "accessors.ClientboundCommandsPacketAccessor",

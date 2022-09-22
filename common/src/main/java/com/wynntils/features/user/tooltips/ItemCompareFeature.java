@@ -85,7 +85,7 @@ public class ItemCompareFeature extends UserFeature {
 
         // No compared item selected, try compare to equipped armor
         if (compareToEquipped) {
-            List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
+            List<ItemStack> armorSlots = McUtils.inventory().armor;
 
             Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
                     .filter(itemStack -> itemStack instanceof GearItemStack gItemStack

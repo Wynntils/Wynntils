@@ -19,7 +19,7 @@ public class HorseFunctions {
     private static WynnItemStack getHorse() {
         int horseSlot = InventoryUtils.findHorseSlotNum();
         if (horseSlot == -1) return null;
-        ItemStack is = McUtils.player().getInventory().getItem(horseSlot);
+        ItemStack is = McUtils.inventory().getItem(horseSlot);
         if (!(is instanceof WynnItemStack horse)) return null;
         return horse;
     }
