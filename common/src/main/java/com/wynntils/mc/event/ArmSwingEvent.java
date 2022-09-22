@@ -30,11 +30,13 @@ public class ArmSwingEvent extends Event {
 
     public enum ArmSwingContext {
         DROP_ITEM_FROM_INVENTORY_SCREEN,
-        DROP_ITEM_FROM_HOTBAR,
-        ATTACK_OR_START_BREAKING_BLOCK,
-        BREAKING_BLOCK,
-        INTERACT_WITH_BLOCK,
-        INTERACT_WITH_ENTITY,
-        USE_ITEM,
+
+        // Not implemented
+        //        DROP_ITEM_FROM_HOTBAR,
+        //        ATTACK_OR_START_BREAKING_BLOCK,
+        //        BREAKING_BLOCK,
+        //        INTERACT_WITH_BLOCK,
+        //        INTERACT_WITH_ENTITY,
+        //        USE_ITEM,
     }
 }
