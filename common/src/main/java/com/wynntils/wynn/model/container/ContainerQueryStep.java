@@ -38,6 +38,19 @@ public interface ContainerQueryStep {
      */
     void onError(String errorMsg);
 
+    /**
+     * This will be called after query competition, after the inventory was closed.
+     */
+    void onComplete();
+
     /** A way to identify this query. It is used to help avoid queueing the same query twice. */
     String getName();
+
+    // FIXME: This might not be the best way to handle this
+    /** Some gui's do not reopen the menu, they just refresh the content (pressing dialogue history in quest book).
+     * Use this to indicate that a content refresh is enough for us, and we do not need to wait for opening a menu
+     */
+    default boolean shouldWaitForMenuReopen() {
+        return true;
+    }
 }
