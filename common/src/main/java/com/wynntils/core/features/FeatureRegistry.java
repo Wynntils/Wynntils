@@ -82,7 +82,6 @@ public final class FeatureRegistry {
 
         // always on
         registerFeature(new FixSpellOverwriteFeature());
-        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new LootrunFeature());
 
         // user
@@ -99,6 +98,7 @@ public final class FeatureRegistry {
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new FixPacketBugsFeature());
+        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
