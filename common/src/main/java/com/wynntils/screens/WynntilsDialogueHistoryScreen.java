@@ -50,12 +50,12 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
         super(new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.name"));
 
         // Only register this once
-        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.registerEventListener(this);
     }
 
     @Override
     public void onClose() {
-        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
 
