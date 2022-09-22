@@ -120,6 +120,7 @@ public final class ChatModel extends Model {
             // Figure out what's new since last chat message
             for (Component line : lines) {
                 String noCodes = ComponentUtils.getUnformatted(line);
+                // Remove all empty lines
                 if (noCodes.isBlank()) continue;
 
                 if (noCodes.equals(lastRealChat)) break;
