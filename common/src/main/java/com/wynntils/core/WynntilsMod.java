@@ -5,14 +5,19 @@
 package com.wynntils.core;
 
 import com.wynntils.core.events.EventBusWrapper;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
@@ -45,7 +50,50 @@ public final class WynntilsMod {
     }
 
     public static boolean postEvent(Event event) {
-        return eventBus.post(event);
+        try {
+            return eventBus.post(event);
+        } catch (Throwable t) {
+            handleExceptionInEventListener(t);
+            return false;
+        }
+    }
+
+    private static void handleExceptionInEventListener(Throwable t) {
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        String crashingFeatureName = null;
+        for (StackTraceElement line : stackTrace) {
+            if (line.getClassName().startsWith("com.wynntils.features.")) {
+                crashingFeatureName = line.getClassName();
+                break;
+            }
+        }
+
+        if (crashingFeatureName == null) {
+            WynntilsMod.error("Exception in event listener not belonging to a feature", t);
+            return;
+        }
+
+        String featureClassName = crashingFeatureName.substring(crashingFeatureName.lastIndexOf('.') + 1);
+        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureClassName);
+        if (featureOptional.isEmpty()) {
+            WynntilsMod.error(
+                    "Exception in event listener in feature that cannot be located: " + crashingFeatureName, t);
+            return;
+        }
+
+        if (!(featureOptional.get() instanceof UserFeature feature)) {
+            WynntilsMod.error("Exception in event listener in non-user feature: " + crashingFeatureName, t);
+            return;
+        }
+
+        WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
+        WynntilsMod.warn("This feature will be disabled");
+        McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
+                        + "' has crashed and will be disabled")
+                .withStyle(ChatFormatting.RED));
+
+        feature.setUserEnabled(false);
+        feature.tryUserToggle();
     }
 
     public static String getVersion() {
