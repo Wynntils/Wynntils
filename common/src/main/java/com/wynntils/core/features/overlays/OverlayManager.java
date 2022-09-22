@@ -158,7 +158,7 @@ public final class OverlayManager extends CoreManager {
     }
 
     private static void calculateSections() {
-        Window window = McUtils.mc().getWindow();
+        Window window = McUtils.window();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
 
