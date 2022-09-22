@@ -97,7 +97,7 @@ public class QuestBookManager extends CoreManager {
             // Last page finished
             quests = newQuests;
             WynntilsMod.getEventBus().post(new QuestBookReloadedEvent.QuestsReloaded());
-        }
+            }
     }
 
     public static void trackQuest(QuestInfo questInfo) {

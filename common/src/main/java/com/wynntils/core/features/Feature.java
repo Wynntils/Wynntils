@@ -157,7 +157,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         }
 
         if (isListener) {
-            WynntilsMod.getEventBus().register(this);
+            WynntilsMod.registerEventListener(this);
         }
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
@@ -176,7 +176,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         ManagerRegistry.removeAllFeatureDependency(this);
 
         if (isListener) {
-            WynntilsMod.getEventBus().unregister(this);
+            WynntilsMod.unregisterEventListener(this);
         }
         OverlayManager.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
@@ -264,13 +264,13 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
                 return;
             }
 
-            WynntilsMod.getEventBus().register(this);
+            WynntilsMod.registerEventListener(this);
         }
 
         @SubscribeEvent
         public void onWebSetup(WebSetupEvent e) {
             setSatisfied(true);
-            WynntilsMod.getEventBus().unregister(this);
+            WynntilsMod.unregisterEventListener(this);
         }
 
         @Override

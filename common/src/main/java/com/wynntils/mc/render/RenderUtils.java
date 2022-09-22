@@ -932,7 +932,7 @@ public final class RenderUtils {
        this changes it so it doesn't do that
     */
     public static void enableScissor(int x, int y, int width, int height) {
-        Window window = McUtils.mc().getWindow();
+        Window window = McUtils.window();
         double scale = window.getGuiScale();
         RenderSystem.enableScissor(
                 (int) (x * scale), (int) (window.getHeight() - ((y + height) * scale)), (int) (width * scale), (int)

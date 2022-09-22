@@ -69,12 +69,12 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 this);
 
         // Only register this once
-        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.registerEventListener(this);
     }
 
     @Override
     public void onClose() {
-        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
 

@@ -73,9 +73,9 @@ public final class ActionBarModel extends Model {
         ActionBarMessageUpdateEvent.ManaText manaText =
                 new ActionBarMessageUpdateEvent.ManaText("§b✺ " + currentMana + "/" + maxMana);
 
-        WynntilsMod.getEventBus().post(actionText);
-        WynntilsMod.getEventBus().post(healthText);
-        WynntilsMod.getEventBus().post(manaText);
+        WynntilsMod.postEvent(actionText);
+        WynntilsMod.postEvent(healthText);
+        WynntilsMod.postEvent(manaText);
 
         MutableComponent modified = new TextComponent(healthText.getMessage())
                 .append("    ")

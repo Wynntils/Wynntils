@@ -274,7 +274,7 @@ public class CharacterManager extends CoreManager {
          * Return the current number of soul points of the character, or -1 if unable to determine
          */
         public int getSoulPoints() {
-            ItemStack soulPoints = McUtils.player().getInventory().getItem(8);
+            ItemStack soulPoints = McUtils.inventory().getItem(8);
             if (soulPoints.getItem() != Items.NETHER_STAR) {
                 return -1;
             }
