@@ -17,6 +17,7 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
+import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.CustomCommandKeybindsFeature;
@@ -86,6 +87,7 @@ public final class FeatureRegistry {
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new BeaconBeamFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new CustomBarsOverlayFeature());

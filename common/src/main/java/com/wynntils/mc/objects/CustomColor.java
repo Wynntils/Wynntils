@@ -129,6 +129,10 @@ public class CustomColor {
         return (a << 24) | (r << 16) | (g << 8) | b;
     }
 
+    public float[] asFloatArray() {
+        return new float[] {r / 255f, g / 255f, b / 255f};
+    }
+
     /** #rrggbb format */
     public String toHexString() {
         String hex = Integer.toHexString(this.asInt());
