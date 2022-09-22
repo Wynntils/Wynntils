@@ -72,7 +72,6 @@ public final class ChatModel extends Model {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue(§r)?$");
     private static final Pattern NPC_DIALOGUE_PATTERN = Pattern.compile("§r§7\\[\\d+/\\d+\\] §r§2.+: §r§a.*");
-    private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
     private static final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private static String lastRealChat = null;
@@ -156,33 +155,16 @@ public final class ChatModel extends Model {
             newLines.removeFirst();
 
             // Separate the dialog part from any potential new "real" chat lines
-            boolean dialogDone = false;
             for (Component lineComponent : newLines) {
                 String line = ComponentUtils.getCoded(lineComponent);
 
-                if (!dialogDone) {
-                    if (EMPTY_LINE_PATTERN.matcher(line).find()) {
-                        dialogDone = true;
-                        // Intentionally throw away this line
-                    } else {
-                        dialog.push(line);
-                    }
+                if (NPC_DIALOGUE_PATTERN.matcher(line).find()) {
+                    dialog.push(line);
                 } else {
-                    if (!EMPTY_LINE_PATTERN.matcher(line).find()) {
-                        newChatLines.push(lineComponent);
-                    }
+                    newChatLines.push(lineComponent);
                 }
             }
         } else {
-            // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
-            // We just ignore that part. Also, remove empty lines or lines with just the §r code
-            while (!newLines.isEmpty()
-                    && EMPTY_LINE_PATTERN
-                            .matcher(ComponentUtils.getCoded(newLines.getFirst()))
-                            .find()) {
-                newLines.removeFirst();
-            }
-
             // What remains, if any, are new chat lines
             newLines.forEach(newChatLines::push);
         }
