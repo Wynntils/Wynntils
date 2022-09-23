@@ -134,6 +134,10 @@ public class MainMapScreen extends Screen {
 
         renderMap(poseStack, map, textureX, textureZ);
 
+        renderCursor(poseStack);
+    }
+
+    private void renderCursor(PoseStack poseStack) {
         double pX = McUtils.player().getX();
         double pZ = McUtils.player().getZ();
 
