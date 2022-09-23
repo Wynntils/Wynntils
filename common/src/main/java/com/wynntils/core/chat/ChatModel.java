@@ -12,7 +12,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.NpcDialogEvent;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,7 +20,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -77,7 +75,7 @@ public final class ChatModel extends Model {
 
     private static final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private static String lastRealChat = null;
-    private static List<String> lastNpcDialog = List.of();
+    private static List<Component> lastNpcDialog = List.of();
 
     /** Needed for all Models */
     public static void init() {}
@@ -92,7 +90,7 @@ public final class ChatModel extends Model {
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
         if (!codedMessage.contains("\n") || codedMessage.indexOf("\n") == (codedMessage.length() - 1)) {
-            saveLastChat(codedMessage);
+            saveLastChat(message);
             MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, codedMessage, messageType);
             if (updatedMessage == null) {
@@ -112,18 +110,18 @@ public final class ChatModel extends Model {
     private static void handleMultilineMessage(Component message) {
         String msg = ComponentUtils.getCoded(message);
 
-        List<String> lines = new LinkedList<>(Arrays.asList(msg.split("\\n")));
+        List<Component> lines = ComponentUtils.splitComponentInLines(message);
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
-        LinkedList<String> newLines = new LinkedList<>();
+        LinkedList<Component> newLines = new LinkedList<>();
         if (lastRealChat == null) {
             // If we have no history, all lines are to be considered new
             lines.forEach(newLines::addLast);
         } else {
             // Figure out what's new since last chat message
-            for (String line : lines) {
-                String noCodes = ComponentUtils.stripFormatting(line);
-                if (noCodes.equals(lastRealChat)) break;
+            for (Component line : lines) {
+                String plainText = line.getString();
+                if (plainText.equals(lastRealChat)) break;
                 newLines.addLast(line);
             }
         }
@@ -135,19 +133,21 @@ public final class ChatModel extends Model {
             return;
         }
 
-        if (newLines.getLast().isEmpty()) {
+        if (newLines.getLast().getString().isEmpty()) {
             // Wynntils add an empty line before the NPC dialog; remove it
             newLines.removeLast();
         }
 
-        LinkedList<String> newChatLines = new LinkedList<>();
-        LinkedList<String> dialog = new LinkedList<>();
+        LinkedList<Component> newChatLines = new LinkedList<>();
+        LinkedList<Component> dialog = new LinkedList<>();
 
-        if (NPC_FINAL_PATTERN.matcher(newLines.getFirst()).find()) {
+        if (NPC_FINAL_PATTERN
+                .matcher(ComponentUtils.getCoded(newLines.getFirst()))
+                .find()) {
             // This is an NPC dialog screen.
             // First remove the "Press SHIFT to continue" trailer.
             newLines.removeFirst();
-            if (newLines.getFirst().isEmpty()) {
+            if (newLines.getFirst().getString().isEmpty()) {
                 newLines.removeFirst();
             } else {
                 WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
@@ -155,16 +155,17 @@ public final class ChatModel extends Model {
 
             // Separate the dialog part from any potential new "real" chat lines
             boolean dialogDone = false;
-            for (String line : newLines) {
+            for (Component line : newLines) {
+                String codedLine = ComponentUtils.getCoded(line);
                 if (!dialogDone) {
-                    if (EMPTY_LINE_PATTERN.matcher(line).find()) {
+                    if (EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
                         dialogDone = true;
                         // Intentionally throw away this line
                     } else {
                         dialog.push(line);
                     }
                 } else {
-                    if (!EMPTY_LINE_PATTERN.matcher(line).find()) {
+                    if (!EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
                         newChatLines.push(line);
                     }
                 }
@@ -173,7 +174,9 @@ public final class ChatModel extends Model {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && EMPTY_LINE_PATTERN.matcher(newLines.getFirst()).find()) {
+                    && EMPTY_LINE_PATTERN
+                            .matcher(ComponentUtils.getCoded(newLines.getFirst()))
+                            .find()) {
                 newLines.removeFirst();
             }
 
@@ -188,11 +191,11 @@ public final class ChatModel extends Model {
         handleNpcDialog(dialog);
     }
 
-    private static void handleFakeChatLine(String codedString) {
-        // This is a normal, single line chat but coded with format codes
-        saveLastChat(codedString);
-        TextComponent message = new TextComponent(codedString);
-        Component updatedMessage = handleChatLine(message, codedString, MessageType.BACKGROUND);
+    private static void handleFakeChatLine(Component chatMsg) {
+        // This is a normal, single line chat
+        saveLastChat(chatMsg);
+        String coded = ComponentUtils.getCoded(chatMsg);
+        Component updatedMessage = handleChatLine(chatMsg, coded, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -200,10 +203,12 @@ public final class ChatModel extends Model {
         McUtils.sendMessageToClient(updatedMessage);
     }
 
-    private static void saveLastChat(String codedString) {
-        String msg = ComponentUtils.stripFormatting(codedString);
-        if (!msg.isBlank()) {
-            lastRealChat = msg;
+    private static void saveLastChat(Component chatMsg) {
+        String plainText = chatMsg.getString();
+        if (!plainText.isBlank()) {
+            // We store the unformatted string version to be able to compare between
+            // normal and background versions
+            lastRealChat = plainText;
         }
     }
 
@@ -243,7 +248,7 @@ public final class ChatModel extends Model {
         return event.getMessage();
     }
 
-    private static void handleNpcDialog(List<String> dialog) {
+    private static void handleNpcDialog(List<Component> dialog) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
