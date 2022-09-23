@@ -201,10 +201,21 @@ public final class ConfigManager extends CoreManager {
             }
 
             ConfigHolder configHolder = new ConfigHolder(parent, configField, category, metadata, type);
-            if (metadata.visible()) {
-                assert !configHolder.getDisplayName().startsWith("feature.wynntils.");
-                assert !configHolder.getDescription().startsWith("feature.wynntils.");
-                assert !configHolder.getDescription().isEmpty();
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                if (metadata.visible()) {
+                    if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
+                        WynntilsMod.error("Config displayName i18n is missing for " + configHolder.getDisplayName());
+                        throw new RuntimeException();
+                    }
+                    if (configHolder.getDescription().startsWith("feature.wynntils.")) {
+                        WynntilsMod.error("Config description i18n is missing for " + configHolder.getDescription());
+                        throw new RuntimeException();
+                    }
+                    if (configHolder.getDescription().isEmpty()) {
+                        WynntilsMod.error("Config description is empty for " + configHolder.getDisplayName());
+                        throw new RuntimeException();
+                    }
+                }
             }
             options.add(configHolder);
         }
