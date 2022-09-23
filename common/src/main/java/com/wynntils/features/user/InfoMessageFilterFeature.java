@@ -199,6 +199,10 @@ public class InfoMessageFilterFeature extends UserFeature {
                                         .withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
+
+                if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
+                    e.setCanceled(true);
+                }
             }
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
