@@ -124,7 +124,7 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        renderBackground(poseStack, renderWidth, renderHeight, renderX, renderY);
+        renderBackground(poseStack);
 
         if (!WebManager.isMapLoaded()) return;
 
@@ -173,7 +173,8 @@ public class MainMapScreen extends Screen {
         lastMouseY = mouseY;
     }
 
-    private static void renderBackground(PoseStack poseStack, float width, float height, float renderX, float renderY) {
+    @Override
+    public void renderBackground(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.FULLSCREEN_MAP_BORDER.resource(),
