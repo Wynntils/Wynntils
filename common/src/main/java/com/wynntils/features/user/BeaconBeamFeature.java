@@ -39,7 +39,7 @@ public class BeaconBeamFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (event.getQuestInfo() == null) return;
+        if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
 
         ScoreboardQuestInfo questInfo = event.getQuestInfo();
         Location location = questInfo.getLocation();
