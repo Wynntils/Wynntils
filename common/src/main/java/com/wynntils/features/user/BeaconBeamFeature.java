@@ -74,8 +74,8 @@ public class BeaconBeamFeature extends UserFeature {
                 partials,
                 1,
                 player.level.getGameTime(),
-                0,
-                319,
+                (int) -McUtils.player().position().y,
+                319 + (int) McUtils.player().position().y,
                 waypointBeamColor.asFloatArray(),
                 0.166F,
                 0.33F);
