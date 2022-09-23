@@ -48,7 +48,7 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class NpcDialogueOverlayFeature extends UserFeature {
-    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
+    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
