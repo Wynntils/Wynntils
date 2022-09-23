@@ -17,12 +17,14 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
+import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.FilterAdminCommandsFeature;
+import com.wynntils.features.user.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
@@ -32,13 +34,15 @@ import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
-import com.wynntils.features.user.QuestBookFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TranslationFeature;
+import com.wynntils.features.user.UpdateReminderFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
+import com.wynntils.features.user.WynntilsQuestBookFeature;
+import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
@@ -83,7 +87,9 @@ public final class FeatureRegistry {
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
+        registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new BeaconBeamFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new CustomBarsOverlayFeature());
@@ -93,6 +99,7 @@ public final class FeatureRegistry {
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new FixPacketBugsFeature());
+        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
@@ -115,16 +122,17 @@ public final class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
-        registerFeature(new QuestBookFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new UpdateReminderFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

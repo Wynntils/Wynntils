@@ -52,12 +52,12 @@ public final class FontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case Left -> x;
-            case Center -> x - font.width(text) / 2;
+            case Center -> x - font.width(text) / 2f;
             case Right -> x - font.width(text);};
 
         renderY = switch (verticalAlignment) {
             case Top -> y;
-            case Middle -> y - font.lineHeight / 2;
+            case Middle -> y - font.lineHeight / 2f;
             case Bottom -> y - font.lineHeight;};
 
         switch (shadow) {
@@ -95,14 +95,14 @@ public final class FontRenderer {
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x1;
-                    case Center -> (x1 + x2) / 2;
+                    case Center -> (x1 + x2) / 2f;
                     case Right -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
                     case Top -> y1;
-                    case Middle -> (y1 + y2) / 2;
+                    case Middle -> (y1 + y2) / 2f;
                     case Bottom -> y2;
                 };
 

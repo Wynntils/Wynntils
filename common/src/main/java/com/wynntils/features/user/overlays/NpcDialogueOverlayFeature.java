@@ -162,6 +162,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 ChatModel.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 ChatModel.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                currentDialogue = null;
             }
         }
 

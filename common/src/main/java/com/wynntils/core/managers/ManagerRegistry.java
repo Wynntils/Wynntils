@@ -17,6 +17,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
+        registerPersistentDependency(QuestBookManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
 
@@ -59,7 +61,7 @@ public final class ManagerRegistry {
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
 
-        WynntilsMod.getEventBus().register(manager);
+        WynntilsMod.registerEventListener(manager);
 
         tryInitManager(manager);
     }
@@ -120,7 +122,7 @@ public final class ManagerRegistry {
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (!hasDependencies) {
-                WynntilsMod.getEventBus().unregister(manager);
+                WynntilsMod.unregisterEventListener(manager);
 
                 ENABLED_MANAGERS.remove(manager);
 
@@ -128,7 +130,7 @@ public final class ManagerRegistry {
             }
         } else {
             if (hasDependencies) {
-                WynntilsMod.getEventBus().register(manager);
+                WynntilsMod.registerEventListener(manager);
 
                 ENABLED_MANAGERS.add(manager);
 

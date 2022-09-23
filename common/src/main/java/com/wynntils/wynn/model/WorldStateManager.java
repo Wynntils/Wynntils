@@ -71,7 +71,7 @@ public class WorldStateManager extends CoreManager {
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
-        WynntilsMod.getEventBus().post(new WorldStateEvent(newState, oldState, newWorldName));
+        WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
     @SubscribeEvent

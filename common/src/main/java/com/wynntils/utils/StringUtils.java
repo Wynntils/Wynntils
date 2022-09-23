@@ -120,20 +120,43 @@ public final class StringUtils {
         searchTerm = searchTerm.toLowerCase(Locale.ROOT);
         toMatch = toMatch.toLowerCase(Locale.ROOT);
 
-        int lastMatchIndex = 0;
+        int firstIndexToMatch = 0;
 
         for (int i = 0; i < searchTerm.length(); i++) {
             char currentChar = searchTerm.charAt(i);
 
-            int indexOfFirstMatch = toMatch.indexOf(currentChar, lastMatchIndex);
+            int indexOfFirstMatch = toMatch.indexOf(currentChar, firstIndexToMatch);
 
             if (indexOfFirstMatch == -1) {
                 return false;
             }
 
-            lastMatchIndex = indexOfFirstMatch;
+            firstIndexToMatch = indexOfFirstMatch + 1;
         }
 
         return true;
+    }
+
+    public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
+        String renderedText;
+        if (font.width(text) < maxTextWidth) {
+            return text;
+        } else {
+            // This case, the input is too long, only render text that fits, and is closest to cursor
+            StringBuilder builder = new StringBuilder();
+
+            int suffixWidth = font.width("...");
+            int stringPosition = 0;
+
+            while (font.width(builder.toString()) < maxTextWidth - suffixWidth && stringPosition < text.length()) {
+                builder.append(text.charAt(stringPosition));
+
+                stringPosition++;
+            }
+
+            builder.append("...");
+            renderedText = builder.toString();
+        }
+        return renderedText;
     }
 }

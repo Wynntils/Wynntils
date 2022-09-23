@@ -29,7 +29,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
-import com.wynntils.wynn.model.scoreboard.quests.QuestInfo;
+import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
@@ -115,7 +115,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestHandler.getCurrentQuest();
+            ScoreboardQuestInfo currentQuest = QuestHandler.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;

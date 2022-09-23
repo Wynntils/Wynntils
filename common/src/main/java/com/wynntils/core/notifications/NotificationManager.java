@@ -30,7 +30,7 @@ public final class NotificationManager {
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
 
-        WynntilsMod.getEventBus().post(new NotificationEvent.Queue(msgContainer));
+        WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
@@ -43,7 +43,7 @@ public final class NotificationManager {
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
 
-        WynntilsMod.getEventBus().post(new NotificationEvent.Edit(msgContainer));
+        WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
 
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 public class WynntilsModForge {
     public WynntilsModForge() {
         WynntilsMod.init(
+                WynntilsMod.ModLoader.FORGE,
                 ModLoadingContext.get()
                         .getActiveContainer()
                         .getModInfo()
