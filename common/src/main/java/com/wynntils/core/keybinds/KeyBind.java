@@ -63,4 +63,10 @@ public class KeyBind {
     public String getCategory() {
         return keyMapping.getCategory();
     }
+
+    @Override
+    public String toString() {
+        return "'" + getName() + "' ["
+                + getKeyMapping().getTranslatedKeyMessage().getString() + "]";
+    }
 }
