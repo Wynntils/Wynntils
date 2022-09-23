@@ -92,7 +92,15 @@ public final class ChatModel extends Model {
         if (!codedMessage.contains("\n") || codedMessage.indexOf('\n') == (codedMessage.length() - 1)) {
             saveLastChat(message);
             MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
-            Component updatedMessage = handleChatLine(message, codedMessage, messageType);
+            RecipientType recipientType = getRecipientType(message, messageType);
+
+            boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
+            if (separateNPC && recipientType == RecipientType.NPC) {
+                handleNpcDialog(List.of(message), false);
+                return;
+            }
+
+            Component updatedMessage = handleChatLine(message, codedMessage, recipientType, messageType);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -127,7 +135,7 @@ public final class ChatModel extends Model {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNpcDialog(List.of());
+            handleNpcDialog(List.of(), true);
             return;
         }
 
@@ -183,17 +191,43 @@ public final class ChatModel extends Model {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(ChatModel::handleFakeChatLine);
+        LinkedList<Component> noConfirmationDialog = new LinkedList<>();
 
-        // Update the new dialog
-        handleNpcDialog(dialog);
+        newChatLines.forEach((line) -> {
+            handleFakeChatLine(line, noConfirmationDialog);
+        });
+        if (!noConfirmationDialog.isEmpty()) {
+            if (!dialog.isEmpty()) {
+                WynntilsMod.warn("Malformed dialog [#4]: " + ComponentUtils.getCoded(dialog.get(0)) + ", "
+                        + ComponentUtils.getCoded(noConfirmationDialog.get(0)));
+            }
+            if (noConfirmationDialog.size() > 1) {
+                WynntilsMod.warn("Malformed dialog [#5]: " + noConfirmationDialog);
+                // Keep going anyway and post the first line of the dialog
+            }
+            lastNpcDialog = noConfirmationDialog;
+            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog.get(0), false);
+            WynntilsMod.postEvent(event);
+        } else {
+            // Update the new confirmation requred dialog
+            handleNpcDialog(dialog, true);
+        }
     }
 
-    private static void handleFakeChatLine(Component chatMsg) {
+    private static void handleFakeChatLine(Component chatMsg, LinkedList<Component> noConfirmationDialog) {
         // This is a normal, single line chat
         saveLastChat(chatMsg);
         String coded = ComponentUtils.getCoded(chatMsg);
-        Component updatedMessage = handleChatLine(chatMsg, coded, MessageType.BACKGROUND);
+
+        RecipientType recipientType = getRecipientType(chatMsg, MessageType.BACKGROUND);
+        boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
+
+        if (separateNPC && recipientType == RecipientType.NPC) {
+            noConfirmationDialog.add(chatMsg);
+            return;
+        }
+
+        Component updatedMessage = handleChatLine(chatMsg, coded, recipientType, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -215,10 +249,13 @@ public final class ChatModel extends Model {
 
         // Check if message match a recipient category
         if (messageType == MessageType.SYSTEM) {
-            // System type messages can only be shouts or "info" messages
+            // System type messages can only be shouts, NPCs or "info" messages
             // We call this MessageType.NORMAL anyway...
             if (RecipientType.SHOUT.matchPattern(msg, MessageType.NORMAL)) {
                 return RecipientType.SHOUT;
+            }
+            if (RecipientType.NPC.matchPattern(msg, MessageType.NORMAL)) {
+                return RecipientType.NPC;
             }
         } else {
             for (RecipientType recipientType : RecipientType.values()) {
@@ -236,9 +273,8 @@ public final class ChatModel extends Model {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
-        RecipientType recipientType = getRecipientType(message, messageType);
-
+    private static Component handleChatLine(
+            Component message, String codedMessage, RecipientType recipientType, MessageType messageType) {
         ChatMessageReceivedEvent event =
                 new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
         WynntilsMod.postEvent(event);
@@ -246,7 +282,7 @@ public final class ChatModel extends Model {
         return event.getMessage();
     }
 
-    private static void handleNpcDialog(List<Component> dialog) {
+    private static void handleNpcDialog(List<Component> dialog, boolean needsConfirmation) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
@@ -254,7 +290,7 @@ public final class ChatModel extends Model {
                 WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0));
+            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0), needsConfirmation);
             WynntilsMod.postEvent(event);
         }
     }

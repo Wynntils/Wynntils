@@ -54,6 +54,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private String currentDialogue;
+    private boolean needsConfirmation;
 
     @Config
     public boolean autoProgress = false;
@@ -88,6 +89,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg);
         }
         currentDialogue = msg;
+        needsConfirmation = e.needsConfirmation();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -178,7 +180,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             }
         }
 
-        private void renderDialogue(PoseStack poseStack, String currentDialogue) {
+        private void renderDialogue(PoseStack poseStack, String currentDialogue, boolean needsConfirmation) {
+            // List<TextRenderTask> dialogueRenderTask = List.of(new TextRenderTask(currentDialogue, renderSetting));
             TextRenderTask dialogueRenderTask = new TextRenderTask(currentDialogue, renderSetting);
 
             if (stripColors) {
@@ -223,8 +226,10 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             if (showHelperTexts) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
-                renderTaskList.add(pressSneakMessage);
+                if (needsConfirmation) {
+                    TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+                    renderTaskList.add(pressSneakMessage);
+                }
 
                 if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
                     long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
@@ -259,7 +264,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             if (currentDialogue == null) return;
 
-            renderDialogue(poseStack, currentDialogue);
+            renderDialogue(poseStack, currentDialogue, NpcDialogueOverlayFeature.this.needsConfirmation);
         }
 
         @Override
@@ -269,7 +274,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             // we have to force update every time
             updateTextRenderSettings();
 
-            renderDialogue(poseStack, fakeDialogue);
+            renderDialogue(poseStack, fakeDialogue, true);
         }
     }
 }

@@ -89,13 +89,14 @@ public class TranslationFeature extends UserFeature {
                 // This will currently remove all formatting :(
                 Component translatedComponent = new TextComponent(ComponentUtils.stripFormatting(unwrapped));
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(translatedComponent);
+                    NpcDialogEvent translatedEvent =
+                            new TranslatedNpcDialogEvent(translatedComponent, e.needsConfirmation());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null);
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null, e.needsConfirmation());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
@@ -112,8 +113,8 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(Component chatMsg) {
-            super(chatMsg);
+        protected TranslatedNpcDialogEvent(Component chatMsg, boolean needsConfirmation) {
+            super(chatMsg, needsConfirmation);
         }
     }
 }

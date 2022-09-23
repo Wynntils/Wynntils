@@ -11,9 +11,19 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class NpcDialogEvent extends Event {
     private final Component chatMessage;
+    private final boolean needsConfirmation;
 
-    public NpcDialogEvent(Component chatMessage) {
+    public NpcDialogEvent(Component chatMessage, boolean needsConfirmation) {
         this.chatMessage = chatMessage;
+        this.needsConfirmation = needsConfirmation;
+    }
+
+    /**
+     * Return true if this message needs to be confirmed using the sneak key to
+     * progress the dialogue.
+     */
+    public boolean needsConfirmation() {
+        return needsConfirmation;
     }
 
     public Component getChatMessage() {
