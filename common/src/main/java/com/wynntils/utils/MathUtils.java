@@ -46,6 +46,14 @@ public final class MathUtils {
         }
     }
 
+    public static float clamp(float num, float min, float max) {
+        if (num < min) {
+            return min;
+        } else {
+            return Math.min(num, max);
+        }
+    }
+
     public static int integerFromRoman(String numeral) {
         String normalized = numeral.trim()
                 .toUpperCase(Locale.ROOT)

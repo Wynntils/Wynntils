@@ -14,6 +14,7 @@ import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.overlays.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.screens.widgets.WynntilsMenuButton;
@@ -96,6 +97,21 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
                         new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                                .withStyle(ChatFormatting.GRAY),
+                        new TextComponent(""),
+                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
+        buttons.add(new WynntilsMenuButton(
+                Texture.MAP_ICON,
+                true,
+                new MainMapScreen(),
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.mainMap.name")
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(ChatFormatting.GOLD)),
+                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.mainMap.description")
                                 .withStyle(ChatFormatting.GRAY),
                         new TextComponent(""),
                         new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")

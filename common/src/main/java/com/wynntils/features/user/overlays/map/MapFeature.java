@@ -6,13 +6,7 @@ package com.wynntils.features.user.overlays.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -20,6 +14,8 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.mc.event.RenderEvent;
@@ -32,12 +28,24 @@ import com.wynntils.mc.render.TextRenderTask;
 import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.renderer.GameRenderer;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
+import org.lwjgl.glfw.GLFW;
 
-public class MiniMapOverlayFeature extends UserFeature {
+public class MapFeature extends UserFeature {
+    public static MapFeature INSTANCE;
+
+    @RegisterKeyBind
+    public final KeyBind openMapKeybind = new KeyBind("Open Full Screen Map", GLFW.GLFW_KEY_M, false, () -> {
+        if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
+            mainMapScreen.setHoldingMapKey(true);
+            return;
+        }
+
+        McUtils.mc().setScreen(new MainMapScreen());
+    });
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
@@ -110,7 +118,18 @@ public class MiniMapOverlayFeature extends UserFeature {
                 MapProfile map = WebManager.getMaps().get(0);
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
-                renderMapQuad(map, poseStack, centerX, centerZ, textureX, textureZ, width, height);
+                RenderUtils.MapRenderer.renderMapQuad(
+                        map,
+                        poseStack,
+                        centerX,
+                        centerZ,
+                        textureX,
+                        textureZ,
+                        width,
+                        height,
+                        scale,
+                        this.followPlayerRotation,
+                        this.renderUsingLinear);
             }
 
             // TODO minimap icons
@@ -118,7 +137,8 @@ public class MiniMapOverlayFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
-            renderCursor(poseStack, centerX, centerZ);
+            RenderUtils.MapRenderer.renderCursor(
+                    poseStack, centerX, centerZ, 1f, this.followPlayerRotation, this.pointerColor, this.pointerType);
 
             // disable mask & render border
             switch (maskType) {
@@ -223,34 +243,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                             new TextRenderTask("W", TextRenderSetting.CENTERED));
         }
 
-        private void renderCursor(PoseStack poseStack, float centerX, float centerZ) {
-            if (!followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(
-                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
-            }
-
-            RenderUtils.drawTexturedRectWithColor(
-                    poseStack,
-                    Texture.MAP_POINTERS.resource(),
-                    pointerColor,
-                    (int) (centerX - pointerType.width / 2),
-                    (int) (centerZ - pointerType.height / 2),
-                    0,
-                    pointerType.width,
-                    pointerType.height,
-                    0,
-                    pointerType.textureY,
-                    pointerType.width,
-                    pointerType.height,
-                    Texture.MAP_POINTERS.width(),
-                    Texture.MAP_POINTERS.height());
-
-            if (!followPlayerRotation) {
-                poseStack.popPose();
-            }
-        }
-
         private void renderRectangularMapBorder(
                 PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
@@ -281,84 +273,6 @@ public class MiniMapOverlayFeature extends UserFeature {
                     ty2 - ty1,
                     texture.width(),
                     texture.height());
-        }
-
-        private void renderMapQuad(
-                MapProfile map,
-                PoseStack poseStack,
-                float centerX,
-                float centerZ,
-                float textureX,
-                float textureZ,
-                float width,
-                float height) {
-            // enable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(
-                        poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
-            }
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, map.resource());
-
-            // clamp map rendering
-            int option = renderUsingLinear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
-            RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, option);
-
-            RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-            RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
-
-            float uScale = 1f / map.getTextureWidth();
-            float vScale = 1f / map.getTextureHeight();
-
-            // avoid rotational overpass - This is a rather loose oversizing, if possible later
-            // use trignometry, etc. to find a better one
-            float extraFactor = 1F;
-            if (followPlayerRotation && maskType == MapMaskType.Rectangular) {
-                // 1.5 > sqrt(2);
-                extraFactor = 1.5F;
-
-                if (width > height) {
-                    extraFactor *= width / height;
-                } else {
-                    extraFactor *= height / width;
-                }
-            }
-
-            float halfRenderedWidth = width / 2 * extraFactor;
-            float halfRenderedHeight = height / 2 * extraFactor;
-            float halfTextureWidth = halfRenderedWidth * scale;
-            float halfTextureHeight = halfRenderedHeight * scale;
-
-            Matrix4f matrix = poseStack.last().pose();
-
-            // TODO replace with RenderUtils after settings pr is merged
-            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            bufferBuilder
-                    .vertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                    .uv((textureX - halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                    .uv((textureX + halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                    .uv((textureX + halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
-                    .endVertex();
-            bufferBuilder
-                    .vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                    .uv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
-                    .endVertex();
-            bufferBuilder.end();
-            BufferUploader.end(bufferBuilder);
-
-            // disable rotation if necessary
-            if (followPlayerRotation) {
-                poseStack.popPose();
-            }
         }
 
         @Override
