@@ -79,14 +79,14 @@ public class CustomBarsOverlayFeature extends UserFeature {
     private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
 
     public abstract static class BaseBarOverlay extends Overlay {
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
         public boolean flip = false;
 
         // hacky override of custom color
-        @Config
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
         public CustomColor textColor = CustomColor.NONE;
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size) {
