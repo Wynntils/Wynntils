@@ -169,11 +169,14 @@ public final class WynntilsMod {
     private static void initFeatures() {
         // Init all features. Now resources (i.e I18n) are available.
         FeatureRegistry.init();
+        LOGGER.info(
+                "Wynntils: {} features are now loaded and ready",
+                FeatureRegistry.getFeatures().size());
     }
 
     private static void parseVersion(String versionString) {
         LOGGER.info(
-                "Wynntils version {} (using {} on Minecraft {}) is now loaded",
+                "Wynntils: Starting version {} (using {} on Minecraft {})",
                 versionString,
                 modLoader,
                 Minecraft.getInstance().getLaunchedVersion());
