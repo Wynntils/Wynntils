@@ -24,6 +24,7 @@ import com.wynntils.features.user.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.user.FilterAdminCommandsFeature;
+import com.wynntils.features.user.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
@@ -98,6 +99,7 @@ public final class FeatureRegistry {
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new FixPacketBugsFeature());
+        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());

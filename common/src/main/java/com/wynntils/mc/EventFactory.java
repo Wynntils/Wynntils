@@ -11,6 +11,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -288,6 +289,10 @@ public final class EventFactory {
 
     public static DropHeldItemEvent onDropPre(boolean fullStack) {
         return post(new DropHeldItemEvent(fullStack));
+    }
+
+    public static ArmSwingEvent onArmSwing(ArmSwingEvent.ArmSwingContext actionContext, InteractionHand hand) {
+        return post(new ArmSwingEvent(actionContext, hand));
     }
     // endregion
 

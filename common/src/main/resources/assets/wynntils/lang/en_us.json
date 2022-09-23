@@ -62,6 +62,7 @@
   "feature.wynntils.emeraldPouchHotkey.name": "Emerald Pouch Hotkey",
   "feature.wynntils.emeraldPouchHotkey.noPouch": "You do not have an emerald pouch in your inventory.",
   "feature.wynntils.filterAdminCommands.name": "Filter Admin Commands",
+  "feature.wynntils.fixCastingSpellsFromInventory.name": "Fix Casting Spells From Inventory",
   "feature.wynntils.fixPacketBugs.name": "Fix Packet Bugs",
   "feature.wynntils.fixSpellOverwrite.name": "Fix Spell Overwrite",
   "feature.wynntils.gameNotificationOverlay.name": "Game Update Overlay",
