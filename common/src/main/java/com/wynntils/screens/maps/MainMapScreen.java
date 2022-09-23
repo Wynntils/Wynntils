@@ -118,9 +118,9 @@ public class MainMapScreen extends Screen {
             return;
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
         updateMapCenterIfDragging(mouseX, mouseY);
+
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
 
