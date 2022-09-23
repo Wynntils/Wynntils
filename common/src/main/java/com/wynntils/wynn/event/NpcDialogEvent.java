@@ -4,18 +4,19 @@
  */
 package com.wynntils.wynn.event;
 
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class NpcDialogEvent extends Event {
-    private final String codedDialog;
+    private final Component chatMessage;
 
-    public NpcDialogEvent(String codedDialog) {
-        this.codedDialog = codedDialog;
+    public NpcDialogEvent(Component chatMessage) {
+        this.chatMessage = chatMessage;
     }
 
-    public String getCodedDialog() {
-        return codedDialog;
+    public Component getChatMessage() {
+        return chatMessage;
     }
 }

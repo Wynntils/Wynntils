@@ -82,7 +82,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        String msg = e.getCodedDialog();
+        String msg = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
         if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
