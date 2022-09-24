@@ -75,18 +75,16 @@ public class MainMapScreen extends Screen {
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
+                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyRight.key,
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
+                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyShift.key,
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
@@ -103,12 +101,6 @@ public class MainMapScreen extends Screen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
-    }
-
-    @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
     }
 
     @Override
