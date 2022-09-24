@@ -176,8 +176,8 @@ public class MainMapScreen extends Screen {
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
         if (dragging) {
             float zoomScale = currentZoom;
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) * zoomScale), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) * zoomScale));
+            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / zoomScale), (float)
+                    (mapCenterZ + (lastMouseY - mouseY) / zoomScale));
         }
         lastMouseX = mouseX;
         lastMouseY = mouseY;
@@ -199,7 +199,8 @@ public class MainMapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setZoom((float) (currentZoom + delta * ZOOM_FACTOR));
+        double newZoom = currentZoom + delta * ZOOM_FACTOR * currentZoom;
+        setZoom((float) newZoom);
 
         return true;
     }
@@ -266,7 +267,7 @@ public class MainMapScreen extends Screen {
     }
 
     private void setZoom(float zoomTargetDelta) {
-        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MAX_ZOOM, MIN_ZOOM);
+        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
     }
 
     private void updateMapCenter(float newX, float newZ) {
