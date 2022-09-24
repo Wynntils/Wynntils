@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.overlays.map;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,8 +17,8 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.MapProfile;
+import com.wynntils.core.managers.Model;
+import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
@@ -29,6 +30,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.renderer.GameRenderer;
 
@@ -37,8 +39,13 @@ public class MiniMapFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
-    public static class MiniMapOverlay extends Overlay {
+    @Override
+    protected void onInit(ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+        super.onInit(conditions, dependencies);
+        dependencies.add(MapModel.class);
+    }
 
+    public static class MiniMapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
         @Config
@@ -102,8 +109,8 @@ public class MiniMapFeature extends UserFeature {
             }
 
             // TODO replace with generalized maps whenever that is done
-            if (WebManager.isMapLoaded()) {
-                MapProfile map = WebManager.getMaps().get(0);
+            if (MapModel.isMapLoaded()) {
+                MapProfile map = MapModel.getMaps().get(0);
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
                 MapRenderer.renderMapQuad(
