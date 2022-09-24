@@ -25,7 +25,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
-import com.wynntils.wynn.model.map.MapModel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
