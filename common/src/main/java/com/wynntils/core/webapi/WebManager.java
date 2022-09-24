@@ -7,16 +7,12 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
@@ -29,7 +25,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,13 +34,11 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -54,7 +47,7 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
-    private static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
+    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
     private static boolean setup = false;
@@ -78,8 +71,6 @@ public final class WebManager extends CoreManager {
     private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
 
     private static WynntilsAccount account = null;
-
-    private static List<MapProfile> maps = new ArrayList<>();
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s-%d (%s) %s",
@@ -123,9 +114,6 @@ public final class WebManager extends CoreManager {
 
         // tryLoadTerritories
         territories.clear();
-
-        // tryLoadMaps
-        maps.clear();
 
         updateTerritoryThreadStatus(false);
     }
@@ -263,75 +251,6 @@ public final class WebManager extends CoreManager {
         // Check for success
     }
 
-    public static CompletableFuture<Boolean> tryLoadMaps() {
-        if (apiUrls == null || !apiUrls.hasKey("AMainMap")) return CompletableFuture.completedFuture(false);
-
-        File mapDirectory = new File(API_CACHE_ROOT, "maps");
-
-        String url = apiUrls.get("AMainMap");
-
-        CompletableFuture<Boolean> result = new CompletableFuture<>();
-
-        handler.addAndDispatch(new RequestBuilder(url, "maps")
-                .cacheTo(new File(mapDirectory, "maps.json"))
-                .useCacheAsBackup()
-                .handleJson(json -> {
-                    String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
-
-                    JsonArray mapArray = json.getAsJsonArray();
-
-                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
-
-                    for (JsonElement mapData : mapArray) {
-                        JsonObject mapObject = mapData.getAsJsonObject();
-
-                        // Final since used in closure
-                        final int x1 = mapObject.get("x1").getAsInt();
-                        final int z1 = mapObject.get("z1").getAsInt();
-                        final int x2 = mapObject.get("x2").getAsInt();
-                        final int z2 = mapObject.get("z2").getAsInt();
-
-                        final String file = mapObject.get("file").getAsString();
-
-                        String md5 = mapObject.get("hash").getAsString();
-
-                        // TODO DownloaderManager? + Overlay
-                        handler.addRequest(new RequestBuilder(fileBase + file, file)
-                                .cacheTo(new File(mapDirectory, file))
-                                .cacheMD5Validator(md5)
-                                .useCacheAsBackup()
-                                .handle(bytes -> {
-                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                        NativeImage nativeImage = NativeImage.read(in);
-
-                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
-                                    } catch (IOException e) {
-                                        WynntilsMod.info("IOException occurred while loading map image of " + file);
-                                        return false; // don't cache
-                                    }
-
-                                    return true;
-                                })
-                                .build());
-                    }
-
-                    // hacky way to know when handler has finished dispatching
-                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
-                        if (syncList.size() == mapArray.size()) {
-                            result.complete(true);
-                            maps = syncList;
-                        } else {
-                            result.complete(false);
-                        }
-                    });
-
-                    return true;
-                })
-                .build());
-
-        return result;
-    }
-
     private static void tryReloadApiUrls(boolean async) {
         handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
                 .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
@@ -348,8 +267,6 @@ public final class WebManager extends CoreManager {
                 .build());
 
         handler.dispatch(async);
-
-        tryLoadMaps();
     }
 
     /**
@@ -404,10 +321,6 @@ public final class WebManager extends CoreManager {
         return !territories.isEmpty();
     }
 
-    public static boolean isMapLoaded() {
-        return !maps.isEmpty();
-    }
-
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
@@ -438,10 +351,6 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, TerritoryProfile> getTerritories() {
         return territories;
-    }
-
-    public static List<MapProfile> getMaps() {
-        return maps;
     }
 
     public static String getUserAgent() {
