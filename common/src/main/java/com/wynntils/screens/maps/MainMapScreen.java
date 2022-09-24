@@ -88,8 +88,8 @@ public class MainMapScreen extends Screen {
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
-        renderWidth = this.width - (SCREEN_SIDE_OFFSET) * 2f;
-        renderHeight = this.height - (SCREEN_SIDE_OFFSET) * 2f;
+        renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
+        renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
         renderX = SCREEN_SIDE_OFFSET;
         renderY = SCREEN_SIDE_OFFSET;
 
@@ -181,8 +181,8 @@ public class MainMapScreen extends Screen {
                 renderX,
                 renderY,
                 100,
-                width,
-                height,
+                renderWidth,
+                renderHeight,
                 Texture.FULLSCREEN_MAP_BORDER.width(),
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
