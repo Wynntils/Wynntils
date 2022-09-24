@@ -13,6 +13,7 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
 import com.wynntils.features.alwayson.LootrunFeature;
+import com.wynntils.features.alwayson.TradeMarketPriceConversionFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -85,6 +86,7 @@ public final class FeatureRegistry {
         // always on
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
+        registerFeature(new TradeMarketPriceConversionFeature());
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
