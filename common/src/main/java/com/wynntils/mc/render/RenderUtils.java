@@ -1009,7 +1009,6 @@ public final class RenderUtils {
 
             Matrix4f matrix = poseStack.last().pose();
 
-            // TODO replace with RenderUtils after settings pr is merged
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder

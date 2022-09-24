@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.features.user.overlays.map.MapFeature;
-import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.render.RenderUtils;
@@ -51,7 +50,7 @@ public class MainMapScreen extends Screen {
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
     private static final float MIN_ZOOM = 0.2f;
     private static final float MAX_ZOOM = 3f;
-    private static final float ZOOM_FACTOR = 0.04f;
+    private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.04f;
     private float currentZoom = 1f;
 
     private boolean dragging = false;
@@ -147,7 +146,13 @@ public class MainMapScreen extends Screen {
         float cursorX = (float) (centerX + distanceX * currentZoom);
         float cursorZ = (float) (centerZ + distanceZ * currentZoom);
         RenderUtils.MapRenderer.renderCursor(
-                poseStack, cursorX, cursorZ, 1.5f, false, CommonColors.WHITE, PointerType.Arrow);
+                poseStack,
+                cursorX,
+                cursorZ,
+                1.5f,
+                false,
+                MapFeature.INSTANCE.pointerColor,
+                MapFeature.INSTANCE.pointerType);
     }
 
     private void renderMap(PoseStack poseStack, MapProfile map, float textureX, float textureZ) {
@@ -175,9 +180,8 @@ public class MainMapScreen extends Screen {
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
         if (dragging) {
-            float zoomScale = currentZoom;
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / zoomScale), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) / zoomScale));
+            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / currentZoom), (float)
+                    (mapCenterZ + (lastMouseY - mouseY) / currentZoom));
         }
         lastMouseX = mouseX;
         lastMouseY = mouseY;
@@ -199,7 +203,7 @@ public class MainMapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        double newZoom = currentZoom + delta * ZOOM_FACTOR * currentZoom;
+        double newZoom = currentZoom + delta * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
         setZoom((float) newZoom);
 
         return true;
