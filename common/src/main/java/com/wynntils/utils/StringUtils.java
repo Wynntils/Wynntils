@@ -207,7 +207,7 @@ public final class StringUtils {
                 emeralds = Math.round(emeralds / taxAmount);
             }
         } catch (NumberFormatException e) {
-            return ""; //
+            return "";
         }
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
