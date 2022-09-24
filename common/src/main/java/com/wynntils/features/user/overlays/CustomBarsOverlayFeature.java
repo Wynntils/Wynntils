@@ -35,8 +35,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
 
-    public static CustomBarsOverlayFeature INSTANCE;
-
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
@@ -77,6 +75,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay corruptedBarOverlay = new CorruptedBarOverlay();
 
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
@@ -131,7 +132,23 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-        protected abstract void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress);
+        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+
+            RenderUtils.drawColoredProgressBar(
+                    poseStack,
+                    universalBarTexture,
+                    this.textColor,
+                    this.getRenderX(),
+                    renderY,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + renderHeight,
+                    0,
+                    0,
+                    universalBarTexture.width(),
+                    universalBarTexture.height(),
+                    progress);
+        }
 
         protected void renderText(PoseStack poseStack, float renderY, String text) {
             FontRenderer.getInstance()
@@ -148,7 +165,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class HealthBarOverlay extends BaseBarOverlay {
+    public class HealthBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
         public HealthTexture healthTexture = HealthTexture.a;
 
@@ -206,7 +223,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class BloodPoolBarOverlay extends HealthBarOverlay {
+    public class BloodPoolBarOverlay extends HealthBarOverlay {
         public BloodPoolBarOverlay() {
             super(
                     new OverlayPosition(
@@ -234,7 +251,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class ManaBarOverlay extends BaseBarOverlay {
+    public class ManaBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
         public ManaTexture manaTexture = ManaTexture.a;
 
@@ -293,7 +310,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class ManaBankBarOverlay extends ManaBarOverlay {
+    public class ManaBankBarOverlay extends ManaBarOverlay {
         public ManaBankBarOverlay() {
             super(
                     new OverlayPosition(
@@ -321,7 +338,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
+    public class AwakenedProgressBarOverlay extends BaseBarOverlay {
 
         public AwakenedProgressBarOverlay() {
             super(
@@ -351,30 +368,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
-            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
-            RenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    universalBarTexture,
-                    textColor,
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    0,
-                    universalBarTexture.width(),
-                    universalBarTexture.height(),
-                    progress);
-        }
-
-        @Override
         public WynnBossBarUtils.BarProgress noProgress() {
             return WynnBossBarUtils.NO_AWAKENED_PROGRESS;
         }
     }
 
-    public static class FocusBarOverlay extends BaseBarOverlay {
+    public class FocusBarOverlay extends BaseBarOverlay {
         public FocusBarOverlay() {
             super(
                     new OverlayPosition(
@@ -403,27 +402,43 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
-            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+        public WynnBossBarUtils.BarProgress noProgress() {
+            return WynnBossBarUtils.NO_FOCUS;
+        }
+    }
 
-            RenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    universalBarTexture,
-                    this.textColor,
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    0,
-                    universalBarTexture.width(),
-                    universalBarTexture.height(),
-                    progress);
+    public class CorruptedBarOverlay extends BaseBarOverlay {
+
+        protected CorruptedBarOverlay() {
+            super(
+                    new OverlayPosition(
+                            -70,
+                            -150,
+                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.Center,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(81, 21));
+            textColor = CommonColors.PURPLE;
+        }
+
+        @Override
+        public float textureHeight() {
+            return Texture.UNIVERSAL_BAR.height() / 2f;
+        }
+
+        @Override
+        public WynnBossBarUtils.BarProgress progress() {
+            return WynnBossBarUtils.getCorruptedBar();
+        }
+
+        @Override
+        public String icon() {
+            return "☠";
         }
 
         @Override
         public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_FOCUS;
+            return WynnBossBarUtils.NO_CORRUPTED;
         }
     }
 
