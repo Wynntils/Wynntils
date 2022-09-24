@@ -17,11 +17,13 @@ public class WynnBossBarUtils {
     public static final BarProgress NO_BLOOD_POOL = new BarProgress(0, 0, -1);
     public static final BarProgress NO_AWAKENED_PROGRESS = new BarProgress(0, 0, -1);
     public static final BarProgress NO_FOCUS = new BarProgress(0, 0, -1);
+    public static final BarProgress NO_CORRUPTED = new BarProgress(0, 100, -1);
 
     private static final Pattern BLOOD_POOL_PATTERN = Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]");
     private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
     private static final Pattern AWAKENED_PROGRESS_PATTERN = Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]");
     private static final Pattern FOCUS_PATTERN = Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]");
+    private static final Pattern CORRUPTED_PROGRESS_PATTERN = Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]§r");
 
     private static Pair<LerpingBossEvent, Matcher> getLerpingBossEvent(Pattern titlePattern) {
         LerpingBossEvent poolEvent = null;
@@ -108,6 +110,22 @@ public class WynnBossBarUtils {
             return new BarProgress(currentFocus, maxFocus, progress);
         } catch (NumberFormatException e) {
             return NO_FOCUS;
+        }
+    }
+
+    public static BarProgress getCorruptedBar() {
+        Pair<LerpingBossEvent, Matcher> pair = getLerpingBossEvent(CORRUPTED_PROGRESS_PATTERN);
+
+        if (pair.a == null) return NO_CORRUPTED;
+
+        try {
+            int currentCorruptedProgress = Integer.parseInt(pair.b.group(1));
+            int maxCorruptedProgress = 100;
+            float progress = pair.a.getProgress();
+
+            return new BarProgress(currentCorruptedProgress, maxCorruptedProgress, progress);
+        } catch (NumberFormatException e) {
+            return NO_CORRUPTED;
         }
     }
 
