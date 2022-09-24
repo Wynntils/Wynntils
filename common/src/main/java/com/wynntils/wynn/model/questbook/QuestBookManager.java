@@ -29,10 +29,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
+    private static final int MINI_QUESTS_SLOT = 53;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
 
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
+    private static List<QuestInfo> miniQuests = List.of();
+    private static List<QuestInfo> newMiniQuests;
     private static List<List<String>> dialogueHistory = List.of();
     private static List<List<String>> newDialogueHistory;
 
@@ -97,6 +100,61 @@ public class QuestBookManager extends CoreManager {
             // Last page finished
             quests = newQuests;
             WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
+        }
+    }
+
+    public static void queryMiniQuests() {
+        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Mini Quest Query")
+                .onError(msg -> {
+                    WynntilsMod.warn("Problem querying Quest Book for mini quests: " + msg);
+                    McUtils.player()
+                            .sendMessage(
+                                    new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED),
+                                    null);
+                })
+                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .matchTitle(getQuestBookTitle(1))
+                .processContainer(c -> {})
+                .clickOnSlot(MINI_QUESTS_SLOT)
+                .matchTitle(getMiniQuestBookTitle(1))
+                .processContainer(c -> processMiniQuestBookPage(c, 1));
+
+        for (int i = 2; i < 4; i++) {
+            final int page = i; // Lambdas need final variables
+            queryBuilder
+                    .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
+                    .matchTitle(getMiniQuestBookTitle(page))
+                    .processContainer(c -> processMiniQuestBookPage(c, page));
+        }
+
+        queryBuilder.build().executeQuery();
+    }
+
+    public static void processMiniQuestBookPage(ContainerContent container, int page) {
+        // Quests are in the top-left container area
+        if (page == 1) {
+            // Build new set of quests without disturbing current set
+            newMiniQuests = new ArrayList<>();
+        }
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
+                int slot = row * 9 + col;
+
+                // Very first slot is chat history
+                if (slot == 0) continue;
+
+                ItemStack item = container.items().get(slot);
+                QuestInfo questInfo = QuestInfo.parseItem(item, page);
+                if (questInfo == null) continue;
+
+                newMiniQuests.add(questInfo);
+            }
+        }
+
+        if (page == 3) {
+            // Last page finished
+            miniQuests = newMiniQuests;
+            WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
         }
     }
 
@@ -230,11 +288,19 @@ public class QuestBookManager extends CoreManager {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
     }
 
+    private static String getMiniQuestBookTitle(int pageNum) {
+        return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Mini-Quests$";
+    }
+
     public static List<QuestInfo> getQuests() {
         return quests;
     }
 
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
+    }
+
+    public static List<QuestInfo> getMiniQuests() {
+        return miniQuests;
     }
 }

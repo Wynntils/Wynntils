@@ -15,14 +15,14 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.Texture;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.ActionBarModel;
@@ -49,7 +49,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         public boolean onlyIfWeaponHeld = true;
 
         @Config
-        public boolean hideIfNoCharge = false;
+        public boolean hideIfNoCharge = true;
 
         public PowderAbilityBarOverlay() {
             super(
@@ -68,7 +68,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
             Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && !WynnItemMatchers.isWeapon(McUtils.inventory().getSelected())) return;
-            if (this.hideIfNoCharge && powderSpecialCharge == 0) return;
+            if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
         }

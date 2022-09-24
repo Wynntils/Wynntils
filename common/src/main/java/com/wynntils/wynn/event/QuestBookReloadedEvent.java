@@ -9,5 +9,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class QuestBookReloadedEvent extends Event {
     public static class QuestsReloaded extends QuestBookReloadedEvent {}
 
+    public static class MiniQuestsReloaded extends QuestBookReloadedEvent {}
+
     public static class DialogueHistoryReloaded extends QuestBookReloadedEvent {}
 }
