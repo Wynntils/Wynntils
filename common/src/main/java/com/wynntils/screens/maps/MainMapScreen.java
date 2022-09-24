@@ -48,10 +48,10 @@ public class MainMapScreen extends Screen {
     private float mapCenterX;
     private float mapCenterZ;
 
-    // Zoom is the scaling of the map. The bigger the zoom, the less detailed the map becomes.
-    private static final float MIN_ZOOM = 5.0f;
-    private static final float MAX_ZOOM = 0.3f;
-    private static final float ZOOM_FACTOR = 0.4f;
+    // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
+    private static final float MIN_ZOOM = 0.2f;
+    private static final float MAX_ZOOM = 3f;
+    private static final float ZOOM_FACTOR = 0.04f;
     private float currentZoom = 1f;
 
     private boolean dragging = false;
@@ -144,8 +144,8 @@ public class MainMapScreen extends Screen {
         double distanceX = pX - mapCenterX;
         double distanceZ = pZ - mapCenterZ;
 
-        float cursorX = (float) (centerX + distanceX / currentZoom);
-        float cursorZ = (float) (centerZ + distanceZ / currentZoom);
+        float cursorX = (float) (centerX + distanceX * currentZoom);
+        float cursorZ = (float) (centerZ + distanceZ * currentZoom);
         RenderUtils.MapRenderer.renderCursor(
                 poseStack, cursorX, cursorZ, 1.5f, false, CommonColors.WHITE, PointerType.Arrow);
     }
@@ -160,7 +160,17 @@ public class MainMapScreen extends Screen {
                 mapWidth,
                 mapHeight);
         RenderUtils.MapRenderer.renderMapQuad(
-                map, poseStack, centerX, centerZ, textureX, textureZ, mapWidth, mapHeight, currentZoom, false, false);
+                map,
+                poseStack,
+                centerX,
+                centerZ,
+                textureX,
+                textureZ,
+                mapWidth,
+                mapHeight,
+                1f / currentZoom,
+                false,
+                false);
     }
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
@@ -189,7 +199,7 @@ public class MainMapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setZoom((float) (currentZoom - delta * ZOOM_FACTOR));
+        setZoom((float) (currentZoom + delta * ZOOM_FACTOR));
 
         return true;
     }
@@ -210,8 +220,8 @@ public class MainMapScreen extends Screen {
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
-        double gameX = (mouseX - centerX) * currentZoom + mapCenterX;
-        double gameZ = (mouseY - centerZ) * currentZoom + mapCenterZ;
+        double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
+        double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
         Location compassLocation = new Location(gameX, 0, gameZ);
         CompassModel.setCompassLocation(compassLocation);
 
