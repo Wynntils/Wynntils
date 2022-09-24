@@ -14,7 +14,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;

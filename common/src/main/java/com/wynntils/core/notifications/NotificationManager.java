@@ -6,8 +6,8 @@ package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NotificationEvent;

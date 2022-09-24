@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.gui.screens.maps.MainMapScreen;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)

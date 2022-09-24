@@ -16,7 +16,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.render.RenderUtils;
+import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;

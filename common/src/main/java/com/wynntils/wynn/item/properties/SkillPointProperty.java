@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item.properties;
 
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.WynnItemStack;

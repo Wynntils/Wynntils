@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user.overlays.map;
 
-import com.wynntils.mc.render.Texture;
+import com.wynntils.gui.render.Texture;
 
 public enum MapBorderType {
     Gilded(Texture.GILDED_MAP_TEXTURES, 0, 262, 262, 524, 1),
