@@ -164,6 +164,10 @@ public class QuestBookManager extends CoreManager {
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(getQuestBookTitle(1));
 
+        if (questInfo.isMiniQuest()) {
+            queryBuilder.processContainer(c -> {}).clickOnSlot(MINI_QUESTS_SLOT).matchTitle(getMiniQuestBookTitle(1));
+        }
+
         if (questInfo.getPageNumber() > 1) {
             for (int i = 2; i <= questInfo.getPageNumber(); i++) {
                 queryBuilder

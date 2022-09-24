@@ -39,6 +39,7 @@ public class QuestInfo {
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
+    private boolean isMiniQuest;
     private final int pageNumber;
     private boolean tracked;
 
@@ -49,6 +50,7 @@ public class QuestInfo {
             int level,
             String nextTask,
             List<Pair<String, Integer>> additionalRequirements,
+            boolean isMiniQuest,
             int pageNumber,
             boolean tracked) {
         this.name = name;
@@ -57,6 +59,7 @@ public class QuestInfo {
         this.level = level;
         this.nextTask = nextTask;
         this.additionalRequirements = additionalRequirements;
+        this.isMiniQuest = isMiniQuest;
         this.pageNumber = pageNumber;
         this.tracked = tracked;
     }
@@ -93,6 +96,10 @@ public class QuestInfo {
         return tracked;
     }
 
+    public boolean isMiniQuest() {
+        return isMiniQuest;
+    }
+
     @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
@@ -112,11 +119,14 @@ public class QuestInfo {
                 .withStyle(ChatFormatting.WHITE));
         tooltipLines.add(questInfo.getStatus().getQuestBookComponent());
         tooltipLines.add(new TextComponent(""));
-        tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
-                        ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
-                        : new TextComponent("✖").withStyle(ChatFormatting.RED))
-                .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
+        // We always parse level as one, so check if this mini-quest does not have a min combat level
+        if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
+            tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
+                            ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
+                            : new TextComponent("✖").withStyle(ChatFormatting.RED))
+                    .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                    .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
+        }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
@@ -176,7 +186,15 @@ public class QuestInfo {
             boolean tracked = isQuestTracked(item);
 
             QuestInfo questInfo = new QuestInfo(
-                    name, status, questLength, level, description, additionalRequirements, pageNumber, tracked);
+                    name,
+                    status,
+                    questLength,
+                    level,
+                    description,
+                    additionalRequirements,
+                    name.startsWith("Mini-Quest - "),
+                    pageNumber,
+                    tracked);
             return questInfo;
         } catch (NoSuchElementException e) {
             WynntilsMod.warn("Failed to parse quest book item: " + item);
