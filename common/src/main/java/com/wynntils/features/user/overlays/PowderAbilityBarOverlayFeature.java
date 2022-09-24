@@ -49,7 +49,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         public boolean onlyIfWeaponHeld = true;
 
         @Config
-        public boolean hideIfNoCharge = false;
+        public boolean hideIfNoCharge = true;
 
         public PowderAbilityBarOverlay() {
             super(
@@ -68,7 +68,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
             Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && !WynnItemMatchers.isWeapon(McUtils.inventory().getSelected())) return;
-            if (this.hideIfNoCharge && powderSpecialCharge == 0) return;
+            if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
         }
