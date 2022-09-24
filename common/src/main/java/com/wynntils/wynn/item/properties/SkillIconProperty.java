@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.item.properties;
 
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;

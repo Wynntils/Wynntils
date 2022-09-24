@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.item.properties;
 
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.WynnItemStack;

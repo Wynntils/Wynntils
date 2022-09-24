@@ -6,9 +6,9 @@ package com.wynntils.wynn.item.properties;
 
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;

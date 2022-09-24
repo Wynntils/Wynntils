@@ -6,14 +6,14 @@ package com.wynntils.gui.screens.overlays;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
 import com.wynntils.gui.screens.overlays.lists.OverlayList;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;

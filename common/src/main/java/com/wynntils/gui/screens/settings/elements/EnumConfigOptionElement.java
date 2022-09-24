@@ -6,14 +6,14 @@ package com.wynntils.gui.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
 import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.McUtils;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

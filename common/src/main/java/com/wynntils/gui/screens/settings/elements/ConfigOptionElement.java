@@ -6,14 +6,14 @@ package com.wynntils.gui.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 
 public abstract class ConfigOptionElement {
