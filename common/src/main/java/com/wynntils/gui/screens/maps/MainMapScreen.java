@@ -10,10 +10,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.features.user.overlays.map.MapFeature;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
@@ -145,7 +146,7 @@ public class MainMapScreen extends Screen {
 
         float cursorX = (float) (centerX + distanceX * currentZoom);
         float cursorZ = (float) (centerZ + distanceZ * currentZoom);
-        RenderUtils.MapRenderer.renderCursor(
+        MapRenderer.renderCursor(
                 poseStack,
                 cursorX,
                 cursorZ,
@@ -164,7 +165,7 @@ public class MainMapScreen extends Screen {
                 0,
                 mapWidth,
                 mapHeight);
-        RenderUtils.MapRenderer.renderMapQuad(
+        MapRenderer.renderMapQuad(
                 map,
                 poseStack,
                 centerX,

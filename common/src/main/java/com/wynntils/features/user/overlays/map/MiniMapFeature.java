@@ -18,6 +18,9 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
+import com.wynntils.gui.render.MapRenderer;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -105,7 +108,7 @@ public class MiniMapFeature extends UserFeature {
                 MapProfile map = WebManager.getMaps().get(0);
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
-                RenderUtils.MapRenderer.renderMapQuad(
+                MapRenderer.renderMapQuad(
                         map,
                         poseStack,
                         centerX,
@@ -124,7 +127,7 @@ public class MiniMapFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
-            RenderUtils.MapRenderer.renderCursor(
+            MapRenderer.renderCursor(
                     poseStack, centerX, centerZ, 1f, this.followPlayerRotation, this.pointerColor, this.pointerType);
 
             // disable mask & render border
