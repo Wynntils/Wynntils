@@ -16,8 +16,6 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
-import com.wynntils.core.webapi.profiles.MapProfile;
-import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
@@ -34,8 +32,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 public final class RenderUtils {
     // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
