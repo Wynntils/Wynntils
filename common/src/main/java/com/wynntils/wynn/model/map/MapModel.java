@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.model.map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,6 +15,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.wynn.model.map.poi.Label;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +25,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
+    public static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
+    private static List<Label> labels = List.of();
 
     public static void init() {
+        loadLabels();
         tryLoadMaps();
     }
 
@@ -34,6 +40,28 @@ public final class MapModel extends Model {
 
     public static List<MapProfile> getMaps() {
         return maps;
+    }
+
+    public static List<Label> getLabels() {
+        return labels;
+    }
+
+    public static void loadLabels() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+
+        String url = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+
+        RequestHandler handler = WebManager.getHandler();
+
+        handler.addAndDispatch(new RequestBuilder(url, "places")
+                .cacheTo(new File(mapDirectory, "places.json"))
+                .useCacheAsBackup()
+                .handleJsonObject(json -> {
+                    PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
+                    labels = places.labels;
+                    return true;
+                })
+                .build());
     }
 
     public static CompletableFuture<Boolean> tryLoadMaps() {
@@ -108,5 +136,9 @@ public final class MapModel extends Model {
 
     public static boolean isMapLoaded() {
         return !maps.isEmpty();
+    }
+
+    public static class PlacesProfile {
+        List<Label> labels;
     }
 }
