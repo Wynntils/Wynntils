@@ -25,7 +25,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
-    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
+    private static final Pattern QUEST_NAME_MATCHER =
+            Pattern.compile("^§.§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
@@ -39,9 +40,9 @@ public class QuestInfo {
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
-    private boolean isMiniQuest;
+    private final boolean isMiniQuest;
     private final int pageNumber;
-    private boolean tracked;
+    private final boolean tracked;
 
     public QuestInfo(
             String name,
@@ -162,7 +163,7 @@ public class QuestInfo {
         return tooltipLines;
     }
 
-    public static QuestInfo parseItem(ItemStack item, int pageNumber) {
+    public static QuestInfo parseItem(ItemStack item, int pageNumber, boolean isMiniQuest) {
         try {
             String name = getQuestName(item);
             if (name == null) return null;
@@ -192,7 +193,7 @@ public class QuestInfo {
                     level,
                     description,
                     additionalRequirements,
-                    name.startsWith("Mini-Quest - "),
+                    isMiniQuest,
                     pageNumber,
                     tracked);
             return questInfo;
@@ -212,7 +213,7 @@ public class QuestInfo {
             WynntilsMod.warn("Non-matching quest name: " + rawName);
             return null;
         }
-        return m.group(1);
+        return m.group(2);
     }
 
     private static boolean isQuestTracked(ItemStack item) {

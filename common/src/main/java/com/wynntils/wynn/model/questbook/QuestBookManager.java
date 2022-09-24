@@ -89,7 +89,7 @@ public class QuestBookManager extends CoreManager {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item, page);
+                QuestInfo questInfo = QuestInfo.parseItem(item, page, false);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -144,7 +144,7 @@ public class QuestBookManager extends CoreManager {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item, page);
+                QuestInfo questInfo = QuestInfo.parseItem(item, page, true);
                 if (questInfo == null) continue;
 
                 newMiniQuests.add(questInfo);

@@ -132,6 +132,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 Texture.QUESTS_BUTTON.width(),
                 Texture.QUESTS_BUTTON.height(),
                 this));
+
+        reloadQuestButtons();
     }
 
     @Override
