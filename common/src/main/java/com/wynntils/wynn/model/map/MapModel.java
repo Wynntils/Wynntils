@@ -17,23 +17,26 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wynn.model.map.poi.Label;
+import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.ServiceKind;
+import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
     public static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
-    private static List<Label> labels = List.of();
-    private static Map<String, List<MapLocation>> services = new HashMap<>();
+    private static Set<Poi> allPois = new HashSet<>();
 
     public static void init() {
         loadLabels();
@@ -49,12 +52,8 @@ public final class MapModel extends Model {
         return maps;
     }
 
-    public static List<Label> getLabels() {
-        return labels;
-    }
-
-    public static Map<String, List<MapLocation>> getServices() {
-        return services;
+    public static Set<Poi> getAllPois() {
+        return allPois;
     }
 
     public static void loadLabels() {
@@ -69,7 +68,9 @@ public final class MapModel extends Model {
                 .useCacheAsBackup()
                 .handleJsonObject(json -> {
                     PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
-                    labels = places.labels;
+                    for (Label label : places.labels) {
+                        allPois.add(new LabelPoi(label));
+                    }
                     return true;
                 })
                 .build());
@@ -90,7 +91,14 @@ public final class MapModel extends Model {
 
                     List<ServiceProfile> serviceList = GSON.fromJson(json, type);
                     for (var service : serviceList) {
-                        services.put(service.type, service.locations);
+                        ServiceKind kind = ServiceKind.fromString(service.type);
+                        if (kind != null) {
+                            for (MapLocation location : service.locations) {
+                                allPois.add(new ServicePoi(location, kind));
+                            }
+                        } else {
+                            WynntilsMod.error("Unknown service type in services.json: " + service.type);
+                        }
                     }
 
                     return true;

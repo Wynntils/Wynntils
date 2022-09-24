@@ -32,10 +32,10 @@ public class Label {
     }
 
     /**
-     * The relative importance of this place, where 1 is a Province and 3 is a Town
+     * The relative importance of this place
      */
-    public int getLayer() {
-        return layer;
+    public LabelLayer getLayer() {
+        return LabelLayer.values()[layer-1];
     }
 
     /**
@@ -45,5 +45,11 @@ public class Label {
         if (level == null) return "";
 
         return level;
+    }
+
+    public enum LabelLayer {
+        PROVINCE,
+        CITY,
+        TOWN_OR_PLACE
     }
 }
