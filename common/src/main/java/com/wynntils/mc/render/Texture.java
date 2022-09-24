@@ -44,6 +44,7 @@ public enum Texture {
     QUEST_STARTED("quest_started_icon.png", 7, 7),
 
     // Icons
+    MAP_ICON("map_icon.png", 21, 38),
     OVERLAYS_ICON("overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("quests_icon.png", 24, 34),
     SETTINGS_ICON("settings_icon.png", 17, 34),
@@ -52,6 +53,7 @@ public enum Texture {
     GILDED_MAP_TEXTURES("map/gilded_map_textures.png", 262, 524),
     PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
     WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256),
+    FULLSCREEN_MAP_BORDER("map/full_map_border.png", 510, 254),
     MAP_POINTERS("map/map_pointers.png", 256, 256);
 
     private final ResourceLocation resource;
