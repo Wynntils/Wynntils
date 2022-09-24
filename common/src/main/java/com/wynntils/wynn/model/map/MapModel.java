@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.map;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -16,21 +17,27 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wynn.model.map.poi.Label;
+import com.wynntils.wynn.model.map.poi.MapLocation;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
     public static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
     private static List<Label> labels = List.of();
+    private static Map<String, List<MapLocation>> services = new HashMap<>();
 
     public static void init() {
         loadLabels();
+        loadServices();
         tryLoadMaps();
     }
 
@@ -46,6 +53,10 @@ public final class MapModel extends Model {
         return labels;
     }
 
+    public static Map<String, List<MapLocation>> getServices() {
+        return services;
+    }
+
     public static void loadLabels() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
 
@@ -53,12 +64,35 @@ public final class MapModel extends Model {
 
         RequestHandler handler = WebManager.getHandler();
 
-        handler.addAndDispatch(new RequestBuilder(url, "places")
+        handler.addAndDispatch(new RequestBuilder(url, "maps-places")
                 .cacheTo(new File(mapDirectory, "places.json"))
                 .useCacheAsBackup()
                 .handleJsonObject(json -> {
                     PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
                     labels = places.labels;
+                    return true;
+                })
+                .build());
+    }
+
+    public static void loadServices() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+
+        String url = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+
+        RequestHandler handler = WebManager.getHandler();
+
+        handler.addAndDispatch(new RequestBuilder(url, "maps-services")
+                .cacheTo(new File(mapDirectory, "services.json"))
+                .useCacheAsBackup()
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
+
+                    List<ServiceProfile> serviceList = GSON.fromJson(json, type);
+                    for (var service : serviceList) {
+                        services.put(service.type, service.locations);
+                    }
+
                     return true;
                 })
                 .build());
@@ -140,5 +174,10 @@ public final class MapModel extends Model {
 
     public static class PlacesProfile {
         List<Label> labels;
+    }
+
+    public static class ServiceProfile {
+        String type;
+        List<MapLocation> locations;
     }
 }
