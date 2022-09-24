@@ -27,6 +27,7 @@
   "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow.name": "Text Shadow",
   "feature.wynntils.customBarsOverlay.overlay.bloodPoolBar.name": "Blood Pool Bar",
+  "feature.wynntils.customBarsOverlay.overlay.corruptedBar.name": "Corrupted Bar",
   "feature.wynntils.customBarsOverlay.overlay.focusBar.name": "Focus Bar",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture.description": "What texture should be used for the health bar?",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture.name": "Health Texture",
