@@ -10,6 +10,7 @@
   "feature.wynntils.abilityTreeScroll.invertScroll.name": "Invert scroll",
   "feature.wynntils.abilityTreeScroll.name": "Ability Tree Scroll",
   "feature.wynntils.addCommandExpansion.name": "Add Command Expansion",
+  "feature.wynntils.tradeMarketPriceConversion.name": "Trade Market Price Conversion",
   "feature.wynntils.beaconBeam.autoTrackQuestCoordinates.description": "Should waypoints automatically be set for quest coordinates?",
   "feature.wynntils.beaconBeam.autoTrackQuestCoordinates.name": "Auto Track Quest Coordinates",
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
