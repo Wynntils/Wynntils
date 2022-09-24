@@ -8,7 +8,7 @@ import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.render.Texture;
+import com.wynntils.gui.render.Texture;
 import java.io.IOException;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;

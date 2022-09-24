@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.VerticalAlignment;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

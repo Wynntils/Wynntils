@@ -18,15 +18,16 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.MapProfile;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.MapRenderer;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.render.Texture;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.renderer.GameRenderer;
@@ -105,7 +106,7 @@ public class MiniMapFeature extends UserFeature {
                 MapProfile map = WebManager.getMaps().get(0);
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
-                RenderUtils.MapRenderer.renderMapQuad(
+                MapRenderer.renderMapQuad(
                         map,
                         poseStack,
                         centerX,
@@ -124,7 +125,7 @@ public class MiniMapFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
-            RenderUtils.MapRenderer.renderCursor(
+            MapRenderer.renderCursor(
                     poseStack, centerX, centerZ, 1f, this.followPlayerRotation, this.pointerColor, this.pointerType);
 
             // disable mask & render border

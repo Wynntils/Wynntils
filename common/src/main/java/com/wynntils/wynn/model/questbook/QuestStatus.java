@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.questbook;
 
+import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -15,7 +16,7 @@ public enum QuestStatus {
     CAN_START(new TextComponent("Can start...").withStyle(ChatFormatting.YELLOW)),
     CANNOT_START(new TextComponent("Cannot start...").withStyle(ChatFormatting.RED));
 
-    /** This component is used to reconstruct quest tooltip in {@link com.wynntils.screens.WynntilsQuestBookScreen}.
+    /** This component is used to reconstruct quest tooltip in {@link WynntilsQuestBookScreen}.
      */
     private final Component questBookComponent;
 
