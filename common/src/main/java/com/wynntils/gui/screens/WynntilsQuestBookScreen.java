@@ -316,7 +316,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
             tooltipLines = new ArrayList<>();
 
             if (miniQuestMode) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.name2"));
+                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.miniQuestInfo.name"));
             } else {
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.name"));
             }
@@ -369,7 +369,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.click")
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.click2")
+                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.miniQuestInfo.click")
                         .withStyle(ChatFormatting.GREEN));
             }
         }
