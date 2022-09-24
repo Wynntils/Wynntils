@@ -23,7 +23,7 @@ public class WynnBossBarUtils {
     private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
     private static final Pattern AWAKENED_PROGRESS_PATTERN = Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]");
     private static final Pattern FOCUS_PATTERN = Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]");
-    private static final Pattern CORRUPTED_PROGRESS_PATTERN = Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]§r");
+    private static final Pattern CORRUPTED_PROGRESS_PATTERN = Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]");
 
     private static Pair<LerpingBossEvent, Matcher> getLerpingBossEvent(Pattern titlePattern) {
         LerpingBossEvent poolEvent = null;
