@@ -35,7 +35,7 @@ public class Label {
      * The relative importance of this place
      */
     public LabelLayer getLayer() {
-        return LabelLayer.values()[layer-1];
+        return LabelLayer.values()[layer - 1];
     }
 
     /**
