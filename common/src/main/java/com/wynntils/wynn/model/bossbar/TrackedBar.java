@@ -14,14 +14,14 @@ public abstract class TrackedBar {
     public final Pattern pattern;
     public final BarType type;
 
-    protected float progress = -1;
-    private float targetPercent = -1;
-    private long setTime = -1;
+    protected float progress = 0;
+    private float targetPercent = 0;
+    private long setTime = 0;
 
     private boolean rendered = true;
 
-    protected int current = -1;
-    protected int max = -1;
+    protected int current = 0;
+    protected int max = 0;
 
     protected UUID uuid = null;
 
@@ -63,14 +63,15 @@ public abstract class TrackedBar {
     }
 
     void reset() {
-        progress = -1;
-        targetPercent = -1;
-        setTime = -1;
+        progress = 0;
+        targetPercent = 0;
+        setTime = 0;
         rendered = true;
+        uuid = null;
     }
 
     public boolean isActive() {
-        return progress != -1;
+        return uuid != null;
     }
 
     public BossBarModel.BarProgress getBar() {
