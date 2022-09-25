@@ -23,12 +23,13 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.utils.WynnBossBarUtils;
+import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -38,10 +39,14 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnActionBar = false;
 
+    @Config
+    public boolean shouldDisplayOnBossBar = false;
+
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
         dependencies.add(ActionBarModel.class);
+        dependencies.add(BossBarModel.class);
     }
 
     @SubscribeEvent
@@ -56,6 +61,22 @@ public class CustomBarsOverlayFeature extends UserFeature {
         if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
 
         event.setMessage("");
+    }
+
+    @SubscribeEvent
+    public void onBossBarAdd(CustomBarAddEvent event) {
+        Overlay overlay =
+                switch (event.getType()) {
+                    case BLOODPOOL -> bloodPoolBarOverlay;
+                    case MANABANK -> manaBarOverlay;
+                    case AWAKENED -> awakenedProgressBarOverlay;
+                    case FOCUS -> focusBarOverlay;
+                    case CORRUPTED -> corruptedBarOverlay;
+                };
+
+        if (overlay.isEnabled() && !shouldDisplayOnBossBar) {
+            event.setCanceled(true);
+        }
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
@@ -94,24 +115,24 @@ public class CustomBarsOverlayFeature extends UserFeature {
             super(position, size);
         }
 
-        public abstract float textureHeight();
+        public float textureHeight() {
+            return Texture.UNIVERSAL_BAR.height() / 2f;
+        }
 
-        public abstract WynnBossBarUtils.BarProgress progress();
+        public abstract BossBarModel.BarProgress progress();
 
         public abstract String icon();
 
-        public abstract WynnBossBarUtils.BarProgress noProgress();
+        public abstract boolean isActive();
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!WynnUtils.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
 
-            WynnBossBarUtils.BarProgress barProgress = progress();
-
-            if (barProgress.equals(noProgress())) return;
+            BossBarModel.BarProgress barProgress = progress();
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);
@@ -196,15 +217,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return null;
+        public boolean isActive() {
+            return true;
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress progress() {
+        public BossBarModel.BarProgress progress() {
             int current = ActionBarModel.getCurrentHealth();
             int max = ActionBarModel.getMaxHealth();
-            return new WynnBossBarUtils.BarProgress(current, max, current / (float) max);
+            return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
@@ -241,13 +262,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getBloodPool();
+        public BossBarModel.BarProgress progress() {
+            return BossBarModel.bloodPoolBar.getBarProgress();
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_BLOOD_POOL;
+        public boolean isActive() {
+            return BossBarModel.bloodPoolBar.isActive();
         }
     }
 
@@ -277,10 +298,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress progress() {
+        public BossBarModel.BarProgress progress() {
             int current = ActionBarModel.getCurrentMana();
             int max = ActionBarModel.getMaxMana();
-            return new WynnBossBarUtils.BarProgress(current, max, current / (float) max);
+            return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
         @Override
@@ -289,8 +310,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return null;
+        public boolean isActive() {
+            return true;
         }
 
         @Override
@@ -328,13 +349,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getManaBank();
+        public BossBarModel.BarProgress progress() {
+            return BossBarModel.manaBankBar.getBarProgress();
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_MANA_BANK;
+        public boolean isActive() {
+            return BossBarModel.manaBankBar.isActive();
         }
     }
 
@@ -353,13 +374,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public float textureHeight() {
-            return Texture.UNIVERSAL_BAR.height() / 2f;
-        }
-
-        @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getAwakenedBar();
+        public BossBarModel.BarProgress progress() {
+            return BossBarModel.awakenedBar.getBarProgress();
         }
 
         @Override
@@ -368,8 +384,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_AWAKENED_PROGRESS;
+        public boolean isActive() {
+            return BossBarModel.awakenedBar.isActive();
         }
     }
 
@@ -387,13 +403,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public float textureHeight() {
-            return Texture.UNIVERSAL_BAR.height() / 2f;
-        }
-
-        @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getFocusBar();
+        public BossBarModel.BarProgress progress() {
+            return BossBarModel.focusBar.getBarProgress();
         }
 
         @Override
@@ -402,8 +413,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_FOCUS;
+        public boolean isActive() {
+            return BossBarModel.focusBar.isActive();
         }
     }
 
@@ -422,13 +433,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public float textureHeight() {
-            return Texture.UNIVERSAL_BAR.height() / 2f;
-        }
-
-        @Override
-        public WynnBossBarUtils.BarProgress progress() {
-            return WynnBossBarUtils.getCorruptedBar();
+        public BossBarModel.BarProgress progress() {
+            return BossBarModel.corruptedBar.getBarProgress();
         }
 
         @Override
@@ -437,8 +443,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public WynnBossBarUtils.BarProgress noProgress() {
-            return WynnBossBarUtils.NO_CORRUPTED;
+        public boolean isActive() {
+            return BossBarModel.corruptedBar.isActive();
         }
     }
 
