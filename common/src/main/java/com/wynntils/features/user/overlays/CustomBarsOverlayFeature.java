@@ -134,7 +134,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
             BossBarModel.BarProgress barProgress = progress();
 
-            if (isActive()) return;
+            if (!isActive()) return;
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);
