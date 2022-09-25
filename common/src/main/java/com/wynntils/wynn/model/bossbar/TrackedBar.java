@@ -1,11 +1,14 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.wynn.model.bossbar;
-
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.Util;
+import net.minecraft.util.Mth;
 
 public abstract class TrackedBar {
     public final Pattern pattern;
@@ -27,9 +30,7 @@ public abstract class TrackedBar {
         this.type = type;
     }
 
-    public void onAdd() {
-
-    }
+    public void onAdd() {}
 
     public abstract void onUpdateName(Matcher match);
 

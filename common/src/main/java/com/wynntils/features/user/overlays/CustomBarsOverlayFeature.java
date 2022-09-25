@@ -42,7 +42,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @Config
     public boolean shouldDisplayOnBossBar = false;
 
-
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
@@ -66,13 +65,14 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        Overlay overlay = switch (event.getType()) {
-            case BLOODPOOL -> bloodPoolBarOverlay;
-            case MANABANK -> manaBarOverlay;
-            case AWAKENED -> awakenedProgressBarOverlay;
-            case FOCUS -> focusBarOverlay;
-            case CORRUPTED -> corruptedBarOverlay;
-        };
+        Overlay overlay =
+                switch (event.getType()) {
+                    case BLOODPOOL -> bloodPoolBarOverlay;
+                    case MANABANK -> manaBarOverlay;
+                    case AWAKENED -> awakenedProgressBarOverlay;
+                    case FOCUS -> focusBarOverlay;
+                    case CORRUPTED -> corruptedBarOverlay;
+                };
 
         if (overlay.isEnabled() && !shouldDisplayOnBossBar) {
             event.setCanceled(true);
@@ -386,7 +386,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public boolean isActive() {return BossBarModel.awakenedBar.isActive();
+        public boolean isActive() {
+            return BossBarModel.awakenedBar.isActive();
         }
     }
 
