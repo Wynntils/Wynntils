@@ -66,6 +66,8 @@ public abstract class TrackedBar {
         progress = 0;
         targetPercent = 0;
         setTime = 0;
+        current = 0;
+        max = 0;
         rendered = true;
         uuid = null;
     }
