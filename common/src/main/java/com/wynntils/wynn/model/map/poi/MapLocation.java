@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
+import com.wynntils.mc.objects.Location;
+
 public class MapLocation {
     private int x;
     private int y;
@@ -25,5 +27,18 @@ public class MapLocation {
 
     public int getZ() {
         return z;
+    }
+
+    public Location asLocation() {
+        return new Location(x, y, z);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + ", " + z + "]";
+    }
+
+    public String asChatCoordinates() {
+        return x + " " + y + " " + z;
     }
 }
