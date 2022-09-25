@@ -206,14 +206,14 @@ public class BossBarModel extends Model {
             if (bar != null) {
                 if (!bar.isRendered()) {
                     event.setCanceled(true);
-
-                    Matcher matcher = bar.pattern.matcher(ComponentUtils.getCoded(name));
-                    if (!matcher.matches()) {
-                        WynntilsMod.error("Failed to match already matched boss bar");
-                    }
-
-                    bar.onUpdateName(matcher);
                 }
+
+                Matcher matcher = bar.pattern.matcher(ComponentUtils.getCoded(name));
+                if (!matcher.matches()) {
+                    WynntilsMod.error("Failed to match already matched boss bar");
+                }
+
+                bar.onUpdateName(matcher);
             }
         }
 
