@@ -22,7 +22,7 @@ public enum ServiceKind {
     LIQUID_MERCHANT("Liquid Merchant", Texture.LIQUID_MERCHANT),
     PARTY_FINDER("Party Finder", Texture.PARTY_FINDER),
     POTION_MERCHANT("Potion Merchant", Texture.POTION_MERCHANT),
-    POWDER_MASTER("Powder Master", Texture.POWDER_MERCHANT),
+    POWDER_MASTER("Powder Master", Texture.POWDER_MASTER),
     SCRIBING_STATION("Scribing Station", Texture.SCRIBING_STATION),
     SCROLL_MERCHANT("Scroll Merchant", Texture.SCROLL_MERCHANT),
     TAILORING_STATION("Tailoring Station", Texture.TAILORING_STATION),

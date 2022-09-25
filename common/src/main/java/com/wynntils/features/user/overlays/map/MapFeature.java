@@ -28,6 +28,9 @@ public class MapFeature extends UserFeature {
     @Config
     public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
+    @Config
+    public float minScaleForLabels = 1f;
+
     @RegisterKeyBind
     public final KeyBind openMapKeybind = new KeyBind("Open Full Screen Map", GLFW.GLFW_KEY_M, false, () -> {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
@@ -43,7 +46,6 @@ public class MapFeature extends UserFeature {
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        super.onInit(conditions, dependencies);
         dependencies.add(MapModel.class);
     }
 }

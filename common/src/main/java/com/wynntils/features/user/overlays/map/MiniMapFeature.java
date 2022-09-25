@@ -42,7 +42,6 @@ public class MiniMapFeature extends UserFeature {
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        super.onInit(conditions, dependencies);
         dependencies.add(MapModel.class);
     }
 
@@ -51,6 +50,12 @@ public class MiniMapFeature extends UserFeature {
 
         @Config
         public float scale = 1f;
+
+        @Config
+        public float poiScale = 0.8f;
+
+        @Config
+        public float pointerScale = 1f;
 
         @Config
         public boolean followPlayerRotation = true;
@@ -117,13 +122,18 @@ public class MiniMapFeature extends UserFeature {
                 MapRenderer.renderMapQuad(
                         map,
                         poseStack,
+                        (float) McUtils.player().getX(),
+                        (float) McUtils.player().getZ(),
                         centerX,
                         centerZ,
                         textureX,
                         textureZ,
                         width,
                         height,
-                        scale,
+                        this.scale,
+                        this.poiScale,
+                        null,
+                        false,
                         this.followPlayerRotation,
                         this.renderUsingLinear);
             }
@@ -134,7 +144,13 @@ public class MiniMapFeature extends UserFeature {
 
             // cursor
             MapRenderer.renderCursor(
-                    poseStack, centerX, centerZ, 1f, this.followPlayerRotation, this.pointerColor, this.pointerType);
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    this.pointerScale,
+                    this.followPlayerRotation,
+                    this.pointerColor,
+                    this.pointerType);
 
             // disable mask & render border
             switch (maskType) {
