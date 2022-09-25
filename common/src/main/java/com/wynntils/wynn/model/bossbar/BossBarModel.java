@@ -124,7 +124,7 @@ public class BossBarModel extends Model {
     private static TrackedBar matchUUID(UUID id) {
 
         for (TrackedBar trackedBar : trackedBars) {
-            if (trackedBar.getUuid().equals(id)) {
+            if (trackedBar.isActive() && trackedBar.getUuid().equals(id)) {
                 return trackedBar;
             }
         }
