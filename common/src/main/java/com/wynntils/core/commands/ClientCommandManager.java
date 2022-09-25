@@ -9,9 +9,11 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
+import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
@@ -50,9 +52,11 @@ public final class ClientCommandManager extends CoreManager {
     }
 
     public static void init() {
+        registerCommand(new CompassCommand());
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
+        registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
