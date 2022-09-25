@@ -88,9 +88,9 @@ public class CompassCommand extends CommandBase {
                 .filter(poi -> poi instanceof ServicePoi servicePoi
                         && servicePoi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                                poi.getLocation().getX(),
-                                poi.getLocation().getY(),
-                                poi.getLocation().getZ())));
+                        poi.getLocation().getX(),
+                        poi.getLocation().getY(),
+                        poi.getLocation().getZ())));
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...
             MutableComponent response = new TextComponent("Found no services of kind '" + selectedKind.getName() + "'")
@@ -101,8 +101,8 @@ public class CompassCommand extends CommandBase {
         Poi closestService = closestServiceOptional.get();
         CompassModel.setCompassLocation(closestService.getLocation().asLocation());
 
-        MutableComponent response =
-                new TextComponent("Setting compass to " + selectedKind.getName() + " at ").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = new TextComponent("Setting compass to " + selectedKind.getName() + " at ")
+                .withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
@@ -126,10 +126,13 @@ public class CompassCommand extends CommandBase {
 
         if (places.size() > 1) {
             // Try to find one with an exact match, to differentiate e.g. "Detlas" from "Detlas Suburbs"
-            Optional<Poi> exactMatch = places.stream().filter(poi -> poi.getName().equals(searchedName)).findFirst();
+            Optional<Poi> exactMatch = places.stream()
+                    .filter(poi -> poi.getName().equals(searchedName))
+                    .findFirst();
             if (exactMatch.isEmpty()) {
-                MutableComponent response =
-                        new TextComponent("Found multiple places matching '" + searchedName + "', but none matched exactly. Matching: ").withStyle(ChatFormatting.RED);
+                MutableComponent response = new TextComponent("Found multiple places matching '" + searchedName
+                                + "', but none matched exactly. Matching: ")
+                        .withStyle(ChatFormatting.RED);
                 response.append(new TextComponent(String.join(
                         ", ", places.stream().map(poi -> poi.getName()).toList())));
                 context.getSource().sendFailure(response);

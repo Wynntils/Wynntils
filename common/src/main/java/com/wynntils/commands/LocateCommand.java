@@ -29,10 +29,10 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.Vec3;
 
 public class LocateCommand extends CommandBase {
-    public final static SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
+    public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
-    public final static SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
+    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     MapModel.getAllPois().stream()
                             .filter(poi -> poi instanceof LabelPoi)
