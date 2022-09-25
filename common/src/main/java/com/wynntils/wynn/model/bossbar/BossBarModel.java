@@ -131,7 +131,7 @@ public class BossBarModel extends Model {
     public record BarProgress(int current, int max, float progress) {}
 
     private record TrackedBarHandler(BossHealthUpdateEvent event) implements ClientboundBossEventPacket.Handler {
-
+        @Override
         public void add(
                 UUID id,
                 Component name,
@@ -190,6 +190,7 @@ public class BossBarModel extends Model {
             }
         }
 
+        @Override
         public void remove(UUID id) {
             whenBarPresent(id, trackedBar -> {
                 trackedBar.reset();
@@ -197,12 +198,14 @@ public class BossBarModel extends Model {
             });
         }
 
+        @Override
         public void updateProgress(UUID id, float progress) {
             whenBarPresent(id, trackedBar -> {
                 trackedBar.setProgress(progress);
             });
         }
 
+        @Override
         public void updateName(UUID id, Component name) {
             whenBarPresent(id, trackedBar -> {
                 Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
@@ -214,10 +217,12 @@ public class BossBarModel extends Model {
             });
         }
 
+        @Override
         public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
             whenBarPresent(id, trackedBar -> {});
         }
 
+        @Override
         public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
             whenBarPresent(id, trackedBar -> {});
         }
