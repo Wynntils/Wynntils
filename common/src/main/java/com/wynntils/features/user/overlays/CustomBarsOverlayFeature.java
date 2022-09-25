@@ -263,7 +263,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.bloodPoolBar.getBar();
+            return BossBarModel.bloodPoolBar.getBarProgress();
         }
 
         @Override
@@ -350,7 +350,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.manaBankBar.getBar();
+            return BossBarModel.manaBankBar.getBarProgress();
         }
 
         @Override
@@ -375,7 +375,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.awakenedBar.getBar();
+            return BossBarModel.awakenedBar.getBarProgress();
         }
 
         @Override
@@ -404,7 +404,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.focusBar.getBar();
+            return BossBarModel.focusBar.getBarProgress();
         }
 
         @Override
@@ -434,7 +434,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.corruptedBar.getBar();
+            return BossBarModel.corruptedBar.getBarProgress();
         }
 
         @Override

@@ -76,7 +76,7 @@ public abstract class TrackedBar {
         return uuid != null;
     }
 
-    public BossBarModel.BarProgress getBar() {
+    public BossBarModel.BarProgress getBarProgress() {
         return isActive() ? new BossBarModel.BarProgress(current, max, getProgress()) : null;
     }
 
