@@ -19,6 +19,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
@@ -26,6 +27,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public class MapRenderer {
+    private static Poi hovered = null;
+
     // TODO: Support circle map rendering
     public static void renderMapQuad(
             MapProfile map,
@@ -116,18 +119,19 @@ public class MapRenderer {
 
         List<ServicePoi> servicePois = MapModel.getAllPois().stream()
                 .filter(poi -> {
-                    double distanceX = McUtils.player().getX() - mapCenterX;
-                    double distanceZ = McUtils.player().getZ() - mapCenterZ;
+                    if (!(poi instanceof ServicePoi)) return false;
 
-                    float textureXPosition = (float) (centerX + distanceX / scale);
-                    float textureZPosition = (float) (centerZ + distanceZ / scale);
-
-                    boolean inMap = textureXPosition >= mapTopX
-                            && textureXPosition <= mapBottomX
-                            && textureZPosition >= mapLeftZ
-                            && textureZPosition <= mapRightZ;
-
-                    return poi instanceof ServicePoi && inMap;
+                    return isPoiVisible(
+                            mapCenterX,
+                            mapCenterZ,
+                            centerX,
+                            centerZ,
+                            scale,
+                            mapTopX,
+                            mapLeftZ,
+                            mapBottomX,
+                            mapRightZ,
+                            poi);
                 })
                 .map(poi -> (ServicePoi) poi)
                 .toList();
@@ -151,6 +155,29 @@ public class MapRenderer {
         }
     }
 
+    private static boolean isPoiVisible(
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float scale,
+            float mapTopX,
+            float mapLeftZ,
+            float mapBottomX,
+            float mapRightZ,
+            Poi poi) {
+        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
+
+        double distanceX = poi.getLocation().getX() - mapCenterX;
+        float textureXPosition = (float) (centerX + distanceX / scale);
+        float textureZPosition = (float) (centerZ + distanceZ / scale);
+
+        return textureXPosition >= mapTopX
+                && textureXPosition <= mapBottomX
+                && textureZPosition >= mapLeftZ
+                && textureZPosition <= mapRightZ;
+    }
+
     private static void renderServicePois(
             PoseStack poseStack,
             int mouseX,
@@ -163,23 +190,50 @@ public class MapRenderer {
             float poiScale,
             boolean followPlayerRotation,
             List<ServicePoi> servicePois) {
-        poseStack.pushPose();
 
-        if (followPlayerRotation) {
-            poseStack.mulPose(new Quaternion(
-                    0F,
-                    0,
-                    (float) StrictMath.sin(Math.toRadians(180 + McUtils.player().getYRot()) / 2),
-                    (float) StrictMath.cos(
-                            -Math.toRadians(180 + McUtils.player().getYRot()) / 2)));
-        }
-
+        hovered = null;
         for (ServicePoi servicePoi : servicePois) {
             renderServicePoi(
-                    poseStack, mouseX, mouseY, mapCenterX, mapCenterZ, centerX, centerZ, scale, poiScale, servicePoi);
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    mapCenterX,
+                    mapCenterZ,
+                    centerX,
+                    centerZ,
+                    followPlayerRotation,
+                    scale,
+                    poiScale,
+                    servicePoi);
         }
 
-        if (followPlayerRotation) {
+        if (hovered != null) {
+            double distanceX = hovered.getLocation().getX() - mapCenterX;
+            double distanceZ = hovered.getLocation().getZ() - mapCenterZ;
+
+            float textureXPosition = (float) (centerX + distanceX / scale);
+            float textureZPosition = (float) (centerZ + distanceZ / scale);
+
+            float width = hovered.getIcon().width() * poiScale;
+            float height = hovered.getIcon().height() * poiScale;
+
+            poseStack.pushPose();
+
+            float renderX = textureXPosition - width / 2f;
+            float renderZ = textureZPosition - height / 2f;
+            poseStack.translate(renderX, renderZ, 0);
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            hovered.getName(),
+                            width / 2f,
+                            20,
+                            CommonColors.GREEN,
+                            HorizontalAlignment.Center,
+                            VerticalAlignment.Top,
+                            FontRenderer.TextShadow.OUTLINE);
+
             poseStack.popPose();
         }
     }
@@ -192,6 +246,7 @@ public class MapRenderer {
             float mapCenterZ,
             float centerX,
             float centerZ,
+            boolean followPlayerRotation,
             float scale,
             float poiScale,
             ServicePoi servicePoi) {
@@ -207,23 +262,23 @@ public class MapRenderer {
         float width = servicePoi.getIcon().width() * poiScale;
         float height = servicePoi.getIcon().height() * poiScale;
 
-        poseStack.pushPose();
-
         float renderX = textureXPosition - width / 2f;
         float renderZ = textureZPosition - height / 2f;
-        poseStack.translate(renderX, renderZ, 0);
 
         if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            servicePoi.getName(),
-                            width / 2f,
-                            25,
-                            CommonColors.GREEN,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Top,
-                            FontRenderer.TextShadow.OUTLINE);
+            hovered = servicePoi;
+        }
+
+        poseStack.pushPose();
+        poseStack.translate(renderX, renderZ, 0);
+
+        if (followPlayerRotation) {
+            poseStack.mulPose(new Quaternion(
+                    0F,
+                    0,
+                    (float) StrictMath.sin(Math.toRadians(180 + McUtils.player().getYRot()) / 2),
+                    (float) StrictMath.cos(
+                            -Math.toRadians(180 + McUtils.player().getYRot()) / 2)));
         }
 
         RenderUtils.drawScalingTexturedRect(
