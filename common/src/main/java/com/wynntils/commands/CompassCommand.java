@@ -36,8 +36,7 @@ public class CompassCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("compass")
                 .then(Commands.literal("at")
-                        .then(Commands.argument("location", Vec3Argument.vec3())
-                                .executes(this::compassAt))
+                        .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAt))
                         .build())
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
@@ -65,8 +64,7 @@ public class CompassCommand extends CommandBase {
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
         CompassModel.setCompassLocation(location);
 
-        MutableComponent response =
-                new TextComponent("Setting compass to ").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = new TextComponent("Setting compass to ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
