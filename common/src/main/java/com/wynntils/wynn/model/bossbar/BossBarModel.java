@@ -21,6 +21,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BossBarModel extends Model {
 
+    public static void init() {}
+
     public static final TrackedBar manaBankBar =
             new TrackedBar(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), TrackedBar.BarType.MANABANK) {
                 @Override
