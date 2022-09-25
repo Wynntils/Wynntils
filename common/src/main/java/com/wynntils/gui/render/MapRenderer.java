@@ -214,6 +214,10 @@ public class MapRenderer {
             hovered = null;
         }
 
+        final double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+        final float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+        final float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
         for (ServicePoi servicePoi : servicePois) {
             renderServicePoi(
                     poseStack,
@@ -225,6 +229,8 @@ public class MapRenderer {
                     followPlayerRotation,
                     scale,
                     poiScale,
+                    sinRotationRadians,
+                    cosRotationRadians,
                     servicePoi);
         }
 
@@ -290,6 +296,8 @@ public class MapRenderer {
             boolean followPlayerRotation,
             float scale,
             float poiScale,
+            float sinRotationRadians,
+            float cosRotationRadians,
             ServicePoi servicePoi) {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
@@ -298,10 +306,6 @@ public class MapRenderer {
         float textureZPosition;
 
         if (followPlayerRotation) {
-            final double rotationRadians = Math.toRadians(McUtils.player().getYRot());
-            final float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
-            final float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
-
             float dX = (servicePoi.getLocation().getX() - mapCenterX) / scale;
             float dZ = (servicePoi.getLocation().getZ() - mapCenterZ) / scale;
 
