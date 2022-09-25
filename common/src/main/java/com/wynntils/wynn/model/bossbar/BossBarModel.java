@@ -113,7 +113,7 @@ public class BossBarModel extends Model {
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
 
     @SubscribeEvent
-    private static void onHealthBarEvent(BossHealthUpdateEvent event) {
+    public static void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 
         packet.dispatch(new TrackedBarHandler(event));
