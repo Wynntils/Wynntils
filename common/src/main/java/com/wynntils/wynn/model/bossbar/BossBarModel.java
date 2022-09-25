@@ -146,7 +146,6 @@ public class BossBarModel extends Model {
 
             ClassType userClass = CharacterManager.getCharacterInfo().getClassType();
 
-            // TODO when we can successfuly parse character info, reduce checks
             for (TrackedBar potentialTrackedBar :
                     Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar)) {
                 if (potentialTrackedBar.classType != userClass) continue;
