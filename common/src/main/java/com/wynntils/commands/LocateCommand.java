@@ -95,12 +95,13 @@ public class LocateCommand extends CommandBase {
                         && servicePoi.getKind().equals(selectedKind))
                 .toList());
 
-        // Only keep the closest results
+        // Only keep the 4 closest results
         Vec3 currentLocation = McUtils.player().position();
         services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                 poi.getLocation().getX(),
                 poi.getLocation().getY(),
                 poi.getLocation().getZ())));
+        // Removes from element 4 to the end of the list
         services.subList(4, services.size()).clear();
 
         MutableComponent response =
