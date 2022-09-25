@@ -12,6 +12,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
+import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
@@ -53,6 +54,7 @@ public final class ClientCommandManager extends CoreManager {
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
+        registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
