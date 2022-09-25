@@ -127,14 +127,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!WynnUtils.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
 
             BossBarModel.BarProgress barProgress = progress();
-
-            if (!isActive()) return;
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);

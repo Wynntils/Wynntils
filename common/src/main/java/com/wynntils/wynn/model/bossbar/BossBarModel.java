@@ -10,8 +10,9 @@ import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -111,25 +112,13 @@ public class BossBarModel extends Model {
                 }
             };
 
-    private static final List<TrackedBar> trackedBars =
-            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
+    private static final HashMap<UUID, TrackedBar> trackedBarsMap = new HashMap<>();
 
     @SubscribeEvent
     public static void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 
         packet.dispatch(new TrackedBarHandler(event));
-    }
-
-    private static TrackedBar matchUUID(UUID id) {
-
-        for (TrackedBar trackedBar : trackedBars) {
-            if (trackedBar.isActive() && trackedBar.getUuid().equals(id)) {
-                return trackedBar;
-            }
-        }
-
-        return null;
     }
 
     public record BarProgress(int current, int max, float progress) {}
@@ -145,92 +134,84 @@ public class BossBarModel extends Model {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-            TrackedBar bar = null;
+            TrackedBar trackedBar = null;
             Matcher matcher = null;
 
-            for (TrackedBar trackedBar : trackedBars) {
-                matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
+            // TODO when we can successfuly parse character info, reduce checks
+            for (TrackedBar potentialTrackedBar :
+                    Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar)) {
+                matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (matcher.matches()) {
-                    bar = trackedBar;
+                    trackedBar = potentialTrackedBar;
                     break;
                 }
             }
 
-            if (bar == null) return;
+            if (trackedBar == null) return;
 
-            CustomBarAddEvent barAddEvent = new CustomBarAddEvent(bar.type);
+            trackedBar.setProgress(progress);
+            trackedBar.setUuid(id);
+
+            // Allow for others to try and cancel event
+            CustomBarAddEvent barAddEvent = new CustomBarAddEvent(trackedBar.type);
             WynntilsMod.postEvent(barAddEvent);
 
-            bar.setProgress(progress);
-            bar.setUuid(id);
-
             if (barAddEvent.isCanceled()) {
-                bar.setRendered(false);
+                trackedBar.setRendered(false);
                 event.setCanceled(true);
             } else {
-                bar.setRendered(true);
+                trackedBar.setRendered(true);
             }
 
             // Order matters
-            bar.onUpdateName(matcher);
-            bar.onAdd();
+            trackedBar.onUpdateName(matcher);
+            trackedBar.onAdd();
+
+            trackedBarsMap.put(id, trackedBar);
+        }
+
+        private void whenBarPresent(UUID id, Consumer<TrackedBar> consumer) {
+            TrackedBar trackedBar = trackedBarsMap.get(id);
+
+            if (trackedBar != null) {
+                if (!trackedBar.isRendered()) {
+                    event.setCanceled(true);
+                }
+
+                consumer.accept(trackedBar);
+            }
         }
 
         public void remove(UUID id) {
-            TrackedBar bar = matchUUID(id);
-
-            if (bar != null) {
-                if (!bar.isRendered()) {
-                    event.setCanceled(true);
-                }
-
-                bar.reset();
-            }
+            whenBarPresent(id, trackedBar -> {
+                trackedBar.reset();
+                trackedBarsMap.remove(id);
+            });
         }
 
         public void updateProgress(UUID id, float progress) {
-            TrackedBar bar = matchUUID(id);
-
-            if (bar != null) {
-                if (!bar.isRendered()) {
-                    event.setCanceled(true);
-                }
-
-                bar.setProgress(progress);
-            }
+            whenBarPresent(id, trackedBar -> {
+                trackedBar.setProgress(progress);
+            });
         }
 
         public void updateName(UUID id, Component name) {
-            TrackedBar bar = matchUUID(id);
-
-            if (bar != null) {
-                if (!bar.isRendered()) {
-                    event.setCanceled(true);
-                }
-
-                Matcher matcher = bar.pattern.matcher(ComponentUtils.getCoded(name));
+            whenBarPresent(id, trackedBar -> {
+                Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
                 }
 
-                bar.onUpdateName(matcher);
-            }
+                trackedBar.onUpdateName(matcher);
+            });
         }
 
         public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
-            TrackedBar bar = matchUUID(id);
-
-            if (bar != null && !bar.isRendered()) {
-                event.setCanceled(true);
-            }
+            whenBarPresent(id, trackedBar -> {});
         }
 
         public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
-            TrackedBar bar = matchUUID(id);
-
-            if (bar != null && !bar.isRendered()) {
-                event.setCanceled(true);
-            }
+            whenBarPresent(id, trackedBar -> {});
         }
     }
 }
