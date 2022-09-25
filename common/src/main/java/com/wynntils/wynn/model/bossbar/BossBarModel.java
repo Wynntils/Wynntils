@@ -39,7 +39,7 @@ public class BossBarModel extends Model {
             };
 
     public static final TrackedBar bloodPoolBar =
-            new TrackedBar(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), TrackedBar.BarType.AWAKENED) {
+            new TrackedBar(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), TrackedBar.BarType.BLOODPOOL) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
