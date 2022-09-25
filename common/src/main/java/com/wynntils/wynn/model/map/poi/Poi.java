@@ -20,24 +20,4 @@ public abstract class Poi {
     public abstract Texture getIcon();
 
     public abstract String getName();
-
-    /**
-     * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param centerX} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public float getRenderX(float mapCenterX, float centerX, float currentZoom) {
-        double distanceX = this.getLocation().getX() - mapCenterX;
-        return (float) (centerX + distanceX * currentZoom);
-    }
-
-    /**
-     * {@param mapCenterZ} center coordinates of map (in-game coordinates)
-     * {@param centerZ} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public float getRenderZ(float mapCenterZ, float centerZ, float currentZoom) {
-        double distanceZ = this.getLocation().getZ() - mapCenterZ;
-        return (float) (centerZ + distanceZ * currentZoom);
-    }
 }

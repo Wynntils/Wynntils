@@ -121,25 +121,6 @@ public class MapRenderer {
         float mapBottomX = centerX + halfRenderedWidth;
         float mapRightZ = centerZ + halfRenderedHeight;
 
-        List<ServicePoi> servicePois = MapModel.getAllPois().stream()
-                .filter(poi -> {
-                    if (!(poi instanceof ServicePoi)) return false;
-
-                    return isPoiVisible(
-                            mapCenterX,
-                            mapCenterZ,
-                            centerX,
-                            centerZ,
-                            scale,
-                            mapTopX,
-                            mapLeftZ,
-                            mapBottomX,
-                            mapRightZ,
-                            poi);
-                })
-                .map(poi -> (ServicePoi) poi)
-                .toList();
-
         if (renderMapLabels) {
             List<LabelPoi> labelPois = MapModel.getAllPois().stream()
                     .filter(poi -> poi instanceof LabelPoi)
@@ -182,48 +163,52 @@ public class MapRenderer {
 
         renderServicePois(
                 poseStack,
-                mouseCoordinates,
                 mapCenterX,
                 mapCenterZ,
                 centerX,
                 centerZ,
                 scale,
                 poiScale,
+                mouseCoordinates,
                 followPlayerRotation,
-                servicePois);
-    }
-
-    private static boolean isPoiVisible(
-            float mapCenterX,
-            float mapCenterZ,
-            float centerX,
-            float centerZ,
-            float scale,
-            float mapTopX,
-            float mapLeftZ,
-            float mapBottomX,
-            float mapRightZ,
-            Poi poi) {
-        float textureXPosition = poi.getRenderX(mapCenterX, centerX, 1f / scale);
-        float textureZPosition = poi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
-
-        return textureXPosition >= mapTopX
-                && textureXPosition <= mapBottomX
-                && textureZPosition >= mapLeftZ
-                && textureZPosition <= mapRightZ;
+                mapTopX,
+                mapLeftZ,
+                mapBottomX,
+                mapRightZ);
     }
 
     private static void renderServicePois(
             PoseStack poseStack,
-            Pair<Integer, Integer> mouseCoordinates,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
             float centerZ,
             float scale,
             float poiScale,
+            Pair<Integer, Integer> mouseCoordinates,
             boolean followPlayerRotation,
-            List<ServicePoi> servicePois) {
+            float mapTopX,
+            float mapLeftZ,
+            float mapBottomX,
+            float mapRightZ) {
+        List<ServicePoi> servicePois = MapModel.getAllPois().stream()
+                .filter(poi -> {
+                    if (!(poi instanceof ServicePoi)) return false;
+
+                    return isPoiVisible(
+                            mapCenterX,
+                            mapCenterZ,
+                            centerX,
+                            centerZ,
+                            scale,
+                            mapTopX,
+                            mapLeftZ,
+                            mapBottomX,
+                            mapRightZ,
+                            poi);
+                })
+                .map(poi -> (ServicePoi) poi)
+                .toList();
 
         if (mouseCoordinates != null) {
             hovered = null;
@@ -248,8 +233,8 @@ public class MapRenderer {
         }
 
         if (hovered != null && mouseCoordinates != null) {
-            float textureXPosition = hovered.getRenderX(mapCenterX, centerX, 1f / scale);
-            float textureZPosition = hovered.getRenderZ(mapCenterZ, centerZ, 1f / scale);
+            float textureXPosition = getRenderX(hovered, mapCenterX, centerX, 1f / scale);
+            float textureZPosition = getRenderZ(hovered, mapCenterZ, centerZ, 1f / scale);
 
             float width = hovered.getIcon().width() * poiScale;
             float height = hovered.getIcon().height() * poiScale;
@@ -273,6 +258,26 @@ public class MapRenderer {
 
             poseStack.popPose();
         }
+    }
+
+    private static boolean isPoiVisible(
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float scale,
+            float mapTopX,
+            float mapLeftZ,
+            float mapBottomX,
+            float mapRightZ,
+            Poi poi) {
+        float textureXPosition = getRenderX(poi, mapCenterX, centerX, 1f / scale);
+        float textureZPosition = getRenderZ(poi, mapCenterZ, centerZ, 1f / scale);
+
+        return textureXPosition >= mapTopX
+                && textureXPosition <= mapBottomX
+                && textureZPosition >= mapLeftZ
+                && textureZPosition <= mapRightZ;
     }
 
     public static void renderServicePoi(
@@ -303,8 +308,8 @@ public class MapRenderer {
             textureXPosition = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
             textureZPosition = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
         } else {
-            textureXPosition = servicePoi.getRenderX(mapCenterX, centerX, 1f / scale);
-            textureZPosition = servicePoi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
+            textureXPosition = getRenderX(servicePoi, mapCenterX, centerX, 1f / scale);
+            textureZPosition = getRenderZ(servicePoi, mapCenterZ, centerZ, 1f / scale);
         }
 
         float width = servicePoi.getIcon().width() * poiScale;
@@ -374,5 +379,27 @@ public class MapRenderer {
         if (!followPlayerRotation) {
             poseStack.popPose();
         }
+    }
+
+    /**
+     * {@param poi} POI that we get the render coordinate for
+     * {@param mapCenterX} center coordinates of map (in-game coordinates)
+     * {@param centerX} center coordinates of map (screen render coordinates)
+     * {@param currentZoom} the bigger, the more detailed the map is
+     */
+    public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
+        double distanceX = poi.getLocation().getX() - mapCenterX;
+        return (float) (centerX + distanceX * currentZoom);
+    }
+
+    /**
+     * {@param poi} POI that we get the render coordinate for
+     * {@param mapCenterZ} center coordinates of map (in-game coordinates)
+     * {@param centerZ} center coordinates of map (screen render coordinates)
+     * {@param currentZoom} the bigger, the more detailed the map is
+     */
+    public static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
+        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
+        return (float) (centerZ + distanceZ * currentZoom);
     }
 }
