@@ -12,10 +12,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.MapProfile;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -126,8 +126,8 @@ public class MapRenderer {
                 poseStack,
                 Texture.MAP_POINTERS.resource(),
                 pointerColor,
-                (int) (renderX - renderedWidth / 2),
-                (int) (renderY - renderedHeight / 2),
+                renderX - renderedWidth / 2f,
+                renderY - renderedHeight / 2f,
                 0,
                 renderedWidth,
                 renderedHeight,

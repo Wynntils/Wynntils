@@ -11,12 +11,22 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 
 public final class StringUtils {
     private static final String[] suffixes = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
     private static final DecimalFormat fractionalFormat = new DecimalFormat("#.#");
+
+    private static final Pattern STX_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(s|stx|stacks)");
+    private static final Pattern LE_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(l|le)");
+    private static final Pattern EB_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(b|eb)");
+    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
+    private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
+
+    private static final int stackSize = 64;
+    private static final double taxAmount = 1.05;
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
@@ -158,5 +168,48 @@ public final class StringUtils {
             renderedText = builder.toString();
         }
         return renderedText;
+    }
+
+    public static String convertEmeraldPrice(String input) {
+        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
+        if (rawMatcher.matches()) return "";
+
+        input = input.toLowerCase();
+        long emeralds = 0;
+
+        try {
+            // stx
+            Matcher stxMatcher = STX_PATTERN.matcher(input);
+            while (stxMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(stxMatcher.group(1)) * stackSize * stackSize * stackSize);
+            }
+
+            // le
+            Matcher leMatcher = LE_PATTERN.matcher(input);
+            while (leMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(leMatcher.group(1)) * stackSize * stackSize);
+            }
+
+            // eb
+            Matcher ebMatcher = EB_PATTERN.matcher(input);
+            while (ebMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(ebMatcher.group(1)) * stackSize);
+            }
+
+            // standard numbers/emeralds
+            Matcher eMatcher = E_PATTERN.matcher(input);
+            while (eMatcher.find()) {
+                emeralds += Long.parseLong(eMatcher.group(1));
+            }
+
+            // account for tax if flagged
+            if (input.contains("-t")) {
+                emeralds = Math.round(emeralds / taxAmount);
+            }
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+        return (emeralds > 0) ? String.valueOf(emeralds) : "";
     }
 }

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi.profiles;
+package com.wynntils.wynn.model.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.mc.utils.McUtils;
@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapProfile {
-
     NativeImage texture;
     ResourceLocation mapResource;
 

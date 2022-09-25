@@ -188,7 +188,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class HealthBarOverlay extends BaseBarOverlay {
+    public static class HealthBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
         public HealthTexture healthTexture = HealthTexture.a;
 
@@ -246,7 +246,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class BloodPoolBarOverlay extends HealthBarOverlay {
+    public static class BloodPoolBarOverlay extends HealthBarOverlay {
         public BloodPoolBarOverlay() {
             super(
                     new OverlayPosition(
@@ -274,7 +274,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class ManaBarOverlay extends BaseBarOverlay {
+    public static class ManaBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
         public ManaTexture manaTexture = ManaTexture.a;
 
@@ -333,7 +333,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class ManaBankBarOverlay extends ManaBarOverlay {
+    public static class ManaBankBarOverlay extends ManaBarOverlay {
         public ManaBankBarOverlay() {
             super(
                     new OverlayPosition(
@@ -361,7 +361,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class AwakenedProgressBarOverlay extends BaseBarOverlay {
+    public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
 
         public AwakenedProgressBarOverlay() {
             super(
@@ -391,7 +391,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class FocusBarOverlay extends BaseBarOverlay {
+    public static class FocusBarOverlay extends BaseBarOverlay {
         public FocusBarOverlay() {
             super(
                     new OverlayPosition(
@@ -420,7 +420,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public class CorruptedBarOverlay extends BaseBarOverlay {
+    public static class CorruptedBarOverlay extends BaseBarOverlay {
 
         protected CorruptedBarOverlay() {
             super(

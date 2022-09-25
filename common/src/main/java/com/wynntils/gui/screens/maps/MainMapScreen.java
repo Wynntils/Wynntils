@@ -7,8 +7,6 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.MapProfile;
 import com.wynntils.features.user.overlays.map.MapFeature;
 import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
@@ -19,6 +17,8 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.map.MapModel;
+import com.wynntils.wynn.model.map.MapProfile;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -75,18 +75,16 @@ public class MainMapScreen extends Screen {
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
+                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyRight.key,
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
+                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
         KeyMapping.set(
                 McUtils.mc().options.keyShift.key,
                 KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
@@ -106,12 +104,6 @@ public class MainMapScreen extends Screen {
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey && !MapFeature.INSTANCE.openMapKeybind.getKeyMapping().isDown()) {
             this.onClose();
@@ -126,9 +118,9 @@ public class MainMapScreen extends Screen {
 
         renderBackground(poseStack);
 
-        if (!WebManager.isMapLoaded()) return;
+        if (!MapModel.isMapLoaded()) return;
 
-        MapProfile map = WebManager.getMaps().get(0);
+        MapProfile map = MapModel.getMaps().get(0);
         float textureX = map.getTextureXPosition(mapCenterX);
         float textureZ = map.getTextureZPosition(mapCenterZ);
 

@@ -25,7 +25,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
-    private static final Pattern QUEST_NAME_MATCHER = Pattern.compile("^§.§l([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
+    private static final Pattern QUEST_NAME_MATCHER =
+            Pattern.compile("^§.§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
@@ -39,8 +40,9 @@ public class QuestInfo {
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
+    private final boolean isMiniQuest;
     private final int pageNumber;
-    private boolean tracked;
+    private final boolean tracked;
 
     public QuestInfo(
             String name,
@@ -49,6 +51,7 @@ public class QuestInfo {
             int level,
             String nextTask,
             List<Pair<String, Integer>> additionalRequirements,
+            boolean isMiniQuest,
             int pageNumber,
             boolean tracked) {
         this.name = name;
@@ -57,6 +60,7 @@ public class QuestInfo {
         this.level = level;
         this.nextTask = nextTask;
         this.additionalRequirements = additionalRequirements;
+        this.isMiniQuest = isMiniQuest;
         this.pageNumber = pageNumber;
         this.tracked = tracked;
     }
@@ -93,6 +97,10 @@ public class QuestInfo {
         return tracked;
     }
 
+    public boolean isMiniQuest() {
+        return isMiniQuest;
+    }
+
     @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
@@ -112,11 +120,14 @@ public class QuestInfo {
                 .withStyle(ChatFormatting.WHITE));
         tooltipLines.add(questInfo.getStatus().getQuestBookComponent());
         tooltipLines.add(new TextComponent(""));
-        tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
-                        ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
-                        : new TextComponent("✖").withStyle(ChatFormatting.RED))
-                .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
+        // We always parse level as one, so check if this mini-quest does not have a min combat level
+        if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
+            tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
+                            ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
+                            : new TextComponent("✖").withStyle(ChatFormatting.RED))
+                    .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                    .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
+        }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
@@ -152,7 +163,7 @@ public class QuestInfo {
         return tooltipLines;
     }
 
-    public static QuestInfo parseItem(ItemStack item, int pageNumber) {
+    public static QuestInfo parseItem(ItemStack item, int pageNumber, boolean isMiniQuest) {
         try {
             String name = getQuestName(item);
             if (name == null) return null;
@@ -176,7 +187,15 @@ public class QuestInfo {
             boolean tracked = isQuestTracked(item);
 
             QuestInfo questInfo = new QuestInfo(
-                    name, status, questLength, level, description, additionalRequirements, pageNumber, tracked);
+                    name,
+                    status,
+                    questLength,
+                    level,
+                    description,
+                    additionalRequirements,
+                    isMiniQuest,
+                    pageNumber,
+                    tracked);
             return questInfo;
         } catch (NoSuchElementException e) {
             WynntilsMod.warn("Failed to parse quest book item: " + item);
@@ -194,7 +213,7 @@ public class QuestInfo {
             WynntilsMod.warn("Non-matching quest name: " + rawName);
             return null;
         }
-        return m.group(1);
+        return m.group(2);
     }
 
     private static boolean isQuestTracked(ItemStack item) {
