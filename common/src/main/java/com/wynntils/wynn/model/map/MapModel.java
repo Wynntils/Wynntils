@@ -4,6 +4,9 @@
  */
 package com.wynntils.wynn.model.map;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,18 +16,35 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.wynn.model.map.poi.Label;
+import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.ServiceKind;
+import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
+    private static final String PLACES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+    private static final String SERVICES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+    private static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
+    private static final Set<Poi> allPois = new HashSet<>();
 
     public static void init() {
+        loadPlaces();
+        loadServices();
         tryLoadMaps();
     }
 
@@ -36,7 +56,53 @@ public final class MapModel extends Model {
         return maps;
     }
 
-    public static CompletableFuture<Boolean> tryLoadMaps() {
+    public static Set<Poi> getAllPois() {
+        return allPois;
+    }
+
+    private static void loadPlaces() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        RequestHandler handler = WebManager.getHandler();
+        handler.addAndDispatch(new RequestBuilder(PLACES_JSON_URL, "maps-places")
+                .cacheTo(new File(mapDirectory, "places.json"))
+                .useCacheAsBackup()
+                .handleJsonObject(json -> {
+                    PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
+                    for (Label label : places.labels) {
+                        allPois.add(new LabelPoi(label));
+                    }
+                    return true;
+                })
+                .build());
+    }
+
+    private static void loadServices() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        RequestHandler handler = WebManager.getHandler();
+        handler.addAndDispatch(new RequestBuilder(SERVICES_JSON_URL, "maps-services")
+                .cacheTo(new File(mapDirectory, "services.json"))
+                .useCacheAsBackup()
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
+
+                    List<ServiceProfile> serviceList = GSON.fromJson(json, type);
+                    for (var service : serviceList) {
+                        ServiceKind kind = ServiceKind.fromString(service.type);
+                        if (kind != null) {
+                            for (MapLocation location : service.locations) {
+                                allPois.add(new ServicePoi(location, kind));
+                            }
+                        } else {
+                            WynntilsMod.error("Unknown service type in services.json: " + service.type);
+                        }
+                    }
+
+                    return true;
+                })
+                .build());
+    }
+
+    private static CompletableFuture<Boolean> tryLoadMaps() {
         if (WebManager.getApiUrl("AMainMap") == null) return CompletableFuture.completedFuture(false);
 
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
@@ -108,5 +174,14 @@ public final class MapModel extends Model {
 
     public static boolean isMapLoaded() {
         return !maps.isEmpty();
+    }
+
+    private static class PlacesProfile {
+        List<Label> labels;
+    }
+
+    private static class ServiceProfile {
+        String type;
+        List<MapLocation> locations;
     }
 }
