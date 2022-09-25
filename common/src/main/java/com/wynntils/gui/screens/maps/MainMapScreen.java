@@ -160,6 +160,8 @@ public class MainMapScreen extends Screen {
         MapRenderer.renderMapQuad(
                 map,
                 poseStack,
+                mapCenterX,
+                mapCenterZ,
                 centerX,
                 centerZ,
                 textureX,

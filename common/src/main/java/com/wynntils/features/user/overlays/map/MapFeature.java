@@ -43,7 +43,6 @@ public class MapFeature extends UserFeature {
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        super.onInit(conditions, dependencies);
         dependencies.add(MapModel.class);
     }
 }

@@ -42,7 +42,6 @@ public class MiniMapFeature extends UserFeature {
     @Override
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        super.onInit(conditions, dependencies);
         dependencies.add(MapModel.class);
     }
 
@@ -117,6 +116,8 @@ public class MiniMapFeature extends UserFeature {
                 MapRenderer.renderMapQuad(
                         map,
                         poseStack,
+                        (float) McUtils.player().getX(),
+                        (float) McUtils.player().getZ(),
                         centerX,
                         centerZ,
                         textureX,

@@ -15,7 +15,10 @@ import com.mojang.math.Matrix4f;
 import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.poi.ServicePoi;
+import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -25,6 +28,8 @@ public class MapRenderer {
     public static void renderMapQuad(
             MapProfile map,
             PoseStack poseStack,
+            float mapCenterX,
+            float mapCenterZ,
             float centerX,
             float centerZ,
             float textureX,
@@ -99,10 +104,66 @@ public class MapRenderer {
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
 
+        float mapTopX = centerX - halfRenderedWidth;
+        float mapLeftZ = centerZ - halfRenderedHeight;
+        float mapBottomX = centerX + halfRenderedWidth;
+        float mapRightZ = centerZ + halfRenderedHeight;
+
+        List<ServicePoi> servicePois = MapModel.getAllPois().stream()
+                .filter(poi -> {
+                    double distanceX = McUtils.player().getX() - mapCenterX;
+                    double distanceZ = McUtils.player().getZ() - mapCenterZ;
+
+                    float textureXPosition = (float) (centerX + distanceX / scale);
+                    float textureZPosition = (float) (centerZ + distanceZ / scale);
+
+                    boolean inMap = textureXPosition >= mapTopX
+                            && textureXPosition <= mapBottomX
+                            && textureZPosition >= mapLeftZ
+                            && textureZPosition <= mapRightZ;
+
+                    return poi instanceof ServicePoi && inMap;
+                })
+                .map(poi -> (ServicePoi) poi)
+                .toList();
+
+        for (ServicePoi servicePoi : servicePois) {
+            renderServicePoi(poseStack, mapCenterX, mapCenterZ, centerX, centerZ, scale, servicePoi);
+        }
+
         // disable rotation if necessary
         if (followPlayerRotation) {
             poseStack.popPose();
         }
+    }
+
+    public static void renderServicePoi(
+            PoseStack poseStack,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float scale,
+            ServicePoi servicePoi) {
+        // TODO: This is really basic at the moment
+        //       Add fading, and other configs
+
+        double distanceX = servicePoi.getLocation().getX() - mapCenterX;
+        double distanceZ = servicePoi.getLocation().getZ() - mapCenterZ;
+
+        float textureXPosition = (float) (centerX + distanceX / scale);
+        float textureZPosition = (float) (centerZ + distanceZ / scale);
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                servicePoi.getIcon().resource(),
+                textureXPosition,
+                textureZPosition,
+                100,
+                servicePoi.getIcon().width(),
+                servicePoi.getIcon().height(),
+                servicePoi.getIcon().width(),
+                servicePoi.getIcon().height());
     }
 
     public static void renderCursor(
