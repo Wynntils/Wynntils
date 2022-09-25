@@ -218,6 +218,7 @@ public class BossBarModel extends Model {
                 Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
+                    return;
                 }
 
                 trackedBar.onUpdateName(matcher);
