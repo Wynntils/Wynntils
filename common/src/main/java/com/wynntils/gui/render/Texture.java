@@ -54,7 +54,32 @@ public enum Texture {
     PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
     WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256),
     FULLSCREEN_MAP_BORDER("map/full_map_border.png", 510, 254),
-    MAP_POINTERS("map/map_pointers.png", 256, 256);
+    MAP_POINTERS("map/map_pointers.png", 256, 256),
+
+    // Map Icons
+    ALCHEMIST_STATION("alchemist_station.png", 16, 19),
+    ARMOR_MERCHANT("armor_merchant.png", 17, 17),
+    ARMORING_STATION("armoring_station.png", 17, 17),
+    BLACKSMITH("blacksmith.png", 18, 18),
+    BOOTH_SHOP("booth_shop.png", 19, 17),
+    COOKING_STATION("cooking_station.png", 18, 16),
+    DUNGEON_SCROLL_MERCHANT("dungeon_scroll_merchant.png", 18, 17),
+    EMERALD_MERCHANT("emerald_merchant.png", 17, 18),
+    HOUSING_BALLOON("housing_balloon.png", 13, 23),
+    ITEM_IDENTIFIER("item_identifier.png", 18, 17),
+    JEWELING_STATION("jeweling_station.png", 17, 16),
+    LIQUID_MERCHANT("liquid_merchant.png", 15, 17),
+    PARTY_FINDER("party_finder.png", 18, 18),
+    POTION_MERCHANT("potion_merchant.png", 16, 18),
+    POWDER_MERCHANT("powder_merchant.png", 17, 17),
+    SCRIBING_STATION("scribing_station.png", 18, 17),
+    SCROLL_MERCHANT("scroll_merchant.png", 18, 17),
+    TAILORING_STATION("tailoring_station.png", 18, 15),
+    TOOL_MERCHANT("tool_merchant.png", 17, 15),
+    TRADE_MARKET("trade_market.png", 18, 18),
+    WEAPON_MERCHANT("weapon_merchant.png", 18, 15),
+    WEAPONSMITHING_STATION("weaponsmithing_station.png", 18, 15),
+    WOODWORKING_STATION("woodworking_station.png", 17, 15);
 
     private final ResourceLocation resource;
     private final int width;

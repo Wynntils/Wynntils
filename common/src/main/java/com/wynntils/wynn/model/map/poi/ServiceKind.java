@@ -8,34 +8,36 @@ import com.wynntils.gui.render.Texture;
 import java.util.Arrays;
 
 public enum ServiceKind {
-    ALCHEMISM_STATION("Alchemism Station"),
-    ARMOUR_MERCHANT("Armour Merchant"),
-    ARMOURING_STATION("Armouring Station"),
-    BLACKSMITH("Blacksmith"),
-    BOOTH_SHOP("Booth Shop"),
-    COOKING_STATION("Cooking Station"),
-    DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant"),
-    EMERALD_MERCHANT("Emerald Merchant"),
-    HOUSING_BALLOON("Housing Balloon"),
-    ITEM_IDENTIFIER("Item Identifier"),
-    JEWELING_STATION("Jeweling Station"),
-    LIQUID_MERCHANT("Liquid Merchant"),
-    PARTY_FINDER("Party Finder"),
-    POTION_MERCHANT("Potion Merchant"),
-    POWDER_MASTER("Powder Master"),
-    SCRIBING_STATION("Scribing Station"),
-    SCROLL_MERCHANT("Scroll Merchant"),
-    TAILORING_STATION("Tailoring Station"),
-    TOOL_MERCHANT("Tool Merchant"),
-    TRADE_MARKET("Trade Market"),
-    WEAPON_MERCHANT("Weapon Merchant"),
-    WEAPONSMITHING_STATION("Weaponsmithing Station"),
-    WOODWORKING_STATION("Woodworking Station");
+    ALCHEMISM_STATION("Alchemism Station", Texture.ALCHEMIST_STATION),
+    ARMOUR_MERCHANT("Armour Merchant", Texture.ARMOR_MERCHANT),
+    ARMOURING_STATION("Armouring Station", Texture.ARMORING_STATION),
+    BLACKSMITH("Blacksmith", Texture.BLACKSMITH),
+    BOOTH_SHOP("Booth Shop", Texture.BOOTH_SHOP),
+    COOKING_STATION("Cooking Station", Texture.COOKING_STATION),
+    DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT),
+    EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT),
+    HOUSING_BALLOON("Housing Balloon", Texture.HOUSING_BALLOON),
+    ITEM_IDENTIFIER("Item Identifier", Texture.ITEM_IDENTIFIER),
+    JEWELING_STATION("Jeweling Station", Texture.JEWELING_STATION),
+    LIQUID_MERCHANT("Liquid Merchant", Texture.LIQUID_MERCHANT),
+    PARTY_FINDER("Party Finder", Texture.PARTY_FINDER),
+    POTION_MERCHANT("Potion Merchant", Texture.POTION_MERCHANT),
+    POWDER_MASTER("Powder Master", Texture.POWDER_MERCHANT),
+    SCRIBING_STATION("Scribing Station", Texture.SCRIBING_STATION),
+    SCROLL_MERCHANT("Scroll Merchant", Texture.SCROLL_MERCHANT),
+    TAILORING_STATION("Tailoring Station", Texture.TAILORING_STATION),
+    TOOL_MERCHANT("Tool Merchant", Texture.TOOL_MERCHANT),
+    TRADE_MARKET("Trade Market", Texture.TRADE_MARKET),
+    WEAPON_MERCHANT("Weapon Merchant", Texture.WEAPON_MERCHANT),
+    WEAPONSMITHING_STATION("Weaponsmithing Station", Texture.WEAPONSMITHING_STATION),
+    WOODWORKING_STATION("Woodworking Station", Texture.WOODWORKING_STATION);
 
     private final String name;
+    private final Texture texture;
 
-    ServiceKind(String name) {
+    ServiceKind(String name, Texture texture) {
         this.name = name;
+        this.texture = texture;
     }
 
     public String getName() {
@@ -43,8 +45,7 @@ public enum ServiceKind {
     }
 
     public Texture getIcon() {
-        // FIXME: implement
-        return null;
+        return texture;
     }
 
     public static ServiceKind fromString(String str) {
