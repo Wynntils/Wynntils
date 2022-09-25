@@ -96,7 +96,7 @@ public class LocateCommand extends CommandBase {
 
         for (Poi service : services) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(service.getName()).withStyle(ChatFormatting.YELLOW))
+                    .append(new TextComponent(service.getName() + " ").withStyle(ChatFormatting.YELLOW))
                     .append(new TextComponent(service.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         }
 
@@ -123,7 +123,7 @@ public class LocateCommand extends CommandBase {
 
         for (Poi place : places) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(place.getName()).withStyle(ChatFormatting.YELLOW))
+                    .append(new TextComponent(place.getName() + " ").withStyle(ChatFormatting.YELLOW))
                     .append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         }
 
