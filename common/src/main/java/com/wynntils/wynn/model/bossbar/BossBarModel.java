@@ -15,6 +15,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.objects.ClassType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
@@ -25,7 +28,7 @@ public class BossBarModel extends Model {
     public static void init() {}
 
     public static final TrackedBar manaBankBar =
-            new TrackedBar(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), TrackedBar.BarType.MANABANK) {
+            new TrackedBar(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), TrackedBar.BarType.MANABANK, ClassType.Mage) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
@@ -40,7 +43,7 @@ public class BossBarModel extends Model {
             };
 
     public static final TrackedBar bloodPoolBar =
-            new TrackedBar(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), TrackedBar.BarType.BLOODPOOL) {
+            new TrackedBar(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), TrackedBar.BarType.BLOODPOOL, ClassType.Shaman) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
@@ -71,7 +74,7 @@ public class BossBarModel extends Model {
             };
 
     public static final TrackedBar awakenedBar =
-            new TrackedBar(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), TrackedBar.BarType.AWAKENED) {
+            new TrackedBar(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), TrackedBar.BarType.AWAKENED, ClassType.Shaman) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
@@ -86,7 +89,7 @@ public class BossBarModel extends Model {
             };
 
     public static final TrackedBar focusBar =
-            new TrackedBar(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), TrackedBar.BarType.FOCUS) {
+            new TrackedBar(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), TrackedBar.BarType.FOCUS, ClassType.Archer) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
@@ -101,7 +104,7 @@ public class BossBarModel extends Model {
             };
 
     public static final TrackedBar corruptedBar =
-            new TrackedBar(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), TrackedBar.BarType.CORRUPTED) {
+            new TrackedBar(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), TrackedBar.BarType.CORRUPTED, ClassType.Warrior) {
                 @Override
                 public void onUpdateName(Matcher match) {
                     try {
@@ -141,9 +144,13 @@ public class BossBarModel extends Model {
             TrackedBar trackedBar = null;
             Matcher matcher = null;
 
+            ClassType userClass = CharacterManager.getCharacterInfo().getClassType();
+
             // TODO when we can successfuly parse character info, reduce checks
             for (TrackedBar potentialTrackedBar :
                     Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar)) {
+                if (potentialTrackedBar.classType != userClass) continue;
+
                 matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (matcher.matches()) {
                     trackedBar = potentialTrackedBar;
@@ -184,10 +191,10 @@ public class BossBarModel extends Model {
             }
         }
 
-        public void remove(UUID key) {
-            whenBarPresent(key, trackedBar -> {
+        public void remove(UUID id) {
+            whenBarPresent(id, trackedBar -> {
                 trackedBar.reset();
-                trackedBarsMap.remove(key);
+                trackedBarsMap.remove(id);
             });
         }
 

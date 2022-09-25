@@ -7,12 +7,15 @@ package com.wynntils.wynn.model.bossbar;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.wynn.objects.ClassType;
 import net.minecraft.Util;
 import net.minecraft.util.Mth;
 
 public abstract class TrackedBar {
     public final Pattern pattern;
     public final BarType type;
+    public final ClassType classType;
 
     private boolean rendered = true;
 
@@ -25,9 +28,10 @@ public abstract class TrackedBar {
 
     protected UUID uuid = null;
 
-    TrackedBar(Pattern pattern, BarType type) {
+    TrackedBar(Pattern pattern, BarType type, ClassType classType) {
         this.pattern = pattern;
         this.type = type;
+        this.classType = classType;
     }
 
     public void onAdd() {}
