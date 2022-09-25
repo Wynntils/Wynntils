@@ -114,8 +114,8 @@ public class CompassCommand extends CommandBase {
         Poi closestService = closestServiceOptional.get();
         CompassModel.setCompassLocation(closestService.getLocation().asLocation());
 
-        MutableComponent response = new TextComponent("Compass set to " + selectedKind.getName() + " at ")
-                .withStyle(ChatFormatting.AQUA);
+        MutableComponent response =
+                new TextComponent("Compass set to " + selectedKind.getName() + " at ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
