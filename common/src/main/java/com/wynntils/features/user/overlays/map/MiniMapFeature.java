@@ -125,6 +125,7 @@ public class MiniMapFeature extends UserFeature {
                         width,
                         height,
                         scale,
+                        0.7f,
                         this.followPlayerRotation,
                         this.renderUsingLinear);
             }

@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -37,6 +38,7 @@ public class MapRenderer {
             float width,
             float height,
             float scale,
+            float poiScale,
             boolean followPlayerRotation,
             boolean renderUsingLinear) {
         // enable rotation if necessary
@@ -128,7 +130,16 @@ public class MapRenderer {
                 .toList();
 
         for (ServicePoi servicePoi : servicePois) {
-            renderServicePoi(poseStack, mapCenterX, mapCenterZ, centerX, centerZ, scale, servicePoi);
+            renderServicePoi(
+                    poseStack,
+                    mapCenterX,
+                    mapCenterZ,
+                    centerX,
+                    centerZ,
+                    scale,
+                    poiScale,
+                    followPlayerRotation,
+                    servicePoi);
         }
 
         // disable rotation if necessary
@@ -144,6 +155,8 @@ public class MapRenderer {
             float centerX,
             float centerZ,
             float scale,
+            float poiScale,
+            boolean followPlayerRotation,
             ServicePoi servicePoi) {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
@@ -154,16 +167,31 @@ public class MapRenderer {
         float textureXPosition = (float) (centerX + distanceX / scale);
         float textureZPosition = (float) (centerZ + distanceZ / scale);
 
-        RenderUtils.drawTexturedRect(
+        poseStack.pushPose();
+
+        poseStack.translate(textureXPosition, textureZPosition, 100);
+
+        if (followPlayerRotation) {
+            poseStack.mulPose(new Quaternion(
+                    0F,
+                    0,
+                    (float) StrictMath.sin(Math.toRadians(180 + McUtils.player().getYRot()) / 2),
+                    (float) StrictMath.cos(
+                            -Math.toRadians(180 + McUtils.player().getYRot()) / 2)));
+        }
+
+        RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 servicePoi.getIcon().resource(),
-                textureXPosition,
-                textureZPosition,
-                100,
-                servicePoi.getIcon().width(),
-                servicePoi.getIcon().height(),
+                0,
+                0,
+                0,
+                servicePoi.getIcon().width() * poiScale,
+                servicePoi.getIcon().height() * poiScale,
                 servicePoi.getIcon().width(),
                 servicePoi.getIcon().height());
+
+        poseStack.popPose();
     }
 
     public static void renderCursor(

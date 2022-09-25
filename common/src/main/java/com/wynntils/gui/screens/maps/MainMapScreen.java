@@ -169,6 +169,7 @@ public class MainMapScreen extends Screen {
                 mapWidth,
                 mapHeight,
                 1f / currentZoom,
+                1f,
                 false,
                 false);
     }
