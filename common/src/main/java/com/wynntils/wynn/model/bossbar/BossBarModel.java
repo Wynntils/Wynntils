@@ -45,20 +45,24 @@ public class BossBarModel extends Model {
                 public void onUpdateName(Matcher match) {
                     try {
                         current = Integer.parseInt(match.group(1));
+
+                        if (progress == 0f) {
+                            max = 0;
+                        } else {
+                            // Round to nearest 30
+                            int unroundedMax = (int) (current / progress);
+                            int remainder = unroundedMax % 30;
+
+                            max = unroundedMax - remainder;
+                            if (remainder > 15) {
+                                max += 30;
+                            }
+
+                        }
                     } catch (NumberFormatException e) {
                         WynntilsMod.error(String.format(
                                 "Failed to parse current and max for blood pool bar (%s out of %s)",
                                 match.group(1), match.group(2)));
-                    }
-                }
-
-                @Override
-                public void onAdd() {
-                    if (progress == 0f) {
-                        WynntilsMod.error("Progress of zero for blood pool bar, can not find max");
-                    } else {
-                        // Round to nearest 30
-                        max = Math.round(current / (progress * 30f)) * 30;
                     }
                 }
             };
@@ -99,22 +103,19 @@ public class BossBarModel extends Model {
                 public void onUpdateName(Matcher match) {
                     try {
                         current = Integer.parseInt(match.group(1));
+                        max = 100;
                     } catch (NumberFormatException e) {
                         WynntilsMod.error(String.format(
                                 "Failed to parse current and max for corrupted bar %s (%s out of %s)",
                                 type, match.group(1), match.group(2)));
                     }
                 }
-
-                @Override
-                public void onAdd() {
-                    max = 100;
-                }
             };
 
     private static final HashMap<UUID, TrackedBar> trackedBarsMap = new HashMap<>();
 
-    @SubscribeEvent
+    // FixPacketBugsFeature gets in the way if receiveCanceled is not set
+    @SubscribeEvent(receiveCanceled = true)
     public static void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 
@@ -165,7 +166,6 @@ public class BossBarModel extends Model {
 
             // Order matters
             trackedBar.onUpdateName(matcher);
-            trackedBar.onAdd();
 
             trackedBarsMap.put(id, trackedBar);
         }
@@ -182,10 +182,10 @@ public class BossBarModel extends Model {
             }
         }
 
-        public void remove(UUID id) {
-            whenBarPresent(id, trackedBar -> {
+        public void remove(UUID key) {
+            whenBarPresent(key, trackedBar -> {
                 trackedBar.reset();
-                trackedBarsMap.remove(id);
+                trackedBarsMap.remove(key);
             });
         }
 
