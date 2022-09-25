@@ -34,12 +34,16 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
-    public static final Gson GSON = new GsonBuilder().create();
+    private static final String PLACES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+    private static final String SERVICES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+    private static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
-    private static Set<Poi> allPois = new HashSet<>();
+    private static final Set<Poi> allPois = new HashSet<>();
 
     public static void init() {
-        loadLabels();
+        loadPlaces();
         loadServices();
         tryLoadMaps();
     }
@@ -56,14 +60,10 @@ public final class MapModel extends Model {
         return allPois;
     }
 
-    public static void loadLabels() {
+    private static void loadPlaces() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-
-        String url = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
-
         RequestHandler handler = WebManager.getHandler();
-
-        handler.addAndDispatch(new RequestBuilder(url, "maps-places")
+        handler.addAndDispatch(new RequestBuilder(PLACES_JSON_URL, "maps-places")
                 .cacheTo(new File(mapDirectory, "places.json"))
                 .useCacheAsBackup()
                 .handleJsonObject(json -> {
@@ -76,14 +76,10 @@ public final class MapModel extends Model {
                 .build());
     }
 
-    public static void loadServices() {
+    private static void loadServices() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-
-        String url = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
-
         RequestHandler handler = WebManager.getHandler();
-
-        handler.addAndDispatch(new RequestBuilder(url, "maps-services")
+        handler.addAndDispatch(new RequestBuilder(SERVICES_JSON_URL, "maps-services")
                 .cacheTo(new File(mapDirectory, "services.json"))
                 .useCacheAsBackup()
                 .handleJsonArray(json -> {
@@ -106,7 +102,7 @@ public final class MapModel extends Model {
                 .build());
     }
 
-    public static CompletableFuture<Boolean> tryLoadMaps() {
+    private static CompletableFuture<Boolean> tryLoadMaps() {
         if (WebManager.getApiUrl("AMainMap") == null) return CompletableFuture.completedFuture(false);
 
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
@@ -180,11 +176,11 @@ public final class MapModel extends Model {
         return !maps.isEmpty();
     }
 
-    public static class PlacesProfile {
+    private static class PlacesProfile {
         List<Label> labels;
     }
 
-    public static class ServiceProfile {
+    private static class ServiceProfile {
         String type;
         List<MapLocation> locations;
     }
