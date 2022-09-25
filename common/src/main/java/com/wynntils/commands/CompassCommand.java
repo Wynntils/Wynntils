@@ -64,7 +64,7 @@ public class CompassCommand extends CommandBase {
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
         CompassModel.setCompassLocation(location);
 
-        MutableComponent response = new TextComponent("Setting compass to ").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
@@ -114,7 +114,7 @@ public class CompassCommand extends CommandBase {
         Poi closestService = closestServiceOptional.get();
         CompassModel.setCompassLocation(closestService.getLocation().asLocation());
 
-        MutableComponent response = new TextComponent("Setting compass to " + selectedKind.getName() + " at ")
+        MutableComponent response = new TextComponent("Compass set to " + selectedKind.getName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
