@@ -34,8 +34,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class MapModel extends Model {
-    public static final String PLACES_JSON_URL = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
-    public static final String SERVICES_JSON_URL = "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+    public static final String PLACES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+    public static final String SERVICES_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
     public static final Gson GSON = new GsonBuilder().create();
     private static List<MapProfile> maps = new ArrayList<>();
     private static Set<Poi> allPois = new HashSet<>();
