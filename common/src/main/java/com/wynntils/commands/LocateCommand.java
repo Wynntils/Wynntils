@@ -9,13 +9,16 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -23,6 +26,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.phys.Vec3;
 
 public class LocateCommand extends CommandBase {
     private final SuggestionProvider<CommandSourceStack> serviceSuggestionProvider = (context, builder) ->
@@ -86,10 +90,18 @@ public class LocateCommand extends CommandBase {
 
         ServiceKind selectedKind = matchedKinds.get(0);
 
-        List<Poi> services = MapModel.getAllPois().stream()
+        List<Poi> services = new ArrayList<>(MapModel.getAllPois().stream()
                 .filter(poi -> poi instanceof ServicePoi servicePoi
                         && servicePoi.getKind().equals(selectedKind))
-                .toList();
+                .toList());
+
+        // Only keep the closest results
+        Vec3 currentLocation = McUtils.player().position();
+        services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
+                poi.getLocation().getX(),
+                poi.getLocation().getY(),
+                poi.getLocation().getZ())));
+        services.subList(4, services.size()).clear();
 
         MutableComponent response =
                 new TextComponent("Found " + selectedKind.getName() + " services:").withStyle(ChatFormatting.AQUA);
@@ -107,9 +119,9 @@ public class LocateCommand extends CommandBase {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = MapModel.getAllPois().stream()
+        List<Poi> places = new ArrayList<>(MapModel.getAllPois().stream()
                 .filter(poi -> poi instanceof LabelPoi && StringUtils.partialMatch(poi.getName(), searchedName))
-                .toList();
+                .toList());
 
         if (places.isEmpty()) {
             MutableComponent response =
@@ -117,6 +129,13 @@ public class LocateCommand extends CommandBase {
             context.getSource().sendFailure(response);
             return 0;
         }
+
+        // Sort in order of closeness to the player
+        Vec3 currentLocation = McUtils.player().position();
+        places.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
+                poi.getLocation().getX(),
+                poi.getLocation().getY(),
+                poi.getLocation().getZ())));
 
         MutableComponent response =
                 new TextComponent("Found places matching '" + searchedName + "':").withStyle(ChatFormatting.AQUA);
