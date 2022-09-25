@@ -14,11 +14,11 @@ public abstract class TrackedBar {
     public final Pattern pattern;
     public final BarType type;
 
-    protected float progress = 0;
-    private float targetPercent = 0;
-    private long setTime = 0;
-
     private boolean rendered = true;
+
+    protected float progress = 0;
+    protected float targetProgress = 0;
+    protected long setTime = 0;
 
     protected int current = 0;
     protected int max = 0;
@@ -44,14 +44,14 @@ public abstract class TrackedBar {
 
     public void setProgress(float progress) {
         this.progress = this.getProgress();
-        this.targetPercent = progress;
+        this.targetProgress = progress;
         this.setTime = Util.getMillis();
     }
 
     public float getProgress() {
         long l = Util.getMillis() - this.setTime;
         float f = Mth.clamp((float) l / 100.0F, 0.0F, 1.0F);
-        return Mth.lerp(f, this.progress, this.targetPercent);
+        return Mth.lerp(f, this.progress, this.targetProgress);
     }
 
     public void setUuid(UUID uuid) {
@@ -64,7 +64,7 @@ public abstract class TrackedBar {
 
     void reset() {
         progress = 0;
-        targetPercent = 0;
+        targetProgress = 0;
         setTime = 0;
         current = 0;
         max = 0;

@@ -45,23 +45,29 @@ public class BossBarModel extends Model {
                 public void onUpdateName(Matcher match) {
                     try {
                         current = Integer.parseInt(match.group(1));
-
-                        if (progress == 0f) {
-                            max = 0;
-                        } else {
-                            // Round to nearest 30
-                            int unroundedMax = (int) (current / progress);
-                            int remainder = unroundedMax % 30;
-
-                            max = unroundedMax - remainder;
-                            if (remainder > 15) {
-                                max += 30;
-                            }
-                        }
                     } catch (NumberFormatException e) {
                         WynntilsMod.error(String.format(
-                                "Failed to parse current and max for blood pool bar (%s out of %s)",
+                                "Failed to parse current for blood pool bar (%s out of %s)",
                                 match.group(1), match.group(2)));
+                    }
+                }
+
+                // Wynncraft sends the name packet before the progress packet
+                @Override
+                public void setProgress(float progress) {
+                    super.setProgress(progress);
+
+                    if (targetProgress == 0f) {
+                        max = 0;
+                    } else {
+                        // Round to nearest 30
+                        int unroundedMax = (int) (current / targetProgress);
+                        int remainder = unroundedMax % 30;
+
+                        max = unroundedMax - remainder;
+                        if (remainder > 15) {
+                            max += 30;
+                        }
                     }
                 }
             };
@@ -163,7 +169,6 @@ public class BossBarModel extends Model {
                 trackedBar.setRendered(true);
             }
 
-            // Order matters
             trackedBar.onUpdateName(matcher);
 
             trackedBarsMap.put(id, trackedBar);
