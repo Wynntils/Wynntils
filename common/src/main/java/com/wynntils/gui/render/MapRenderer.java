@@ -12,13 +12,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.List;
@@ -45,8 +45,11 @@ public class MapRenderer {
             float poiScale,
             int mouseX,
             int mouseY,
+            boolean renderMapLabels,
             boolean followPlayerRotation,
             boolean renderUsingLinear) {
+        RenderSystem.disableBlend();
+
         // enable rotation if necessary
         if (followPlayerRotation) {
             poseStack.pushPose();
@@ -149,6 +152,41 @@ public class MapRenderer {
                 followPlayerRotation,
                 servicePois);
 
+        if (renderMapLabels) {
+            List<LabelPoi> labelPois = MapModel.getAllPois().stream()
+                    .filter(poi -> poi instanceof LabelPoi)
+                    .map(poi -> (LabelPoi) poi)
+                    .toList();
+
+            for (LabelPoi labelPoi : labelPois) {
+                float x = labelPoi.getLocation().getX();
+                float z = labelPoi.getLocation().getZ();
+                double distanceX = x - mapCenterX;
+                double distanceZ = z - mapCenterZ;
+
+                float textureXPosition = (float) (centerX
+                        + distanceX / scale
+                        - FontRenderer.getInstance()
+                                        .getFont()
+                                        .width(labelPoi.getLabel().getName())
+                                / 2f
+                                / scale);
+                float textureZPosition = (float) (centerZ + distanceZ / scale - 4.5f / scale);
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                labelPoi.getLabel().getName(),
+                                textureXPosition,
+                                textureZPosition,
+                                0,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.Left,
+                                VerticalAlignment.Top,
+                                FontRenderer.TextShadow.NORMAL);
+            }
+        }
+
         // disable rotation if necessary
         if (followPlayerRotation) {
             poseStack.popPose();
@@ -166,9 +204,9 @@ public class MapRenderer {
             float mapBottomX,
             float mapRightZ,
             Poi poi) {
+        double distanceX = poi.getLocation().getX() - mapCenterX;
         double distanceZ = poi.getLocation().getZ() - mapCenterZ;
 
-        double distanceX = poi.getLocation().getX() - mapCenterX;
         float textureXPosition = (float) (centerX + distanceX / scale);
         float textureZPosition = (float) (centerZ + distanceZ / scale);
 
@@ -267,18 +305,17 @@ public class MapRenderer {
 
         if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
             hovered = servicePoi;
+
+            // Render as slightly bigger for hover animation
+            width *= 1.05;
+            height *= 1.05;
         }
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderZ, 0);
 
         if (followPlayerRotation) {
-            poseStack.mulPose(new Quaternion(
-                    0F,
-                    0,
-                    (float) StrictMath.sin(Math.toRadians(180 + McUtils.player().getYRot()) / 2),
-                    (float) StrictMath.cos(
-                            -Math.toRadians(180 + McUtils.player().getYRot()) / 2)));
+            // todo rotate
         }
 
         RenderUtils.drawScalingTexturedRect(

@@ -173,6 +173,7 @@ public class MainMapScreen extends Screen {
                 1f,
                 mouseX,
                 mouseY,
+                MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
                 false,
                 false);
     }

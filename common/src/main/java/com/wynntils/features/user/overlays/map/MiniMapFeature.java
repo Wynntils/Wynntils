@@ -134,6 +134,7 @@ public class MiniMapFeature extends UserFeature {
                         this.poiScale,
                         -1,
                         -1,
+                        false,
                         this.followPlayerRotation,
                         this.renderUsingLinear);
             }
