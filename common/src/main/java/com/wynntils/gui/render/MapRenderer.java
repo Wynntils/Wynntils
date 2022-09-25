@@ -140,18 +140,6 @@ public class MapRenderer {
                 .map(poi -> (ServicePoi) poi)
                 .toList();
 
-        renderServicePois(
-                poseStack,
-                mouseCoordinates,
-                mapCenterX,
-                mapCenterZ,
-                centerX,
-                centerZ,
-                scale,
-                poiScale,
-                followPlayerRotation,
-                servicePois);
-
         if (renderMapLabels) {
             List<LabelPoi> labelPois = MapModel.getAllPois().stream()
                     .filter(poi -> poi instanceof LabelPoi)
@@ -191,6 +179,18 @@ public class MapRenderer {
         if (followPlayerRotation) {
             poseStack.popPose();
         }
+
+        renderServicePois(
+                poseStack,
+                mouseCoordinates,
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                scale,
+                poiScale,
+                followPlayerRotation,
+                servicePois);
     }
 
     private static boolean isPoiVisible(
@@ -289,8 +289,23 @@ public class MapRenderer {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
 
-        float textureXPosition = servicePoi.getRenderX(mapCenterX, centerX, 1f / scale);
-        float textureZPosition = servicePoi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
+        float textureXPosition;
+        float textureZPosition;
+
+        if (followPlayerRotation) {
+            final double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            final float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            final float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
+            float dX = (servicePoi.getLocation().getX() - mapCenterX) / scale;
+            float dZ = (servicePoi.getLocation().getZ() - mapCenterZ) / scale;
+
+            textureXPosition = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
+            textureZPosition = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
+        } else {
+            textureXPosition = servicePoi.getRenderX(mapCenterX, centerX, 1f / scale);
+            textureZPosition = servicePoi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
+        }
 
         float width = servicePoi.getIcon().width() * poiScale;
         float height = servicePoi.getIcon().height() * poiScale;
@@ -312,17 +327,12 @@ public class MapRenderer {
         }
 
         poseStack.pushPose();
-        poseStack.translate(renderX, renderZ, 0);
-
-        if (followPlayerRotation) {
-            // todo rotate
-        }
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 servicePoi.getIcon().resource(),
-                0,
-                0,
+                renderX,
+                renderZ,
                 0,
                 width,
                 height,
