@@ -326,8 +326,6 @@ public class MapRenderer {
             }
         }
 
-        poseStack.pushPose();
-
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 servicePoi.getIcon().resource(),
@@ -338,8 +336,6 @@ public class MapRenderer {
                 height,
                 servicePoi.getIcon().width(),
                 servicePoi.getIcon().height());
-
-        poseStack.popPose();
     }
 
     public static void renderCursor(
