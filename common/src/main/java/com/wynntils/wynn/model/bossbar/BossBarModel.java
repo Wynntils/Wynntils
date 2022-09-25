@@ -57,9 +57,7 @@ public class BossBarModel extends Model {
                 public void setProgress(float progress) {
                     super.setProgress(progress);
 
-                    if (targetProgress == 0f) {
-                        max = 0;
-                    } else {
+                    if (targetProgress != 0f) {
                         // Round to nearest 30
                         int unroundedMax = (int) (current / targetProgress);
                         int remainder = unroundedMax % 30;
