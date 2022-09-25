@@ -132,8 +132,7 @@ public class MiniMapFeature extends UserFeature {
                         height,
                         this.scale,
                         this.poiScale,
-                        -1,
-                        -1,
+                        null,
                         false,
                         this.followPlayerRotation,
                         this.renderUsingLinear);

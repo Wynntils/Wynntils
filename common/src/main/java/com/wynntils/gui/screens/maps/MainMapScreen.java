@@ -16,9 +16,11 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.poi.Poi;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -57,6 +59,8 @@ public class MainMapScreen extends Screen {
     private boolean dragging = false;
     private double lastMouseX = 0;
     private double lastMouseY = 0;
+
+    private Poi hovered = null;
 
     public MainMapScreen() {
         super(new TextComponent("Main Map"));
@@ -171,8 +175,7 @@ public class MainMapScreen extends Screen {
                 mapHeight,
                 1f / currentZoom,
                 1f,
-                mouseX,
-                mouseY,
+                new Pair<>(mouseX, mouseY),
                 MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
                 false,
                 false);
@@ -214,6 +217,12 @@ public class MainMapScreen extends Screen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (hovered != null) {
+                McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f));
+                CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                return true;
+            }
+
             dragging = true;
             lastMouseX = mouseX;
             lastMouseY = mouseY;
@@ -281,5 +290,9 @@ public class MainMapScreen extends Screen {
 
     public void setHoldingMapKey(boolean holdingMapKey) {
         this.holdingMapKey = holdingMapKey;
+    }
+
+    public void setHovered(Poi hovered) {
+        this.hovered = hovered;
     }
 }

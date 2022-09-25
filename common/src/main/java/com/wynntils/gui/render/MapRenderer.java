@@ -13,9 +13,11 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.wynntils.features.user.overlays.map.PointerType;
+import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
@@ -43,8 +45,7 @@ public class MapRenderer {
             float height,
             float scale,
             float poiScale,
-            int mouseX,
-            int mouseY,
+            Pair<Integer, Integer> mouseCoordinates,
             boolean renderMapLabels,
             boolean followPlayerRotation,
             boolean renderUsingLinear) {
@@ -141,8 +142,7 @@ public class MapRenderer {
 
         renderServicePois(
                 poseStack,
-                mouseX,
-                mouseY,
+                mouseCoordinates,
                 mapCenterX,
                 mapCenterZ,
                 centerX,
@@ -204,11 +204,8 @@ public class MapRenderer {
             float mapBottomX,
             float mapRightZ,
             Poi poi) {
-        double distanceX = poi.getLocation().getX() - mapCenterX;
-        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
-
-        float textureXPosition = (float) (centerX + distanceX / scale);
-        float textureZPosition = (float) (centerZ + distanceZ / scale);
+        float textureXPosition = poi.getRenderX(mapCenterX, centerX, 1f / scale);
+        float textureZPosition = poi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
 
         return textureXPosition >= mapTopX
                 && textureXPosition <= mapBottomX
@@ -218,8 +215,7 @@ public class MapRenderer {
 
     private static void renderServicePois(
             PoseStack poseStack,
-            int mouseX,
-            int mouseY,
+            Pair<Integer, Integer> mouseCoordinates,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
@@ -229,12 +225,14 @@ public class MapRenderer {
             boolean followPlayerRotation,
             List<ServicePoi> servicePois) {
 
-        hovered = null;
+        if (mouseCoordinates != null) {
+            hovered = null;
+        }
+
         for (ServicePoi servicePoi : servicePois) {
             renderServicePoi(
                     poseStack,
-                    mouseX,
-                    mouseY,
+                    mouseCoordinates,
                     mapCenterX,
                     mapCenterZ,
                     centerX,
@@ -245,12 +243,13 @@ public class MapRenderer {
                     servicePoi);
         }
 
-        if (hovered != null) {
-            double distanceX = hovered.getLocation().getX() - mapCenterX;
-            double distanceZ = hovered.getLocation().getZ() - mapCenterZ;
+        if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
+            mainMapScreen.setHovered(hovered);
+        }
 
-            float textureXPosition = (float) (centerX + distanceX / scale);
-            float textureZPosition = (float) (centerZ + distanceZ / scale);
+        if (hovered != null && mouseCoordinates != null) {
+            float textureXPosition = hovered.getRenderX(mapCenterX, centerX, 1f / scale);
+            float textureZPosition = hovered.getRenderZ(mapCenterZ, centerZ, 1f / scale);
 
             float width = hovered.getIcon().width() * poiScale;
             float height = hovered.getIcon().height() * poiScale;
@@ -278,8 +277,7 @@ public class MapRenderer {
 
     public static void renderServicePoi(
             PoseStack poseStack,
-            int mouseX,
-            int mouseY,
+            Pair<Integer, Integer> mouseCoordinates,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
@@ -291,11 +289,8 @@ public class MapRenderer {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
 
-        double distanceX = servicePoi.getLocation().getX() - mapCenterX;
-        double distanceZ = servicePoi.getLocation().getZ() - mapCenterZ;
-
-        float textureXPosition = (float) (centerX + distanceX / scale);
-        float textureZPosition = (float) (centerZ + distanceZ / scale);
+        float textureXPosition = servicePoi.getRenderX(mapCenterX, centerX, 1f / scale);
+        float textureZPosition = servicePoi.getRenderZ(mapCenterZ, centerZ, 1f / scale);
 
         float width = servicePoi.getIcon().width() * poiScale;
         float height = servicePoi.getIcon().height() * poiScale;
@@ -303,12 +298,17 @@ public class MapRenderer {
         float renderX = textureXPosition - width / 2f;
         float renderZ = textureZPosition - height / 2f;
 
-        if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
-            hovered = servicePoi;
+        if (mouseCoordinates != null) {
+            int mouseX = mouseCoordinates.a;
+            int mouseY = mouseCoordinates.b;
 
-            // Render as slightly bigger for hover animation
-            width *= 1.05;
-            height *= 1.05;
+            if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
+                hovered = servicePoi;
+
+                // Render as slightly bigger for hover animation
+                width *= 1.05;
+                height *= 1.05;
+            }
         }
 
         poseStack.pushPose();
