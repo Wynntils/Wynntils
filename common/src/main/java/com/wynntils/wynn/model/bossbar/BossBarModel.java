@@ -188,7 +188,7 @@ public class BossBarModel extends Model {
             trackedBarsMap.put(id, trackedBar);
         }
 
-        private void whenBarPresent(UUID id, Consumer<TrackedBar> consumer) {
+        private void handleBarUpdate(UUID id, Consumer<TrackedBar> consumer) {
             TrackedBar trackedBar = trackedBarsMap.get(id);
 
             if (trackedBar != null) {
@@ -202,7 +202,7 @@ public class BossBarModel extends Model {
 
         @Override
         public void remove(UUID id) {
-            whenBarPresent(id, trackedBar -> {
+            handleBarUpdate(id, trackedBar -> {
                 trackedBar.reset();
                 trackedBarsMap.remove(id);
             });
@@ -210,14 +210,14 @@ public class BossBarModel extends Model {
 
         @Override
         public void updateProgress(UUID id, float progress) {
-            whenBarPresent(id, trackedBar -> {
+            handleBarUpdate(id, trackedBar -> {
                 trackedBar.setProgress(progress);
             });
         }
 
         @Override
         public void updateName(UUID id, Component name) {
-            whenBarPresent(id, trackedBar -> {
+            handleBarUpdate(id, trackedBar -> {
                 Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
@@ -228,14 +228,15 @@ public class BossBarModel extends Model {
             });
         }
 
+        // We need to cancel the event even though we don't process it here
         @Override
         public void updateStyle(UUID id, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay) {
-            whenBarPresent(id, trackedBar -> {});
+            handleBarUpdate(id, trackedBar -> {});
         }
 
         @Override
         public void updateProperties(UUID id, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
-            whenBarPresent(id, trackedBar -> {});
+            handleBarUpdate(id, trackedBar -> {});
         }
     }
 }
