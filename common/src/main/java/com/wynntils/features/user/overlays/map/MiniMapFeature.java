@@ -52,6 +52,12 @@ public class MiniMapFeature extends UserFeature {
         public float scale = 1f;
 
         @Config
+        public float poiScale = 0.8f;
+
+        @Config
+        public float pointerScale = 1f;
+
+        @Config
         public boolean followPlayerRotation = true;
 
         @Config
@@ -124,8 +130,10 @@ public class MiniMapFeature extends UserFeature {
                         textureZ,
                         width,
                         height,
-                        scale,
-                        0.7f,
+                        this.scale,
+                        this.poiScale,
+                        -1,
+                        -1,
                         this.followPlayerRotation,
                         this.renderUsingLinear);
             }
@@ -136,7 +144,13 @@ public class MiniMapFeature extends UserFeature {
 
             // cursor
             MapRenderer.renderCursor(
-                    poseStack, centerX, centerZ, 1f, this.followPlayerRotation, this.pointerColor, this.pointerType);
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    this.pointerScale,
+                    this.followPlayerRotation,
+                    this.pointerColor,
+                    this.pointerType);
 
             // disable mask & render border
             switch (maskType) {

@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.wynntils.features.user.overlays.map.PointerType;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
@@ -39,6 +40,8 @@ public class MapRenderer {
             float height,
             float scale,
             float poiScale,
+            int mouseX,
+            int mouseY,
             boolean followPlayerRotation,
             boolean renderUsingLinear) {
         // enable rotation if necessary
@@ -129,18 +132,18 @@ public class MapRenderer {
                 .map(poi -> (ServicePoi) poi)
                 .toList();
 
-        for (ServicePoi servicePoi : servicePois) {
-            renderServicePoi(
-                    poseStack,
-                    mapCenterX,
-                    mapCenterZ,
-                    centerX,
-                    centerZ,
-                    scale,
-                    poiScale,
-                    followPlayerRotation,
-                    servicePoi);
-        }
+        renderServicePois(
+                poseStack,
+                mouseX,
+                mouseY,
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                scale,
+                poiScale,
+                followPlayerRotation,
+                servicePois);
 
         // disable rotation if necessary
         if (followPlayerRotation) {
@@ -148,8 +151,10 @@ public class MapRenderer {
         }
     }
 
-    public static void renderServicePoi(
+    private static void renderServicePois(
             PoseStack poseStack,
+            int mouseX,
+            int mouseY,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
@@ -157,19 +162,8 @@ public class MapRenderer {
             float scale,
             float poiScale,
             boolean followPlayerRotation,
-            ServicePoi servicePoi) {
-        // TODO: This is really basic at the moment
-        //       Add fading, and other configs
-
-        double distanceX = servicePoi.getLocation().getX() - mapCenterX;
-        double distanceZ = servicePoi.getLocation().getZ() - mapCenterZ;
-
-        float textureXPosition = (float) (centerX + distanceX / scale);
-        float textureZPosition = (float) (centerZ + distanceZ / scale);
-
+            List<ServicePoi> servicePois) {
         poseStack.pushPose();
-
-        poseStack.translate(textureXPosition, textureZPosition, 100);
 
         if (followPlayerRotation) {
             poseStack.mulPose(new Quaternion(
@@ -180,14 +174,66 @@ public class MapRenderer {
                             -Math.toRadians(180 + McUtils.player().getYRot()) / 2)));
         }
 
+        for (ServicePoi servicePoi : servicePois) {
+            renderServicePoi(
+                    poseStack, mouseX, mouseY, mapCenterX, mapCenterZ, centerX, centerZ, scale, poiScale, servicePoi);
+        }
+
+        if (followPlayerRotation) {
+            poseStack.popPose();
+        }
+    }
+
+    public static void renderServicePoi(
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float scale,
+            float poiScale,
+            ServicePoi servicePoi) {
+        // TODO: This is really basic at the moment
+        //       Add fading, and other configs
+
+        double distanceX = servicePoi.getLocation().getX() - mapCenterX;
+        double distanceZ = servicePoi.getLocation().getZ() - mapCenterZ;
+
+        float textureXPosition = (float) (centerX + distanceX / scale);
+        float textureZPosition = (float) (centerZ + distanceZ / scale);
+
+        float width = servicePoi.getIcon().width() * poiScale;
+        float height = servicePoi.getIcon().height() * poiScale;
+
+        poseStack.pushPose();
+
+        float renderX = textureXPosition - width / 2f;
+        float renderZ = textureZPosition - height / 2f;
+        poseStack.translate(renderX, renderZ, 0);
+
+        if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            servicePoi.getName(),
+                            width / 2f,
+                            25,
+                            CommonColors.GREEN,
+                            HorizontalAlignment.Center,
+                            VerticalAlignment.Top,
+                            FontRenderer.TextShadow.OUTLINE);
+        }
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 servicePoi.getIcon().resource(),
                 0,
                 0,
                 0,
-                servicePoi.getIcon().width() * poiScale,
-                servicePoi.getIcon().height() * poiScale,
+                width,
+                height,
                 servicePoi.getIcon().width(),
                 servicePoi.getIcon().height());
 

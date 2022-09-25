@@ -124,7 +124,7 @@ public class MainMapScreen extends Screen {
         float textureX = map.getTextureXPosition(mapCenterX);
         float textureZ = map.getTextureZPosition(mapCenterZ);
 
-        renderMap(poseStack, map, textureX, textureZ);
+        renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
 
         renderCursor(poseStack);
     }
@@ -148,7 +148,8 @@ public class MainMapScreen extends Screen {
                 MapFeature.INSTANCE.pointerType);
     }
 
-    private void renderMap(PoseStack poseStack, MapProfile map, float textureX, float textureZ) {
+    private void renderMap(
+            PoseStack poseStack, MapProfile map, float textureX, float textureZ, int mouseX, int mouseY) {
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.BLACK,
@@ -170,6 +171,8 @@ public class MainMapScreen extends Screen {
                 mapHeight,
                 1f / currentZoom,
                 1f,
+                mouseX,
+                mouseY,
                 false,
                 false);
     }
