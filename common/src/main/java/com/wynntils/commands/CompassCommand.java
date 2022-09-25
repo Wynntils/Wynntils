@@ -7,10 +7,10 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
@@ -20,37 +20,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.Vec3;
 
-public class LocateCommand extends CommandBase {
-    public final static SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
-
-    public final static SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    MapModel.getAllPois().stream()
-                            .filter(poi -> poi instanceof LabelPoi)
-                            .map(Poi::getName),
-                    builder);
-
+public class CompassCommand extends CommandBase {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("locate")
+        return Commands.literal("compass")
+                .then(Commands.literal("at")
+                        .then(Commands.argument("coordinates", StringArgumentType.greedyString())
+                                .executes(this::notImplemented))
+                        .build())
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .suggests(SERVICE_SUGGESTION_PROVIDER)
-                                .executes(this::locateService))
+                                .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
+                                .executes(this::compassService))
                         .build())
                 .then(Commands.literal("place")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .suggests(PLACES_SUGGESTION_PROVIDER)
-                                .executes(this::locatePlace))
+                                .suggests(LocateCommand.PLACES_SUGGESTION_PROVIDER)
+                                .executes(this::compassPlace))
                         .build())
                 .then(Commands.literal("npc")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
@@ -63,7 +57,7 @@ public class LocateCommand extends CommandBase {
                 .executes(this::syntaxError);
     }
 
-    private int locateService(CommandContext<CommandSourceStack> context) {
+    private int compassService(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
         List<ServiceKind> matchedKinds = Arrays.stream(ServiceKind.values())
@@ -89,33 +83,32 @@ public class LocateCommand extends CommandBase {
 
         ServiceKind selectedKind = matchedKinds.get(0);
 
-        List<Poi> services = new ArrayList<>(MapModel.getAllPois().stream()
+        Vec3 currentLocation = McUtils.player().position();
+        Optional<Poi> closestServiceOptional = MapModel.getAllPois().stream()
                 .filter(poi -> poi instanceof ServicePoi servicePoi
                         && servicePoi.getKind().equals(selectedKind))
-                .toList());
-
-        // Only keep the closest results
-        Vec3 currentLocation = McUtils.player().position();
-        services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY(),
-                poi.getLocation().getZ())));
-        services.subList(4, services.size()).clear();
+                .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
+                                poi.getLocation().getX(),
+                                poi.getLocation().getY(),
+                                poi.getLocation().getZ())));
+        if (closestServiceOptional.isEmpty()) {
+            // This really should not happen...
+            MutableComponent response = new TextComponent("Found no services of kind '" + selectedKind.getName() + "'")
+                    .withStyle(ChatFormatting.RED);
+            context.getSource().sendFailure(response);
+            return 0;
+        }
+        Poi closestService = closestServiceOptional.get();
+        CompassModel.setCompassLocation(closestService.getLocation().asLocation());
 
         MutableComponent response =
-                new TextComponent("Found " + selectedKind.getName() + " services:").withStyle(ChatFormatting.AQUA);
-
-        for (Poi service : services) {
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(service.getName() + " ").withStyle(ChatFormatting.YELLOW))
-                    .append(new TextComponent(service.getLocation().toString()).withStyle(ChatFormatting.WHITE));
-        }
-
+                new TextComponent("Setting compass to " + selectedKind.getName() + " at ").withStyle(ChatFormatting.AQUA);
+        response.append(new TextComponent(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
 
-    private int locatePlace(CommandContext<CommandSourceStack> context) {
+    private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
         List<Poi> places = new ArrayList<>(MapModel.getAllPois().stream()
@@ -129,22 +122,29 @@ public class LocateCommand extends CommandBase {
             return 0;
         }
 
-        // Sort in order of closeness to the player
-        Vec3 currentLocation = McUtils.player().position();
-        places.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY(),
-                poi.getLocation().getZ())));
+        Poi place;
 
-        MutableComponent response =
-                new TextComponent("Found places matching '" + searchedName + "':").withStyle(ChatFormatting.AQUA);
-
-        for (Poi place : places) {
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(place.getName() + " ").withStyle(ChatFormatting.YELLOW))
-                    .append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+        if (places.size() > 1) {
+            // Try to find one with an exact match, to differentiate e.g. "Detlas" from "Detlas Suburbs"
+            Optional<Poi> exactMatch = places.stream().filter(poi -> poi.getName().equals(searchedName)).findFirst();
+            if (exactMatch.isEmpty()) {
+                MutableComponent response =
+                        new TextComponent("Found multiple places matching '" + searchedName + "', but none matched exactly. Matching: ").withStyle(ChatFormatting.RED);
+                response.append(new TextComponent(String.join(
+                        ", ", places.stream().map(poi -> poi.getName()).toList())));
+                context.getSource().sendFailure(response);
+                return 0;
+            }
+            place = exactMatch.get();
+        } else {
+            place = places.get(0);
         }
 
+        CompassModel.setCompassLocation(place.getLocation().asLocation());
+
+        MutableComponent response =
+                new TextComponent("Setting compass to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
+        response.append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
