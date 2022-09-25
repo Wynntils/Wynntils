@@ -4,11 +4,10 @@
  */
 package com.wynntils.wynn.model.bossbar;
 
+import com.wynntils.wynn.objects.ClassType;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.wynn.objects.ClassType;
 import net.minecraft.Util;
 import net.minecraft.util.Mth;
 
