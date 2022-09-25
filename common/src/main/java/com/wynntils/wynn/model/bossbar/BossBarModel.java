@@ -57,7 +57,6 @@ public class BossBarModel extends Model {
                             if (remainder > 15) {
                                 max += 30;
                             }
-
                         }
                     } catch (NumberFormatException e) {
                         WynntilsMod.error(String.format(
