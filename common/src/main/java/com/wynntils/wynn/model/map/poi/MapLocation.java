@@ -37,4 +37,9 @@ public class MapLocation {
     public String toString() {
         return "[" + x + ", " + y + ", " + z + "]";
     }
+
+    public String asChatCoordinates() {
+        return  x + " " + y + " " + z;
+    }
+
 }

@@ -24,6 +24,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.Vec3;
@@ -107,8 +108,16 @@ public class LocateCommand extends CommandBase {
 
         for (Poi service : services) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(service.getName() + " ").withStyle(ChatFormatting.YELLOW))
-                    .append(new TextComponent(service.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+                    .append(new TextComponent(service.getName() + " ")
+                            .withStyle(ChatFormatting.YELLOW)
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/compass at " + service.getLocation().asChatCoordinates()))))
+                    .append(new TextComponent(service.getLocation().toString())
+                            .withStyle(ChatFormatting.WHITE)
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/compass at " + service.getLocation().asChatCoordinates()))));
         }
 
         context.getSource().sendSuccess(response, false);
@@ -141,8 +150,14 @@ public class LocateCommand extends CommandBase {
 
         for (Poi place : places) {
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(place.getName() + " ").withStyle(ChatFormatting.YELLOW))
-                    .append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+                    .append(new TextComponent(place.getName() + " ")
+                            .withStyle(ChatFormatting.YELLOW)
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))))
+                    .append(new TextComponent(place.getLocation().toString())
+                            .withStyle(ChatFormatting.WHITE)
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))));
         }
 
         context.getSource().sendSuccess(response, false);

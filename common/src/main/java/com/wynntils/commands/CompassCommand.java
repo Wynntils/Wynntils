@@ -8,6 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
@@ -24,6 +25,8 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.Vec3;
@@ -33,8 +36,8 @@ public class CompassCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("compass")
                 .then(Commands.literal("at")
-                        .then(Commands.argument("coordinates", StringArgumentType.greedyString())
-                                .executes(this::notImplemented))
+                        .then(Commands.argument("location", Vec3Argument.vec3())
+                                .executes(this::compassAt))
                         .build())
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
@@ -55,6 +58,18 @@ public class CompassCommand extends CommandBase {
                                 .executes(this::notImplemented))
                         .build())
                 .executes(this::syntaxError);
+    }
+
+    private int compassAt(CommandContext<CommandSourceStack> context) {
+        Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
+        Location location = new Location(coordinates.getBlockPos(context.getSource()));
+        CompassModel.setCompassLocation(location);
+
+        MutableComponent response =
+                new TextComponent("Setting compass to ").withStyle(ChatFormatting.AQUA);
+        response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
+        context.getSource().sendSuccess(response, false);
+        return 1;
     }
 
     private int compassService(CommandContext<CommandSourceStack> context) {
