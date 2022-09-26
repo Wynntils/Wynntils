@@ -173,6 +173,8 @@ public final class MapModel extends Model {
                         thread.join();
                     } catch (InterruptedException e) {
                         WynntilsMod.error("Exception when loading map files.", e);
+                        result.complete(false);
+                        return true;
                     }
 
                     if (syncList.size() == mapArray.size()) {
