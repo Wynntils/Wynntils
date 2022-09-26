@@ -22,7 +22,7 @@ import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
-import java.util.Comparator;
+import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
@@ -130,7 +130,7 @@ public class MapRenderer {
             poseStack.popPose();
         }
 
-        renderTexturedPois(
+        renderServicePois(
                 poseStack,
                 mapCenterX,
                 mapCenterZ,
@@ -182,7 +182,7 @@ public class MapRenderer {
         }
     }
 
-    private static void renderTexturedPois(
+    private static void renderServicePois(
             PoseStack poseStack,
             float mapCenterX,
             float mapCenterZ,
@@ -196,9 +196,9 @@ public class MapRenderer {
             float mapLeftZ,
             float mapBottomX,
             float mapRightZ) {
-        List<Poi> pois = MapModel.getAllPois().stream()
+        List<ServicePoi> servicePois = MapModel.getAllPois().stream()
                 .filter(poi -> {
-                    if (poi.getIcon() == null) return false;
+                    if (!(poi instanceof ServicePoi)) return false;
 
                     return isPoiVisible(
                             mapCenterX,
@@ -212,7 +212,7 @@ public class MapRenderer {
                             mapRightZ,
                             poi);
                 })
-                .sorted(Comparator.comparing(poi -> -poi.getLocation().getY()))
+                .map(poi -> (ServicePoi) poi)
                 .toList();
 
         if (mouseCoordinates != null) {
@@ -223,7 +223,7 @@ public class MapRenderer {
         final float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
         final float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
 
-        for (Poi poi : pois) {
+        for (ServicePoi servicePoi : servicePois) {
             Pair<Float, Float> renderPositions = getRenderPositions(
                     followPlayerRotation,
                     mapCenterX,
@@ -234,23 +234,23 @@ public class MapRenderer {
                     scale,
                     sinRotationRadians,
                     cosRotationRadians,
-                    poi);
+                    servicePoi);
             float renderX = renderPositions.a;
             float renderZ = renderPositions.b;
 
-            float width = poi.getIcon().width() * poiScale;
-            float height = poi.getIcon().height() * poiScale;
+            float width = servicePoi.getIcon().width() * poiScale;
+            float height = servicePoi.getIcon().height() * poiScale;
 
             if (mouseCoordinates != null) {
                 int mouseX = mouseCoordinates.a;
                 int mouseY = mouseCoordinates.b;
 
                 if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
-                    hovered = poi;
+                    hovered = servicePoi;
                 }
             }
 
-            renderTexturedPoi(poseStack, renderX, renderZ, width, height, hovered == poi, poi);
+            renderServicePoi(poseStack, renderX, renderZ, width, height, hovered == servicePoi, servicePoi);
         }
 
         if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
@@ -305,14 +305,14 @@ public class MapRenderer {
                 && textureZPosition <= mapRightZ;
     }
 
-    public static void renderTexturedPoi(
+    public static void renderServicePoi(
             PoseStack poseStack,
             float renderX,
             float renderZ,
             float width,
             float height,
             boolean hovered,
-            Poi renderablePoi) {
+            ServicePoi servicePoi) {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
 
@@ -323,14 +323,14 @@ public class MapRenderer {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                renderablePoi.getIcon().resource(),
+                servicePoi.getIcon().resource(),
                 renderX,
                 renderZ,
-                renderablePoi.getLocation().getY(),
+                0,
                 width,
                 height,
-                renderablePoi.getIcon().width(),
-                renderablePoi.getIcon().height());
+                servicePoi.getIcon().width(),
+                servicePoi.getIcon().height());
     }
 
     private static Pair<Float, Float> getRenderPositions(
@@ -343,7 +343,7 @@ public class MapRenderer {
             float scale,
             float sinRotationRadians,
             float cosRotationRadians,
-            Poi servicePoi) {
+            ServicePoi servicePoi) {
         float textureXPosition;
         float textureZPosition;
 
