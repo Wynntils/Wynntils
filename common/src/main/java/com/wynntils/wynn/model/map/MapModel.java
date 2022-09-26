@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class MapModel extends Model {
@@ -61,16 +60,16 @@ public final class MapModel extends Model {
         return maps;
     }
 
-    public static Set<Poi> getAllPois() {
-        Set<Poi> waypointSet = Set.of();
-
+    public static Stream<Poi> getAllPois() {
         if (CompassModel.getCompassLocation().isPresent()) {
             Location location = CompassModel.getCompassLocation().get();
-            waypointSet =
-                    Set.of(new WaypointPoi(new MapLocation((int) location.x, (int) location.y, (int) location.z)));
+            WaypointPoi waypointPoi =
+                    new WaypointPoi(new MapLocation((int) location.x, (int) location.y, (int) location.z));
+
+            return Stream.concat(allPois.stream(), Stream.of(waypointPoi));
         }
 
-        return Stream.concat(allPois.stream(), waypointSet.stream()).collect(Collectors.toSet());
+        return allPois.stream();
     }
 
     private static void loadPlaces() {

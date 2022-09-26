@@ -148,7 +148,7 @@ public class MapRenderer {
 
     private static void renderLabelPois(
             PoseStack poseStack, float mapCenterX, float mapCenterZ, float centerX, float centerZ, float scale) {
-        List<LabelPoi> labelPois = MapModel.getAllPois().stream()
+        List<LabelPoi> labelPois = MapModel.getAllPois()
                 .filter(poi -> poi instanceof LabelPoi)
                 .map(poi -> (LabelPoi) poi)
                 .toList();
@@ -196,7 +196,7 @@ public class MapRenderer {
             float mapLeftZ,
             float mapBottomX,
             float mapRightZ) {
-        List<Poi> pois = MapModel.getAllPois().stream()
+        List<Poi> pois = MapModel.getAllPois()
                 .filter(poi -> {
                     if (poi.getIcon() == null) return false;
 
