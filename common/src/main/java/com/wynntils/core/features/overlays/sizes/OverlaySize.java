@@ -5,7 +5,6 @@
 package com.wynntils.core.features.overlays.sizes;
 
 import com.wynntils.core.WynntilsMod;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

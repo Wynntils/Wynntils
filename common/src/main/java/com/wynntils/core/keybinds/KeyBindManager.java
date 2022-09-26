@@ -57,8 +57,7 @@ public final class KeyBindManager extends CoreManager {
 
     public static void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
-            WynntilsMod.error(
-                    "Can not add keybind " + toAdd.getName() + " since the name already exists");
+            WynntilsMod.error("Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
         Options options = McUtils.options();
