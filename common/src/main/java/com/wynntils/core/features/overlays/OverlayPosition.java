@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class OverlayPosition {
         Matcher matcher = POSITION_PATTERN.matcher(string.replaceAll(" ", ""));
 
         if (!matcher.matches()) {
-            throw new RuntimeException("Failed to parse OverlayPosition");
+            WynntilsMod.error("Failed to parse OverlayPosition");
         }
 
         try {
@@ -50,7 +51,8 @@ public class OverlayPosition {
             this.horizontalAlignment = HorizontalAlignment.valueOf(matcher.group(4));
             this.anchorSection = AnchorSection.valueOf(matcher.group(5));
         } catch (IllegalArgumentException exception) {
-            throw new RuntimeException("Failed to parse OverlayPosition", exception);
+            WynntilsMod.error("Failed to parse OverlayPosition", exception);
+            throw new RuntimeException();
         }
     }
 

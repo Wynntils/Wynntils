@@ -16,6 +16,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
@@ -965,8 +966,8 @@ public final class RenderUtils {
         }
 
         @Override
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            if (!DataFlavor.imageFlavor.equals(flavor)) throw new UnsupportedFlavorException(flavor);
+        public Object getTransferData(DataFlavor flavor) {
+            if (!DataFlavor.imageFlavor.equals(flavor)) WynntilsMod.error(String.valueOf(flavor));
             return this.image;
         }
     }

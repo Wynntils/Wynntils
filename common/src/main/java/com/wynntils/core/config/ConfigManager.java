@@ -205,15 +205,15 @@ public final class ConfigManager extends CoreManager {
                 if (metadata.visible()) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
                         WynntilsMod.error("Config displayName i18n is missing for " + configHolder.getDisplayName());
-                        throw new RuntimeException();
+                        return null;
                     }
                     if (configHolder.getDescription().startsWith("feature.wynntils.")) {
                         WynntilsMod.error("Config description i18n is missing for " + configHolder.getDescription());
-                        throw new RuntimeException();
+                        return null;
                     }
                     if (configHolder.getDescription().isEmpty()) {
                         WynntilsMod.error("Config description is empty for " + configHolder.getDisplayName());
-                        throw new RuntimeException();
+                        return null;
                     }
                 }
             }

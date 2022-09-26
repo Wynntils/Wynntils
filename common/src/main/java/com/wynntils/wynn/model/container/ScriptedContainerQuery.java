@@ -158,7 +158,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder expectTitle(String expectedTitle) {
             if (verification != null) {
-                throw new IllegalStateException("Set verification twice");
+                WynntilsMod.error("Set verification twice");
             }
             this.verification = (title, type) -> title.getString().equals(expectedTitle);
             checkForCompletion();
@@ -167,7 +167,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder matchTitle(String regExp) {
             if (verification != null) {
-                throw new IllegalStateException("Set verification twice");
+                WynntilsMod.error("Set verification twice");
             }
             this.verification = (title, type) -> title.getString().matches(regExp);
             checkForCompletion();
@@ -176,7 +176,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder processContainer(ContainerAction action) {
             if (handleContent != null) {
-                throw new IllegalStateException("Set handleContent twice");
+                WynntilsMod.error("Set handleContent twice");
             }
             this.handleContent = action;
             checkForCompletion();
@@ -185,7 +185,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder clickOnSlot(int slotNum) {
             if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
+                WynntilsMod.error("Set startAction twice");
             }
             this.startAction = (container) -> {
                 ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
@@ -197,7 +197,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, String expectedItemName) {
             if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
+                WynntilsMod.error("Set startAction twice");
             }
             this.startAction = (container) -> {
                 ItemStack item = container.items().get(slotNum);
@@ -213,7 +213,7 @@ public class ScriptedContainerQuery {
 
         public QueryBuilder useItemInHotbar(int slotNum) {
             if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
+                WynntilsMod.error("Set startAction twice");
             }
             this.startAction = (container) -> ContainerUtils.openInventory(slotNum);
             checkForCompletion();
@@ -222,7 +222,7 @@ public class ScriptedContainerQuery {
 
         public ScriptedContainerQuery build() {
             if (startAction != null || handleContent != null || verification != null) {
-                throw new IllegalStateException("Partial contents only for last step");
+                WynntilsMod.error("Partial contents only for last step");
             }
             return query;
         }

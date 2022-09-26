@@ -55,7 +55,7 @@ public class WebReader {
 
     private void parseFile(File file) throws Exception {
         if (!parseData(FileUtils.readFileToString(file, StandardCharsets.UTF_8))) {
-            throw new Exception("Invalid WebReader result");
+            WynntilsMod.error("Invalid WebReader result");
         }
     }
 
@@ -64,7 +64,7 @@ public class WebReader {
         st.setRequestProperty("User-Agent", WebManager.getUserAgent());
 
         if (!parseData(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))) {
-            throw new Exception("Invalid WebReader result");
+            WynntilsMod.error("Invalid WebReader result");
         }
     }
 

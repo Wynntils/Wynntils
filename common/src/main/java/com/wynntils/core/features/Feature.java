@@ -72,7 +72,8 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
                 Object fieldValue = FieldUtils.readField(overlayField, this, true);
 
                 if (!(fieldValue instanceof Overlay overlay)) {
-                    throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
+                    WynntilsMod.error("A non-Overlay class was marked with OverlayInfo annotation.");
+                    return;
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
@@ -145,7 +146,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called to activate a feature */
     public final void enable() {
-        if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
+        if (enabled) WynntilsMod.error("Feature can not be enabled as it already is enabled");
 
         if (!canEnable()) return;
         if (!onEnable()) return;
@@ -167,7 +168,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (!enabled) throw new IllegalStateException("Feature can not be disabled as it already is disabled");
+        if (!enabled) WynntilsMod.error("Feature can not be disabled as it already is disabled");
 
         onDisable();
 

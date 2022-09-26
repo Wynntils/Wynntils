@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.features.overlays.sizes;
 
+import com.wynntils.core.WynntilsMod;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,14 +29,14 @@ public abstract class OverlaySize {
         Matcher matcher = SIZE_REGEX.matcher(string.replaceAll(" ", ""));
 
         if (!matcher.matches()) {
-            throw new RuntimeException("Failed to parse OverlaySize");
+            WynntilsMod.error("Failed to parse OverlaySize");
         }
 
         try {
             this.width = Float.parseFloat(matcher.group(1));
             this.height = Float.parseFloat(matcher.group(2));
         } catch (NumberFormatException exception) {
-            throw new RuntimeException("Failed to parse OverlaySize", exception);
+            WynntilsMod.error("Failed to parse OverlaySize", exception);
         }
     }
 

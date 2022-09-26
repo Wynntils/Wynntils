@@ -34,7 +34,7 @@ public class ConfigHolder {
     public ConfigHolder(
             Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
-            throw new RuntimeException("Parent must implement Translatable interface.");
+            WynntilsMod.error("Parent must implement Translatable interface.");
         }
 
         this.parent = parent;

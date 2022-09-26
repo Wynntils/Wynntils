@@ -225,7 +225,7 @@ public class RequestBuilder {
 
     public Request build() {
         if (cacheValidator != null && cacheFile == null)
-            throw new IllegalStateException("Invalid cache file and validator pairing");
+            WynntilsMod.error("Invalid cache file and validator pairing");
 
         return new Request(
                 url,
