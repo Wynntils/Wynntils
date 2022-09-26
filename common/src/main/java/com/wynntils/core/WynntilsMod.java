@@ -196,12 +196,7 @@ public final class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "In Development";
-            }
-
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("In Development") {
             @Override
             public Object generate() {
                 return isDevelopmentEnvironment() ? "Yes" : "No";

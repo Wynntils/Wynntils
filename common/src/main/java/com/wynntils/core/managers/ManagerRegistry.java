@@ -159,12 +159,7 @@ public final class ManagerRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Managers";
-            }
-
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Managers") {
             @Override
             public Object generate() {
                 StringBuilder result = new StringBuilder();
