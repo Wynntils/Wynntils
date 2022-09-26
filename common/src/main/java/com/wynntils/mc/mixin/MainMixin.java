@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.WynntilsMod;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.util.Locale;
@@ -30,7 +29,8 @@ public abstract class MainMixin {
         // This uses a Mixin because this must be done as early as possible - before other mods load that use AWT
         // see https://github.com/BuiltBrokenModding/SBM-SheepMetal/issues/2
         if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac")) {
-            WynntilsMod.info("[Wynntils/Artemis] Setting java.awt.headless to false");
+            // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
+            System.out.println("[Wynntils/Artemis] Setting java.awt.headless to false");
             System.setProperty("java.awt.headless", "false");
 
             // Test that the mixin was run properly
@@ -39,7 +39,8 @@ public abstract class MainMixin {
             try {
                 Toolkit.getDefaultToolkit().getSystemClipboard();
             } catch (HeadlessException e) {
-                WynntilsMod.warn("[Wynntils/Artemis] java.awt.headless property was not set properly!");
+                // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
+                System.out.println("[Wynntils/Artemis] java.awt.headless property was not set properly!");
             }
         }
     }
