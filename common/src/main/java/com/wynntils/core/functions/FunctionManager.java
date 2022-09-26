@@ -40,7 +40,7 @@ public final class FunctionManager extends CoreManager {
         //        and register/unregister the model dependency when enabling/disabling
         if (function instanceof DependantFunction<?> dependantFunction) {
             for (Class<? extends Model> dependency : dependantFunction.getModelDependencies()) {
-                ManagerRegistry.addFunctionDependency(dependantFunction, dependency);
+                ManagerRegistry.addDependency(dependantFunction, dependency);
             }
         }
     }

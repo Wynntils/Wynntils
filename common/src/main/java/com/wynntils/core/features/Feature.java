@@ -34,7 +34,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
+public abstract class Feature implements Translatable, Configurable, ModelDependant, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
@@ -152,10 +152,6 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         enabled = true;
 
-        for (Class<? extends Model> dependency : dependencies) {
-            ManagerRegistry.addDependency(this, dependency);
-        }
-
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
@@ -207,6 +203,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
             if (!condition.isSatisfied()) return false;
         }
 
+        for (Class<? extends Model> dependency : dependencies) {
+            if (!ManagerRegistry.addDependency(this, dependency)) return false;
+        }
+
         return true;
     }
 
@@ -218,6 +218,11 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     @Override
     public final void addConfigOptions(List<ConfigHolder> options) {
         configOptions.addAll(options);
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return dependencies;
     }
 
     /** Returns all config options registered in this feature */
