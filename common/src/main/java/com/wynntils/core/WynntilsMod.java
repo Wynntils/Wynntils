@@ -158,9 +158,6 @@ public final class WynntilsMod {
         parseVersion(modVersion);
         addCrashCallbacks();
 
-        // MC will sometimes think it's running headless and refuse to set clipboard contents
-        // making sure this is set to false will fix that
-        System.setProperty("java.awt.headless", "false");
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         ManagerRegistry.init();
