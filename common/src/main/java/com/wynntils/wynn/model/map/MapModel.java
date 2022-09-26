@@ -16,12 +16,15 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.objects.Location;
+import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public final class MapModel extends Model {
     private static final String PLACES_JSON_URL =
@@ -56,8 +60,16 @@ public final class MapModel extends Model {
         return maps;
     }
 
-    public static Set<Poi> getAllPois() {
-        return allPois;
+    public static Stream<Poi> getAllPois() {
+        if (CompassModel.getCompassLocation().isPresent()) {
+            Location location = CompassModel.getCompassLocation().get();
+            WaypointPoi waypointPoi =
+                    new WaypointPoi(new MapLocation((int) location.x, (int) location.y, (int) location.z));
+
+            return Stream.concat(allPois.stream(), Stream.of(waypointPoi));
+        }
+
+        return allPois.stream();
     }
 
     private static void loadPlaces() {
