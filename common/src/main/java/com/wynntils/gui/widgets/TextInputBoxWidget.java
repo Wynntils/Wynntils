@@ -11,7 +11,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.SearchableScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.KeyboardUtils;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -59,8 +58,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        checkForHeldBackspace();
-
         poseStack.pushPose();
 
         poseStack.translate(this.x, this.y, 0);
@@ -82,20 +79,6 @@ public class TextInputBoxWidget extends AbstractWidget {
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();
-    }
-
-    protected void checkForHeldBackspace() {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_BACKSPACE)) {
-            if (firstKeyDown == 0) {
-                firstKeyDown = System.currentTimeMillis();
-            } else if (System.currentTimeMillis() - firstKeyDown > 250
-                    && System.currentTimeMillis() - lastKeyDownCheck > 65) {
-                this.keyPressed(GLFW.GLFW_KEY_BACKSPACE, 0, 0);
-                lastKeyDownCheck = System.currentTimeMillis();
-            }
-        } else {
-            firstKeyDown = 0;
-        }
     }
 
     protected String getRenderedText(float maxTextWidth) {
