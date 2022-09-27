@@ -168,34 +168,32 @@ public class OverlayManagementScreen extends Screen {
                 float yOffset =
                         switch (overlay.getRenderVerticalAlignment()) {
                             case Top -> 1.8f;
-                            case Middle -> -1.8f;
-                            case Bottom -> -4.8f;
+                            case Middle -> 0f;
+                            case Bottom -> -1.8f;
                         };
 
                 float xOffset =
                         switch (overlay.getRenderHorizontalAlignment()) {
                             case Left -> 1.8f;
-                            case Center -> 0.0F;
-                            case Right -> -1f;
+                            case Center -> 0f;
+                            case Right -> -1.8f;
                         };
 
-                TextRenderTask renderTask = new TextRenderTask(
-                        overlay.getTranslatedName(),
-                        TextRenderSetting.DEFAULT
-                                .withMaxWidth(overlay.getWidth())
-                                .withCustomColor(color)
-                                .withHorizontalAlignment(overlay.getRenderHorizontalAlignment())
-                                .withTextShadow(FontRenderer.TextShadow.OUTLINE));
+                float renderX = overlay.getRenderX() + xOffset;
+                float renderY = overlay.getRenderY() + yOffset;
                 FontRenderer.getInstance()
-                        .renderTextWithAlignment(
+                        .renderAlignedTextInBox(
                                 poseStack,
-                                overlay.getRenderX() + xOffset,
-                                overlay.getRenderY() + yOffset,
-                                renderTask,
-                                overlay.getRenderedWidth() / (float) McUtils.guiScale(),
-                                overlay.getRenderedHeight() / (float) McUtils.guiScale(),
+                                overlay.getTranslatedName(),
+                                renderX,
+                                renderX + overlay.getWidth(),
+                                renderY,
+                                renderY + overlay.getHeight(),
+                                overlay.getWidth(),
+                                color,
                                 overlay.getRenderHorizontalAlignment(),
-                                overlay.getRenderVerticalAlignment());
+                                overlay.getRenderVerticalAlignment(),
+                                FontRenderer.TextShadow.OUTLINE);
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {

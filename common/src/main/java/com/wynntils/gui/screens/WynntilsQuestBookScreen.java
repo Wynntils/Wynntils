@@ -76,6 +76,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
 
     @Override
     public void onClose() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
@@ -84,6 +85,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
      * */
     @Override
     protected void init() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+
         QuestBookManager.rescanQuestBook();
 
         this.addRenderableWidget(searchWidget);
