@@ -10,15 +10,25 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.PLAYERS)
-public class PlayerGhostTransparencyFeature extends UserFeature {
+public class PlayerTransparencyFeature extends UserFeature {
     @Config
-    public static float playerGhostTranslucenceLevel = 0.75f;
+    public static float playerTranslucenceLevel = 0.75f;
+
+    @Config
+    public static boolean playerGhostTranslucent = true;
+
+    @Config
+    public static boolean playerTranslucent = true;
+
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
@@ -26,8 +36,18 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
 
         if (!(e.getEntity() instanceof Player player)) return;
 
-        if (WynnPlayerUtils.isPlayerGhost(player)) {
-            e.setTranslucence(playerGhostTranslucenceLevel);
+        boolean transparent = isTransparent(e, player);
+
+        if (transparent) {
+            e.setTranslucence(playerTranslucenceLevel);
         }
+    }
+
+    private static boolean isTransparent(LivingEntityRenderTranslucentCheckEvent e, Player player) {
+        if (playerGhostTranslucent && WynnPlayerUtils.isPlayerGhost(player)) {
+            return true;
+        }
+
+        return playerTranslucent && e.getEntity().is(McUtils.player()) && e.getEntity().isInvisible();
     }
 }
