@@ -58,8 +58,13 @@ public class InfoBoxFeature extends UserFeature {
         @Config
         public String content = "";
 
+        @Config
+        public float secondsPerRecalculation = 0.5f;
+
         private final int id;
         private final List<Function<?>> functionDependencies = new ArrayList<>();
+        private TextRenderTask renderTask;
+        private long lastUpdate = 0;
 
         private TextRenderTask getRenderTask(String content) {
             return FunctionManager.getStringFromLegacyTemplate(content)
@@ -88,12 +93,17 @@ public class InfoBoxFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
+            if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
+                lastUpdate = System.nanoTime();
+                renderTask = getRenderTask(content);
+            }
+
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            getRenderTask(content),
+                            renderTask,
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
