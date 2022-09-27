@@ -7,11 +7,8 @@ package com.wynntils.core.managers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.ModelDependant;
 import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.functions.DependantFunction;
-import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
@@ -153,22 +150,22 @@ public final class ManagerRegistry {
                     result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
                 }
 
-                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
+                        MODEL_DEPENDENCIES.entrySet()) {
                     if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
 
                     result.append("\n\t\t")
-                        .append(dependencyEntry.getKey().getName())
-                        .append(": ")
-                        .append(dependencyEntry.getValue().stream()
-                            .map(t -> {
-                                if (t instanceof Translatable translatable) {
-                                    return translatable.getTranslatedName();
-                                } else {
-                                    return t.toString();
-                                }
-                            })
-                            .collect(Collectors.joining(", "))
-                        );                
+                            .append(dependencyEntry.getKey().getName())
+                            .append(": ")
+                            .append(dependencyEntry.getValue().stream()
+                                    .map(t -> {
+                                        if (t instanceof Translatable translatable) {
+                                            return translatable.getTranslatedName();
+                                        } else {
+                                            return t.toString();
+                                        }
+                                    })
+                                    .collect(Collectors.joining(", ")));
                 }
 
                 return result.toString();
