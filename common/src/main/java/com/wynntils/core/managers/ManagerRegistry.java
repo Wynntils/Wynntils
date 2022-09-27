@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.ModelDependant;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
@@ -29,8 +30,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ManagerRegistry {
     private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
-    private static final Map<Class<? extends Model>, List<Feature>> MODEL_DEPENDENCIES = new HashMap<>();
-    private static final Map<Class<? extends Model>, List<Function<?>>> FUNCTION_MODEL_DEPENDENCIES = new HashMap<>();
+    private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
     private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
@@ -66,7 +66,7 @@ public final class ManagerRegistry {
         tryInitManager(manager);
     }
 
-    public static void addDependency(Feature dependant, Class<? extends Model> dependency) {
+    public static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to register a persistent manager.");
         }
@@ -78,20 +78,7 @@ public final class ManagerRegistry {
         updateManagerState(dependency);
     }
 
-    public static void addFunctionDependency(
-            DependantFunction<?> dependantFunction, Class<? extends Model> dependency) {
-        if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to register a persistent manager.");
-        }
-
-        FUNCTION_MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
-
-        FUNCTION_MODEL_DEPENDENCIES.get(dependency).add(dependantFunction);
-
-        updateManagerState(dependency);
-    }
-
-    public static void removeDependency(Feature dependant, Class<? extends Model> dependency) {
+    public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to unregister a persistent manager.");
         }
@@ -103,7 +90,7 @@ public final class ManagerRegistry {
         updateManagerState(dependency);
     }
 
-    public static void removeAllFeatureDependency(Feature dependant) {
+    public static void removeAllDependency(ModelDependant dependant) {
         for (Class<? extends Manager> manager : MODEL_DEPENDENCIES.keySet()) {
             boolean removed = MODEL_DEPENDENCIES.get(manager).remove(dependant);
 
@@ -114,11 +101,9 @@ public final class ManagerRegistry {
     }
 
     private static void updateManagerState(Class<? extends Manager> manager) {
-        List<Feature> dependencies = MODEL_DEPENDENCIES.get(manager);
-        List<Function<?>> functionDependencies = FUNCTION_MODEL_DEPENDENCIES.get(manager);
+        List<ModelDependant> dependencies = MODEL_DEPENDENCIES.get(manager);
 
-        boolean hasDependencies = (dependencies != null && !dependencies.isEmpty())
-                || (functionDependencies != null && !functionDependencies.isEmpty());
+        boolean hasDependencies = dependencies != null && !dependencies.isEmpty();
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (!hasDependencies) {
@@ -168,17 +153,22 @@ public final class ManagerRegistry {
                     result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
                 }
 
-                for (Map.Entry<Class<? extends Model>, List<Feature>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
                     if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
 
                     result.append("\n\t\t")
-                            .append(dependencyEntry.getKey().getName())
-                            .append(": ")
-                            .append(String.join(
-                                    ", ",
-                                    dependencyEntry.getValue().stream()
-                                            .map(Feature::getTranslatedName)
-                                            .toList()));
+                        .append(dependencyEntry.getKey().getName())
+                        .append(": ")
+                        .append(dependencyEntry.getValue().stream()
+                            .map(t -> {
+                                if (t instanceof Translatable translatable) {
+                                    return translatable.getTranslatedName();
+                                } else {
+                                    return t.toString();
+                                }
+                            })
+                            .collect(Collectors.joining(", "))
+                        );                
                 }
 
                 return result.toString();
