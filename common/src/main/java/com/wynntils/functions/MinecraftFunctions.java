@@ -12,28 +12,28 @@ public class MinecraftFunctions {
     public static class XFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return McUtils.player().getBlockX();
+            return McUtils.player() == null ? null : McUtils.player().getBlockX();
         }
     }
 
     public static class YFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return McUtils.player().getBlockY();
+            return McUtils.player() == null ? null : McUtils.player().getBlockY();
         }
     }
 
     public static class ZFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return McUtils.player().getBlockZ();
+            return McUtils.player() == null ? null : McUtils.player().getBlockZ();
         }
     }
 
     public static class DirFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return McUtils.player().getYRot();
+            return McUtils.player() == null ? null : McUtils.player().getYRot();
         }
     }
 

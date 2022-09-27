@@ -13,77 +13,98 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 
-@FeatureInfo(category = "Overlays")
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class InfoBoxesFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox1Overlay = new InfoBoxOverlay1();
+    private final Overlay infoBox1Overlay = new InfoBoxOverlay(1);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox2Overlay = new InfoBoxOverlay2();
+    private final Overlay infoBox2Overlay = new InfoBoxOverlay(2);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox3Overlay = new InfoBoxOverlay3();
+    private final Overlay infoBox3Overlay = new InfoBoxOverlay(3);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox4Overlay = new InfoBoxOverlay4();
+    private final Overlay infoBox4Overlay = new InfoBoxOverlay(4);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox5Overlay = new InfoBoxOverlay5();
+    private final Overlay infoBox5Overlay = new InfoBoxOverlay(5);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay infoBox6Overlay = new InfoBoxOverlay6();
+    private final Overlay infoBox6Overlay = new InfoBoxOverlay(6);
 
     private static final Pattern INFO_VARIABLE_PATTERN =
             Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
-    public abstract static class InfoBoxOverlay extends Overlay {
+    public static class InfoBoxOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
         @Config
         public String content = "";
 
-        private TextRenderTask toRender = getRenderTask(content);
-        private final TextRenderTask toRenderPreview = getRenderTask("&cX: %x%, &9Y: %y%, &aZ: %z%");
+        private final int id;
 
-        protected InfoBoxOverlay(int id) {
+        private TextRenderTask toRender = recalculateFunctions(content);
+        private List<Function<?>> functionDependencies = new ArrayList<>();
+
+        public InfoBoxOverlay(int id) {
             super(
                     new OverlayPosition(
-                            -80 + (15 * id),
+                            -60 + (15 * id),
                             5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.MiddleLeft),
-                    new GuiScaledOverlaySize(100, 12),
+                    new GuiScaledOverlaySize(120, 10),
                     HorizontalAlignment.Left,
-                    VerticalAlignment.Bottom);
+                    VerticalAlignment.Middle);
+            this.id = id;
         }
 
-        private TextRenderTask getRenderTask(String renderableText) {
-            StringBuffer buffer = new StringBuffer(renderableText.length() + 10);
+        private TextRenderTask recalculateFunctions(String renderableText) {
+            if (functionDependencies == null) {
+                functionDependencies = new ArrayList<>();
+            }
+
+            for (Function<?> oldDependency : functionDependencies) {
+                FunctionManager.disableFunction(oldDependency);
+            }
+
+            functionDependencies.clear();
+
+            StringBuilder builder = new StringBuilder(renderableText.length() + 10);
             Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
             while (m.find()) {
                 String replacement = null;
                 if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
                     // %variable%
                     Function<?> function = FunctionManager.forName(m.group(1)).get();
+
+                    FunctionManager.enableFunction(function);
+                    functionDependencies.add(function);
+
                     replacement = FunctionManager.getRawValueString(function, "");
                 } else if (m.group(2) != null) {
                     // \escape
@@ -92,16 +113,17 @@ public class InfoBoxesFeature extends UserFeature {
                 if (replacement == null) {
                     replacement = m.group(0);
                 }
-                m.appendReplacement(buffer, replacement);
+
+                m.appendReplacement(builder, replacement);
             }
-            m.appendTail(buffer);
+            m.appendTail(builder);
 
             return new TextRenderTask(
-                    parseColorCodes(buffer.toString()),
-                    TextRenderSetting.getWithHorizontalAlignment(
-                                    this.getWidth(),
-                                    CustomColor.fromChatFormatting(ChatFormatting.WHITE),
-                                    this.getRenderHorizontalAlignment())
+                    parseColorCodes(builder.toString()),
+                    TextRenderSetting.DEFAULT
+                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                            .withMaxWidth(this.getWidth())
+                            .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.WHITE))
                             .withTextShadow(textShadow));
         }
 
@@ -122,7 +144,7 @@ public class InfoBoxesFeature extends UserFeature {
                     }
                 }
             }
-            return toProcess;
+            return sb.toString();
         }
 
         private String doEscapeFormat(String escaped) {
@@ -142,7 +164,7 @@ public class InfoBoxesFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            toRender = getRenderTask(content);
+            toRender = recalculateFunctions(content);
         }
 
         @Override
@@ -163,6 +185,11 @@ public class InfoBoxesFeature extends UserFeature {
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
+
+            // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
+            // architectural changes at the moment
+            TextRenderTask toRenderPreview = recalculateFunctions("&cX: %x%, &9Y: %y%, &aZ: %z%");
+
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
@@ -174,41 +201,18 @@ public class InfoBoxesFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
-    }
 
-    public static class InfoBoxOverlay1 extends InfoBoxOverlay {
-        public InfoBoxOverlay1() {
-            super(1);
+        @Override
+        public String getTranslatedName() {
+            return I18n.get(
+                    "feature.wynntils." + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase()
+                            + ".name",
+                    id);
         }
-    }
 
-    public static class InfoBoxOverlay2 extends InfoBoxOverlay {
-        public InfoBoxOverlay2() {
-            super(2);
-        }
-    }
-
-    public static class InfoBoxOverlay3 extends InfoBoxOverlay {
-        public InfoBoxOverlay3() {
-            super(3);
-        }
-    }
-
-    public static class InfoBoxOverlay4 extends InfoBoxOverlay {
-        public InfoBoxOverlay4() {
-            super(4);
-        }
-    }
-
-    public static class InfoBoxOverlay5 extends InfoBoxOverlay {
-        public InfoBoxOverlay5() {
-            super(5);
-        }
-    }
-
-    public static class InfoBoxOverlay6 extends InfoBoxOverlay {
-        public InfoBoxOverlay6() {
-            super(6);
+        @Override
+        public String getConfigJsonName() {
+            return super.getConfigJsonName() + id;
         }
     }
 }
