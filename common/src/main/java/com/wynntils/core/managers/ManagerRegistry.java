@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ManagerRegistry {
@@ -72,7 +71,8 @@ public final class ManagerRegistry {
             throw new IllegalStateException("Tried to register a persistent manager.");
         }
 
-        List<ModelDependant> managerDependencies = MODEL_DEPENDENCIES.computeIfAbsent(manager, (k) -> new ArrayList<>());
+        List<ModelDependant> managerDependencies =
+                MODEL_DEPENDENCIES.computeIfAbsent(manager, (k) -> new ArrayList<>());
 
         managerDependencies.add(dependant);
 
@@ -84,7 +84,8 @@ public final class ManagerRegistry {
             throw new IllegalStateException("Tried to unregister a persistent manager.");
         }
 
-        List<ModelDependant> managerDependencies = MODEL_DEPENDENCIES.computeIfAbsent(manager, (k) -> new ArrayList<>());
+        List<ModelDependant> managerDependencies =
+                MODEL_DEPENDENCIES.computeIfAbsent(manager, (k) -> new ArrayList<>());
 
         managerDependencies.remove(dependant);
 
@@ -131,7 +132,7 @@ public final class ManagerRegistry {
             MethodUtils.invokeExactStaticMethod(manager, "disable");
         } catch (IllegalAccessException | NoSuchMethodException e) {
             // ignored, it is fine to not have a disable method
-        }  catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             WynntilsMod.warn("Exception during init of manager " + manager, e.getTargetException());
             return false;
         }
@@ -154,21 +155,22 @@ public final class ManagerRegistry {
                     result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
                 }
 
-                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
+                        MODEL_DEPENDENCIES.entrySet()) {
                     if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
 
                     result.append("\n\t\t")
                             .append(dependencyEntry.getKey().getName())
                             .append(": ")
                             .append(dependencyEntry.getValue().stream()
-                                            .map(t -> {
-                                                if (t instanceof Translatable translatable) {
-                                                    return translatable.getTranslatedName();
-                                                } else {
-                                                    return t.toString();
-                                                }
-                                            })
-                                            .collect(Collectors.joining(", ")));
+                                    .map(t -> {
+                                        if (t instanceof Translatable translatable) {
+                                            return translatable.getTranslatedName();
+                                        } else {
+                                            return t.toString();
+                                        }
+                                    })
+                                    .collect(Collectors.joining(", ")));
                 }
 
                 return result.toString();

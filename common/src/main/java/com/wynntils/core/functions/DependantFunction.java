@@ -6,5 +6,4 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.features.ModelDependant;
 
-public abstract class DependantFunction<T> extends Function<T> implements ModelDependant {
-}
+public abstract class DependantFunction<T> extends Function<T> implements ModelDependant {}
