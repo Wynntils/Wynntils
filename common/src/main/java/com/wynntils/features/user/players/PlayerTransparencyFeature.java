@@ -11,8 +11,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +26,6 @@ public class PlayerTransparencyFeature extends UserFeature {
 
     @Config
     public static boolean playerTranslucent = true;
-
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
@@ -48,6 +45,8 @@ public class PlayerTransparencyFeature extends UserFeature {
             return true;
         }
 
-        return playerTranslucent && e.getEntity().is(McUtils.player()) && e.getEntity().isInvisible();
+        return playerTranslucent
+                && e.getEntity().is(McUtils.player())
+                && e.getEntity().isInvisible();
     }
 }

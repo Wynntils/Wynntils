@@ -356,16 +356,12 @@
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow.name": "Text Shadow",
   "feature.wynntils.packetDebugger.name": "Packet Debugger",
   "feature.wynntils.playerTransparency.name": "Transparent Player Ghost",
-  "feature.wynntils.playerTransparency.playerTranslucenceLevel.description": "The level of translucence that should be applied to specific players",
-  "feature.wynntils.playerTransparency.playerTranslucenceLevel.name": "Player Translucence",
-
   "feature.wynntils.playerTransparency.playerGhostTranslucent.description": "Should player ghosts be transparent?",
   "feature.wynntils.playerTransparency.playerGhostTranslucent.name": "Player Ghost Translucence",
-
+  "feature.wynntils.playerTransparency.playerTranslucenceLevel.description": "The level of translucence that should be applied to specific players",
+  "feature.wynntils.playerTransparency.playerTranslucenceLevel.name": "Player Translucence",
   "feature.wynntils.playerTransparency.playerTranslucent.description": "Should the player, when invisible, be render transparent instead?",
   "feature.wynntils.playerTransparency.playerTranslucent.name": "Player Invisible Translucence",
-
-
   "feature.wynntils.pouchRedirect.name": "Pouch Message Redirect",
   "feature.wynntils.pouchRedirect.redirectEmeraldPouch.description": "Should messages about emeralds being added to your pouch be redirected to the game update ticker?",
   "feature.wynntils.pouchRedirect.redirectEmeraldPouch.name": "Redirect Emerald Pouch Messages",
