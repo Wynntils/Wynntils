@@ -33,9 +33,8 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
     private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ActionBarModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ActionBarModel.class);
     }
 
     public static class PowderAbilityBarOverlay extends Overlay {

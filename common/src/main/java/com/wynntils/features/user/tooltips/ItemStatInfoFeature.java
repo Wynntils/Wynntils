@@ -41,8 +41,12 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+            ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
-        dependencies.add(ItemStackTransformModel.class);
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 }

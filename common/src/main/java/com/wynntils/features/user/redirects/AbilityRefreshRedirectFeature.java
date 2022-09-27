@@ -23,9 +23,8 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
             Pattern.compile("§8\\[§r§7⬤§r§8\\] §r§7(.+)§r§8 has been refreshed!");
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ChatModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

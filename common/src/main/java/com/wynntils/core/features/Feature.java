@@ -34,9 +34,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
+public abstract class Feature implements Translatable, Configurable, Comparable<Feature>, ModelDependant {
     private ImmutableList<Condition> conditions;
-    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<ConfigHolder> configOptions = new ArrayList<>();
@@ -50,12 +49,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
-        onInit(conditions, dependencies);
+        onInit(conditions);
 
         this.conditions = conditions.build();
-        this.dependencies = dependencies.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
@@ -127,7 +124,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called on init of Feature */
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
+            ImmutableList.Builder<Condition> conditions) {}
 
     /**
      * Called on enabling of Feature
@@ -208,6 +205,11 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         }
 
         return true;
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of();
     }
 
     public boolean canUserEnable() {

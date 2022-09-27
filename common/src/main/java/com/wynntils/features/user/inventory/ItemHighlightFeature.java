@@ -138,9 +138,8 @@ public class ItemHighlightFeature extends UserFeature {
     public static float hotbarOpacity = .5f;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ItemStackTransformModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

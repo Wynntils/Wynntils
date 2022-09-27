@@ -16,7 +16,7 @@ import com.wynntils.core.managers.Model;
 public abstract class DebugFeature extends Feature {
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+            ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
     }
 

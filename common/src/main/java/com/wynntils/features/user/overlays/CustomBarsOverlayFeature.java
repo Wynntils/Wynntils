@@ -43,10 +43,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
     public boolean shouldDisplayOnBossBar = false;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ActionBarModel.class);
-        dependencies.add(BossBarModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ActionBarModel.class, BossBarModel.class);
     }
 
     @SubscribeEvent

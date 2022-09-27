@@ -48,7 +48,7 @@ public class LootrunFeature extends StateManagedFeature {
 
     @Override
     protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+            ImmutableList.Builder<Condition> conditions) {
         FileUtils.mkdir(LootrunModel.LOOTRUNS);
     }
 

@@ -75,9 +75,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     }
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ChatModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

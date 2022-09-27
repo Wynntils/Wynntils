@@ -76,9 +76,8 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static boolean hotbarTextOverlayEnabled = true;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ItemStackTransformModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent

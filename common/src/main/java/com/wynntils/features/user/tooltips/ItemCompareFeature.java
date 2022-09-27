@@ -43,9 +43,8 @@ public class ItemCompareFeature extends UserFeature {
     private boolean compareToEquipped = false;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ItemStackTransformModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent

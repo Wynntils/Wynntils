@@ -40,9 +40,8 @@ public class MiniMapFeature extends UserFeature {
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(MapModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(MapModel.class);
     }
 
     public static class MiniMapOverlay extends Overlay {
