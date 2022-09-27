@@ -34,7 +34,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
-public class InfoBoxesFeature extends UserFeature {
+public class InfoBoxFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay infoBox1Overlay = new InfoBoxOverlay(1);

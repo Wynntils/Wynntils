@@ -52,7 +52,7 @@ import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
-import com.wynntils.features.user.overlays.InfoBoxesFeature;
+import com.wynntils.features.user.overlays.InfoBoxFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.user.overlays.PowderAbilityBarOverlayFeature;
@@ -107,7 +107,7 @@ public final class FeatureRegistry {
         registerFeature(new GammabrightFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
-        registerFeature(new InfoBoxesFeature());
+        registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
