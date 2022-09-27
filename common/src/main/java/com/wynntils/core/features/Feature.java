@@ -42,9 +42,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     private final List<ConfigHolder> configOptions = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
-    protected boolean enabled = false;
-
-    protected boolean initFinished = false;
+    protected FeatureState state = FeatureState.UNINITALIZED;
 
     private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
@@ -59,7 +57,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
-        initFinished = true;
+        state = FeatureState.DISABLED;
 
         assert !getTranslatedName().startsWith("feature.wynntils.");
     }
@@ -145,12 +143,11 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called to activate a feature */
     public final void enable() {
-        if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
+        if (state != FeatureState.DISABLED) return;
 
         if (!canEnable()) return;
-        if (!onEnable()) return;
 
-        enabled = true;
+        state = FeatureState.ENABLED;
 
         for (Class<? extends Model> dependency : dependencies) {
             ManagerRegistry.addDependency(this, dependency);
@@ -167,11 +164,9 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (!enabled) throw new IllegalStateException("Feature can not be disabled as it already is disabled");
+        if (state == FeatureState.DISABLED) return;
 
-        onDisable();
-
-        enabled = false;
+        state = FeatureState.DISABLED;
 
         ManagerRegistry.removeAllFeatureDependency(this);
 
@@ -184,21 +179,9 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         }
     }
 
-    public final void tryEnable() {
-        if (enabled) return;
-
-        enable();
-    }
-
-    public final void tryDisable() {
-        if (!enabled) return;
-
-        disable();
-    }
-
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
-        return enabled;
+        return state == FeatureState.ENABLED;
     }
 
     /** Whether a feature can be enabled */
@@ -209,11 +192,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         return true;
     }
-
-    public boolean canUserEnable() {
-        return this instanceof UserFeature;
-    }
-
+    
     /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
     @Override
     public final void addConfigOptions(List<ConfigHolder> options) {
@@ -280,7 +259,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     public abstract static class Condition {
-        boolean satisfied = false;
+        private boolean satisfied = false;
 
         public boolean isSatisfied() {
             return satisfied;
@@ -291,5 +270,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         public void setSatisfied(boolean satisfied) {
             this.satisfied = satisfied;
         }
+    }
+    public enum FeatureState {
+        UNINITALIZED,
+        DISABLED,
+        ENABLED;
     }
 }

@@ -7,6 +7,7 @@ package com.wynntils.gui.screens.settings.lists.entries;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -67,7 +68,7 @@ public class FeatureEntry extends FeatureListEntryBase {
     }
 
     private void renderEnabledSwitch(PoseStack poseStack) {
-        if (!this.feature.canEnable() || !this.feature.canUserEnable()) return;
+        if (!this.feature.canEnable() || !(this.feature instanceof UserFeature)) return;
 
         float size = getConfigOptionElementSize();
 

@@ -4,8 +4,11 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+
+import java.util.Optional;
 
 /**
  * A feature that is enabled & disabled by the user.
@@ -20,7 +23,6 @@ public abstract class UserFeature extends Feature {
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
             // If this was changed before init, do not try to toggle
-            if (!this.initFinished) return;
 
             tryUserToggle();
             return;
@@ -33,13 +35,20 @@ public abstract class UserFeature extends Feature {
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
     public final void tryUserToggle() {
         if (userEnabled) {
-            tryEnable();
+            enable();
         } else {
-            tryDisable();
+            disable();
         }
     }
 
     public void setUserEnabled(boolean newState) {
-        this.userEnabled = newState;
+        Optional<ConfigHolder> opt = getConfigOptionFromString("userEnabled");
+
+        if (opt.isEmpty()) {
+            WynntilsMod.error("UserEnabled lacking userEnabled config");
+        }
+
+        ConfigHolder holder = opt.get();
+        holder.setValue(newState);
     }
 }
