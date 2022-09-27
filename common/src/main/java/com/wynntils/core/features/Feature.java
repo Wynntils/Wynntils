@@ -126,20 +126,6 @@ public abstract class Feature extends Configurable implements Translatable, Comp
     protected void onInit(
             ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
 
-    /**
-     * Called on enabling of Feature
-     *
-     * <p>Return false to cancel enabling, return true to continue. Note that if a feature's enable
-     * is cancelled it isn't called again by the conditions and must be done so manually, likely by
-     * the user.
-     */
-    protected boolean onEnable() {
-        return true;
-    }
-
-    /** Called on disabling of Feature */
-    protected void onDisable() {}
-
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED) return;
