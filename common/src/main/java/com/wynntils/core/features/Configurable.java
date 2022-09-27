@@ -5,7 +5,6 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.config.ConfigHolder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

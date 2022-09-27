@@ -22,8 +22,6 @@ import com.wynntils.mc.event.WebSetupEvent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -233,6 +231,7 @@ public abstract class Feature extends Configurable implements Translatable, Comp
             this.satisfied = satisfied;
         }
     }
+
     public enum FeatureState {
         UNINITALIZED,
         DISABLED,
