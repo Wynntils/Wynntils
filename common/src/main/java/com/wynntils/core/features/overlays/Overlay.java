@@ -103,6 +103,12 @@ public abstract class Overlay implements Translatable, Configurable, Comparable<
         return configOptions.stream().filter(c -> c.getFieldName().equals(name)).findFirst();
     }
 
+    @Override
+    public String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     /** Gets the name of a feature */
     @Override
     public String getTranslatedName() {

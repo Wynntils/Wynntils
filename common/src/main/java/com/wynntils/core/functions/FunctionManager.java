@@ -13,6 +13,9 @@ import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -107,6 +112,15 @@ public final class FunctionManager extends CoreManager {
         return header.append(new TextComponent(formattedValue).withStyle(color));
     }
 
+    public static String getRawValueString(Function<?> function, String argument) {
+        Object value = function.getValue(argument);
+        if (value == null) {
+            return "??";
+        }
+
+        return format(value);
+    }
+
     private static String format(Object value) {
         if (value instanceof Number number) {
             return NumberFormat.getInstance().format(number);
@@ -170,6 +184,87 @@ public final class FunctionManager extends CoreManager {
 
         consumer.accept(mapper.apply(format.substring(index)));
     }
+
+    // region Legacy formatting
+
+    private static final Pattern INFO_VARIABLE_PATTERN =
+            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
+
+    public static List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
+        List<Function<?>> dependencies = new ArrayList<>();
+
+        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
+        while (m.find()) {
+            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+                // %variable%
+                Function<?> function = FunctionManager.forName(m.group(1)).get();
+                dependencies.add(function);
+            }
+        }
+
+        return dependencies;
+    }
+
+    public static TextRenderTask getStringFromLegacyTemplate(String renderableText) {
+        StringBuilder builder = new StringBuilder(renderableText.length() + 10);
+        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
+        while (m.find()) {
+            String replacement = null;
+            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+                // %variable%
+                Function<?> function = FunctionManager.forName(m.group(1)).get();
+
+                replacement = FunctionManager.getRawValueString(function, "");
+            } else if (m.group(2) != null) {
+                // \escape
+                replacement = doEscapeFormat(m.group(2));
+            }
+            if (replacement == null) {
+                replacement = m.group(0);
+            }
+
+            m.appendReplacement(builder, replacement);
+        }
+        m.appendTail(builder);
+
+        return new TextRenderTask(parseColorCodes(builder.toString()), TextRenderSetting.DEFAULT);
+    }
+
+    private static String parseColorCodes(String toProcess) {
+        // For every & symbol, check if the next symbol is a color code and if so, replace it with §
+        // But don't do it if a \ precedes the &
+        String validColors = "0123456789abcdefklmnor";
+        StringBuilder sb = new StringBuilder(toProcess);
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) == '&') { // char == &
+                if (i + 1 < sb.length()
+                        && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
+                    if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
+                        sb.setCharAt(i, '§');
+                    } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
+                        sb.deleteCharAt(i - 1);
+                    }
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String doEscapeFormat(String escaped) {
+        return switch (escaped) {
+            case "\\" -> "\\\\";
+            case "n" -> "\n";
+            case "%" -> "%";
+            case "§" -> "&";
+            case "E" -> EmeraldSymbols.E_STRING;
+            case "B" -> EmeraldSymbols.B_STRING;
+            case "L" -> EmeraldSymbols.L_STRING;
+            case "M" -> "✺";
+            case "H" -> "❤";
+            default -> null;
+        };
+    }
+    // endregion
 
     public static void init() {
         registerFunction(new WorldFunction());

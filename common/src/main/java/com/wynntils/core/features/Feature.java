@@ -241,6 +241,12 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
+    @Override
+    public String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     public FeatureCategory getCategory() {
         return category;
     }
