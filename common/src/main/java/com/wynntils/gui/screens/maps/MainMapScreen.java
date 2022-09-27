@@ -69,6 +69,8 @@ public class MainMapScreen extends Screen {
 
     @Override
     protected void init() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(
@@ -108,6 +110,12 @@ public class MainMapScreen extends Screen {
     }
 
     @Override
+    public void onClose() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
+        super.onClose();
+    }
+
+    @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey && !MapFeature.INSTANCE.openMapKeybind.getKeyMapping().isDown()) {
             this.onClose();
@@ -120,15 +128,18 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        renderBackground(poseStack);
-
-        if (!MapModel.isMapLoaded()) return;
+        if (!MapModel.isMapLoaded()) {
+            renderBackground(poseStack);
+            return;
+        }
 
         MapProfile map = MapModel.getMaps().get(0);
         float textureX = map.getTextureXPosition(mapCenterX);
         float textureZ = map.getTextureZPosition(mapCenterZ);
 
         renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
+
+        renderBackground(poseStack);
 
         renderCursor(poseStack);
     }

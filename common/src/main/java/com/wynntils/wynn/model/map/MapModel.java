@@ -167,15 +167,24 @@ public final class MapModel extends Model {
                                 .build());
                     }
 
-                    // hacky way to know when handler has finished dispatching
-                    CompletableFuture.runAsync(handler::dispatch).whenComplete((a, b) -> {
-                        if (syncList.size() == mapArray.size()) {
-                            result.complete(true);
-                            maps = syncList;
-                        } else {
-                            result.complete(false);
-                        }
-                    });
+                    Thread thread = handler.dispatchAsync();
+
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        WynntilsMod.error("Exception when loading map files.", e);
+                        result.complete(false);
+                        return true;
+                    }
+
+                    if (syncList.size() == mapArray.size()) {
+                        result.complete(true);
+                        maps = syncList;
+                    } else {
+                        WynntilsMod.error("MapModel: Expected " + mapArray.size() + " map pieces, got "
+                                + syncList.size() + " pieces.");
+                        result.complete(false);
+                    }
 
                     return true;
                 })

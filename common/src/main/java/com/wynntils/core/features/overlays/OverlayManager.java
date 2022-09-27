@@ -127,11 +127,7 @@ public final class OverlayManager extends CoreManager {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Overlays";
-            }
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Overlays") {
 
             @Override
             public Object generate() {
