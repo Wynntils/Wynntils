@@ -15,6 +15,7 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
+import java.utils.List;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)

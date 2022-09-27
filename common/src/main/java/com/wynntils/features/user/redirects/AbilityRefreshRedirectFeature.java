@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
