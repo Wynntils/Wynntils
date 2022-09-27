@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.ModelDependant;
+import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ManagerRegistry {
