@@ -333,7 +333,7 @@ public class OverlayManagementScreen extends Screen {
 
             int finalIndex = index;
             selectedOverlay
-                    .getConfigOptionFromString("verticalAlignmentOverride", false)
+                    .getConfigOptionFromString("verticalAlignmentOverride")
                     .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
             int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
@@ -349,7 +349,7 @@ public class OverlayManagementScreen extends Screen {
 
             int finalIndex = index;
             selectedOverlay
-                    .getConfigOptionFromString("horizontalAlignmentOverride", false)
+                    .getConfigOptionFromString("horizontalAlignmentOverride")
                     .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
         } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
             ConfigManager.saveConfig();

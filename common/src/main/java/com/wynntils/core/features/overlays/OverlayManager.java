@@ -41,8 +41,8 @@ public final class OverlayManager extends CoreManager {
 
     public static void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
-        overlays.forEach(overlay ->
-                overlay.getConfigOptionFromString("userEnabled", true).ifPresent(overlay::onConfigUpdate));
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
@@ -51,8 +51,8 @@ public final class OverlayManager extends CoreManager {
         }
 
         enabledOverlays.addAll(overlays);
-        overlays.forEach(overlay ->
-                overlay.getConfigOptionFromString("userEnabled", true).ifPresent(overlay::onConfigUpdate));
+        overlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
     @SubscribeEvent
@@ -118,7 +118,7 @@ public final class OverlayManager extends CoreManager {
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
-            overlay.getConfigOptionFromString("userEnabled", true).ifPresent(c -> c.setValue(Boolean.FALSE));
+            overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
     }
 
