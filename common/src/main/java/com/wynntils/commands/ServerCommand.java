@@ -6,6 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
@@ -25,6 +26,13 @@ import net.minecraft.network.chat.TextComponent;
 public class ServerCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(getBaseCommandBuilder());
+
+        dispatcher.register(Commands.literal("s").redirect(node));
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         LiteralCommandNode<CommandSourceStack> listNode =
                 Commands.literal("list").executes(this::serverList).build();
 
@@ -33,15 +41,13 @@ public class ServerCommand extends CommandBase {
                 .executes(this::serverInfoHelp)
                 .build();
 
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("server")
+        return Commands.literal("server")
                 .then(listNode)
                 .then(Commands.literal("ls").redirect(listNode))
                 .then(Commands.literal("l").redirect(listNode))
                 .then(infoNode)
                 .then(Commands.literal("i").redirect(infoNode))
-                .executes(this::serverHelp));
-
-        dispatcher.register(Commands.literal("s").redirect(node));
+                .executes(this::serverHelp);
     }
 
     private int serverInfoHelp(CommandContext<CommandSourceStack> context) {

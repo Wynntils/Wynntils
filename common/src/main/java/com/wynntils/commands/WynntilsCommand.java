@@ -5,13 +5,16 @@
 package com.wynntils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.MapModel;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -25,13 +28,27 @@ import net.minecraft.network.chat.TextComponent;
 public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("wynntils")
+        LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
+
+        // Register all commands under the wynntils command as subcommands
+        for (CommandBase commandInstance : ClientCommandManager.getCommandInstanceSet()) {
+            if (commandInstance == this) continue;
+
+            builder.then(commandInstance.getBaseCommandBuilder());
+        }
+
+        dispatcher.register(builder);
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+        return Commands.literal("wynntils")
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("reload").executes(this::reload))
                 .then(Commands.literal("version").executes(this::version))
-                .executes(this::help));
+                .executes(this::help);
     }
 
     private int version(CommandContext<CommandSourceStack> context) {
@@ -60,30 +77,36 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int reload(CommandContext<CommandSourceStack> context) {
-        for (Feature feature : FeatureRegistry.getFeatures()) { // disable all active features before resetting web
-            if (feature.isEnabled()) {
-                feature.disable();
-            }
+        List<Feature> enabledFeatures = FeatureRegistry.getFeatures().stream()
+                .filter(Feature::isEnabled)
+                .toList();
+
+        for (Feature feature : enabledFeatures) { // disable all active features before resetting web
+            feature.disable();
         }
 
         WebManager.reset();
+        // FIXME: This is weird but keeping the old logic for now
+        MapModel.reset();
 
         WebManager.init(); // reloads api urls as well as web manager
 
-        for (Feature feature : FeatureRegistry.getFeatures()) { // re-enable all features which should be
+        for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {
                 feature.enable();
 
-                if (!feature.isEnabled()) {
-                    McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
-                } else {
+                if (feature.isEnabled()) {
                     McUtils.sendMessageToClient(new TextComponent("Reloaded ")
                             .withStyle(ChatFormatting.GREEN)
                             .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
+
+                    continue;
                 }
             }
+
+            McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
         }
 
         context.getSource()
@@ -134,8 +157,9 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite =
-                WebManager.getApiUrls() == null ? null : WebManager.getApiUrls().get("DiscordInvite");
+        String discordInvite = WebManager.getApiUrls().isEmpty()
+                ? null
+                : WebManager.getApiUrls().get().get("DiscordInvite");
         MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         if (discordInvite != null) {

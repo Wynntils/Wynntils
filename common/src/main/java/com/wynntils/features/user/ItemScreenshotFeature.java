@@ -12,9 +12,9 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.model.ChatItemModel;
@@ -50,20 +50,18 @@ public class ItemScreenshotFeature extends UserFeature {
 
     @SubscribeEvent
     public void render(ItemTooltipRenderEvent.Pre e) {
-        if (screenshotSlot == null) return;
-
-        // has to be called during a render period
-        takeScreenshot(screenshotSlot);
-        screenshotSlot = null;
-    }
-
-    private static void takeScreenshot(Slot hoveredSlot) {
         if (!WynnUtils.onWorld()) return;
+        if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
-        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
+        // has to be called during a render period
+        takeScreenshot(screen, screenshotSlot);
+        screenshotSlot = null;
+    }
+
+    private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);

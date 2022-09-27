@@ -16,6 +16,8 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.container.ContainerQueryManager;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,9 +38,11 @@ public final class ManagerRegistry {
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(ClientCommandManager.class);
+        registerPersistentDependency(ContainerQueryManager.class);
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
+        registerPersistentDependency(QuestBookManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
 
@@ -57,7 +61,7 @@ public final class ManagerRegistry {
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
 
-        WynntilsMod.getEventBus().register(manager);
+        WynntilsMod.registerEventListener(manager);
 
         tryInitManager(manager);
     }
@@ -118,7 +122,7 @@ public final class ManagerRegistry {
 
         if (ENABLED_MANAGERS.contains(manager)) {
             if (!hasDependencies) {
-                WynntilsMod.getEventBus().unregister(manager);
+                WynntilsMod.unregisterEventListener(manager);
 
                 ENABLED_MANAGERS.remove(manager);
 
@@ -126,7 +130,7 @@ public final class ManagerRegistry {
             }
         } else {
             if (hasDependencies) {
-                WynntilsMod.getEventBus().register(manager);
+                WynntilsMod.registerEventListener(manager);
 
                 ENABLED_MANAGERS.add(manager);
 
@@ -138,8 +142,11 @@ public final class ManagerRegistry {
     private static void tryInitManager(Class<? extends Manager> manager) {
         try {
             MethodUtils.invokeExactStaticMethod(manager, "init");
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            WynntilsMod.warn(e.getMessage());
+        } catch (IllegalAccessException | NoSuchMethodException e) {
+            WynntilsMod.warn("Misconfigured init() on manager " + manager, e);
+            assert false;
+        } catch (InvocationTargetException e) {
+            WynntilsMod.error("Exception during init of manager " + manager, e.getTargetException());
         }
     }
 
@@ -152,12 +159,7 @@ public final class ManagerRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Managers";
-            }
-
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Managers") {
             @Override
             public Object generate() {
                 StringBuilder result = new StringBuilder();

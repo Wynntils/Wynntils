@@ -23,7 +23,8 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
-        EventFactory.onContainerRender((Screen) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
+        EventFactory.onContainerRender(
+                (AbstractContainerScreen<?>) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
 
     @Inject(
@@ -43,6 +44,14 @@ public abstract class AbstractContainerScreenMixin {
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
     private void keyPressedPre(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)
+                .isCanceled()) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onInventoryMouseClick(mouseX, mouseY, button, this.hoveredSlot)
                 .isCanceled()) {
             cir.setReturnValue(true);
         }

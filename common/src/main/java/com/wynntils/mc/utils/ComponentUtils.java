@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -19,6 +21,8 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
 
 public final class ComponentUtils {
+    private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
+
     // Text with formatting codes "§cTest §1Text"
     public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();
@@ -230,5 +234,49 @@ public final class ComponentUtils {
                 .collect(Collectors.toList());
         if (split.isEmpty()) split.add(new TextComponent(""));
         return split;
+    }
+
+    private static class ComponentListBuilder {
+        private final List<Component> lines = new ArrayList<>();
+        private MutableComponent currentLine = new TextComponent("");
+
+        public void appendSegment(String segment, Style style) {
+            currentLine.append(new TextComponent(segment).withStyle(style));
+        }
+
+        public void endLine() {
+            lines.add(currentLine);
+            currentLine = new TextComponent("");
+        }
+
+        public List<Component> extractLines() {
+            if (!currentLine.getString().isEmpty()) {
+                endLine();
+            }
+            return lines;
+        }
+    }
+
+    public static List<Component> splitComponentInLines(Component message) {
+        ComponentListBuilder builder = new ComponentListBuilder();
+
+        message.visit(
+                (style, str) -> {
+                    Matcher m = NEWLINE_PATTERN.matcher(str);
+                    int lastSegmentStart = 0;
+                    while (m.find()) {
+                        String segment = str.substring(lastSegmentStart, m.start());
+                        builder.appendSegment(segment, style);
+                        builder.endLine();
+                        lastSegmentStart = m.end();
+                    }
+                    if (lastSegmentStart != str.length()) {
+                        String segment = str.substring(lastSegmentStart);
+                        builder.appendSegment(segment, style);
+                    }
+                    return Optional.empty();
+                },
+                Style.EMPTY);
+        return builder.extractLines();
     }
 }

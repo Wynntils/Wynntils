@@ -4,9 +4,24 @@
  */
 package com.wynntils.utils;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public final class MathUtils {
+
+    private static final Map<Integer, Integer> romanNumeralsMap = new HashMap<>();
+
+    static {
+        romanNumeralsMap.put((int) 'I', 1);
+        romanNumeralsMap.put((int) 'V', 5);
+        romanNumeralsMap.put((int) 'X', 10);
+        romanNumeralsMap.put((int) 'L', 50);
+        romanNumeralsMap.put((int) 'C', 100);
+        romanNumeralsMap.put((int) 'D', 500);
+        romanNumeralsMap.put((int) 'M', 1000);
+    }
+
     public static float lerp(float a, float b, float t) {
         return a + (b - a) * t;
     }
@@ -27,32 +42,37 @@ public final class MathUtils {
         if (num < min) {
             return min;
         } else {
-            return num > max ? max : num;
+            return Math.min(num, max);
+        }
+    }
+
+    public static float clamp(float num, float min, float max) {
+        if (num < min) {
+            return min;
+        } else {
+            return Math.min(num, max);
         }
     }
 
     public static int integerFromRoman(String numeral) {
-        return switch (numeral.toUpperCase(Locale.ROOT)) {
-            case "I" -> 1;
-            case "II" -> 2;
-            case "III" -> 3;
-            case "IV" -> 4;
-            case "V" -> 5;
-            case "VI" -> 6;
-            case "VII" -> 7;
-            case "VIII" -> 8;
-            case "IX" -> 9;
-            case "X" -> 10;
-            default -> 0;
-        };
+        String normalized = numeral.trim()
+                .toUpperCase(Locale.ROOT)
+                .replace("IV", "IIII")
+                .replace("IX", "VIIII")
+                .replace("XL", "XXXX")
+                .replace("XC", "LXXXX")
+                .replace("CD", "CCCC")
+                .replace("CM", "DCCCC");
+
+        return normalized.chars().map(c -> romanNumeralsMap.getOrDefault(c, 0)).sum();
     }
 
-    public static double map(double sourceNumber, double fromA, double fromB, double toA, double toB) {
-        double deltaA = fromB - fromA;
-        double deltaB = toB - toA;
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromA;
-        double offset = (negA * scale) + toA;
+    public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {
+        float deltaA = fromB - fromA;
+        float deltaB = toB - toA;
+        float scale = deltaB / deltaA;
+        float negA = -1 * fromA;
+        float offset = (negA * scale) + toA;
         return (sourceNumber * scale) + offset;
     }
 }

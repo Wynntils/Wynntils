@@ -5,36 +5,51 @@
 package com.wynntils.core.keybinds;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
-    private static final List<KeyBind> KEY_BINDS = new ArrayList<>();
+    private static final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
+    private static final Object optionsLock = new Object();
 
     /** Needed for all Models */
     public static void init() {}
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent e) {
-        if (e.getTickPhase() == ClientTickEvent.Phase.END) {
-            triggerKeybinds();
-        }
+    public static void onTick(ClientTickEvent.End e) {
+        triggerKeybinds();
     }
 
     @SubscribeEvent
     public static void onKeyPress(InventoryKeyPressEvent e) {
-        KEY_BINDS.forEach(keyBind -> {
+        checkAllKeyBinds(keyBind -> {
             if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
+                keyBind.onInventoryPress(e.getHoveredSlot());
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onMousePress(InventoryMouseClickedEvent e) {
+        checkAllKeyBinds(keyBind -> {
+            if (keyBind.getKeyMapping().matchesMouse(e.getButton())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
@@ -42,19 +57,17 @@ public final class KeyBindManager extends CoreManager {
 
     public static void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
-            throw new IllegalStateException("Can not add " + toAdd + " since the name already exists");
+            throw new IllegalStateException(
+                    "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
-
-        KEY_BINDS.add(toAdd);
 
         Options options = McUtils.options();
 
-        if (options == null) { // fabric's modinitalizer runs before options init, instead this is
-            // loaded later by a mixin
-            return;
-        }
+        assert options != null;
 
-        synchronized (options) {
+        KEY_BINDS.add(toAdd);
+
+        synchronized (optionsLock) {
             KeyMapping[] keyMappings = options.keyMappings;
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
@@ -64,30 +77,17 @@ public final class KeyBindManager extends CoreManager {
         }
     }
 
-    public static void loadKeybinds(Options options) {
-        synchronized (options) {
-            KeyMapping[] keyMappings = options.keyMappings;
+    public static void unregisterKeybind(KeyBind toRemove) {
+        Options options = McUtils.options();
 
-            List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
+        assert options != null;
 
-            for (KeyBind keyBind : KEY_BINDS) {
-                if (!newKeyMappings.contains(keyBind.getKeyMapping())) {
-                    newKeyMappings.add(keyBind.getKeyMapping());
-                }
-            }
-
-            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
-        }
-    }
-
-    public static void unregisterKeybind(KeyBind toAdd) {
-        if (KEY_BINDS.remove(toAdd)) {
-            Options options = McUtils.options();
-            synchronized (options) {
+        if (KEY_BINDS.remove(toRemove)) {
+            synchronized (optionsLock) {
                 KeyMapping[] keyMappings = options.keyMappings;
 
                 List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-                newKeyMappings.remove(toAdd.getKeyMapping());
+                newKeyMappings.remove(toRemove.getKeyMapping());
 
                 ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
             }
@@ -95,7 +95,7 @@ public final class KeyBindManager extends CoreManager {
     }
 
     private static void triggerKeybinds() {
-        KEY_BINDS.forEach(keyBind -> {
+        checkAllKeyBinds(keyBind -> {
             if (keyBind.isFirstPress()) {
                 if (keyBind.getKeyMapping().consumeClick()) {
                     keyBind.onPress();
@@ -114,6 +114,29 @@ public final class KeyBindManager extends CoreManager {
         });
     }
 
+    private static void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
+        List<KeyBind> crashedKeyBinds = new LinkedList<>();
+
+        KEY_BINDS.forEach(keyBind -> {
+            try {
+                checkKeybind.accept(keyBind);
+            } catch (Throwable t) {
+                WynntilsMod.error("Exception when handling key bind " + keyBind, t);
+                WynntilsMod.warn("This key bind will be disabled");
+                McUtils.sendMessageToClient(
+                        new TextComponent("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
+                                .withStyle(ChatFormatting.RED));
+                // We can't disable it right away since that will cause ConcurrentModificationException
+                crashedKeyBinds.add(keyBind);
+            }
+        });
+
+        // Hopefully we have none :)
+        for (KeyBind keyBind : crashedKeyBinds) {
+            unregisterKeybind(keyBind);
+        }
+    }
+
     private static boolean hasName(String name) {
         return KEY_BINDS.stream().anyMatch(k -> k.getName().equals(name));
     }
@@ -130,5 +153,13 @@ public final class KeyBindManager extends CoreManager {
         }
 
         categorySortOrder.put(category, max + 1);
+    }
+
+    public static void loadKeybindConfigFile() {
+        Options options = McUtils.options();
+
+        assert options != null;
+
+        options.load();
     }
 }

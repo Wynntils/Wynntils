@@ -19,7 +19,7 @@ public class DialogueOptionOverrideFeature extends UserFeature {
     public void onDialogueKeyPress(KeyInputEvent e) {
         if (!WynnUtils.onWorld() || e.getAction() != 1) return; // Only send packet on presses, not releases
 
-        if (e.getKey() - 49 == McUtils.player().getInventory().selected) { // keys 1-9 are +49 offset from hotbar
+        if (e.getKey() - 49 == McUtils.inventory().selected) { // keys 1-9 are +49 offset from hotbar
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(e.getKey() - 49));
         }
     }

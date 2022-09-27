@@ -28,9 +28,4 @@ public class ConsumableChargeProperty extends CustomStackCountProperty {
     public boolean isTextOverlayEnabled() {
         return ItemTextOverlayFeature.consumableChargeEnabled;
     }
-
-    @Override
-    public boolean isHotbarText() {
-        return true;
-    }
 }

@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.VerticalAlignment;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,13 +86,12 @@ public class OverlayPosition {
 
     public static OverlayPosition getBestPositionFor(
             Overlay overlay, float oldRenderX, float oldRenderY, float offsetX, float offsetY) {
-        Vec2 middleOfOverlay =
-                new Vec2(overlay.getRenderX() + overlay.getWidth() / 2, overlay.getRenderY() + overlay.getHeight() / 2);
+        Vec2 topLeftOfOverlay = new Vec2(overlay.getRenderX(), overlay.getRenderY());
 
-        // 1. Get the best section (section with the center point of overlay)
+        // 1. Get the best section (section with the top left point of overlay)
         AnchorSection section = Arrays.stream(AnchorSection.values())
                 .filter(anchorSection ->
-                        OverlayManager.getSection(anchorSection).overlaps(middleOfOverlay.x, middleOfOverlay.y))
+                        OverlayManager.getSection(anchorSection).overlaps(topLeftOfOverlay.x, topLeftOfOverlay.y))
                 .findAny()
                 .orElse(AnchorSection.Middle);
         SectionCoordinates sectionCoordinates = OverlayManager.getSection(section);
@@ -100,21 +99,21 @@ public class OverlayPosition {
         // 2. Calculate the best alignment inside the section
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
 
-        float distanceToCenterHorizontally =
-                Math.abs((sectionCoordinates.x1() + sectionCoordinates.x2()) / 2f - middleOfOverlay.x);
-        if (Math.abs(sectionCoordinates.x1() - middleOfOverlay.x) < distanceToCenterHorizontally) {
+        float distanceToCornerHorizontally =
+                Math.abs((sectionCoordinates.x1() + sectionCoordinates.x2()) / 2f - topLeftOfOverlay.x);
+        if (Math.abs(sectionCoordinates.x1() - topLeftOfOverlay.x) < distanceToCornerHorizontally) {
             horizontalAlignment = HorizontalAlignment.Left;
-        } else if (Math.abs(sectionCoordinates.x2() - middleOfOverlay.x) < distanceToCenterHorizontally) {
+        } else if (Math.abs(sectionCoordinates.x2() - topLeftOfOverlay.x) < distanceToCornerHorizontally) {
             horizontalAlignment = HorizontalAlignment.Right;
         }
 
         VerticalAlignment verticalAlignment = VerticalAlignment.Middle;
 
-        float distanceToCenterVertically =
-                Math.abs((sectionCoordinates.y1() + sectionCoordinates.y2()) / 2f - middleOfOverlay.y);
-        if (Math.abs(sectionCoordinates.y1() - middleOfOverlay.y) < distanceToCenterVertically) {
+        float distanceToCornerVertically =
+                Math.abs((sectionCoordinates.y1() + sectionCoordinates.y2()) / 2f - topLeftOfOverlay.y);
+        if (Math.abs(sectionCoordinates.y1() - topLeftOfOverlay.y) < distanceToCornerVertically) {
             verticalAlignment = VerticalAlignment.Top;
-        } else if (Math.abs(sectionCoordinates.y2() - middleOfOverlay.y) < distanceToCenterVertically) {
+        } else if (Math.abs(sectionCoordinates.y2() - topLeftOfOverlay.y) < distanceToCornerVertically) {
             verticalAlignment = VerticalAlignment.Bottom;
         }
 

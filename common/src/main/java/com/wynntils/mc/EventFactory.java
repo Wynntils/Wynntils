@@ -11,6 +11,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -21,15 +22,20 @@ import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -55,8 +61,8 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -66,6 +72,7 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
@@ -74,6 +81,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -87,6 +95,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -102,15 +111,19 @@ import net.minecraftforge.eventbus.api.Event;
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
     private static <T extends Event> T post(T event) {
-        WynntilsMod.getEventBus().post(event);
+        if (WynnUtils.onServer()) {
+            WynntilsMod.postEvent(event);
+        }
         return event;
     }
 
-    // region Wynntils Events
-    public static void onWebSetup() {
-        post(new WebSetupEvent());
+    /**
+     * Post event without checking if we are connected to a Wynncraft server
+     */
+    private static <T extends Event> T postAlways(T event) {
+        WynntilsMod.postEvent(event);
+        return event;
     }
-    // endregion
 
     // region Render Events
     public static void onRenderLast(
@@ -143,7 +156,12 @@ public final class EventFactory {
     }
 
     public static void onContainerRender(
-            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTicks, Slot hoveredSlot) {
+            AbstractContainerScreen<?> screen,
+            PoseStack poseStack,
+            int mouseX,
+            int mouseY,
+            float partialTicks,
+            Slot hoveredSlot) {
         post(new ContainerRenderEvent(screen, poseStack, mouseX, mouseY, partialTicks, hoveredSlot));
     }
 
@@ -175,12 +193,17 @@ public final class EventFactory {
     public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
         return post(new DrawPotionGlintEvent(item));
     }
+
+    public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
+        return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
     // endregion
 
     // region Screen Events
     public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            post(new TitleScreenInitEvent(titleScreen, addButton));
+            postAlways(new TitleScreenInitEvent(titleScreen, addButton));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
             post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
         }
@@ -194,14 +217,20 @@ public final class EventFactory {
         post(new ScreenClosedEvent());
     }
 
-    public static void onOpenScreen(ClientboundOpenScreenPacket packet) {
-        post(new MenuOpenedEvent(packet.getType(), packet.getTitle()));
+    public static MenuOpenedEvent onOpenScreen(ClientboundOpenScreenPacket packet) {
+        return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
     }
+
+    public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
+        return post(new ContainerSetContentEvent(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
     // endregion
 
     // region Container Events
-    public static void onClientboundContainerClosePacket() {
-        post(new MenuClosedEvent());
+    public static Event onClientboundContainerClosePacket(int containerId) {
+        return post(new MenuClosedEvent(containerId));
     }
 
     public static ContainerCloseEvent.Pre onCloseContainerPre() {
@@ -221,10 +250,20 @@ public final class EventFactory {
         return post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, hoveredSlot));
     }
 
+    public static InventoryMouseClickedEvent onInventoryMouseClick(
+            double mouseX, double mouseY, int button, Slot hoveredSlot) {
+        return post(new InventoryMouseClickedEvent(mouseX, mouseY, button, hoveredSlot));
+    }
+
     public static ContainerClickEvent onContainerClickEvent(
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
         return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
+
+    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+    }
+
     // endregion
 
     // region Player Input Events
@@ -251,6 +290,10 @@ public final class EventFactory {
     public static DropHeldItemEvent onDropPre(boolean fullStack) {
         return post(new DropHeldItemEvent(fullStack));
     }
+
+    public static ArmSwingEvent onArmSwing(ArmSwingEvent.ArmSwingContext actionContext, InteractionHand hand) {
+        return post(new ArmSwingEvent(actionContext, hand));
+    }
     // endregion
 
     // region Chat Events
@@ -269,7 +312,7 @@ public final class EventFactory {
     }
 
     public static void onConnect(String host, int port) {
-        post(new ConnectedEvent(host, port));
+        postAlways(new ConnectedEvent(host, port));
     }
 
     public static void onResourcePack() {
@@ -342,21 +385,21 @@ public final class EventFactory {
 
     // region Packet Events
     public static <T extends Packet<?>> PacketSentEvent<T> onPacketSent(T packet) {
-        return post(new PacketSentEvent<>(packet));
+        return postAlways(new PacketSentEvent<>(packet));
     }
 
     public static <T extends Packet<?>> PacketReceivedEvent<T> onPacketReceived(T packet) {
-        return post(new PacketReceivedEvent<>(packet));
+        return postAlways(new PacketReceivedEvent<>(packet));
     }
     // endregion
 
     // region Game Events
     public static void onTickStart() {
-        post(new ClientTickEvent(ClientTickEvent.Phase.START));
+        post(new ClientTickEvent.Start());
     }
 
     public static void onTickEnd() {
-        post(new ClientTickEvent(ClientTickEvent.Phase.END));
+        post(new ClientTickEvent.End());
     }
 
     public static void onResizeDisplayPost() {
@@ -372,6 +415,10 @@ public final class EventFactory {
 
     public static Event onSubtitleSetText(ClientboundSetSubtitleTextPacket packet) {
         return post(new SubtitleSetTextEvent(packet.getText()));
+    }
+
+    public static Event onMouseScroll(double windowPointer, double xOffset, double yOffset) {
+        return post(new MouseScrollEvent(windowPointer, xOffset, yOffset));
     }
 
     // endregion

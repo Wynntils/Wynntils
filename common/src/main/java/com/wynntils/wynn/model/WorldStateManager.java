@@ -8,11 +8,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -23,19 +23,20 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldStateManager extends CoreManager {
-    private static final Pattern WORLD_NAME = Pattern.compile("^§f  §lGlobal \\[(.*)\\]$");
+    private static final UUID WORLD_NAME_UUID = UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af");
+    private static final Pattern WORLD_NAME = Pattern.compile("^§f {2}§lGlobal \\[(.*)\\]$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
-    private static final String WYNNCRAFT_SERVER_SUFFIX = ".wynncraft.com";
-    private static final String WYNNCRAFT_BETA_PREFIX = "beta.";
+    private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
+    private static final String WYNNCRAFT_BETA_NAME = "beta";
 
     private static String currentTabListFooter = "";
     private static String currentWorldName = "";
-    private static UUID currentWorldId = null;
     private static boolean onBetaServer;
 
     private static State currentState = State.NOT_CONNECTED;
@@ -63,31 +64,26 @@ public class WorldStateManager extends CoreManager {
         return currentState;
     }
 
-    private static void setState(State newState, String newWorldName, UUID newUuid) {
+    private static void setState(State newState, String newWorldName) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         State oldState = currentState;
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
-        currentWorldId = newUuid;
-        WynntilsMod.getEventBus().post(new WorldStateEvent(newState, oldState, newWorldName));
+        WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName));
     }
 
     @SubscribeEvent
     public static void screenOpened(ScreenOpenedEvent e) {
-        if (!onServer()) return;
-
         if (e.getScreen() instanceof DisconnectedScreen) {
-            setState(State.NOT_CONNECTED, "", null);
+            setState(State.NOT_CONNECTED, "");
         }
     }
 
     @SubscribeEvent
     public static void disconnected(DisconnectedEvent e) {
-        if (!onServer()) return;
-
-        setState(State.NOT_CONNECTED, "", null);
+        setState(State.NOT_CONNECTED, "");
     }
 
     @SubscribeEvent
@@ -99,42 +95,43 @@ public class WorldStateManager extends CoreManager {
         }
 
         String host = e.getHost().toLowerCase(Locale.ROOT);
-        if (host.endsWith(WYNNCRAFT_SERVER_SUFFIX)) {
-            onBetaServer = host.startsWith(WYNNCRAFT_BETA_PREFIX);
-            setState(State.CONNECTING, "", null);
+        Matcher m = WYNNCRAFT_SERVER_PATTERN.matcher(host);
+        if (m.matches()) {
+            onBetaServer = m.group(1).equals(WYNNCRAFT_BETA_NAME);
+            setState(State.CONNECTING, "");
             currentTabListFooter = "";
         }
     }
 
     @SubscribeEvent
     public static void remove(PlayerLogOutEvent e) {
-        if (!onServer()) return;
-
-        if (e.getId().equals(currentWorldId) && !currentWorldName.isEmpty()) {
-            setState(State.INTERIM, "", null);
+        if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
+            setState(State.INTERIM, "");
         }
     }
 
     @SubscribeEvent
-    public static void onResourcePack(ResourcePackEvent e) {
-        if (!onServer()) return;
-
-        setState(State.INTERIM, "", null);
+    public static void onTeleport(PlayerTeleportEvent e) {
+        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
+            // We get here even if the character selection menu will not show up because of autojoin
+            if (getCurrentState() != State.CHARACTER_SELECTION) {
+                // Sometimes the TP comes after the character selection menu, instead of before
+                // Don't lose the CHARACTER_SELECTION state if that is the case
+                setState(State.INTERIM, "");
+            }
+        }
     }
 
     @SubscribeEvent
-    public static void onTeleport(PlayerTeleportEvent e) {
-        if (!onServer()) return;
-
-        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
-            setState(State.CHARACTER_SELECTION, "", null);
+    public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+        if (e.getMenuType() == MenuType.GENERIC_9x3
+                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
+            setState(State.CHARACTER_SELECTION, "");
         }
     }
 
     @SubscribeEvent
     public static void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        if (!onServer()) return;
-
         String footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
@@ -142,21 +139,21 @@ public class WorldStateManager extends CoreManager {
 
         if (!footer.isEmpty()) {
             if (HUB_NAME.matcher(footer).find()) {
-                setState(State.HUB, "", null);
+                setState(State.HUB, "");
             }
         }
     }
 
     @SubscribeEvent
     public static void update(PlayerDisplayNameChangeEvent e) {
-        if (!onServer()) return;
+        if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
         String name = ComponentUtils.getCoded(displayName);
         Matcher m = WORLD_NAME.matcher(name);
         if (m.find()) {
             String worldName = m.group(1);
-            setState(State.WORLD, worldName, e.getId());
+            setState(State.WORLD, worldName);
         }
     }
 

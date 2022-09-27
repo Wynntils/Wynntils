@@ -8,31 +8,37 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
+import com.wynntils.wynn.objects.ProfessionInfo;
+import com.wynntils.wynn.utils.InventoryUtils;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CharacterManager extends CoreManager {
-    private static final Pattern CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
-    private static final Pattern LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
-    private static boolean hasAutojoinWarned = false;
+    private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
+    private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
+    private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
+    private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
+    private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
+            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[(\\d+)%\\]");
+    private static final int CHARACTER_INFO_SLOT = 7;
+    private static final int PROFESSION_INFO_SLOT = 17;
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
-     * Note that the last value is the sum of all preceeding values
+     * Note that the last value is the sum of all preceding values
      */
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
         110, 190, 275, 385, 505, 645, 790, 940, 1100, 1370, 1570, 1800, 2090, 2400, 2720, 3100, 3600, 4150, 4800, 5300,
@@ -57,24 +63,9 @@ public class CharacterManager extends CoreManager {
 
     public static CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
-            if (!hasAutojoinWarned) {
-                hasAutojoinWarned = true;
-                McUtils.sendMessageToClient(new TextComponent(
-                                "Could not find your class type. Disable your autojoin (/toggle autojoin) and try again.")
-                        .withStyle(ChatFormatting.RED));
-            }
-            currentCharacter = new CharacterInfo(ClassType.None, false, McUtils.player().experienceLevel, 0);
+            currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0, new ProfessionInfo());
         }
         return currentCharacter;
-    }
-
-    @SubscribeEvent
-    public static void onMenuOpened(MenuOpenedEvent e) {
-        if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Class")) {
-            inCharacterSelection = true;
-            WynntilsMod.info("In character selection menu");
-        }
     }
 
     @SubscribeEvent
@@ -82,7 +73,7 @@ public class CharacterManager extends CoreManager {
         inCharacterSelection = false;
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldStateManager.State.WORLD) {
@@ -90,9 +81,46 @@ public class CharacterManager extends CoreManager {
             // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
+
         if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
-            WynntilsMod.info("Preparing for character selection");
+            inCharacterSelection = true;
         }
+
+        if (e.getNewState() == WorldStateManager.State.WORLD) {
+            if (e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+                // We went directly to a world without coming from the character selection
+                // menu. This means the player has "autojoin" enabled, and that we did not
+                // get a chance to read the character info from the character selection menu.
+                // Instead, we send a container query to read it from the character (compass) menu.
+                WynntilsMod.info("Scheduling character info query");
+
+                // This time, we need to scan character info and profession info as well.
+                scanCharacterInfoPage(-1);
+            } else {
+                // We did not auto-join, we have a correct ID already.
+                int oldId = currentCharacter.id;
+                scanCharacterInfoPage(oldId);
+            }
+        }
+    }
+
+    private static void scanCharacterInfoPage(int oldId) {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
+                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                .matchTitle("Character Info")
+                .processContainer(container -> {
+                    ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
+                    ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+
+                    // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
+                    // default to oldId
+                    currentCharacter =
+                            CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    WynntilsMod.info("Deducing character " + currentCharacter);
+                })
+                .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
+                .build();
+        query.executeQuery();
     }
 
     @SubscribeEvent
@@ -104,8 +132,7 @@ public class CharacterManager extends CoreManager {
         }
     }
 
-    // TODO: We don't have a way to parse CharacterInfo if auto select class is on for the player
-    //       Fix this by storing last selected class in WebAPI.
+    // TODO: We don't have a way get CharacterInfo id if auto select class is on for the player.
     public static final class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
@@ -116,10 +143,14 @@ public class CharacterManager extends CoreManager {
         // This was implemented the same way by legacy.
         private final int id;
 
-        private CharacterInfo(ClassType classType, boolean reskinned, int level, int id) {
+        private final ProfessionInfo professionInfo;
+
+        private CharacterInfo(
+                ClassType classType, boolean reskinned, int level, int id, ProfessionInfo professionInfo) {
             this.classType = classType;
             this.reskinned = reskinned;
             this.level = level;
+            this.professionInfo = professionInfo;
             this.id = id;
         }
 
@@ -145,20 +176,24 @@ public class CharacterManager extends CoreManager {
             return id;
         }
 
-        public static CharacterInfo parseCharacter(ItemStack itemStack, int slotNum) {
+        public ProfessionInfo getProfessionInfo() {
+            return professionInfo;
+        }
+
+        public static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
             String className = "";
 
             for (String line : lore) {
-                Matcher levelMatcher = LEVEL_PATTERN.matcher(line);
+                Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line);
                 if (levelMatcher.matches()) {
                     level = Integer.parseInt(levelMatcher.group(1));
                     continue;
                 }
 
-                Matcher classMatcher = CLASS_PATTERN.matcher(line);
+                Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line);
 
                 if (classMatcher.matches()) {
                     className = classMatcher.group(1);
@@ -166,13 +201,60 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            return new CharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, slotNum);
+            return new CharacterInfo(
+                    classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
+        }
+
+        public static CharacterInfo parseCharacterFromCharacterMenu(
+                ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
+            List<String> lore = ItemUtils.getLore(characterInfoItem);
+
+            int level = 0;
+            String className = "";
+
+            for (String line : lore) {
+                Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line);
+                if (levelMatcher.matches()) {
+                    level = Integer.parseInt(levelMatcher.group(1));
+                    continue;
+                }
+
+                Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line);
+
+                if (classMatcher.matches()) {
+                    className = classMatcher.group(1);
+                }
+            }
+            ClassType classType = ClassType.fromName(className);
+
+            Map<ProfessionInfo.ProfessionType, Integer> levels = new HashMap<>();
+            List<String> professionLore = ItemUtils.getLore(professionInfoItem);
+            for (String line : professionLore) {
+                Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
+
+                if (matcher.matches()) {
+                    levels.put(
+                            ProfessionInfo.ProfessionType.valueOf(matcher.group(2)),
+                            Integer.parseInt(matcher.group(1)));
+                }
+            }
+
+            return new CharacterInfo(
+                    classType,
+                    classType != null && ClassType.isReskinned(className),
+                    level,
+                    id,
+                    new ProfessionInfo(levels));
         }
 
         @Override
         public String toString() {
-            return "CharacterInfo[classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + ", id="
-                    + id + ']';
+            return "CharacterInfo{" + "classType="
+                    + classType + ", reskinned="
+                    + reskinned + ", level="
+                    + level + ", id="
+                    + id + ", professionInfo="
+                    + professionInfo + '}';
         }
 
         /**
@@ -191,7 +273,7 @@ public class CharacterManager extends CoreManager {
          * Return the current number of soul points of the character, or -1 if unable to determine
          */
         public int getSoulPoints() {
-            ItemStack soulPoints = McUtils.player().getInventory().getItem(8);
+            ItemStack soulPoints = McUtils.inventory().getItem(8);
             if (soulPoints.getItem() != Items.NETHER_STAR) {
                 return -1;
             }

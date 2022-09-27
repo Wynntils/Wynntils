@@ -14,8 +14,8 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay implements Translatable, Configurable {
+public abstract class Overlay implements Translatable, Configurable, Comparable<Overlay> {
     private final List<ConfigHolder> configOptions = new ArrayList<>();
 
-    @Config(key = "overlay.wynntils.overlay.position")
+    @Config(key = "overlay.wynntils.overlay.position", visible = false)
     protected OverlayPosition position;
 
-    @Config(key = "overlay.wynntils.overlay.size")
+    @Config(key = "overlay.wynntils.overlay.size", visible = false)
     protected OverlaySize size;
 
     @Config(key = "overlay.wynntils.overlay.userEnabled")
@@ -40,10 +40,10 @@ public abstract class Overlay implements Translatable, Configurable {
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @Config(key = "overlay.wynntils.overlay.horizontalAlignmentOverride")
+    @Config(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
     protected HorizontalAlignment horizontalAlignmentOverride = null;
 
-    @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride")
+    @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
     protected VerticalAlignment verticalAlignmentOverride = null;
 
     protected Overlay(OverlayPosition position, float width, float height) {
@@ -228,6 +228,7 @@ public abstract class Overlay implements Translatable, Configurable {
         };
     }
 
+    @Override
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())

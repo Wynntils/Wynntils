@@ -12,10 +12,11 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.services.TranslationModel;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.NpcDialogEvent;
-import com.wynntils.wynn.utils.WynnUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,7 +56,6 @@ public class TranslationFeature extends UserFeature {
     public void onChat(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo) return;
-        if (!WynnUtils.onServer()) return;
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
@@ -83,20 +83,23 @@ public class TranslationFeature extends UserFeature {
         if (!translateNpc) return;
         if (e instanceof TranslatedNpcDialogEvent) return;
 
-        String origCoded = e.getCodedDialog();
+        String origCoded = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
         if (origCoded != null) {
             String wrapped = wrapCoding(origCoded);
             TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
+                // FIXME: We need a ComponentUtils.componentFromCoded()...
+                // This will currently remove all formatting :(
+                Component translatedComponent = new TextComponent(ComponentUtils.stripFormatting(unwrapped));
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(unwrapped);
-                    WynntilsMod.getEventBus().post(translatedEvent);
+                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(translatedComponent);
+                    WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
             NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null);
-            WynntilsMod.getEventBus().post(translatedEvent);
+            WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
             e.setCanceled(true);
@@ -112,8 +115,8 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        public TranslatedNpcDialogEvent(String codedDialog) {
-            super(codedDialog);
+        public TranslatedNpcDialogEvent(Component chatMsg) {
+            super(chatMsg);
         }
     }
 }

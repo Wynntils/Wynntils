@@ -15,10 +15,12 @@ public class WynntilsModFabric implements ClientModInitializer {
     public void onInitializeClient() {
         Optional<ModContainer> wynntilsMod = FabricLoader.getInstance().getModContainer("wynntils");
         if (wynntilsMod.isEmpty()) {
-            throw new RuntimeException("Where is my Wynntils?");
+            WynntilsMod.error("Where is my Wynntils? :(");
+            return;
         }
 
         WynntilsMod.init(
+                WynntilsMod.ModLoader.FABRIC,
                 wynntilsMod.get().getMetadata().getVersion().getFriendlyString(),
                 FabricLoader.getInstance().isDevelopmentEnvironment());
     }

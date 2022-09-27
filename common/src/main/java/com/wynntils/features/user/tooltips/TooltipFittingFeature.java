@@ -7,19 +7,19 @@ package com.wynntils.features.user.tooltips;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = "Item Tooltips")
+@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
     @Config
     public static float universalScale = 1f;
@@ -37,8 +37,6 @@ public class TooltipFittingFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
-        if (!WynnUtils.onServer()) return;
-
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
@@ -84,7 +82,6 @@ public class TooltipFittingFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
-        if (!WynnUtils.onServer()) return;
         if (!scaledLast) return;
 
         e.getPoseStack().popPose();

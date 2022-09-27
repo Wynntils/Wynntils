@@ -9,6 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -153,7 +154,7 @@ public class TerritoryProfile {
             try {
                 acquired = DATE_FORMAT.parse(territory.get("acquired").getAsString());
             } catch (ParseException e) {
-                e.printStackTrace();
+                WynntilsMod.error("Error when trying to parse territory profile data.", e);
             }
             String attacker = null;
             if (!territory.get("attacker").isJsonNull()) {

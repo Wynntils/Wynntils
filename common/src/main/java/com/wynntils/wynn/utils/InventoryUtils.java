@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
 public final class InventoryUtils {
+    public static final int COMPASS_SLOT_NUM = 6;
+    public static final int QUEST_BOOK_SLOT_NUM = 7;
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
@@ -48,9 +49,9 @@ public final class InventoryUtils {
     }
 
     public static int findHorseSlotNum() {
-        Player player = McUtils.player();
+        Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum <= 44; slotNum++) {
-            ItemStack stack = player.getInventory().getItem(slotNum);
+            ItemStack stack = inventory.getItem(slotNum);
             if (WynnItemMatchers.isHorse(stack)) {
                 return slotNum;
             }

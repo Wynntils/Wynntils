@@ -22,12 +22,12 @@ public class FixedOverlaySize extends OverlaySize {
 
     @Override
     public float getWidth() {
-        return (float) (this.width / McUtils.window().getGuiScale());
+        return (float) (this.width / McUtils.guiScale());
     }
 
     @Override
     public float getHeight() {
-        return (float) (this.height / McUtils.window().getGuiScale());
+        return (float) (this.height / McUtils.guiScale());
     }
 
     @Override

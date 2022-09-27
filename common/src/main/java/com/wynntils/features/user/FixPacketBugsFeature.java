@@ -12,7 +12,6 @@ import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.UUID;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
@@ -27,8 +26,6 @@ public class FixPacketBugsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onBossEventPackageReceived(BossHealthUpdateEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         ClientboundBossEventPacket packet = event.getPacket();
         Operation operation = ((ClientboundBossEventPacketAccessor) packet).getOperation();
         OperationType type = operation.getType();
@@ -44,7 +41,6 @@ public class FixPacketBugsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {
-        if (!WynnUtils.onServer()) return;
         if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
@@ -56,7 +52,6 @@ public class FixPacketBugsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRemovePlayerFromTeam(RemovePlayerFromTeamEvent event) {
-        if (!WynnUtils.onServer()) return;
         if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes NPEs in Vanilla
@@ -68,7 +63,6 @@ public class FixPacketBugsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetEntityPassengersPacket(SetEntityPassengersEvent event) {
-        if (!WynnUtils.onServer()) return;
         if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
@@ -80,8 +74,6 @@ public class FixPacketBugsFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAddEntityLookup(AddEntityLookupEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
         if (event.getEntityMap().containsKey(event.getUUID())) {
             event.setCanceled(true);

@@ -6,13 +6,15 @@ package com.wynntils.features.user.inventory;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
@@ -20,7 +22,7 @@ import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "Inventory")
+@FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
     @Config
     public static boolean powderTierEnabled = true;
@@ -30,6 +32,15 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Config
     public static FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
+    public static boolean emeraldPouchTierEnabled = true;
+
+    @Config
+    public static boolean emeraldPouchTierRomanNumerals = true;
+
+    @Config
+    public static FontRenderer.TextShadow emeraldPouchTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
     public static boolean teleportScrollEnabled = true;
@@ -94,20 +105,17 @@ public class ItemTextOverlayFeature extends UserFeature {
 
             TextOverlayProperty.TextOverlay textOverlay = overlayProperty.getTextOverlay();
 
+            if (textOverlay == null) {
+                WynntilsMod.error(overlayProperty + "'s textOverlay was null.");
+                continue;
+            }
+
             PoseStack poseStack = new PoseStack();
             poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
             poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
             float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
             float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            textOverlay.text(),
-                            x,
-                            y,
-                            textOverlay.color(),
-                            textOverlay.alignment(),
-                            textOverlay.shadow());
+            FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
         }
     }
 }

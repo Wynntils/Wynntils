@@ -14,27 +14,29 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
-import com.wynntils.wynn.model.scoreboard.quests.QuestInfo;
+import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = "Overlays")
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
     @Config
     public static boolean disableQuestTrackingOnScoreboard = true;
@@ -85,8 +87,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
                         null,
-                        TextRenderSetting.getWithHorizontalAlignment(
-                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                        TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                                 .withTextShadow(this.textShadow)));
             }
             return renderTaskList;
@@ -96,8 +100,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
             for (int i = 0; i < 3; i++) {
                 renderTasks
                         .get(i)
-                        .setSetting(TextRenderSetting.getWithHorizontalAlignment(
-                                        this.getWidth(), TEXT_COLORS.get(i), this.getRenderHorizontalAlignment())
+                        .setSetting(TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                                 .withTextShadow(this.textShadow));
             }
         }
@@ -109,7 +115,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestHandler.getCurrentQuest();
+            ScoreboardQuestInfo currentQuest = QuestHandler.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;
@@ -128,8 +134,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRender,
-                            this.getRenderedWidth(),
-                            this.getRenderedHeight(),
+                            this.getRenderedWidth() / (float) McUtils.guiScale(),
+                            this.getRenderedHeight() / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
@@ -161,8 +167,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRenderPreview,
-                            this.getRenderedWidth(),
-                            this.getRenderedHeight(),
+                            this.getRenderedWidth() / (float) McUtils.guiScale(),
+                            this.getRenderedHeight() / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }

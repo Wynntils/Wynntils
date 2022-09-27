@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.WebReader;
 import com.wynntils.core.webapi.request.PostRequestBuilder;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
@@ -50,11 +51,12 @@ public class WynntilsAccount {
     }
 
     public boolean login() {
-        if (WebManager.getApiUrls() == null || !WebManager.getApiUrls().hasKey("Athena")) return false;
+        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
+        WebReader webReader = WebManager.getApiUrls().get();
         RequestHandler handler = WebManager.getHandler();
 
-        String baseUrl = WebManager.getApiUrls().get("Athena");
+        String baseUrl = webReader.get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
@@ -74,7 +76,11 @@ public class WynntilsAccount {
         JsonObject authParams = new JsonObject();
         authParams.addProperty("username", McUtils.mc().getUser().getName());
         authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty("version", "A" + WynntilsMod.getVersion() + "_" + WynntilsMod.getBuildNumber());
+        authParams.addProperty(
+                "version",
+                String.format(
+                        "A%s_%s %s",
+                        WynntilsMod.getVersion(), WynntilsMod.getBuildNumber(), WynntilsMod.getModLoader()));
 
         Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
                 .postJsonElement(authParams)
@@ -122,7 +128,7 @@ public class WynntilsAccount {
 
             return Hex.encodeHexString(secretKeyEncrypted);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            WynntilsMod.error("Failed to parse public key.", ex);
             return "";
         }
     }

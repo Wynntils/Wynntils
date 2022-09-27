@@ -75,6 +75,7 @@ public final class ScoreboardModel extends Model {
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
         LinkedList<ScoreboardLineChange> queueCopy = new LinkedList<>(queuedChanges);
+        queuedChanges.clear();
 
         Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
 
@@ -186,7 +187,7 @@ public final class ScoreboardModel extends Model {
             List<String> skipped = new ArrayList<>();
 
             for (Segment parsedSegment : segments) {
-                boolean cancelled = WynntilsMod.getEventBus().post(new ScoreboardSegmentAdditionEvent(parsedSegment));
+                boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));
 
                 if (cancelled) {
                     skipped.addAll(parsedSegment.getScoreboardLines());
@@ -278,7 +279,7 @@ public final class ScoreboardModel extends Model {
                 if (currentSegment != null) {
                     if (currentSegment.getType() != value) {
                         WynntilsMod.error(
-                                "ScoreboardManager: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
+                                "ScoreboardModel: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
                     }
                     continue;
                 }
@@ -322,8 +323,6 @@ public final class ScoreboardModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetScore(ScoreboardSetScoreEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
     }
 

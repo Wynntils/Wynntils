@@ -5,10 +5,12 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
+import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.FeatureCategory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -22,14 +24,15 @@ public class ConfigHolder {
     private final Field field;
     private final Type fieldType;
 
-    private final String category;
+    private final FeatureCategory category;
     private final Config metadata;
 
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, String category, Config metadata, Type typeOverride) {
+    public ConfigHolder(
+            Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -64,6 +67,10 @@ public class ConfigHolder {
         return fieldType;
     }
 
+    public Class<?> getClassOfConfigField() {
+        return TypeToken.get(this.getType()).getRawType();
+    }
+
     public Field getField() {
         return field;
     }
@@ -95,7 +102,7 @@ public class ConfigHolder {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public String getCategory() {
+    public FeatureCategory getCategory() {
         return category;
     }
 
@@ -121,8 +128,7 @@ public class ConfigHolder {
         try {
             return FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to get field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to get field " + getJsonName(), e);
             return null;
         }
     }
@@ -134,8 +140,7 @@ public class ConfigHolder {
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to set field " + getJsonName(), e);
             return false;
         }
     }

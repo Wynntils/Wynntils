@@ -18,12 +18,12 @@ public class Delay {
         this.function = function;
         this.delay = delay;
 
-        WynntilsMod.getEventBus().register(this);
+        WynntilsMod.registerEventListener(this);
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent e) {
-        if (e.getTickPhase() == ClientTickEvent.Phase.END && !onPause && isRunning) {
+    public void onTick(ClientTickEvent.End e) {
+        if (!onPause && isRunning) {
             if (delay < 0) {
                 start();
             }
@@ -61,6 +61,6 @@ public class Delay {
 
     public void end() {
         isRunning = false;
-        WynntilsMod.getEventBus().unregister(this);
+        WynntilsMod.unregisterEventListener(this);
     }
 }

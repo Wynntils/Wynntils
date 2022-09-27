@@ -21,7 +21,7 @@ public class LogItemInfoFeature extends DebugFeature {
             "Log Item Info", GLFW.GLFW_KEY_INSERT, true, this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);
 
     private void onLogItemInfoPress() {
-        logItem(McUtils.mc().player.getItemBySlot(EquipmentSlot.MAINHAND));
+        logItem(McUtils.player().getItemBySlot(EquipmentSlot.MAINHAND));
     }
 
     private void onLogItemInfoInventoryPress(Slot hoveredSlot) {

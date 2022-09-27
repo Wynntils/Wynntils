@@ -14,6 +14,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.objects.CustomColor;
@@ -81,13 +82,15 @@ public final class ConfigManager extends CoreManager {
 
             configObject = fileElement.getAsJsonObject();
         } catch (IOException e) {
-            WynntilsMod.error("Failed to load user config file!");
-            e.printStackTrace();
+            WynntilsMod.error("Failed to load user config file!", e);
         }
     }
 
     public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
-        if (configObject == null) return; // nothing to load from
+        if (configObject == null) {
+            WynntilsMod.error("Tried to load configs when configObject is null.");
+            return; // nothing to load from
+        }
 
         for (ConfigHolder holder : holders) {
             // option hasn't been saved to config
@@ -108,7 +111,9 @@ public final class ConfigManager extends CoreManager {
     public static void saveConfig() {
         try {
             // create file if necessary
-            if (!userConfig.exists()) userConfig.createNewFile();
+            if (!userConfig.exists()) {
+                FileUtils.createNewFile(userConfig);
+            }
 
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
@@ -126,15 +131,16 @@ public final class ConfigManager extends CoreManager {
             gson.toJson(holderJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!");
-            e.printStackTrace();
+            WynntilsMod.error("Failed to save user config file!", e);
         }
     }
 
     public static void saveDefaultConfig() {
         try {
             // create file if necessary
-            if (!defaultConfig.exists()) defaultConfig.createNewFile();
+            if (!defaultConfig.exists()) {
+                FileUtils.createNewFile(defaultConfig);
+            }
 
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
@@ -150,28 +156,21 @@ public final class ConfigManager extends CoreManager {
                     new OutputStreamWriter(new FileOutputStream(defaultConfig), StandardCharsets.UTF_8);
             gson.toJson(holderJson, fileWriter);
             fileWriter.close();
-            WynntilsMod.info("Default config file created.");
+            WynntilsMod.info("Default config file created with " + holderJson.size() + " config values.");
         } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!");
-            e.printStackTrace();
+            WynntilsMod.error("Failed to save user config file!", e);
         }
     }
 
     private static List<ConfigHolder> collectConfigOptions(Feature feature) {
         FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-
-        String category = "";
-        // feature has no category defined, default to empty category
-        if (featureInfo != null) {
-            category = featureInfo.category();
-        }
-
+        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        feature.setCategory(category);
         loadFeatureOverlayConfigOptions(category, feature);
-
         return getConfigOptions(category, feature);
     }
 
-    private static void loadFeatureOverlayConfigOptions(String category, Feature feature) {
+    private static void loadFeatureOverlayConfigOptions(FeatureCategory category, Feature feature) {
         // collect feature's overlays' config options
         for (Overlay overlay : feature.getOverlays()) {
             List<ConfigHolder> options = getConfigOptions(category, overlay);
@@ -180,7 +179,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static List<ConfigHolder> getConfigOptions(String category, Configurable parent) {
+    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
@@ -192,17 +191,33 @@ public final class ConfigManager extends CoreManager {
                             field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
                     .findFirst();
 
+            Type type = null;
             if (typeField.isPresent()) {
                 try {
-                    Type type = (Type) FieldUtils.readField(typeField.get(), parent, true);
-                    options.add(new ConfigHolder(parent, configField, category, metadata, type));
+                    type = (Type) FieldUtils.readField(typeField.get(), parent, true);
                 } catch (IllegalAccessException e) {
-                    WynntilsMod.error("Unable to get field " + typeField.get().getName());
-                    e.printStackTrace();
+                    WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
                 }
-            } else {
-                options.add(new ConfigHolder(parent, configField, category, metadata, null));
             }
+
+            ConfigHolder configHolder = new ConfigHolder(parent, configField, category, metadata, type);
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                if (metadata.visible()) {
+                    if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
+                        WynntilsMod.error("Config displayName i18n is missing for " + configHolder.getDisplayName());
+                        throw new RuntimeException();
+                    }
+                    if (configHolder.getDescription().startsWith("feature.wynntils.")) {
+                        WynntilsMod.error("Config description i18n is missing for " + configHolder.getDescription());
+                        throw new RuntimeException();
+                    }
+                    if (configHolder.getDescription().isEmpty()) {
+                        WynntilsMod.error("Config description is empty for " + configHolder.getDisplayName());
+                        throw new RuntimeException();
+                    }
+                }
+            }
+            options.add(configHolder);
         }
         return options;
     }
@@ -213,11 +228,5 @@ public final class ConfigManager extends CoreManager {
 
     public static List<ConfigHolder> getConfigHolders() {
         return CONFIG_HOLDERS;
-    }
-
-    public static List<ConfigHolder> getConfigHolders(Configurable configurable) {
-        return CONFIG_HOLDERS.stream()
-                .filter(configHolder -> configHolder.getParent() == configurable)
-                .toList();
     }
 }
