@@ -30,8 +30,8 @@ import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.utils.WynnUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.List;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
