@@ -91,7 +91,8 @@ public final class ManagerRegistry {
 
     public static void removeAllDependencies(ModelDependant dependant) {
         for (Class<? extends Model> model : dependant.getModelDependencies()) {
-            if (MODEL_DEPENDENCIES.containsKey(model) && MODEL_DEPENDENCIES.get(model).remove(dependant)) {
+            if (MODEL_DEPENDENCIES.containsKey(model)
+                    && MODEL_DEPENDENCIES.get(model).remove(dependant)) {
                 updateManagerState(model);
             }
         }
