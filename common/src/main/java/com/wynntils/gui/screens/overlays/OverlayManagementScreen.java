@@ -179,23 +179,21 @@ public class OverlayManagementScreen extends Screen {
                             case Right -> -1f;
                         };
 
-                TextRenderTask renderTask = new TextRenderTask(
-                        overlay.getTranslatedName(),
-                        TextRenderSetting.DEFAULT
-                                .withMaxWidth(overlay.getWidth())
-                                .withCustomColor(color)
-                                .withHorizontalAlignment(overlay.getRenderHorizontalAlignment())
-                                .withTextShadow(FontRenderer.TextShadow.OUTLINE));
+                float renderX = overlay.getRenderX() + xOffset;
+                float renderY = overlay.getRenderY() + yOffset;
                 FontRenderer.getInstance()
-                        .renderTextWithAlignment(
+                        .renderAlignedTextInBox(
                                 poseStack,
-                                overlay.getRenderX() + xOffset,
-                                overlay.getRenderY() + yOffset,
-                                renderTask,
-                                overlay.getRenderedWidth() / (float) McUtils.guiScale(),
-                                overlay.getRenderedHeight() / (float) McUtils.guiScale(),
+                                overlay.getTranslatedName(),
+                                renderX,
+                                renderX + overlay.getRenderedWidth() / (float) McUtils.guiScale(),
+                                renderY,
+                                renderY + overlay.getRenderedHeight() / (float) McUtils.guiScale(),
+                                overlay.getWidth(),
+                                color,
                                 overlay.getRenderHorizontalAlignment(),
-                                overlay.getRenderVerticalAlignment());
+                                overlay.getRenderVerticalAlignment(),
+                                FontRenderer.TextShadow.OUTLINE);
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
