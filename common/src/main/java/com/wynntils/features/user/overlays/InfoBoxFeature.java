@@ -24,12 +24,9 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
@@ -54,9 +51,6 @@ public class InfoBoxFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay infoBox6Overlay = new InfoBoxOverlay(6);
 
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
     public static class InfoBoxOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
@@ -65,9 +59,16 @@ public class InfoBoxFeature extends UserFeature {
         public String content = "";
 
         private final int id;
+        private final List<Function<?>> functionDependencies = new ArrayList<>();
 
-        private TextRenderTask toRender = recalculateFunctions(content);
-        private List<Function<?>> functionDependencies = new ArrayList<>();
+        private TextRenderTask getRenderTask(String content) {
+            return FunctionManager.getStringFromLegacyTemplate(content)
+                    .setSetting(TextRenderSetting.DEFAULT
+                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                            .withMaxWidth(this.getWidth())
+                            .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.WHITE))
+                            .withTextShadow(textShadow));
+        }
 
         public InfoBoxOverlay(int id) {
             super(
@@ -83,99 +84,16 @@ public class InfoBoxFeature extends UserFeature {
             this.id = id;
         }
 
-        private TextRenderTask recalculateFunctions(String renderableText) {
-            if (functionDependencies == null) {
-                functionDependencies = new ArrayList<>();
-            }
-
-            for (Function<?> oldDependency : functionDependencies) {
-                FunctionManager.disableFunction(oldDependency);
-            }
-
-            functionDependencies.clear();
-
-            StringBuilder builder = new StringBuilder(renderableText.length() + 10);
-            Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
-            while (m.find()) {
-                String replacement = null;
-                if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
-                    // %variable%
-                    Function<?> function = FunctionManager.forName(m.group(1)).get();
-
-                    FunctionManager.enableFunction(function);
-                    functionDependencies.add(function);
-
-                    replacement = FunctionManager.getRawValueString(function, "");
-                } else if (m.group(2) != null) {
-                    // \escape
-                    replacement = doEscapeFormat(m.group(2));
-                }
-                if (replacement == null) {
-                    replacement = m.group(0);
-                }
-
-                m.appendReplacement(builder, replacement);
-            }
-            m.appendTail(builder);
-
-            return new TextRenderTask(
-                    parseColorCodes(builder.toString()),
-                    TextRenderSetting.DEFAULT
-                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                            .withMaxWidth(this.getWidth())
-                            .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.WHITE))
-                            .withTextShadow(textShadow));
-        }
-
-        private String parseColorCodes(String toProcess) {
-            // For every & symbol, check if the next symbol is a color code and if so, replace it with §
-            // But don't do it if a \ precedes the &
-            String validColors = "0123456789abcdefklmnor";
-            StringBuilder sb = new StringBuilder(toProcess);
-            for (int i = 0; i < sb.length(); i++) {
-                if (sb.charAt(i) == '&') { // char == &
-                    if (i + 1 < sb.length()
-                            && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
-                        if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
-                            sb.setCharAt(i, '§');
-                        } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
-                            sb.deleteCharAt(i - 1);
-                        }
-                    }
-                }
-            }
-            return sb.toString();
-        }
-
-        private String doEscapeFormat(String escaped) {
-            return switch (escaped) {
-                case "\\" -> "\\\\";
-                case "n" -> "\n";
-                case "%" -> "%";
-                case "§" -> "&";
-                case "E" -> EmeraldSymbols.E_STRING;
-                case "B" -> EmeraldSymbols.B_STRING;
-                case "L" -> EmeraldSymbols.L_STRING;
-                case "M" -> "✺";
-                case "H" -> "❤";
-                default -> null;
-            };
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            toRender = recalculateFunctions(content);
-        }
-
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
+
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            toRender,
+                            getRenderTask(content),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -187,8 +105,8 @@ public class InfoBoxFeature extends UserFeature {
             if (!WynnUtils.onWorld()) return;
 
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
-            // architectural changes at the moment
-            TextRenderTask toRenderPreview = recalculateFunctions("&cX: %x%, &9Y: %y%, &aZ: %z%");
+            //        architectural changes at the moment
+            TextRenderTask toRenderPreview = getRenderTask("&cX: %x%, &9Y: %y%, &aZ: %z%");
 
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
@@ -200,6 +118,19 @@ public class InfoBoxFeature extends UserFeature {
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            for (Function<?> oldDependency : functionDependencies) {
+                FunctionManager.disableFunction(oldDependency);
+            }
+
+            functionDependencies.clear();
+
+            for (Function<?> function : FunctionManager.getDependenciesFromStringLegacy(content)) {
+                FunctionManager.enableFunction(function);
+            }
         }
 
         @Override
