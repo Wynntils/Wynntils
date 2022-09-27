@@ -223,12 +223,7 @@ public final class FeatureRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Features";
-            }
-
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Features") {
             @Override
             public Object generate() {
                 StringBuilder result = new StringBuilder();
