@@ -23,17 +23,21 @@ public final class CrashReportManager {
             Object infos = crashContext.generate();
 
             if (infos != null) {
-                wynntilsCategory.setDetail(crashContext.name(), crashContext.generate());
+                wynntilsCategory.setDetail(crashContext.name, crashContext.generate());
             }
         }
 
         return wynntilsCategory;
     }
 
-    public interface ICrashContext {
-        String name();
+    public abstract static class ICrashContext {
+        public final String name;
+
+        protected ICrashContext(String name) {
+            this.name = name;
+        }
 
         /** Return null to not add */
-        Object generate();
+        public abstract Object generate();
     }
 }
