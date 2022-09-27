@@ -116,13 +116,23 @@ public class MapRenderer {
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
 
-        float mapTopX = centerX - halfRenderedWidth;
-        float mapLeftZ = centerZ - halfRenderedHeight;
-        float mapBottomX = centerX + halfRenderedWidth;
-        float mapRightZ = centerZ + halfRenderedHeight;
+        float mapLeftX = centerX - halfRenderedWidth;
+        float mapTopZ = centerZ - halfRenderedHeight;
+        float mapRightX = centerX + halfRenderedWidth;
+        float mapBottomZ = centerZ + halfRenderedHeight;
 
         if (renderMapLabels) {
-            renderLabelPois(poseStack, mapCenterX, mapCenterZ, centerX, centerZ, scale);
+            renderLabelPois(
+                    poseStack,
+                    mapCenterX,
+                    mapCenterZ,
+                    centerX,
+                    centerZ,
+                    scale,
+                    mapLeftX,
+                    mapTopZ,
+                    mapRightX,
+                    mapBottomZ);
         }
 
         // disable rotation if necessary
@@ -140,16 +150,27 @@ public class MapRenderer {
                 poiScale,
                 mouseCoordinates,
                 followPlayerRotation,
-                mapTopX,
-                mapLeftZ,
-                mapBottomX,
-                mapRightZ);
+                mapLeftX,
+                mapTopZ,
+                mapRightX,
+                mapBottomZ);
     }
 
     private static void renderLabelPois(
-            PoseStack poseStack, float mapCenterX, float mapCenterZ, float centerX, float centerZ, float scale) {
+            PoseStack poseStack,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float scale,
+            float mapLeftX,
+            float mapTopZ,
+            float mapRightX,
+            float mapBottomZ) {
         List<LabelPoi> labelPois = MapModel.getAllPois()
                 .filter(poi -> poi instanceof LabelPoi)
+                .filter(poi -> isPoiVisible(
+                        mapCenterX, mapCenterZ, centerX, centerZ, scale, mapLeftX, mapTopZ, mapRightX, mapBottomZ, poi))
                 .map(poi -> (LabelPoi) poi)
                 .toList();
 
@@ -192,26 +213,14 @@ public class MapRenderer {
             float poiScale,
             Pair<Integer, Integer> mouseCoordinates,
             boolean followPlayerRotation,
-            float mapTopX,
-            float mapLeftZ,
-            float mapBottomX,
-            float mapRightZ) {
+            float mapLeftX,
+            float mapTopZ,
+            float mapRightX,
+            float mapBottomZ) {
         List<Poi> pois = MapModel.getAllPois()
-                .filter(poi -> {
-                    if (poi.getIcon() == null) return false;
-
-                    return isPoiVisible(
-                            mapCenterX,
-                            mapCenterZ,
-                            centerX,
-                            centerZ,
-                            scale,
-                            mapTopX,
-                            mapLeftZ,
-                            mapBottomX,
-                            mapRightZ,
-                            poi);
-                })
+                .filter(poi -> poi.getIcon() != null)
+                .filter(poi -> isPoiVisible(
+                        mapCenterX, mapCenterZ, centerX, centerZ, scale, mapLeftX, mapTopZ, mapRightX, mapBottomZ, poi))
                 .sorted(Comparator.comparing(poi -> -poi.getLocation().getY()))
                 .toList();
 
@@ -291,18 +300,18 @@ public class MapRenderer {
             float centerX,
             float centerZ,
             float scale,
-            float mapTopX,
-            float mapLeftZ,
-            float mapBottomX,
-            float mapRightZ,
+            float mapLeftX,
+            float mapTopZ,
+            float mapRightX,
+            float mapBottomZ,
             Poi poi) {
         float textureXPosition = getRenderX(poi, mapCenterX, centerX, 1f / scale);
         float textureZPosition = getRenderZ(poi, mapCenterZ, centerZ, 1f / scale);
 
-        return textureXPosition >= mapTopX
-                && textureXPosition <= mapBottomX
-                && textureZPosition >= mapLeftZ
-                && textureZPosition <= mapRightZ;
+        return textureXPosition >= mapLeftX
+                && textureXPosition <= mapRightX
+                && textureZPosition >= mapTopZ
+                && textureZPosition <= mapBottomZ;
     }
 
     public static void renderTexturedPoi(
