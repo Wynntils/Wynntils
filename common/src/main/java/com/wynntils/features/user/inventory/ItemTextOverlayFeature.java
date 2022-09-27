@@ -20,6 +20,7 @@ import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {

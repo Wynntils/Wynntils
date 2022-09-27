@@ -21,6 +21,7 @@ import com.wynntils.wynn.item.properties.ItemProperty;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {

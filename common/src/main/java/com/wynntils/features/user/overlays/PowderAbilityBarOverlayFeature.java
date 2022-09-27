@@ -26,6 +26,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
+import java.util.List;
 
 public class PowderAbilityBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

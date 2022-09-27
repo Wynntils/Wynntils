@@ -17,6 +17,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.entity.player.Player;

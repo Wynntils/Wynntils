@@ -18,6 +18,7 @@ import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class UnidentifiedItemIconFeature extends UserFeature {

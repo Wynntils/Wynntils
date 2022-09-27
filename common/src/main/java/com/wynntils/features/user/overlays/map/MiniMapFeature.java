@@ -31,6 +31,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 
 @FeatureInfo(category = FeatureCategory.MAP)
