@@ -100,9 +100,7 @@ public abstract class Overlay implements Translatable, Configurable, Comparable<
 
     /** Returns the config option matching the given name, if it exists */
     public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getVisibleConfigOptions().stream()
-                .filter(c -> c.getFieldName().equals(name))
-                .findFirst();
+        return configOptions.stream().filter(c -> c.getFieldName().equals(name)).findFirst();
     }
 
     @Override

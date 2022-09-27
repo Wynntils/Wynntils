@@ -24,8 +24,6 @@ public class QuestBookSearchWidget extends SearchWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        checkForHeldBackspace();
-
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
