@@ -74,7 +74,7 @@ public final class ManagerRegistry {
 
         MODEL_DEPENDENCIES.get(dependency).add(dependant);
 
-        updateManagerState(dependency);
+        updateModelState(dependency);
     }
 
     public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
@@ -86,39 +86,39 @@ public final class ManagerRegistry {
 
         MODEL_DEPENDENCIES.get(dependency).remove(dependant);
 
-        updateManagerState(dependency);
+        updateModelState(dependency);
     }
 
     public static void removeAllDependencies(ModelDependant dependant) {
-        for (Class<? extends Manager> manager : MODEL_DEPENDENCIES.keySet()) {
-            boolean removed = MODEL_DEPENDENCIES.get(manager).remove(dependant);
+        for (Class<? extends Model> model : MODEL_DEPENDENCIES.keySet()) {
+            boolean removed = MODEL_DEPENDENCIES.get(model).remove(dependant);
 
             if (removed) {
-                updateManagerState(manager);
+                updateManagerState(model);
             }
         }
     }
 
-    private static void updateManagerState(Class<? extends Manager> manager) {
-        List<ModelDependant> dependencies = MODEL_DEPENDENCIES.get(manager);
+    private static void updateModelState(Class<? extends Model> model) {
+        List<ModelDependant> dependencies = MODEL_DEPENDENCIES.get(model);
 
         boolean hasDependencies = dependencies != null && !dependencies.isEmpty();
 
-        if (ENABLED_MANAGERS.contains(manager)) {
+        if (ENABLED_MANAGERS.contains(model)) {
             if (!hasDependencies) {
-                WynntilsMod.unregisterEventListener(manager);
+                WynntilsMod.unregisterEventListener(model);
 
-                ENABLED_MANAGERS.remove(manager);
+                ENABLED_MANAGERS.remove(model);
 
-                tryDisableManager(manager);
+                tryDisableManager(model);
             }
         } else {
             if (hasDependencies) {
-                WynntilsMod.registerEventListener(manager);
+                WynntilsMod.registerEventListener(model);
 
-                ENABLED_MANAGERS.add(manager);
+                ENABLED_MANAGERS.add(model);
 
-                tryInitManager(manager);
+                tryInitManager(model);
             }
         }
     }
