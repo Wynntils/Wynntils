@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.config.Config;

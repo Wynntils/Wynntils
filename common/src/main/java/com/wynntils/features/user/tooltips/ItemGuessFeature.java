@@ -21,8 +21,7 @@ public class ItemGuessFeature extends UserFeature {
     public static boolean showGuessesPrice = true;
 
     @Override
-    public void onInit(
-            ImmutableList.Builder<Condition> conditions) {
+    public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
     }
 
@@ -30,7 +29,6 @@ public class ItemGuessFeature extends UserFeature {
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ItemStackTransformModel.class);
     }
-
 
     public static ItemGuessFeature getInstance() {
         return INSTANCE;

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;

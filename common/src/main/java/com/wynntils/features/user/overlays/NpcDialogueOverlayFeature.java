@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatModel;

@@ -9,7 +9,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
@@ -47,8 +46,7 @@ public class LootrunFeature extends StateManagedFeature {
     public boolean showNotes = true;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
         FileUtils.mkdir(LootrunModel.LOOTRUNS);
     }
 

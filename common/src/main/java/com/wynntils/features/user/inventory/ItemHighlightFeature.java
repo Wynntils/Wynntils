@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;

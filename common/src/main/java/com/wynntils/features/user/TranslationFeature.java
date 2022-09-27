@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;

@@ -123,8 +123,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     /** Called on init of Feature */
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     /**
      * Called on enabling of Feature

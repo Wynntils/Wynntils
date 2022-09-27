@@ -40,8 +40,7 @@ public class ItemStatInfoFeature extends UserFeature {
     public static boolean groupIdentifications = true;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions) {
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
     }
 
