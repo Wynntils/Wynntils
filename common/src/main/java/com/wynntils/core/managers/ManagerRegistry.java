@@ -89,7 +89,7 @@ public final class ManagerRegistry {
         updateManagerState(dependency);
     }
 
-    public static void removeAllDependency(ModelDependant dependant) {
+    public static void removeAllDependencies(ModelDependant dependant) {
         for (Class<? extends Manager> manager : MODEL_DEPENDENCIES.keySet()) {
             boolean removed = MODEL_DEPENDENCIES.get(manager).remove(dependant);
 

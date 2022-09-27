@@ -171,7 +171,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         enabled = false;
 
-        ManagerRegistry.removeAllDependency(this);
+        ManagerRegistry.removeAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
