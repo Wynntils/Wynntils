@@ -562,7 +562,7 @@ public class ConfigCommand extends CommandBase {
 
         if (overlay == null) return null;
 
-        Optional<ConfigHolder> configOptional = overlay.getConfigOptionFromString(configName);
+        Optional<ConfigHolder> configOptional = overlay.getConfigOptionFromString(configName, false);
 
         if (configOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Config not found!").withStyle(ChatFormatting.RED));
