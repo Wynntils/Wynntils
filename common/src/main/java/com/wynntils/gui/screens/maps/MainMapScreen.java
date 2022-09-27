@@ -120,15 +120,18 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        renderBackground(poseStack);
-
-        if (!MapModel.isMapLoaded()) return;
+        if (!MapModel.isMapLoaded()) {
+            renderBackground(poseStack);
+            return;
+        }
 
         MapProfile map = MapModel.getMaps().get(0);
         float textureX = map.getTextureXPosition(mapCenterX);
         float textureZ = map.getTextureZPosition(mapCenterZ);
 
         renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
+
+        renderBackground(poseStack);
 
         renderCursor(poseStack);
     }
