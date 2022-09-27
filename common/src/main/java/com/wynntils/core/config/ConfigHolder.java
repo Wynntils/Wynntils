@@ -86,10 +86,10 @@ public class ConfigHolder {
     public String getJsonName() {
         if (parent instanceof Overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + getNameCamelCase() + "." + field.getName();
+            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + field.getName();
         }
         // "featureName.settingName"
-        return getNameCamelCase() + "." + field.getName();
+        return parent.getConfigJsonName() + "." + field.getName();
     }
 
     private String getNameCamelCase() {
