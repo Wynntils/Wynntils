@@ -97,7 +97,7 @@ public class CompassCommand extends CommandBase {
         ServiceKind selectedKind = matchedKinds.get(0);
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<Poi> closestServiceOptional = MapModel.getAllPois().stream()
+        Optional<Poi> closestServiceOptional = MapModel.getAllPois()
                 .filter(poi -> poi instanceof ServicePoi servicePoi
                         && servicePoi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
@@ -124,7 +124,7 @@ public class CompassCommand extends CommandBase {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getAllPois().stream()
+        List<Poi> places = new ArrayList<>(MapModel.getAllPois()
                 .filter(poi -> poi instanceof LabelPoi && StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 

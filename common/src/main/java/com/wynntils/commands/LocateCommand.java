@@ -35,10 +35,7 @@ public class LocateCommand extends CommandBase {
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    MapModel.getAllPois().stream()
-                            .filter(poi -> poi instanceof LabelPoi)
-                            .map(Poi::getName),
-                    builder);
+                    MapModel.getAllPois().filter(poi -> poi instanceof LabelPoi).map(Poi::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -90,7 +87,7 @@ public class LocateCommand extends CommandBase {
 
         ServiceKind selectedKind = matchedKinds.get(0);
 
-        List<Poi> services = new ArrayList<>(MapModel.getAllPois().stream()
+        List<Poi> services = new ArrayList<>(MapModel.getAllPois()
                 .filter(poi -> poi instanceof ServicePoi servicePoi
                         && servicePoi.getKind().equals(selectedKind))
                 .toList());
@@ -128,7 +125,7 @@ public class LocateCommand extends CommandBase {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getAllPois().stream()
+        List<Poi> places = new ArrayList<>(MapModel.getAllPois()
                 .filter(poi -> poi instanceof LabelPoi && StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
