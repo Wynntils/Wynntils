@@ -93,7 +93,7 @@ public final class ManagerRegistry {
         for (Class<? extends Model> model : dependant.getModelDependencies()) {
             if (MODEL_DEPENDENCIES.containsKey(model)
                     && MODEL_DEPENDENCIES.get(model).remove(dependant)) {
-                updateManagerState(model);
+                updateModelState(model);
             }
         }
     }
