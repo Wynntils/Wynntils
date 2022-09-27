@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay implements Translatable, Configurable, Comparable<Overlay> {
-    private final List<ConfigHolder> configOptions = new ArrayList<>();
+public abstract class Overlay extends Configurable implements Translatable, Comparable<Overlay> {
 
     @Config(key = "overlay.wynntils.overlay.position", visible = false)
     protected OverlayPosition position;
@@ -86,24 +85,6 @@ public abstract class Overlay implements Translatable, Configurable, Comparable<
     }
 
     protected abstract void onConfigUpdate(ConfigHolder configHolder);
-
-    /** Registers the overlay's config options. Called by ConfigManager when overlay is loaded */
-    @Override
-    public final void addConfigOptions(List<ConfigHolder> options) {
-        configOptions.addAll(options);
-    }
-
-    /** Returns all config options registered in this overlay that should be visible to the user */
-    public final List<ConfigHolder> getVisibleConfigOptions() {
-        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
-    }
-
-    /** Returns the config option matching the given name, if it exists */
-    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getVisibleConfigOptions().stream()
-                .filter(c -> c.getFieldName().equals(name))
-                .findFirst();
-    }
 
     /** Gets the name of a feature */
     @Override

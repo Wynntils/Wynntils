@@ -34,12 +34,11 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
+public abstract class Feature extends Configurable implements Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
-    private final List<ConfigHolder> configOptions = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
     protected FeatureState state = FeatureState.UNINITALIZED;
@@ -118,7 +117,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         return this.getClass().getSimpleName();
     }
 
-    protected String getNameCamelCase() {
+    private String getNameCamelCase() {
         String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
@@ -191,29 +190,6 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         }
 
         return true;
-    }
-    
-    /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
-    @Override
-    public final void addConfigOptions(List<ConfigHolder> options) {
-        configOptions.addAll(options);
-    }
-
-    /** Returns all config options registered in this feature */
-    public final List<ConfigHolder> getConfigOptions() {
-        return configOptions;
-    }
-
-    /** Returns all config options registered in this feature that should be visible to the user */
-    public final List<ConfigHolder> getVisibleConfigOptions() {
-        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
-    }
-
-    /** Returns the config option matching the given name, if it exists */
-    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getVisibleConfigOptions().stream()
-                .filter(c -> c.getFieldName().equals(name))
-                .findFirst();
     }
 
     /** Used to react to config option updates */
