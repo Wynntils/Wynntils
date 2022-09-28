@@ -46,19 +46,18 @@ public final class ConfigManager extends CoreManager {
 
     public static void registerFeature(Feature feature) {
         for (Overlay overlay : feature.getOverlays()) {
-            List<ConfigHolder> options = getConfigOptions(overlay);
-
-            registerConfigOptions(overlay, options);
+            registerConfigOptions(overlay);
         }
 
-        List<ConfigHolder> featureConfigOptions = getConfigOptions(feature);
-        registerConfigOptions(feature, featureConfigOptions);
+        registerConfigOptions(feature);
     }
 
-    private static void registerConfigOptions(Configurable configurable, List<ConfigHolder> featureConfigOptions) {
-        configurable.addConfigOptions(featureConfigOptions);
-        loadConfigOptions(featureConfigOptions, false);
-        CONFIG_HOLDERS.addAll(featureConfigOptions);
+    private static void registerConfigOptions(Configurable configurable) {
+        List<ConfigHolder> configOptions = getConfigOptions(configurable);
+
+        configurable.addConfigOptions(configOptions);
+        loadConfigOptions(configOptions, false);
+        CONFIG_HOLDERS.addAll(configOptions);
     }
 
     public static void init() {
