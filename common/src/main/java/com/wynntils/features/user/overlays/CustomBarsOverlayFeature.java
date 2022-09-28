@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -31,6 +30,7 @@ import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -43,10 +43,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
     public boolean shouldDisplayOnBossBar = false;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ActionBarModel.class);
-        dependencies.add(BossBarModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ActionBarModel.class, BossBarModel.class);
     }
 
     @SubscribeEvent

@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.ItemStackTransformModel;
+import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
@@ -21,10 +22,13 @@ public class ItemGuessFeature extends UserFeature {
     public static boolean showGuessesPrice = true;
 
     @Override
-    public void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
+    public void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
-        dependencies.add(ItemStackTransformModel.class);
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 
     public static ItemGuessFeature getInstance() {

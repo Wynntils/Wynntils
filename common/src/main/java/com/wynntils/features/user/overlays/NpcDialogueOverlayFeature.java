@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatModel;
@@ -75,9 +74,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     }
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ChatModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

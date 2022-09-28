@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays.map;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,6 +31,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -40,9 +40,8 @@ public class MiniMapFeature extends UserFeature {
     public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(MapModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(MapModel.class);
     }
 
     public static class MiniMapOverlay extends Overlay {
