@@ -19,6 +19,7 @@ import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +31,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 public final class ManagerRegistry {
     private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
     private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
-    private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
+    private static final Collection<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
@@ -118,7 +119,7 @@ public final class ManagerRegistry {
             removeDependency(dependant, dependency);
         }
     }
-    
+
     private static void tryInitManager(Class<? extends Manager> manager) {
         WynntilsMod.registerEventListener(manager);
 
