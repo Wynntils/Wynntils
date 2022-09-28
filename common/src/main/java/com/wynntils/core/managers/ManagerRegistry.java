@@ -60,9 +60,6 @@ public final class ManagerRegistry {
     private static void registerPersistentDependency(Class<? extends CoreManager> manager) {
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
-
-        WynntilsMod.registerEventListener(manager);
-
         tryInitManager(manager);
     }
 
