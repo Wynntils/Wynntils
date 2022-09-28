@@ -150,7 +150,6 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         ManagerRegistry.addAllDependencies(this);
 
-
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }

@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
@@ -91,7 +90,8 @@ public final class ManagerRegistry {
 
         // Check if present and try to remove
         if (modelDependencies == null || !modelDependencies.remove(dependant)) {
-            WynntilsMod.warn(String.format("Could not remove dependency of %s for %s when lacking", dependant, dependency));
+            WynntilsMod.warn(
+                    String.format("Could not remove dependency of %s for %s when lacking", dependant, dependency));
             return;
         }
 
