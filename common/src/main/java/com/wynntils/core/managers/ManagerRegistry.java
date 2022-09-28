@@ -118,31 +118,7 @@ public final class ManagerRegistry {
             removeDependency(dependant, dependency);
         }
     }
-
-    private static void updateModelState(Class<? extends Model> model) {
-        List<ModelDependant> dependencies = MODEL_DEPENDENCIES.get(model);
-
-        boolean hasDependencies = dependencies != null && !dependencies.isEmpty();
-
-        if (ENABLED_MANAGERS.contains(model)) {
-            if (!hasDependencies) {
-                WynntilsMod.unregisterEventListener(model);
-
-                ENABLED_MANAGERS.remove(model);
-
-                tryDisableManager(model);
-            }
-        } else {
-            if (hasDependencies) {
-                WynntilsMod.registerEventListener(model);
-
-                ENABLED_MANAGERS.add(model);
-
-                tryInitManager(model);
-            }
-        }
-    }
-
+    
     private static void tryInitManager(Class<? extends Manager> manager) {
         WynntilsMod.registerEventListener(manager);
 
