@@ -168,23 +168,20 @@ public final class ConfigManager extends CoreManager {
     }
 
     private static List<ConfigHolder> collectConfigOptions(Feature feature) {
-        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
-        feature.setCategory(category);
-        loadFeatureOverlayConfigOptions(category, feature);
-        return getConfigOptions(category, feature);
+        loadFeatureOverlayConfigOptions(feature);
+        return getConfigOptions(feature);
     }
 
-    private static void loadFeatureOverlayConfigOptions(FeatureCategory category, Feature feature) {
+    private static void loadFeatureOverlayConfigOptions(Feature feature) {
         // collect feature's overlays' config options
         for (Overlay overlay : feature.getOverlays()) {
-            List<ConfigHolder> options = getConfigOptions(category, overlay);
+            List<ConfigHolder> options = getConfigOptions(overlay);
 
             registerConfigOptions(overlay, options);
         }
     }
 
-    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
+    private static List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
@@ -205,7 +202,7 @@ public final class ConfigManager extends CoreManager {
                 }
             }
 
-            ConfigHolder configHolder = new ConfigHolder(parent, configField, category, metadata, type);
+            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, type);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (metadata.visible()) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {

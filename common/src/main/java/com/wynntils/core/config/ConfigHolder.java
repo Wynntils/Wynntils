@@ -24,7 +24,6 @@ public class ConfigHolder {
     private final Field field;
     private final Type fieldType;
 
-    private final FeatureCategory category;
     private final Config metadata;
 
     private final Object defaultValue;
@@ -32,14 +31,13 @@ public class ConfigHolder {
     private boolean userEdited = false;
 
     public ConfigHolder(
-            Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
+            Configurable parent, Field field, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
 
         this.parent = parent;
         this.field = field;
-        this.category = category;
         this.metadata = metadata;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
@@ -100,10 +98,6 @@ public class ConfigHolder {
     private String getDeclaringFeatureNameCamelCase() {
         String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
-
-    public FeatureCategory getCategory() {
-        return category;
     }
 
     public Config getMetadata() {
