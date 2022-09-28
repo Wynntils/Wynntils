@@ -40,13 +40,6 @@ public abstract class UserFeature extends Feature {
     }
 
     public void setUserEnabled(boolean newState) {
-        Optional<ConfigHolder> opt = getConfigOptionFromString("userEnabled");
-
-        if (opt.isEmpty()) {
-            WynntilsMod.error("UserEnabled lacking userEnabled config");
-        }
-
-        ConfigHolder holder = opt.get();
-        holder.setValue(newState);
+        this.userEnabled = newState;
     }
 }

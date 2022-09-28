@@ -92,7 +92,8 @@ public final class WynntilsMod {
                         + "' has crashed and will be disabled")
                 .withStyle(ChatFormatting.RED));
 
-        feature.disable();
+        feature.setUserEnabled(false);
+        feature.tryUserToggle();
     }
 
     public static String getVersion() {
