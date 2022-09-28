@@ -184,7 +184,6 @@ public final class FeatureRegistry {
         FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
         feature.setCategory(category);
 
-
         // register key binds
         for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {
             if (!f.getType().equals(KeyBind.class)) continue;

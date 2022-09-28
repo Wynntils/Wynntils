@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.FeatureCategory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -30,8 +29,7 @@ public class ConfigHolder {
 
     private boolean userEdited = false;
 
-    public ConfigHolder(
-            Configurable parent, Field field, Config metadata, Type typeOverride) {
+    public ConfigHolder(Configurable parent, Field field, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }

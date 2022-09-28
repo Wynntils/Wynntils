@@ -14,8 +14,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -93,7 +91,6 @@ public final class ConfigManager extends CoreManager {
     public static void loadAllConfigOptions(boolean resetIfNotFound) {
         loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
     }
-
 
     public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) {
