@@ -21,8 +21,7 @@ public abstract class UserFeature extends Feature {
 
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
-            // If this was changed before init, do not try to toggle
-
+            // Toggling before init does not do anything, so we don't worry about it for now
             tryUserToggle();
             return;
         }

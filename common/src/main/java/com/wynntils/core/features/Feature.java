@@ -147,7 +147,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (state == FeatureState.DISABLED) return;
+        if (state != FeatureState.ENABLED) return;
 
         state = FeatureState.DISABLED;
 
