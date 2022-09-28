@@ -67,34 +67,55 @@ public final class ManagerRegistry {
 
     public static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to register a persistent manager.");
+            throw new IllegalStateException("Tried to register a core manager like a model.");
         }
 
-        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
 
-        MODEL_DEPENDENCIES.get(dependency).add(dependant);
+        // first dependency, enable manager
+        if (modelDependencies == null) {
+            modelDependencies = new ArrayList<>();
+            MODEL_DEPENDENCIES.put(dependency, modelDependencies);
 
-        updateModelState(dependency);
+            ENABLED_MANAGERS.add(dependency);
+            tryInitManager(dependency);
+        }
+
+        modelDependencies.add(dependant);
     }
 
     public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to unregister a persistent manager.");
+            throw new IllegalStateException("Tried to unregister a core manager like a model.");
         }
 
-        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
 
-        MODEL_DEPENDENCIES.get(dependency).remove(dependant);
+        // Check if present and try to remove
+        if (modelDependencies == null || !modelDependencies.remove(dependant)) {
+            WynntilsMod.warn(String.format("Could not remove dependency of %s for %s when lacking", dependant, dependency));
+            return;
+        }
 
-        updateModelState(dependency);
+        // Check if should disable manager
+        if (modelDependencies.isEmpty()) {
+            // remove empty list
+            MODEL_DEPENDENCIES.remove(dependency);
+
+            ENABLED_MANAGERS.remove(dependency);
+            tryDisableManager(dependency);
+        }
+    }
+
+    public static void addAllDependencies(ModelDependant dependant) {
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            addDependency(dependant, dependency);
+        }
     }
 
     public static void removeAllDependencies(ModelDependant dependant) {
-        for (Class<? extends Model> model : dependant.getModelDependencies()) {
-            if (MODEL_DEPENDENCIES.containsKey(model)
-                    && MODEL_DEPENDENCIES.get(model).remove(dependant)) {
-                updateModelState(model);
-            }
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            removeDependency(dependant, dependency);
         }
     }
 
@@ -123,6 +144,8 @@ public final class ManagerRegistry {
     }
 
     private static void tryInitManager(Class<? extends Manager> manager) {
+        WynntilsMod.registerEventListener(manager);
+
         try {
             MethodUtils.invokeExactStaticMethod(manager, "init");
         } catch (IllegalAccessException | NoSuchMethodException e) {
@@ -134,6 +157,8 @@ public final class ManagerRegistry {
     }
 
     private static void tryDisableManager(Class<? extends Manager> manager) {
+        WynntilsMod.unregisterEventListener(manager);
+
         try {
             MethodUtils.invokeExactStaticMethod(manager, "disable");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
