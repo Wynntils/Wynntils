@@ -7,7 +7,7 @@ package com.wynntils.core.config;
 import com.google.common.base.CaseFormat;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder {
-    private final Configurable parent;
+    private final AbstractConfigurable parent;
     private final Field field;
     private final Type fieldType;
 
@@ -32,7 +32,7 @@ public class ConfigHolder {
     private boolean userEdited = false;
 
     public ConfigHolder(
-            Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
+            AbstractConfigurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -79,7 +79,7 @@ public class ConfigHolder {
         return field.getName();
     }
 
-    public Configurable getParent() {
+    public AbstractConfigurable getParent() {
         return parent;
     }
 

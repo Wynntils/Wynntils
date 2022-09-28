@@ -10,7 +10,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -20,7 +20,7 @@ import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay extends Configurable implements Translatable, Comparable<Overlay> {
+public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
 
     @Config(key = "overlay.wynntils.overlay.position", visible = false)
     protected OverlayPosition position;

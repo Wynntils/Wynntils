@@ -32,7 +32,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature extends Configurable implements Translatable, Comparable<Feature> {
+public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;

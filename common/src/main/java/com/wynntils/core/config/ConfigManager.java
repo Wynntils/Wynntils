@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -50,7 +50,8 @@ public final class ConfigManager extends CoreManager {
         registerConfigOptions(feature, featureConfigOptions);
     }
 
-    private static void registerConfigOptions(Configurable configurable, List<ConfigHolder> featureConfigOptions) {
+    private static void registerConfigOptions(
+            AbstractConfigurable configurable, List<ConfigHolder> featureConfigOptions) {
         configurable.addConfigOptions(featureConfigOptions);
         loadConfigOptions(featureConfigOptions, false);
         CONFIG_HOLDERS.addAll(featureConfigOptions);
@@ -179,7 +180,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
+    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, AbstractConfigurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
