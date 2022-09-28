@@ -398,7 +398,7 @@ public class OverlayManagementScreen extends Screen {
 
     private void reloadConfigForOverlay() {
         ConfigManager.loadConfigFile();
-        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        ConfigManager.loadAllConfigOptions(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {

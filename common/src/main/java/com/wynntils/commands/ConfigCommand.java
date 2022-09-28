@@ -188,7 +188,7 @@ public class ConfigCommand extends CommandBase {
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
         ConfigManager.loadConfigFile();
-        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        ConfigManager.loadAllConfigOptions(true);
         ConfigManager.saveConfig();
 
         context.getSource()

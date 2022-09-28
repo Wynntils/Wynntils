@@ -86,6 +86,11 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
+    public static void loadAllConfigOptions(boolean resetIfNotFound) {
+        loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
+    }
+
+
     public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");

@@ -214,7 +214,7 @@ public class WynntilsSettingsScreen extends Screen implements SearchableScreen {
 
     private void exitWithoutSaving(Button button) {
         ConfigManager.loadConfigFile();
-        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        ConfigManager.loadAllConfigOptions(true);
 
         McUtils.mc().setScreen(new WynntilsMenuScreen());
     }
