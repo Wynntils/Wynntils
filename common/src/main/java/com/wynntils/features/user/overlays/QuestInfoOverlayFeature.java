@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -42,9 +41,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
     public static boolean disableQuestTrackingOnScoreboard = true;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ScoreboardModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ScoreboardModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

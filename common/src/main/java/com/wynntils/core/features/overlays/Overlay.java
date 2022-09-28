@@ -83,6 +83,12 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
 
     protected abstract void onConfigUpdate(ConfigHolder configHolder);
 
+    @Override
+    public String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     /** Gets the name of a feature */
     @Override
     public String getTranslatedName() {

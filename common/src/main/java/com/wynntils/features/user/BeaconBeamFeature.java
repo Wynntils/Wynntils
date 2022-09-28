@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.config.Config;
@@ -18,6 +17,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.entity.player.Player;
@@ -32,9 +32,8 @@ public class BeaconBeamFeature extends UserFeature {
     public boolean autoTrackQuestCoordinates = true;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(CompassModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(CompassModel.class);
     }
 
     @SubscribeEvent

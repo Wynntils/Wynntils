@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays.map;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -16,6 +15,7 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
+import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -44,8 +44,7 @@ public class MapFeature extends UserFeature {
     });
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(MapModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(MapModel.class);
     }
 }

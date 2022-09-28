@@ -46,7 +46,7 @@ public class ConfigCommand extends CommandBase {
                         if (foundFeature.isEmpty()) return Collections.emptyIterator();
 
                         return foundFeature.get().getOverlays().stream()
-                                .map(Overlay::getShortName)
+                                .map(Overlay::getConfigJsonName)
                                 .iterator();
                     },
                     builder);
@@ -77,7 +77,7 @@ public class ConfigCommand extends CommandBase {
 
                         Feature feature = featureOptional.get();
                         Optional<Overlay> overlayOptional = feature.getOverlays().stream()
-                                .filter(overlay -> overlay.getShortName().equals(overlayName))
+                                .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                                 .findFirst();
 
                         if (overlayOptional.isEmpty()) return Collections.emptyIterator();
@@ -582,7 +582,7 @@ public class ConfigCommand extends CommandBase {
         }
 
         Optional<Overlay> overlayOptional = feature.getOverlays().stream()
-                .filter(overlay -> overlay.getShortName().equals(overlayName))
+                .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                 .findFirst();
 
         if (overlayOptional.isEmpty()) {

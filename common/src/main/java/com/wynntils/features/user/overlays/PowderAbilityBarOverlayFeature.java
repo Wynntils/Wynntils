@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
@@ -27,15 +26,15 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
+import java.util.List;
 
 public class PowderAbilityBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ActionBarModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ActionBarModel.class);
     }
 
     public static class PowderAbilityBarOverlay extends Overlay {

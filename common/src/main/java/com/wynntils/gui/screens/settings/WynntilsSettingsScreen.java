@@ -55,6 +55,8 @@ public class WynntilsSettingsScreen extends Screen implements SearchableScreen {
 
     @Override
     protected void init() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+
         featureList = new FeatureList(this);
 
         this.exitButton = new Button(
@@ -90,6 +92,12 @@ public class WynntilsSettingsScreen extends Screen implements SearchableScreen {
         this.addRenderableWidget(this.featureSettingWidget);
 
         this.setFocused(searchWidget);
+    }
+
+    @Override
+    public void onClose() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
+        super.onClose();
     }
 
     @Override

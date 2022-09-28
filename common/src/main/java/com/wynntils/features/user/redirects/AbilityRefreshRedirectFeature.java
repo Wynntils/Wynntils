@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -12,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -23,9 +23,8 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
             Pattern.compile("§8\\[§r§7⬤§r§8\\] §r§7(.+)§r§8 has been refreshed!");
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ChatModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

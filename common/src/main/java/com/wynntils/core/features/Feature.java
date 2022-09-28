@@ -32,9 +32,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature> {
+public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature>, ModelDependant {
     private ImmutableList<Condition> conditions;
-    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
@@ -45,12 +44,10 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
-        onInit(conditions, dependencies);
+        onInit(conditions);
 
         this.conditions = conditions.build();
-        this.dependencies = dependencies.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
@@ -121,8 +118,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     }
 
     /** Called on init of Feature */
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     /** Called to activate a feature */
     public final void enable() {
@@ -131,6 +127,8 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         if (!canEnable()) return;
 
         state = FeatureState.ENABLED;
+
+        List<Class<? extends Model>> dependencies = getModelDependencies();
 
         for (Class<? extends Model> dependency : dependencies) {
             ManagerRegistry.addDependency(this, dependency);
@@ -151,7 +149,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
 
         state = FeatureState.DISABLED;
 
-        ManagerRegistry.removeAllFeatureDependency(this);
+        ManagerRegistry.removeAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
@@ -176,8 +174,19 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         return true;
     }
 
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of();
+    }
+  
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+    @Override
+    public String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
 
     public FeatureCategory getCategory() {
         return category;
