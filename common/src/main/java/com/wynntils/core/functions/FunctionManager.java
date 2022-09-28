@@ -7,7 +7,6 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.managers.Model;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
