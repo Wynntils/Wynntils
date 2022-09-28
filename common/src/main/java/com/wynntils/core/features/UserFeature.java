@@ -4,10 +4,8 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import java.util.Optional;
 
 /**
  * A feature that is enabled & disabled by the user.
