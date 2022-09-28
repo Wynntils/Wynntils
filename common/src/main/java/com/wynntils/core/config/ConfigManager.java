@@ -171,26 +171,31 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
+    private static Type findFieldType(Configurable parent, Field configField) {
+        Optional<Field> typeField = Arrays.stream(
+                        FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
+                .filter(field ->
+                        field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
+                .findFirst();
+
+        if (typeField.isPresent()) {
+            try {
+                return (Type) FieldUtils.readField(typeField.get(), parent, true);
+            } catch (IllegalAccessException e) {
+                WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
+            }
+        }
+
+        return null;
+    }
+
     private static List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
 
-            Optional<Field> typeField = Arrays.stream(
-                            FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                    .filter(field ->
-                            field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
-                    .findFirst();
-
-            Type type = null;
-            if (typeField.isPresent()) {
-                try {
-                    type = (Type) FieldUtils.readField(typeField.get(), parent, true);
-                } catch (IllegalAccessException e) {
-                    WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
-                }
-            }
+            Type type = findFieldType(parent, configField);
 
             ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, type);
             if (WynntilsMod.isDevelopmentEnvironment()) {

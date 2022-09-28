@@ -45,9 +45,7 @@ public class ConfigHolder {
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        Object valueTemp = this.getValue();
-        Type fieldTypeTemp =
-                typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
+        Type fieldTypeTemp = calculateType(typeOverride, getValue(), field);
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
@@ -59,6 +57,18 @@ public class ConfigHolder {
         }
 
         this.fieldType = fieldTypeTemp;
+    }
+
+    private Type calculateType(Type typeOverride, Object value, Field field) {
+        if (typeOverride != null) {
+            return typeOverride;
+        }
+
+        if (value != null) {
+            return value.getClass();
+        }
+
+        return field.getType();
     }
 
     public Type getType() {
