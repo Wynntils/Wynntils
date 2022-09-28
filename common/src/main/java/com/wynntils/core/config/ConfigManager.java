@@ -45,8 +45,13 @@ public final class ConfigManager extends CoreManager {
     private static Gson gson;
 
     public static void registerFeature(Feature feature) {
-        List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
+        for (Overlay overlay : feature.getOverlays()) {
+            List<ConfigHolder> options = getConfigOptions(overlay);
 
+            registerConfigOptions(overlay, options);
+        }
+
+        List<ConfigHolder> featureConfigOptions = getConfigOptions(feature);
         registerConfigOptions(feature, featureConfigOptions);
     }
 
@@ -164,20 +169,6 @@ public final class ConfigManager extends CoreManager {
             WynntilsMod.info("Default config file created with " + holderJson.size() + " config values.");
         } catch (IOException e) {
             WynntilsMod.error("Failed to save user config file!", e);
-        }
-    }
-
-    private static List<ConfigHolder> collectConfigOptions(Feature feature) {
-        loadFeatureOverlayConfigOptions(feature);
-        return getConfigOptions(feature);
-    }
-
-    private static void loadFeatureOverlayConfigOptions(Feature feature) {
-        // collect feature's overlays' config options
-        for (Overlay overlay : feature.getOverlays()) {
-            List<ConfigHolder> options = getConfigOptions(overlay);
-
-            registerConfigOptions(overlay, options);
         }
     }
 
