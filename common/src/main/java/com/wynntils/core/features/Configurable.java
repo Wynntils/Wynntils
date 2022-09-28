@@ -23,5 +23,5 @@ public interface Configurable {
     /** Returns the config option matching the given name, if it exists */
     Optional<ConfigHolder> getConfigOptionFromString(String name);
 
-  String getConfigJsonName();
+    String getConfigJsonName();
 }
