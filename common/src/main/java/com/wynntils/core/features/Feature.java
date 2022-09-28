@@ -32,7 +32,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature>, ModelDependant {
+public abstract class Feature extends AbstractConfigurable
+        implements Translatable, Comparable<Feature>, ModelDependant {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
@@ -178,7 +179,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of();
     }
-  
+
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
