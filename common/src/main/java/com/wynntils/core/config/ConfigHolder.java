@@ -43,18 +43,12 @@ public class ConfigHolder {
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        Type fieldTypeTemp = calculateType(typeOverride, getValue(), field);
+        this.fieldType = calculateType(typeOverride, getValue(), field);
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
         this.defaultValue =
-                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
-
-        if (typeOverride == null && this.defaultValue != null) {
-            fieldTypeTemp = defaultValue.getClass();
-        }
-
-        this.fieldType = fieldTypeTemp;
+                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), this.fieldType);
     }
 
     private Type calculateType(Type typeOverride, Object value, Field field) {
