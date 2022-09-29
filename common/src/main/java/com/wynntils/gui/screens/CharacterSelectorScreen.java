@@ -97,8 +97,8 @@ public class CharacterSelectorScreen extends Screen {
         float deleteButtonWidth = Texture.REMOVE_BUTTON.width() * currentTextureScale;
         float deleteButtonHeight = Texture.REMOVE_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionDeleteButton(
-                (int) (this.width * 0.152f),
-                (int) (this.height * 0.912f),
+                (int) (this.width * 0.1535f),
+                (int) (this.height * 0.915f),
                 (int) deleteButtonWidth,
                 (int) deleteButtonHeight,
                 this));
@@ -106,8 +106,8 @@ public class CharacterSelectorScreen extends Screen {
         float editButtonWidth = Texture.EDIT_BUTTON.width() * currentTextureScale;
         float editButtonHeight = Texture.EDIT_BUTTON.height() * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionEditButton(
-                (int) (this.width * 0.1135f),
-                (int) (this.height * 0.912f),
+                (int) (this.width * 0.1132f),
+                (int) (this.height * 0.915f),
                 (int) editButtonWidth,
                 (int) editButtonHeight,
                 this));
@@ -116,7 +116,7 @@ public class CharacterSelectorScreen extends Screen {
         float addButtonHeight = Texture.ADD_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionAddButton(
                 (int) (this.width * 0.057f),
-                (int) (this.height * 0.912f),
+                (int) (this.height * 0.915f),
                 (int) addButtonWidth,
                 (int) addButtonHeight,
                 this));
@@ -299,7 +299,7 @@ public class CharacterSelectorScreen extends Screen {
         poseStack.pushPose();
 
         poseStack.scale(scale, scale, 0f);
-        poseStack.translate(this.width * 0.018f, this.height * 0.01f, 0);
+        poseStack.translate(this.width * 0.04f / currentTextureScale, this.height * 0.01f / currentTextureScale, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -326,7 +326,7 @@ public class CharacterSelectorScreen extends Screen {
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, 0f);
-        poseStack.translate(this.width * 0.022f, this.height * 0.01f, 0);
+        poseStack.translate(this.width * 0.045f / currentTextureScale, this.height * 0.01f / currentTextureScale, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -463,5 +463,9 @@ public class CharacterSelectorScreen extends Screen {
 
     public int getFirstNewCharacterSlot() {
         return firstNewCharacterSlot;
+    }
+
+    public float getCurrentTextureScale() {
+        return currentTextureScale;
     }
 }

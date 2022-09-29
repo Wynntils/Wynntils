@@ -51,7 +51,10 @@ public class ClassInfoButton extends AbstractButton {
                 Texture.CHARACTER_BUTTON.height());
 
         RenderUtils.renderGuiItem(
-                classInfo.itemStack(), (int) (this.x + this.width * 0.08f), (int) (this.y + this.height * 0.25f), 1.6f);
+                classInfo.itemStack(),
+                (int) (this.x + this.width * 0.08f),
+                (int) (this.y + this.height * 0.25f),
+                this.height * 0.025f);
 
         poseStack.pushPose();
         poseStack.translate(this.x + this.width * 0.25f, this.y + this.height * 0.16f, 0f);
