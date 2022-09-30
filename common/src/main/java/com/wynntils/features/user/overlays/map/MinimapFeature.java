@@ -35,16 +35,16 @@ import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.MAP)
-public class MiniMapFeature extends UserFeature {
+public class MinimapFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
-    public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
+    public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(MapModel.class);
     }
 
-    public static class MiniMapOverlay extends Overlay {
+    public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
         @Config
@@ -80,7 +80,7 @@ public class MiniMapFeature extends UserFeature {
         @Config
         public boolean showCoords = true;
 
-        public MiniMapOverlay() {
+        public MinimapOverlay() {
             super(
                     new OverlayPosition(
                             5,
