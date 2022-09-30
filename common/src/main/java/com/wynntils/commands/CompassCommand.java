@@ -56,6 +56,9 @@ public class CompassCommand extends CommandBase {
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(this::notImplemented))
                         .build())
+                .then(Commands.literal("clear")
+                            .executes(this::compassClear)
+                        .build())
                 .executes(this::syntaxError);
     }
 
@@ -161,6 +164,14 @@ public class CompassCommand extends CommandBase {
         MutableComponent response =
                 new TextComponent("Setting compass to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+        context.getSource().sendSuccess(response, false);
+        return 1;
+    }
+
+    private int compassClear(CommandContext<CommandSourceStack> context) {
+        CompassModel.reset();
+
+        MutableComponent response = new TextComponent("Compass cleared").withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
