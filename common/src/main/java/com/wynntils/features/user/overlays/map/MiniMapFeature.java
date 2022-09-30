@@ -32,7 +32,6 @@ import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
-import net.minecraft.client.renderer.GameRenderer;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MiniMapFeature extends UserFeature {
@@ -108,9 +107,10 @@ public class MiniMapFeature extends UserFeature {
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                    // case Circle -> {
-                    // TODO
-                    // }
+                case Circle -> {
+                    RenderUtils.createMask(
+                            poseStack, Texture.CIRCLE, (int) renderX, (int) renderY, (int) width, (int) height);
+                }
             }
 
             // TODO replace with generalized maps whenever that is done
@@ -155,13 +155,14 @@ public class MiniMapFeature extends UserFeature {
             switch (maskType) {
                 case Rectangular -> {
                     RenderSystem.disableScissor();
-                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
                 }
-                    // case Circle -> {
-                    // TODO
-                    // renderCircularMapBorder();
-                    // }
+                case Circle -> {
+                    RenderUtils.clearMask();
+                }
             }
+
+            // render border
+            renderMapBorder(poseStack, renderX, renderY, width, height);
 
             // Directional Text
             renderCardinalDirections(poseStack, width, height, centerX, centerZ);
@@ -254,22 +255,19 @@ public class MiniMapFeature extends UserFeature {
                             new TextRenderTask("W", TextRenderSetting.CENTERED));
         }
 
-        private void renderRectangularMapBorder(
-                PoseStack poseStack, float renderX, float renderY, float width, float height) {
+        private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
             int grooves = borderType.groovesSize();
-            MapBorderType.BorderInfo squareBorder = borderType.square();
-            int tx1 = squareBorder.tx1();
-            int ty1 = squareBorder.ty1();
-            int tx2 = squareBorder.tx2();
-            int ty2 = squareBorder.ty2();
+            MapBorderType.BorderInfo borderInfo =
+                    maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
+            int tx1 = borderInfo.tx1();
+            int ty1 = borderInfo.ty1();
+            int tx2 = borderInfo.tx2();
+            int ty2 = borderInfo.ty2();
 
             // Scale to stay the same.
             float groovesWidth = grooves * width / DEFAULT_SIZE;
             float groovesHeight = grooves * height / DEFAULT_SIZE;
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, texture.resource());
 
             RenderUtils.drawTexturedRect(
                     poseStack,
@@ -296,6 +294,7 @@ public class MiniMapFeature extends UserFeature {
         North,
         All
     }
+
     public enum MapMaskType {
         Rectangular,
         Circle
