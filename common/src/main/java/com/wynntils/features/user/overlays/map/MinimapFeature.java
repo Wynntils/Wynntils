@@ -35,16 +35,16 @@ import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.MAP)
-public class MiniMapFeature extends UserFeature {
+public class MinimapFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
-    public final MiniMapOverlay miniMapOverlay = new MiniMapOverlay();
+    public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(MapModel.class);
     }
 
-    public static class MiniMapOverlay extends Overlay {
+    public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
         @Config
@@ -80,7 +80,7 @@ public class MiniMapFeature extends UserFeature {
         @Config
         public boolean showCoords = true;
 
-        public MiniMapOverlay() {
+        public MinimapOverlay() {
             super(
                     new OverlayPosition(
                             5,
@@ -108,11 +108,9 @@ public class MiniMapFeature extends UserFeature {
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                case Circle -> {
-                    RenderUtils.createMask(
-                            poseStack, Texture.CIRCLE, (int) renderX, (int) renderY, (int) (renderX + width), (int)
-                                    (renderY + height));
-                }
+                case Circle -> RenderUtils.createMask(
+                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
+                                (renderY + height));
             }
 
             // TODO replace with generalized maps whenever that is done
@@ -204,7 +202,7 @@ public class MiniMapFeature extends UserFeature {
                     northDX *= toSquareScaleNorth;
                     northDY *= toSquareScaleNorth;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleNorth = width / (MathUtils.mag(northDX, northDY * width / height)) / 2;
+                    double toSquareScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
                     northDX *= toSquareScaleNorth;
                     northDY *= toSquareScaleNorth;
                 }
@@ -236,7 +234,7 @@ public class MiniMapFeature extends UserFeature {
                     eastDX *= toSquareScaleEast;
                     eastDY *= toSquareScaleEast;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleEast = width / (MathUtils.mag(eastDX, eastDY * width / height)) / 2;
+                    double toSquareScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
                     eastDX *= toSquareScaleEast;
                     eastDY *= toSquareScaleEast;
                 }
