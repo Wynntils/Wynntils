@@ -9,7 +9,7 @@ import com.wynntils.gui.render.Texture;
 public enum MapBorderType {
     Gilded(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
     Paper(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
-    Wynn(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 122, 123, 235), 3);
+    Wynn(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
     private final Texture texture;
     private final BorderInfo square;
     private final BorderInfo circle;
