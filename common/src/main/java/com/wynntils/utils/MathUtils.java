@@ -71,7 +71,7 @@ public final class MathUtils {
         return MathUtils.lerp(toA, toB, MathUtils.inverseLerp(fromA, fromB, sourceNumber));
     }
 
-    public static float mag(float x, float y) {
+    public static float magnitude(float x, float y) {
         return (float) Math.sqrt(x * x + y * y);
     }
 }
