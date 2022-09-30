@@ -5,6 +5,7 @@
 package com.wynntils.gui.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,6 +33,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
     // tooltip colors for item screenshot creation. somewhat hacky solution to get around transparency issues -
@@ -945,6 +947,54 @@ public final class RenderUtils {
         poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
                 StrictMath.cos(-Math.toRadians(angle) / 2)));
         poseStack.translate(-centerX, -centerZ, 0);
+    }
+
+    public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
+        createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
+    }
+    
+    /**
+     * Creates a mask that will remove anything drawn after
+     * this and before the next {clearMask()}(or {endGL()})
+     * and is not inside the mask.
+     * A mask, is a clear and white texture where anything
+     * white will allow drawing.
+     *
+     * @param texture mask texture(please use Textures.Masks)
+     * @param x1 bottom-left x(on screen)
+     * @param y1 bottom-left y(on screen)
+     * @param x2 top-right x(on screen)
+     * @param y2 top-right y(on screen)
+     */
+    public static void createMask(PoseStack poseStack, Texture texture, float x1, float y1, float x2, float y2, float tx1, float ty1, float tx2, float ty2) {
+        RenderSystem.enableDepthTest();
+        RenderSystem.colorMask(false, false, false, true);
+
+        int width = texture.width();
+        int height = texture.height();
+        drawTexturedRect(poseStack,
+                texture.resource(),
+        x1,
+        y1,
+        1000f,
+        x2 - x1,
+        y2 - y1,
+                width,
+                height);
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(GL11.GL_GREATER);
+    }
+
+    /**
+     * Clears the active rendering mask from the screen.
+     */
+    public static void clearMask() {
+        RenderSystem.depthMask(true);
+        RenderSystem.clearDepth(0);
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     private static final class ClipboardImage implements Transferable {

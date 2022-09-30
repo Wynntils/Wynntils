@@ -296,4 +296,8 @@ public class MiniMapFeature extends UserFeature {
         North,
         All
     }
+    public enum MapMaskType {
+        Rectangular,
+        Circle
+    }
 }
