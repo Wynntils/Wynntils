@@ -121,7 +121,7 @@ public class CharacterSelectorScreen extends Screen {
                 (int) addButtonHeight,
                 this));
 
-        reloadQuestInfoButtons();
+        reloadButtons();
     }
 
     @Override
@@ -245,7 +245,7 @@ public class CharacterSelectorScreen extends Screen {
             }
         }
 
-        reloadQuestInfoButtons();
+        reloadButtons();
     }
 
     private void renderCharacterInfo(PoseStack poseStack) {
@@ -398,7 +398,7 @@ public class CharacterSelectorScreen extends Screen {
         scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE);
     }
 
-    private void reloadQuestInfoButtons() {
+    private void reloadButtons() {
         this.selected = null;
         this.scrollOffset = 0;
         classInfoButtons.clear();
