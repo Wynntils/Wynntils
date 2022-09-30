@@ -28,11 +28,11 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
-import net.minecraft.client.renderer.GameRenderer;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MiniMapFeature extends UserFeature {
@@ -83,8 +83,8 @@ public class MiniMapFeature extends UserFeature {
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
-                            0,
-                            0,
+                            5,
+                            5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
@@ -108,9 +108,11 @@ public class MiniMapFeature extends UserFeature {
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                    // case Circle -> {
-                    // TODO
-                    // }
+                case Circle -> {
+                    RenderUtils.createMask(
+                            poseStack, Texture.CIRCLE, (int) renderX, (int) renderY, (int) (renderX + width), (int)
+                                    (renderY + height));
+                }
             }
 
             // TODO replace with generalized maps whenever that is done
@@ -155,13 +157,14 @@ public class MiniMapFeature extends UserFeature {
             switch (maskType) {
                 case Rectangular -> {
                     RenderSystem.disableScissor();
-                    renderRectangularMapBorder(poseStack, renderX, renderY, width, height);
                 }
-                    // case Circle -> {
-                    // TODO
-                    // renderCircularMapBorder();
-                    // }
+                case Circle -> {
+                    RenderUtils.clearMask();
+                }
             }
+
+            // render border
+            renderMapBorder(poseStack, renderX, renderY, width, height);
 
             // Directional Text
             renderCardinalDirections(poseStack, width, height, centerX, centerZ);
@@ -200,6 +203,10 @@ public class MiniMapFeature extends UserFeature {
                     double toSquareScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
                     northDX *= toSquareScaleNorth;
                     northDY *= toSquareScaleNorth;
+                } else if (maskType == MapMaskType.Circle) {
+                    double toSquareScaleNorth = width / (MathUtils.mag(northDX, northDY * width / height)) / 2;
+                    northDX *= toSquareScaleNorth;
+                    northDY *= toSquareScaleNorth;
                 }
             } else {
                 northDX = 0;
@@ -228,6 +235,10 @@ public class MiniMapFeature extends UserFeature {
                     double toSquareScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
                     eastDX *= toSquareScaleEast;
                     eastDY *= toSquareScaleEast;
+                } else if (maskType == MapMaskType.Circle) {
+                    double toSquareScaleEast = width / (MathUtils.mag(eastDX, eastDY * width / height)) / 2;
+                    eastDX *= toSquareScaleEast;
+                    eastDY *= toSquareScaleEast;
                 }
             } else {
                 eastDX = width / 2;
@@ -254,21 +265,19 @@ public class MiniMapFeature extends UserFeature {
                             new TextRenderTask("W", TextRenderSetting.CENTERED));
         }
 
-        private void renderRectangularMapBorder(
-                PoseStack poseStack, float renderX, float renderY, float width, float height) {
+        private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
             int grooves = borderType.groovesSize();
-            int tx1 = borderType.tx1();
-            int ty1 = borderType.ty1();
-            int tx2 = borderType.tx2();
-            int ty2 = borderType.ty2();
+            MapBorderType.BorderInfo borderInfo =
+                    maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
+            int tx1 = borderInfo.tx1();
+            int ty1 = borderInfo.ty1();
+            int tx2 = borderInfo.tx2();
+            int ty2 = borderInfo.ty2();
 
             // Scale to stay the same.
             float groovesWidth = grooves * width / DEFAULT_SIZE;
             float groovesHeight = grooves * height / DEFAULT_SIZE;
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, texture.resource());
 
             RenderUtils.drawTexturedRect(
                     poseStack,
@@ -294,5 +303,10 @@ public class MiniMapFeature extends UserFeature {
         None,
         North,
         All
+    }
+
+    public enum MapMaskType {
+        Rectangular,
+        Circle
     }
 }
