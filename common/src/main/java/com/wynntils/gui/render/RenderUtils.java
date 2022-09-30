@@ -1005,7 +1005,7 @@ public final class RenderUtils {
      */
     public static void clearMask() {
         RenderSystem.depthMask(true);
-        RenderSystem.clearDepth(0);
+        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(GL11.GL_LESS);
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
