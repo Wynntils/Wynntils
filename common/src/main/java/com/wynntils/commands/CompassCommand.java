@@ -56,9 +56,7 @@ public class CompassCommand extends CommandBase {
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(this::notImplemented))
                         .build())
-                .then(Commands.literal("clear")
-                            .executes(this::compassClear)
-                        .build())
+                .then(Commands.literal("clear").executes(this::compassClear).build())
                 .executes(this::syntaxError);
     }
 
