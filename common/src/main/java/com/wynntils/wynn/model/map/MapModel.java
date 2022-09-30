@@ -63,8 +63,9 @@ public final class MapModel extends Model {
     public static Stream<Poi> getAllPois() {
         if (CompassModel.getCompassLocation().isPresent()) {
             Location location = CompassModel.getCompassLocation().get();
+            // Always render waypoint POI on top
             WaypointPoi waypointPoi =
-                    new WaypointPoi(new MapLocation((int) location.x, (int) location.y, (int) location.z));
+                    new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
 
             return Stream.concat(allPois.stream(), Stream.of(waypointPoi));
         }
