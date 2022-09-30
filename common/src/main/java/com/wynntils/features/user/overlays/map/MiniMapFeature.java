@@ -83,8 +83,8 @@ public class MiniMapFeature extends UserFeature {
         public MiniMapOverlay() {
             super(
                     new OverlayPosition(
-                            0,
-                            0,
+                            5,
+                            5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
