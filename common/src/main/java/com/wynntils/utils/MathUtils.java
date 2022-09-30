@@ -68,11 +68,10 @@ public final class MathUtils {
     }
 
     public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {
-        float deltaA = fromB - fromA;
-        float deltaB = toB - toA;
-        float scale = deltaB / deltaA;
-        float negA = -1 * fromA;
-        float offset = (negA * scale) + toA;
-        return (sourceNumber * scale) + offset;
+        return MathUtils.lerp(toA, toB, MathUtils.inverseLerp(fromA, fromB, sourceNumber));
+    }
+
+    public static float mag(float x, float y) {
+        return (float) Math.sqrt(x * x + y * y);
     }
 }

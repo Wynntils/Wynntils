@@ -315,7 +315,7 @@
   "feature.wynntils.miniMap.overlay.miniMap.followPlayerRotation.name": "Follow Player Rotation",
   "feature.wynntils.miniMap.overlay.miniMap.maskType.description": "Should the minimap be a rectangle or a circle? (Circle is unsupported as of now)?",
   "feature.wynntils.miniMap.overlay.miniMap.maskType.name": "Map Mask Type",
-  "feature.wynntils.miniMap.overlay.miniMap.name": "Mini Map Overlay",
+  "feature.wynntils.miniMap.overlay.miniMap.name": "Mini Map",
   "feature.wynntils.miniMap.overlay.miniMap.poiScale.description": "How big should mini-map POIs be?",
   "feature.wynntils.miniMap.overlay.miniMap.poiScale.name": "Mini Map Point of Interest Scale",
   "feature.wynntils.miniMap.overlay.miniMap.pointerColor.description": "What colour should the minimap pointer be?",

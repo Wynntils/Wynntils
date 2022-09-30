@@ -28,6 +28,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapProfile;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -109,7 +110,8 @@ public class MiniMapFeature extends UserFeature {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
                 case Circle -> {
                     RenderUtils.createMask(
-                            poseStack, Texture.CIRCLE, (int) renderX, (int) renderY, (int) width, (int) height);
+                            poseStack, Texture.CIRCLE, (int) renderX, (int) renderY, (int) (renderX + width), (int)
+                                    (renderY + height));
                 }
             }
 
@@ -201,6 +203,10 @@ public class MiniMapFeature extends UserFeature {
                     double toSquareScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
                     northDX *= toSquareScaleNorth;
                     northDY *= toSquareScaleNorth;
+                } else if (maskType == MapMaskType.Circle) {
+                    double toSquareScaleNorth = width / (MathUtils.mag(northDX, northDY * width / height)) / 2;
+                    northDX *= toSquareScaleNorth;
+                    northDY *= toSquareScaleNorth;
                 }
             } else {
                 northDX = 0;
@@ -227,6 +233,10 @@ public class MiniMapFeature extends UserFeature {
                 if (maskType == MapMaskType.Rectangular) {
                     // Scale as necessary
                     double toSquareScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
+                    eastDX *= toSquareScaleEast;
+                    eastDY *= toSquareScaleEast;
+                } else if (maskType == MapMaskType.Circle) {
+                    double toSquareScaleEast = width / (MathUtils.mag(eastDX, eastDY * width / height)) / 2;
                     eastDX *= toSquareScaleEast;
                     eastDY *= toSquareScaleEast;
                 }
