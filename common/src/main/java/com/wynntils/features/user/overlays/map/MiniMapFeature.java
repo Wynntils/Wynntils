@@ -258,10 +258,11 @@ public class MiniMapFeature extends UserFeature {
                 PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
             int grooves = borderType.groovesSize();
-            int tx1 = borderType.tx1();
-            int ty1 = borderType.ty1();
-            int tx2 = borderType.tx2();
-            int ty2 = borderType.ty2();
+            MapBorderType.BorderInfo squareBorder = borderType.square();
+            int tx1 = squareBorder.tx1();
+            int ty1 = squareBorder.ty1();
+            int tx2 = squareBorder.tx2();
+            int ty2 = squareBorder.ty2();
 
             // Scale to stay the same.
             float groovesWidth = grooves * width / DEFAULT_SIZE;
