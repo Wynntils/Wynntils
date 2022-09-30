@@ -22,7 +22,7 @@ public class CustomCharacterSelectionScreenFeature extends UserFeature {
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent event) {
-        if (openedInThisCharacterSelectionState
+        if ((onlyOpenOnce && openedInThisCharacterSelectionState)
                 || WorldStateManager.getCurrentState() != WorldStateManager.State.CHARACTER_SELECTION) return;
 
         if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals("§8§lSelect a Character")) {
