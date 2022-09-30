@@ -7,22 +7,18 @@ package com.wynntils.features.user.overlays.map;
 import com.wynntils.gui.render.Texture;
 
 public enum MapBorderType {
-    Gilded(Texture.GILDED_MAP_TEXTURES, 0, 262, 262, 524, 1),
-    Paper(Texture.PAPER_MAP_TEXTURES, 0, 0, 217, 217, 3),
-    Wynn(Texture.WYNN_MAP_TEXTURES, 0, 0, 112, 112, 3);
+    Gilded(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
+    Paper(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
+    Wynn(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
     private final Texture texture;
-    private final int tx1;
-    private final int ty1;
-    private final int tx2;
-    private final int ty2;
+    private final BorderInfo square;
+    private final BorderInfo circle;
     private final int groovesSize;
 
-    MapBorderType(Texture texture, int tx1, int ty1, int tx2, int ty2, int groovesSize) {
+    MapBorderType(Texture texture, BorderInfo square, BorderInfo circle, int groovesSize) {
         this.texture = texture;
-        this.tx1 = tx1;
-        this.ty1 = ty1;
-        this.tx2 = tx2;
-        this.ty2 = ty2;
+        this.square = square;
+        this.circle = circle;
         this.groovesSize = groovesSize;
     }
 
@@ -30,23 +26,17 @@ public enum MapBorderType {
         return texture;
     }
 
-    public int tx1() {
-        return tx1;
-    }
-
-    public int ty1() {
-        return ty1;
-    }
-
-    public int tx2() {
-        return tx2;
-    }
-
-    public int ty2() {
-        return ty2;
-    }
-
     public int groovesSize() {
         return groovesSize;
     }
+
+    public BorderInfo square() {
+        return square;
+    }
+
+    public BorderInfo circle() {
+        return circle;
+    }
+
+    public record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
 }

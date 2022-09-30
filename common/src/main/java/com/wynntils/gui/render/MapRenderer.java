@@ -31,7 +31,6 @@ import org.lwjgl.opengl.GL13;
 public class MapRenderer {
     private static Poi hovered = null;
 
-    // TODO: Support circle map rendering
     public static void renderMapQuad(
             MapProfile map,
             PoseStack poseStack,
@@ -116,10 +115,10 @@ public class MapRenderer {
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
 
-        float mapLeftX = centerX - halfRenderedWidth;
-        float mapTopZ = centerZ - halfRenderedHeight;
-        float mapRightX = centerX + halfRenderedWidth;
-        float mapBottomZ = centerZ + halfRenderedHeight;
+        float mapLeftX = centerX - width / 2f;
+        float mapTopZ = centerZ - height / 2f;
+        float mapRightX = centerX + width / 2f;
+        float mapBottomZ = centerZ + height / 2f;
 
         if (renderMapLabels) {
             renderLabelPois(
@@ -221,7 +220,7 @@ public class MapRenderer {
                 .filter(poi -> poi.getIcon() != null)
                 .filter(poi -> isPoiVisible(
                         mapCenterX, mapCenterZ, centerX, centerZ, scale, mapLeftX, mapTopZ, mapRightX, mapBottomZ, poi))
-                .sorted(Comparator.comparing(poi -> -poi.getLocation().getY()))
+                .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
                 .toList();
 
         if (mouseCoordinates != null) {
@@ -335,7 +334,7 @@ public class MapRenderer {
                 renderablePoi.getIcon().resource(),
                 renderX,
                 renderZ,
-                renderablePoi.getLocation().getY(),
+                0,
                 width,
                 height,
                 renderablePoi.getIcon().width(),

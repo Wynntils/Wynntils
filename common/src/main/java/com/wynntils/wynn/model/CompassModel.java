@@ -26,13 +26,19 @@ public final class CompassModel extends Model {
     public static void setCompassLocation(Location compassLocation) {
         CompassModel.compassLocation = compassLocation;
 
-        if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+        if (McUtils.mc().level != null) {
+            McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+        }
     }
 
     public static void reset() {
         compassLocation = null;
 
-        if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(null, 0);
+        if (McUtils.mc().level != null) {
+            // We can't remove the compass behavior, so arbitrarily set it to our
+            // current position
+            McUtils.mc().level.setDefaultSpawnPos(McUtils.player().blockPosition(), 0);
+        }
     }
 
     @SubscribeEvent
@@ -41,15 +47,17 @@ public final class CompassModel extends Model {
 
         if (McUtils.player() == null) {
             // Reset compass
-            CompassModel.reset();
+            compassLocation = null;
 
-            if (McUtils.mc().level != null) McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
+            if (McUtils.mc().level != null) {
+                McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
+            }
 
             return;
         }
 
-        // Cancel the event to force the compass to not change
-        if (CompassModel.getCompassLocation().isPresent()) {
+        if (compassLocation != null) {
+            // If we have a set location, do not update our spawn point
             e.setCanceled(true);
         }
     }
