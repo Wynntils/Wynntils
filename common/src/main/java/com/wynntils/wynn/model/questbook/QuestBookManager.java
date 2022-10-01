@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
@@ -194,7 +195,8 @@ public class QuestBookManager extends CoreManager {
 
                 String questName = QuestInfo.getQuestName(item);
                 if (Objects.equals(questName, questInfo.getName())) {
-                    ContainerUtils.clickOnSlot(slot, container.containerId(), container.items());
+                    ContainerUtils.clickOnSlot(
+                            slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                     return;
                 }
             }

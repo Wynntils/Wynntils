@@ -14,6 +14,7 @@ import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
@@ -36,6 +37,7 @@ public final class ManagerRegistry {
         // Bootstrapping order is important, take care if reordering
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
+        registerPersistentDependency(CharacterSelectionManager.class);
         registerPersistentDependency(ClientCommandManager.class);
         registerPersistentDependency(ContainerQueryManager.class);
         registerPersistentDependency(FunctionManager.class);
