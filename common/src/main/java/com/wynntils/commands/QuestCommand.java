@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.wynn.model.questbook.QuestBookModel;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.TextComponent;
 public class QuestCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    QuestBookModel.getQuests().stream()
+                    QuestBookManager.getQuests().stream()
                             .map(questInfo -> questInfo.getName().replaceAll(" ", " ")),
                     builder);
 
@@ -50,7 +50,7 @@ public class QuestCommand extends CommandBase {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context) {
-        List<QuestInfo> quests = QuestBookModel.getQuests();
+        List<QuestInfo> quests = QuestBookManager.getQuests();
         // FIXME: sort argument "level", "distance", "alphabetical"
         // FIXME: filter "started", "can start", etc
 
@@ -73,7 +73,7 @@ public class QuestCommand extends CommandBase {
 
     private int questInfo(CommandContext<CommandSourceStack> context) {
         String questName = context.getArgument("quest", String.class).toLowerCase(Locale.ROOT);
-        List<QuestInfo> matchingQuests = QuestBookModel.getQuests().stream()
+        List<QuestInfo> matchingQuests = QuestBookManager.getQuests().stream()
                 .filter(questInfo ->
                         questInfo.getName().toLowerCase(Locale.ROOT).contains(questName))
                 .toList();
