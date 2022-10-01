@@ -27,12 +27,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 public final class MapModel extends Model {
@@ -44,7 +43,7 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
 
     private static final Gson GSON = new GsonBuilder().create();
-    private static List<MapTexture> maps = Collections.synchronizedList(new ArrayList());
+    private static List<MapTexture> maps = new CopyOnWriteArrayList();
     private static final Set<Poi> allPois = new HashSet<>();
 
     public static void init() {
