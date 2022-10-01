@@ -30,7 +30,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class MainMapScreen extends Screen {
     private static final float SCREEN_SIDE_OFFSET = 10;
-    private static final float BORDER_OFFSET = 7;
+    private static final float BORDER_OFFSET = 6;
 
     private boolean holdingMapKey = false;
 
@@ -128,17 +128,13 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        if (!MapModel.isMapLoaded()) {
-            renderBackground(poseStack);
-            return;
+        if (MapModel.isMapLoaded()) {
+            MapProfile map = MapModel.getMaps().get(0);
+            float textureX = map.getTextureXPosition(mapCenterX);
+            float textureZ = map.getTextureZPosition(mapCenterZ);
+
+            renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
         }
-
-        MapProfile map = MapModel.getMaps().get(0);
-        float textureX = map.getTextureXPosition(mapCenterX);
-        float textureZ = map.getTextureZPosition(mapCenterZ);
-
-        renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
-
         renderBackground(poseStack);
 
         renderCursor(poseStack);
@@ -165,6 +161,11 @@ public class MainMapScreen extends Screen {
 
     private void renderMap(
             PoseStack poseStack, MapProfile map, float textureX, float textureZ, int mouseX, int mouseY) {
+        RenderUtils.enableScissor(
+                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
+                        mapHeight);
+
+        // Background black void color
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.BLACK,
@@ -190,6 +191,8 @@ public class MainMapScreen extends Screen {
                 MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
                 false,
                 false);
+
+        RenderSystem.disableScissor();
     }
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
