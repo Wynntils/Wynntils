@@ -12,13 +12,11 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.objects.ClassInfo;
-import com.wynntils.wynn.utils.ContainerUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import org.lwjgl.glfw.GLFW;
 
 public class ClassInfoButton extends AbstractButton {
     private final ClassInfo classInfo;
@@ -101,10 +99,7 @@ public class ClassInfoButton extends AbstractButton {
     @Override
     public void onPress() {
         if (characterSelectorScreen.getSelected() == this) {
-            AbstractContainerMenu menu =
-                    characterSelectorScreen.getActualClassSelectionScreen().getMenu();
-            ContainerUtils.clickOnSlot(
-                    classInfo.slot(), menu.containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, menu.getItems());
+            CharacterSelectionManager.playWithCharacter(classInfo.slot());
         }
     }
 
