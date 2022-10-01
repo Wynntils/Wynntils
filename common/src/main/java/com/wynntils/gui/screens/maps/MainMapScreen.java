@@ -19,8 +19,9 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import java.util.Optional;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -128,8 +129,10 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        if (MapModel.isMapLoaded()) {
-            MapProfile map = MapModel.getMaps().get(0);
+        Optional<MapTexture> mapOpt = MapModel.getMapForLocation(
+                (int) mapCenterX, (int) mapCenterZ);
+        if (mapOpt.isPresent()) {
+            MapTexture map = mapOpt.get();
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
 
@@ -160,7 +163,7 @@ public class MainMapScreen extends Screen {
     }
 
     private void renderMap(
-            PoseStack poseStack, MapProfile map, float textureX, float textureZ, int mouseX, int mouseY) {
+            PoseStack poseStack, MapTexture map, float textureX, float textureZ, int mouseX, int mouseY) {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);

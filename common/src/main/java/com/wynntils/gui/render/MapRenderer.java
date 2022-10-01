@@ -19,7 +19,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.Comparator;
@@ -32,7 +32,7 @@ public class MapRenderer {
     private static Poi hovered = null;
 
     public static void renderMapQuad(
-            MapProfile map,
+            MapTexture map,
             PoseStack poseStack,
             float mapCenterX,
             float mapCenterZ,

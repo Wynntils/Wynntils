@@ -86,9 +86,6 @@ public class WynntilsCommand extends CommandBase {
         }
 
         WebManager.reset();
-        // FIXME: This is weird but keeping the old logic for now
-        MapModel.reset();
-
         WebManager.init(); // reloads api urls as well as web manager
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
