@@ -22,3 +22,4 @@ extendable method net/minecraft/client/gui/components/AbstractSelectionList getE
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 mutable field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
+accessible field net/minecraft/client/renderer/entity/ItemRenderer textureManager Lnet/minecraft/client/renderer/texture/TextureManager;

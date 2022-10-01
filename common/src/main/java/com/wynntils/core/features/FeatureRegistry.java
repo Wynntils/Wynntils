@@ -20,6 +20,7 @@ import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
+import com.wynntils.features.user.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.user.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.DialogueOptionOverrideFeature;
 import com.wynntils.features.user.EmeraldPouchHotkeyFeature;
@@ -96,6 +97,7 @@ public final class FeatureRegistry {
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new CustomBarsOverlayFeature());
+        registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
