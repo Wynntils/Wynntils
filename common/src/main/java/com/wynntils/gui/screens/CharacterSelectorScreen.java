@@ -64,6 +64,8 @@ public class CharacterSelectorScreen extends Screen {
     protected void init() {
         currentTextureScale = (float) this.height / Texture.LIST_BACKGROUND.height();
 
+        float listWidth = Texture.LIST_BACKGROUND.width() * currentTextureScale;
+
         float playButtonWidth = Texture.PLAY_BUTTON.width() * currentTextureScale;
         float playButtonHeight = Texture.PLAY_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new PlayButton(
@@ -76,7 +78,7 @@ public class CharacterSelectorScreen extends Screen {
         float deleteButtonWidth = Texture.REMOVE_BUTTON.width() * currentTextureScale;
         float deleteButtonHeight = Texture.REMOVE_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionDeleteButton(
-                (int) (this.width * 0.1535f),
+                (int) (listWidth * 0.6f),
                 (int) (this.height * 0.915f),
                 (int) deleteButtonWidth,
                 (int) deleteButtonHeight,
@@ -85,7 +87,7 @@ public class CharacterSelectorScreen extends Screen {
         float editButtonWidth = Texture.EDIT_BUTTON.width() * currentTextureScale;
         float editButtonHeight = Texture.EDIT_BUTTON.height() * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionEditButton(
-                (int) (this.width * 0.1132f),
+                (int) (listWidth * 0.44f),
                 (int) (this.height * 0.915f),
                 (int) editButtonWidth,
                 (int) editButtonHeight,
@@ -94,7 +96,7 @@ public class CharacterSelectorScreen extends Screen {
         float addButtonWidth = Texture.ADD_BUTTON.width() * currentTextureScale;
         float addButtonHeight = Texture.ADD_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionAddButton(
-                (int) (this.width * 0.057f),
+                (int) (listWidth * 0.22f),
                 (int) (this.height * 0.915f),
                 (int) addButtonWidth,
                 (int) addButtonHeight,
@@ -219,8 +221,8 @@ public class CharacterSelectorScreen extends Screen {
                 renderHeight,
                 Texture.CHARACTER_INFO.width(),
                 Texture.CHARACTER_INFO.height());
-        float offsetX = this.width * 0.028f;
-        float offsetY = this.height * 0.02f;
+        float offsetX = renderWidth * 0.028f;
+        float offsetY = renderHeight * 0.02f;
         float scale = this.height * 0.0035f;
 
         poseStack.translate(offsetX, offsetY, 0);
@@ -228,15 +230,18 @@ public class CharacterSelectorScreen extends Screen {
         RenderUtils.drawProgressBar(
                 poseStack,
                 Texture.XP_BAR,
-                0,
-                this.height * 0.08f,
-                this.width * 0.2f,
-                this.height * 0.095f,
+                renderWidth * 0.05f,
+                renderHeight * 0.7f,
+                renderWidth * 0.8f,
+                renderHeight * 0.8f,
                 0,
                 0,
                 Texture.XP_BAR.width(),
                 Texture.XP_BAR.height(),
                 selected.getClassInfo().xp() / 100f);
+
+        poseStack.pushPose();
+        poseStack.translate(renderWidth * 0.08f, renderHeight * 0.15f, 0);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -248,10 +253,10 @@ public class CharacterSelectorScreen extends Screen {
                 Texture.SOUL_POINT_ICON.height() * currentTextureScale,
                 Texture.SOUL_POINT_ICON.width(),
                 Texture.SOUL_POINT_ICON.height());
-        poseStack.pushPose();
 
+        poseStack.pushPose();
         poseStack.scale(scale, scale, 0f);
-        poseStack.translate(this.width * 0.04f / currentTextureScale, this.height * 0.01f / currentTextureScale, 0);
+        poseStack.translate(renderWidth * 0.125f / scale, 0, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -264,7 +269,7 @@ public class CharacterSelectorScreen extends Screen {
                         FontRenderer.TextShadow.NONE);
         poseStack.popPose();
 
-        poseStack.translate(this.width * 0.073f, 0, 0);
+        poseStack.translate(renderWidth * 0.27f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.QUESTS_ICON.resource(),
@@ -278,7 +283,7 @@ public class CharacterSelectorScreen extends Screen {
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, 0f);
-        poseStack.translate(this.width * 0.045f / currentTextureScale, this.height * 0.01f / currentTextureScale, 0);
+        poseStack.translate(renderWidth * 0.15f / scale, 0, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -291,7 +296,7 @@ public class CharacterSelectorScreen extends Screen {
                         FontRenderer.TextShadow.NONE);
         poseStack.popPose();
 
-        poseStack.translate(this.width * 0.084f, this.height * 0.005f, 0);
+        poseStack.translate(renderWidth * 0.32f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CHALLENGES_ICON.resource(),
@@ -304,6 +309,7 @@ public class CharacterSelectorScreen extends Screen {
                 Texture.CHALLENGES_ICON.height());
         // FIXME: I have no idea what to render here..
 
+        poseStack.popPose();
         poseStack.popPose();
     }
 
