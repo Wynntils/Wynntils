@@ -8,6 +8,7 @@ import com.mojang.math.Vector3d;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 public class Location extends Vector3d {
     public Location(double x, double y, double z) {
@@ -15,15 +16,19 @@ public class Location extends Vector3d {
     }
 
     public Location(Entity entity) {
-        super(entity.getX(), entity.getY(), entity.getZ());
+        this(entity.getX(), entity.getY(), entity.getZ());
     }
 
     public Location(BlockPos pos) {
-        super(pos.getX(), pos.getY(), pos.getZ());
+        this(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public Location(MapLocation location) {
-        super(location.getX(), location.getY(), location.getZ());
+        this(location.getX(), location.getY(), location.getZ());
+    }
+
+    public Location(Vec3 location) {
+        this(location.x(), location.y(), location.z());
     }
 
     public void add(Vector3d loc) {
@@ -94,6 +99,10 @@ public class Location extends Vector3d {
 
     public BlockPos toBlockPos() {
         return new BlockPos(x, y, z);
+    }
+
+    public Vec3 toVec3() {
+        return new Vec3(x, y, z);
     }
 
     public Location clone() throws CloneNotSupportedException {

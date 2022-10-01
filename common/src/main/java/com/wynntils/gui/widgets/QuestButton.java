@@ -5,10 +5,6 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -19,8 +15,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
 import com.wynntils.wynn.model.questbook.QuestStatus;
@@ -106,7 +100,7 @@ public class QuestButton extends AbstractButton {
     }
 
     private void trackQuest() {
-        if (this.questInfo.getStatus() != QuestStatus.CANNOT_START) {
+        if (this.questInfo.isTrackable()) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
             QuestBookManager.trackQuest(this.questInfo);
 
@@ -119,27 +113,8 @@ public class QuestButton extends AbstractButton {
     }
 
     private void openQuestWiki() {
-        final String baseUrl = "https://wynncraft.fandom.com/wiki/";
-
-        // todo handle mini quest
-        String name = this.questInfo.getName();
-        String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
-        String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
-        Request req = new RequestBuilder(url, "WikiQuestQuery")
-                .handleJsonArray(jsonOutput -> {
-                    String pageTitle = jsonOutput
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("_pageTitle")
-                            .getAsString();
-                    Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(req, true);
+        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+        QuestBookManager.openQuestOnWiki(questInfo);
     }
 
     @Override

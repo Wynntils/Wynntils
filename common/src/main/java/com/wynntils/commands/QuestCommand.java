@@ -25,14 +25,15 @@ import net.minecraft.network.chat.TextComponent;
 public class QuestCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    QuestBookManager.getQuests().stream()
-                            .map(questInfo -> questInfo.getName().replaceAll(" ", " ")),
-                    builder);
+                    QuestBookManager.getQuests().stream().map(QuestInfo::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("quest")
-                .then(Commands.literal("list").executes(this::listQuests))
+                .then(Commands.literal("list")
+                    .then(Commands.argument("sort", StringArgumentType.word())
+                        .then(Commands.argument("status", StringArgumentType.word())
+                                        .executes(this::listQuests))))
                 .then(Commands.literal("info")
                         .then(Commands.argument("quest", StringArgumentType.greedyString())
                                 .suggests(QUEST_SUGGESTION_PROVIDER)
@@ -50,18 +51,25 @@ public class QuestCommand extends CommandBase {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context) {
-        List<QuestInfo> quests = QuestBookManager.getQuests();
-        // FIXME: sort argument "level", "distance", "alphabetical"
-        // FIXME: filter "started", "can start", etc
+        // FIXME: These needs to be proper "enum" argument types
+        String sort = context.getArgument("sort", String.class);
+        String status = context.getArgument("status", String.class);
+        QuestBookManager.QuestSortOrder order = QuestBookManager.QuestSortOrder.fromString(sort);
+        List<QuestInfo> quests = QuestBookManager.getQuestsSorted(order);
+
+        if (status == null) {
+            status = "active";
+        }
 
         MutableComponent response = new TextComponent("All known quests:").withStyle(ChatFormatting.AQUA);
 
         for (QuestInfo quest : quests) {
+            if (status.equals("active") && !quest.isTrackable()) continue;
+
             response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(new TextComponent(quest.getName())
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
-                                    "/quest info " + quest.getName().replaceAll(" ", " "))))
+                            .withStyle(style -> style.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest info " + quest.getName())))
                             .withStyle(style -> style.withHoverEvent(
                                     new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent("Click for info"))))
                             .withStyle(ChatFormatting.WHITE));
@@ -72,29 +80,9 @@ public class QuestCommand extends CommandBase {
     }
 
     private int questInfo(CommandContext<CommandSourceStack> context) {
-        String questName = context.getArgument("quest", String.class).toLowerCase(Locale.ROOT);
-        List<QuestInfo> matchingQuests = QuestBookManager.getQuests().stream()
-                .filter(questInfo ->
-                        questInfo.getName().toLowerCase(Locale.ROOT).contains(questName))
-                .toList();
-
-        if (matchingQuests.size() < 1) {
-            context.getSource()
-                    .sendFailure(
-                            new TextComponent("Quest '" + questName + "' not found").withStyle(ChatFormatting.RED));
-            return 0;
-        } else if (matchingQuests.size() > 1) {
-            MutableComponent error =
-                    new TextComponent("Quest '" + questName + "' match several quests:").withStyle(ChatFormatting.RED);
-            for (var quest : matchingQuests) {
-                error.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                        .append(new TextComponent(quest.getName()).withStyle(ChatFormatting.WHITE));
-            }
-            context.getSource().sendFailure(error);
-            return 0;
-        }
-
-        QuestInfo quest = matchingQuests.get(0);
+        String questName = context.getArgument("quest", String.class);
+        QuestInfo quest = getQuestInfo(context, questName);
+        if (quest == null) return 0;
 
         MutableComponent response =
                 new TextComponent("Info for quest: " + quest.getName()).withStyle(ChatFormatting.AQUA);
@@ -125,30 +113,69 @@ public class QuestCommand extends CommandBase {
 
     private int trackQuest(CommandContext<CommandSourceStack> context) {
         String questName = context.getArgument("quest", String.class);
+        QuestInfo quest = getQuestInfo(context, questName);
+        if (quest == null) return 0;
 
-        context.getSource()
-                .sendFailure(new TextComponent("Track Quest not implemented yet for " + questName)
-                        .withStyle(ChatFormatting.RED));
-        return 0;
+        QuestBookManager.trackQuest(quest);
+        MutableComponent response =
+                new TextComponent("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
+        context.getSource().sendSuccess(response, false);
+        return 1;
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        context.getSource()
-                .sendFailure(new TextComponent("Untrack Quest not implemented yet ").withStyle(ChatFormatting.RED));
-        return 0;
+        String questName = context.getArgument("quest", String.class);
+        QuestInfo quest = getQuestInfo(context, questName);
+        if (quest == null) return 0;
+
+        // FIXME: This is in fact a toggle
+        QuestBookManager.trackQuest(quest);
+        MutableComponent response =
+                new TextComponent("Stopped tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
+        context.getSource().sendSuccess(response, false);
+        return 1;
     }
 
     private int lookupOnWiki(CommandContext<CommandSourceStack> context) {
         String questName = context.getArgument("quest", String.class);
+        QuestInfo quest = getQuestInfo(context, questName);
+        if (quest == null) return 0;
 
-        context.getSource()
-                .sendFailure(new TextComponent("Lookup Quest not implemented yet for " + questName)
-                        .withStyle(ChatFormatting.RED));
-        return 0;
+        QuestBookManager.openQuestOnWiki(quest);
+        MutableComponent response =
+                new TextComponent("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
+        context.getSource().sendSuccess(response, false);
+        return 1;
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
+    }
+
+    private QuestInfo getQuestInfo(CommandContext<CommandSourceStack> context, String questName) {
+        String questNameLowerCase = questName.toLowerCase(Locale.ROOT);
+        List<QuestInfo> matchingQuests = QuestBookManager.getQuests().stream()
+                .filter(questInfo ->
+                        questInfo.getName().toLowerCase(Locale.ROOT).contains(questNameLowerCase))
+                .toList();
+
+        if (matchingQuests.size() < 1) {
+            context.getSource()
+                    .sendFailure(
+                            new TextComponent("Quest '" + questName + "' not found").withStyle(ChatFormatting.RED));
+            return null;
+        } else if (matchingQuests.size() > 1) {
+            MutableComponent error =
+                    new TextComponent("Quest '" + questName + "' match several quests:").withStyle(ChatFormatting.RED);
+            for (var quest : matchingQuests) {
+                error.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
+                        .append(new TextComponent(quest.getName()).withStyle(ChatFormatting.WHITE));
+            }
+            context.getSource().sendFailure(error);
+            return null;
+        }
+
+        return matchingQuests.get(0);
     }
 }
