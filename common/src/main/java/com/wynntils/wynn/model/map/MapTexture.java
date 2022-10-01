@@ -34,9 +34,8 @@ public class MapTexture {
 
         this.mapResource = new ResourceLocation("wynntils", "/maps/" + name);
 
-        // Our main map is apparently incorrectly coded. Fix this assert when that is done.
-        assert (x2 - x1 + 1 == textureWidth) || (x2 - x1 == textureWidth);
-        assert (z2 - z1 + 1 == textureHeight) || (z2 - z1 == textureHeight);
+        assert (x2 - x1 + 1 == textureWidth);
+        assert (z2 - z1 + 1 == textureHeight);
     }
 
     public ResourceLocation resource() {

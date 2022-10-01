@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public final class MapModel extends Model {
@@ -55,7 +54,9 @@ public final class MapModel extends Model {
     }
 
     public static Optional<MapTexture> getMapForLocation(int x, int z) {
-        return maps.stream().filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2())).findFirst();
+        return maps.stream()
+                .filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
+                .findFirst();
     }
 
     public static Stream<Poi> getAllPois() {
@@ -74,7 +75,6 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
         RequestHandler handler = WebManager.getHandler();
-        String mapPartUrlBase = MAPS_JSON_URL.substring(0, MAPS_JSON_URL.lastIndexOf("/") + 1);
 
         maps.clear();
 
@@ -86,19 +86,21 @@ public final class MapModel extends Model {
 
                     List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
                     for (MapPartProfile mapPart : mapPartList) {
-                        String mapPartUrl = mapPartUrlBase + mapPart.file;
+                        String fileName = mapPart.md5 + ".png";
 
-                        handler.addRequest(new RequestBuilder(mapPartUrl, "map-part-" + mapPart.file)
-                                .cacheTo(new File(mapDirectory, mapPart.file))
+                        handler.addRequest(new RequestBuilder(mapPart.url, "map-part-" + mapPart.name)
+                                .cacheTo(new File(mapDirectory, fileName))
                                 .cacheMD5Validator(mapPart.md5)
                                 .useCacheAsBackup()
                                 .handle(bytes -> {
                                     try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
                                         NativeImage nativeImage = NativeImage.read(in);
-                                        MapTexture mapPartImage = new MapTexture(mapPart.file, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                                        MapTexture mapPartImage = new MapTexture(
+                                                fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
                                         maps.add(mapPartImage);
                                     } catch (IOException e) {
-                                        WynntilsMod.info("IOException occurred while loading map image of " + mapPart.file);
+                                        WynntilsMod.info(
+                                                "IOException occurred while loading map image of " + mapPart.name);
                                         return false; // don't cache
                                     }
 
@@ -165,15 +167,17 @@ public final class MapModel extends Model {
     }
 
     private static class MapPartProfile {
-        final String file;
+        final String name;
+        final String url;
         final int x1;
         final int z1;
         final int x2;
         final int z2;
         final String md5;
 
-        public MapPartProfile(String file, int x1, int z1, int x2, int z2, String md5) {
-            this.file = file;
+        public MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {
+            this.name = name;
+            this.url = url;
             this.x1 = x1;
             this.z1 = z1;
             this.x2 = x2;
