@@ -50,11 +50,12 @@ public enum Texture {
     SETTINGS_ICON("settings_icon.png", 17, 34),
 
     // Map related
-    GILDED_MAP_TEXTURES("map/gilded_map_textures.png", 262, 524),
-    PAPER_MAP_TEXTURES("map/paper_map_textures.png", 256, 512),
-    WYNN_MAP_TEXTURES("map/wynn_map_textures.png", 256, 256),
-    FULLSCREEN_MAP_BORDER("map/full_map_border.png", 510, 254),
+    CIRCLE_MASK("map/circle_mask.png", 256, 256),
+    FULLSCREEN_MAP_BORDER("map/map_border/full_map_border.png", 510, 254),
+    GILDED_MAP_TEXTURES("map/map_border/gilded_map_textures.png", 262, 524),
     MAP_POINTERS("map/map_pointers.png", 256, 256),
+    PAPER_MAP_TEXTURES("map/map_border/paper_map_textures.png", 256, 512),
+    WYNN_MAP_TEXTURES("map/map_border/wynn_map_textures.png", 126, 256),
 
     // Map Icons
     ALCHEMIST_STATION("map/map_icons/alchemist_station.png", 16, 19),
