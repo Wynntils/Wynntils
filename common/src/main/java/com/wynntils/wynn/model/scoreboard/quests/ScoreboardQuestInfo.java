@@ -4,21 +4,4 @@
  */
 package com.wynntils.wynn.model.scoreboard.quests;
 
-import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.utils.ComponentUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public record ScoreboardQuestInfo(String quest, String description) {
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
-
-    public Location getLocation() {
-        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(this.description()));
-        if (!matcher.matches()) return null;
-
-        return new Location(
-                Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)),
-                Integer.parseInt(matcher.group(3)));
-    }
-}
+public record ScoreboardQuestInfo(String quest, String description) {}
