@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public class ScriptedContainerQuery {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
@@ -188,7 +189,8 @@ public class ScriptedContainerQuery {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(
+                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                 return true;
             };
             checkForCompletion();
@@ -204,7 +206,8 @@ public class ScriptedContainerQuery {
                 if (!item.is(expectedItemType)
                         || !item.getDisplayName().getString().equals(expectedItemName)) return false;
 
-                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(
+                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                 return true;
             };
             checkForCompletion();

@@ -81,7 +81,22 @@ public enum Texture {
     WAYPOINT("map/map_icons/waypoint.png", 14, 18),
     WEAPON_MERCHANT("map/map_icons/weapon_merchant.png", 18, 15),
     WEAPONSMITHING_STATION("map/map_icons/weaponsmithing_station.png", 18, 15),
-    WOODWORKING_STATION("map/map_icons/woodworking_station.png", 17, 15);
+    WOODWORKING_STATION("map/map_icons/woodworking_station.png", 17, 15),
+
+    // Character Selection UI
+    ADD_BUTTON("character_selection_ui/add_button.png", 14, 28),
+    BACKGROUND_SPLASH("character_selection_ui/background_splash.png", 1920, 1027),
+    CHALLENGES_ICON("character_selection_ui/challenges.png", 9, 14),
+    CHARACTER_BUTTON("character_selection_ui/character_button.png", 104, 64),
+    CHARACTER_INFO("character_selection_ui/character_info.png", 123, 38),
+    EDIT_BUTTON("character_selection_ui/edit_button.png", 6, 16),
+    LIST_BACKGROUND("character_selection_ui/list_background.png", 118, 254),
+    PLAY_BUTTON("character_selection_ui/play_button.png", 79, 76),
+    QUESTS_ICON("character_selection_ui/quests.png", 16, 16),
+    REMOVE_BUTTON("character_selection_ui/remove_button.png", 14, 28),
+    CHARACTER_SELECTION_SCROLL_BUTTON("character_selection_ui/scroll_button.png", 7, 17),
+    SOUL_POINT_ICON("character_selection_ui/soul_point.png", 10, 16),
+    XP_BAR("character_selection_ui/xp_bar.png", 100, 12);
 
     private final ResourceLocation resource;
     private final int width;
