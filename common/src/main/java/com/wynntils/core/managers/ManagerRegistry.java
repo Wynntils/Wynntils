@@ -124,6 +124,7 @@ public final class ManagerRegistry {
             MethodUtils.invokeExactStaticMethod(manager, "init");
         } catch (IllegalAccessException | NoSuchMethodException e) {
             WynntilsMod.error("Misconfigured init() on manager " + manager, e);
+            throw new RuntimeException();
         } catch (InvocationTargetException e) {
             WynntilsMod.error("Exception during init of manager " + manager, e.getTargetException());
         }
