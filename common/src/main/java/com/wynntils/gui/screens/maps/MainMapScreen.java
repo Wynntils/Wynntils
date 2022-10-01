@@ -129,8 +129,7 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        Optional<MapTexture> mapOpt = MapModel.getMapForLocation(
-                (int) mapCenterX, (int) mapCenterZ);
+        Optional<MapTexture> mapOpt = MapModel.getMapForLocation((int) mapCenterX, (int) mapCenterZ);
         if (mapOpt.isPresent()) {
             MapTexture map = mapOpt.get();
             float textureX = map.getTextureXPosition(mapCenterX);

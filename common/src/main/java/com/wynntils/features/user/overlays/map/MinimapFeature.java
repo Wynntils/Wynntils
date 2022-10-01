@@ -116,14 +116,7 @@ public class MinimapFeature extends UserFeature {
             }
 
             // Always draw a black background to cover transparent map areas
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.BLACK,
-                    renderX,
-                    renderY,
-                    0,
-                    width,
-                    height);
+            RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
 
             Optional<MapTexture> mapOpt = MapModel.getMapForLocation(
                     (int) McUtils.player().getX(), (int) McUtils.player().getZ());
