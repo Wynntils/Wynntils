@@ -5,7 +5,6 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -16,42 +15,25 @@ import com.wynntils.gui.widgets.ClassSelectionAddButton;
 import com.wynntils.gui.widgets.ClassSelectionDeleteButton;
 import com.wynntils.gui.widgets.ClassSelectionEditButton;
 import com.wynntils.gui.widgets.PlayButton;
-import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.objects.ClassInfo;
-import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CharacterSelectorScreen extends Screen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
 
-    private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§a\\[+\\] Create new character");
-    private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§6\\[>\\] Select (.+)");
-    private static final Pattern CLASS_ITEM_CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
-    private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
-    private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §r§7XP: §r§f(\\d+)%");
-    private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §r§7Soul Points: §r§f(\\d+)");
-    private static final Pattern CLASS_ITEM_FINISHED_QUESTS_PATTERN =
-            Pattern.compile("§e- §r§7Finished Quests: §r§f(\\d+)/\\d+");
-
     private final AbstractContainerScreen<?> actualClassSelectionScreen;
-    private final List<ClassInfo> classInfoList = new ArrayList<>();
+    private List<ClassInfo> classInfoList = new ArrayList<>();
     private final List<ClassInfoButton> classInfoButtons = new ArrayList<>();
     private int firstNewCharacterSlot = -1;
     private float currentTextureScale = 1f;
@@ -70,13 +52,10 @@ public class CharacterSelectorScreen extends Screen {
             throw new IllegalStateException(
                     "Tried to open custom character selection screen when normal character selection screen is not open");
         }
-
-        WynntilsMod.registerEventListener(this);
     }
 
     @Override
     public void onClose() {
-        WynntilsMod.unregisterEventListener(this);
         ContainerUtils.closeContainer(actualClassSelectionScreen.getMenu().containerId);
         super.onClose();
     }
@@ -219,33 +198,6 @@ public class CharacterSelectorScreen extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
         return true;
-    }
-
-    @SubscribeEvent
-    public void onContainerItemsSet(ContainerSetContentEvent event) {
-        classInfoList.clear();
-        firstNewCharacterSlot = -1;
-
-        if (event.getContainerId() == actualClassSelectionScreen.getMenu().containerId) {
-            List<ItemStack> items = event.getItems();
-            for (int i = 0; i < items.size(); i++) {
-                ItemStack item = items.get(i);
-                String itemName = ComponentUtils.getCoded(item.getHoverName());
-                Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName);
-                if (classItemMatcher.matches()) {
-                    ClassInfo classInfo = getClassInfoFromItem(item, i, classItemMatcher.group(1));
-                    classInfoList.add(classInfo);
-                    continue;
-                }
-
-                if (firstNewCharacterSlot != -1
-                        && NEW_CLASS_ITEM_NAME_PATTERN.matcher(itemName).matches()) {
-                    firstNewCharacterSlot = i;
-                }
-            }
-        }
-
-        reloadButtons();
     }
 
     private void renderCharacterInfo(PoseStack poseStack) {
@@ -395,7 +347,8 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     private void setScrollOffset(int delta) {
-        scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE);
+        scrollOffset = MathUtils.clamp(
+                scrollOffset - delta, 0, Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
     }
 
     private void reloadButtons() {
@@ -412,45 +365,16 @@ public class CharacterSelectorScreen extends Screen {
         }
     }
 
-    private static ClassInfo getClassInfoFromItem(ItemStack item, int slot, String className) {
-        ClassType classType = null;
-        int level = 0;
-        int xp = 0;
-        int soulPoints = 0;
-        int finishedQuests = 0;
-        for (String line : ItemUtils.getLore(item)) {
-            Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
+    public void setFirstNewCharacterSlot(int firstNewCharacterSlot) {
+        this.firstNewCharacterSlot = firstNewCharacterSlot;
+    }
 
-            if (matcher.matches()) {
-                classType = ClassType.fromName(matcher.group(1));
-                continue;
-            }
+    public void setClassInfoList(List<ClassInfo> classInfoList) {
+        firstNewCharacterSlot = -1;
 
-            matcher = CLASS_ITEM_LEVEL_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                level = Integer.parseInt(matcher.group(1));
-                continue;
-            }
+        this.classInfoList = classInfoList;
 
-            matcher = CLASS_ITEM_XP_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                xp = Integer.parseInt(matcher.group(1));
-                continue;
-            }
-
-            matcher = CLASS_ITEM_SOUL_POINTS_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                soulPoints = Integer.parseInt(matcher.group(1));
-                continue;
-            }
-
-            matcher = CLASS_ITEM_FINISHED_QUESTS_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                finishedQuests = Integer.parseInt(matcher.group(1));
-            }
-        }
-
-        return new ClassInfo(className, item, slot, classType, level, xp, soulPoints, finishedQuests);
+        reloadButtons();
     }
 
     public ClassInfoButton getSelected() {

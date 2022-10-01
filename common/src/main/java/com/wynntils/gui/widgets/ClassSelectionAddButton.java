@@ -9,7 +9,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.model.CharacterSelectionManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -17,7 +17,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.lwjgl.glfw.GLFW;
 
 public class ClassSelectionAddButton extends AbstractButton {
     private static final List<Component> TOOLTIP_CANNOT_ADD = List.of(
@@ -41,14 +40,7 @@ public class ClassSelectionAddButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getFirstNewCharacterSlot() == -1) return;
 
-        ContainerUtils.clickOnSlot(
-                characterSelectorScreen.getFirstNewCharacterSlot(),
-                characterSelectorScreen.getActualClassSelectionScreen().getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                characterSelectorScreen
-                        .getActualClassSelectionScreen()
-                        .getMenu()
-                        .getItems());
+        CharacterSelectionManager.createNewClass();
     }
 
     @Override

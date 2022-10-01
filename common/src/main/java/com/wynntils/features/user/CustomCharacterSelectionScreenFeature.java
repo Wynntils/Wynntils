@@ -12,6 +12,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomCharacterSelectionScreenFeature extends UserFeature {
@@ -20,7 +21,7 @@ public class CustomCharacterSelectionScreenFeature extends UserFeature {
 
     private boolean openedInThisCharacterSelectionState = false;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpen(ScreenOpenedEvent event) {
         if ((onlyOpenOnce && openedInThisCharacterSelectionState)
                 || WorldStateManager.getCurrentState() != WorldStateManager.State.CHARACTER_SELECTION) return;

@@ -9,7 +9,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.model.CharacterSelectionManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -17,8 +17,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import org.lwjgl.glfw.GLFW;
 
 public class ClassSelectionDeleteButton extends AbstractButton {
     private static final List<Component> TOOLTIP = List.of(
@@ -37,14 +35,8 @@ public class ClassSelectionDeleteButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getSelected() == null) return;
 
-        AbstractContainerMenu menu =
-                characterSelectorScreen.getActualClassSelectionScreen().getMenu();
-
-        ContainerUtils.clickOnSlot(
-                characterSelectorScreen.getSelected().getClassInfo().slot(),
-                menu.containerId,
-                GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                menu.getItems());
+        CharacterSelectionManager.deleteCharacter(
+                characterSelectorScreen.getSelected().getClassInfo().slot());
     }
 
     @Override

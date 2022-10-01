@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
@@ -195,5 +196,10 @@ public abstract class ClientPacketListenerMixin {
     private void onDisconnectPre(Component reason, CallbackInfo ci) {
         // Unexpected disconnect
         EventFactory.onDisconnect();
+    }
+
+    @Inject(method = "handleParticleEvent", at = @At("HEAD"), cancellable = true)
+    private void onParticle(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
+        ci.cancel();
     }
 }
