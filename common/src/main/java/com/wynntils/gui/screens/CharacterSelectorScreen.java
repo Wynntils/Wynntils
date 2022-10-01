@@ -307,7 +307,7 @@ public class CharacterSelectorScreen extends Screen {
                 Texture.CHALLENGES_ICON.height() * currentTextureScale,
                 Texture.CHALLENGES_ICON.width(),
                 Texture.CHALLENGES_ICON.height());
-        // FIXME: I have no idea what to render here..
+        // FIXME: Render character challenge mode info here
 
         poseStack.popPose();
         poseStack.popPose();
