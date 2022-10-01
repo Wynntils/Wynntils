@@ -7,7 +7,6 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.managers.Model;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -44,9 +43,7 @@ public final class FunctionManager extends CoreManager {
         // FIXME: This is sort of hacky. We should have these as ActiveFunctions instead,
         //        and register/unregister the model dependency when enabling/disabling
         if (function instanceof DependantFunction<?> dependantFunction) {
-            for (Class<? extends Model> dependency : dependantFunction.getModelDependencies()) {
-                ManagerRegistry.addDependency(dependantFunction, dependency);
-            }
+            ManagerRegistry.addAllDependencies(dependantFunction);
         }
     }
 

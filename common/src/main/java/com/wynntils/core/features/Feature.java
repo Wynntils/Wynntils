@@ -148,11 +148,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         enabled = true;
 
-        List<Class<? extends Model>> dependencies = getModelDependencies();
-
-        for (Class<? extends Model> dependency : dependencies) {
-            ManagerRegistry.addDependency(this, dependency);
-        }
+        ManagerRegistry.addAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.registerEventListener(this);
