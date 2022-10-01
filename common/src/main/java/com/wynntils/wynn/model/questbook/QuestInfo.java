@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -71,6 +73,10 @@ public class QuestInfo {
 
     public QuestStatus getStatus() {
         return status;
+    }
+
+    public Optional<Location> getNextLocation() {
+        return QuestBookManager.getLocationFromDescription(nextTask);
     }
 
     public QuestLength getLength() {

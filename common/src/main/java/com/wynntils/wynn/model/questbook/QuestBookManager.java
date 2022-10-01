@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.questbook;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -16,14 +17,18 @@ import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -31,6 +36,7 @@ public class QuestBookManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int MINI_QUESTS_SLOT = 53;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
+    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
 
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
@@ -281,7 +287,7 @@ public class QuestBookManager extends CoreManager {
 
     public static void rescanQuestBook() {
         WynntilsMod.info("Requesting rescan of Quest Book");
-        QuestBookManager.queryQuestBook();
+        queryQuestBook();
     }
 
     private static String getNextPageButtonName(int nextPageNum) {
@@ -300,11 +306,70 @@ public class QuestBookManager extends CoreManager {
         return quests;
     }
 
+    public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+        return switch (sortOrder) {
+            case NONE -> quests;
+            case LEVEL -> quests.stream()
+                    .sorted(Comparator.comparing(questInfo -> questInfo.getLevel()))
+                    .toList();
+            case DISTANCE -> quests.stream().sorted(new LocationComparator()).toList();
+            case ALPHABETIC -> quests.stream()
+                    .sorted(Comparator.comparing(questInfo -> questInfo.getName()))
+                    .toList();
+        };
+    }
+
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
     }
 
     public static List<QuestInfo> getMiniQuests() {
         return miniQuests;
+    }
+
+    public static Optional<Location> getLocationFromDescription(String description) {
+        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(description));
+        if (!matcher.matches()) return Optional.empty();
+
+        return Optional.of(new Location(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3))));
+    }
+
+    private static class LocationComparator implements Comparator<QuestInfo> {
+        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
+
+        private double getDistance(Optional<Location> loc) {
+            // Quests with no location always counts as closest
+            if (loc.isEmpty()) return 0f;
+
+            Location location = loc.get();
+            return PLAYER_LOCATION.distanceToSqr(location.toVec3());
+        }
+
+        @Override
+        public int compare(QuestInfo quest1, QuestInfo quest2) {
+            Optional<Location> loc1 = quest1.getNextLocation();
+            Optional<Location> loc2 = quest2.getNextLocation();
+            return (int) (getDistance(loc1) - getDistance(loc2));
+        }
+    }
+
+    public enum QuestSortOrder {
+        NONE,
+        LEVEL,
+        DISTANCE,
+        ALPHABETIC;
+
+        public static QuestSortOrder fromString(String str) {
+            if (str == null || str.isEmpty()) return NONE;
+
+            try {
+                return QuestSortOrder.valueOf(str.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                return NONE;
+            }
+        }
     }
 }
