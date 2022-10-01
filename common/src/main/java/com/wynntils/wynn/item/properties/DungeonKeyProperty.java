@@ -5,8 +5,9 @@
 package com.wynntils.wynn.item.properties;
 
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
@@ -41,10 +42,11 @@ public class DungeonKeyProperty extends ItemProperty implements TextOverlayPrope
         }
 
         textOverlay = new TextOverlay(
-                dungeon,
-                textColor,
-                FontRenderer.TextAlignment.LEFT_ALIGNED,
-                ItemTextOverlayFeature.dungeonKeyShadow,
+                new TextRenderTask(
+                        dungeon,
+                        TextRenderSetting.DEFAULT
+                                .withCustomColor(textColor)
+                                .withTextShadow(ItemTextOverlayFeature.dungeonKeyShadow)),
                 -1,
                 1,
                 1f);

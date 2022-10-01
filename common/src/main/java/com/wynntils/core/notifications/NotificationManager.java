@@ -6,8 +6,8 @@ package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NotificationEvent;
@@ -30,7 +30,7 @@ public final class NotificationManager {
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
 
-        WynntilsMod.getEventBus().post(new NotificationEvent.Queue(msgContainer));
+        WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
@@ -43,7 +43,7 @@ public final class NotificationManager {
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
 
-        WynntilsMod.getEventBus().post(new NotificationEvent.Edit(msgContainer));
+        WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
 
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {

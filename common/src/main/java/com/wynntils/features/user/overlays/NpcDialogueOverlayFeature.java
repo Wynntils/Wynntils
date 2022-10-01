@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.overlays;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatModel;
@@ -21,14 +20,14 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.render.VerticalAlignment;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
@@ -48,7 +47,7 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class NpcDialogueOverlayFeature extends UserFeature {
-    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §r§e§l(.*)§r$");
+    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
@@ -75,14 +74,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     }
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ChatModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        String msg = e.getCodedDialog();
+        String msg = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
         if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
@@ -122,6 +120,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = null;
+        cancelAutoProgress();
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -145,8 +144,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
 
         private void updateTextRenderSettings() {
-            renderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                    this.getWidth() - 5, CommonColors.WHITE, this.getRenderHorizontalAlignment());
+            renderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth() - 5)
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment());
         }
 
         @Override
@@ -160,6 +160,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 ChatModel.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 ChatModel.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                currentDialogue = null;
             }
         }
 
@@ -185,8 +186,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderX() + 5,
                             this.getRenderY() + 5,
                             dialogueRenderTask,
-                            this.getRenderedWidth() - 10,
-                            this.getRenderedHeight() - 10,
+                            (this.getRenderedWidth() - 10) / (float) McUtils.guiScale(),
+                            (this.getRenderedHeight() - 10) / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
@@ -215,8 +216,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderX() + 5,
                             this.getRenderY() + 20 + textHeight,
                             renderTaskList,
-                            this.getRenderedWidth() - 15,
-                            this.getRenderedHeight() - 15,
+                            (this.getRenderedWidth() - 15) / (float) McUtils.guiScale(),
+                            (this.getRenderedHeight() - 15) / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }

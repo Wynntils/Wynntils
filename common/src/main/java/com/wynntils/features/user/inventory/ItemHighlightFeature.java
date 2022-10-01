@@ -4,22 +4,22 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.Texture;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.HighlightProperty;
+import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -123,6 +123,9 @@ public class ItemHighlightFeature extends UserFeature {
     public static boolean powderHighlightEnabled = true;
 
     @Config
+    public static boolean emeraldPouchHighlightEnabled = true;
+
+    @Config
     public static boolean inventoryHighlightEnabled = true;
 
     @Config
@@ -135,9 +138,8 @@ public class ItemHighlightFeature extends UserFeature {
     public static float hotbarOpacity = .5f;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ItemStackTransformModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -12,11 +12,11 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
-import com.wynntils.mc.render.RenderUtils;
-import com.wynntils.mc.render.Texture;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -51,7 +51,7 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        if (!(event.getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 

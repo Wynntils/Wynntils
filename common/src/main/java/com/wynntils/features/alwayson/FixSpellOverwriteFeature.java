@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class FixSpellOverwriteFeature extends StateManagedFeature {
     private static final Pattern SPELL_CAST = Pattern.compile(
-            "^(§7(.*) spell cast!§3 \\[§b-([0-9]+) ✺§3\\]|§4You don't have enough mana to do that spell!)$");
+            "^(§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]|§4You don't have enough mana to cast that spell!)$");
 
     private int overwriteHighlightTimer;
     private ItemStack overwriteHighlightItem = ItemStack.EMPTY;

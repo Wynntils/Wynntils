@@ -5,6 +5,7 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
+import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
@@ -66,6 +67,10 @@ public class ConfigHolder {
         return fieldType;
     }
 
+    public Class<?> getClassOfConfigField() {
+        return TypeToken.get(this.getType()).getRawType();
+    }
+
     public Field getField() {
         return field;
     }
@@ -81,10 +86,10 @@ public class ConfigHolder {
     public String getJsonName() {
         if (parent instanceof Overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + getNameCamelCase() + "." + field.getName();
+            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + field.getName();
         }
         // "featureName.settingName"
-        return getNameCamelCase() + "." + field.getName();
+        return parent.getConfigJsonName() + "." + field.getName();
     }
 
     private String getNameCamelCase() {
@@ -123,8 +128,7 @@ public class ConfigHolder {
         try {
             return FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to get field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to get field " + getJsonName(), e);
             return null;
         }
     }
@@ -136,8 +140,7 @@ public class ConfigHolder {
             userEdited = true;
             return true;
         } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName());
-            e.printStackTrace();
+            WynntilsMod.error("Unable to set field " + getJsonName(), e);
             return false;
         }
     }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.services;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
@@ -30,7 +31,7 @@ public class TranslationModel extends Model {
             Constructor<? extends TranslationService> ctor = service.serviceClass.getConstructor();
             return ctor.newInstance();
         } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+            WynntilsMod.error("Error when trying to get translation service.", e);
         }
 
         return null;

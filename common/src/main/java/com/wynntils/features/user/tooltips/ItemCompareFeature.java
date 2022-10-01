@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.tooltips;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -12,12 +11,13 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.render.RenderUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.ItemStackTransformModel;
 import java.util.List;
@@ -42,9 +42,14 @@ public class ItemCompareFeature extends UserFeature {
     private boolean compareToEquipped = false;
 
     @Override
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {
-        dependencies.add(ItemStackTransformModel.class);
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        comparedItem = null;
+        compareToEquipped = false;
     }
 
     @SubscribeEvent
@@ -78,7 +83,7 @@ public class ItemCompareFeature extends UserFeature {
 
         // No compared item selected, try compare to equipped armor
         if (compareToEquipped) {
-            List<ItemStack> armorSlots = McUtils.player().getInventory().armor;
+            List<ItemStack> armorSlots = McUtils.inventory().armor;
 
             Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
                     .filter(itemStack -> itemStack instanceof GearItemStack gItemStack

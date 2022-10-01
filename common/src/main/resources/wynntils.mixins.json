@@ -1,5 +1,6 @@
 {
   "client": [
+    "MainMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "ClientLevelMixin",
@@ -16,14 +17,15 @@
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
+    "PlayerMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
-    "OptionsMixin",
     "PotionItemMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
     "SlotMixin",
+    "MouseHandlerMixin",
     "accessors.ChatScreenAccessor",
     "accessors.ClientboundBossEventPacketAccessor",
     "accessors.ClientboundCommandsPacketAccessor",

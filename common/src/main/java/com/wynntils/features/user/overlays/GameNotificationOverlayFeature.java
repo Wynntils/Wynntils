@@ -17,14 +17,15 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.render.FontRenderer;
-import com.wynntils.mc.render.HorizontalAlignment;
-import com.wynntils.mc.render.TextRenderSetting;
-import com.wynntils.mc.render.TextRenderTask;
-import com.wynntils.mc.render.VerticalAlignment;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -39,6 +40,11 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        messageQueue.clear();
+    }
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
@@ -159,8 +165,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
                                                     .customColor()
                                                     .withAlpha(messageContainer.getRemainingTime() / 1000f))))
                                     .toList(),
-                            this.getRenderedWidth(),
-                            this.getRenderedHeight(),
+                            this.getRenderedWidth() / (float) McUtils.guiScale(),
+                            this.getRenderedHeight() / (float) McUtils.guiScale(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
@@ -171,8 +177,9 @@ public class GameNotificationOverlayFeature extends UserFeature {
         }
 
         private void updateTextRenderSetting() {
-            textRenderSetting = TextRenderSetting.getWithHorizontalAlignment(
-                            this.getWidth(), CommonColors.WHITE, this.getRenderHorizontalAlignment())
+            textRenderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth())
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
         }
     }

@@ -34,9 +34,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable, Comparable<Feature> {
+public abstract class Feature implements Translatable, Configurable, Comparable<Feature>, ModelDependant {
     private ImmutableList<Condition> conditions;
-    private ImmutableList<Class<? extends Model>> dependencies;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<ConfigHolder> configOptions = new ArrayList<>();
@@ -50,12 +49,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Class<? extends Model>> dependencies = new ImmutableList.Builder<>();
 
-        onInit(conditions, dependencies);
+        onInit(conditions);
 
         this.conditions = conditions.build();
-        this.dependencies = dependencies.build();
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
@@ -81,8 +78,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
             } catch (IllegalAccessException e) {
-                WynntilsMod.error("Unable to get field " + overlayField);
-                e.printStackTrace();
+                WynntilsMod.error("Unable to get field " + overlayField, e);
             }
         }
     }
@@ -127,8 +123,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     /** Called on init of Feature */
-    protected void onInit(
-            ImmutableList.Builder<Condition> conditions, ImmutableList.Builder<Class<? extends Model>> dependencies) {}
+    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
     /**
      * Called on enabling of Feature
@@ -153,12 +148,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         enabled = true;
 
-        for (Class<? extends Model> dependency : dependencies) {
-            ManagerRegistry.addDependency(this, dependency);
-        }
+        ManagerRegistry.addAllDependencies(this);
 
         if (isListener) {
-            WynntilsMod.getEventBus().register(this);
+            WynntilsMod.registerEventListener(this);
         }
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
@@ -174,10 +167,10 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         enabled = false;
 
-        ManagerRegistry.removeAllFeatureDependency(this);
+        ManagerRegistry.removeAllDependencies(this);
 
         if (isListener) {
-            WynntilsMod.getEventBus().unregister(this);
+            WynntilsMod.unregisterEventListener(this);
         }
         OverlayManager.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
@@ -211,6 +204,15 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         return true;
     }
 
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of();
+    }
+
+    public boolean canUserEnable() {
+        return this instanceof UserFeature;
+    }
+
     /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
     @Override
     public final void addConfigOptions(List<ConfigHolder> options) {
@@ -237,6 +239,12 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
+    @Override
+    public String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     public FeatureCategory getCategory() {
         return category;
     }
@@ -261,13 +269,13 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
                 return;
             }
 
-            WynntilsMod.getEventBus().register(this);
+            WynntilsMod.registerEventListener(this);
         }
 
         @SubscribeEvent
         public void onWebSetup(WebSetupEvent e) {
             setSatisfied(true);
-            WynntilsMod.getEventBus().unregister(this);
+            WynntilsMod.unregisterEventListener(this);
         }
 
         @Override

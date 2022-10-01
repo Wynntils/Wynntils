@@ -28,7 +28,7 @@ public class ContainerQueryManager extends CoreManager {
     private static ContainerQueryStep lastStep;
 
     private static Component currentTitle;
-    private static MenuType currentMenuType;
+    private static MenuType<?> currentMenuType;
     private static int containerId = NO_CONTAINER;
     private static int lastHandledContentId = NO_CONTAINER;
     private static int ticksRemaining;
@@ -54,7 +54,7 @@ public class ContainerQueryManager extends CoreManager {
             return;
         }
 
-        if (McUtils.player().containerMenu.containerId != 0) {
+        if (McUtils.containerMenu().containerId != 0) {
             // For safety, check this way too
             firstStep.onError("Another container is already open");
             return;
@@ -119,7 +119,7 @@ public class ContainerQueryManager extends CoreManager {
             return;
         }
 
-        if (containerId == lastHandledContentId) {
+        if (containerId == lastHandledContentId && currentStep.shouldWaitForMenuReopen()) {
             // Wynncraft sometimes sends contents twice; just drop this silently
             e.setCanceled(true);
             resetTimer();
@@ -143,8 +143,10 @@ public class ContainerQueryManager extends CoreManager {
             }
         } else {
             // We're done
+            ContainerQueryStep lastStep = currentStep;
             endQuery();
             McUtils.sendPacket(new ServerboundContainerClosePacket(id));
+            lastStep.onComplete();
             if (!queuedQueries.isEmpty()) {
                 runQuery(queuedQueries.pop());
             }

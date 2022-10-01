@@ -8,7 +8,7 @@ import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.render.Texture;
+import com.wynntils.gui.render.Texture;
 import java.io.IOException;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
@@ -57,12 +57,11 @@ public class ServerIcon {
             ServerStatusPinger pinger = new ServerStatusPinger();
             pinger.pingServer(server, () -> {
                 // FIXME: DynamicTexture issues in loadServerIcon
-                // loadServerIcon(destination);
+                //        loadServerIcon(destination);
                 onDone();
             });
         } catch (Exception e) {
-            e.printStackTrace();
-            WynntilsMod.warn("Failed to ping server");
+            WynntilsMod.warn("Failed to ping server", e);
             onDone();
         }
     }
@@ -116,10 +115,8 @@ public class ServerIcon {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            WynntilsMod.error("Unable to convert image from base64: " + iconString);
+            WynntilsMod.error("Unable to convert image from base64: " + iconString, e);
             serverIconLocation = FALLBACK;
-            return;
         }
     }
 }

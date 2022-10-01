@@ -16,8 +16,12 @@ import net.minecraft.world.item.ItemStack;
 public class ScriptedContainerQuery {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
             (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
+
+    // No op
+    private static final Runnable DEFAULT_ON_COMPLETE = () -> {};
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
+    private Runnable onComplete = DEFAULT_ON_COMPLETE;
     private String name;
 
     private ScriptedContainerQuery(String name) {
@@ -39,6 +43,10 @@ public class ScriptedContainerQuery {
         this.errorHandler = errorHandler;
     }
 
+    private void setOnComplete(Runnable onComplete) {
+        this.onComplete = onComplete;
+    }
+
     @FunctionalInterface
     private interface StartAction {
         boolean execute(ContainerContent container);
@@ -58,12 +66,17 @@ public class ScriptedContainerQuery {
         final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
+        final boolean waitForMenuReopen;
 
         private ScriptedQueryStep(
-                StartAction startAction, ContainerVerification verification, ContainerAction handleContent) {
+                StartAction startAction,
+                ContainerVerification verification,
+                ContainerAction handleContent,
+                boolean waitForMenuReopen) {
             this.startAction = startAction;
             this.verification = verification;
             this.handleContent = handleContent;
+            this.waitForMenuReopen = waitForMenuReopen;
         }
 
         @Override
@@ -92,14 +105,22 @@ public class ScriptedContainerQuery {
         public void onError(String errorMsg) {
             ScriptedContainerQuery.this.errorHandler.accept(errorMsg);
             // Remove all remaining steps
-            while (!ScriptedContainerQuery.this.steps.isEmpty()) {
-                ScriptedContainerQuery.this.steps.removeFirst();
-            }
+            ScriptedContainerQuery.this.steps.clear();
+        }
+
+        @Override
+        public void onComplete() {
+            ScriptedContainerQuery.this.onComplete.run();
         }
 
         @Override
         public String getName() {
             return ScriptedContainerQuery.this.name;
+        }
+
+        @Override
+        public boolean shouldWaitForMenuReopen() {
+            return this.waitForMenuReopen;
         }
     }
 
@@ -117,11 +138,17 @@ public class ScriptedContainerQuery {
         StartAction startAction;
         ContainerVerification verification;
         ContainerAction handleContent;
+        boolean waitForMenuReopen = true;
 
         ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;
+        }
+
+        public QueryBuilder setWaitForMenuReopen(boolean wait) {
+            this.waitForMenuReopen = wait;
+            return this;
         }
 
         public QueryBuilder onError(Consumer<String> errorHandler) {
@@ -168,7 +195,7 @@ public class ScriptedContainerQuery {
             return this;
         }
 
-        public QueryBuilder clickOnSlotMatching(int slotNum, Item expectedItemType, String expectedItemName) {
+        public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, String expectedItemName) {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }
@@ -202,7 +229,8 @@ public class ScriptedContainerQuery {
 
         private void checkForCompletion() {
             if (startAction != null && verification != null && handleContent != null) {
-                ScriptedQueryStep nextStep = query.new ScriptedQueryStep(startAction, verification, handleContent);
+                ScriptedQueryStep nextStep =
+                        query.new ScriptedQueryStep(startAction, verification, handleContent, waitForMenuReopen);
                 query.steps.add(nextStep);
                 startAction = null;
                 verification = null;

@@ -13,6 +13,7 @@ import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
+import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemProperty;
@@ -23,7 +24,6 @@ import com.wynntils.wynn.item.properties.ProfessionLevelProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -62,6 +62,7 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
         registerProperty(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
         registerProperty(WynnItemMatchers::isPowder, PowderTierProperty::new);
+        registerProperty(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
         registerProperty(WynnItemMatchers::isProfessionLevel, ProfessionLevelProperty::new);
         registerProperty(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
         registerProperty(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
@@ -76,8 +77,6 @@ public class ItemStackTransformModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetSlot(SetSlotEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         ItemStack stack = event.getItem();
 
         // itemstack transformers

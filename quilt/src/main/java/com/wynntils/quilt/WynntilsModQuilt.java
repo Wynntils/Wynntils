@@ -12,6 +12,7 @@ import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 public class WynntilsModQuilt implements ClientModInitializer {
     @Override
     public void onInitializeClient(ModContainer mod) {
-        WynntilsMod.init(mod.metadata().version().raw(), QuiltLoader.isDevelopmentEnvironment());
+        WynntilsMod.init(
+                WynntilsMod.ModLoader.QUILT, mod.metadata().version().raw(), QuiltLoader.isDevelopmentEnvironment());
     }
 }

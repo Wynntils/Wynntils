@@ -10,6 +10,7 @@ import net.minecraft.client.resources.language.I18n;
 public enum FeatureCategory {
     UNCATEGORIZED,
     INVENTORY,
+    MAP,
     OVERLAYS,
     PLAYERS,
     REDIRECTS,

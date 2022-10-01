@@ -13,7 +13,6 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,8 +37,6 @@ public class TooltipFittingFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
-        if (!WynnUtils.onServer()) return;
-
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
@@ -85,7 +82,6 @@ public class TooltipFittingFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
-        if (!WynnUtils.onServer()) return;
         if (!scaledLast) return;
 
         e.getPoseStack().popPose();

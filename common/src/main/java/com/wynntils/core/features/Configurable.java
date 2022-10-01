@@ -11,4 +11,6 @@ public interface Configurable {
     void updateConfigOption(ConfigHolder configHolder);
 
     void addConfigOptions(List<ConfigHolder> options);
+
+    String getConfigJsonName();
 }

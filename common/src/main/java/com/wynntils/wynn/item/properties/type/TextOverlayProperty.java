@@ -4,8 +4,7 @@
  */
 package com.wynntils.wynn.item.properties.type;
 
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
+import com.wynntils.gui.render.TextRenderTask;
 
 public interface TextOverlayProperty extends PropertyType {
 
@@ -13,25 +12,22 @@ public interface TextOverlayProperty extends PropertyType {
 
     boolean isTextOverlayEnabled();
 
-    /** Whether this highlight should be shown in inventories */
+    /**
+     * Whether this overlay is allowed to be rendered in inventories.
+     */
     default boolean isInventoryText() {
         return true;
     }
 
-    /** Whether this highlight should be shown in the hotbar */
+    /**
+     * Whether this overlay is allowed to be rendered in the hotbar.
+     */
     default boolean isHotbarText() {
-        return false;
+        return true;
     }
 
     /**
      * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
      */
-    record TextOverlay(
-            String text,
-            CustomColor color,
-            FontRenderer.TextAlignment alignment,
-            FontRenderer.TextShadow shadow,
-            int xOffset,
-            int yOffset,
-            float scale) {}
+    record TextOverlay(TextRenderTask task, int xOffset, int yOffset, float scale) {}
 }

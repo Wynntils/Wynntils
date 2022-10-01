@@ -4,8 +4,9 @@
  */
 package com.wynntils.wynn.item.properties;
 
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.render.FontRenderer;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
@@ -28,7 +29,7 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
         }
 
         textOverlay = new TextOverlay(
-                icon, color, FontRenderer.TextAlignment.LEFT_ALIGNED, FontRenderer.TextShadow.NORMAL, -1, 1, .75f);
+                new TextRenderTask(icon, TextRenderSetting.DEFAULT.withCustomColor(color)), -1, 1, .75f);
     }
 
     @Override
@@ -38,11 +39,6 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isHotbarText() {
         return true;
     }
 }

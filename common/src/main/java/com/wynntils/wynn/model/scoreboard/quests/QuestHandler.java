@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.scoreboard.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
@@ -13,9 +14,9 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 
 public class QuestHandler implements ScoreboardHandler {
-    private static QuestInfo currentQuest = null;
+    private static ScoreboardQuestInfo currentQuest = null;
 
-    public static QuestInfo getCurrentQuest() {
+    public static ScoreboardQuestInfo getCurrentQuest() {
         return currentQuest;
     }
 
@@ -43,7 +44,7 @@ public class QuestHandler implements ScoreboardHandler {
 
         String descriptionTrimmed = description.toString().trim();
 
-        currentQuest = new QuestInfo(questName.toString().trim(), descriptionTrimmed);
+        setQuest(new ScoreboardQuestInfo(questName.toString().trim(), descriptionTrimmed));
     }
 
     @Override
@@ -52,6 +53,11 @@ public class QuestHandler implements ScoreboardHandler {
     }
 
     public static void resetCurrentQuest() {
-        currentQuest = null;
+        setQuest(null);
+    }
+
+    private static void setQuest(ScoreboardQuestInfo questInfo) {
+        currentQuest = questInfo;
+        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
     }
 }

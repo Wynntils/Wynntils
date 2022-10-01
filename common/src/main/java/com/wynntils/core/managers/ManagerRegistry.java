@@ -7,30 +7,30 @@ package com.wynntils.core.managers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.ModelDependant;
+import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.functions.DependantFunction;
-import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ManagerRegistry {
     private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
-    private static final Map<Class<? extends Model>, List<Feature>> MODEL_DEPENDENCIES = new HashMap<>();
-    private static final Map<Class<? extends Model>, List<Function<?>>> FUNCTION_MODEL_DEPENDENCIES = new HashMap<>();
-    private static final Set<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
+    private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
+    private static final Collection<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
@@ -41,6 +41,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
+        registerPersistentDependency(QuestBookManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
 
@@ -58,95 +59,80 @@ public final class ManagerRegistry {
     private static void registerPersistentDependency(Class<? extends CoreManager> manager) {
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
-
-        WynntilsMod.getEventBus().register(manager);
-
         tryInitManager(manager);
     }
 
-    public static void addDependency(Feature dependant, Class<? extends Model> dependency) {
+    public static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to register a persistent manager.");
+            throw new IllegalStateException("Tried to register a core manager like a model.");
         }
 
-        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
 
-        MODEL_DEPENDENCIES.get(dependency).add(dependant);
+        // first dependency, enable manager
+        if (modelDependencies == null) {
+            modelDependencies = new ArrayList<>();
+            MODEL_DEPENDENCIES.put(dependency, modelDependencies);
 
-        updateManagerState(dependency);
+            ENABLED_MANAGERS.add(dependency);
+            tryInitManager(dependency);
+        }
+
+        modelDependencies.add(dependant);
     }
 
-    public static void addFunctionDependency(
-            DependantFunction<?> dependantFunction, Class<? extends Model> dependency) {
+    public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to register a persistent manager.");
+            throw new IllegalStateException("Tried to unregister a core manager like a model.");
         }
 
-        FUNCTION_MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
 
-        FUNCTION_MODEL_DEPENDENCIES.get(dependency).add(dependantFunction);
-
-        updateManagerState(dependency);
-    }
-
-    public static void removeDependency(Feature dependant, Class<? extends Model> dependency) {
-        if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
-            throw new IllegalStateException("Tried to unregister a persistent manager.");
+        // Check if present and try to remove
+        if (modelDependencies == null || !modelDependencies.remove(dependant)) {
+            WynntilsMod.warn(
+                    String.format("Could not remove dependency of %s for %s when lacking", dependant, dependency));
+            return;
         }
 
-        MODEL_DEPENDENCIES.putIfAbsent(dependency, new ArrayList<>());
+        // Check if should disable manager
+        if (modelDependencies.isEmpty()) {
+            // remove empty list
+            MODEL_DEPENDENCIES.remove(dependency);
 
-        MODEL_DEPENDENCIES.get(dependency).remove(dependant);
-
-        updateManagerState(dependency);
-    }
-
-    public static void removeAllFeatureDependency(Feature dependant) {
-        for (Class<? extends Manager> manager : MODEL_DEPENDENCIES.keySet()) {
-            boolean removed = MODEL_DEPENDENCIES.get(manager).remove(dependant);
-
-            if (removed) {
-                updateManagerState(manager);
-            }
+            ENABLED_MANAGERS.remove(dependency);
+            tryDisableManager(dependency);
         }
     }
 
-    private static void updateManagerState(Class<? extends Manager> manager) {
-        List<Feature> dependencies = MODEL_DEPENDENCIES.get(manager);
-        List<Function<?>> functionDependencies = FUNCTION_MODEL_DEPENDENCIES.get(manager);
+    public static void addAllDependencies(ModelDependant dependant) {
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            addDependency(dependant, dependency);
+        }
+    }
 
-        boolean hasDependencies = (dependencies != null && !dependencies.isEmpty())
-                || (functionDependencies != null && !functionDependencies.isEmpty());
-
-        if (ENABLED_MANAGERS.contains(manager)) {
-            if (!hasDependencies) {
-                WynntilsMod.getEventBus().unregister(manager);
-
-                ENABLED_MANAGERS.remove(manager);
-
-                tryDisableManager(manager);
-            }
-        } else {
-            if (hasDependencies) {
-                WynntilsMod.getEventBus().register(manager);
-
-                ENABLED_MANAGERS.add(manager);
-
-                tryInitManager(manager);
-            }
+    public static void removeAllDependencies(ModelDependant dependant) {
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            removeDependency(dependant, dependency);
         }
     }
 
     private static void tryInitManager(Class<? extends Manager> manager) {
+        WynntilsMod.registerEventListener(manager);
+
         try {
             MethodUtils.invokeExactStaticMethod(manager, "init");
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            WynntilsMod.warn(e.getMessage());
-            assert false;
+        } catch (IllegalAccessException | NoSuchMethodException e) {
+            WynntilsMod.error("Misconfigured init() on manager " + manager, e);
+            throw new RuntimeException();
+        } catch (InvocationTargetException e) {
+            WynntilsMod.error("Exception during init of manager " + manager, e.getTargetException());
         }
     }
 
     private static void tryDisableManager(Class<? extends Manager> manager) {
+        WynntilsMod.unregisterEventListener(manager);
+
         try {
             MethodUtils.invokeExactStaticMethod(manager, "disable");
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
@@ -155,12 +141,7 @@ public final class ManagerRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext() {
-            @Override
-            public String name() {
-                return "Loaded Managers";
-            }
-
+        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Managers") {
             @Override
             public Object generate() {
                 StringBuilder result = new StringBuilder();
@@ -169,17 +150,22 @@ public final class ManagerRegistry {
                     result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
                 }
 
-                for (Map.Entry<Class<? extends Model>, List<Feature>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
+                        MODEL_DEPENDENCIES.entrySet()) {
                     if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
 
                     result.append("\n\t\t")
                             .append(dependencyEntry.getKey().getName())
                             .append(": ")
-                            .append(String.join(
-                                    ", ",
-                                    dependencyEntry.getValue().stream()
-                                            .map(Feature::getTranslatedName)
-                                            .toList()));
+                            .append(dependencyEntry.getValue().stream()
+                                    .map(t -> {
+                                        if (t instanceof Translatable translatable) {
+                                            return translatable.getTranslatedName();
+                                        } else {
+                                            return t.toString();
+                                        }
+                                    })
+                                    .collect(Collectors.joining(", ")));
                 }
 
                 return result.toString();

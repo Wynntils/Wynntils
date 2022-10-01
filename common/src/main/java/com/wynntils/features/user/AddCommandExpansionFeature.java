@@ -13,7 +13,6 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -26,8 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AddCommandExpansionFeature extends UserFeature {
     @SubscribeEvent
     public void onCommandPacket(CommandsPacketEvent event) {
-        if (!WynnUtils.onServer()) return;
-
         RootCommandNode root = event.getRoot();
 
         addArgumentlessCommandNodes(root);
@@ -250,7 +247,8 @@ public class AddCommandExpansionFeature extends UserFeature {
                         .then(literal("none"))
                         .then(literal("low"))
                         .then(literal("medium"))
-                        .then(literal("high")))
+                        .then(literal("high"))
+                        .then(literal("all")))
                 .then(literal("guildjoin"))
                 .then(literal("guildpopups"))
                 .then(literal("insults"))
