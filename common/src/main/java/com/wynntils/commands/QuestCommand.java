@@ -9,8 +9,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
-import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.QuestInfo;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.TextComponent;
 public class QuestCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    QuestBookManager.getQuests().stream().map(QuestInfo::getName), builder);
+                    QuestManager.getQuests().stream().map(QuestInfo::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -54,8 +54,8 @@ public class QuestCommand extends CommandBase {
         // FIXME: These needs to be proper "enum" argument types
         String sort = context.getArgument("sort", String.class);
         String status = context.getArgument("status", String.class);
-        QuestBookManager.QuestSortOrder order = QuestBookManager.QuestSortOrder.fromString(sort);
-        List<QuestInfo> quests = QuestBookManager.getQuestsSorted(order);
+        QuestManager.QuestSortOrder order = QuestManager.QuestSortOrder.fromString(sort);
+        List<QuestInfo> quests = QuestManager.getQuestsSorted(order);
 
         if (status == null) {
             status = "active";
@@ -116,7 +116,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        QuestBookManager.trackQuest(quest);
+        QuestManager.trackQuest(quest);
         MutableComponent response =
                 new TextComponent("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -129,7 +129,7 @@ public class QuestCommand extends CommandBase {
         if (quest == null) return 0;
 
         // FIXME: This is in fact a toggle
-        QuestBookManager.trackQuest(quest);
+        QuestManager.trackQuest(quest);
         MutableComponent response =
                 new TextComponent("Stopped tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -141,7 +141,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        QuestBookManager.openQuestOnWiki(quest);
+        QuestManager.openQuestOnWiki(quest);
         MutableComponent response =
                 new TextComponent("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -155,7 +155,7 @@ public class QuestCommand extends CommandBase {
 
     private QuestInfo getQuestInfo(CommandContext<CommandSourceStack> context, String questName) {
         String questNameLowerCase = questName.toLowerCase(Locale.ROOT);
-        List<QuestInfo> matchingQuests = QuestBookManager.getQuests().stream()
+        List<QuestInfo> matchingQuests = QuestManager.getQuests().stream()
                 .filter(questInfo ->
                         questInfo.getName().toLowerCase(Locale.ROOT).contains(questNameLowerCase))
                 .toList();

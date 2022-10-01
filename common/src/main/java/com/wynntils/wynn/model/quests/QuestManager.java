@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.questbook;
+package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class QuestBookManager extends CoreManager {
+public class QuestManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int MINI_QUESTS_SLOT = 53;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");

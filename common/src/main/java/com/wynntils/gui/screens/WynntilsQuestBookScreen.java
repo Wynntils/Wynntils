@@ -25,9 +25,9 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
-import com.wynntils.wynn.model.questbook.QuestInfo;
-import com.wynntils.wynn.model.questbook.QuestStatus;
+import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestStatus;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -87,7 +87,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     protected void init() {
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
-        QuestBookManager.rescanQuestBook();
+        QuestManager.rescanQuestBook();
 
         this.addRenderableWidget(searchWidget);
 
@@ -105,9 +105,9 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 () -> {
                     if (miniQuestMode) {
-                        QuestBookManager.queryMiniQuests();
+                        QuestManager.queryMiniQuests();
                     } else {
-                        QuestBookManager.rescanQuestBook();
+                        QuestManager.rescanQuestBook();
                     }
                 }));
         this.addRenderableWidget(new PageSelectorButton(
@@ -216,7 +216,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
         if (miniQuestMode) return;
 
-        this.setQuests(QuestBookManager.getQuests());
+        this.setQuests(QuestManager.getQuests());
 
         for (QuestInfo quest : quests) {
             if (!quest.isTracked()) {
@@ -232,7 +232,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     public void onQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
         if (!miniQuestMode) return;
 
-        this.setQuests(QuestBookManager.getMiniQuests());
+        this.setQuests(QuestManager.getMiniQuests());
 
         for (QuestInfo quest : quests) {
             if (!quest.isTracked()) {
@@ -457,7 +457,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     }
 
     private void updateQuestsFilter(String searchText) {
-        this.setQuests(QuestBookManager.getQuests().stream()
+        this.setQuests(QuestManager.getQuests().stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
                 .toList());
     }
@@ -539,9 +539,9 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         this.setQuests(List.of());
 
         if (this.miniQuestMode) {
-            QuestBookManager.queryMiniQuests();
+            QuestManager.queryMiniQuests();
         } else {
-            QuestBookManager.rescanQuestBook();
+            QuestManager.rescanQuestBook();
         }
     }
 }

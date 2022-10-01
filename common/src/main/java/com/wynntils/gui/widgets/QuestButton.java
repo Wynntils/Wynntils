@@ -15,8 +15,8 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
-import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestManager;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -101,7 +101,7 @@ public class QuestButton extends AbstractButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
-            QuestBookManager.trackQuest(this.questInfo);
+            QuestManager.trackQuest(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
                 questBookScreen.setTracked(this.questInfo);
@@ -113,7 +113,7 @@ public class QuestButton extends AbstractButton {
 
     private void openQuestWiki() {
         McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-        QuestBookManager.openQuestOnWiki(questInfo);
+        QuestManager.openQuestOnWiki(questInfo);
     }
 
     @Override

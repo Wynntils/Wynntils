@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.questbook;
+package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.objects.Location;
@@ -80,7 +80,7 @@ public class QuestInfo {
     }
 
     public Optional<Location> getNextLocation() {
-        return QuestBookManager.getLocationFromDescription(nextTask);
+        return QuestManager.getLocationFromDescription(nextTask);
     }
 
     public QuestLength getLength() {

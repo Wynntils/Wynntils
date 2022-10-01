@@ -16,7 +16,7 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
+import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +44,7 @@ public class BeaconBeamFeature extends UserFeature {
 
         // FIXME: Fold into QuestBookManager
         ScoreboardQuestInfo questInfo = event.getQuestInfo();
-        Optional<Location> location = QuestBookManager.getLocationFromDescription(questInfo.description());
+        Optional<Location> location = QuestManager.getLocationFromDescription(questInfo.description());
 
         if (location.isEmpty()) return;
 
