@@ -14,7 +14,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.map.MapModel;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -86,9 +85,6 @@ public class WynntilsCommand extends CommandBase {
         }
 
         WebManager.reset();
-        // FIXME: This is weird but keeping the old logic for now
-        MapModel.reset();
-
         WebManager.init(); // reloads api urls as well as web manager
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be

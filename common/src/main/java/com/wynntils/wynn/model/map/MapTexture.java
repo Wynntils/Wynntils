@@ -9,21 +9,21 @@ import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class MapProfile {
-    NativeImage texture;
-    ResourceLocation mapResource;
+public class MapTexture {
+    private final NativeImage texture;
+    private final ResourceLocation mapResource;
 
-    boolean registered = false;
+    private boolean registered = false;
 
-    int x1;
-    int z1;
-    int x2;
-    int z2;
+    private final int x1;
+    private final int z1;
+    private final int x2;
+    private final int z2;
 
-    int textureWidth;
-    int textureHeight;
+    private final int textureWidth;
+    private final int textureHeight;
 
-    public MapProfile(String name, NativeImage texture, int x1, int z1, int x2, int z2) {
+    public MapTexture(String name, NativeImage texture, int x1, int z1, int x2, int z2) {
         this.texture = texture;
         this.x1 = x1;
         this.z1 = z1;
@@ -34,9 +34,8 @@ public class MapProfile {
 
         this.mapResource = new ResourceLocation("wynntils", "/maps/" + name);
 
-        // Remove this if we ever have non 1 to 1 maps
-        assert x2 - x1 == textureWidth;
-        assert z2 - z1 == textureHeight;
+        assert (x2 - x1 + 1 == textureWidth);
+        assert (z2 - z1 + 1 == textureHeight);
     }
 
     public ResourceLocation resource() {
