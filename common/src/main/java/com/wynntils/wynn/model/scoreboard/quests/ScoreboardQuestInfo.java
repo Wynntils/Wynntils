@@ -4,5 +4,4 @@
  */
 package com.wynntils.wynn.model.scoreboard.quests;
 
-public record ScoreboardQuestInfo(String quest, String description) {
-}
+public record ScoreboardQuestInfo(String quest, String description) {}

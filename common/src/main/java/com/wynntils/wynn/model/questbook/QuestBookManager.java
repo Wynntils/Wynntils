@@ -328,9 +328,7 @@ public class QuestBookManager extends CoreManager {
             case LEVEL -> quests.stream()
                     .sorted(Comparator.comparing(questInfo -> questInfo.getLevel()))
                     .toList();
-            case DISTANCE -> quests.stream()
-                    .sorted(new LocationComparator())
-                    .toList();
+            case DISTANCE -> quests.stream().sorted(new LocationComparator()).toList();
             case ALPHABETIC -> quests.stream()
                     .sorted(Comparator.comparing(questInfo -> questInfo.getName()))
                     .toList();
@@ -381,7 +379,8 @@ public class QuestBookManager extends CoreManager {
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
-        private final static Vec3 PLAYER_LOCATION = McUtils.player().position();
+        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
+
         private double getDistance(Optional<Location> loc) {
             // Quests with no location always counts as closest
             if (loc.isEmpty()) return 0f;
@@ -394,7 +393,7 @@ public class QuestBookManager extends CoreManager {
         public int compare(QuestInfo quest1, QuestInfo quest2) {
             Optional<Location> loc1 = quest1.getNextLocation();
             Optional<Location> loc2 = quest2.getNextLocation();
-            return (int)(getDistance(loc1) - getDistance(loc2));
+            return (int) (getDistance(loc1) - getDistance(loc2));
         }
     }
 

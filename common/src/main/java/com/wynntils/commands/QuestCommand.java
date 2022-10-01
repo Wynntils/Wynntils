@@ -31,8 +31,8 @@ public class QuestCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("quest")
                 .then(Commands.literal("list")
-                    .then(Commands.argument("sort", StringArgumentType.word())
-                        .then(Commands.argument("status", StringArgumentType.word())
+                        .then(Commands.argument("sort", StringArgumentType.word())
+                                .then(Commands.argument("status", StringArgumentType.word())
                                         .executes(this::listQuests))))
                 .then(Commands.literal("info")
                         .then(Commands.argument("quest", StringArgumentType.greedyString())
