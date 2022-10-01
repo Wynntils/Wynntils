@@ -9,8 +9,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.quests.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -23,9 +23,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public class QuestCommand extends CommandBase {
-    private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    QuestManager.getQuests().stream().map(QuestInfo::getName), builder);
+    private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER = (context, builder) ->
+            SharedSuggestionProvider.suggest(QuestManager.getQuests().stream().map(QuestInfo::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
