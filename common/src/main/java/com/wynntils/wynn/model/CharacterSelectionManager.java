@@ -33,6 +33,8 @@ public class CharacterSelectionManager extends CoreManager {
     private static final Pattern CLASS_ITEM_FINISHED_QUESTS_PATTERN =
             Pattern.compile("§e- §r§7Finished Quests: §r§f(\\d+)/\\d+");
 
+    private static final String DEFAULT_CLASS_NAME = "This Character";
+
     private static final int EDIT_BUTTON_SLOT = 8;
 
     private static CharacterSelectorScreen currentScreen;
@@ -102,7 +104,11 @@ public class CharacterSelectionManager extends CoreManager {
             Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
 
             if (matcher.matches()) {
-                classType = ClassType.fromName(matcher.group(1));
+                String classTypeString = matcher.group(1);
+                classType = ClassType.fromName(classTypeString);
+                if (DEFAULT_CLASS_NAME.equals(className)) {
+                    className = classTypeString;
+                }
                 continue;
             }
 
