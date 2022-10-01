@@ -66,7 +66,7 @@ public class MinimapFeature extends UserFeature {
         public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
         @Config
-        public MapMaskType maskType = MapMaskType.Rectangular;
+        public MapMaskType maskType = MapMaskType.Circle;
 
         @Config
         public MapBorderType borderType = MapBorderType.Wynn;
