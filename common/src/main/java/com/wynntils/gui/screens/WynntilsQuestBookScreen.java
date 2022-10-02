@@ -304,7 +304,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 }
             }
 
-            tooltipLines.add(new TextComponent("WIP: Middle click to view on map!")
+            tooltipLines.add(new TextComponent("Middle click to view on map!")
                     .withStyle(ChatFormatting.YELLOW)
                     .withStyle(ChatFormatting.BOLD));
             tooltipLines.add(new TextComponent("Right to open on the wiki!")
