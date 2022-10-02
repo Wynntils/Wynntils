@@ -168,8 +168,8 @@ public class MainMapScreen extends Screen {
                 mapWidth,
                 mapHeight);
 
-        List<MapTexture> maps = MapRenderer.getMapTextures(
-                (int) mapCenterX, (int) mapCenterZ, width, height, 1f / currentZoom);
+        List<MapTexture> maps =
+                MapRenderer.getMapTextures((int) mapCenterX, (int) mapCenterZ, width, height, 1f / currentZoom);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
