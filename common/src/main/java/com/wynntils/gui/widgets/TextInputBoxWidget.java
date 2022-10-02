@@ -16,17 +16,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: This is a very basic text box.
+// FIXME: Add selection support to this class to be a fully working text box
 public class TextInputBoxWidget extends AbstractWidget {
-    protected long lastKeyDownCheck = 0;
-    protected long firstKeyDown = 0;
-
     protected char defaultCursorChar = '_';
     protected Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
@@ -153,28 +151,74 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
+        if (Screen.isCopy(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+            return true;
+        } else if (Screen.isPaste(keyCode)) {
+            this.setTextBoxInput((textBoxInput.substring(0, cursorPosition)
+                    + Minecraft.getInstance().keyboardHandler.getClipboard()
+                    + textBoxInput.substring(cursorPosition)));
+            return true;
+        } else if (Screen.isCut(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+            setTextBoxInput("");
+
+            return true;
+        }
+
         if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
             if (textBoxInput.length() == 0) {
                 return false;
+            }
+
+            if (Screen.hasControlDown()) {
+                setTextBoxInput("");
+                return true;
             }
 
             textBoxInput =
                     textBoxInput.substring(0, Math.max(0, cursorPosition - 1)) + textBoxInput.substring(cursorPosition);
             cursorPosition = Math.max(0, cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_DELETE) {
+            if (textBoxInput.length() == 0) {
+                return false;
+            }
+
+            if (Screen.hasControlDown()) {
+                setTextBoxInput(textBoxInput.substring(0, cursorPosition));
+                return true;
+            }
+
+            textBoxInput = textBoxInput.substring(0, cursorPosition)
+                    + textBoxInput.substring(Math.min(textBoxInput.length(), cursorPosition + 1));
+            this.onUpdateConsumer.accept(this.getTextBoxInput());
+            return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            if (Screen.hasControlDown()) {
+                cursorPosition = 0;
+                return true;
+            }
+
             cursorPosition = Math.max(0, cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            if (Screen.hasControlDown()) {
+                cursorPosition = textBoxInput.length();
+                return true;
+            }
+
             cursorPosition = Math.min(textBoxInput.length(), cursorPosition + 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
         }
 
         return false;
