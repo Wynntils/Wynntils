@@ -180,7 +180,6 @@ public final class MapModel extends Model {
                     return true;
                 })
                 .build());
-
     }
 
     private static class PlacesProfile {
