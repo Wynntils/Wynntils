@@ -18,6 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
@@ -154,13 +155,18 @@ public final class MapModel extends Model {
                                 allPois.add(new ServicePoi(location, kind));
                             }
                         } else {
-                            WynntilsMod.error("Unknown service type in services.json: " + service.type);
+                            WynntilsMod.warn("Unknown service type in services.json: " + service.type);
                         }
                     }
 
                     return true;
                 })
                 .build());
+
+        // TODO export to json hosted remotely and custom deserialization
+        allPois.add(new LostSpiritPoi(new MapLocation(531, 67, -1639), 1));
+        allPois.add(new LostSpiritPoi(new MapLocation(-737, 67, -1682), 2));
+        allPois.add(new LostSpiritPoi(new MapLocation(41, 34, -2240), 3));
     }
 
     private static class PlacesProfile {
