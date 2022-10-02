@@ -58,6 +58,12 @@ public final class MapModel extends Model {
                 .findFirst();
     }
 
+    public static List<MapTexture> getMapsForBoundingBox(int x1, int x2, int z1, int z2) {
+        return maps.stream()
+                .filter(map -> MathUtils.boundingBoxIntersects(x1, x2, z1, z2, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
+                .toList();
+    }
+
     public static Stream<Poi> getAllPois() {
         if (CompassModel.getCompassLocation().isPresent()) {
             Location location = CompassModel.getCompassLocation().get();

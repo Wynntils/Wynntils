@@ -78,4 +78,11 @@ public final class MathUtils {
     public static boolean isInside(int testX, int testZ, int x1, int x2, int z1, int z2) {
         return x1 <= testX && testX <= x2 && z1 <= testZ && testZ <= z2;
     }
+
+    public static boolean boundingBoxIntersects(
+            int a_x1, int a_x2, int a_z1, int a_z2, int b_x1, int b_x2, int b_z1, int b_z2) {
+        boolean x_intersects = a_x1 < b_x2 && b_x1 < a_x2;
+        boolean z_intersects = a_z1 < b_z2 && b_z1 < a_z2;
+        return x_intersects && z_intersects;
+    }
 }
