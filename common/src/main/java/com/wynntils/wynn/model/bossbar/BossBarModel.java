@@ -65,11 +65,9 @@ public class BossBarModel extends Model {
                 // Wynncraft sends the name packet before the progress packet
                 @Override
                 public void onUpdateProgress(float progress) {
-                    float targetProgress = getTargetProgress();
-
-                    if (targetProgress != 0f) {
+                    if (progress != 0f) {
                         // Round to nearest 30
-                        int unroundedMax = (int) (current / targetProgress);
+                        int unroundedMax = (int) (current / progress);
                         int remainder = unroundedMax % 30;
 
                         max = unroundedMax - remainder;
