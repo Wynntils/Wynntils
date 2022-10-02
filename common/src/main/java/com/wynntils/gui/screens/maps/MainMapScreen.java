@@ -67,6 +67,11 @@ public class MainMapScreen extends Screen {
         centerMapAroundPlayer();
     }
 
+    public MainMapScreen(float mapCenterX, float mapCenterZ) {
+        super(new TextComponent("Main Map"));
+        updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
     @Override
     protected void init() {
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
