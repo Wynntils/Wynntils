@@ -174,7 +174,7 @@ public final class MapModel extends Model {
                     List<MapLocation> mapLocations = GSON.fromJson(json, type);
 
                     for (int i = 0; i < mapLocations.size(); i++) {
-                        allPois.add(new LostSpiritPoi(mapLocations.get(i), i));
+                        allPois.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;
