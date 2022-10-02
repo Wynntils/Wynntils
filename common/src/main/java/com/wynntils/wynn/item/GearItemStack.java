@@ -222,11 +222,13 @@ public class GearItemStack extends WynnItemStack {
 
             String name = "Perfect " + itemName;
 
-            long time = System.currentTimeMillis();
+            int cycle = 5000;
+
+            int time = (int) (System.currentTimeMillis() % cycle);
             for (int i = 0; i < name.length(); i++) {
-                float cycle = 1000.0f;
+                int hue = (time + i * cycle / 7) % cycle;
                 Style color = Style.EMPTY
-                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7.0f) % cycle) / cycle, 0.8F, 0.8F))
+                        .withColor(Color.HSBtoRGB((hue / (float) cycle), 0.8F, 0.8F))
                         .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
