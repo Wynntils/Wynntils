@@ -58,7 +58,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     private List<QuestButton> questButtons = new ArrayList<>();
     private QuestInfo tracked = null;
     private boolean miniQuestMode = false;
-    private QuestBookManager.QuestSortOrder questSortOrder = QuestBookManager.QuestSortOrder.NONE;
+    private QuestBookManager.QuestSortOrder questSortOrder = QuestBookManager.QuestSortOrder.LEVEL;
 
     public WynntilsQuestBookScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
@@ -390,9 +390,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
 
         if (this.hovered instanceof SortOrderWidget) {
             switch (questSortOrder) {
-                case NONE -> tooltipLines = List.of(
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.none.name"),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.none.description"));
                 case LEVEL -> tooltipLines = List.of(
                         new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.level.name"),
                         new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.level.description"));

@@ -39,7 +39,6 @@ public enum Texture {
     SORT_ALPHABETICALLY("sort_alphabetical.png", 23, 46),
     SORT_DISTANCE("sort_distance.png", 23, 46),
     SORT_LEVEL("sort_level.png", 23, 46),
-    SORT_NONE("sort_none.png", 23, 46),
 
     // Quest State Icons
     QUEST_CANNOT_START("quest_cannot_start_icon.png", 7, 7),

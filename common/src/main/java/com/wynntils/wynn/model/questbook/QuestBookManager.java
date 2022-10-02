@@ -321,7 +321,6 @@ public class QuestBookManager extends CoreManager {
     }
 
     private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questInfoList) {
-        return switch (sortOrder) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {

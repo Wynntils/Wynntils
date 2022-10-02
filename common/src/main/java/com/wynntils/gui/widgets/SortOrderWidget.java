@@ -37,7 +37,6 @@ public class SortOrderWidget extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
                 switch (questBookScreen.getQuestSortOrder()) {
-                    case NONE -> Texture.SORT_NONE;
                     case LEVEL -> Texture.SORT_LEVEL;
                     case DISTANCE -> Texture.SORT_DISTANCE;
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;

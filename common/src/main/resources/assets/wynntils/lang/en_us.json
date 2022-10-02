@@ -585,7 +585,5 @@
   "screens.wynntils.wynntilsQuestBook.sort.distance.name": "Sort by Distance",
   "screens.wynntils.wynntilsQuestBook.sort.level.description": "Quests are sorted by level, lowest first",
   "screens.wynntils.wynntilsQuestBook.sort.level.name": "Sort by Level",
-  "screens.wynntils.wynntilsQuestBook.sort.none.description": "Quests are in the same order as quest book",
-  "screens.wynntils.wynntilsQuestBook.sort.none.name": "No Sort",
   "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner."
 }
