@@ -238,7 +238,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     }
 
     @SubscribeEvent
-    public void onQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
+    public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
         if (!miniQuestMode) return;
 
         this.setQuests(QuestBookManager.getMiniQuestsSorted(questSortOrder));
