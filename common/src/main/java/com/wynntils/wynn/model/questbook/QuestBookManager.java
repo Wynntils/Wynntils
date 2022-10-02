@@ -313,11 +313,19 @@ public class QuestBookManager extends CoreManager {
         // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {
             case LEVEL -> quests.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getStatus).thenComparing(QuestInfo::getLevel).thenComparing(QuestInfo::getName))
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getLevel)
+                            .thenComparing(QuestInfo::getName))
                     .toList();
-            case DISTANCE -> quests.stream().sorted(Comparator.comparing(QuestInfo::getStatus).thenComparing(new LocationComparator()).thenComparing(QuestInfo::getName)).toList();
+            case DISTANCE -> quests.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(new LocationComparator())
+                            .thenComparing(QuestInfo::getName))
+                    .toList();
             case ALPHABETIC -> quests.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getStatus).thenComparing(QuestInfo::getName).thenComparing(QuestInfo::getLevel))
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getName)
+                            .thenComparing(QuestInfo::getLevel))
                     .toList();
         };
     }
