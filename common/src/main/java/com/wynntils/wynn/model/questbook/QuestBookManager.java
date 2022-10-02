@@ -322,15 +322,23 @@ public class QuestBookManager extends CoreManager {
 
     private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questInfoList) {
         return switch (sortOrder) {
-            case NONE -> questInfoList;
-            case LEVEL -> questInfoList.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getLevel))
+        // All quests are always sorted by status (available then unavailable), and then
+        // the given sort order, and finally a third way if the given sort order is equal.
+        return switch (sortOrder) {
+            case LEVEL -> quests.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getLevel)
+                            .thenComparing(QuestInfo::getName))
                     .toList();
-            case DISTANCE -> questInfoList.stream()
-                    .sorted(new LocationComparator())
+            case DISTANCE -> quests.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(new LocationComparator())
+                            .thenComparing(QuestInfo::getName))
                     .toList();
-            case ALPHABETIC -> questInfoList.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getName))
+            case ALPHABETIC -> quests.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getName)
+                            .thenComparing(QuestInfo::getLevel))
                     .toList();
         };
     }
@@ -369,18 +377,17 @@ public class QuestBookManager extends CoreManager {
     }
 
     public enum QuestSortOrder {
-        NONE,
         LEVEL,
         DISTANCE,
         ALPHABETIC;
 
         public static QuestSortOrder fromString(String str) {
-            if (str == null || str.isEmpty()) return NONE;
+            if (str == null || str.isEmpty()) return LEVEL;
 
             try {
                 return QuestSortOrder.valueOf(str.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                return NONE;
+                return LEVEL;
             }
         }
     }
