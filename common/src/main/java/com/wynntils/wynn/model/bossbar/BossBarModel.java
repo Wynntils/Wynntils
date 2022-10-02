@@ -9,6 +9,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
@@ -62,8 +64,8 @@ public class BossBarModel extends Model {
 
                 // Wynncraft sends the name packet before the progress packet
                 @Override
-                public void setProgress(float progress) {
-                    super.setProgress(progress);
+                public void onUpdateProgress(float progress) {
+                    float targetProgress = getTargetProgress();
 
                     if (targetProgress != 0f) {
                         // Round to nearest 30
@@ -169,8 +171,11 @@ public class BossBarModel extends Model {
 
             if (trackedBar == null) return;
 
-            trackedBar.setProgress(progress);
-            trackedBar.setUuid(id);
+            event.setCanceled(true);
+
+            LerpingBossEvent bossEvent =
+                    new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
+            trackedBar.setEvent(bossEvent);
 
             // Allow for others to try and cancel event
             CustomBarAddEvent barAddEvent = new CustomBarAddEvent(trackedBar.type);
@@ -178,9 +183,9 @@ public class BossBarModel extends Model {
 
             if (barAddEvent.isCanceled()) {
                 trackedBar.setRendered(false);
-                event.setCanceled(true);
             } else {
                 trackedBar.setRendered(true);
+                McUtils.mc().gui.getBossOverlay().events.put(id, bossEvent);
             }
 
             trackedBar.onUpdateName(matcher);
@@ -211,7 +216,7 @@ public class BossBarModel extends Model {
         @Override
         public void updateProgress(UUID id, float progress) {
             handleBarUpdate(id, trackedBar -> {
-                trackedBar.setProgress(progress);
+                trackedBar.onUpdateProgress(progress);
             });
         }
 
