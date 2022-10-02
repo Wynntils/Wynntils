@@ -24,6 +24,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
@@ -485,6 +486,11 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         List<QuestInfo> newQuests = miniQuestMode
                 ? QuestBookManager.getMiniQuestsSorted(questSortOrder)
                 : QuestBookManager.getQuestsSorted(questSortOrder);
+
+        newQuests = newQuests.stream()
+                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
+                .toList();
+
         this.setQuests(newQuests);
     }
 
