@@ -36,6 +36,10 @@ public enum Texture {
     QUEST_BOOK_SEARCH("quest_book_search.png", 133, 23),
     QUEST_BOOK_TITLE("quest_book_title.png", 168, 33),
     RELOAD_BUTTON("reload_button.png", 40, 20),
+    SORT_ALPHABETICALLY("sort_alphabetical.png", 23, 46),
+    SORT_DISTANCE("sort_distance.png", 23, 46),
+    SORT_LEVEL("sort_level.png", 23, 46),
+    SORT_NONE("sort_none.png", 23, 46),
 
     // Quest State Icons
     QUEST_CANNOT_START("quest_cannot_start_icon.png", 7, 7),

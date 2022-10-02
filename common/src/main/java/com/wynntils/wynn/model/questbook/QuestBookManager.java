@@ -309,24 +309,34 @@ public class QuestBookManager extends CoreManager {
     }
 
     public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, quests);
+    }
+
+    public static List<QuestInfo> getMiniQuests() {
+        return miniQuests;
+    }
+
+    public static List<QuestInfo> getMiniQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, miniQuests);
+    }
+
+    private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questInfoList) {
         return switch (sortOrder) {
-            case NONE -> quests;
-            case LEVEL -> quests.stream()
-                    .sorted(Comparator.comparing(questInfo -> questInfo.getLevel()))
+            case NONE -> questInfoList;
+            case LEVEL -> questInfoList.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getLevel))
                     .toList();
-            case DISTANCE -> quests.stream().sorted(new LocationComparator()).toList();
-            case ALPHABETIC -> quests.stream()
-                    .sorted(Comparator.comparing(questInfo -> questInfo.getName()))
+            case DISTANCE -> questInfoList.stream()
+                    .sorted(new LocationComparator())
+                    .toList();
+            case ALPHABETIC -> questInfoList.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getName))
                     .toList();
         };
     }
 
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
-    }
-
-    public static List<QuestInfo> getMiniQuests() {
-        return miniQuests;
     }
 
     public static Optional<Location> getLocationFromDescription(String description) {
