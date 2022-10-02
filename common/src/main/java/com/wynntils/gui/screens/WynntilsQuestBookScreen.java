@@ -24,7 +24,6 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.questbook.QuestInfo;
@@ -483,9 +482,10 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     }
 
     private void updateQuestsFilter(String searchText) {
-        this.setQuests(QuestBookManager.getQuests().stream()
-                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
-                .toList());
+        List<QuestInfo> newQuests = miniQuestMode
+                ? QuestBookManager.getMiniQuestsSorted(questSortOrder)
+                : QuestBookManager.getQuestsSorted(questSortOrder);
+        this.setQuests(newQuests);
     }
 
     private Component getPercentageComponent(int count, int totalCount, int tickCount) {
