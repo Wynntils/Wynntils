@@ -26,6 +26,11 @@ public enum Texture {
     UNIVERSAL_BAR("universal_bar.png", 81, 16),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
+    // Settings Screen
+    SETTING_BACKGROUND("book.png", 400, 220),
+    SETTING_SCROLL_AREA("book_scrollarea.png", 168, 175),
+    SETTING_SCROLL_BUTTON("book_scroll_button.png", 5, 18),
+
     // Quest book related
     BACK_ARROW("back_arrow.png", 32, 9),
     BACKWARD_ARROW("backward_arrow.png", 36, 10),
