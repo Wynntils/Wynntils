@@ -13,7 +13,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.gui.screens.overlays.OverlaySelectionScreen;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.WynntilsMenuButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -59,7 +59,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.SETTINGS_ICON,
                 true,
-                new WynntilsSettingsScreen(),
+                new WynntilsBookSettingsScreen(),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
