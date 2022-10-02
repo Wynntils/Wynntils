@@ -181,10 +181,6 @@ public final class MapModel extends Model {
                 })
                 .build());
 
-        // TODO export to json hosted remotely and custom deserialization
-        allPois.add(new LostSpiritPoi(new MapLocation(531, 67, -1639), 1));
-        allPois.add(new LostSpiritPoi(new MapLocation(-737, 67, -1682), 2));
-        allPois.add(new LostSpiritPoi(new MapLocation(41, 34, -2240), 3));
     }
 
     private static class PlacesProfile {
