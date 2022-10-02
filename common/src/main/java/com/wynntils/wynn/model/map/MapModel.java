@@ -18,6 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
@@ -41,6 +42,8 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
     private static final String MAPS_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
+    private static final String SPIRITS_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/spirits.json";
 
     private static final Gson GSON = new GsonBuilder().create();
     private static List<MapTexture> maps = new CopyOnWriteArrayList();
@@ -154,8 +157,24 @@ public final class MapModel extends Model {
                                 allPois.add(new ServicePoi(location, kind));
                             }
                         } else {
-                            WynntilsMod.error("Unknown service type in services.json: " + service.type);
+                            WynntilsMod.warn("Unknown service type in services.json: " + service.type);
                         }
+                    }
+
+                    return true;
+                })
+                .build());
+
+        handler.addAndDispatch(new RequestBuilder(SPIRITS_JSON_URL, "maps-spirits")
+                .cacheTo(new File(mapDirectory, "spirits.json"))
+                .useCacheAsBackup()
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<MapLocation>>() {}.getType();
+
+                    List<MapLocation> mapLocations = GSON.fromJson(json, type);
+
+                    for (int i = 0; i < mapLocations.size(); i++) {
+                        allPois.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;
