@@ -20,6 +20,7 @@ public enum ServiceKind {
     ITEM_IDENTIFIER("Item Identifier", Texture.ITEM_IDENTIFIER),
     JEWELING_STATION("Jeweling Station", Texture.JEWELING_STATION),
     LIQUID_MERCHANT("Liquid Merchant", Texture.LIQUID_MERCHANT),
+    LOST_SPRIT("Lost Spirit", Texture.LOST_SPIRIT),
     PARTY_FINDER("Party Finder", Texture.PARTY_FINDER),
     POTION_MERCHANT("Potion Merchant", Texture.POTION_MERCHANT),
     POWDER_MASTER("Powder Master", Texture.POWDER_MASTER),
