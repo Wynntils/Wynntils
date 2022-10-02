@@ -434,4 +434,20 @@ public class MapRenderer {
         double distanceZ = poi.getLocation().getZ() - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
     }
+
+    public static List<MapTexture> getMapTextures(
+            int mapCenterX, int mapCenterZ, float renderWidth, float renderHeight, float scale) {
+        float renderDistanceX = renderWidth / 2f;
+        // scale is the conversion betweeen in-game ("map") coordinates and render coordinates
+        int mapDistanceX = (int) (renderDistanceX * scale);
+
+        float renderDistanceZ = renderHeight / 2f;
+        int mapDistanceZ = (int) (renderDistanceZ * scale);
+
+        return MapModel.getMapsForBoundingBox(
+                mapCenterX - mapDistanceX,
+                mapCenterX + mapDistanceX,
+                mapCenterZ - mapDistanceZ,
+                mapCenterZ + mapDistanceZ);
+    }
 }
