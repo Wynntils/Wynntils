@@ -66,8 +66,8 @@ public final class InventoryUtils {
     }
 
     public static final class EmeraldPouch {
-        final int slotNumber;
-        final ItemStack stack;
+        private final int slotNumber;
+        private final ItemStack stack;
 
         private EmeraldPouch(int slotNumber, ItemStack stack) {
             this.slotNumber = slotNumber;

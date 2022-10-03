@@ -8,7 +8,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 
 public class MessageContainer {
-    TextRenderTask message;
+    protected TextRenderTask message;
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);

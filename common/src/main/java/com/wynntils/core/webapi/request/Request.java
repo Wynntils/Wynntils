@@ -20,11 +20,11 @@ import java.util.function.Predicate;
  * the request. Built through {@link RequestBuilder}
  */
 public class Request {
-    final String url;
-    final String id;
-    final int parallelGroup;
-    final ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
-    final boolean useCacheAsBackup;
+    protected final String url;
+    protected final String id;
+    protected final int parallelGroup;
+    protected final ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
+    protected final boolean useCacheAsBackup;
     private final RequestErrorHandler onError;
     private final Map<String, String> headers;
     private final int timeout;

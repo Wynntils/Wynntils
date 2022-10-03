@@ -285,7 +285,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     public abstract static class Condition {
-        boolean satisfied = false;
+        private boolean satisfied = false;
 
         protected boolean isSatisfied() {
             return satisfied;

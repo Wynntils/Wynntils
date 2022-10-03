@@ -136,12 +136,12 @@ public class ScriptedContainerQuery {
      * such triplet. It will not allow the creation of a step where one of them are missing.
      */
     public static class QueryBuilder {
-        StartAction startAction;
-        ContainerVerification verification;
-        ContainerAction handleContent;
-        boolean waitForMenuReopen = true;
+        private StartAction startAction;
+        private ContainerVerification verification;
+        private ContainerAction handleContent;
+        private boolean waitForMenuReopen = true;
 
-        final ScriptedContainerQuery query;
+        private final ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;
