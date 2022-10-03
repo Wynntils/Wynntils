@@ -20,8 +20,8 @@ public final class NotificationManager {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
 
-    public static MessageContainer queueMessage(Component message) {
-        return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
+    public static void queueMessage(Component message) {
+        queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
     }
 
     public static MessageContainer queueMessage(TextRenderTask message) {

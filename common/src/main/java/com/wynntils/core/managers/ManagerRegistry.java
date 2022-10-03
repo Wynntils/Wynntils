@@ -14,6 +14,7 @@ import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.quests.QuestManager;
@@ -36,6 +37,7 @@ public final class ManagerRegistry {
         // Bootstrapping order is important, take care if reordering
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
+        registerPersistentDependency(CharacterSelectionManager.class);
         registerPersistentDependency(ClientCommandManager.class);
         registerPersistentDependency(ContainerQueryManager.class);
         registerPersistentDependency(FunctionManager.class);
@@ -62,7 +64,7 @@ public final class ManagerRegistry {
         tryInitManager(manager);
     }
 
-    public static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+    private static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to register a core manager like a model.");
         }
@@ -81,7 +83,7 @@ public final class ManagerRegistry {
         modelDependencies.add(dependant);
     }
 
-    public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+    private static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to unregister a core manager like a model.");
         }
@@ -141,39 +143,45 @@ public final class ManagerRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Managers") {
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
-
-                for (Class<? extends Manager> persistentManager : PERSISTENT_CORE_MANAGERS) {
-                    result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
-                }
-
-                for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
-                        MODEL_DEPENDENCIES.entrySet()) {
-                    if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
-
-                    result.append("\n\t\t")
-                            .append(dependencyEntry.getKey().getName())
-                            .append(": ")
-                            .append(dependencyEntry.getValue().stream()
-                                    .map(t -> {
-                                        if (t instanceof Translatable translatable) {
-                                            return translatable.getTranslatedName();
-                                        } else {
-                                            return t.toString();
-                                        }
-                                    })
-                                    .collect(Collectors.joining(", ")));
-                }
-
-                return result.toString();
-            }
-        });
+        CrashReportManager.registerCrashContext(new ManagerCrashContext());
     }
 
     public static boolean isEnabled(Class<? extends Manager> manager) {
         return ENABLED_MANAGERS.contains(manager);
+    }
+
+    private static class ManagerCrashContext extends CrashReportManager.ICrashContext {
+        public ManagerCrashContext() {
+            super("Loaded Managers");
+        }
+
+        @Override
+        public Object generate() {
+            StringBuilder result = new StringBuilder();
+
+            for (Class<? extends Manager> persistentManager : PERSISTENT_CORE_MANAGERS) {
+                result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
+            }
+
+            for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
+                    MODEL_DEPENDENCIES.entrySet()) {
+                if (!ENABLED_MANAGERS.contains(dependencyEntry.getKey())) continue;
+
+                result.append("\n\t\t")
+                        .append(dependencyEntry.getKey().getName())
+                        .append(": ")
+                        .append(dependencyEntry.getValue().stream()
+                                .map(t -> {
+                                    if (t instanceof Translatable translatable) {
+                                        return translatable.getTranslatedName();
+                                    } else {
+                                        return t.toString();
+                                    }
+                                })
+                                .collect(Collectors.joining(", ")));
+            }
+
+            return result.toString();
+        }
     }
 }

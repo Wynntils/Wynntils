@@ -15,11 +15,13 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class AbilityTreeScrollFeature extends UserFeature {
 
-    private final Pattern ABILITY_TREE_PATTERN = Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
+    private static final Pattern ABILITY_TREE_PATTERN =
+            Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
 
@@ -37,6 +39,9 @@ public class AbilityTreeScrollFeature extends UserFeature {
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
 
         ContainerUtils.clickOnSlot(
-                slot, gui.getMenu().containerId, gui.getMenu().getItems());
+                slot,
+                gui.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                gui.getMenu().getItems());
     }
 }

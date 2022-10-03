@@ -7,41 +7,40 @@ package com.wynntils.core.webapi.profiles.item;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class ItemProfile {
-    String displayName;
-    ItemTier tier;
-    boolean identified;
-    int powderAmount;
+    private final String displayName;
+    private final ItemTier tier;
+    private final boolean identified;
+    private int powderAmount;
 
-    ItemAttackSpeed attackSpeed = null;
+    private final ItemAttackSpeed attackSpeed;
 
-    ItemInfoContainer itemInfo;
-    Map<String, String> requirements;
+    private final ItemInfoContainer itemInfo;
+    private final Map<String, String> requirements;
 
-    Map<String, String> damageTypes = new HashMap<>();
-    Map<String, Integer> defenseTypes = new HashMap<>();
-    Map<String, IdentificationProfile> statuses = new HashMap<>();
+    private final Map<String, String> damageTypes;
+    private final Map<String, Integer> defenseTypes;
+    private final Map<String, IdentificationProfile> statuses;
 
-    List<String> majorIds = new ArrayList<>();
+    private final List<String> majorIds;
 
-    String restriction;
-    String lore;
+    private final String restriction;
+    private String lore;
 
-    transient List<MajorIdentification> majorIdentifications = new ArrayList<>();
+    private transient List<MajorIdentification> majorIdentifications = new ArrayList<>();
 
-    transient Map<RequirementType, String> parsedRequirements = null;
+    private transient Map<RequirementType, String> parsedRequirements = null;
 
-    transient Map<DamageType, String> parsedDamages = null;
-    transient Map<DamageType, Integer> parsedAvgDamages = null;
-    transient int parsedHealth = Integer.MIN_VALUE;
-    transient Map<DamageType, Integer> parsedDefenses = null;
+    private transient Map<DamageType, String> parsedDamages = null;
+    private transient Map<DamageType, Integer> parsedAvgDamages = null;
+    private transient int parsedHealth = Integer.MIN_VALUE;
+    private transient Map<DamageType, Integer> parsedDefenses = null;
 
-    transient boolean replacedLore = false;
+    private transient boolean replacedLore = false;
 
     public ItemProfile(
             String displayName,
@@ -55,7 +54,20 @@ public class ItemProfile {
             Map<String, IdentificationProfile> statuses,
             ArrayList<String> majorIds,
             String restriction,
-            String lore) {}
+            String lore) {
+        this.displayName = displayName;
+        this.tier = tier;
+        this.identified = identified;
+        this.attackSpeed = attackSpeed;
+        this.itemInfo = itemInfo;
+        this.requirements = requirements;
+        this.damageTypes = damageTypes;
+        this.defenseTypes = defenseTypes;
+        this.statuses = statuses;
+        this.majorIds = majorIds;
+        this.restriction = restriction;
+        this.lore = lore;
+    }
 
     public void registerIdTypes() {
         statuses.forEach((key, value) -> value.registerIdType(key));
@@ -85,7 +97,7 @@ public class ItemProfile {
         return itemInfo;
     }
 
-    public void parseRequirements() {
+    private void parseRequirements() {
         if (parsedRequirements != null) return;
 
         parsedRequirements = new EnumMap<>(RequirementType.class);
@@ -109,7 +121,7 @@ public class ItemProfile {
         return damageTypes;
     }
 
-    public void parseDamages() {
+    private void parseDamages() {
         if (parsedDamages != null) return;
 
         parsedDamages = new EnumMap<>(DamageType.class);

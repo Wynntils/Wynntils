@@ -18,9 +18,9 @@ import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -65,6 +65,11 @@ public class MainMapScreen extends Screen {
     public MainMapScreen() {
         super(new TextComponent("Main Map"));
         centerMapAroundPlayer();
+    }
+
+    public MainMapScreen(float mapCenterX, float mapCenterZ) {
+        super(new TextComponent("Main Map"));
+        updateMapCenter(mapCenterX, mapCenterZ);
     }
 
     @Override
@@ -128,13 +133,7 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        if (MapModel.isMapLoaded()) {
-            MapProfile map = MapModel.getMaps().get(0);
-            float textureX = map.getTextureXPosition(mapCenterX);
-            float textureZ = map.getTextureZPosition(mapCenterZ);
-
-            renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
-        }
+        renderMap(poseStack, mouseX, mouseY);
         renderBackground(poseStack);
 
         renderCursor(poseStack);
@@ -159,8 +158,7 @@ public class MainMapScreen extends Screen {
                 MapFeature.INSTANCE.pointerType);
     }
 
-    private void renderMap(
-            PoseStack poseStack, MapProfile map, float textureX, float textureZ, int mouseX, int mouseY) {
+    private void renderMap(PoseStack poseStack, int mouseX, int mouseY) {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
@@ -174,23 +172,31 @@ public class MainMapScreen extends Screen {
                 0,
                 mapWidth,
                 mapHeight);
-        MapRenderer.renderMapQuad(
-                map,
-                poseStack,
-                mapCenterX,
-                mapCenterZ,
-                centerX,
-                centerZ,
-                textureX,
-                textureZ,
-                mapWidth,
-                mapHeight,
-                1f / currentZoom,
-                1f,
-                new Pair<>(mouseX, mouseY),
-                MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
-                false,
-                false);
+
+        List<MapTexture> maps =
+                MapRenderer.getMapTextures((int) mapCenterX, (int) mapCenterZ, width, height, 1f / currentZoom);
+        for (MapTexture map : maps) {
+            float textureX = map.getTextureXPosition(mapCenterX);
+            float textureZ = map.getTextureZPosition(mapCenterZ);
+
+            MapRenderer.renderMapQuad(
+                    map,
+                    poseStack,
+                    mapCenterX,
+                    mapCenterZ,
+                    centerX,
+                    centerZ,
+                    textureX,
+                    textureZ,
+                    mapWidth,
+                    mapHeight,
+                    1f / currentZoom,
+                    1f,
+                    new Pair<>(mouseX, mouseY),
+                    MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
+                    false,
+                    false);
+        }
 
         RenderSystem.disableScissor();
     }

@@ -15,7 +15,6 @@ import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -23,7 +22,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 
 public class SearchWidget extends TextInputBoxWidget {
-    protected final Component DEFAULT_TEXT =
+    protected static final Component DEFAULT_TEXT =
             new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
     public SearchWidget(
@@ -77,9 +76,6 @@ public class SearchWidget extends TextInputBoxWidget {
 
         return false;
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
     protected void removeFocus() {

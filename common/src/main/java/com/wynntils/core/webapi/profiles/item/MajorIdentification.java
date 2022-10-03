@@ -7,10 +7,13 @@ package com.wynntils.core.webapi.profiles.item;
 import net.minecraft.ChatFormatting;
 
 public class MajorIdentification {
-    String name;
-    String description;
+    private final String name;
+    private final String description;
 
-    public MajorIdentification(String name, String description) {}
+    public MajorIdentification(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public String getName() {
         return name;

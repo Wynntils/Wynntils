@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,11 +78,11 @@ public final class LootrunModel {
         return state;
     }
 
-    public static void enableFeature() {
+    private static void enableFeature() {
         LootrunFeature.INSTANCE.tryEnable();
     }
 
-    public static void disableFeature() {
+    private static void disableFeature() {
         LootrunFeature.INSTANCE.tryDisable();
     }
 
@@ -142,11 +143,7 @@ public final class LootrunModel {
     }
 
     private static void renderNotes(
-            PoseStack poseStack,
-            LootrunInstance lootrun,
-            int color,
-            MultiBufferSource.BufferSource source,
-            long chunkLong) {
+            PoseStack poseStack, LootrunInstance lootrun, int color, MultiBufferSource source, long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
@@ -346,7 +343,7 @@ public final class LootrunModel {
         return 1;
     }
 
-    public static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+    private static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
         Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
@@ -509,7 +506,7 @@ public final class LootrunModel {
         return result;
     }
 
-    public static LootrunUncompiled readJson(File file, JsonObject json) {
+    private static LootrunUncompiled readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
         Path pointsList = new Path(new ArrayList<>());
         for (JsonElement element : points) {
@@ -582,7 +579,7 @@ public final class LootrunModel {
         File lootrunFile = new File(LOOTRUNS, lootrun);
         if (lootrunFile.exists()) {
             try {
-                FileReader file = new FileReader(lootrunFile);
+                FileReader file = new FileReader(lootrunFile, StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
                 LootrunModel.lootrun = compile(uncompiled, false);
@@ -756,50 +753,50 @@ public final class LootrunModel {
         INVALID
     }
 
-    public record LootrunInstance(
+    private record LootrunInstance(
             Long2ObjectMap<List<ColoredPath>> points,
             Long2ObjectMap<Set<BlockPos>> chests,
             Long2ObjectMap<List<Note>> notes) {}
 
-    public record ColoredPoint(Vec3 vec3, int color) {}
+    private record ColoredPoint(Vec3 vec3, int color) {}
 
-    public static class RecordingInformation {
+    private static class RecordingInformation {
         private Vec3 lastLocation;
         private BlockPos lastChest;
         private boolean dirty;
 
-        public Vec3 getLastLocation() {
+        protected Vec3 getLastLocation() {
             return lastLocation;
         }
 
-        public void setLastLocation(Vec3 lastLocation) {
+        protected void setLastLocation(Vec3 lastLocation) {
             this.lastLocation = lastLocation;
         }
 
-        public BlockPos getLastChest() {
+        protected BlockPos getLastChest() {
             return lastChest;
         }
 
-        public void setLastChest(BlockPos lastChest) {
+        protected void setLastChest(BlockPos lastChest) {
             this.lastChest = lastChest;
         }
 
-        public boolean isDirty() {
+        protected boolean isDirty() {
             return dirty;
         }
 
-        public void setDirty(boolean dirty) {
+        protected void setDirty(boolean dirty) {
             this.dirty = dirty;
         }
     }
 
-    public record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
+    private record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
 
-        public LootrunUncompiled(LootrunUncompiled old, File file) {
+        private LootrunUncompiled(LootrunUncompiled old, File file) {
             this(old.path, old.chests, old.notes, file);
         }
 
-        public LootrunSaveResult saveLootrun(String name) {
+        private LootrunSaveResult saveLootrun(String name) {
             try {
                 File file = new File(LootrunModel.LOOTRUNS, name + ".json");
                 LootrunModel.uncompiled = new LootrunUncompiled(this, file);
@@ -851,7 +848,7 @@ public final class LootrunModel {
                         "date",
                         DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
                                 .format(new Date()));
-                FileWriter writer = new FileWriter(file);
+                FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
                 new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
                 writer.close();
                 return LootrunSaveResult.SAVED;
@@ -863,7 +860,7 @@ public final class LootrunModel {
 
     public record Note(Vec3 position, Component component) {}
 
-    public record ColoredPath(List<ColoredPoint> points) {}
+    private record ColoredPath(List<ColoredPoint> points) {}
 
-    public record Path(List<Vec3> points) {}
+    protected record Path(List<Vec3> points) {}
 }

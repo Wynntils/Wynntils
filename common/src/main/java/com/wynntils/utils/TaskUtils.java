@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class TaskUtils {
-    private static ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(
+public final class TaskUtils {
+    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-utilities-%d").build());
 
     public static Future<?> runAsync(Runnable r) {
-        return executorService.submit(r);
+        return EXECUTOR_SERVICE.submit(r);
     }
 }

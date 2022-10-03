@@ -18,6 +18,7 @@ import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.crypto.SecretKey;
@@ -122,7 +123,7 @@ public class WynntilsAccount {
                     .joinServer(
                             McUtils.mc().getUser().getGameProfile(),
                             McUtils.mc().getUser().getAccessToken(),
-                            s1.toLowerCase());
+                            s1.toLowerCase(Locale.ROOT));
 
             byte[] secretKeyEncrypted = Crypt.encryptUsingKey(publicKey, secretkey.getEncoded());
 

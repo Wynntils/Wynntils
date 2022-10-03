@@ -15,8 +15,8 @@ import com.wynntils.mc.objects.CommonColors;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
-    protected final TextInputBoxWidget textInputBoxWidget;
-    protected final WynntilsSettingsScreen settingsScreen;
+    private final TextInputBoxWidget textInputBoxWidget;
+    private final WynntilsSettingsScreen settingsScreen;
 
     protected boolean lastParseSuccessful = false;
 
@@ -70,7 +70,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
                 getTextInputHeight());
     }
 
-    protected void onTextInputUpdate(String textInput) {
+    private void onTextInputUpdate(String textInput) {
         Object parsedValue = configHolder.tryParseStringValue(textInput);
 
         if (parsedValue != null) {

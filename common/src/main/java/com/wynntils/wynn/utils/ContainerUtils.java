@@ -17,6 +17,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
@@ -62,20 +63,19 @@ public final class ContainerUtils {
         return true;
     }
 
-    public static void clickOnSlot(int clickedSlot, int containerId, List<ItemStack> items) {
+    public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
         // FIXME: To expand usage of this function, the following variables needs to
         // be properly handled
-        int mouseButtonNum = 0;
         int transactionId = 0;
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 containerId,
                 transactionId,
                 clickedSlot,
-                mouseButtonNum,
+                mouseButton,
                 ClickType.PICKUP,
                 items.get(clickedSlot),
                 changedSlots));
@@ -104,5 +104,9 @@ public final class ContainerUtils {
         }
 
         return emeralds;
+    }
+
+    public static void closeContainer(int containerId) {
+        McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
     }
 }

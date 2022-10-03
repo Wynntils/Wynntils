@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public class ScriptedContainerQuery {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
@@ -22,7 +23,7 @@ public class ScriptedContainerQuery {
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
     private Runnable onComplete = DEFAULT_ON_COMPLETE;
-    private String name;
+    private final String name;
 
     private ScriptedContainerQuery(String name) {
         this.name = name;
@@ -54,7 +55,7 @@ public class ScriptedContainerQuery {
 
     @FunctionalInterface
     private interface ContainerVerification {
-        boolean verify(Component title, MenuType menuType);
+        boolean verify(Component title, MenuType<?> menuType);
     }
 
     @FunctionalInterface
@@ -85,7 +86,7 @@ public class ScriptedContainerQuery {
         }
 
         @Override
-        public boolean verifyContainer(Component title, MenuType menuType) {
+        public boolean verifyContainer(Component title, MenuType<?> menuType) {
             return verification.verify(title, menuType);
         }
 
@@ -135,12 +136,12 @@ public class ScriptedContainerQuery {
      * such triplet. It will not allow the creation of a step where one of them are missing.
      */
     public static class QueryBuilder {
-        StartAction startAction;
-        ContainerVerification verification;
-        ContainerAction handleContent;
-        boolean waitForMenuReopen = true;
+        private StartAction startAction;
+        private ContainerVerification verification;
+        private ContainerAction handleContent;
+        private boolean waitForMenuReopen = true;
 
-        ScriptedContainerQuery query;
+        private final ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;
@@ -188,7 +189,8 @@ public class ScriptedContainerQuery {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(
+                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                 return true;
             };
             checkForCompletion();
@@ -204,7 +206,8 @@ public class ScriptedContainerQuery {
                 if (!item.is(expectedItemType)
                         || !item.getDisplayName().getString().equals(expectedItemName)) return false;
 
-                ContainerUtils.clickOnSlot(slotNum, container.containerId(), container.items());
+                ContainerUtils.clickOnSlot(
+                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                 return true;
             };
             checkForCompletion();

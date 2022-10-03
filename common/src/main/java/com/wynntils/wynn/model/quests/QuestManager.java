@@ -11,6 +11,7 @@ import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -38,6 +39,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class QuestManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
@@ -152,7 +154,7 @@ public class QuestManager extends CoreManager {
         queryBuilder.build().executeQuery();
     }
 
-    public static void processMiniQuestBookPage(ContainerContent container, int page) {
+    private static void processMiniQuestBookPage(ContainerContent container, int page) {
         // Quests are in the top-left container area
         if (page == 1) {
             // Build new set of quests without disturbing current set
@@ -216,7 +218,8 @@ public class QuestManager extends CoreManager {
 
                 String questName = QuestInfo.getQuestName(item);
                 if (Objects.equals(questName, questInfo.getName())) {
-                    ContainerUtils.clickOnSlot(slot, container.containerId(), container.items());
+                    ContainerUtils.clickOnSlot(
+                            slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
                     return;
                 }
             }
@@ -323,14 +326,35 @@ public class QuestManager extends CoreManager {
     }
 
     public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, quests);
+    }
+
+    public static List<QuestInfo> getMiniQuests() {
+        return miniQuests;
+    }
+
+    public static List<QuestInfo> getMiniQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, miniQuests);
+    }
+
+    private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questList) {
+        // All quests are always sorted by status (available then unavailable), and then
+        // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {
-            case NONE -> quests;
-            case LEVEL -> quests.stream()
-                    .sorted(Comparator.comparing(questInfo -> questInfo.getLevel()))
+            case LEVEL -> questList.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getLevel)
+                            .thenComparing(QuestInfo::getName))
                     .toList();
-            case DISTANCE -> quests.stream().sorted(new LocationComparator()).toList();
-            case ALPHABETIC -> quests.stream()
-                    .sorted(Comparator.comparing(questInfo -> questInfo.getName()))
+            case DISTANCE -> questList.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(new LocationComparator())
+                            .thenComparing(QuestInfo::getName))
+                    .toList();
+            case ALPHABETIC -> questList.stream()
+                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                            .thenComparing(QuestInfo::getName)
+                            .thenComparing(QuestInfo::getLevel))
                     .toList();
         };
     }
@@ -339,8 +363,49 @@ public class QuestManager extends CoreManager {
         return dialogueHistory;
     }
 
-    public static List<QuestInfo> getMiniQuests() {
-        return miniQuests;
+    public static Optional<Location> getLocationFromDescription(String description) {
+        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(description));
+        if (!matcher.matches()) return Optional.empty();
+
+        return Optional.of(new Location(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3))));
+    }
+
+    private static class LocationComparator implements Comparator<QuestInfo> {
+        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
+
+        private double getDistance(Optional<Location> loc) {
+            // Quests with no location always counts as closest
+            if (loc.isEmpty()) return 0f;
+
+            Location location = loc.get();
+            return PLAYER_LOCATION.distanceToSqr(location.toVec3());
+        }
+
+        @Override
+        public int compare(QuestInfo quest1, QuestInfo quest2) {
+            Optional<Location> loc1 = quest1.getNextLocation();
+            Optional<Location> loc2 = quest2.getNextLocation();
+            return (int) (getDistance(loc1) - getDistance(loc2));
+        }
+    }
+
+    public enum QuestSortOrder {
+        LEVEL,
+        DISTANCE,
+        ALPHABETIC;
+
+        public static QuestSortOrder fromString(String str) {
+            if (str == null || str.isEmpty()) return LEVEL;
+
+            try {
+                return QuestSortOrder.valueOf(str.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                return LEVEL;
+            }
+        }
     }
 
     public static void openQuestOnWiki(QuestInfo questInfo) {

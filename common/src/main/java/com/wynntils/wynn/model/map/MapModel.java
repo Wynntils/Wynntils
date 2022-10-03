@@ -7,9 +7,6 @@ package com.wynntils.wynn.model.map;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
@@ -17,9 +14,11 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
@@ -29,12 +28,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 public final class MapModel extends Model {
@@ -42,22 +40,32 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
     private static final String SERVICES_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+    private static final String MAPS_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
+    private static final String SPIRITS_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
+
     private static final Gson GSON = new GsonBuilder().create();
-    private static List<MapProfile> maps = new ArrayList<>();
-    private static final Set<Poi> allPois = new HashSet<>();
+    private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
+    private static final Set<Poi> ALL_POIS = new HashSet<>();
 
     public static void init() {
+        loadMaps();
         loadPlaces();
         loadServices();
-        tryLoadMaps();
     }
 
-    public static void reset() {
-        maps.clear();
+    public static Optional<MapTexture> getMapForLocation(int x, int z) {
+        return MAPS.stream()
+                .filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
+                .findFirst();
     }
 
-    public static List<MapProfile> getMaps() {
-        return maps;
+    public static List<MapTexture> getMapsForBoundingBox(int x1, int x2, int z1, int z2) {
+        return MAPS.stream()
+                .filter(map -> MathUtils.boundingBoxIntersects(
+                        x1, x2, z1, z2, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
+                .toList();
     }
 
     public static Stream<Poi> getAllPois() {
@@ -67,10 +75,53 @@ public final class MapModel extends Model {
             WaypointPoi waypointPoi =
                     new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
 
-            return Stream.concat(allPois.stream(), Stream.of(waypointPoi));
+            return Stream.concat(ALL_POIS.stream(), Stream.of(waypointPoi));
         }
 
-        return allPois.stream();
+        return ALL_POIS.stream();
+    }
+
+    private static void loadMaps() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        RequestHandler handler = WebManager.getHandler();
+
+        MAPS.clear();
+
+        handler.addAndDispatch(new RequestBuilder(MAPS_JSON_URL, "map-parts")
+                .cacheTo(new File(mapDirectory, "maps.json"))
+                .useCacheAsBackup()
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
+
+                    List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
+                    for (MapPartProfile mapPart : mapPartList) {
+                        String fileName = mapPart.md5 + ".png";
+
+                        handler.addRequest(new RequestBuilder(mapPart.url, "map-part-" + mapPart.name)
+                                .cacheTo(new File(mapDirectory, fileName))
+                                .cacheMD5Validator(mapPart.md5)
+                                .useCacheAsBackup()
+                                .handle(bytes -> {
+                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                                        NativeImage nativeImage = NativeImage.read(in);
+                                        MapTexture mapPartImage = new MapTexture(
+                                                fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                                        MAPS.add(mapPartImage);
+                                    } catch (IOException e) {
+                                        WynntilsMod.info(
+                                                "IOException occurred while loading map image of " + mapPart.name);
+                                        return false; // don't cache
+                                    }
+
+                                    return true;
+                                })
+                                .build());
+                    }
+
+                    handler.dispatchAsync();
+                    return true;
+                })
+                .build());
     }
 
     private static void loadPlaces() {
@@ -82,7 +133,7 @@ public final class MapModel extends Model {
                 .handleJsonObject(json -> {
                     PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
                     for (Label label : places.labels) {
-                        allPois.add(new LabelPoi(label));
+                        ALL_POIS.add(new LabelPoi(label));
                     }
                     return true;
                 })
@@ -103,99 +154,32 @@ public final class MapModel extends Model {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
                             for (MapLocation location : service.locations) {
-                                allPois.add(new ServicePoi(location, kind));
+                                ALL_POIS.add(new ServicePoi(location, kind));
                             }
                         } else {
-                            WynntilsMod.error("Unknown service type in services.json: " + service.type);
+                            WynntilsMod.warn("Unknown service type in services.json: " + service.type);
                         }
                     }
 
                     return true;
                 })
                 .build());
-    }
 
-    private static CompletableFuture<Boolean> tryLoadMaps() {
-        if (WebManager.getApiUrl("AMainMap") == null) return CompletableFuture.completedFuture(false);
-
-        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-
-        String url = WebManager.getApiUrl("AMainMap");
-
-        CompletableFuture<Boolean> result = new CompletableFuture<>();
-        RequestHandler handler = WebManager.getHandler();
-
-        handler.addAndDispatch(new RequestBuilder(url, "maps")
-                .cacheTo(new File(mapDirectory, "maps.json"))
+        handler.addAndDispatch(new RequestBuilder(SPIRITS_JSON_URL, "maps-spirits")
+                .cacheTo(new File(mapDirectory, "spirits.json"))
                 .useCacheAsBackup()
-                .handleJson(json -> {
-                    String fileBase = url.substring(0, url.lastIndexOf("/") + 1);
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<MapLocation>>() {}.getType();
 
-                    JsonArray mapArray = json.getAsJsonArray();
+                    List<MapLocation> mapLocations = GSON.fromJson(json, type);
 
-                    final List<MapProfile> syncList = Collections.synchronizedList(new ArrayList<>());
-
-                    for (JsonElement mapData : mapArray) {
-                        JsonObject mapObject = mapData.getAsJsonObject();
-
-                        // Final since used in closure
-                        final int x1 = mapObject.get("x1").getAsInt();
-                        final int z1 = mapObject.get("z1").getAsInt();
-                        final int x2 = mapObject.get("x2").getAsInt();
-                        final int z2 = mapObject.get("z2").getAsInt();
-
-                        final String file = mapObject.get("file").getAsString();
-
-                        String md5 = mapObject.get("hash").getAsString();
-
-                        // TODO DownloaderManager? + Overlay
-                        handler.addRequest(new RequestBuilder(fileBase + file, file)
-                                .cacheTo(new File(mapDirectory, file))
-                                .cacheMD5Validator(md5)
-                                .useCacheAsBackup()
-                                .handle(bytes -> {
-                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                        NativeImage nativeImage = NativeImage.read(in);
-
-                                        syncList.add(new MapProfile(file, nativeImage, x1, z1, x2, z2));
-                                    } catch (IOException e) {
-                                        WynntilsMod.info("IOException occurred while loading map image of " + file);
-                                        return false; // don't cache
-                                    }
-
-                                    return true;
-                                })
-                                .build());
-                    }
-
-                    Thread thread = handler.dispatchAsync();
-
-                    try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        WynntilsMod.error("Exception when loading map files.", e);
-                        result.complete(false);
-                        return true;
-                    }
-
-                    if (syncList.size() == mapArray.size()) {
-                        result.complete(true);
-                        maps = syncList;
-                    } else {
-                        WynntilsMod.error("MapModel: Expected " + mapArray.size() + " map pieces, got "
-                                + syncList.size() + " pieces.");
-                        result.complete(false);
+                    for (int i = 0; i < mapLocations.size(); i++) {
+                        ALL_POIS.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;
                 })
                 .build());
-
-        return result;
-    }
-
-    public static boolean isMapLoaded() {
-        return !maps.isEmpty();
     }
 
     private static class PlacesProfile {
@@ -205,5 +189,25 @@ public final class MapModel extends Model {
     private static class ServiceProfile {
         String type;
         List<MapLocation> locations;
+    }
+
+    private static class MapPartProfile {
+        final String name;
+        final String url;
+        final int x1;
+        final int z1;
+        final int x2;
+        final int z2;
+        final String md5;
+
+        private MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {
+            this.name = name;
+            this.url = url;
+            this.x1 = x1;
+            this.z1 = z1;
+            this.x2 = x2;
+            this.z2 = z2;
+            this.md5 = md5;
+        }
     }
 }

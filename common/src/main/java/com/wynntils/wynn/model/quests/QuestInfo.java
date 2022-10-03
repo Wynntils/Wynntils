@@ -46,7 +46,7 @@ public class QuestInfo {
     private final int pageNumber;
     private final boolean tracked;
 
-    public QuestInfo(
+    private QuestInfo(
             String name,
             QuestStatus status,
             QuestLength length,
@@ -114,7 +114,8 @@ public class QuestInfo {
     @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
-                + name + "\", " + "status="
+                + name + "\", " + "isMiniQuest="
+                + isMiniQuest + ", " + "status="
                 + status + ", " + "length="
                 + length + ", " + "minLevel="
                 + level + ", " + "nextTask=\""
@@ -142,14 +143,14 @@ public class QuestInfo {
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
                                     .getProfessionInfo()
-                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a))
-                            >= additionalRequirement.b
+                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a()))
+                            >= additionalRequirement.b()
                     ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
                     : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
 
-            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
+            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(String.valueOf(additionalRequirement.b))
+                    .append(new TextComponent(String.valueOf(additionalRequirement.b()))
                             .withStyle(ChatFormatting.WHITE))));
         }
 
@@ -293,7 +294,7 @@ public class QuestInfo {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static String getDescription(LinkedList<String> lore) {
+    private static String getDescription(List<String> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
         List<String> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
@@ -302,7 +303,7 @@ public class QuestInfo {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(line -> ChatFormatting.stripFormatting(line))
+                                .map(ChatFormatting::stripFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();

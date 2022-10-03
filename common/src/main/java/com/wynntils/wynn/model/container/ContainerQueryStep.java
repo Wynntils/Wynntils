@@ -19,7 +19,7 @@ public interface ContainerQueryStep {
      * Verify that the container that has just opened has the expected type and
      * title. To ensure robustness, make this test as tight as possible.
      */
-    boolean verifyContainer(Component title, MenuType menuType);
+    boolean verifyContainer(Component title, MenuType<?> menuType);
 
     /**
      * Process the actual content of the container that this step has opened up.

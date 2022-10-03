@@ -75,7 +75,7 @@ public class InfoBoxFeature extends UserFeature {
                             .withTextShadow(textShadow));
         }
 
-        public InfoBoxOverlay(int id) {
+        protected InfoBoxOverlay(int id) {
             super(
                     new OverlayPosition(
                             -60 + (15 * id),

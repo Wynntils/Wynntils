@@ -53,7 +53,7 @@ public abstract class LivingEntityRendererMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
-    public void onOpacityUse(
+    private void onOpacityUse(
             EntityModel<?> instance,
             PoseStack poseStack,
             VertexConsumer consumer,

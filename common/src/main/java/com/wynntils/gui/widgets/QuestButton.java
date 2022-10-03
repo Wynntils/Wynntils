@@ -11,10 +11,18 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
+import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.Utils;
+import com.wynntils.utils.WebUtils;
+import com.wynntils.wynn.model.questbook.QuestBookManager;
+import com.wynntils.wynn.model.questbook.QuestInfo;
+import com.wynntils.wynn.model.questbook.QuestStatus;
+import java.util.Optional;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestManager;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -90,7 +98,10 @@ public class QuestButton extends AbstractButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             trackQuest();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            // TODO open map
+            Optional<Location> nextLocation = this.questInfo.getNextLocation();
+
+            nextLocation.ifPresent(
+                    location -> McUtils.mc().setScreen(new MainMapScreen((float) location.x, (float) location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             openQuestWiki();
         }

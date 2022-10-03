@@ -50,7 +50,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         @Config
         public boolean hideIfNoCharge = true;
 
-        public PowderAbilityBarOverlay() {
+        protected PowderAbilityBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
