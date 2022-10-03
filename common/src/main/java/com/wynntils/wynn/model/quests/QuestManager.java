@@ -11,7 +11,6 @@ import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
