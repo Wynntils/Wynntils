@@ -37,11 +37,12 @@ public class UpdateCommand extends CommandBase {
             switch (result) {
                 case SUCCESSFUL -> context.getSource()
                         .sendSuccess(
-                                new TextComponent("Successfully downloaded Wynntils update. It will apply on shutdown.")
+                                new TextComponent(
+                                                "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
                                         .withStyle(ChatFormatting.DARK_GREEN),
                                 false);
                 case ERROR -> context.getSource()
-                        .sendFailure(new TextComponent("Error applying Wynntils update.")
+                        .sendFailure(new TextComponent("Error applying Wynntils/Artemis update.")
                                 .withStyle(ChatFormatting.DARK_RED));
                 case ALREADY_ON_LATEST -> context.getSource()
                         .sendSuccess(
