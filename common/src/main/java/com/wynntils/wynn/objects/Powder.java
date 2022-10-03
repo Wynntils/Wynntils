@@ -53,7 +53,7 @@ public enum Powder {
     }
 
     public String getLetterRepresentation() {
-        return this.name().substring(0, 1).toLowerCase();
+        return this.name().substring(0, 1).toLowerCase(Locale.ROOT);
     }
 
     public static List<Powder> findPowders(String input) {

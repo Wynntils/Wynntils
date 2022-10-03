@@ -41,7 +41,7 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /** Sets the writer to a json string from a json element */
     public PostRequestBuilder postJsonElement(JsonElement element) {
-        return postBytes(element.toString().getBytes(), "application/json");
+        return postBytes(element.toString().getBytes(StandardCharsets.UTF_8), "application/json");
     }
 
     private static final byte[] newline = "\r\n".getBytes(StandardCharsets.US_ASCII);

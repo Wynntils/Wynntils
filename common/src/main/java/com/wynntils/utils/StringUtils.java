@@ -169,7 +169,7 @@ public final class StringUtils {
         Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
         if (rawMatcher.matches()) return "";
 
-        input = input.toLowerCase();
+        input = input.toLowerCase(Locale.ROOT);
         long emeralds = 0;
 
         try {

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -578,7 +579,7 @@ public final class LootrunModel {
         File lootrunFile = new File(LOOTRUNS, lootrun);
         if (lootrunFile.exists()) {
             try {
-                FileReader file = new FileReader(lootrunFile);
+                FileReader file = new FileReader(lootrunFile, StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
                 LootrunModel.lootrun = compile(uncompiled, false);
@@ -847,7 +848,7 @@ public final class LootrunModel {
                         "date",
                         DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
                                 .format(new Date()));
-                FileWriter writer = new FileWriter(file);
+                FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
                 new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
                 writer.close();
                 return LootrunSaveResult.SAVED;
