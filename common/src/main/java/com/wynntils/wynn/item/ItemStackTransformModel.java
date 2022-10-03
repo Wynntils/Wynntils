@@ -16,7 +16,6 @@ import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
-import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.MaterialProperty;
 import com.wynntils.wynn.item.properties.PowderTierProperty;
@@ -110,6 +109,6 @@ public class ItemStackTransformModel extends Model {
 
     @FunctionalInterface
     private interface PropertyWriter {
-        ItemProperty attach(WynnItemStack stack);
+        void attach(WynnItemStack stack);
     }
 }

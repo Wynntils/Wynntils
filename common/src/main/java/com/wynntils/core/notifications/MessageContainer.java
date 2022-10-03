@@ -22,9 +22,8 @@ public class MessageContainer {
         return message;
     }
 
-    public MessageContainer editMessage(String newMessage) {
+    public void editMessage(String newMessage) {
         this.message.setText(newMessage);
-        return this;
     }
 
     public void update(MessageContainer other) {
