@@ -18,20 +18,20 @@ import java.util.Date;
 public class TerritoryProfile {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    final String name;
-    final String friendlyName;
-    final int startX;
-    final int startZ;
-    final int endX;
-    final int endZ;
+    private final String name;
+    private final String friendlyName;
+    private final int startX;
+    private final int startZ;
+    private final int endX;
+    private final int endZ;
 
-    final String guild;
-    final String guildPrefix;
-    final String guildColor;
-    final String attacker;
-    final Date acquired;
+    private final String guild;
+    private final String guildPrefix;
+    private final String guildColor;
+    private final String attacker;
+    private final Date acquired;
 
-    final int level;
+    private final int level;
 
     public TerritoryProfile(
             String name,

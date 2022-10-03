@@ -81,7 +81,7 @@ public class MinimapFeature extends UserFeature {
         @Config
         public boolean showCoords = true;
 
-        public MinimapOverlay() {
+        protected MinimapOverlay() {
             super(
                     new OverlayPosition(
                             5,

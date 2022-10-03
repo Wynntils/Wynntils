@@ -22,7 +22,7 @@ public final class WynnObjective {
 
     private boolean guildObjective;
 
-    public WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
+    private WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
         this.goal = goal;
         this.score = score;
         this.maxScore = maxScore;

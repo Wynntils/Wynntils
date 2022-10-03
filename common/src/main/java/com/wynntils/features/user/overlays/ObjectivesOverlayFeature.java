@@ -71,7 +71,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
 
-        public GuildObjectiveOverlay() {
+        protected GuildObjectiveOverlay() {
             super(
                     new OverlayPosition(
                             -5.5f,
@@ -162,7 +162,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public CustomColor textColor = CommonColors.GREEN;
 
-        public DailyObjectiveOverlay() {
+        protected DailyObjectiveOverlay() {
             super(
                     new OverlayPosition(
                             -35.5f,
@@ -257,7 +257,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public abstract static class ObjectiveOverlayBase extends Overlay {
+    protected abstract static class ObjectiveOverlayBase extends Overlay {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public boolean hideOnInactivity = false;
 

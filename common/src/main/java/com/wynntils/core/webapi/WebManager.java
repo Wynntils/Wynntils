@@ -187,7 +187,7 @@ public final class WebManager extends CoreManager {
         territoryUpdateThread = null;
     }
 
-    public static void tryLoadItemGuesses() {
+    private static void tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
@@ -210,7 +210,7 @@ public final class WebManager extends CoreManager {
         // Check for success
     }
 
-    public static void tryLoadItemList() {
+    private static void tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
@@ -294,7 +294,7 @@ public final class WebManager extends CoreManager {
         }
     }
 
-    public static void updateCurrentSplash() {
+    private static void updateCurrentSplash() {
         if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
 
         List<String> splashes = apiUrls.getList("Splashes");

@@ -414,7 +414,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 true);
     }
 
-    protected void renderDescription(PoseStack poseStack) {
+    private void renderDescription(PoseStack poseStack) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -528,7 +528,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {}
 
-    public void setQuests(List<QuestInfo> quests) {
+    private void setQuests(List<QuestInfo> quests) {
         this.quests = quests;
         this.maxPage = (quests.size() / QUESTS_PER_PAGE + (quests.size() % QUESTS_PER_PAGE != 0 ? 1 : 0)) - 1;
         this.setCurrentPage(0);

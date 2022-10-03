@@ -9,7 +9,7 @@ import com.wynntils.gui.render.Texture;
 public abstract class Poi {
     private final MapLocation location;
 
-    public Poi(MapLocation location) {
+    protected Poi(MapLocation location) {
         this.location = location;
     }
 

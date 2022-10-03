@@ -44,18 +44,18 @@ public abstract class GuiMixin {
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At("HEAD"))
-    public void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPre(poseStack, partialTick, this.minecraft.getWindow());
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At("RETURN"))
-    public void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    public void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
+    private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
         if (EventFactory.onRenderCrosshairPre(poseStack, this.minecraft.getWindow())
                 .isCanceled()) {
             ci.cancel();
@@ -63,7 +63,7 @@ public abstract class GuiMixin {
     }
 
     @Inject(method = "renderHearts", at = @At("HEAD"), cancellable = true)
-    public void onRenderHeartsPre(
+    private void onRenderHeartsPre(
             PoseStack poseStack,
             Player player,
             int x,
@@ -92,7 +92,7 @@ public abstract class GuiMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
-    public int onRenderFoodPre(Gui instance, LivingEntity mountEntity) {
+    private int onRenderFoodPre(Gui instance, LivingEntity mountEntity) {
         if (EventFactory.onRenderFoodPre(new PoseStack(), this.minecraft.getWindow())
                 .isCanceled()) {
 
@@ -107,7 +107,7 @@ public abstract class GuiMixin {
     // On fabric/quilt, we can just cancel this. Wynncraft does not use vehicle health in any meaningful way.
     // This does not work on forge. See ForgeIngameGui for replacement.
     @Inject(method = "renderVehicleHealth", at = @At("HEAD"), cancellable = true)
-    public void onVehicleHearthRender(PoseStack poseStack, CallbackInfo ci) {
+    private void onVehicleHearthRender(PoseStack poseStack, CallbackInfo ci) {
         if (WynnUtils.onWorld()) {
             ci.cancel();
         }

@@ -64,7 +64,7 @@ public final class ManagerRegistry {
         tryInitManager(manager);
     }
 
-    public static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+    private static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to register a core manager like a model.");
         }
@@ -83,7 +83,7 @@ public final class ManagerRegistry {
         modelDependencies.add(dependant);
     }
 
-    public static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+    private static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
         if (PERSISTENT_CORE_MANAGERS.contains(dependency)) {
             throw new IllegalStateException("Tried to unregister a core manager like a model.");
         }

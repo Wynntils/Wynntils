@@ -23,13 +23,13 @@ public class PostRequestBuilder extends RequestBuilder {
     /**
      * Set a consumer that will write to a HttpURLConnection
      */
-    public PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
+    private PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
         this.writer = writer;
         return this;
     }
 
     /** Sets the writer to one that just writes the given bytes */
-    public PostRequestBuilder postBytes(byte[] data, String contentType) {
+    private PostRequestBuilder postBytes(byte[] data, String contentType) {
         return setWriter(conn -> {
             conn.addRequestProperty("Content-Type", contentType);
             conn.addRequestProperty("Content-Length", Integer.toString(data.length));

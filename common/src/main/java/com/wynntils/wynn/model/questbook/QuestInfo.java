@@ -46,7 +46,7 @@ public class QuestInfo {
     private final int pageNumber;
     private final boolean tracked;
 
-    public QuestInfo(
+    private QuestInfo(
             String name,
             QuestStatus status,
             QuestLength length,

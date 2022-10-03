@@ -63,7 +63,7 @@ public class WynncraftButtonFeature extends UserFeature {
             blit(matrices, this.x + 3, this.y + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
         }
 
-        public static void onPress(Button button) {
+        protected static void onPress(Button button) {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
 
             ConnectScreen.startConnecting(

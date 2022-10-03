@@ -240,16 +240,16 @@ public final class ComponentUtils {
         private final List<Component> lines = new ArrayList<>();
         private MutableComponent currentLine = new TextComponent("");
 
-        public void appendSegment(String segment, Style style) {
+        protected void appendSegment(String segment, Style style) {
             currentLine.append(new TextComponent(segment).withStyle(style));
         }
 
-        public void endLine() {
+        protected void endLine() {
             lines.add(currentLine);
             currentLine = new TextComponent("");
         }
 
-        public List<Component> extractLines() {
+        protected List<Component> extractLines() {
             if (!currentLine.getString().isEmpty()) {
                 endLine();
             }

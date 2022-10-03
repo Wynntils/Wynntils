@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 public abstract class TieredCraftingItemProperty extends ItemProperty implements HighlightProperty {
     protected final IngredientTier tier;
 
-    public TieredCraftingItemProperty(WynnItemStack item) {
+    protected TieredCraftingItemProperty(WynnItemStack item) {
         super(item);
 
         String name = WynnUtils.normalizeBadString(item.getHoverName().getString());
@@ -20,7 +20,7 @@ public abstract class TieredCraftingItemProperty extends ItemProperty implements
         tier = calculateTier(name);
     }
 
-    protected IngredientTier calculateTier(String name) {
+    private IngredientTier calculateTier(String name) {
         if (name.endsWith(
                 getPrimaryParsingColor(IngredientTier.ONE) + " [" + getSecondaryParsingColor(IngredientTier.ONE) + "✫"
                         + ChatFormatting.DARK_GRAY + "✫✫" + getPrimaryParsingColor(IngredientTier.ONE) + "]")) {

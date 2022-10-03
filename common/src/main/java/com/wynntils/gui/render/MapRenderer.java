@@ -313,7 +313,7 @@ public class MapRenderer {
                 && textureZPosition <= mapBottomZ;
     }
 
-    public static void renderTexturedPoi(
+    private static void renderTexturedPoi(
             PoseStack poseStack,
             float renderX,
             float renderZ,
@@ -419,7 +419,7 @@ public class MapRenderer {
      * {@param centerX} center coordinates of map (screen render coordinates)
      * {@param currentZoom} the bigger, the more detailed the map is
      */
-    public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
+    private static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
         double distanceX = poi.getLocation().getX() - mapCenterX;
         return (float) (centerX + distanceX * currentZoom);
     }
@@ -430,7 +430,7 @@ public class MapRenderer {
      * {@param centerZ} center coordinates of map (screen render coordinates)
      * {@param currentZoom} the bigger, the more detailed the map is
      */
-    public static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
+    private static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
         double distanceZ = poi.getLocation().getZ() - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
     }

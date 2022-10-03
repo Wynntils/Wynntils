@@ -67,7 +67,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         private final List<TextRenderTask> toRender = createRenderTaskList();
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
 
-        public QuestInfoOverlay() {
+        protected QuestInfoOverlay() {
             super(
                     new OverlayPosition(
                             5,

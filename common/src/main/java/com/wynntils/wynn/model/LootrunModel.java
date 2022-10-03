@@ -77,11 +77,11 @@ public final class LootrunModel {
         return state;
     }
 
-    public static void enableFeature() {
+    private static void enableFeature() {
         LootrunFeature.INSTANCE.tryEnable();
     }
 
-    public static void disableFeature() {
+    private static void disableFeature() {
         LootrunFeature.INSTANCE.tryDisable();
     }
 
@@ -346,7 +346,7 @@ public final class LootrunModel {
         return 1;
     }
 
-    public static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+    private static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
         Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
@@ -509,7 +509,7 @@ public final class LootrunModel {
         return result;
     }
 
-    public static LootrunUncompiled readJson(File file, JsonObject json) {
+    private static LootrunUncompiled readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
         Path pointsList = new Path(new ArrayList<>());
         for (JsonElement element : points) {
@@ -761,45 +761,45 @@ public final class LootrunModel {
             Long2ObjectMap<Set<BlockPos>> chests,
             Long2ObjectMap<List<Note>> notes) {}
 
-    public record ColoredPoint(Vec3 vec3, int color) {}
+    protected record ColoredPoint(Vec3 vec3, int color) {}
 
-    public static class RecordingInformation {
+    protected static class RecordingInformation {
         private Vec3 lastLocation;
         private BlockPos lastChest;
         private boolean dirty;
 
-        public Vec3 getLastLocation() {
+        protected Vec3 getLastLocation() {
             return lastLocation;
         }
 
-        public void setLastLocation(Vec3 lastLocation) {
+        protected void setLastLocation(Vec3 lastLocation) {
             this.lastLocation = lastLocation;
         }
 
-        public BlockPos getLastChest() {
+        protected BlockPos getLastChest() {
             return lastChest;
         }
 
-        public void setLastChest(BlockPos lastChest) {
+        protected void setLastChest(BlockPos lastChest) {
             this.lastChest = lastChest;
         }
 
-        public boolean isDirty() {
+        protected boolean isDirty() {
             return dirty;
         }
 
-        public void setDirty(boolean dirty) {
+        protected void setDirty(boolean dirty) {
             this.dirty = dirty;
         }
     }
 
     public record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
 
-        public LootrunUncompiled(LootrunUncompiled old, File file) {
+        protected LootrunUncompiled(LootrunUncompiled old, File file) {
             this(old.path, old.chests, old.notes, file);
         }
 
-        public LootrunSaveResult saveLootrun(String name) {
+        protected LootrunSaveResult saveLootrun(String name) {
             try {
                 File file = new File(LootrunModel.LOOTRUNS, name + ".json");
                 LootrunModel.uncompiled = new LootrunUncompiled(this, file);
@@ -863,7 +863,7 @@ public final class LootrunModel {
 
     public record Note(Vec3 position, Component component) {}
 
-    public record ColoredPath(List<ColoredPoint> points) {}
+    protected record ColoredPath(List<ColoredPoint> points) {}
 
-    public record Path(List<Vec3> points) {}
+    protected record Path(List<Vec3> points) {}
 }

@@ -114,7 +114,7 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        public TranslatedNpcDialogEvent(Component chatMsg) {
+        protected TranslatedNpcDialogEvent(Component chatMsg) {
             super(chatMsg);
         }
     }

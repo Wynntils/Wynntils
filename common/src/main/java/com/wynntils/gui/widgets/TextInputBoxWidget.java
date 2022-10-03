@@ -24,17 +24,17 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 // FIXME: Add selection support to this class to be a fully working text box
-public class TextInputBoxWidget extends AbstractWidget {
-    protected final char defaultCursorChar = '_';
-    protected final Consumer<String> onUpdateConsumer;
+public abstract class TextInputBoxWidget extends AbstractWidget {
+    private final char defaultCursorChar = '_';
+    private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
-    protected int cursorPosition = 0;
-    protected long lastCursorSwitch = 0;
-    protected boolean renderCursor = true;
+    private int cursorPosition = 0;
+    private long lastCursorSwitch = 0;
+    private boolean renderCursor = true;
 
     protected final SearchableScreen searchableScreen;
 
-    public TextInputBoxWidget(
+    protected TextInputBoxWidget(
             int x,
             int y,
             int width,
@@ -232,7 +232,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
-    protected String getRenderCursorChar() {
+    private String getRenderCursorChar() {
         String cursorChar;
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {
             renderCursor = !renderCursor;
@@ -253,7 +253,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
 
-    public char getCursorChar() {
+    private char getCursorChar() {
         return this.defaultCursorChar;
     }
 

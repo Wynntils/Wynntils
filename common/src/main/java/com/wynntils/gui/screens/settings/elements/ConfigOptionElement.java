@@ -17,14 +17,14 @@ import com.wynntils.mc.objects.CustomColor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 
 public abstract class ConfigOptionElement {
-    protected static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
-    protected static final CustomColor FOREGROUND_COLOR = new CustomColor(137, 117, 92, 255);
+    private static final CustomColor BORDER_COLOR = new CustomColor(73, 62, 50, 255);
+    private static final CustomColor FOREGROUND_COLOR = new CustomColor(137, 117, 92, 255);
 
     protected final ConfigHolder configHolder;
-    protected final FeatureSettingWidget featureSettingWidget;
-    protected final WynntilsSettingsScreen settingsScreen;
+    private final FeatureSettingWidget featureSettingWidget;
+    private final WynntilsSettingsScreen settingsScreen;
 
-    public ConfigOptionElement(
+    protected ConfigOptionElement(
             ConfigHolder configHolder,
             FeatureSettingWidget featureSettingWidget,
             WynntilsSettingsScreen settingsScreen) {
@@ -57,7 +57,7 @@ public abstract class ConfigOptionElement {
         poseStack.popPose();
     }
 
-    protected void renderDescription(PoseStack poseStack, float width, float height) {
+    private void renderDescription(PoseStack poseStack, float width, float height) {
         float twoThirdOfWidth = width / 3f * 2f;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -74,7 +74,7 @@ public abstract class ConfigOptionElement {
                         FontRenderer.TextShadow.OUTLINE);
     }
 
-    protected void renderConfigTitle(PoseStack poseStack, float width, float height) {
+    private void renderConfigTitle(PoseStack poseStack, float width, float height) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -90,12 +90,12 @@ public abstract class ConfigOptionElement {
                         FontRenderer.TextShadow.OUTLINE);
     }
 
-    protected void renderBackground(PoseStack poseStack, float width, float height) {
+    private void renderBackground(PoseStack poseStack, float width, float height) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack, BORDER_COLOR, FOREGROUND_COLOR, 0, 0, 0, width, height, 2, 6, 8);
     }
 
-    public float getConfigOptionElementSize() {
+    protected float getConfigOptionElementSize() {
         return settingsScreen.width / 80f;
     }
 

@@ -15,11 +15,11 @@ import net.minecraftforge.eventbus.api.GenericEvent;
  * <p>Please do not misuse this class by looking for specific packet classes; instead create a
  * unique Event class in mc.event and add a mixin for the handler in ClientPacketListenerMixin.
  */
-public class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
+public abstract class PacketEvent<T extends Packet<?>> extends GenericEvent<T> {
     private final T packet;
 
     @SuppressWarnings("unchecked") // Technically an unsafe typecast, but nobody wants to pass up the packet class
-    public PacketEvent(T packet) {
+    protected PacketEvent(T packet) {
         super((Class<T>) packet.getClass());
         this.packet = packet;
     }
