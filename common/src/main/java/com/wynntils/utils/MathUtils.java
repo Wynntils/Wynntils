@@ -80,9 +80,9 @@ public final class MathUtils {
     }
 
     public static boolean boundingBoxIntersects(
-            int a_x1, int a_x2, int a_z1, int a_z2, int b_x1, int b_x2, int b_z1, int b_z2) {
-        boolean x_intersects = a_x1 < b_x2 && b_x1 < a_x2;
-        boolean z_intersects = a_z1 < b_z2 && b_z1 < a_z2;
-        return x_intersects && z_intersects;
+            int aX1, int aX2, int aZ1, int aZ2, int bX1, int bX2, int bZ1, int bZ2) {
+        boolean xIntersects = aX1 < bX2 && bX1 < aX2;
+        boolean zIntersects = aZ1 < bZ2 && bZ1 < aZ2;
+        return xIntersects && zIntersects;
     }
 }
