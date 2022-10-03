@@ -30,7 +30,11 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
 
         float renderY = (height - renderHeight) / 2f;
 
-        boolean isHovered = mouseX <= renderWidth && mouseY <= renderY + renderHeight && mouseY >= renderY;
+        boolean isHovered = mouseX >= 0
+                && mouseY >= 0
+                && mouseX <= renderWidth
+                && mouseY <= renderY + renderHeight
+                && mouseY >= renderY;
 
         Boolean value = (Boolean) configHolder.getValue();
 
