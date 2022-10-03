@@ -179,8 +179,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
 
-            final float SPACE_BETWEEN = 10;
-
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
