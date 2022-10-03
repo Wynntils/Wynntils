@@ -27,8 +27,7 @@ public class SortOrderWidget extends AbstractButton {
 
         QuestManager.QuestSortOrder[] questSortOrders = QuestManager.QuestSortOrder.values();
 
-        QuestManager.QuestSortOrder newSort =
-                questSortOrders[(questSortOrder.ordinal() + 1) % questSortOrders.length];
+        QuestManager.QuestSortOrder newSort = questSortOrders[(questSortOrder.ordinal() + 1) % questSortOrders.length];
 
         questBookScreen.setQuestSortOrder(newSort);
     }
