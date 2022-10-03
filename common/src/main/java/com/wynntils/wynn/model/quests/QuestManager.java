@@ -416,19 +416,18 @@ public class QuestManager extends CoreManager {
                 if (line.startsWith("§e")) {
                     questName.append(ComponentUtils.stripFormatting(line)).append(" ");
                 } else {
-                    nextTask
-                            .append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                    nextTask.append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                     .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                             .append(" ");
                 }
             }
 
-            Optional<QuestInfo> questInfoOpt = QuestManager.getQuestFromName(questName.toString().trim());
+            Optional<QuestInfo> questInfoOpt =
+                    QuestManager.getQuestFromName(questName.toString().trim());
             if (questInfoOpt.isEmpty()) return;
 
             QuestInfo questInfo = questInfoOpt.get();
             questInfo.setNextTask(nextTask.toString().trim());
-
 
             setCurrentQuest(questInfo);
         }
