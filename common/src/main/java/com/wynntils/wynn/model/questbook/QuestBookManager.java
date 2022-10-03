@@ -309,20 +309,32 @@ public class QuestBookManager extends CoreManager {
     }
 
     public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, quests);
+    }
+
+    public static List<QuestInfo> getMiniQuests() {
+        return miniQuests;
+    }
+
+    public static List<QuestInfo> getMiniQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, miniQuests);
+    }
+
+    private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {
-            case LEVEL -> quests.stream()
+            case LEVEL -> questList.stream()
                     .sorted(Comparator.comparing(QuestInfo::getStatus)
                             .thenComparing(QuestInfo::getLevel)
                             .thenComparing(QuestInfo::getName))
                     .toList();
-            case DISTANCE -> quests.stream()
+            case DISTANCE -> questList.stream()
                     .sorted(Comparator.comparing(QuestInfo::getStatus)
                             .thenComparing(new LocationComparator())
                             .thenComparing(QuestInfo::getName))
                     .toList();
-            case ALPHABETIC -> quests.stream()
+            case ALPHABETIC -> questList.stream()
                     .sorted(Comparator.comparing(QuestInfo::getStatus)
                             .thenComparing(QuestInfo::getName)
                             .thenComparing(QuestInfo::getLevel))
@@ -332,10 +344,6 @@ public class QuestBookManager extends CoreManager {
 
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
-    }
-
-    public static List<QuestInfo> getMiniQuests() {
-        return miniQuests;
     }
 
     public static Optional<Location> getLocationFromDescription(String description) {
