@@ -17,7 +17,6 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.questbook.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.Optional;

@@ -17,10 +17,15 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
+import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
+import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.wynn.model.scoreboard.Segment;
+import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
@@ -41,6 +46,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class QuestManager extends CoreManager {
+    public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
+
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int MINI_QUESTS_SLOT = 53;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
@@ -52,6 +59,7 @@ public class QuestManager extends CoreManager {
     private static List<QuestInfo> newMiniQuests;
     private static List<List<String>> dialogueHistory = List.of();
     private static List<List<String>> newDialogueHistory;
+    private static ScoreboardQuestInfo currentQuest = null;
 
     public static void init() {}
 
@@ -324,12 +332,12 @@ public class QuestManager extends CoreManager {
         return quests;
     }
 
-    public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
-        return sortQuestInfoList(sortOrder, quests);
-    }
-
     public static List<QuestInfo> getMiniQuests() {
         return miniQuests;
+    }
+
+    public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+        return sortQuestInfoList(sortOrder, quests);
     }
 
     public static List<QuestInfo> getMiniQuestsSorted(QuestSortOrder sortOrder) {
@@ -360,51 +368,6 @@ public class QuestManager extends CoreManager {
 
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
-    }
-
-    public static Optional<Location> getLocationFromDescription(String description) {
-        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(description));
-        if (!matcher.matches()) return Optional.empty();
-
-        return Optional.of(new Location(
-                Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)),
-                Integer.parseInt(matcher.group(3))));
-    }
-
-    private static class LocationComparator implements Comparator<QuestInfo> {
-        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
-
-        private double getDistance(Optional<Location> loc) {
-            // Quests with no location always counts as closest
-            if (loc.isEmpty()) return 0f;
-
-            Location location = loc.get();
-            return PLAYER_LOCATION.distanceToSqr(location.toVec3());
-        }
-
-        @Override
-        public int compare(QuestInfo quest1, QuestInfo quest2) {
-            Optional<Location> loc1 = quest1.getNextLocation();
-            Optional<Location> loc2 = quest2.getNextLocation();
-            return (int) (getDistance(loc1) - getDistance(loc2));
-        }
-    }
-
-    public enum QuestSortOrder {
-        LEVEL,
-        DISTANCE,
-        ALPHABETIC;
-
-        public static QuestSortOrder fromString(String str) {
-            if (str == null || str.isEmpty()) return LEVEL;
-
-            try {
-                return QuestSortOrder.valueOf(str.toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                return LEVEL;
-            }
-        }
     }
 
     public static void openQuestOnWiki(QuestInfo questInfo) {
@@ -442,6 +405,53 @@ public class QuestManager extends CoreManager {
                 Integer.parseInt(matcher.group(3))));
     }
 
+    public static ScoreboardQuestInfo getCurrentQuest() {
+        return currentQuest;
+    }
+
+    public static void resetCurrentQuest() {
+        setQuest(null);
+    }
+
+    private static void setQuest(ScoreboardQuestInfo questInfo) {
+        currentQuest = questInfo;
+        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
+    }
+
+    public static class QuestScoreboardHandler implements ScoreboardHandler {
+        @Override
+        public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
+            List<String> content = newValue.getContent();
+
+            if (content.isEmpty()) {
+                WynntilsMod.error("QuestHandler: content was empty.");
+            }
+
+            StringBuilder questName = new StringBuilder();
+            StringBuilder description = new StringBuilder();
+
+            for (String line : content) {
+                if (line.startsWith("§e")) {
+                    questName.append(ComponentUtils.stripFormatting(line)).append(" ");
+                } else {
+                    description
+                            .append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                                    .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
+                            .append(" ");
+                }
+            }
+
+            String descriptionTrimmed = description.toString().trim();
+
+            setQuest(new ScoreboardQuestInfo(questName.toString().trim(), descriptionTrimmed));
+        }
+
+        @Override
+        public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
+            resetCurrentQuest();
+        }
+    }
+
     private static class LocationComparator implements Comparator<QuestInfo> {
         private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
 
@@ -462,18 +472,17 @@ public class QuestManager extends CoreManager {
     }
 
     public enum QuestSortOrder {
-        NONE,
         LEVEL,
         DISTANCE,
         ALPHABETIC;
 
         public static QuestSortOrder fromString(String str) {
-            if (str == null || str.isEmpty()) return NONE;
+            if (str == null || str.isEmpty()) return LEVEL;
 
             try {
                 return QuestSortOrder.valueOf(str.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                return NONE;
+                return LEVEL;
             }
         }
     }

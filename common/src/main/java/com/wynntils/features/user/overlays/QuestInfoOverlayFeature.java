@@ -26,8 +26,8 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
 import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            ScoreboardQuestInfo currentQuest = QuestHandler.getCurrentQuest();
+            ScoreboardQuestInfo currentQuest = QuestManager.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;

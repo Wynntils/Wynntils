@@ -13,8 +13,8 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
-import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -303,7 +303,7 @@ public final class ScoreboardModel extends Model {
 
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(new QuestHandler(), SegmentType.Quest);
+        registerHandler(QuestManager.SCOREBOARD_HANDLER, SegmentType.Quest);
 
         startThread();
     }
@@ -353,7 +353,7 @@ public final class ScoreboardModel extends Model {
         segments.clear();
 
         ObjectiveHandler.resetObjectives();
-        QuestHandler.resetCurrentQuest();
+        QuestManager.resetCurrentQuest();
     }
 
     public enum SegmentType {

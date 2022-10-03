@@ -42,7 +42,7 @@ public class BeaconBeamFeature extends UserFeature {
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
 
-        // FIXME: Fold into QuestBookManager
+        // FIXME: Fold into QuestManager
         ScoreboardQuestInfo questInfo = event.getQuestInfo();
         Optional<Location> location = QuestManager.getLocationFromDescription(questInfo.description());
 

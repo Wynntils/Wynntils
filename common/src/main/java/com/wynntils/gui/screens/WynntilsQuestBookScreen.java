@@ -58,7 +58,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     private final List<QuestButton> questButtons = new ArrayList<>();
     private QuestInfo tracked = null;
     private boolean miniQuestMode = false;
-    private QuestBookManager.QuestSortOrder questSortOrder = QuestBookManager.QuestSortOrder.LEVEL;
+    private QuestManager.QuestSortOrder questSortOrder = QuestManager.QuestSortOrder.LEVEL;
 
     public WynntilsQuestBookScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
@@ -574,11 +574,11 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         }
     }
 
-    public QuestBookManager.QuestSortOrder getQuestSortOrder() {
+    public QuestManager.QuestSortOrder getQuestSortOrder() {
         return questSortOrder;
     }
 
-    public void setQuestSortOrder(QuestBookManager.QuestSortOrder newSortOrder) {
+    public void setQuestSortOrder(QuestManager.QuestSortOrder newSortOrder) {
         if (newSortOrder == null) {
             throw new IllegalStateException("Tried to set quest order to null");
         }
@@ -586,9 +586,9 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         this.questSortOrder = newSortOrder;
 
         if (miniQuestMode) {
-            setQuests(QuestBookManager.getMiniQuestsSorted(questSortOrder));
+            setQuests(QuestManager.getMiniQuestsSorted(questSortOrder));
         } else {
-            setQuests(QuestBookManager.getQuestsSorted(questSortOrder));
+            setQuests(QuestManager.getQuestsSorted(questSortOrder));
         }
     }
 }
