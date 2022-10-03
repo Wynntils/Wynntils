@@ -214,6 +214,8 @@ public class BossBarModel extends Model {
         @Override
         public void updateProgress(UUID id, float progress) {
             handleBarUpdate(id, trackedBar -> {
+                event.setCanceled(true);
+                trackedBar.getEvent().setProgress(progress);
                 trackedBar.onUpdateProgress(progress);
             });
         }
