@@ -12,11 +12,16 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.FeatureButton;
 import com.wynntils.gui.screens.settings.widgets.GeneralSettingsButton;
 import com.wynntils.gui.screens.settings.widgets.ScrollButton;
+import com.wynntils.gui.widgets.SearchWidget;
+import com.wynntils.gui.widgets.TextInputBoxWidget;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -26,10 +31,12 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 
-public class WynntilsBookSettingsScreen extends Screen {
+public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
     private final int FEATURES_PER_PAGE = 13;
     private final List<AbstractButton> features = new ArrayList<>();
 
+    private TextInputBoxWidget focusedTextInput;
+    private final SearchWidget searchWidget;
     private ScrollButton featureListScrollButton;
     private Feature selected = null;
     private int scrollOffset = 0;
@@ -37,11 +44,24 @@ public class WynntilsBookSettingsScreen extends Screen {
     public WynntilsBookSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
 
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+
+        searchWidget = new SearchWidget(
+                95,
+                Texture.SETTING_BACKGROUND.height() - 32,
+                100,
+                20,
+                s -> {
+                    reloadFeatureButtons();
+                },
+                this);
         reloadFeatureButtons();
     }
 
     @Override
     protected void init() {
+        this.addRenderableWidget(searchWidget);
+
         this.addRenderableWidget(new GeneralSettingsButton(
                 55,
                 Texture.SETTING_BACKGROUND.height() - 30,
@@ -171,15 +191,30 @@ public class WynntilsBookSettingsScreen extends Screen {
         return true;
     }
 
-    private void scroll(double delta) {
+    private void scrollFeatureList(double delta) {
         scrollOffset =
                 MathUtils.clamp((int) (scrollOffset - delta), 0, Math.max(0, features.size() - FEATURES_PER_PAGE));
     }
 
     // endregion
 
+    // region keyboard events
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return focusedTextInput.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    // endregion
+
     @Override
     public void onClose() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         ConfigManager.loadConfigFile();
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
         super.onClose();
@@ -191,8 +226,12 @@ public class WynntilsBookSettingsScreen extends Screen {
 
         FeatureCategory oldCategory = null;
 
-        List<Feature> featureList =
-                FeatureRegistry.getFeatures().stream().sorted().toList();
+        List<Feature> featureList = FeatureRegistry.getFeatures().stream()
+                .filter(feature ->
+                        StringUtils.partialMatch(feature.getTranslatedName(), searchWidget.getTextBoxInput()))
+                .sorted()
+                .toList();
+
         int offset = 0;
         for (int i = 0; i < featureList.size(); i++) {
             Feature feature = featureList.get(i);
@@ -216,7 +255,8 @@ public class WynntilsBookSettingsScreen extends Screen {
                 Texture.SETTING_SCROLL_BUTTON.width(),
                 Texture.SETTING_SCROLL_BUTTON.height() / 2,
                 features.size() - FEATURES_PER_PAGE,
-                this::scroll);
+                FEATURES_PER_PAGE,
+                this::scrollFeatureList);
     }
 
     private float getTranslationY() {
@@ -233,5 +273,15 @@ public class WynntilsBookSettingsScreen extends Screen {
 
     public void setSelected(Feature selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
     }
 }

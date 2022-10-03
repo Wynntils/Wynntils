@@ -11,7 +11,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.SearchableScreen;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
 import com.wynntils.gui.screens.settings.lists.FeatureList;
 import com.wynntils.gui.screens.settings.lists.entries.FeatureEntry;
@@ -28,7 +28,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsSettingsScreen extends Screen implements SearchableScreen {
+public class WynntilsSettingsScreen extends Screen implements TextboxScreen {
     private static final int BUTTON_WIDTH = 160;
     private static final int BUTTON_HEIGHT = 20;
     private static final int SEARCH_BAR_HEIGHT = 20;

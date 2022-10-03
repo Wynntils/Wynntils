@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.SearchableScreen;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import java.util.function.Consumer;
@@ -32,7 +32,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected long lastCursorSwitch = 0;
     protected boolean renderCursor = true;
 
-    protected final SearchableScreen searchableScreen;
+    protected final TextboxScreen textboxScreen;
 
     public TextInputBoxWidget(
             int x,
@@ -41,17 +41,17 @@ public class TextInputBoxWidget extends AbstractWidget {
             int height,
             Component boxTitle,
             Consumer<String> onUpdateConsumer,
-            SearchableScreen searchableScreen) {
+            TextboxScreen textboxScreen) {
         super(x, y, width, height, boxTitle);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.searchableScreen = searchableScreen;
+        this.textboxScreen = textboxScreen;
     }
 
     public TextInputBoxWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, TextComponent.EMPTY);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.searchableScreen = searchableScreen;
+        this.textboxScreen = textboxScreen;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-        searchableScreen.setFocusedTextInput(this);
+        textboxScreen.setFocusedTextInput(this);
 
         return false;
     }
@@ -226,7 +226,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean isFocused() {
-        return searchableScreen.getFocusedTextInput() == this;
+        return textboxScreen.getFocusedTextInput() == this;
     }
 
     @Override
@@ -244,7 +244,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void removeFocus() {
-        searchableScreen.setFocusedTextInput(null);
+        textboxScreen.setFocusedTextInput(null);
     }
 
     public void setTextBoxInput(String textBoxInput) {

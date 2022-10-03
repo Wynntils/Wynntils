@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 
-public interface SearchableScreen {
+public interface TextboxScreen {
     TextInputBoxWidget getFocusedTextInput();
 
     void setFocusedTextInput(TextInputBoxWidget focusedTextInput);

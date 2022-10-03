@@ -17,14 +17,24 @@ public class ScrollButton extends AbstractButton {
     private final Consumer<Integer> onScroll;
     private final int y2;
     private final int maxScroll;
+    private final int perScrollIncrement;
     private int currentScroll = 0;
 
     private boolean dragging = false;
 
-    public ScrollButton(int x, int y, int y2, int width, int height, int maxScroll, Consumer<Integer> onScroll) {
+    public ScrollButton(
+            int x,
+            int y,
+            int y2,
+            int width,
+            int height,
+            int maxScroll,
+            int perScrollIncrement,
+            Consumer<Integer> onScroll) {
         super(x, y, width, height, new TextComponent("Scroll Button"));
         this.y2 = y2;
         this.maxScroll = maxScroll;
+        this.perScrollIncrement = perScrollIncrement;
         this.onScroll = onScroll;
     }
 
@@ -78,8 +88,8 @@ public class ScrollButton extends AbstractButton {
     }
 
     private void scroll(double delta) {
-        onScroll.accept((int) delta);
-        currentScroll = MathUtils.clamp((int) (currentScroll - delta), 0, maxScroll);
+        onScroll.accept((int) delta * perScrollIncrement);
+        currentScroll = MathUtils.clamp((int) (currentScroll - delta * perScrollIncrement), 0, maxScroll);
     }
 
     @Override
