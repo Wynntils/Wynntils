@@ -9,8 +9,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.FeatureButton;
 import com.wynntils.gui.screens.settings.widgets.GeneralSettingsButton;
 import com.wynntils.gui.screens.settings.widgets.ScrollButton;
@@ -187,11 +189,22 @@ public class WynntilsBookSettingsScreen extends Screen {
         features.clear();
         scrollOffset = 0;
 
-        List<Feature> featureList = FeatureRegistry.getFeatures();
+        FeatureCategory oldCategory = null;
+
+        List<Feature> featureList =
+                FeatureRegistry.getFeatures().stream().sorted().toList();
+        int offset = 0;
         for (int i = 0; i < featureList.size(); i++) {
             Feature feature = featureList.get(i);
 
-            int renderIndex = i % FEATURES_PER_PAGE;
+            int renderIndex = (i + offset) % FEATURES_PER_PAGE;
+
+            if (feature.getCategory() != oldCategory) {
+                features.add(new CategoryButton(37, 21 + renderIndex * 12, 140, 10, feature.getCategory()));
+                oldCategory = feature.getCategory();
+                offset++;
+                renderIndex = (i + offset) % FEATURES_PER_PAGE;
+            }
 
             features.add(new FeatureButton(37, 21 + renderIndex * 12, 140, 10, feature));
         }
