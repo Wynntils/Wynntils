@@ -24,7 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 // FIXME: Add selection support to this class to be a fully working text box
-public abstract class TextInputBoxWidget extends AbstractWidget {
+public class TextInputBoxWidget extends AbstractWidget {
     private final char defaultCursorChar = '_';
     private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
