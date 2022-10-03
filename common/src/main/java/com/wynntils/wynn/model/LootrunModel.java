@@ -142,11 +142,7 @@ public final class LootrunModel {
     }
 
     private static void renderNotes(
-            PoseStack poseStack,
-            LootrunInstance lootrun,
-            int color,
-            MultiBufferSource source,
-            long chunkLong) {
+            PoseStack poseStack, LootrunInstance lootrun, int color, MultiBufferSource source, long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
