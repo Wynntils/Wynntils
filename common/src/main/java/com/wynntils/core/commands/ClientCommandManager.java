@@ -18,7 +18,6 @@ import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
-import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
@@ -59,7 +58,6 @@ public final class ClientCommandManager extends CoreManager {
         registerCommand(new FunctionCommand());
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
-        registerCommand(new UpdateCommand());
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
         registerCommand(new TokenCommand());

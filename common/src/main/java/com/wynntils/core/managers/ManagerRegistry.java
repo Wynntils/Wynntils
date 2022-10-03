@@ -43,7 +43,6 @@ public final class ManagerRegistry {
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
         registerPersistentDependency(OverlayManager.class);
-        registerPersistentDependency(UpdateManager.class);
         registerPersistentDependency(QuestBookManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);

@@ -36,7 +36,6 @@ public final class WynntilsMod {
     private static boolean developmentEnvironment;
     private static boolean featuresInited = false;
     private static IEventBus eventBus;
-    private static File modJar;
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -97,10 +96,6 @@ public final class WynntilsMod {
         feature.tryUserToggle();
     }
 
-    public static File getModJar() {
-        return modJar;
-    }
-
     public static String getVersion() {
         return version;
     }
@@ -154,9 +149,7 @@ public final class WynntilsMod {
         featuresInited = true;
     }
 
-    public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment, File modFile) {
-        modJar = modFile;
-
+    public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment) {
         // Note that at this point, no resources (including I18n) are available, so we postpone features until then
 
         // Setup mod core properties
