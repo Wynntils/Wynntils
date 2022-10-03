@@ -145,7 +145,7 @@ public final class LootrunModel {
             PoseStack poseStack,
             LootrunInstance lootrun,
             int color,
-            MultiBufferSource.BufferSource source,
+            MultiBufferSource source,
             long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
