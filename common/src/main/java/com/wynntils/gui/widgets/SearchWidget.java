@@ -79,9 +79,6 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
     protected void removeFocus() {
         this.setTextBoxInput("");
         super.removeFocus();

@@ -39,11 +39,6 @@ public abstract class TieredCraftingItemProperty extends ItemProperty implements
     }
 
     @Override
-    public boolean isInventoryHighlight() {
-        return true;
-    }
-
-    @Override
     public boolean isHotbarHighlight() {
         return false;
     }
