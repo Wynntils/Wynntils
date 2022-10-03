@@ -1,0 +1,41 @@
+name: Bug Report
+description: Create a bug report
+labels:
+  - Bug
+body:
+  - type: input
+    attributes:
+        label: Version
+        description: Use the version in the mods list instead of the file name
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Brief Description
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Steps to Reproduce
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Expected Behaviour
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Actual Behaviour
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Additional Comments
+    validations:
+        required: false
+  - type: textarea
+    attributes:
+        label: Installed Mods
+    validations:
+        required: false

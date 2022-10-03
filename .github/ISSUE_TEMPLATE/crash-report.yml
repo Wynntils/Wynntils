@@ -1,0 +1,35 @@
+name: Crash Report
+description: Create a crash report
+labels:
+  - Bug
+body:
+  - type: input
+    attributes:
+        label: Version
+        description: Use the version in the mods list instead of the file name
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Brief Description
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Steps to Reproduce
+    validations:
+        required: true
+  - type: textarea
+    attributes:
+        label: Crash Report
+        description: |-
+            **Windows:** Hit Windows Key + R and type in `%appdata%`. Open the `.minecraft` folder.
+            **macOS:** On the bar at the top of your screen in Finder, click `Go`, then click `Go to Folder` and type `~/Library/Application Support/Minecraft`, then hit enter.
+            **Linux:** `.minecraft` is located in your home folder. `~/.minecraft`
+            
+            Open your Minecraft folder and send the newest file from `.minecraft/crash-reports`.
+  - type: textarea
+    attributes:
+        label: Installed Mods
+    validations:
+        required: false
