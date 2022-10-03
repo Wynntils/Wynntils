@@ -139,14 +139,14 @@ public class QuestInfo {
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
                                     .getProfessionInfo()
-                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a))
-                            >= additionalRequirement.b
+                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a()))
+                            >= additionalRequirement.b()
                     ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
                     : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
 
-            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a + " Lv. Min: ")
+            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(String.valueOf(additionalRequirement.b))
+                    .append(new TextComponent(String.valueOf(additionalRequirement.b()))
                             .withStyle(ChatFormatting.WHITE))));
         }
 

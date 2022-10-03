@@ -243,15 +243,15 @@ public final class MapRenderer {
                     sinRotationRadians,
                     cosRotationRadians,
                     poi);
-            float renderX = renderPositions.a;
-            float renderZ = renderPositions.b;
+            float renderX = renderPositions.a();
+            float renderZ = renderPositions.b();
 
             float width = poi.getIcon().width() * poiScale;
             float height = poi.getIcon().height() * poiScale;
 
             if (mouseCoordinates != null) {
-                int mouseX = mouseCoordinates.a;
-                int mouseY = mouseCoordinates.b;
+                int mouseX = mouseCoordinates.a();
+                int mouseY = mouseCoordinates.b();
 
                 if (mouseX >= renderX && mouseX <= renderX + width && mouseY >= renderZ && mouseY <= renderZ + height) {
                     hovered = poi;

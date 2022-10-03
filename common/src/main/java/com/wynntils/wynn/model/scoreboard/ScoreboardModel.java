@@ -154,8 +154,8 @@ public final class ScoreboardModel extends Model {
 
         for (Segment segment : removedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b.contains(segment.getType())) {
-                    scoreboardHandler.a.onSegmentRemove(segment, segment.getType());
+                if (scoreboardHandler.b().contains(segment.getType())) {
+                    scoreboardHandler.a().onSegmentRemove(segment, segment.getType());
                 }
             }
         }
@@ -171,8 +171,8 @@ public final class ScoreboardModel extends Model {
 
         for (Segment segment : changedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b.contains(segment.getType())) {
-                    scoreboardHandler.a.onSegmentChange(segment, segment.getType());
+                if (scoreboardHandler.b().contains(segment.getType())) {
+                    scoreboardHandler.a().onSegmentChange(segment, segment.getType());
                 }
             }
         }
