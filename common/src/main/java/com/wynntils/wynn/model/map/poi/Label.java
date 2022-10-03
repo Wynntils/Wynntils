@@ -5,11 +5,11 @@
 package com.wynntils.wynn.model.map.poi;
 
 public class Label {
-    private String name;
-    private int x;
-    private int z;
-    private int layer;
-    private String level;
+    private final String name;
+    private final int x;
+    private final int z;
+    private final int layer;
+    private final String level;
 
     public Label(String name, int x, int z, int layer, String level) {
         this.name = name;

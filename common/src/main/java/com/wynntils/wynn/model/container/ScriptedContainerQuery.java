@@ -23,7 +23,7 @@ public class ScriptedContainerQuery {
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
     private Runnable onComplete = DEFAULT_ON_COMPLETE;
-    private String name;
+    private final String name;
 
     private ScriptedContainerQuery(String name) {
         this.name = name;
@@ -141,7 +141,7 @@ public class ScriptedContainerQuery {
         ContainerAction handleContent;
         boolean waitForMenuReopen = true;
 
-        ScriptedContainerQuery query;
+        final ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;

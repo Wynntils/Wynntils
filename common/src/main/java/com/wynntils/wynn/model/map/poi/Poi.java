@@ -7,7 +7,7 @@ package com.wynntils.wynn.model.map.poi;
 import com.wynntils.gui.render.Texture;
 
 public abstract class Poi {
-    private MapLocation location;
+    private final MapLocation location;
 
     public Poi(MapLocation location) {
         this.location = location;

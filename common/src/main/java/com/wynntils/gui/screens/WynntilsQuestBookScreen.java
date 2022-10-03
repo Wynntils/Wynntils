@@ -55,7 +55,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     private int currentPage = 0;
     private int maxPage = 0;
     private List<QuestInfo> quests = new ArrayList<>();
-    private List<QuestButton> questButtons = new ArrayList<>();
+    private final List<QuestButton> questButtons = new ArrayList<>();
     private QuestInfo tracked = null;
     private boolean miniQuestMode = false;
     private QuestBookManager.QuestSortOrder questSortOrder = QuestBookManager.QuestSortOrder.LEVEL;

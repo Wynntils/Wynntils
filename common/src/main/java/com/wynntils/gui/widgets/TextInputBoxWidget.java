@@ -25,8 +25,8 @@ import org.lwjgl.glfw.GLFW;
 
 // FIXME: Add selection support to this class to be a fully working text box
 public class TextInputBoxWidget extends AbstractWidget {
-    protected char defaultCursorChar = '_';
-    protected Consumer<String> onUpdateConsumer;
+    protected final char defaultCursorChar = '_';
+    protected final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
     protected int cursorPosition = 0;
     protected long lastCursorSwitch = 0;

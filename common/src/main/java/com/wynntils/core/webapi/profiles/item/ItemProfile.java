@@ -18,16 +18,16 @@ public class ItemProfile {
     boolean identified;
     int powderAmount;
 
-    ItemAttackSpeed attackSpeed = null;
+    final ItemAttackSpeed attackSpeed = null;
 
     ItemInfoContainer itemInfo;
     Map<String, String> requirements;
 
-    Map<String, String> damageTypes = new HashMap<>();
-    Map<String, Integer> defenseTypes = new HashMap<>();
-    Map<String, IdentificationProfile> statuses = new HashMap<>();
+    final Map<String, String> damageTypes = new HashMap<>();
+    final Map<String, Integer> defenseTypes = new HashMap<>();
+    final Map<String, IdentificationProfile> statuses = new HashMap<>();
 
-    List<String> majorIds = new ArrayList<>();
+    final List<String> majorIds = new ArrayList<>();
 
     String restriction;
     String lore;

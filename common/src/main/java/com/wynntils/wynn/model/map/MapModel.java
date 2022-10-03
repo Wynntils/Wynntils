@@ -46,7 +46,7 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
 
     private static final Gson GSON = new GsonBuilder().create();
-    private static List<MapTexture> maps = new CopyOnWriteArrayList();
+    private static final List<MapTexture> maps = new CopyOnWriteArrayList();
     private static final Set<Poi> allPois = new HashSet<>();
 
     public static void init() {

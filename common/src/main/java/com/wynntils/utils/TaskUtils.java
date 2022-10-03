@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class TaskUtils {
-    private static ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(
+    private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-utilities-%d").build());
 
     public static Future<?> runAsync(Runnable r) {
