@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class AbilityTreeScrollFeature extends UserFeature {
 
-    private final Pattern ABILITY_TREE_PATTERN = Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
+    private static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
 

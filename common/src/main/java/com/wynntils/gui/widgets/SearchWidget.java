@@ -22,7 +22,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 
 public class SearchWidget extends TextInputBoxWidget {
-    protected final Component DEFAULT_TEXT =
+    protected static final Component DEFAULT_TEXT =
             new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
     public SearchWidget(
