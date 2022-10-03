@@ -465,15 +465,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
             this.height = height;
         }
 
-        protected int getTextureY1() {
+        private int getTextureY1() {
             return textureY1;
         }
 
-        protected int getTextureY2() {
+        private int getTextureY2() {
             return textureY2;
         }
 
-        protected int getHeight() {
+        private int getHeight() {
             return height;
         }
     }
@@ -498,15 +498,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
             this.height = height;
         }
 
-        protected int getTextureY1() {
+        private int getTextureY1() {
             return textureY1;
         }
 
-        protected int getTextureY2() {
+        private int getTextureY2() {
             return textureY2;
         }
 
-        protected int getHeight() {
+        private int getHeight() {
             return height;
         }
     }
