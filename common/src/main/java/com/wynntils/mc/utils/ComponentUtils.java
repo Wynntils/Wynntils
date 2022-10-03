@@ -27,21 +27,7 @@ public final class ComponentUtils {
     public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
-        component.visit(
-                new FormattedText.StyledContentConsumer<>() {
-                    Style oldStyle = Style.EMPTY;
-
-                    @Override
-                    public Optional<Object> accept(Style style, String string) {
-                        handleStyleDifference(oldStyle, style, result);
-                        result.append(string);
-
-                        oldStyle = style;
-
-                        return Optional.empty();
-                    }
-                },
-                Style.EMPTY);
+        component.visit(new CodedStringGenerator(result), Style.EMPTY);
 
         return result.toString();
     }
@@ -63,38 +49,6 @@ public final class ComponentUtils {
         if (component == null) return null;
 
         return getUnformatted(component);
-    }
-
-    /**
-     * This method handles the fact that the style likely has changed between 2 components
-     *
-     * <p>It tries to first generate a constructive way of adding color codes to get from the old
-     * style to the new style. If that does not succeed, it instead resets the format and adds the
-     * color codes of the new style
-     */
-    private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
-        if (oldStyle.equals(newStyle)) return;
-
-        if (!oldStyle.isEmpty()) {
-            StringBuilder different = tryConstructDifference(oldStyle, newStyle);
-
-            if (different != null) {
-                result.append(different);
-                return;
-            }
-        }
-
-        result.append(ChatFormatting.RESET);
-
-        if (newStyle.getColor() != null) {
-            getChatFormatting(newStyle.getColor()).ifPresent(result::append);
-        }
-
-        if (newStyle.isBold()) result.append(ChatFormatting.BOLD);
-        if (newStyle.isItalic()) result.append(ChatFormatting.ITALIC);
-        if (newStyle.isUnderlined()) result.append(ChatFormatting.UNDERLINE);
-        if (newStyle.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
-        if (newStyle.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
     }
 
     private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
@@ -278,5 +232,57 @@ public final class ComponentUtils {
                 },
                 Style.EMPTY);
         return builder.extractLines();
+    }
+
+    private static class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
+        private final StringBuilder result;
+        Style oldStyle;
+
+        public CodedStringGenerator(StringBuilder result) {
+            this.result = result;
+            oldStyle = Style.EMPTY;
+        }
+
+        @Override
+        public Optional<Object> accept(Style style, String string) {
+            handleStyleDifference(oldStyle, style, result);
+            result.append(string);
+
+            oldStyle = style;
+
+            return Optional.empty();
+        }
+
+        /**
+         * This method handles the fact that the style likely has changed between 2 components
+         *
+         * <p>It tries to first generate a constructive way of adding color codes to get from the old
+         * style to the new style. If that does not succeed, it instead resets the format and adds the
+         * color codes of the new style
+         */
+        private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
+            if (oldStyle.equals(newStyle)) return;
+
+            if (!oldStyle.isEmpty()) {
+                StringBuilder different = tryConstructDifference(oldStyle, newStyle);
+
+                if (different != null) {
+                    result.append(different);
+                    return;
+                }
+            }
+
+            result.append(ChatFormatting.RESET);
+
+            if (newStyle.getColor() != null) {
+                getChatFormatting(newStyle.getColor()).ifPresent(result::append);
+            }
+
+            if (newStyle.isBold()) result.append(ChatFormatting.BOLD);
+            if (newStyle.isItalic()) result.append(ChatFormatting.ITALIC);
+            if (newStyle.isUnderlined()) result.append(ChatFormatting.UNDERLINE);
+            if (newStyle.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
+            if (newStyle.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
+        }
     }
 }
