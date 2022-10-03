@@ -289,7 +289,7 @@ public class QuestInfo {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static String getDescription(LinkedList<String> lore) {
+    private static String getDescription(List<String> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
         List<String> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
