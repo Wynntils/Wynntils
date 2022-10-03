@@ -41,6 +41,9 @@ public enum Texture {
     QUEST_BOOK_SEARCH("quest_book_search.png", 133, 23),
     QUEST_BOOK_TITLE("quest_book_title.png", 168, 33),
     RELOAD_BUTTON("reload_button.png", 40, 20),
+    SORT_ALPHABETICALLY("sort_alphabetical.png", 23, 46),
+    SORT_DISTANCE("sort_distance.png", 23, 46),
+    SORT_LEVEL("sort_level.png", 23, 46),
 
     // Quest State Icons
     QUEST_CANNOT_START("quest_cannot_start_icon.png", 7, 7),
@@ -75,6 +78,7 @@ public enum Texture {
     ITEM_IDENTIFIER("map/map_icons/item_identifier.png", 18, 17),
     JEWELING_STATION("map/map_icons/jeweling_station.png", 17, 16),
     LIQUID_MERCHANT("map/map_icons/liquid_merchant.png", 15, 17),
+    LOST_SPIRIT("map/map_icons/lost_spirit.png", 16, 16),
     PARTY_FINDER("map/map_icons/party_finder.png", 18, 18),
     POTION_MERCHANT("map/map_icons/potion_merchant.png", 16, 18),
     POWDER_MASTER("map/map_icons/powder_master.png", 17, 17),
