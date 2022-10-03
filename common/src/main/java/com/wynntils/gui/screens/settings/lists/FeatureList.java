@@ -67,19 +67,17 @@ public class FeatureList extends ContainerObjectSelectionList<FeatureListEntryBa
 
     @Override
     protected void renderList(PoseStack poseStack, int x, int y, int mouseX, int mouseY, float partialTick) {
-        iterateOnRenderedEntries((featureListEntryBase, index, top) -> {
-            featureListEntryBase.render(
-                    poseStack,
-                    index,
-                    top + 1,
-                    this.getRowLeft(),
-                    this.getRowWidth(),
-                    featureListEntryBase.getRenderHeight(),
-                    mouseX,
-                    mouseY,
-                    Objects.equals(this.getHovered(), featureListEntryBase),
-                    partialTick);
-        });
+        iterateOnRenderedEntries((featureListEntryBase, index, top) -> featureListEntryBase.render(
+                poseStack,
+                index,
+                top + 1,
+                this.getRowLeft(),
+                this.getRowWidth(),
+                featureListEntryBase.getRenderHeight(),
+                mouseX,
+                mouseY,
+                Objects.equals(this.getHovered(), featureListEntryBase),
+                partialTick));
     }
 
     @Override

@@ -251,7 +251,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                         FontRenderer.TextShadow.NONE);
     }
 
-    public void setDialogues(List<List<String>> dialogues) {
+    private void setDialogues(List<List<String>> dialogues) {
         // Optimize pages so they fit
         List<List<String>> splitDialogues = new ArrayList<>();
         List<String> currentPage = new ArrayList<>();

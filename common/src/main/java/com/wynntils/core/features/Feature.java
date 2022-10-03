@@ -41,7 +41,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     private final List<ConfigHolder> configOptions = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
-    protected boolean enabled = false;
+    private boolean enabled = false;
 
     protected boolean initFinished = false;
 
@@ -285,9 +285,9 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
     }
 
     public abstract static class Condition {
-        boolean satisfied = false;
+        private boolean satisfied = false;
 
-        public boolean isSatisfied() {
+        protected boolean isSatisfied() {
             return satisfied;
         }
 

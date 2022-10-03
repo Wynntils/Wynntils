@@ -180,7 +180,7 @@ public class CharacterManager extends CoreManager {
             return professionInfo;
         }
 
-        public static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
+        private static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
@@ -205,7 +205,7 @@ public class CharacterManager extends CoreManager {
                     classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
         }
 
-        public static CharacterInfo parseCharacterFromCharacterMenu(
+        private static CharacterInfo parseCharacterFromCharacterMenu(
                 ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
             List<String> lore = ItemUtils.getLore(characterInfoItem);
 

@@ -60,8 +60,9 @@ public class FunctionCommand extends CommandBase {
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
-        List<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toList());
-        functions.sort(Comparator.comparing(Function::getName));
+        List<Function<?>> functions = FunctionManager.getFunctions().stream()
+                .sorted(Comparator.comparing(Function::getName))
+                .collect(Collectors.toList());
 
         MutableComponent response = new TextComponent("Available functions:").withStyle(ChatFormatting.AQUA);
 

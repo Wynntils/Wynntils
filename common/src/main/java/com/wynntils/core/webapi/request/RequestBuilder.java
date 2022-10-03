@@ -24,16 +24,16 @@ import java.util.function.Supplier;
 
 /** Helper class for building a {@link Request} */
 public class RequestBuilder {
-    final String url;
-    final String id;
-    int parallelGroup = 0;
-    ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
-    Request.RequestErrorHandler onError;
-    final Map<String, String> headers = new HashMap<>();
-    File cacheFile;
-    Predicate<byte[]> cacheValidator = null;
-    boolean useCacheAsBackup;
-    int timeout = 16000;
+    protected final String url;
+    protected final String id;
+    protected int parallelGroup = 0;
+    protected ThrowingBiPredicate<URLConnection, byte[], IOException> handler;
+    protected Request.RequestErrorHandler onError;
+    protected final Map<String, String> headers = new HashMap<>();
+    protected File cacheFile;
+    protected Predicate<byte[]> cacheValidator = null;
+    protected boolean useCacheAsBackup;
+    protected int timeout = 16000;
 
     public RequestBuilder(String url, String id) {
         this.url = url;

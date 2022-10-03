@@ -18,7 +18,7 @@ public class TrackedBar {
 
     private boolean rendered = true;
 
-    protected LerpingBossEvent event = null;
+    private LerpingBossEvent event = null;
 
     protected int current = 0;
     protected int max = 0;

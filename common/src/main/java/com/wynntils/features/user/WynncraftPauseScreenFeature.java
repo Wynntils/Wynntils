@@ -26,9 +26,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
         Button wynntilsMenu = replaceButtonFunction(
                 (Button) renderables.get(2),
                 new TranslatableComponent("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
-                (button) -> {
-                    McUtils.mc().setScreen(new WynntilsMenuScreen());
-                });
+                (button) -> McUtils.mc().setScreen(new WynntilsMenuScreen()));
         renderables.set(2, wynntilsMenu);
 
         Button classSelection = replaceButtonFunction(

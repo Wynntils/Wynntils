@@ -15,9 +15,8 @@ public class TimedMessageContainer {
         this.endTime = messageDisplayLength + System.currentTimeMillis();
     }
 
-    public TimedMessageContainer resetRemainingTime(long messageDisplayLength) {
+    public void resetRemainingTime(long messageDisplayLength) {
         this.endTime = messageDisplayLength + System.currentTimeMillis();
-        return this;
     }
 
     public void update(TimedMessageContainer other, long messageDisplayLength) {

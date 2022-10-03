@@ -7,10 +7,10 @@ package com.wynntils.mc.event;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
-public class EntityEvent extends Event {
+public abstract class EntityEvent extends Event {
     private final Entity entity;
 
-    public EntityEvent(Entity entity) {
+    protected EntityEvent(Entity entity) {
         this.entity = entity;
     }
 

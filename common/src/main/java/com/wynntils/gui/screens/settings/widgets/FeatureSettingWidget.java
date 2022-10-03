@@ -38,7 +38,7 @@ public final class FeatureSettingWidget extends AbstractWidget {
     private final WynntilsSettingsScreen settingsScreen;
 
     private Feature cachedFeature = null;
-    private List<ConfigOptionElement> configWidgets = new ArrayList<>();
+    private final List<ConfigOptionElement> configWidgets = new ArrayList<>();
     private ConfigOptionElement hoveredConfigElement = null;
     private int scrollIndexOffset = 0;
 

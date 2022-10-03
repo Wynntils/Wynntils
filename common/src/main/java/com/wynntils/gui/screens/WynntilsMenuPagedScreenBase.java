@@ -12,7 +12,7 @@ import com.wynntils.mc.objects.CommonColors;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsMenuPagedScreenBase extends WynntilsMenuScreenBase {
-    public WynntilsMenuPagedScreenBase(Component component) {
+    protected WynntilsMenuPagedScreenBase(Component component) {
         super(component);
     }
 
