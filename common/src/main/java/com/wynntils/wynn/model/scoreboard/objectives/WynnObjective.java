@@ -21,7 +21,8 @@ public final class WynnObjective {
     private final String original;
     private final boolean isGuildObjective;
 
-    private WynnObjective(String goal, int score, int maxScore, long updatedAt, String original, boolean isGuildObjective) {
+    private WynnObjective(
+            String goal, int score, int maxScore, long updatedAt, String original, boolean isGuildObjective) {
         this.goal = goal;
         this.score = score;
         this.maxScore = maxScore;
