@@ -25,7 +25,6 @@ import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
-import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ public class QuestManager extends CoreManager {
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int MINI_QUESTS_SLOT = 53;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
 
     private static List<QuestInfo> quests = List.of();
     private static List<QuestInfo> newQuests;
@@ -59,7 +57,7 @@ public class QuestManager extends CoreManager {
     private static List<QuestInfo> newMiniQuests;
     private static List<List<String>> dialogueHistory = List.of();
     private static List<List<String>> newDialogueHistory;
-    private static ScoreboardQuestInfo currentQuest = null;
+    private static QuestInfo currentQuest = null;
 
     public static void init() {}
 
@@ -366,6 +364,10 @@ public class QuestManager extends CoreManager {
         };
     }
 
+    private static Optional<QuestInfo> getQuestFromName(String name) {
+        return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
+    }
+
     public static List<List<String>> getDialogueHistory() {
         return dialogueHistory;
     }
@@ -394,18 +396,7 @@ public class QuestManager extends CoreManager {
         handler.addAndDispatch(req, true);
     }
 
-    // FIXME: Should not be exposed
-    public static Optional<Location> getLocationFromDescription(String description) {
-        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(description));
-        if (!matcher.matches()) return Optional.empty();
-
-        return Optional.of(new Location(
-                Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)),
-                Integer.parseInt(matcher.group(3))));
-    }
-
-    public static ScoreboardQuestInfo getCurrentQuest() {
+    public static QuestInfo getCurrentQuest() {
         return currentQuest;
     }
 
@@ -419,35 +410,40 @@ public class QuestManager extends CoreManager {
             }
 
             StringBuilder questName = new StringBuilder();
-            StringBuilder description = new StringBuilder();
+            StringBuilder nextTask = new StringBuilder();
 
             for (String line : content) {
                 if (line.startsWith("§e")) {
                     questName.append(ComponentUtils.stripFormatting(line)).append(" ");
                 } else {
-                    description
+                    nextTask
                             .append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                     .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                             .append(" ");
                 }
             }
 
-            String descriptionTrimmed = description.toString().trim();
+            Optional<QuestInfo> questInfoOpt = QuestManager.getQuestFromName(questName.toString().trim());
+            if (questInfoOpt.isEmpty()) return;
 
-            setQuest(new ScoreboardQuestInfo(questName.toString().trim(), descriptionTrimmed));
+            QuestInfo questInfo = questInfoOpt.get();
+            questInfo.setNextTask(nextTask.toString().trim());
+
+
+            setCurrentQuest(questInfo);
         }
 
         @Override
         public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-            setQuest(null);
+            setCurrentQuest(null);
         }
 
         @Override
         public void resetHandler() {
-            setQuest(null);
+            setCurrentQuest(null);
         }
 
-        private static void setQuest(ScoreboardQuestInfo questInfo) {
+        private static void setCurrentQuest(QuestInfo questInfo) {
             currentQuest = questInfo;
             WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
         }

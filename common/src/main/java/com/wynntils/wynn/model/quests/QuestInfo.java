@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
@@ -33,12 +34,13 @@ public class QuestInfo {
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
     private static final Pattern REQ_MATCHER = Pattern.compile("^§..§r§7 (.*) Lv. Min: §r§f(\\d+)$");
+    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
 
     private final String name;
     private final QuestStatus status;
     private final QuestLength length;
     private final int level;
-    private final String nextTask;
+    private String nextTask;
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
@@ -80,7 +82,13 @@ public class QuestInfo {
     }
 
     public Optional<Location> getNextLocation() {
-        return QuestManager.getLocationFromDescription(nextTask);
+        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(nextTask));
+        if (!matcher.matches()) return Optional.empty();
+
+        return Optional.of(new Location(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3))));
     }
 
     public QuestLength getLength() {
@@ -93,6 +101,10 @@ public class QuestInfo {
 
     public String getNextTask() {
         return nextTask;
+    }
+
+    public void setNextTask(String nextTask) {
+        this.nextTask = nextTask;
     }
 
     public List<Pair<String, Integer>> getAdditionalRequirements() {

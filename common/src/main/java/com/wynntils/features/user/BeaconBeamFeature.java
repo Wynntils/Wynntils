@@ -16,8 +16,6 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.quests.QuestManager;
-import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -42,10 +40,7 @@ public class BeaconBeamFeature extends UserFeature {
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
 
-        // FIXME: Fold into QuestManager
-        ScoreboardQuestInfo questInfo = event.getQuestInfo();
-        Optional<Location> location = QuestManager.getLocationFromDescription(questInfo.description());
-
+        Optional<Location> location = event.getQuestInfo().getNextLocation();
         if (location.isEmpty()) return;
 
         CompassModel.setCompassLocation(location.get());
