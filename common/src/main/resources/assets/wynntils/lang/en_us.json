@@ -579,7 +579,7 @@
   "screens.wynntils.wynntilsQuestBook.quests": "Quests",
   "screens.wynntils.wynntilsQuestBook.reload.description": "Reloads all quest data.",
   "screens.wynntils.wynntilsQuestBook.reload.name": "Reload Button",
-  "screens.wynntils.wynntilsQuestBook.sort.alphabetical.description": "Quests are sorted by alphabetically",
+  "screens.wynntils.wynntilsQuestBook.sort.alphabetical.description": "Quests are sorted alphabetically",
   "screens.wynntils.wynntilsQuestBook.sort.alphabetical.name": "Sort Alphabetically",
   "screens.wynntils.wynntilsQuestBook.sort.distance.description": "Quests are sorted by distance, closest first",
   "screens.wynntils.wynntilsQuestBook.sort.distance.name": "Sort by Distance",
