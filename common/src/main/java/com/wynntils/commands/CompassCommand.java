@@ -90,7 +90,7 @@ public class CompassCommand extends CommandBase {
                             + "'. Pleace specify with more detail. Matching: ")
                     .withStyle(ChatFormatting.RED);
             response.append(new TextComponent(String.join(
-                    ", ", matchedKinds.stream().map(kind -> kind.getName()).toList())));
+                    ", ", matchedKinds.stream().map(ServiceKind::getName).toList())));
             context.getSource().sendFailure(response);
             return 0;
         }
@@ -148,7 +148,7 @@ public class CompassCommand extends CommandBase {
                                 + "', but none matched exactly. Matching: ")
                         .withStyle(ChatFormatting.RED);
                 response.append(new TextComponent(String.join(
-                        ", ", places.stream().map(poi -> poi.getName()).toList())));
+                        ", ", places.stream().map(Poi::getName).toList())));
                 context.getSource().sendFailure(response);
                 return 0;
             }

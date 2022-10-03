@@ -299,7 +299,7 @@ public class QuestInfo {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(line -> ChatFormatting.stripFormatting(line))
+                                .map(ChatFormatting::stripFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();

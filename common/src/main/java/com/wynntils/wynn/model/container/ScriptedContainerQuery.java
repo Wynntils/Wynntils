@@ -55,7 +55,7 @@ public class ScriptedContainerQuery {
 
     @FunctionalInterface
     private interface ContainerVerification {
-        boolean verify(Component title, MenuType menuType);
+        boolean verify(Component title, MenuType<?> menuType);
     }
 
     @FunctionalInterface
@@ -86,7 +86,7 @@ public class ScriptedContainerQuery {
         }
 
         @Override
-        public boolean verifyContainer(Component title, MenuType menuType) {
+        public boolean verifyContainer(Component title, MenuType<?> menuType) {
             return verification.verify(title, menuType);
         }
 
