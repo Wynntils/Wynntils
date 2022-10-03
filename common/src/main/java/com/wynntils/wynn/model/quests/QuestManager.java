@@ -409,15 +409,6 @@ public class QuestManager extends CoreManager {
         return currentQuest;
     }
 
-    public static void resetCurrentQuest() {
-        setQuest(null);
-    }
-
-    private static void setQuest(ScoreboardQuestInfo questInfo) {
-        currentQuest = questInfo;
-        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
-    }
-
     public static class QuestScoreboardHandler implements ScoreboardHandler {
         @Override
         public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
@@ -448,7 +439,17 @@ public class QuestManager extends CoreManager {
 
         @Override
         public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-            resetCurrentQuest();
+            setQuest(null);
+        }
+
+        @Override
+        public void resetHandler() {
+            setQuest(null);
+        }
+
+        private static void setQuest(ScoreboardQuestInfo questInfo) {
+            currentQuest = questInfo;
+            WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
         }
     }
 

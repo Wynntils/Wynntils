@@ -352,8 +352,9 @@ public final class ScoreboardModel extends Model {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        ObjectiveHandler.resetObjectives();
-        QuestManager.resetCurrentQuest();
+        for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
+            scoreboardHandler.a().resetHandler();
+        }
     }
 
     public enum SegmentType {
