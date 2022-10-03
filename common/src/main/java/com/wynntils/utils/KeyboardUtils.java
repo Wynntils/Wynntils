@@ -7,7 +7,7 @@ package com.wynntils.utils;
 import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyboardUtils {
+public final class KeyboardUtils {
     public static boolean isKeyDown(int keyCode) {
         return GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), keyCode) == 1;
     }

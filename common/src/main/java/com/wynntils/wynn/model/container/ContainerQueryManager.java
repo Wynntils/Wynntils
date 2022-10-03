@@ -21,7 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ContainerQueryManager extends CoreManager {
     private static final int NO_CONTAINER = -2;
     private static final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
-    public static final int OPERATION_TIMEOUT_TICKS = 30; // normal operation is ~10 ticks
+    private static final int OPERATION_TIMEOUT_TICKS = 30; // normal operation is ~10 ticks
 
     private static ContainerQueryStep currentStep;
     private static String firstStepName;

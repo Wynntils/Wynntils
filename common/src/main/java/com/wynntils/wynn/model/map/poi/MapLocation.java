@@ -7,9 +7,9 @@ package com.wynntils.wynn.model.map.poi;
 import com.wynntils.mc.objects.Location;
 
 public class MapLocation {
-    private int x;
-    private int y;
-    private int z;
+    private final int x;
+    private final int y;
+    private final int z;
 
     public MapLocation(int x, int y, int z) {
         this.x = x;

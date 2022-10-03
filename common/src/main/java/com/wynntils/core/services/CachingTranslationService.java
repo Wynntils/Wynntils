@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 
 public abstract class CachingTranslationService implements TranslationService {
-    public static final File TRANSLATION_CACHE_ROOT = WynntilsMod.getModStorageDir("translationcache");
+    private static final File TRANSLATION_CACHE_ROOT = WynntilsMod.getModStorageDir("translationcache");
     private static final Gson GSON = new Gson();
 
     // Map language code (String) to a translation map (String -> String)

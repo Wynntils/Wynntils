@@ -34,7 +34,7 @@ public final class FontRenderer {
         return font;
     }
 
-    public int renderText(
+    public void renderText(
             PoseStack poseStack,
             String text,
             float x,
@@ -46,7 +46,7 @@ public final class FontRenderer {
         float renderX;
         float renderY;
 
-        if (text == null) return 0;
+        if (text == null) return;
 
         // TODO: Add rainbow color support
 
@@ -61,7 +61,7 @@ public final class FontRenderer {
             case Bottom -> y - font.lineHeight;};
 
         switch (shadow) {
-            case OUTLINE:
+            case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
                 String strippedText = ComponentUtils.stripColorFormatting(text);
 
@@ -71,11 +71,14 @@ public final class FontRenderer {
                 font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
                 font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
 
-                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
-            case NORMAL:
-                return font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
-            default:
-                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+            }
+            case NORMAL -> {
+                font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
+            }
+            default -> {
+                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+            }
         }
     }
 
@@ -208,7 +211,7 @@ public final class FontRenderer {
 
         String lastPartCodes = "";
         int index;
-        while ((index = lastPart.lastIndexOf("§")) != -1) {
+        while ((index = lastPart.lastIndexOf('§')) != -1) {
             if (index >= lastPart.length() - 1) {
                 // trailing §, no format code, skip it
                 lastPart = lastPart.substring(0, index);

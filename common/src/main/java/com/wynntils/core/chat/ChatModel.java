@@ -89,7 +89,7 @@ public final class ChatModel extends Model {
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
-        if (!codedMessage.contains("\n") || codedMessage.indexOf("\n") == (codedMessage.length() - 1)) {
+        if (!codedMessage.contains("\n") || codedMessage.indexOf('\n') == (codedMessage.length() - 1)) {
             saveLastChat(message);
             MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
             Component updatedMessage = handleChatLine(message, codedMessage, messageType);

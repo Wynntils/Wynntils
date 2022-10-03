@@ -19,18 +19,19 @@ public final class WynnObjective {
     private final int maxScore;
     private long updatedAt;
     private final String original;
+    private final boolean isGuildObjective;
 
-    private boolean guildObjective;
-
-    public WynnObjective(String goal, int score, int maxScore, long updatedAt, String original) {
+    private WynnObjective(
+            String goal, int score, int maxScore, long updatedAt, String original, boolean isGuildObjective) {
         this.goal = goal;
         this.score = score;
         this.maxScore = maxScore;
         this.updatedAt = updatedAt;
         this.original = original;
+        this.isGuildObjective = isGuildObjective;
     }
 
-    public static WynnObjective parseObjectiveLine(String objectiveLine) {
+    public static WynnObjective parseObjectiveLine(String objectiveLine, boolean isGuildObjective) {
         String stripped = ComponentUtils.stripFormatting(objectiveLine);
 
         assert stripped != null;
@@ -51,7 +52,7 @@ public final class WynnObjective {
             }
         }
 
-        return new WynnObjective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine);
+        return new WynnObjective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine, isGuildObjective);
     }
 
     @Override
@@ -96,7 +97,7 @@ public final class WynnObjective {
     }
 
     public boolean isGuildObjective() {
-        return guildObjective;
+        return isGuildObjective;
     }
 
     public boolean isSameObjective(WynnObjective other) {
@@ -105,11 +106,6 @@ public final class WynnObjective {
 
     public void setScore(int score) {
         this.score = score;
-        updateTimestamp();
-    }
-
-    public void setGuildObjective(boolean guildObjective) {
-        this.guildObjective = guildObjective;
         updateTimestamp();
     }
 }

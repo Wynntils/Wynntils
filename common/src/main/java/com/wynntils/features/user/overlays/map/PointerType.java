@@ -11,7 +11,9 @@ public enum PointerType {
     Round(8, 8, 23),
     Straight(6, 8, 31),
     Triangle(8, 6, 39);
-    public int width, height, textureY;
+    public final int width;
+    public final int height;
+    public final int textureY;
 
     PointerType(int width, int height, int textureY) {
         this.width = width;

@@ -137,7 +137,7 @@ public class QuestBookManager extends CoreManager {
         queryBuilder.build().executeQuery();
     }
 
-    public static void processMiniQuestBookPage(ContainerContent container, int page) {
+    private static void processMiniQuestBookPage(ContainerContent container, int page) {
         // Quests are in the top-left container area
         if (page == 1) {
             // Build new set of quests without disturbing current set

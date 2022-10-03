@@ -23,7 +23,7 @@ public class ScriptedContainerQuery {
     private final LinkedList<ScriptedQueryStep> steps = new LinkedList<>();
     private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
     private Runnable onComplete = DEFAULT_ON_COMPLETE;
-    private String name;
+    private final String name;
 
     private ScriptedContainerQuery(String name) {
         this.name = name;
@@ -55,7 +55,7 @@ public class ScriptedContainerQuery {
 
     @FunctionalInterface
     private interface ContainerVerification {
-        boolean verify(Component title, MenuType menuType);
+        boolean verify(Component title, MenuType<?> menuType);
     }
 
     @FunctionalInterface
@@ -86,7 +86,7 @@ public class ScriptedContainerQuery {
         }
 
         @Override
-        public boolean verifyContainer(Component title, MenuType menuType) {
+        public boolean verifyContainer(Component title, MenuType<?> menuType) {
             return verification.verify(title, menuType);
         }
 
@@ -136,12 +136,12 @@ public class ScriptedContainerQuery {
      * such triplet. It will not allow the creation of a step where one of them are missing.
      */
     public static class QueryBuilder {
-        StartAction startAction;
-        ContainerVerification verification;
-        ContainerAction handleContent;
-        boolean waitForMenuReopen = true;
+        private StartAction startAction;
+        private ContainerVerification verification;
+        private ContainerAction handleContent;
+        private boolean waitForMenuReopen = true;
 
-        ScriptedContainerQuery query;
+        private final ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;

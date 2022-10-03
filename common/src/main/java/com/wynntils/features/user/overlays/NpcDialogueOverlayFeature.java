@@ -129,7 +129,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public class NpcDialogueOverlay extends Overlay {
         private TextRenderSetting renderSetting;
 
-        public NpcDialogueOverlay() {
+        protected NpcDialogueOverlay() {
             super(
                     new OverlayPosition(
                             0,
