@@ -753,14 +753,14 @@ public final class LootrunModel {
         INVALID
     }
 
-    public record LootrunInstance(
+    private record LootrunInstance(
             Long2ObjectMap<List<ColoredPath>> points,
             Long2ObjectMap<Set<BlockPos>> chests,
             Long2ObjectMap<List<Note>> notes) {}
 
-    protected record ColoredPoint(Vec3 vec3, int color) {}
+    private record ColoredPoint(Vec3 vec3, int color) {}
 
-    protected static class RecordingInformation {
+    private static class RecordingInformation {
         private Vec3 lastLocation;
         private BlockPos lastChest;
         private boolean dirty;
@@ -790,13 +790,13 @@ public final class LootrunModel {
         }
     }
 
-    public record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
+    private record LootrunUncompiled(Path path, Set<BlockPos> chests, List<Note> notes, File file) {
 
-        protected LootrunUncompiled(LootrunUncompiled old, File file) {
+        private LootrunUncompiled(LootrunUncompiled old, File file) {
             this(old.path, old.chests, old.notes, file);
         }
 
-        protected LootrunSaveResult saveLootrun(String name) {
+        private LootrunSaveResult saveLootrun(String name) {
             try {
                 File file = new File(LootrunModel.LOOTRUNS, name + ".json");
                 LootrunModel.uncompiled = new LootrunUncompiled(this, file);
@@ -860,7 +860,7 @@ public final class LootrunModel {
 
     public record Note(Vec3 position, Component component) {}
 
-    protected record ColoredPath(List<ColoredPoint> points) {}
+    private record ColoredPath(List<ColoredPoint> points) {}
 
     protected record Path(List<Vec3> points) {}
 }

@@ -46,8 +46,8 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
 
     private static final Gson GSON = new GsonBuilder().create();
-    private static final List<MapTexture> maps = new CopyOnWriteArrayList<>();
-    private static final Set<Poi> allPois = new HashSet<>();
+    private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
+    private static final Set<Poi> ALL_POIS = new HashSet<>();
 
     public static void init() {
         loadMaps();
@@ -56,13 +56,13 @@ public final class MapModel extends Model {
     }
 
     public static Optional<MapTexture> getMapForLocation(int x, int z) {
-        return maps.stream()
+        return MAPS.stream()
                 .filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
                 .findFirst();
     }
 
     public static List<MapTexture> getMapsForBoundingBox(int x1, int x2, int z1, int z2) {
-        return maps.stream()
+        return MAPS.stream()
                 .filter(map -> MathUtils.boundingBoxIntersects(
                         x1, x2, z1, z2, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
                 .toList();
@@ -75,17 +75,17 @@ public final class MapModel extends Model {
             WaypointPoi waypointPoi =
                     new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
 
-            return Stream.concat(allPois.stream(), Stream.of(waypointPoi));
+            return Stream.concat(ALL_POIS.stream(), Stream.of(waypointPoi));
         }
 
-        return allPois.stream();
+        return ALL_POIS.stream();
     }
 
     private static void loadMaps() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
         RequestHandler handler = WebManager.getHandler();
 
-        maps.clear();
+        MAPS.clear();
 
         handler.addAndDispatch(new RequestBuilder(MAPS_JSON_URL, "map-parts")
                 .cacheTo(new File(mapDirectory, "maps.json"))
@@ -106,7 +106,7 @@ public final class MapModel extends Model {
                                         NativeImage nativeImage = NativeImage.read(in);
                                         MapTexture mapPartImage = new MapTexture(
                                                 fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                                        maps.add(mapPartImage);
+                                        MAPS.add(mapPartImage);
                                     } catch (IOException e) {
                                         WynntilsMod.info(
                                                 "IOException occurred while loading map image of " + mapPart.name);
@@ -133,7 +133,7 @@ public final class MapModel extends Model {
                 .handleJsonObject(json -> {
                     PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
                     for (Label label : places.labels) {
-                        allPois.add(new LabelPoi(label));
+                        ALL_POIS.add(new LabelPoi(label));
                     }
                     return true;
                 })
@@ -154,7 +154,7 @@ public final class MapModel extends Model {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
                             for (MapLocation location : service.locations) {
-                                allPois.add(new ServicePoi(location, kind));
+                                ALL_POIS.add(new ServicePoi(location, kind));
                             }
                         } else {
                             WynntilsMod.warn("Unknown service type in services.json: " + service.type);
@@ -174,7 +174,7 @@ public final class MapModel extends Model {
                     List<MapLocation> mapLocations = GSON.fromJson(json, type);
 
                     for (int i = 0; i < mapLocations.size(); i++) {
-                        allPois.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
+                        ALL_POIS.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;
