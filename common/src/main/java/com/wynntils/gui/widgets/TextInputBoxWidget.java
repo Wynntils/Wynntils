@@ -167,7 +167,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
-            if (textBoxInput.length() == 0) {
+            if (textBoxInput.isEmpty()) {
                 return false;
             }
 
@@ -184,7 +184,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_DELETE) {
-            if (textBoxInput.length() == 0) {
+            if (textBoxInput.isEmpty()) {
                 return false;
             }
 

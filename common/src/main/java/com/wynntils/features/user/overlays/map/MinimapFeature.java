@@ -157,12 +157,8 @@ public class MinimapFeature extends UserFeature {
 
             // disable mask & render border
             switch (maskType) {
-                case Rectangular -> {
-                    RenderSystem.disableScissor();
-                }
-                case Circle -> {
-                    RenderUtils.clearMask();
-                }
+                case Rectangular -> RenderSystem.disableScissor();
+                case Circle -> RenderUtils.clearMask();
             }
 
             // render border
