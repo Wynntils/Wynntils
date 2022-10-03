@@ -5,7 +5,6 @@
 package com.wynntils.utils;
 
 import com.wynntils.mc.utils.McUtils;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
