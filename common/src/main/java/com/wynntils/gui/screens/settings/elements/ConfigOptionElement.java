@@ -18,8 +18,8 @@ public abstract class ConfigOptionElement {
         return configHolder;
     }
 
-    protected abstract void renderConfigAppropriateButton(
+    public abstract void renderConfigAppropriateButton(
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks);
 
-    public abstract void mouseClicked(double mouseX, double mouseY, int button);
+    public abstract boolean mouseClicked(double mouseX, double mouseY, int button);
 }

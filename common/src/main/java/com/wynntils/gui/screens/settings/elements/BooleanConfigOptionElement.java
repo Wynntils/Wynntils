@@ -6,37 +6,64 @@ package com.wynntils.gui.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
+import net.minecraft.client.resources.language.I18n;
 
 public class BooleanConfigOptionElement extends ConfigOptionElement {
+    private static final CustomColor BORDER_COLOR = CommonColors.BLACK;
+    private static final CustomColor FOREGROUND_COLOR = new CustomColor(98, 34, 8);
+    private static final CustomColor HOVER_FOREGROUND_COLOR = new CustomColor(158, 52, 16);
+
     public BooleanConfigOptionElement(ConfigHolder configHolder) {
         super(configHolder);
     }
 
     @Override
-    protected void renderConfigAppropriateButton(
+    public void renderConfigAppropriateButton(
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
-        float size = width;
+        final float renderHeight = FontRenderer.getInstance().getFont().lineHeight + 8;
+        final float renderWidth = 50f;
 
-        Object holderValue = configHolder.getValue();
-        final Texture switchTexture =
-                (holderValue != null && (boolean) holderValue) ? Texture.SWITCH_ON : Texture.SWITCH_OFF;
+        float renderY = (height - renderHeight) / 2f;
 
-        RenderUtils.drawScalingTexturedRect(
+        boolean isHovered = mouseX <= renderWidth && mouseY <= renderY + renderHeight && mouseY >= renderY;
+
+        Boolean value = (Boolean) configHolder.getValue();
+
+        RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
-                switchTexture.resource(),
-                width - width / 10f - size / 2,
-                height / 2f - size / 2f,
+                BORDER_COLOR,
+                isHovered ? HOVER_FOREGROUND_COLOR : FOREGROUND_COLOR,
                 0,
-                size * 2f,
-                size,
-                switchTexture.width(),
-                switchTexture.height());
+                renderY,
+                0,
+                renderWidth,
+                renderHeight,
+                1,
+                3,
+                3);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        value
+                                ? I18n.get("screens.wynntils.settingsScreen.booleanConfig.enabled")
+                                : I18n.get("screens.wynntils.settingsScreen.booleanConfig.disabled"),
+                        0,
+                        renderWidth,
+                        renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,
+                        0,
+                        value ? CommonColors.GREEN : CommonColors.RED,
+                        HorizontalAlignment.Center,
+                        FontRenderer.TextShadow.OUTLINE);
     }
 
     @Override
-    public void mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Boolean value = (Boolean) configHolder.getValue();
 
         if (value == null) {
@@ -44,5 +71,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
         } else {
             configHolder.setValue(!value);
         }
+
+        return true;
     }
 }

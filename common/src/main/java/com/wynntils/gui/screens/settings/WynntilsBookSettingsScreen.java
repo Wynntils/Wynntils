@@ -30,7 +30,9 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
@@ -127,7 +129,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        selected.getTranslatedName(),
+                        selected.getTranslatedName() + ": "
+                                + (selected.isEnabled()
+                                        ? ChatFormatting.DARK_GREEN + "Enabled"
+                                        : ChatFormatting.DARK_RED + "Disabled"),
                         Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
                         12,
                         CommonColors.BLACK,
@@ -261,8 +266,11 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     private void scrollConfigList(double delta) {
-        configScrollOffset =
-                MathUtils.clamp((int) (configScrollOffset - delta), 0, Math.max(0, configs.size() - CONFIGS_PER_PAGE));
+        int roundedUpPageNeed = configs.size() / CONFIGS_PER_PAGE + (configs.size() % CONFIGS_PER_PAGE == 0 ? 0 : 1);
+        configScrollOffset = MathUtils.clamp(
+                (int) (configScrollOffset - delta),
+                0,
+                configs.size() <= CONFIGS_PER_PAGE ? 0 : (roundedUpPageNeed - 1) * CONFIGS_PER_PAGE);
     }
 
     // endregion
@@ -278,6 +286,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
+            return true;
         }
 
         return focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
@@ -337,7 +346,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         configs.clear();
         configScrollOffset = 0;
 
-        List<ConfigHolder> configsOptions = selected.getVisibleConfigOptions();
+        List<ConfigHolder> configsOptions = selected.getVisibleConfigOptions().stream()
+                .sorted(Comparator.comparing(
+                        configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
+                .toList();
 
         for (int i = 0; i < configsOptions.size(); i++) {
             ConfigHolder config = configsOptions.get(i);
@@ -345,16 +357,17 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             int renderIndex = i % CONFIGS_PER_PAGE;
 
             configs.add(new ConfigButton(
-                    Texture.SETTING_BACKGROUND.width() / 2 + 10, 21 + renderIndex * 61, 160, 60, config));
+                    Texture.SETTING_BACKGROUND.width() / 2 + 10, 21 + renderIndex * 61, 160, 60, this, config));
         }
 
+        int roundedUpPageNeed = configs.size() / CONFIGS_PER_PAGE + (configs.size() % CONFIGS_PER_PAGE == 0 ? 0 : 1);
         configListScrollButton = new ScrollButton(
                 Texture.SETTING_BACKGROUND.width() - 23,
                 17,
                 Texture.SETTING_BACKGROUND.height() - 25,
                 Texture.SETTING_SCROLL_BUTTON.width(),
                 Texture.SETTING_SCROLL_BUTTON.height() / 2,
-                Math.max(0, this.configs.size() - CONFIGS_PER_PAGE),
+                configs.size() <= CONFIGS_PER_PAGE ? 0 : (roundedUpPageNeed - 1) * CONFIGS_PER_PAGE,
                 CONFIGS_PER_PAGE,
                 this::scrollConfigList,
                 CommonColors.GRAY);

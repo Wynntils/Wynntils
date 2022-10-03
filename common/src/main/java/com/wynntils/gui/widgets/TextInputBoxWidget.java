@@ -8,8 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
@@ -31,6 +33,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private int cursorPosition = 0;
     private long lastCursorSwitch = 0;
     private boolean renderCursor = true;
+    private CustomColor renderColor = CommonColors.WHITE;
 
     protected final TextboxScreen textboxScreen;
 
@@ -71,9 +74,11 @@ public class TextInputBoxWidget extends AbstractWidget {
                         2,
                         this.width,
                         2,
+                        this.height - 2,
                         0,
-                        CommonColors.WHITE,
+                        renderColor,
                         HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -121,7 +126,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(poseStack, CommonColors.WHITE, 0, 0, this.width, this.height, 0, 2);
+        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
     }
 
     @Override
@@ -129,7 +134,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         textboxScreen.setFocusedTextInput(this);
 
-        return false;
+        return true;
     }
 
     @Override
@@ -259,5 +264,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public String getTextBoxInput() {
         return textBoxInput;
+    }
+
+    public void setRenderColor(CustomColor renderColor) {
+        this.renderColor = renderColor;
+    }
+
+    public CustomColor getRenderColor() {
+        return renderColor;
     }
 }

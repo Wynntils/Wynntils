@@ -10,7 +10,14 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.gui.screens.settings.elements.BooleanConfigOptionElement;
+import com.wynntils.gui.screens.settings.elements.ConfigOptionElement;
+import com.wynntils.gui.screens.settings.elements.CustomColorConfigOptionElement;
+import com.wynntils.gui.screens.settings.elements.EnumConfigOptionElement;
+import com.wynntils.gui.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.List;
@@ -21,12 +28,16 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class ConfigButton extends AbstractButton {
+    private final WynntilsBookSettingsScreen settingsScreen;
     private final ConfigHolder configHolder;
 
     private final GeneralSettingsButton resetButton;
+    private ConfigOptionElement configOptionElement;
 
-    public ConfigButton(int x, int y, int width, int height, ConfigHolder configHolder) {
+    public ConfigButton(
+            int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, ConfigHolder configHolder) {
         super(x, y, width, height, new TextComponent(configHolder.getJsonName()));
+        this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
         this.resetButton = new GeneralSettingsButton(
                 this.x + 3,
@@ -34,8 +45,12 @@ public class ConfigButton extends AbstractButton {
                 35,
                 12,
                 new TranslatableComponent("screens.wynntils.settingsScreen.reset.name"),
-                configHolder::reset,
+                () -> {
+                    configHolder.reset();
+                    this.configOptionElement = getWidgetFromConfigHolder(configHolder);
+                },
                 List.of(new TranslatableComponent("screens.wynntils.settingsScreen.reset.description")));
+        this.configOptionElement = getWidgetFromConfigHolder(configHolder);
     }
 
     @Override
@@ -66,6 +81,14 @@ public class ConfigButton extends AbstractButton {
                 0,
                 1);
 
+        poseStack.pushPose();
+        final int renderX = this.x + 3;
+        final int renderY = this.y + 30;
+        poseStack.translate(renderX, renderY, 0);
+        configOptionElement.renderConfigAppropriateButton(
+                poseStack, this.width, 30, mouseX - renderX, mouseY - renderY, partialTick);
+        poseStack.popPose();
+
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
             String[] parts = StringUtils.wrapTextBySize(description, 200);
@@ -86,7 +109,8 @@ public class ConfigButton extends AbstractButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return resetButton.mouseClicked(mouseX, mouseY, button);
+        return configOptionElement.mouseClicked(mouseX, mouseY, button)
+                && resetButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -96,4 +120,16 @@ public class ConfigButton extends AbstractButton {
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+
+    private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
+        if (configOption.getType().equals(Boolean.class)) {
+            return new BooleanConfigOptionElement(configOption);
+        } else if (configOption.getClassOfConfigField().isEnum()) {
+            return new EnumConfigOptionElement(configOption);
+        } else if (configOption.getType().equals(CustomColor.class)) {
+            return new CustomColorConfigOptionElement(configOption, settingsScreen);
+        } else {
+            return new TextConfigOptionElement(configOption, settingsScreen);
+        }
+    }
 }

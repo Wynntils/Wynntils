@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 
 public class CustomColorConfigOptionElement extends TextConfigOptionElement {
@@ -17,24 +16,16 @@ public class CustomColorConfigOptionElement extends TextConfigOptionElement {
     }
 
     @Override
-    protected void renderSuccessState(PoseStack poseStack) {
+    public void renderConfigAppropriateButton(
+            PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
         poseStack.pushPose();
+        poseStack.translate(0f, (height - renderHeight) / 2f - 5, 0f);
 
-        poseStack.translate(-getTextInputHeight() * 1.2f, 0, 0);
+        textInputBoxWidget.render(poseStack, mouseX, mouseY, partialTicks);
 
-        if (!this.lastParseSuccessful) {
-            // Render cross
-            RenderUtils.drawLine(
-                    poseStack, CommonColors.RED, 0, 0, getTextInputHeight(), getTextInputHeight(), 0, 1.2f);
-            RenderUtils.drawLine(
-                    poseStack, CommonColors.RED, getTextInputHeight(), 0, 0, getTextInputHeight(), 0, 1.2f);
-        } else {
-            Object configHolderValue = configHolder.getValue();
-            assert configHolderValue instanceof CustomColor;
+        CustomColor value = (CustomColor) configHolder.getValue();
 
-            RenderUtils.drawRect(
-                    poseStack, (CustomColor) configHolderValue, 0, 0, 0, getTextInputHeight(), getTextInputHeight());
-        }
+        RenderUtils.drawRect(poseStack, value, 105, 0, 0, renderHeight, renderHeight);
 
         poseStack.popPose();
     }
