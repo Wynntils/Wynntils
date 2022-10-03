@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class TaskUtils {
+public final class TaskUtils {
     private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-utilities-%d").build());
 

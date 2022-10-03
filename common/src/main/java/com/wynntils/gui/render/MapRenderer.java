@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class MapRenderer {
+public final class MapRenderer {
     private static Poi hovered = null;
 
     public static void renderMapQuad(
