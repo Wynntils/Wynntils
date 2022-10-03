@@ -8,21 +8,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
-import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
 
 public class BooleanConfigOptionElement extends ConfigOptionElement {
-    public BooleanConfigOptionElement(
-            ConfigHolder configHolder,
-            FeatureSettingWidget featureSettingWidget,
-            WynntilsSettingsScreen settingsScreen) {
-        super(configHolder, featureSettingWidget, settingsScreen);
+    public BooleanConfigOptionElement(ConfigHolder configHolder) {
+        super(configHolder);
     }
 
     @Override
     protected void renderConfigAppropriateButton(
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks) {
-        float size = getConfigOptionElementSize() * 1.5f;
+        float size = width;
 
         Object holderValue = configHolder.getValue();
         final Texture switchTexture =
@@ -50,7 +45,4 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
             configHolder.setValue(!value);
         }
     }
-
-    @Override
-    public void keyPressed(int keyCode, int scanCode, int modifiers) {}
 }

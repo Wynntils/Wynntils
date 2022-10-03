@@ -13,11 +13,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
-import com.wynntils.gui.screens.settings.elements.BooleanConfigOptionElement;
 import com.wynntils.gui.screens.settings.elements.ConfigOptionElement;
-import com.wynntils.gui.screens.settings.elements.CustomColorConfigOptionElement;
-import com.wynntils.gui.screens.settings.elements.EnumConfigOptionElement;
-import com.wynntils.gui.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
@@ -91,10 +87,10 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (hoveredConfigElement != null) {
-            hoveredConfigElement.keyPressed(keyCode, scanCode, modifiers);
-            return true;
-        }
+        //        if (hoveredConfigElement != null) {
+        //            hoveredConfigElement.keyPressed(keyCode, scanCode, modifiers);
+        //            return true;
+        //        }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -160,8 +156,8 @@ public final class FeatureSettingWidget extends AbstractWidget {
 
             if (renderY + renderHeight > this.y + this.height) break;
 
-            configWidgetLeft.render(
-                    poseStack, xOffset, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
+            //            configWidgetLeft.render(
+            //                    poseStack, xOffset, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
 
             float actualRenderX = this.x + xOffset;
             float actualRenderY = this.y + renderY;
@@ -187,9 +183,10 @@ public final class FeatureSettingWidget extends AbstractWidget {
                     i--;
                     continue;
                 }
-
-                configWidgetRight.render(
-                        poseStack, renderX, renderY, renderWidth, renderHeight, mouseX, mouseY, partialTick);
+                //
+                //                configWidgetRight.render(
+                //                        poseStack, renderX, renderY, renderWidth, renderHeight, mouseX, mouseY,
+                // partialTick);
             }
 
             renderY += padding + renderHeight;
@@ -275,15 +272,15 @@ public final class FeatureSettingWidget extends AbstractWidget {
     }
 
     private void getWidgetFromConfigHolder(ConfigHolder configOption) {
-        if (configOption.getType().equals(Boolean.class)) {
-            configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
-        } else if (configOption.getClassOfConfigField().isEnum()) {
-            configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
-        } else if (configOption.getType().equals(CustomColor.class)) {
-            configWidgets.add(new CustomColorConfigOptionElement(configOption, this, settingsScreen));
-        } else {
-            configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
-        }
+        //        if (configOption.getType().equals(Boolean.class)) {
+        //            configWidgets.add(new BooleanConfigOptionElement(configOption, this, settingsScreen));
+        //        } else if (configOption.getClassOfConfigField().isEnum()) {
+        //            configWidgets.add(new EnumConfigOptionElement(configOption, this, settingsScreen));
+        //        } else if (configOption.getType().equals(CustomColor.class)) {
+        //            configWidgets.add(new CustomColorConfigOptionElement(configOption, this, settingsScreen));
+        //        } else {
+        //            configWidgets.add(new TextConfigOptionElement(configOption, this, settingsScreen));
+        //        }
     }
 
     private float getRenderHeight() {

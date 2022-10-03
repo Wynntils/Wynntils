@@ -43,9 +43,9 @@ public class GeneralSettingsButton extends AbstractButton {
                 0,
                 this.width,
                 this.height,
-                2,
-                4,
-                6);
+                1,
+                3,
+                3);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

@@ -544,6 +544,8 @@
   "screens.wynntils.settingsScreen.close.description": "Close without saving changes",
   "screens.wynntils.settingsScreen.featureList": "Features",
   "screens.wynntils.settingsScreen.name": "Wynntils Settings",
+  "screens.wynntils.settingsScreen.reset.description": "Reset config to default value.",
+  "screens.wynntils.settingsScreen.reset.name": "Reset",
   "screens.wynntils.settingsScreen.title": "Wynntils Settings",
   "screens.wynntils.settingsScreen.uncategorized": "Uncategorized",
   "screens.wynntils.wynntilsDialogueHistory.description": "Here you can read your last few conversations with NPCs on your current class.",

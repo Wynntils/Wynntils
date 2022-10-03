@@ -7,17 +7,13 @@ package com.wynntils.gui.screens.settings.elements;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
-import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
+import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 
 public class CustomColorConfigOptionElement extends TextConfigOptionElement {
-    public CustomColorConfigOptionElement(
-            ConfigHolder configHolder,
-            FeatureSettingWidget featureSettingWidget,
-            WynntilsSettingsScreen settingsScreen) {
-        super(configHolder, featureSettingWidget, settingsScreen);
+    public CustomColorConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+        super(configHolder, screen);
     }
 
     @Override

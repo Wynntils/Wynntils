@@ -8,28 +8,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
-import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
+import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
     protected final TextInputBoxWidget textInputBoxWidget;
-    protected final WynntilsSettingsScreen settingsScreen;
-
     protected boolean lastParseSuccessful = false;
 
-    public TextConfigOptionElement(
-            ConfigHolder configHolder,
-            FeatureSettingWidget featureSettingWidget,
-            WynntilsSettingsScreen settingsScreen) {
-        super(configHolder, featureSettingWidget, settingsScreen);
-        this.settingsScreen = settingsScreen;
+    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+        super(configHolder);
 
-        float defaultSize = getConfigOptionElementSize();
-        this.textInputBoxWidget = new TextInputBoxWidget(
-                0, 0, (int) (defaultSize * 6), getTextInputHeight(), this::onTextInputUpdate, this.settingsScreen);
+        this.textInputBoxWidget =
+                new TextInputBoxWidget(0, 0, 100, getTextInputHeight(), this::onTextInputUpdate, screen);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
     }
 
@@ -39,10 +31,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
         poseStack.pushPose();
 
         float size = this.textInputBoxWidget.getWidth();
-        poseStack.translate(
-                width - width / 10f - size / 2f - getConfigOptionElementSize(),
-                height / 2f - getTextInputHeight() / 2f,
-                0);
+        poseStack.translate(width - width / 10f - size / 2f, height / 2f - getTextInputHeight() / 2f, 0);
 
         this.textInputBoxWidget.render(poseStack, mouseX, mouseY, partialTicks);
 
@@ -55,9 +44,6 @@ public class TextConfigOptionElement extends ConfigOptionElement {
     public void mouseClicked(double mouseX, double mouseY, int button) {
         this.textInputBoxWidget.mouseClicked(mouseX, mouseY, button);
     }
-
-    @Override
-    public void keyPressed(int keyCode, int scanCode, int modifiers) {}
 
     protected void renderSuccessState(PoseStack poseStack) {
         RenderUtils.drawRect(

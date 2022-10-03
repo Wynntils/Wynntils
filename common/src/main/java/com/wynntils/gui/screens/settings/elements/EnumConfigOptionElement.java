@@ -9,8 +9,6 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
-import com.wynntils.gui.screens.settings.widgets.FeatureSettingWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -27,11 +25,8 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
     private final float enumSwitchWidth;
     private final List<? extends Enum<?>> enumConstants;
 
-    public EnumConfigOptionElement(
-            ConfigHolder configHolder,
-            FeatureSettingWidget featureSettingWidget,
-            WynntilsSettingsScreen settingsScreen) {
-        super(configHolder, featureSettingWidget, settingsScreen);
+    public EnumConfigOptionElement(ConfigHolder configHolder) {
+        super(configHolder);
 
         this.enumConstants = getEnumConstants();
         this.enumSwitchWidth = this.enumConstants.stream()
@@ -109,10 +104,6 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
                 .toList();
     }
 
-    @Override
-    public void keyPressed(int keyCode, int scanCode, int modifiers) {}
-
-    @Override
     public float getConfigOptionElementSize() {
         return FontRenderer.getInstance().getFont().lineHeight + 8;
     }
