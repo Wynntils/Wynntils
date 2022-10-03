@@ -211,7 +211,7 @@ public final class FontRenderer {
 
         String lastPartCodes = "";
         int index;
-        while ((index = lastPart.lastIndexOf("§")) != -1) {
+        while ((index = lastPart.lastIndexOf('§')) != -1) {
             if (index >= lastPart.length() - 1) {
                 // trailing §, no format code, skip it
                 lastPart = lastPart.substring(0, index);

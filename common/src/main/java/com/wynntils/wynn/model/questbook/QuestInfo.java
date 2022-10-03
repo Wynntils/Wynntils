@@ -110,7 +110,8 @@ public class QuestInfo {
     @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
-                + name + "\", " + "status="
+                + name + "\", " + "isMiniQuest="
+                + isMiniQuest + ", " + "status="
                 + status + ", " + "length="
                 + length + ", " + "minLevel="
                 + level + ", " + "nextTask=\""
