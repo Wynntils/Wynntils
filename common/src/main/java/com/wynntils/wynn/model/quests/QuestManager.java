@@ -164,6 +164,11 @@ public class QuestManager extends CoreManager {
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }
 
+    /** Shared between the container query classes */
+    protected static String getQuestBookTitle(int pageNum) {
+        return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
+    }
+
     private static class LocationComparator implements Comparator<QuestInfo> {
         private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
 

@@ -40,14 +40,14 @@ public class QuestContainerQueries {
                                     null);
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(getQuestBookTitle(1))
+                .matchTitle(QuestManager.getQuestBookTitle(1))
                 .processContainer(c -> processQuestBookPage(c, 1));
 
         for (int i = 2; i < 5; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(getQuestBookTitle(page))
+                    .matchTitle(QuestManager.getQuestBookTitle(page))
                     .processContainer(c -> processQuestBookPage(c, page));
         }
 
@@ -85,10 +85,6 @@ public class QuestContainerQueries {
         return "[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]";
     }
 
-    private String getQuestBookTitle(int pageNum) {
-        return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
-    }
-
     protected void queryMiniQuests() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Mini Quest Query")
                 .onError(msg -> {
@@ -99,7 +95,7 @@ public class QuestContainerQueries {
                                     null);
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(getQuestBookTitle(1))
+                .matchTitle(QuestManager.getQuestBookTitle(1))
                 .processContainer(c -> {})
                 .clickOnSlot(MINI_QUESTS_SLOT)
                 .matchTitle(getMiniQuestBookTitle(1))
@@ -151,7 +147,7 @@ public class QuestContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
                 .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(getQuestBookTitle(1));
+                .matchTitle(QuestManager.getQuestBookTitle(1));
 
         if (questInfo.isMiniQuest()) {
             queryBuilder.processContainer(c -> {}).clickOnSlot(MINI_QUESTS_SLOT).matchTitle(getMiniQuestBookTitle(1));
@@ -162,7 +158,7 @@ public class QuestContainerQueries {
                 queryBuilder
                         .processContainer(container -> {}) // we ignore this because this is not the correct page
                         .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(i))
-                        .matchTitle(getQuestBookTitle(i));
+                        .matchTitle(QuestManager.getQuestBookTitle(i));
             }
         }
         queryBuilder

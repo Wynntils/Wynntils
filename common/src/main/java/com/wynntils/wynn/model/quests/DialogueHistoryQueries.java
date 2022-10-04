@@ -20,17 +20,12 @@ public class DialogueHistoryQueries {
 
     private List<List<String>> newDialogueHistory;
 
-    // FIXME: this is duplicated!
-    private String getQuestBookTitle(int pageNum) {
-        return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
-    }
-
     protected void scanDialogueHistory() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder(
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(getQuestBookTitle(1))
+                .matchTitle(QuestManager.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
@@ -56,7 +51,7 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(getQuestBookTitle(1))
+                .matchTitle(QuestManager.getQuestBookTitle(1))
                 .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
@@ -78,7 +73,7 @@ public class DialogueHistoryQueries {
             int page = i;
             queryBuilder
                     .clickOnSlot(0)
-                    .matchTitle(getQuestBookTitle(1))
+                    .matchTitle(QuestManager.getQuestBookTitle(1))
                     .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
