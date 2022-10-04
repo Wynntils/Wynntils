@@ -60,7 +60,7 @@ public class UpdateManager extends CoreManager {
 
         RequestHandler handler = new RequestHandler();
 
-        handler.addAndDispatch(versionRequest);
+        handler.addAndDispatch(versionRequest, true);
 
         return future;
     }
