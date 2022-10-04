@@ -90,4 +90,9 @@ public abstract class ScreenMixin {
     private void renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
         EventFactory.onItemTooltipRenderPost(poseStack, itemStack, mouseX, mouseY);
     }
+
+    @Inject(method = "init()V", at = @At("HEAD"))
+    private void onScreenInit(CallbackInfo ci) {
+        EventFactory.onScreenInit((Screen) (Object) this);
+    }
 }
