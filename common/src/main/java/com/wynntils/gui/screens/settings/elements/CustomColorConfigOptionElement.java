@@ -8,11 +8,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CustomColor;
 
 public class CustomColorConfigOptionElement extends TextConfigOptionElement {
     public CustomColorConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
         super(configHolder, screen);
+        this.textInputBoxWidget =
+                new TextInputBoxWidget(0, 0, 80, (int) this.renderHeight, this::onTextInputUpdate, screen);
+        this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
     }
 
     @Override
@@ -25,7 +29,7 @@ public class CustomColorConfigOptionElement extends TextConfigOptionElement {
 
         CustomColor value = (CustomColor) configHolder.getValue();
 
-        RenderUtils.drawRect(poseStack, value, 105, 0, 0, renderHeight, renderHeight);
+        RenderUtils.drawRect(poseStack, value, 85, 0, 0, renderHeight, renderHeight);
 
         poseStack.popPose();
     }

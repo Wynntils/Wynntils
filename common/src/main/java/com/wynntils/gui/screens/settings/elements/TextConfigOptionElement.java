@@ -13,7 +13,7 @@ import com.wynntils.mc.objects.CommonColors;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
-    protected final TextInputBoxWidget textInputBoxWidget;
+    protected TextInputBoxWidget textInputBoxWidget;
     protected boolean lastParseSuccessful = false;
 
     protected final float renderHeight;

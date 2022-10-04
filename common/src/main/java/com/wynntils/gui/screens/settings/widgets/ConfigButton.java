@@ -40,7 +40,7 @@ public class ConfigButton extends AbstractButton {
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
         this.resetButton = new GeneralSettingsButton(
-                this.x + 3,
+                this.x + this.width - 40,
                 this.y + 13,
                 35,
                 12,
@@ -83,10 +83,10 @@ public class ConfigButton extends AbstractButton {
 
         poseStack.pushPose();
         final int renderX = this.x + 3;
-        final int renderY = this.y + 30;
+        final int renderY = this.y + 12;
         poseStack.translate(renderX, renderY, 0);
         configOptionElement.renderConfigAppropriateButton(
-                poseStack, this.width, 30, mouseX - renderX, mouseY - renderY, partialTick);
+                poseStack, this.width - 45, 30, mouseX - renderX, mouseY - renderY, partialTick);
         poseStack.popPose();
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {

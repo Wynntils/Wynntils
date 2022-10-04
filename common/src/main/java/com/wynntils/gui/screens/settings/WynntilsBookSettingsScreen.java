@@ -44,7 +44,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
     private final int CONFIGURABLES_PER_PAGE = 13;
-    private final int CONFIGS_PER_PAGE = 3;
+    private final int CONFIGS_PER_PAGE = 4;
     private final List<AbstractButton> configurables = new ArrayList<>();
     private final List<AbstractButton> configs = new ArrayList<>();
 
@@ -258,6 +258,9 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        mouseX -= getTranslationX();
+        mouseY -= getTranslationY();
+
         if (configurableListScrollButton.isMouseOver(mouseX, mouseY)) {
             configurableListScrollButton.mouseReleased(mouseX, mouseY, button);
         }
@@ -271,6 +274,9 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        mouseX -= getTranslationX();
+        mouseY -= getTranslationY();
+
         configurableListScrollButton.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         if (configListScrollButton != null) {
             configListScrollButton.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -400,7 +406,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             int renderIndex = i % CONFIGS_PER_PAGE;
 
             configs.add(new ConfigButton(
-                    Texture.SETTING_BACKGROUND.width() / 2 + 10, 21 + renderIndex * 61, 160, 60, this, config));
+                    Texture.SETTING_BACKGROUND.width() / 2 + 10, 21 + renderIndex * 46, 160, 45, this, config));
         }
 
         int roundedUpPageNeed = configs.size() / CONFIGS_PER_PAGE + (configs.size() % CONFIGS_PER_PAGE == 0 ? 0 : 1);

@@ -219,7 +219,7 @@ public final class RenderUtils {
 
     public static void drawHoverableTexturedRect(
             PoseStack poseStack, Texture texture, float x, float y, boolean hovered) {
-        RenderUtils.drawTexturedRect(
+        drawTexturedRect(
                 poseStack,
                 texture.resource(),
                 x,
@@ -236,7 +236,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
-        RenderUtils.drawTexturedRect(
+        drawTexturedRect(
                 poseStack,
                 texture.resource(),
                 x,
