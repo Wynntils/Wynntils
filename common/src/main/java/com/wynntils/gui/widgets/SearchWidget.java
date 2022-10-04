@@ -64,6 +64,8 @@ public class SearchWidget extends TextInputBoxWidget {
             textboxScreen.setFocusedTextInput(this);
 
             return true;
+        } else {
+            textboxScreen.setFocusedTextInput(null);
         }
 
         return false;
