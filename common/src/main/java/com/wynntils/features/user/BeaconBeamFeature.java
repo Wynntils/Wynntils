@@ -20,10 +20,10 @@ import com.wynntils.wynn.model.questbook.QuestBookManager;
 import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconBeamFeature extends UserFeature {
@@ -62,8 +62,8 @@ public class BeaconBeamFeature extends UserFeature {
 
         poseStack.pushPose();
         float partials = event.getPartialTick();
-        Vec3 vec = McUtils.mc().getCameraEntity().getEyePosition(partials);
-        poseStack.translate(-vec.x, -vec.y, -vec.z);
+        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
         Location location = CompassModel.getCompassLocation().get();
         poseStack.translate(location.x, location.y, location.z);
