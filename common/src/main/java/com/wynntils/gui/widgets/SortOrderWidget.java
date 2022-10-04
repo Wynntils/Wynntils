@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
-import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.QuestSortOrder;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
@@ -23,11 +23,11 @@ public class SortOrderWidget extends AbstractButton {
 
     @Override
     public void onPress() {
-        QuestManager.QuestSortOrder questSortOrder = questBookScreen.getQuestSortOrder();
+        QuestSortOrder questSortOrder = questBookScreen.getQuestSortOrder();
 
-        QuestManager.QuestSortOrder[] questSortOrders = QuestManager.QuestSortOrder.values();
+        QuestSortOrder[] questSortOrders = QuestSortOrder.values();
 
-        QuestManager.QuestSortOrder newSort = questSortOrders[(questSortOrder.ordinal() + 1) % questSortOrders.length];
+        QuestSortOrder newSort = questSortOrders[(questSortOrder.ordinal() + 1) % questSortOrders.length];
 
         questBookScreen.setQuestSortOrder(newSort);
     }

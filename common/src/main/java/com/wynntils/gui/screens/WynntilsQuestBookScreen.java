@@ -28,6 +28,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.QuestSortOrder;
 import com.wynntils.wynn.model.quests.QuestStatus;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     private final List<QuestButton> questButtons = new ArrayList<>();
     private QuestInfo tracked = null;
     private boolean miniQuestMode = false;
-    private QuestManager.QuestSortOrder questSortOrder = QuestManager.QuestSortOrder.LEVEL;
+    private QuestSortOrder questSortOrder = QuestSortOrder.LEVEL;
 
     public WynntilsQuestBookScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
@@ -89,7 +90,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     protected void init() {
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
-        QuestManager.rescanQuestBook();
+        QuestManager.rescanQuestBook(true, true);
 
         this.addRenderableWidget(searchWidget);
 
@@ -105,13 +106,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                () -> {
-                    if (miniQuestMode) {
-                        QuestManager.queryMiniQuests();
-                    } else {
-                        QuestManager.rescanQuestBook();
-                    }
-                }));
+                () -> QuestManager.rescanQuestBook(!miniQuestMode, miniQuestMode)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -567,18 +562,14 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
 
         this.setQuests(List.of());
 
-        if (this.miniQuestMode) {
-            QuestManager.queryMiniQuests();
-        } else {
-            QuestManager.rescanQuestBook();
-        }
+        QuestManager.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
     }
 
-    public QuestManager.QuestSortOrder getQuestSortOrder() {
+    public QuestSortOrder getQuestSortOrder() {
         return questSortOrder;
     }
 
-    public void setQuestSortOrder(QuestManager.QuestSortOrder newSortOrder) {
+    public void setQuestSortOrder(QuestSortOrder newSortOrder) {
         if (newSortOrder == null) {
             throw new IllegalStateException("Tried to set quest order to null");
         }

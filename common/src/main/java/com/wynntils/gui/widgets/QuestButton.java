@@ -107,7 +107,7 @@ public class QuestButton extends AbstractButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
-            QuestManager.trackQuest(this.questInfo);
+            QuestManager.toggleTracking(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
                 questBookScreen.setTracked(this.questInfo);

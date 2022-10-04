@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.QuestSortOrder;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -53,7 +54,7 @@ public class QuestCommand extends CommandBase {
         // FIXME: These needs to be proper "enum" argument types
         String sort = context.getArgument("sort", String.class);
         String status = context.getArgument("status", String.class);
-        QuestManager.QuestSortOrder order = QuestManager.QuestSortOrder.fromString(sort);
+        QuestSortOrder order = QuestSortOrder.fromString(sort);
         List<QuestInfo> quests = QuestManager.getQuestsSorted(order);
 
         if (status == null) {
@@ -115,7 +116,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        QuestManager.trackQuest(quest);
+        QuestManager.toggleTracking(quest);
         MutableComponent response =
                 new TextComponent("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -127,8 +128,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        // FIXME: This is in fact a toggle
-        QuestManager.trackQuest(quest);
+        QuestManager.toggleTracking(quest);
         MutableComponent response =
                 new TextComponent("Stopped tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
