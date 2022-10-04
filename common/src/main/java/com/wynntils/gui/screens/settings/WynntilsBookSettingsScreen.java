@@ -129,41 +129,32 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     private void renderConfigTitle(PoseStack poseStack) {
+        String name = "";
+        boolean enabled = false;
         if (selectedOverlay != null) {
-            poseStack.pushPose();
-            poseStack.scale(0.8f, 0.8f, 0);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            selectedOverlay.getTranslatedName() + ": "
-                                    + (selectedOverlay.isEnabled()
-                                            ? ChatFormatting.DARK_GREEN + "Enabled"
-                                            : ChatFormatting.DARK_RED + "Disabled"),
-                            Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
-                            12,
-                            CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
-            poseStack.popPose();
+            enabled = selectedOverlay.isEnabled();
+            name = selectedOverlay.getTranslatedName();
         } else if (selectedFeature != null) {
-            poseStack.pushPose();
-            poseStack.scale(0.8f, 0.8f, 0);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            selectedFeature.getTranslatedName() + ": "
-                                    + (selectedFeature.isEnabled()
-                                            ? ChatFormatting.DARK_GREEN + "Enabled"
-                                            : ChatFormatting.DARK_RED + "Disabled"),
-                            Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
-                            12,
-                            CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
-            poseStack.popPose();
+            enabled = selectedFeature.isEnabled();
+            name = selectedFeature.getTranslatedName();
         }
+
+        poseStack.pushPose();
+        poseStack.scale(0.8f, 0.8f, 0);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        name + ": "
+                                + (enabled
+                                        ? ChatFormatting.DARK_GREEN + "Enabled"
+                                        : ChatFormatting.DARK_RED + "Disabled"),
+                        Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
+                        12,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextShadow.NONE);
+        poseStack.popPose();
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
