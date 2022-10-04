@@ -9,6 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.UpdateManager;
+import com.wynntils.mc.utils.McUtils;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,22 +36,19 @@ public class UpdateCommand extends CommandBase {
 
         completableFuture.whenComplete((result, throwable) -> {
             switch (result) {
-                case SUCCESSFUL -> context.getSource()
-                        .sendSuccess(
-                                new TextComponent(
-                                                "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
-                                        .withStyle(ChatFormatting.DARK_GREEN),
-                                false);
-                case ERROR -> context.getSource()
-                        .sendFailure(new TextComponent("Error applying Wynntils/Artemis update.")
-                                .withStyle(ChatFormatting.DARK_RED));
-                case ALREADY_ON_LATEST -> context.getSource()
-                        .sendSuccess(
-                                new TextComponent("Wynntils/Artemis is already on latest version.")
-                                        .withStyle(ChatFormatting.YELLOW),
-                                false);
+                case SUCCESSFUL -> McUtils.sendMessageToClient(
+                        new TextComponent("Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
+                                .withStyle(ChatFormatting.DARK_GREEN));
+                case ERROR -> McUtils.sendMessageToClient(new TextComponent("Error applying Wynntils/Artemis update.")
+                        .withStyle(ChatFormatting.DARK_RED));
+                case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
+                        new TextComponent("Wynntils/Artemis is already on latest version.")
+                                .withStyle(ChatFormatting.YELLOW));
             }
         });
+
+        context.getSource()
+                .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }

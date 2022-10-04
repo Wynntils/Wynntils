@@ -25,7 +25,7 @@ import org.apache.commons.io.FileUtils;
 
 public class UpdateManager extends CoreManager {
     private static final Pattern ARTIFACT_PATTERN =
-            Pattern.compile("(.+)/build/libs/wynntils-(.+)+(\\d+).MC1.18.2-(.+).jar");
+            Pattern.compile("(.+)/build/libs/wynntils-(.+)\\+(\\d+).MC1.18.2-(.+).jar");
 
     private static final String LAST_BUILD_DOWNLOAD_PATH =
             "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/artifact/";
@@ -60,7 +60,7 @@ public class UpdateManager extends CoreManager {
 
         RequestHandler handler = new RequestHandler();
 
-        handler.addAndDispatch(versionRequest);
+        handler.addAndDispatch(versionRequest, true);
 
         return future;
     }
