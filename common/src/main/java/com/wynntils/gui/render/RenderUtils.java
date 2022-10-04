@@ -217,6 +217,36 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
+    public static void drawHoverableTexturedRect(
+            PoseStack poseStack, Texture texture, float x, float y, boolean hovered) {
+        drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                x,
+                y,
+                0,
+                texture.width(),
+                texture.height() / 2f,
+                0,
+                hovered ? texture.height() / 2f : 0,
+                texture.width(),
+                texture.height() / 2f,
+                texture.width(),
+                texture.height());
+    }
+
+    public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
+        drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                x,
+                y,
+                texture.width(),
+                texture.height(),
+                texture.width(),
+                texture.height());
+    }
+
     public static void drawTexturedRect(
             PoseStack poseStack,
             ResourceLocation tex,

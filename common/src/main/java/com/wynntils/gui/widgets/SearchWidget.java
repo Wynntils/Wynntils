@@ -8,8 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.SearchableScreen;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
@@ -26,8 +25,8 @@ public class SearchWidget extends TextInputBoxWidget {
             new TranslatableComponent("screens.wynntils.searchWidget.defaultSearchText");
 
     public SearchWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
-        super(x, y, width, height, new TextComponent("SearchTextBox"), onUpdateConsumer, searchableScreen);
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+        super(x, y, width, height, new TextComponent("Search Box"), onUpdateConsumer, textboxScreen);
     }
 
     @Override
@@ -53,23 +52,16 @@ public class SearchWidget extends TextInputBoxWidget {
 
     @Override
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.SEARCH_BAR.resource(),
-                this.x,
-                this.y,
-                0,
-                this.width,
-                this.height,
-                Texture.SEARCH_BAR.width(),
-                Texture.SEARCH_BAR.height());
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRectBorders(
+                poseStack, CommonColors.GRAY, this.x, this.y, this.x + this.width, this.y + this.height, 0, 1f);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
             McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            searchableScreen.setFocusedTextInput(this);
+            textboxScreen.setFocusedTextInput(this);
 
             return true;
         }

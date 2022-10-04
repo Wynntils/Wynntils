@@ -13,7 +13,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.gui.screens.overlays.OverlaySelectionScreen;
-import com.wynntils.gui.screens.settings.WynntilsSettingsScreen;
+import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.WynntilsMenuButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -38,6 +38,9 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private final List<WynntilsMenuButton> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
 
+    // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
+    private static final WynntilsBookSettingsScreen settingsScreenInstance = new WynntilsBookSettingsScreen();
+
     public WynntilsMenuScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsMenu.name"));
 
@@ -59,7 +62,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.SETTINGS_ICON,
                 true,
-                new WynntilsSettingsScreen(),
+                settingsScreenInstance,
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
