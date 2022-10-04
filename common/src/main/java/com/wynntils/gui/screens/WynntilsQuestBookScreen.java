@@ -44,7 +44,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase implements SearchableScreen {
+public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase implements TextboxScreen {
     private static final int QUESTS_PER_PAGE = 13;
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.name").withStyle(ChatFormatting.WHITE),

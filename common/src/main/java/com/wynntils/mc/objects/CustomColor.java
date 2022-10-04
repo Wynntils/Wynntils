@@ -150,14 +150,15 @@ public class CustomColor {
 
     @Override
     public String toString() {
-        return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+        return toHexString();
     }
 
     public static class CustomColorSerializer implements JsonSerializer<CustomColor>, JsonDeserializer<CustomColor> {
         @Override
         public CustomColor deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            return CustomColor.fromString(json.getAsString());
+            CustomColor customColor = CustomColor.fromHexString(json.getAsString());
+            return customColor == NONE ? CustomColor.fromString(json.getAsString()) : customColor;
         }
 
         @Override
