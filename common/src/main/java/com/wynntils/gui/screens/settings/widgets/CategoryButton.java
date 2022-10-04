@@ -32,7 +32,7 @@ public class CategoryButton extends AbstractButton {
                         this.x + this.width,
                         this.y,
                         0,
-                        CommonColors.GREEN,
+                        CommonColors.CYAN,
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NORMAL);
     }

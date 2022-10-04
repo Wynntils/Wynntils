@@ -37,6 +37,9 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
                 && mouseY >= renderY;
 
         Boolean value = (Boolean) configHolder.getValue();
+        if (value == null) {
+            value = true;
+        }
 
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,

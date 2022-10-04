@@ -311,7 +311,7 @@
   "feature.wynntils.map.pointerColor.name": "Pointer Colour",
   "feature.wynntils.map.pointerType.description": "What style should the main map pointer have?",
   "feature.wynntils.map.pointerType.name": "Main Map Pointer Type",
-  "feature.wynntils.minimap.name": "Minimap",
+  "feature.wynntils.minimap.name": "Minimaps",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "What style should the minimap border have?",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "Minimap Border Type",
   "feature.wynntils.minimap.overlay.minimap.description": "Minimap that displays region surrounding player",

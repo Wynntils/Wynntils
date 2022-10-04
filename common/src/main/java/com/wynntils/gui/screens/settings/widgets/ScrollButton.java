@@ -94,7 +94,7 @@ public class ScrollButton extends AbstractButton {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scroll(delta);
+        scroll(delta > 0 ? 1 : -1);
         return true;
     }
 

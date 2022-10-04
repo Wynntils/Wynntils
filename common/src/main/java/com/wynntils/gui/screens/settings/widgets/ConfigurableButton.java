@@ -5,7 +5,10 @@
 package com.wynntils.gui.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.Translatable;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
@@ -17,12 +20,12 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 
-public class FeatureButton extends AbstractButton {
-    private final Feature feature;
+public class ConfigurableButton extends AbstractButton {
+    private final Configurable configurable;
 
-    public FeatureButton(int x, int y, int width, int height, Feature feature) {
-        super(x, y, width, height, new TextComponent(feature.getTranslatedName()));
-        this.feature = feature;
+    public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
+        super(x, y, width, height, new TextComponent(((Translatable) configurable).getTranslatedName()));
+        this.configurable = configurable;
     }
 
     @Override
@@ -30,15 +33,19 @@ public class FeatureButton extends AbstractButton {
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            if (bookSettingsScreen.getSelected() == feature) {
+            if (bookSettingsScreen.getSelectedFeature() == configurable) {
+                color = CommonColors.GRAY;
+            } else if (bookSettingsScreen.getSelectedOverlay() == configurable) {
                 color = CommonColors.GRAY;
             }
         }
 
+        boolean isOverlay = configurable instanceof Overlay;
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        feature.getTranslatedName(),
+                        (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName(),
                         this.x,
                         this.y,
                         color,
@@ -50,7 +57,11 @@ public class FeatureButton extends AbstractButton {
     @Override
     public void onPress() {
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            bookSettingsScreen.setSelected(feature);
+            if (configurable instanceof Feature feature) {
+                bookSettingsScreen.setSelectedFeature(feature);
+            } else if (configurable instanceof Overlay overlay) {
+                bookSettingsScreen.setSelectedOverlay(overlay);
+            }
         }
     }
 

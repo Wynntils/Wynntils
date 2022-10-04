@@ -10,6 +10,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -19,7 +20,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
-import com.wynntils.gui.screens.settings.widgets.FeatureButton;
+import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.gui.screens.settings.widgets.GeneralSettingsButton;
 import com.wynntils.gui.screens.settings.widgets.ScrollButton;
 import com.wynntils.gui.widgets.SearchWidget;
@@ -42,17 +43,21 @@ import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
-    private final int FEATURES_PER_PAGE = 13;
+    private final int CONFIGURABLES_PER_PAGE = 13;
     private final int CONFIGS_PER_PAGE = 3;
-    private final List<AbstractButton> features = new ArrayList<>();
+    private final List<AbstractButton> configurables = new ArrayList<>();
     private final List<AbstractButton> configs = new ArrayList<>();
 
     private TextInputBoxWidget focusedTextInput;
     private final SearchWidget searchWidget;
-    private ScrollButton featureListScrollButton;
+    private ScrollButton configurableListScrollButton;
     private ScrollButton configListScrollButton;
-    private Feature selected = null;
-    private int featureScrollOffset = 0;
+
+    // FIXME: Suboptimal to have both selected variables, but we need big changes to fix that
+    private Feature selectedFeature = null;
+    private Overlay selectedOverlay = null;
+
+    private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
 
     public WynntilsBookSettingsScreen() {
@@ -66,10 +71,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 100,
                 20,
                 s -> {
-                    reloadFeatureButtons();
+                    reloadConfigurableButtons();
                 },
                 this);
-        reloadFeatureButtons();
+        reloadConfigurableButtons();
     }
 
     @Override
@@ -116,7 +121,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
         renderButtons(poseStack, mouseX, mouseY, partialTick);
 
-        if (selected != null) {
+        if (selectedFeature != null || selectedOverlay != null) {
             renderConfigTitle(poseStack);
         }
 
@@ -124,22 +129,41 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     private void renderConfigTitle(PoseStack poseStack) {
-        poseStack.pushPose();
-        poseStack.scale(0.8f, 0.8f, 0);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        selected.getTranslatedName() + ": "
-                                + (selected.isEnabled()
-                                        ? ChatFormatting.DARK_GREEN + "Enabled"
-                                        : ChatFormatting.DARK_RED + "Disabled"),
-                        Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
-                        12,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
-        poseStack.popPose();
+        if (selectedOverlay != null) {
+            poseStack.pushPose();
+            poseStack.scale(0.8f, 0.8f, 0);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            selectedOverlay.getTranslatedName() + ": "
+                                    + (selectedOverlay.isEnabled()
+                                            ? ChatFormatting.DARK_GREEN + "Enabled"
+                                            : ChatFormatting.DARK_RED + "Disabled"),
+                            Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
+                            12,
+                            CommonColors.BLACK,
+                            HorizontalAlignment.Left,
+                            VerticalAlignment.Top,
+                            FontRenderer.TextShadow.NONE);
+            poseStack.popPose();
+        } else if (selectedFeature != null) {
+            poseStack.pushPose();
+            poseStack.scale(0.8f, 0.8f, 0);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            selectedFeature.getTranslatedName() + ": "
+                                    + (selectedFeature.isEnabled()
+                                            ? ChatFormatting.DARK_GREEN + "Enabled"
+                                            : ChatFormatting.DARK_RED + "Disabled"),
+                            Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
+                            12,
+                            CommonColors.BLACK,
+                            HorizontalAlignment.Left,
+                            VerticalAlignment.Top,
+                            FontRenderer.TextShadow.NONE);
+            poseStack.popPose();
+        }
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -150,10 +174,12 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
-        featureListScrollButton.renderButton(poseStack, mouseX, mouseY, partialTick);
+        configurableListScrollButton.renderButton(poseStack, mouseX, mouseY, partialTick);
 
-        for (int i = featureScrollOffset; i < Math.min(features.size(), featureScrollOffset + FEATURES_PER_PAGE); i++) {
-            AbstractButton featureButton = features.get(i);
+        for (int i = configurableScrollOffset;
+                i < Math.min(configurables.size(), configurableScrollOffset + CONFIGURABLES_PER_PAGE);
+                i++) {
+            AbstractButton featureButton = configurables.get(i);
             featureButton.render(poseStack, mouseX, mouseY, partialTick);
         }
 
@@ -161,7 +187,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             configListScrollButton.renderButton(poseStack, mouseX, mouseY, partialTick);
         }
 
-        // Reverse iteration for optimal rendering
+        // Reverse iteration for so tooltip Z levels are correct when rendering
         for (int i = Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE) - 1;
                 i >= configScrollOffset;
                 i--) {
@@ -199,8 +225,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             }
         }
 
-        for (int i = featureScrollOffset; i < Math.min(features.size(), featureScrollOffset + FEATURES_PER_PAGE); i++) {
-            AbstractButton featureButton = features.get(i);
+        for (int i = configurableScrollOffset;
+                i < Math.min(configurables.size(), configurableScrollOffset + CONFIGURABLES_PER_PAGE);
+                i++) {
+            AbstractButton featureButton = configurables.get(i);
             if (featureButton.isMouseOver(mouseX, mouseY)) {
                 featureButton.mouseClicked(mouseX, mouseY, button);
             }
@@ -213,8 +241,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             }
         }
 
-        if (featureListScrollButton.isMouseOver(mouseX, mouseY)) {
-            featureListScrollButton.mouseClicked(mouseX, mouseY, button);
+        if (configurableListScrollButton.isMouseOver(mouseX, mouseY)) {
+            configurableListScrollButton.mouseClicked(mouseX, mouseY, button);
         }
         if (configListScrollButton != null && configListScrollButton.isMouseOver(mouseX, mouseY)) {
             configListScrollButton.mouseClicked(mouseX, mouseY, button);
@@ -229,7 +257,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         mouseY -= getTranslationY();
 
         if (mouseX <= Texture.SETTING_BACKGROUND.width() / 2f) {
-            featureListScrollButton.mouseScrolled(mouseX, mouseY, delta);
+            configurableListScrollButton.mouseScrolled(mouseX, mouseY, delta);
         } else if (configListScrollButton != null) {
             configListScrollButton.mouseScrolled(mouseX, mouseY, delta);
         }
@@ -239,8 +267,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (featureListScrollButton.isMouseOver(mouseX, mouseY)) {
-            featureListScrollButton.mouseReleased(mouseX, mouseY, button);
+        if (configurableListScrollButton.isMouseOver(mouseX, mouseY)) {
+            configurableListScrollButton.mouseReleased(mouseX, mouseY, button);
         }
 
         if (configListScrollButton != null && configListScrollButton.isMouseOver(mouseX, mouseY)) {
@@ -252,7 +280,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        featureListScrollButton.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        configurableListScrollButton.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         if (configListScrollButton != null) {
             configListScrollButton.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         }
@@ -260,9 +288,11 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         return true;
     }
 
-    private void scrollFeatureList(double delta) {
-        featureScrollOffset = MathUtils.clamp(
-                (int) (featureScrollOffset - delta), 0, Math.max(0, features.size() - FEATURES_PER_PAGE));
+    private void scrollConfigurableList(double delta) {
+        configurableScrollOffset = MathUtils.clamp(
+                (int) (configurableScrollOffset - delta),
+                0,
+                Math.max(0, configurables.size() - CONFIGURABLES_PER_PAGE));
     }
 
     private void scrollConfigList(double delta) {
@@ -302,15 +332,17 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         super.onClose();
     }
 
-    private void reloadFeatureButtons() {
-        features.clear();
-        featureScrollOffset = 0;
+    private void reloadConfigurableButtons() {
+        configurables.clear();
+        configurableScrollOffset = 0;
 
         FeatureCategory oldCategory = null;
 
         List<Feature> featureList = FeatureRegistry.getFeatures().stream()
-                .filter(feature ->
-                        StringUtils.partialMatch(feature.getTranslatedName(), searchWidget.getTextBoxInput()))
+                .filter(feature -> StringUtils.partialMatch(feature.getTranslatedName(), searchWidget.getTextBoxInput())
+                        || feature.getOverlays().stream()
+                                .anyMatch(overlay -> StringUtils.partialMatch(
+                                        overlay.getTranslatedName(), searchWidget.getTextBoxInput())))
                 .sorted()
                 .toList();
 
@@ -318,27 +350,33 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         for (int i = 0; i < featureList.size(); i++) {
             Feature feature = featureList.get(i);
 
-            int renderIndex = (i + offset) % FEATURES_PER_PAGE;
+            int renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
 
             if (feature.getCategory() != oldCategory) {
-                features.add(new CategoryButton(37, 21 + renderIndex * 12, 140, 10, feature.getCategory()));
+                configurables.add(new CategoryButton(37, 21 + renderIndex * 12, 140, 10, feature.getCategory()));
                 oldCategory = feature.getCategory();
                 offset++;
-                renderIndex = (i + offset) % FEATURES_PER_PAGE;
+                renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
             }
 
-            features.add(new FeatureButton(37, 21 + renderIndex * 12, 140, 10, feature));
+            configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, feature));
+
+            for (Overlay overlay : feature.getOverlays()) {
+                offset++;
+                renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
+                configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
+            }
         }
 
-        featureListScrollButton = new ScrollButton(
+        configurableListScrollButton = new ScrollButton(
                 23,
                 17,
                 Texture.SETTING_BACKGROUND.height() - 50,
                 Texture.SETTING_SCROLL_BUTTON.width(),
                 Texture.SETTING_SCROLL_BUTTON.height() / 2,
-                Math.max(0, features.size() - FEATURES_PER_PAGE),
-                FEATURES_PER_PAGE,
-                this::scrollFeatureList,
+                Math.max(0, configurables.size() - CONFIGURABLES_PER_PAGE),
+                CONFIGURABLES_PER_PAGE,
+                this::scrollConfigurableList,
                 CustomColor.NONE);
     }
 
@@ -346,10 +384,24 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         configs.clear();
         configScrollOffset = 0;
 
-        List<ConfigHolder> configsOptions = selected.getVisibleConfigOptions().stream()
-                .sorted(Comparator.comparing(
-                        configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
-                .toList();
+        if (selectedFeature == null && selectedOverlay == null) {
+            configListScrollButton = null;
+            return;
+        }
+
+        List<ConfigHolder> configsOptions;
+
+        if (selectedFeature != null) {
+            configsOptions = selectedFeature.getVisibleConfigOptions().stream()
+                    .sorted(Comparator.comparing(
+                            configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
+                    .toList();
+        } else {
+            configsOptions = selectedOverlay.getVisibleConfigOptions().stream()
+                    .sorted(Comparator.comparing(
+                            configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
+                    .toList();
+        }
 
         for (int i = 0; i < configsOptions.size(); i++) {
             ConfigHolder config = configsOptions.get(i);
@@ -381,13 +433,24 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         return (this.width - Texture.SETTING_BACKGROUND.width()) / 2f;
     }
 
-    public Feature getSelected() {
-        return selected;
+    public Feature getSelectedFeature() {
+        return selectedFeature;
     }
 
-    public void setSelected(Feature selected) {
-        this.selected = selected;
+    public void setSelectedFeature(Feature selectedFeature) {
+        this.selectedFeature = selectedFeature;
+        this.selectedOverlay = null;
         reloadConfigButtons();
+    }
+
+    public void setSelectedOverlay(Overlay selectedOverlay) {
+        this.selectedOverlay = selectedOverlay;
+        this.selectedFeature = null;
+        reloadConfigButtons();
+    }
+
+    public Overlay getSelectedOverlay() {
+        return selectedOverlay;
     }
 
     @Override
