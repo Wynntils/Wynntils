@@ -283,7 +283,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         if (this.hovered instanceof QuestButton questButton) {
             QuestInfo questInfo = questButton.getQuestInfo();
 
-            tooltipLines = QuestInfo.getTooltipLinesForQuest(questInfo);
+            tooltipLines = QuestInfo.generateTooltipForQuest(questInfo);
 
             tooltipLines.add(new TextComponent(""));
 

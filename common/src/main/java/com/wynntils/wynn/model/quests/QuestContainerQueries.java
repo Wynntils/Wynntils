@@ -68,7 +68,7 @@ public class QuestContainerQueries {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item, page, false);
+                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, false);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -126,7 +126,7 @@ public class QuestContainerQueries {
                 if (slot == 0) continue;
 
                 ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfo.parseItem(item, page, true);
+                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, true);
                 if (questInfo == null) continue;
 
                 newMiniQuests.add(questInfo);
@@ -177,7 +177,7 @@ public class QuestContainerQueries {
 
                 ItemStack item = container.items().get(slot);
 
-                String questName = QuestInfo.getQuestName(item);
+                String questName = QuestInfoParser.getQuestName(item);
                 if (Objects.equals(questName, questInfo.getName())) {
                     ContainerUtils.clickOnSlot(
                             slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
