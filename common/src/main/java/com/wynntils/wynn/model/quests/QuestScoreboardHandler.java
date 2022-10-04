@@ -37,7 +37,10 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
 
         Optional<QuestInfo> questInfoOpt =
                 QuestManager.getQuestFromName(questName.toString().trim());
-        if (questInfoOpt.isEmpty()) return;
+        if (questInfoOpt.isEmpty()) {
+            WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + questName);
+            return;
+        }
 
         QuestInfo questInfo = questInfoOpt.get();
         questInfo.setNextTask(nextTask.toString().trim());
