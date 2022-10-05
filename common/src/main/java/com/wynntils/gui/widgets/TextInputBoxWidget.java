@@ -131,7 +131,12 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-        textboxScreen.setFocusedTextInput(this);
+
+        if (this.isHovered) {
+            textboxScreen.setFocusedTextInput(this);
+        } else {
+            textboxScreen.setFocusedTextInput(null);
+        }
 
         return true;
     }
@@ -172,7 +177,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
             if (textBoxInput.isEmpty()) {
-                return false;
+                return true;
             }
 
             if (Screen.hasControlDown()) {
@@ -189,7 +194,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (keyCode == GLFW.GLFW_KEY_DELETE) {
             if (textBoxInput.isEmpty()) {
-                return false;
+                return true;
             }
 
             if (Screen.hasControlDown()) {
@@ -225,7 +230,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override

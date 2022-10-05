@@ -25,6 +25,8 @@ public abstract class ItemProperty {
     public static final Class<HighlightProperty> HIGHLIGHT = HighlightProperty.class;
     public static final Class<TextOverlayProperty> TEXT_OVERLAY = TextOverlayProperty.class;
 
+    public static final Class<SearchOverlayProperty> SEARCH_OVERLAY = SearchOverlayProperty.class;
+
     protected final WynnItemStack item;
 
     protected ItemProperty(WynnItemStack item) {

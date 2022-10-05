@@ -29,6 +29,7 @@ import com.wynntils.features.user.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
+import com.wynntils.features.user.HighlightMatchingItemsFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemLockFeature;
@@ -96,6 +97,7 @@ public final class FeatureRegistry {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
+        registerFeature(new HighlightMatchingItemsFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
