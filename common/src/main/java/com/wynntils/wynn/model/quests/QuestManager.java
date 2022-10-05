@@ -6,7 +6,6 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
@@ -26,6 +25,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestManager extends CoreManager {
+    private static final String WIKI_BASE_URL = "https://wynncraft.fandom.com/wiki/";
+    private static final String WIKI_QUEST_PAGE_QUERY = "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
+
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
@@ -109,12 +111,8 @@ public class QuestManager extends CoreManager {
     }
 
     public static void openQuestOnWiki(QuestInfo questInfo) {
-        final String baseUrl = "https://wynncraft.fandom.com/wiki/";
-
         // TODO handle mini quest
-        String name = questInfo.getName();
-        String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
-        String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
+        String url = WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(questInfo.getName());
         Request req = new RequestBuilder(url, "WikiQuestQuery")
                 .handleJsonArray(jsonOutput -> {
                     String pageTitle = jsonOutput
@@ -122,7 +120,7 @@ public class QuestManager extends CoreManager {
                             .getAsJsonObject()
                             .get("_pageTitle")
                             .getAsString();
-                    Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
+                    Utils.openUrl(WIKI_BASE_URL + WebUtils.encodeForWikiTitle(pageTitle));
                     return true;
                 })
                 .build();
