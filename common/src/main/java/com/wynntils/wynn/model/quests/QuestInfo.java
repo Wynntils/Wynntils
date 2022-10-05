@@ -31,6 +31,7 @@ public class QuestInfo {
     private final int level;
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
+
     private final boolean isMiniQuest;
     private final int pageNumber;
 
