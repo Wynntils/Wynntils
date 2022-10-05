@@ -5,10 +5,6 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,15 +17,11 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
-import com.wynntils.wynn.model.questbook.QuestInfo;
-import com.wynntils.wynn.model.questbook.QuestStatus;
+import com.wynntils.wynn.model.quests.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -112,9 +104,9 @@ public class QuestButton extends AbstractButton {
     }
 
     private void trackQuest() {
-        if (this.questInfo.getStatus() != QuestStatus.CANNOT_START) {
-            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
-            QuestBookManager.trackQuest(this.questInfo);
+        if (this.questInfo.isTrackable()) {
+            McUtils.playSound(SoundEvents.ANVIL_LAND);
+            QuestManager.toggleTracking(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
                 questBookScreen.setTracked(this.questInfo);
@@ -125,27 +117,8 @@ public class QuestButton extends AbstractButton {
     }
 
     private void openQuestWiki() {
-        final String baseUrl = "https://wynncraft.fandom.com/wiki/";
-
-        // todo handle mini quest
-        String name = this.questInfo.getName();
-        String wikiQuestPageNameQuery = WebManager.getApiUrl("WikiQuestQuery");
-        String url = wikiQuestPageNameQuery + WebUtils.encodeForCargoQuery(name);
-        Request req = new RequestBuilder(url, "WikiQuestQuery")
-                .handleJsonArray(jsonOutput -> {
-                    String pageTitle = jsonOutput
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("_pageTitle")
-                            .getAsString();
-                    Utils.openUrl(baseUrl + WebUtils.encodeForWikiTitle(pageTitle));
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(req, true);
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        QuestManager.openQuestOnWiki(questInfo);
     }
 
     @Override

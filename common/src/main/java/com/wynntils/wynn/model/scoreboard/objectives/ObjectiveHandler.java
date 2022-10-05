@@ -70,7 +70,8 @@ public class ObjectiveHandler implements ScoreboardHandler {
         guildWynnObjective = parsed;
     }
 
-    public static void resetObjectives() {
+    @Override
+    public void resetHandler() {
         guildWynnObjective = null;
         WYNN_OBJECTIVES.clear();
     }
