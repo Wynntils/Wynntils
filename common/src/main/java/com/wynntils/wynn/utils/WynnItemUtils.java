@@ -234,9 +234,9 @@ public final class WynnItemUtils {
     private static final TreeMap<Float, TextColor> colorMap = new TreeMap<>() {
         {
             put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-            put(30f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-            put(80f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-            put(96f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+            put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+            put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+            put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
         }
     };
 
