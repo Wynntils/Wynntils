@@ -62,6 +62,7 @@ public class QuestManager extends CoreManager {
     public static List<QuestInfo> getQuestsRaw() {
         return quests;
     }
+
     public static List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }

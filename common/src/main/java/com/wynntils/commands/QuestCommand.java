@@ -24,8 +24,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public class QuestCommand extends CommandBase {
-    private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(QuestManager.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+    private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    QuestManager.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
