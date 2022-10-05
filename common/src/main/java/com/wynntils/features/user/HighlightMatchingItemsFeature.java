@@ -22,7 +22,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ContainerSearchFeature extends UserFeature {
+public class HighlightMatchingItemsFeature extends UserFeature {
     private static final Pattern BANK_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s§0 Bank");
     private static final Pattern GUILD_BANK_PATTERN = Pattern.compile(".+: Bank \\(.+\\)");
     private static final Pattern MEMBER_LIST_PATTERN = Pattern.compile(".+: Members");
@@ -51,20 +51,39 @@ public class ContainerSearchFeature extends UserFeature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
+        if (!shouldAddSearch(title)) return;
+
+        addSearchWidget(screen, renderX, renderY);
+    }
+
+    @SubscribeEvent
+    public void onRenderSlot(SlotRenderEvent.Pre e) {
+        ItemStack item = e.getSlot().getItem();
+
+        if (!(item instanceof WynnItemStack wynnItemStack)) return;
+
+        if (!wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).isSearched()) return;
+
+        RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+    }
+
+    public boolean shouldAddSearch(String title) {
         if (filterInBank && BANK_PATTERN.matcher(title).matches()) {
-            addSimpleSearchWidget(screen, renderX, renderY);
+            return true;
         }
 
         if (filterInGuildBank && GUILD_BANK_PATTERN.matcher(title).matches()) {
-            addSimpleSearchWidget(screen, renderX, renderY);
+            return true;
         }
 
         if (filterInGuildMemberList && MEMBER_LIST_PATTERN.matcher(title).matches()) {
-            addSimpleSearchWidget(screen, renderX, renderY);
+            return true;
         }
+
+        return false;
     }
 
-    private void addSimpleSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
+    private void addSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
         screen.addRenderableWidget(new SearchWidget(
                 renderX + screen.imageWidth - 100,
                 renderY - 20,
@@ -86,16 +105,5 @@ public class ContainerSearchFeature extends UserFeature {
 
             wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
         }
-    }
-
-    @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
-        ItemStack item = e.getSlot().getItem();
-
-        if (!(item instanceof WynnItemStack wynnItemStack)) return;
-
-        if (!wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).isSearched()) return;
-
-        RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
 }
