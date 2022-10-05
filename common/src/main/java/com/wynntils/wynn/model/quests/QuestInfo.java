@@ -25,17 +25,19 @@ public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
 
+    // Quest metadata is forever constant
     private final String name;
-    private final QuestStatus status;
     private final QuestLength length;
     private final int level;
-    private String nextTask;
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
-
     private final boolean isMiniQuest;
     private final int pageNumber;
-    private final boolean tracked;
+
+    // Quest progress can change over time
+    private QuestStatus status;
+    private String nextTask;
+    private boolean tracked;
 
     protected QuestInfo(
             String name,
