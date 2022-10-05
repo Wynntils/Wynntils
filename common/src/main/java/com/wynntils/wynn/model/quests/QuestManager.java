@@ -66,19 +66,11 @@ public class QuestManager extends CoreManager {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
-    public static List<QuestInfo> getQuests() {
-        return quests;
-    }
-
-    public static List<QuestInfo> getMiniQuests() {
-        return miniQuests;
-    }
-
-    public static List<QuestInfo> getQuestsSorted(QuestSortOrder sortOrder) {
+    public static List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
 
-    public static List<QuestInfo> getMiniQuestsSorted(QuestSortOrder sortOrder) {
+    public static List<QuestInfo> getMiniQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, miniQuests);
     }
 

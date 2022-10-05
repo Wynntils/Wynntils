@@ -220,7 +220,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
         if (miniQuestMode) return;
 
-        this.setQuests(QuestManager.getQuestsSorted(questSortOrder));
+        this.setQuests(QuestManager.getQuests(questSortOrder));
 
         for (QuestInfo quest : quests) {
             if (!quest.isTracked()) {
@@ -236,7 +236,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
         if (!miniQuestMode) return;
 
-        this.setQuests(QuestManager.getMiniQuestsSorted(questSortOrder));
+        this.setQuests(QuestManager.getMiniQuests(questSortOrder));
 
         for (QuestInfo quest : quests) {
             if (!quest.isTracked()) {
@@ -476,8 +476,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
 
     private void updateQuestsFilter(String searchText) {
         List<QuestInfo> newQuests = miniQuestMode
-                ? QuestManager.getMiniQuestsSorted(questSortOrder)
-                : QuestManager.getQuestsSorted(questSortOrder);
+                ? QuestManager.getMiniQuests(questSortOrder)
+                : QuestManager.getQuests(questSortOrder);
 
         newQuests = newQuests.stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
@@ -577,9 +577,9 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
         this.questSortOrder = newSortOrder;
 
         if (miniQuestMode) {
-            setQuests(QuestManager.getMiniQuestsSorted(questSortOrder));
+            setQuests(QuestManager.getMiniQuests(questSortOrder));
         } else {
-            setQuests(QuestManager.getQuestsSorted(questSortOrder));
+            setQuests(QuestManager.getQuests(questSortOrder));
         }
     }
 }
