@@ -14,7 +14,6 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
@@ -85,7 +84,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
             return false;
         }
 
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
 
         Enum<?> configHolderValue = (Enum<?>) configHolder.getValue();
         assert enumConstants.contains(configHolderValue);
@@ -97,7 +96,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
 
         configHolder.setValue(nextValue);
 
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
 
         return true;
     }

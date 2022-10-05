@@ -14,7 +14,6 @@ import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -60,7 +59,7 @@ public class SearchWidget extends TextInputBoxWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
-            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
             textboxScreen.setFocusedTextInput(this);
 
             return true;
