@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.Pair;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,6 @@ import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.io.FileUtils;
 
 public class UpdateManager extends CoreManager {
     private static final Pattern ARTIFACT_PATTERN =
