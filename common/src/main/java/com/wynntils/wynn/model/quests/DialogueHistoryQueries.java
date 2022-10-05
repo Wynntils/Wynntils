@@ -21,6 +21,10 @@ public class DialogueHistoryQueries {
     private List<List<String>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
+        findNumberOfPages();
+    }
+
+    private void findNumberOfPages() {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder(
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
@@ -37,7 +41,9 @@ public class DialogueHistoryQueries {
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));
-                            createActualDialogueHistoryQuery(pageCount);
+                            // Now that we know the max number of pages, we can
+                            // create the actual extraction query
+                            createDialogueHistoryQuery(pageCount);
                             break;
                         }
                     }
@@ -46,7 +52,7 @@ public class DialogueHistoryQueries {
         queryBuilder.build().executeQuery();
     }
 
-    private void createActualDialogueHistoryQuery(int pageCount) {
+    private void createDialogueHistoryQuery(int pageCount) {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder(
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
