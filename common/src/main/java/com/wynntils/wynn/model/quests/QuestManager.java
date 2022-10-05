@@ -57,6 +57,10 @@ public final class QuestManager extends Manager {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
+    public List<QuestInfo> getQuestsRaw() {
+        return quests;
+    }
+
     public List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
