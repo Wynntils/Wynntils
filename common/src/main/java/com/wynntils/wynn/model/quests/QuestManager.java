@@ -26,7 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestManager extends CoreManager {
     private static final String WIKI_BASE_URL = "https://wynncraft.fandom.com/wiki/";
-    private static final String WIKI_QUEST_PAGE_QUERY = "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
+    private static final String WIKI_QUEST_PAGE_QUERY =
+            "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
 
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
