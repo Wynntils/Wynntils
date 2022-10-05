@@ -475,9 +475,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuPagedScreenBase impleme
     }
 
     private void updateQuestsFilter(String searchText) {
-        List<QuestInfo> newQuests = miniQuestMode
-                ? QuestManager.getMiniQuests(questSortOrder)
-                : QuestManager.getQuests(questSortOrder);
+        List<QuestInfo> newQuests =
+                miniQuestMode ? QuestManager.getMiniQuests(questSortOrder) : QuestManager.getQuests(questSortOrder);
 
         newQuests = newQuests.stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
