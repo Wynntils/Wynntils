@@ -22,7 +22,6 @@ import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -106,7 +105,7 @@ public class QuestButton extends AbstractButton {
 
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
-            McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.ANVIL_LAND, 1.0F));
+            McUtils.playSound(SoundEvents.ANVIL_LAND);
             QuestManager.toggleTracking(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
@@ -118,7 +117,7 @@ public class QuestButton extends AbstractButton {
     }
 
     private void openQuestWiki() {
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
         QuestManager.openQuestOnWiki(questInfo);
     }
 

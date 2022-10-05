@@ -23,7 +23,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -238,7 +237,7 @@ public class MainMapScreen extends Screen {
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered != null) {
-                McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f));
+                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                 return true;
             }
@@ -259,7 +258,7 @@ public class MainMapScreen extends Screen {
         Location compassLocation = new Location(gameX, 0, gameZ);
         CompassModel.setCompassLocation(compassLocation);
 
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     @Override
