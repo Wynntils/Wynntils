@@ -59,6 +59,9 @@ public class QuestManager extends CoreManager {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
+    public static List<QuestInfo> getQuestsRaw() {
+        return quests;
+    }
     public static List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
