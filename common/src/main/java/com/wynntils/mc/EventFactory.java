@@ -51,6 +51,7 @@ import com.wynntils.mc.event.RenderLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
@@ -224,6 +225,10 @@ public final class EventFactory {
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
         return post(new ContainerSetContentEvent(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
+    public static void onScreenInit(Screen screen) {
+        post(new ScreenInitEvent(screen));
     }
 
     // endregion
