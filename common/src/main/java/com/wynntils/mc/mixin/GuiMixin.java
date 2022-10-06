@@ -88,9 +88,8 @@ public abstract class GuiMixin {
     // This doesn't work on forge. See ForgeIngameGuiMixin for replacement.
     // As getVehicleMaxHearts is a private method and is only used by two methods, we can safely override it.
     // This is strange, but it is still better than redirecting...
-    // NOTE: This mixin depends on the fact that we always cancel `renderVehicleHealth` with `onVehicleHearthRender`. If
-    // we remove that, this mixin will be called twice,
-    //       making the event be posted twice in 1 render.
+    // NOTE: This mixin depends on the fact that we always cancel `renderVehicleHealth` with `onVehicleHealthRender`. If
+    // we remove that, this mixin will be called twice, making the event be posted twice in 1 render.
     @Inject(method = "getVehicleMaxHearts", at = @At("HEAD"), cancellable = true)
     private void onRenderFoodPre(LivingEntity mountEntity, CallbackInfoReturnable<Integer> cir) {
         RenderEvent.Pre event = EventFactory.onRenderFoodPre(new PoseStack(), this.minecraft.getWindow());
@@ -106,7 +105,7 @@ public abstract class GuiMixin {
     // On fabric/quilt, we can just cancel this. Wynncraft does not use vehicle health in any meaningful way.
     // This does not work on forge. See ForgeIngameGui for replacement.
     @Inject(method = "renderVehicleHealth", at = @At("HEAD"), cancellable = true)
-    private void onVehicleHearthRender(PoseStack poseStack, CallbackInfo ci) {
+    private void onVehicleHealthRender(PoseStack poseStack, CallbackInfo ci) {
         if (WynnUtils.onWorld()) {
             ci.cancel();
         }
