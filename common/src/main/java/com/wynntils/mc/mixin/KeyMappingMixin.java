@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyMapping.class)
 public abstract class KeyMappingMixin {
@@ -24,7 +23,7 @@ public abstract class KeyMappingMixin {
     @Inject(
             method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
-    private void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
+    private void initPost(String name, InputConstants.Type type, int i, String category) {
         KeyBindManager.initKeyMapping(category, CATEGORY_SORT_ORDER);
     }
 }

@@ -10,7 +10,6 @@ import net.minecraft.CrashReportCategory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
@@ -21,7 +20,7 @@ public abstract class CrashReportMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/SystemReport;appendToCrashReportString(Ljava/lang/StringBuilder;)V"))
-    private void addWynntilsDetails(StringBuilder builder, CallbackInfo ci) {
+    private void addWynntilsDetails(StringBuilder builder) {
         CrashReportCategory wynntilsCrashDetails = CrashReportManager.generateDetails();
 
         wynntilsCrashDetails.getDetails(builder);

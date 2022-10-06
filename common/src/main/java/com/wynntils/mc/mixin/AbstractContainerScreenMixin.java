@@ -22,7 +22,7 @@ public abstract class AbstractContainerScreenMixin {
     public Slot hoveredSlot;
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
-    private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
+    private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks) {
         EventFactory.onContainerRender(
                 (AbstractContainerScreen<?>) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot);
     }
@@ -30,14 +30,14 @@ public abstract class AbstractContainerScreenMixin {
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("HEAD"))
-    private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
+    private void renderSlotPre(PoseStack poseStack, Slot slot) {
         EventFactory.onSlotRenderPre((Screen) (Object) this, slot);
     }
 
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("RETURN"))
-    private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
+    private void renderSlotPost(PoseStack poseStack, Slot slot) {
         EventFactory.onSlotRenderPost((Screen) (Object) this, slot);
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(method = "onClose", at = @At("RETURN"))
-    private void onCloseContainerPost(CallbackInfo ci) {
+    private void onCloseContainerPost() {
         EventFactory.onCloseContainerPost();
     }
 }

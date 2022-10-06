@@ -24,7 +24,7 @@ public abstract class ScoreboardMixin {
     public Map<String, Map<Objective, Score>> playerScores;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onCtor(CallbackInfo ci) {
+    private void onCtor() {
         this.playerScores = Maps.newConcurrentMap();
     }
 

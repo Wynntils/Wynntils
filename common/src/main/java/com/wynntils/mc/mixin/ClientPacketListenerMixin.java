@@ -43,7 +43,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
             at = @At("HEAD"))
-    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+    private void handleCommandsPre(ClientboundCommandsPacket packet) {
         if (!isRenderThread()) return;
         CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
         ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
@@ -52,7 +52,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
             at = @At("RETURN"))
-    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet) {
         if (!isRenderThread()) return;
         EventFactory.onPlayerInfoPacket(packet);
     }
@@ -60,7 +60,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleTabListCustomisation(Lnet/minecraft/network/protocol/game/ClientboundTabListPacket;)V",
             at = @At("RETURN"))
-    private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
+    private void handleTabListCustomisationPost(ClientboundTabListPacket packet) {
         if (!isRenderThread()) return;
         EventFactory.onTabListCustomisation(packet);
     }
@@ -68,14 +68,14 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleResourcePack(Lnet/minecraft/network/protocol/game/ClientboundResourcePackPacket;)V",
             at = @At("RETURN"))
-    private void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
+    private void handleResourcePackPost(ClientboundResourcePackPacket packet) {
         EventFactory.onResourcePack();
     }
 
     @Inject(
             method = "handleMovePlayer(Lnet/minecraft/network/protocol/game/ClientboundPlayerPositionPacket;)V",
             at = @At("RETURN"))
-    private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
+    private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet) {
         if (!isRenderThread()) return;
         EventFactory.onPlayerMove(packet);
     }
@@ -192,7 +192,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(method = "onDisconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
-    private void onDisconnectPre(Component reason, CallbackInfo ci) {
+    private void onDisconnectPre(Component reason) {
         // Unexpected disconnect
         EventFactory.onDisconnect();
     }

@@ -32,26 +32,26 @@ public abstract class GuiMixin {
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("HEAD"))
-    private void renderSlotPre(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
+    private void renderSlotPre(int x, int y, float ticks, Player player, ItemStack stack, int i) {
         EventFactory.onHotbarSlotRenderPre(stack, x, y);
     }
 
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
-    private void renderSlotPost(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
+    private void renderSlotPost(int x, int y, float ticks, Player player, ItemStack stack, int i) {
         EventFactory.onHotbarSlotRenderPost(stack, x, y);
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At("HEAD"))
-    private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPre(PoseStack poseStack, float partialTick) {
         EventFactory.onRenderGuiPre(poseStack, partialTick, this.minecraft.getWindow());
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
     @Inject(method = "render", at = @At("RETURN"))
-    private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPost(PoseStack poseStack, float partialTick) {
         EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
     }
 

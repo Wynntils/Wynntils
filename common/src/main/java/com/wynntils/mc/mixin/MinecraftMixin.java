@@ -10,12 +10,11 @@ import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
-    private void setScreenPostPost(Screen screen, CallbackInfo ci) {
+    private void setScreenPostPost(Screen screen) {
         if (screen == null) {
             EventFactory.onScreenClose();
         } else {
@@ -24,17 +23,17 @@ public abstract class MinecraftMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void tickPre(CallbackInfo ci) {
+    private void tickPre() {
         EventFactory.onTickStart();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
-    private void tickPost(CallbackInfo ci) {
+    private void tickPost() {
         EventFactory.onTickEnd();
     }
 
     @Inject(method = "resizeDisplay", at = @At("RETURN"))
-    private void resizeDisplayPost(CallbackInfo ci) {
+    private void resizeDisplayPost() {
         EventFactory.onResizeDisplayPost();
     }
 }

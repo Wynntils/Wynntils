@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
@@ -34,8 +33,7 @@ public abstract class LevelRendererMixin {
             Camera camera,
             GameRenderer gameRenderer,
             LightTexture lightTexture,
-            Matrix4f projectionMatrix,
-            CallbackInfo ci) {
+            Matrix4f projectionMatrix) {
         EventFactory.onRenderLast(
                 this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime);
     }

@@ -11,12 +11,11 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ConnectScreen.class)
 public abstract class ConnectScreenMixin {
     @Inject(method = "connect", at = @At("HEAD"))
-    private void connectPre(Minecraft minecraft, ServerAddress serverAddress, CallbackInfo ci) {
+    private void connectPre(Minecraft minecraft, ServerAddress serverAddress) {
         EventFactory.onConnect(serverAddress.getHost(), serverAddress.getPort());
     }
 }

@@ -19,13 +19,13 @@ public abstract class ForgeIngameGuiMixin {
     // so we have to use the instance.
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPre(PoseStack poseStack, float partialTick) {
         EventFactory.onRenderGuiPre(
                 poseStack, partialTick, Minecraft.getInstance().getWindow());
     }
 
     @Inject(method = "render", at = @At("RETURN"))
-    private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+    private void onRenderGuiPost(PoseStack poseStack, float partialTick) {
         EventFactory.onRenderGuiPost(
                 poseStack, partialTick, Minecraft.getInstance().getWindow());
     }

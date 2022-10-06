@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin implements TextboxScreen {
@@ -59,7 +58,7 @@ public abstract class ScreenMixin implements TextboxScreen {
     }
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
-    private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
+    private void initPost(Minecraft client, int width, int height) {
         Screen screen = (Screen) (Object) this;
 
         EventFactory.onScreenCreated(screen, this::addRenderableWidget);
@@ -93,12 +92,12 @@ public abstract class ScreenMixin implements TextboxScreen {
     @Inject(
             method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("RETURN"))
-    private void renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
+    private void renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
         EventFactory.onItemTooltipRenderPost(poseStack, itemStack, mouseX, mouseY);
     }
 
     @Inject(method = "init()V", at = @At("HEAD"))
-    private void onScreenInit(CallbackInfo ci) {
+    private void onScreenInit() {
         EventFactory.onScreenInit((Screen) (Object) this);
     }
 
