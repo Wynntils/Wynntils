@@ -32,14 +32,15 @@ public class ServerIcon {
 
     /**
      * @param server {@link ServerData} of server
-     * @param allowStale flag whether if an already existing icon should be used
      * @param onDone consumer when done, can be null if none
      */
-    private ServerIcon(ServerData server, boolean allowStale, Consumer<ServerIcon> onDone) {
+    private ServerIcon(ServerData server, Consumer<ServerIcon> onDone) {
         this.server = server;
         this.onDone = onDone;
         this.serverIconLocation = FALLBACK;
+    }
 
+    public void loadResource(boolean allowStale) {
         // Try default
         ResourceLocation destination =
                 new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
@@ -66,8 +67,8 @@ public class ServerIcon {
         }
     }
 
-    public ServerIcon(ServerData server, boolean allowStale) {
-        this(server, allowStale, null);
+    public ServerIcon(ServerData server) {
+        this(server, null);
     }
 
     /** Returns whether getting the icon has succeeded. */
