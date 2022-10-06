@@ -30,6 +30,7 @@ import net.minecraft.world.item.TooltipFlag;
 public class UnidentifiedItemStack extends WynnItemStack {
     private final List<Component> tooltip;
     private ItemType itemType;
+    private ItemTier itemTier;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
@@ -38,8 +39,8 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
         if (!ItemGuessFeature.getInstance().isEnabled()) return;
 
-        ItemTier tier = ItemTier.fromComponent(getHoverName());
-        if (tier == null) return;
+        itemTier = ItemTier.fromComponent(getHoverName());
+        if (itemTier == null) return;
 
         String itemTypeStr = itemName.split(" ", 2)[1];
         if (itemTypeStr == null) return;
@@ -69,7 +70,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
         if (rarityMap == null) return;
 
-        List<String> items = rarityMap.get(tier);
+        List<String> items = rarityMap.get(itemTier);
         if (items == null || items.isEmpty()) return;
 
         tooltip.add(new TranslatableComponent("feature.wynntils.itemGuess.possibilities"));
@@ -81,7 +82,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = new TextComponent(item).withStyle(tier.getChatFormatting());
+            MutableComponent itemDesc = new TextComponent(item).withStyle(itemTier.getChatFormatting());
 
             levelToItems.computeIfAbsent(level, i -> new ArrayList<>()).add(itemDesc);
         }
@@ -98,7 +99,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
             if (ItemGuessFeature.showGuessesPrice && level != -1) {
                 guesses.append(new TextComponent(" [")
                         .append(new TextComponent(
-                                        (tier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
+                                        (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(new TextComponent("]"))
                         .withStyle(ChatFormatting.GRAY));
@@ -124,6 +125,10 @@ public class UnidentifiedItemStack extends WynnItemStack {
     }
 
     public Optional<ItemType> getItemType() {
-        return itemType == null ? Optional.empty() : Optional.of(itemType);
+        return Optional.ofNullable(itemType);
+    }
+
+    public Optional<ItemTier> getItemTier() {
+        return Optional.ofNullable(itemTier);
     }
 }
