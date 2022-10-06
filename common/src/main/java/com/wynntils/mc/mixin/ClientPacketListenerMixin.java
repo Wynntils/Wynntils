@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
@@ -113,6 +114,16 @@ public abstract class ClientPacketListenerMixin {
         if (EventFactory.onContainerSetContent(packet).isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "handleContainerSetSlot", at = @At("HEAD"), cancellable = true)
+    private void handleContainerSetContentPre(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        System.out.println("packet.getContainerId() = " + packet.getContainerId());
+        System.out.println("packet.getItem() = " + packet.getItem());
+        System.out.println(
+                "packet.getItem().getHoverName() = " + packet.getItem().getHoverName());
     }
 
     @Inject(

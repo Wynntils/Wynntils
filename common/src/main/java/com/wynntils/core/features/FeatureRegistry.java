@@ -16,6 +16,7 @@ import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.statemanaged.LootrunFunctionsFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
@@ -89,6 +90,7 @@ public final class FeatureRegistry {
         // always on
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
+        registerFeature(new LootrunFunctionsFeature());
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
