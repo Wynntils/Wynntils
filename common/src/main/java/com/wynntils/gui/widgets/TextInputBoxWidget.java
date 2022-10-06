@@ -57,7 +57,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
         poseStack.translate(this.x, this.y, 0);
