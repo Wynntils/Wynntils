@@ -75,8 +75,8 @@ public final class MathUtils {
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public static float magnitude(double x, double y) {
-        return (float) Math.sqrt(x * x + y * y);
+    public static double magnitude(double x, double y) {
+        return Math.sqrt(x * x + y * y);
     }
 
     public static boolean isInside(int testX, int testZ, int x1, int x2, int z1, int z2) {
