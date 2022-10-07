@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -51,7 +50,8 @@ public class BeaconBeamFeature extends UserFeature {
         if (CompassModel.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+        MultiBufferSource.BufferSource bufferSource =
+                McUtils.mc().renderBuffers().bufferSource();
 
         Vec3 camera = event.getCamera().getPosition();
         Location location = CompassModel.getCompassLocation().get();
@@ -61,7 +61,7 @@ public class BeaconBeamFeature extends UserFeature {
         double dz = location.z - camera.z;
 
         double distance = MathUtils.magnitude(dx, dz);
-        int maxDistance = (McUtils.mc().options.renderDistance - 1) * 16;
+        int maxDistance = McUtils.mc().options.renderDistance * 16;
 
         if (distance > maxDistance) {
             double scale = maxDistance / distance;
