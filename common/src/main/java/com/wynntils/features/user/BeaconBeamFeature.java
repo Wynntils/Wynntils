@@ -4,24 +4,24 @@
  */
 package com.wynntils.features.user;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconBeamFeature extends UserFeature {
@@ -47,35 +47,45 @@ public class BeaconBeamFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onRenderLevelLast(RenderLevelLastEvent event) {
+    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
         if (CompassModel.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
-        Player player = McUtils.player();
+        Vec3 camera = event.getCamera().getPosition();
+        Location location = CompassModel.getCompassLocation().get();
+
+        double dx = location.x - camera.x;
+        double dy = location.y - camera.y;
+        double dz = location.z - camera.z;
+
+        double distance = MathUtils.magnitude(dx, dz);
+        int maxDistance = (McUtils.mc().options.renderDistance - 1) * 16;
+
+        if (distance > maxDistance) {
+            double scale = maxDistance / distance;
+
+            dx *= scale;
+            dz *= scale;
+        }
 
         poseStack.pushPose();
-        float partials = event.getPartialTick();
-        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
-        poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
-
-        Location location = CompassModel.getCompassLocation().get();
-        poseStack.translate(location.x, location.y, location.z);
+        poseStack.translate(dx, dy, dz);
 
         BeaconRenderer.renderBeaconBeam(
                 poseStack,
                 bufferSource,
                 BeaconRenderer.BEAM_LOCATION,
-                partials,
-                1,
-                player.level.getGameTime(),
-                (int) -McUtils.player().position().y,
-                319 + (int) McUtils.player().position().y,
+                event.getPartialTick(),
+                1f,
+                McUtils.player().level.getGameTime(),
+                0,
+                1024,
                 waypointBeamColor.asFloatArray(),
-                0.166F,
-                0.33F);
+                0.166f,
+                0.33f);
+
         poseStack.popPose();
 
         bufferSource.endBatch();

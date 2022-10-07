@@ -10,7 +10,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraftforge.eventbus.api.Event;
 
-public class RenderLevelLastEvent extends Event {
+public class RenderTileLevelLastEvent extends Event {
     private final LevelRenderer levelRenderer;
     private final PoseStack poseStack;
     private final float partialTick;
@@ -18,7 +18,7 @@ public class RenderLevelLastEvent extends Event {
     private final long startNanos;
     private final Camera camera;
 
-    public RenderLevelLastEvent(
+    public RenderTileLevelLastEvent(
             LevelRenderer levelRenderer,
             PoseStack poseStack,
             float partialTick,
