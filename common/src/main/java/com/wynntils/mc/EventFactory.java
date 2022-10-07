@@ -49,6 +49,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -69,6 +70,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -134,8 +136,19 @@ public final class EventFactory {
             PoseStack poseStack,
             float partialTick,
             Matrix4f projectionMatrix,
-            long finishTimeNano) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+    }
+
+    public static void onRenderTileLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderTileLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
     }
 
     public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
