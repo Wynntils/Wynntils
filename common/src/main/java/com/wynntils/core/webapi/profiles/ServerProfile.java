@@ -36,7 +36,7 @@ public class ServerProfile {
     }
 
     /**
-     * This makes the firstSeem match the user computer time instead of the server time
+     * This makes the firstSeen match the user computer time instead of the server time
      *
      * @param serverTime the input server time
      */
