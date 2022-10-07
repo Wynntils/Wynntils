@@ -20,6 +20,7 @@ import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
+    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
@@ -53,6 +54,10 @@ public final class WynnItemMatchers {
         Component name = itemStack.getHoverName();
         String unformattedLoreLine = ComponentUtils.getCoded(name);
         return unformattedLoreLine.equals("§dUpgrade your §b❉ Intelligence§d skill");
+    }
+
+    public static boolean isServerItem(ItemStack itemStack) {
+        return serverItemMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isHealingPotion(ItemStack itemStack) {
@@ -235,6 +240,10 @@ public final class WynnItemMatchers {
         }
 
         return false;
+    }
+
+    public static Matcher serverItemMatcher(Component text) {
+        return SERVER_ITEM_PATTERN.matcher(text.getString());
     }
 
     public static Matcher rarityLineMatcher(Component text) {
