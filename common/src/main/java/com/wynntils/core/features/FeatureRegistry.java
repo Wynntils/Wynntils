@@ -35,6 +35,7 @@ import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
+import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
@@ -124,6 +125,7 @@ public final class FeatureRegistry {
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new LobbyUptimeFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());

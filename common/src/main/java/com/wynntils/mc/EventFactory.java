@@ -23,6 +23,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
@@ -48,6 +49,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -68,6 +70,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -83,6 +86,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -132,8 +136,19 @@ public final class EventFactory {
             PoseStack poseStack,
             float partialTick,
             Matrix4f projectionMatrix,
-            long finishTimeNano) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+    }
+
+    public static void onRenderTileLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderTileLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
     }
 
     public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
@@ -225,6 +240,11 @@ public final class EventFactory {
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
         return post(new ContainerSetContentEvent(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
+    public static void onContainerSetSlot(ClientboundContainerSetSlotPacket packet) {
+        post(new ContainerSetSlotEvent(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
     }
 
     public static void onScreenInit(Screen screen) {

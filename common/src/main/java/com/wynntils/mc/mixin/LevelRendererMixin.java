@@ -37,6 +37,28 @@ public abstract class LevelRendererMixin {
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
         EventFactory.onRenderLast(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime);
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @Inject(
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+                            ordinal = 2),
+            method = "renderLevel")
+    private void renderTilePost(
+            PoseStack poseStack,
+            float partialTick,
+            long finishNanoTime,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightTexture lightTexture,
+            Matrix4f projectionMatrix,
+            CallbackInfo ci) {
+        EventFactory.onRenderTileLast(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
     }
 }
