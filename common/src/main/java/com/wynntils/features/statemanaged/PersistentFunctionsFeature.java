@@ -36,8 +36,6 @@ public class PersistentFunctionsFeature extends StateManagedFeature {
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
         if (ContainerUtils.isLootOrRewardChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
-            System.out.println("nextExpectedLootContainerId = " + nextExpectedLootContainerId);
-
             dryCount++;
         }
     }
@@ -48,8 +46,6 @@ public class PersistentFunctionsFeature extends StateManagedFeature {
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
         ItemStack itemStack = event.getItemStack();
-
-        System.out.println("itemStack.getHoverName() = " + itemStack.getHoverName());
 
         if (!WynnItemMatchers.isUnidentified(itemStack)) return;
 
