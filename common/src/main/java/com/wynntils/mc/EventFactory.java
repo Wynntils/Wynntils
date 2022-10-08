@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -254,6 +255,10 @@ public final class EventFactory {
     // endregion
 
     // region Container Events
+    public static void onChestMenuQuickMove(int containerId) {
+        post(new ChestMenuQuickMoveEvent(containerId));
+    }
+
     public static Event onClientboundContainerClosePacket(int containerId) {
         return post(new MenuClosedEvent(containerId));
     }
