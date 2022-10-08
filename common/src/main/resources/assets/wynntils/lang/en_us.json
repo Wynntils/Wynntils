@@ -381,7 +381,7 @@
   "feature.wynntils.persistentFunctions.dryBoxes.name": "Dry Boxes",
   "feature.wynntils.persistentFunctions.dryCount.description": "Dry Count for Function variable",
   "feature.wynntils.persistentFunctions.dryCount.name": "Dry Count",
-  "feature.wynntils.persistentFunctions.name": "Lootrun Functions",
+  "feature.wynntils.persistentFunctions.name": "Persistent Functions",
   "feature.wynntils.playerGhostTransparency.name": "Transparent Player Ghost",
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.description": "The level of translucence that should be applied to player ghosts",
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Player Ghost Translucence",
