@@ -23,7 +23,6 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
@@ -86,7 +85,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
@@ -240,11 +238,6 @@ public final class EventFactory {
     public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
         return post(new ContainerSetContentEvent(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
-    }
-
-    public static void onContainerSetSlot(ClientboundContainerSetSlotPacket packet) {
-        post(new ContainerSetSlotEvent(
-                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
     }
 
     public static void onScreenInit(Screen screen) {
