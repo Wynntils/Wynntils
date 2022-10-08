@@ -1,8 +1,8 @@
 {
   "client": [
-    "ChestMenuMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
+    "ChestMenuMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "CommandSuggestionsMixin",
