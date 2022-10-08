@@ -36,7 +36,9 @@ public class PersistentFunctionsFeature extends StateManagedFeature {
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
         if (ContainerUtils.isLootOrRewardChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
+
             dryCount++;
+            ConfigManager.saveConfig();
         }
     }
 
