@@ -17,8 +17,8 @@ import com.wynntils.wynn.utils.ContainerUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// FIXME: This feature is only needed because we do not have a way to save function data persistently. Remove this when
-//        we add persistent data storage other than configs.
+// FIXME: This feature is only needed because we do not have a way to save function data persistently.
+//        Remove this when we add persistent data storage other than configs.
 public class PersistentFunctionsFeature extends StateManagedFeature {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
