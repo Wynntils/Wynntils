@@ -27,7 +27,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
     private static final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
-    private static final Object optionsLock = new Object();
 
     /** Needed for all Models */
     public static void init() {}
@@ -61,13 +60,10 @@ public final class KeyBindManager extends CoreManager {
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
-        Options options = McUtils.options();
+        synchronized (McUtils.options()) {
+            KEY_BINDS.add(toAdd);
 
-        assert options != null;
-
-        KEY_BINDS.add(toAdd);
-
-        synchronized (optionsLock) {
+            Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
@@ -78,37 +74,26 @@ public final class KeyBindManager extends CoreManager {
     }
 
     public static void unregisterKeybind(KeyBind toRemove) {
-        Options options = McUtils.options();
+        if (!KEY_BINDS.remove(toRemove)) return;
 
-        assert options != null;
+        synchronized (McUtils.options()) {
+            Options options = McUtils.options();
+            KeyMapping[] keyMappings = options.keyMappings;
 
-        if (KEY_BINDS.remove(toRemove)) {
-            synchronized (optionsLock) {
-                KeyMapping[] keyMappings = options.keyMappings;
+            List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
+            newKeyMappings.remove(toRemove.getKeyMapping());
 
-                List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-                newKeyMappings.remove(toRemove.getKeyMapping());
-
-                ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
-            }
+            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
         }
     }
 
     private static void triggerKeybinds() {
         checkAllKeyBinds(keyBind -> {
-            if (keyBind.isFirstPress()) {
-                if (keyBind.getKeyMapping().consumeClick()) {
+            if (keyBind.onlyFirstPress()) {
+                while (keyBind.getKeyMapping().consumeClick()) {
                     keyBind.onPress();
                 }
-
-                while (keyBind.getKeyMapping().consumeClick()) {
-                    // do nothing
-                }
-
-                return;
-            }
-
-            if (keyBind.getKeyMapping().isDown()) {
+            } else if (keyBind.getKeyMapping().isDown()) {
                 keyBind.onPress();
             }
         });
@@ -117,7 +102,7 @@ public final class KeyBindManager extends CoreManager {
     private static void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
         List<KeyBind> crashedKeyBinds = new LinkedList<>();
 
-        KEY_BINDS.forEach(keyBind -> {
+        for (KeyBind keyBind : KEY_BINDS) {
             try {
                 checkKeybind.accept(keyBind);
             } catch (Throwable t) {
@@ -129,7 +114,7 @@ public final class KeyBindManager extends CoreManager {
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedKeyBinds.add(keyBind);
             }
-        });
+        }
 
         // Hopefully we have none :)
         for (KeyBind keyBind : crashedKeyBinds) {
@@ -153,13 +138,5 @@ public final class KeyBindManager extends CoreManager {
         }
 
         categorySortOrder.put(category, max + 1);
-    }
-
-    public static void loadKeybindConfigFile() {
-        Options options = McUtils.options();
-
-        assert options != null;
-
-        options.load();
     }
 }
