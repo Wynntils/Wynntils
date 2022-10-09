@@ -40,9 +40,11 @@ public final class ContainerUtils {
     }
 
     public static boolean isLootOrRewardChest(String title) {
-        return title.startsWith("Loot Chest")
-                || title.startsWith("Daily Rewards")
-                || title.contains("Objective Rewards");
+        return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
+    }
+
+    public static boolean isLootChest(String title) {
+        return title.startsWith("Loot Chest");
     }
 
     public static NonNullList<ItemStack> getItems(Screen screen) {

@@ -5,7 +5,7 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
-import com.wynntils.features.statemanaged.PersistentFunctionsFeature;
+import com.wynntils.features.statemanaged.DataStorageFeature;
 import java.util.List;
 
 public class LootrunFunctions {
@@ -13,7 +13,7 @@ public class LootrunFunctions {
 
         @Override
         public Integer getValue(String argument) {
-            return PersistentFunctionsFeature.INSTANCE.dryCount;
+            return DataStorageFeature.INSTANCE.dryCount;
         }
 
         @Override
@@ -26,7 +26,7 @@ public class LootrunFunctions {
 
         @Override
         public Integer getValue(String argument) {
-            return PersistentFunctionsFeature.INSTANCE.dryBoxes;
+            return DataStorageFeature.INSTANCE.dryBoxes;
         }
 
         @Override
