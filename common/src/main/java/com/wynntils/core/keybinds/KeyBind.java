@@ -36,7 +36,7 @@ public class KeyBind {
         this(name, keyCode, firstPress, onPress, null);
     }
 
-    public boolean isFirstPress() {
+    public boolean onlyFirstPress() {
         return firstPress;
     }
 
