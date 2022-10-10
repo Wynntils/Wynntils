@@ -10,11 +10,12 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.CrashReportManager;
-import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
-import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.statemanaged.DataStorageFeature;
+import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
+import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
@@ -90,6 +91,7 @@ public final class FeatureRegistry {
         // always on
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
+        registerFeature(new DataStorageFeature());
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());

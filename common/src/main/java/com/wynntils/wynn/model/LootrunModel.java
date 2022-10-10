@@ -13,7 +13,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.features.alwayson.LootrunFeature;
+import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;

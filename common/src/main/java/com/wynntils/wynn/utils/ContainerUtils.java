@@ -36,9 +36,15 @@ public final class ContainerUtils {
         if (!(screen instanceof AbstractContainerScreen)) return false;
 
         String title = screen.getTitle().getString();
-        return title.startsWith("Loot Chest")
-                || title.startsWith("Daily Rewards")
-                || title.contains("Objective Rewards");
+        return isLootOrRewardChest(title);
+    }
+
+    public static boolean isLootOrRewardChest(String title) {
+        return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
+    }
+
+    public static boolean isLootChest(String title) {
+        return title.startsWith("Loot Chest");
     }
 
     public static NonNullList<ItemStack> getItems(Screen screen) {
