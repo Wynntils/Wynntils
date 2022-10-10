@@ -10,6 +10,7 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
+import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -295,6 +296,9 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new HorseFunctions.HorseXpFunction());
         registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
+
+        registerFunction(new LootrunFunctions.DryBoxesFunction());
+        registerFunction(new LootrunFunctions.DryStreakFunction());
 
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());

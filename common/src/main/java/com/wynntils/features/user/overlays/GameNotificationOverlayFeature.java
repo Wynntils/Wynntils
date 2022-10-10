@@ -89,7 +89,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
         private TextRenderSetting textRenderSetting;
 
-        public GameNotificationOverlay() {
+        protected GameNotificationOverlay() {
             super(
                     new OverlayPosition(
                             0,

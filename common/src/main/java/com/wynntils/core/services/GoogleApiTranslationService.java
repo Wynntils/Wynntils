@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * restricted. There is a rate limit of about 100 messages per hour and IP address. This is typically
  * sufficient for NPCs translation, but not for general chat messages, at least not in chatty areas like Detlas.
  */
-public class GoogleApiTranslationService extends CachingTranslationService implements TranslationService {
+public class GoogleApiTranslationService extends CachingTranslationService {
     private static final AtomicInteger requestNumber = new AtomicInteger();
 
     @Override

@@ -6,7 +6,11 @@ package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileSystemException;
 
 public final class FileUtils {
     /**
@@ -35,6 +39,28 @@ public final class FileUtils {
             }
         } catch (IOException e) {
             WynntilsMod.error("IOException while created File " + file);
+        }
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (sourceFile == null || destFile == null) {
+            throw new IllegalArgumentException("Argument files should not be null.");
+        }
+
+        try {
+            org.apache.commons.io.FileUtils.copyFile(sourceFile, destFile);
+        } catch (FileSystemException exception) {
+            // Jar is locked on Windows, use streams
+            copyFileWindows(sourceFile, destFile);
+        }
+    }
+
+    private static void copyFileWindows(File sourceFile, File destFile) {
+        try (FileChannel source = new FileInputStream(sourceFile).getChannel();
+                FileChannel destination = new FileOutputStream(destFile).getChannel()) {
+            destination.transferFrom(source, 0, source.size());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

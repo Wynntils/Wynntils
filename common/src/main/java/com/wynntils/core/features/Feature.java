@@ -221,7 +221,7 @@ public abstract class Feature extends AbstractConfigurable
     public abstract static class Condition {
         private boolean satisfied = false;
 
-        public boolean isSatisfied() {
+        protected boolean isSatisfied() {
             return satisfied;
         }
 

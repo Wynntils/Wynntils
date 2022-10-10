@@ -9,14 +9,7 @@ import java.util.Objects;
 /**
  * The Pair Type Holds 1 field of type T and 1 field of type J
  */
-public class Pair<T, J> {
-    public final T a;
-    public final J b;
-
-    public Pair(T a, J b) {
-        this.a = a;
-        this.b = b;
-    }
+public record Pair<T, J>(T a, J b) {
 
     @Override
     public String toString() {
@@ -32,10 +25,5 @@ public class Pair<T, J> {
         }
 
         return Objects.deepEquals(a, other.a) && Objects.deepEquals(b, other.b);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(a, b);
     }
 }

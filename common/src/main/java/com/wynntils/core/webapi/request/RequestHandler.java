@@ -59,9 +59,11 @@ public class RequestHandler {
         dispatch(false);
     }
 
-    /** Send all enqueued requests inside of a new thread and return that thread */
-    public Thread dispatchAsync() {
-        return dispatch(true);
+    /**
+     * Send all enqueued requests inside of a new thread and return that thread
+     */
+    public void dispatchAsync() {
+        dispatch(true);
     }
 
     /** Enqueue a new {@link Request} and dispatches it */

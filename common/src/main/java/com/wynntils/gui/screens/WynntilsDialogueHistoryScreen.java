@@ -20,7 +20,7 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.questbook.QuestBookManager;
+import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -61,7 +61,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @Override
     protected void init() {
-        QuestBookManager.scanDialogueHistory();
+        QuestManager.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -74,7 +74,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                QuestBookManager::scanDialogueHistory));
+                QuestManager::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -177,7 +177,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(QuestBookManager.getDialogueHistory());
+        this.setDialogues(QuestManager.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
@@ -251,7 +251,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                         FontRenderer.TextShadow.NONE);
     }
 
-    public void setDialogues(List<List<String>> dialogues) {
+    private void setDialogues(List<List<String>> dialogues) {
         // Optimize pages so they fit
         List<List<String>> splitDialogues = new ArrayList<>();
         List<String> currentPage = new ArrayList<>();

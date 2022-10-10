@@ -6,15 +6,15 @@ package com.wynntils.mc.event;
 
 import net.minecraft.world.entity.player.Player;
 
-public class PlayerEvent extends LivingEvent {
+public abstract class PlayerEvent extends LivingEvent {
     private final Player entityPlayer;
 
-    public PlayerEvent(Player player) {
+    protected PlayerEvent(Player player) {
         super(player);
         this.entityPlayer = player;
     }
 
-    public Player getPlayer() {
+    protected Player getPlayer() {
         return this.entityPlayer;
     }
 }

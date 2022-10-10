@@ -20,7 +20,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class UpdateReminderFeature extends UserFeature {
     private static final String CI_LINK =
             "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/api/json?tree=number";
-    private static final String DOWNLOAD_LINK = "https://ci.wynntils.com/job/Artemis";
 
     private boolean firstJoin = true;
 
@@ -43,12 +42,12 @@ public class UpdateReminderFeature extends UserFeature {
                         TextComponent clickable = new TextComponent("here.");
                         clickable.setStyle(clickable
                                 .getStyle()
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, DOWNLOAD_LINK))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                                 .withUnderlined(true)
                                 .withBold(true));
                         McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Build " + buildNumber
                                         + " is the latest version, but you are using build "
-                                        + WynntilsMod.getBuildNumber() + ". Please consider updating ")
+                                        + WynntilsMod.getBuildNumber() + ". Please consider updating by clicking ")
                                 .append(clickable)
                                 .append(
                                         new TextComponent(

@@ -26,11 +26,12 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class MinimapFeature extends UserFeature {
         public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
         @Config
-        public MapMaskType maskType = MapMaskType.Rectangular;
+        public MapMaskType maskType = MapMaskType.Circle;
 
         @Config
         public MapBorderType borderType = MapBorderType.Wynn;
@@ -80,7 +81,7 @@ public class MinimapFeature extends UserFeature {
         @Config
         public boolean showCoords = true;
 
-        public MinimapOverlay() {
+        protected MinimapOverlay() {
             super(
                     new OverlayPosition(
                             5,
@@ -113,9 +114,12 @@ public class MinimapFeature extends UserFeature {
                                 (renderY + height));
             }
 
-            // TODO replace with generalized maps whenever that is done
-            if (MapModel.isMapLoaded()) {
-                MapProfile map = MapModel.getMaps().get(0);
+            // Always draw a black background to cover transparent map areas
+            RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
+
+            List<MapTexture> maps = MapRenderer.getMapTextures(
+                    (int) McUtils.player().getX(), (int) McUtils.player().getZ(), width, height, scale);
+            for (MapTexture map : maps) {
                 float textureX = map.getTextureXPosition(McUtils.player().getX());
                 float textureZ = map.getTextureZPosition(McUtils.player().getZ());
                 MapRenderer.renderMapQuad(
@@ -153,12 +157,8 @@ public class MinimapFeature extends UserFeature {
 
             // disable mask & render border
             switch (maskType) {
-                case Rectangular -> {
-                    RenderSystem.disableScissor();
-                }
-                case Circle -> {
-                    RenderUtils.clearMask();
-                }
+                case Rectangular -> RenderSystem.disableScissor();
+                case Circle -> RenderUtils.clearMask();
             }
 
             // render border

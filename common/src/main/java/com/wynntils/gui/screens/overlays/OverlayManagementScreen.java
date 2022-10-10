@@ -407,8 +407,8 @@ public class OverlayManagementScreen extends Screen {
         }
 
         Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
-        dragX = newDrag.a;
-        dragY = newDrag.b;
+        dragX = newDrag.a();
+        dragY = newDrag.b();
 
         Overlay overlay = selectedOverlay;
         Edge edge = selectedEdge;
@@ -448,8 +448,8 @@ public class OverlayManagementScreen extends Screen {
         }
 
         Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
-        dragX = newDrag.a;
-        dragY = newDrag.b;
+        dragX = newDrag.a();
+        dragY = newDrag.b();
 
         Overlay overlay = selectedOverlay;
 
@@ -463,8 +463,8 @@ public class OverlayManagementScreen extends Screen {
         }
 
         Pair<Double, Double> newDrag = calculateDragAfterSnapping(dragX, dragY);
-        dragX = newDrag.a;
-        dragY = newDrag.b;
+        dragX = newDrag.a();
+        dragY = newDrag.b();
 
         Overlay overlay = selectedOverlay;
         Corner corner = selectedCorner;
@@ -526,7 +526,7 @@ public class OverlayManagementScreen extends Screen {
 
             if (edge.isVerticalLine()) {
                 for (Float alignmentLinePosition : verticalAlignmentLinePositions) {
-                    if (Math.abs(this.width * alignmentLinePosition - edgePos.a.x) < ALIGNMENT_SNAP_DISTANCE) {
+                    if (Math.abs(this.width * alignmentLinePosition - edgePos.a().x) < ALIGNMENT_SNAP_DISTANCE) {
                         edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
                         alignmentLinesToRender.put(edge, alignmentLinePosition);
                         break;
@@ -534,7 +534,7 @@ public class OverlayManagementScreen extends Screen {
                 }
             } else {
                 for (Float alignmentLinePosition : horizontalAlignmentLinePositions) {
-                    if (Math.abs(this.height * alignmentLinePosition - edgePos.a.y) < ALIGNMENT_SNAP_DISTANCE) {
+                    if (Math.abs(this.height * alignmentLinePosition - edgePos.a().y) < ALIGNMENT_SNAP_DISTANCE) {
                         edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
                         alignmentLinesToRender.put(edge, alignmentLinePosition);
                         break;
@@ -632,9 +632,9 @@ public class OverlayManagementScreen extends Screen {
                 Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
 
                 if (edge.isVerticalLine()) {
-                    verticalAlignmentLinePositions.add(edgePos.a.x / this.width);
+                    verticalAlignmentLinePositions.add(edgePos.a().x / this.width);
                 } else {
-                    horizontalAlignmentLinePositions.add(edgePos.a.y / this.height);
+                    horizontalAlignmentLinePositions.add(edgePos.a().y / this.height);
                 }
             }
         }

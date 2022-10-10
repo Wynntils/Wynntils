@@ -18,8 +18,6 @@ public final class CompassModel extends Model {
     public static void init() {}
 
     public static Optional<Location> getCompassLocation() {
-        if (compassLocation != null) compassLocation.y = McUtils.player().getY();
-
         return Optional.ofNullable(compassLocation);
     }
 

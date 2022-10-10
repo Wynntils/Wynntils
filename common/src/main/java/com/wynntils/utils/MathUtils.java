@@ -74,4 +74,19 @@ public final class MathUtils {
     public static float magnitude(float x, float y) {
         return (float) Math.sqrt(x * x + y * y);
     }
+
+    public static double magnitude(double x, double y) {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    public static boolean isInside(int testX, int testZ, int x1, int x2, int z1, int z2) {
+        return x1 <= testX && testX <= x2 && z1 <= testZ && testZ <= z2;
+    }
+
+    public static boolean boundingBoxIntersects(
+            int aX1, int aX2, int aZ1, int aZ2, int bX1, int bX2, int bZ1, int bZ2) {
+        boolean xIntersects = aX1 < bX2 && bX1 < aX2;
+        boolean zIntersects = aZ1 < bZ2 && bZ1 < aZ2;
+        return xIntersects && zIntersects;
+    }
 }

@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils;
 
-public class WebUtils {
+public final class WebUtils {
     public static String encodeForCargoQuery(String name) {
         return StringUtils.encodeUrl("'" + name.replace("'", "\\'") + "'");
     }

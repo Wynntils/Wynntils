@@ -16,11 +16,12 @@ import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
-import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.MaterialProperty;
 import com.wynntils.wynn.item.properties.PowderTierProperty;
 import com.wynntils.wynn.item.properties.ProfessionLevelProperty;
+import com.wynntils.wynn.item.properties.SearchOverlayProperty;
+import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
@@ -56,6 +57,7 @@ public class ItemStackTransformModel extends Model {
         registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
         registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
+        registerTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
@@ -73,6 +75,8 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isIngredient, IngredientProperty::new);
         registerProperty(WynnItemMatchers::isMaterial, MaterialProperty::new);
         registerProperty(WynnItemMatchers::isHorse, HorseProperty::new);
+        registerProperty(WynnItemMatchers::isServerItem, ServerCountProperty::new);
+        registerProperty(itemStack -> true, SearchOverlayProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -110,6 +114,6 @@ public class ItemStackTransformModel extends Model {
 
     @FunctionalInterface
     private interface PropertyWriter {
-        ItemProperty attach(WynnItemStack stack);
+        void attach(WynnItemStack stack);
     }
 }

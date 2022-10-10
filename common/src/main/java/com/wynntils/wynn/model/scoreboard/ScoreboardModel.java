@@ -13,8 +13,8 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
-import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -154,8 +154,8 @@ public final class ScoreboardModel extends Model {
 
         for (Segment segment : removedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b.contains(segment.getType())) {
-                    scoreboardHandler.a.onSegmentRemove(segment, segment.getType());
+                if (scoreboardHandler.b().contains(segment.getType())) {
+                    scoreboardHandler.a().onSegmentRemove(segment, segment.getType());
                 }
             }
         }
@@ -171,8 +171,8 @@ public final class ScoreboardModel extends Model {
 
         for (Segment segment : changedSegments) {
             for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b.contains(segment.getType())) {
-                    scoreboardHandler.a.onSegmentChange(segment, segment.getType());
+                if (scoreboardHandler.b().contains(segment.getType())) {
+                    scoreboardHandler.a().onSegmentChange(segment, segment.getType());
                 }
             }
         }
@@ -303,7 +303,7 @@ public final class ScoreboardModel extends Model {
 
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(new QuestHandler(), SegmentType.Quest);
+        registerHandler(QuestManager.SCOREBOARD_HANDLER, SegmentType.Quest);
 
         startThread();
     }
@@ -352,8 +352,9 @@ public final class ScoreboardModel extends Model {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        ObjectiveHandler.resetObjectives();
-        QuestHandler.resetCurrentQuest();
+        for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
+            scoreboardHandler.a().resetHandler();
+        }
     }
 
     public enum SegmentType {

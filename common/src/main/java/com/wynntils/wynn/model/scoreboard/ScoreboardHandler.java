@@ -8,4 +8,6 @@ public interface ScoreboardHandler {
     void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType);
 
     void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType);
+
+    void resetHandler();
 }

@@ -6,10 +6,10 @@ package com.wynntils.mc.event;
 
 import net.minecraft.world.entity.LivingEntity;
 
-public class LivingEvent extends EntityEvent {
+public abstract class LivingEvent extends EntityEvent {
     private final LivingEntity entityLiving;
 
-    public LivingEvent(LivingEntity entity) {
+    protected LivingEvent(LivingEntity entity) {
         super(entity);
         this.entityLiving = entity;
     }

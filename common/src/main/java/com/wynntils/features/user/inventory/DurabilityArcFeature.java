@@ -57,7 +57,7 @@ public class DurabilityArcFeature extends UserFeature {
         // calculate color of arc
         float durabilityPercent = durability.getDurabilityPercent();
         int colorInt = Mth.hsvToRgb(Math.max(0f, durabilityPercent) / 3f, 1f, 1f);
-        CustomColor color = CustomColor.fromInt(colorInt).setAlpha(160);
+        CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
         // draw
         RenderUtils.drawArc(color, slotX, slotY, hotbar ? 0 : 200, durabilityPercent, 6, 8);

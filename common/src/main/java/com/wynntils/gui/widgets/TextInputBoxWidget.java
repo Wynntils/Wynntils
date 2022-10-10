@@ -8,56 +8,56 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.SearchableScreen;
+import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: This is a very basic text box.
+// FIXME: Add selection support to this class to be a fully working text box
 public class TextInputBoxWidget extends AbstractWidget {
-    protected long lastKeyDownCheck = 0;
-    protected long firstKeyDown = 0;
-
-    protected char defaultCursorChar = '_';
-    protected Consumer<String> onUpdateConsumer;
+    private static final char DEFAULT_CURSOR_CHAR = '_';
+    private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
-    protected int cursorPosition = 0;
-    protected long lastCursorSwitch = 0;
-    protected boolean renderCursor = true;
+    private int cursorPosition = 0;
+    private long lastCursorSwitch = 0;
+    private boolean renderCursor = true;
+    private CustomColor renderColor = CommonColors.WHITE;
 
-    protected final SearchableScreen searchableScreen;
+    protected final TextboxScreen textboxScreen;
 
-    public TextInputBoxWidget(
+    protected TextInputBoxWidget(
             int x,
             int y,
             int width,
             int height,
             Component boxTitle,
             Consumer<String> onUpdateConsumer,
-            SearchableScreen searchableScreen) {
+            TextboxScreen textboxScreen) {
         super(x, y, width, height, boxTitle);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.searchableScreen = searchableScreen;
+        this.textboxScreen = textboxScreen;
     }
 
     public TextInputBoxWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, TextComponent.EMPTY);
         this.onUpdateConsumer = onUpdateConsumer;
-        this.searchableScreen = searchableScreen;
+        this.textboxScreen = textboxScreen;
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
         poseStack.translate(this.x, this.y, 0);
@@ -73,9 +73,11 @@ public class TextInputBoxWidget extends AbstractWidget {
                         2,
                         this.width,
                         2,
+                        this.height - 2,
                         0,
-                        CommonColors.WHITE,
+                        renderColor,
                         HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -123,15 +125,20 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(poseStack, CommonColors.WHITE, 0, 0, this.width, this.height, 0, 2);
+        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-        searchableScreen.setFocusedTextInput(this);
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
 
-        return false;
+        if (this.isHovered) {
+            textboxScreen.setFocusedTextInput(this);
+        } else {
+            textboxScreen.setFocusedTextInput(null);
+        }
+
+        return true;
     }
 
     @Override
@@ -153,42 +160,88 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
+        if (Screen.isCopy(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+            return true;
+        } else if (Screen.isPaste(keyCode)) {
+            this.setTextBoxInput((textBoxInput.substring(0, cursorPosition)
+                    + Minecraft.getInstance().keyboardHandler.getClipboard()
+                    + textBoxInput.substring(cursorPosition)));
+            return true;
+        } else if (Screen.isCut(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+            setTextBoxInput("");
+
+            return true;
+        }
+
         if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
-            if (textBoxInput.length() == 0) {
-                return false;
+            if (textBoxInput.isEmpty()) {
+                return true;
+            }
+
+            if (Screen.hasControlDown()) {
+                setTextBoxInput("");
+                return true;
             }
 
             textBoxInput =
                     textBoxInput.substring(0, Math.max(0, cursorPosition - 1)) + textBoxInput.substring(cursorPosition);
             cursorPosition = Math.max(0, cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_DELETE) {
+            if (textBoxInput.isEmpty()) {
+                return true;
+            }
+
+            if (Screen.hasControlDown()) {
+                setTextBoxInput(textBoxInput.substring(0, cursorPosition));
+                return true;
+            }
+
+            textBoxInput = textBoxInput.substring(0, cursorPosition)
+                    + textBoxInput.substring(Math.min(textBoxInput.length(), cursorPosition + 1));
+            this.onUpdateConsumer.accept(this.getTextBoxInput());
+            return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            if (Screen.hasControlDown()) {
+                cursorPosition = 0;
+                return true;
+            }
+
             cursorPosition = Math.max(0, cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            if (Screen.hasControlDown()) {
+                cursorPosition = textBoxInput.length();
+                return true;
+            }
+
             cursorPosition = Math.min(textBoxInput.length(), cursorPosition + 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return false;
+            return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override
     public boolean isFocused() {
-        return searchableScreen.getFocusedTextInput() == this;
+        return textboxScreen.getFocusedTextInput() == this;
     }
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
-    protected String getRenderCursorChar() {
+    private String getRenderCursorChar() {
         String cursorChar;
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {
             renderCursor = !renderCursor;
@@ -200,7 +253,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void removeFocus() {
-        searchableScreen.setFocusedTextInput(null);
+        textboxScreen.setFocusedTextInput(null);
     }
 
     public void setTextBoxInput(String textBoxInput) {
@@ -209,11 +262,19 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
 
-    public char getCursorChar() {
-        return this.defaultCursorChar;
+    private char getCursorChar() {
+        return this.DEFAULT_CURSOR_CHAR;
     }
 
     public String getTextBoxInput() {
         return textBoxInput;
+    }
+
+    public void setRenderColor(CustomColor renderColor) {
+        this.renderColor = renderColor;
+    }
+
+    public CustomColor getRenderColor() {
+        return renderColor;
     }
 }

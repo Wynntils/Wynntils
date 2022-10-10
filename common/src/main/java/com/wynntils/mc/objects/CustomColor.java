@@ -21,7 +21,10 @@ public class CustomColor {
     private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})");
     private static final Pattern STRING_PATTERN = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");
 
-    public int r, g, b, a;
+    public final int r;
+    public final int g;
+    public final int b;
+    public final int a;
 
     public CustomColor(int r, int g, int b) {
         this(r, g, b, 255);
@@ -45,6 +48,14 @@ public class CustomColor {
         this.a = (int) (a * 255);
     }
 
+    public CustomColor(CustomColor color) {
+        this(color.r, color.g, color.b, color.a);
+    }
+
+    public CustomColor(CustomColor color, int alpha) {
+        this(color.r, color.g, color.b, alpha);
+    }
+
     public CustomColor(String toParse) {
         String noSpace = toParse.replaceAll(" ", "");
 
@@ -64,10 +75,6 @@ public class CustomColor {
         this.a = parseTry.a;
     }
 
-    public CustomColor(CustomColor color) {
-        this(color.r, color.g, color.b, color.a);
-    }
-
     public static CustomColor fromChatFormatting(ChatFormatting cf) {
         return fromInt(cf.getColor() | 0xFF000000);
     }
@@ -85,7 +92,7 @@ public class CustomColor {
         if (!hexMatcher.matches()) return CustomColor.NONE;
 
         // parse hex
-        return fromInt(Integer.parseInt(hexMatcher.group(1), 16)).setAlpha(255);
+        return fromInt(Integer.parseInt(hexMatcher.group(1), 16)).withAlpha(255);
     }
 
     /** "rgba(r,g,b,a)" format as defined in toString() */
@@ -102,22 +109,12 @@ public class CustomColor {
                 Integer.parseInt(stringMatcher.group(4)));
     }
 
-    public CustomColor setAlpha(int a) {
-        this.a = a;
-        return this;
-    }
-
-    public CustomColor setAlpha(float a) {
-        this.a = (int) (a * 255);
-        return this;
-    }
-
     public CustomColor withAlpha(int a) {
-        return new CustomColor(this).setAlpha(a);
+        return new CustomColor(this, a);
     }
 
     public CustomColor withAlpha(float a) {
-        return new CustomColor(this).setAlpha(a);
+        return new CustomColor(this, (int) (a * 255));
     }
 
     /** 0xAARRGGBB format */
@@ -153,14 +150,15 @@ public class CustomColor {
 
     @Override
     public String toString() {
-        return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+        return toHexString();
     }
 
     public static class CustomColorSerializer implements JsonSerializer<CustomColor>, JsonDeserializer<CustomColor> {
         @Override
         public CustomColor deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            return CustomColor.fromString(json.getAsString());
+            CustomColor customColor = CustomColor.fromHexString(json.getAsString());
+            return customColor == NONE ? CustomColor.fromString(json.getAsString()) : customColor;
         }
 
         @Override

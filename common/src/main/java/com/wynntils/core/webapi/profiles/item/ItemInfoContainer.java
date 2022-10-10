@@ -16,13 +16,19 @@ import net.minecraft.world.item.Items;
 public class ItemInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
-    String material;
-    ItemType type;
-    String set;
-    ItemDropType dropType;
-    String armorColor;
+    private final String material;
+    private final ItemType type;
+    private final String set;
+    private final ItemDropType dropType;
+    private final String armorColor;
 
-    public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {}
+    public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {
+        this.material = material;
+        this.type = type;
+        this.set = set;
+        this.dropType = dropType;
+        this.armorColor = armorColor;
+    }
 
     public ItemDropType getDropType() {
         return dropType;
