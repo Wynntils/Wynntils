@@ -12,8 +12,10 @@ import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
@@ -30,6 +32,7 @@ import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -37,6 +40,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
+    @Shadow
+    public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
+
     private static boolean isRenderThread() {
         return (McUtils.mc().isSameThread());
     }
@@ -202,5 +208,11 @@ public abstract class ClientPacketListenerMixin {
     private void onDisconnectPre(Component reason, CallbackInfo ci) {
         // Unexpected disconnect
         EventFactory.onDisconnect();
+    }
+
+    @Inject(method = "handleAddPlayer", at = @At("HEAD"))
+    private void handleAddPlayer(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onPlayerJoinedWorld(packet, this.getPlayerInfo(packet.getPlayerId()));
     }
 }

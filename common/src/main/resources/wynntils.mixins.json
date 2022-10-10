@@ -23,6 +23,7 @@
     "MouseHandlerMixin",
     "MultiPlayerGameModeMixin",
     "PlayerMixin",
+    "PlayerRendererMixin",
     "PotionItemMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
