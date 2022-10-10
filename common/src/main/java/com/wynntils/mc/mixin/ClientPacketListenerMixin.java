@@ -212,6 +212,7 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(method = "handleAddPlayer", at = @At("HEAD"))
     private void handleAddPlayer(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
         EventFactory.onPlayerJoinedWorld(packet, this.getPlayerInfo(packet.getPlayerId()));
     }
 }
