@@ -49,6 +49,7 @@ public class UserInfoModel extends Model {
 
                     return true;
                 })
+                .onError(() -> {})
                 .build();
 
         WebManager.getHandler().addAndDispatch(req, true);
