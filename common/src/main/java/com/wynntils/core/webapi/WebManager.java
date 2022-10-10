@@ -317,6 +317,10 @@ public final class WebManager extends CoreManager {
         return apiUrls.get(key);
     }
 
+    public static boolean isAthenaOnline() {
+        return (account != null && account.isConnected());
+    }
+
     public static boolean isTerritoryListLoaded() {
         return !territories.isEmpty();
     }
