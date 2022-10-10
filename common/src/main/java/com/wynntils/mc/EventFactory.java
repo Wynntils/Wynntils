@@ -38,6 +38,7 @@ import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -46,6 +47,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -78,13 +80,17 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -132,6 +138,15 @@ public final class EventFactory {
     }
 
     // region Render Events
+    public static NametagRenderEvent onNameTagRender(
+            AbstractClientPlayer entity,
+            Component displayName,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight) {
+        return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
+    }
+
     public static void onRenderLast(
             LevelRenderer context,
             PoseStack poseStack,
@@ -337,6 +352,18 @@ public final class EventFactory {
     // endregion
 
     // region Server Events
+    public static void onPlayerJoinedWorld(ClientboundAddPlayerPacket packet, PlayerInfo playerInfo) {
+        post(new PlayerJoinedWorldEvent(
+                packet.getEntityId(),
+                packet.getPlayerId(),
+                packet.getX(),
+                packet.getY(),
+                packet.getZ(),
+                packet.getxRot(),
+                packet.getyRot(),
+                playerInfo));
+    }
+
     public static void onDisconnect() {
         post(new DisconnectedEvent());
     }
