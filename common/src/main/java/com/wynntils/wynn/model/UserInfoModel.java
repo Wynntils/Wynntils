@@ -29,7 +29,7 @@ public class UserInfoModel extends Model {
         if (!WebManager.isAthenaOnline() || WebManager.getApiUrls().isEmpty()) return;
         if (fetching.contains(uuid)) return;
 
-        fetching.add(uuid); // temporary null, avoid extra loads
+        fetching.add(uuid); // temporary, avoid extra loads
 
         JsonObject body = new JsonObject();
         body.addProperty("uuid", uuid.toString());
