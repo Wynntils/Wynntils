@@ -74,6 +74,8 @@ public class UserInfoModel extends Model {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerJoinedWorldEvent event) {
+        if (event.getPlayerId() == null) return;
+
         loadUser(event.getPlayerId());
     }
 }
