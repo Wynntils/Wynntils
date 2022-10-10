@@ -2,6 +2,7 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
+    "ChestMenuMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "CommandSuggestionsMixin",

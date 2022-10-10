@@ -9,13 +9,13 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.CrashReportManager;
-import com.wynntils.features.alwayson.FixSpellOverwriteFeature;
-import com.wynntils.features.alwayson.LootrunFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.statemanaged.DataStorageFeature;
+import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
+import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
@@ -35,6 +35,7 @@ import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
+import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
@@ -69,6 +70,7 @@ import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
+import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +92,7 @@ public final class FeatureRegistry {
         // always on
         registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
+        registerFeature(new DataStorageFeature());
 
         // user
         registerFeature(new AbilityRefreshRedirectFeature());
@@ -124,6 +127,7 @@ public final class FeatureRegistry {
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new LobbyUptimeFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());
@@ -155,7 +159,7 @@ public final class FeatureRegistry {
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
-        KeyBindManager.loadKeybindConfigFile();
+        McUtils.mc().options.load();
 
         addCrashCallbacks();
     }

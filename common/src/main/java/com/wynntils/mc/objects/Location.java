@@ -11,7 +11,7 @@ import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-public class Location extends Vector3d {
+public class Location extends Vector3d implements Position {
     public Location(double x, double y, double z) {
         super(x, y, z);
     }
@@ -128,5 +128,20 @@ public class Location extends Vector3d {
 
     public String toString() {
         return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
+    }
+
+    @Override
+    public double x() {
+        return x;
+    }
+
+    @Override
+    public double y() {
+        return y;
+    }
+
+    @Override
+    public double z() {
+        return z;
     }
 }

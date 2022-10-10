@@ -7,17 +7,20 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
+import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
@@ -39,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -292,6 +296,30 @@ public final class WebManager extends CoreManager {
         } else {
             return new HashMap<>();
         }
+    }
+
+    public static void getServerList(Consumer<HashMap<String, ServerProfile>> onReceive) {
+        if (apiUrls == null || !isAthenaOnline()) return;
+        String url = apiUrls.get("Athena") + "/cache/get/serverList";
+
+        Request request = new RequestBuilder(url, "serverList")
+                .handleJsonObject((con, json) -> {
+                    JsonObject servers = json.getAsJsonObject("servers");
+                    HashMap<String, ServerProfile> result = new HashMap<>();
+
+                    long serverTime = Long.parseLong(con.getHeaderField("timestamp"));
+                    for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                        ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
+                        profile.matchTime(serverTime);
+
+                        result.put(entry.getKey(), profile);
+                    }
+
+                    onReceive.accept(result);
+                    return true;
+                })
+                .build();
+        handler.addAndDispatch(request, true);
     }
 
     private static void updateCurrentSplash() {
