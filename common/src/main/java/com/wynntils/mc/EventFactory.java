@@ -36,6 +36,7 @@ import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -76,7 +77,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -130,6 +133,15 @@ public final class EventFactory {
     }
 
     // region Render Events
+    public static NametagRenderEvent onNameTagRender(
+            AbstractClientPlayer entity,
+            Component displayName,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight) {
+        return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
+    }
+
     public static void onRenderLast(
             LevelRenderer context,
             PoseStack poseStack,

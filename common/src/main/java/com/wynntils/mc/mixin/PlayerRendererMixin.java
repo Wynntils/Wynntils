@@ -5,8 +5,9 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.NametagRenderEvent;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -14,7 +15,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,7 +30,8 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
     @Inject(
             method =
                     "renderNameTag(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     public void redirectNameTagRender(
             AbstractClientPlayer entity,
             Component displayName,
@@ -38,13 +39,13 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        List<MutableComponent> injected = List.of(
-                new TextComponent("AItem").withStyle(ChatFormatting.AQUA),
-                new TextComponent("BItem").withStyle(ChatFormatting.AQUA),
-                new TextComponent("CItem").withStyle(ChatFormatting.AQUA),
-                new TextComponent("DItem").withStyle(ChatFormatting.AQUA),
-                new TextComponent("EItem").withStyle(ChatFormatting.AQUA),
-                new TextComponent("Wynntils Developer").withStyle(ChatFormatting.GOLD));
+        NametagRenderEvent event = EventFactory.onNameTagRender(entity, displayName, matrixStack, buffer, packedLight);
+        if (event.isCanceled()) {
+            ci.cancel();
+            return;
+        }
+
+        List<MutableComponent> injected = event.getInjectedLines();
 
         for (MutableComponent component : injected) {
             super.renderNameTag(entity, component, matrixStack, buffer, packedLight);
