@@ -14,6 +14,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.objects.account.WynntilsUser;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,12 +23,13 @@ public class UserInfoModel extends Model {
     public static void init() {}
 
     private static final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
+    private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
     public static void loadUser(UUID uuid) {
         if (!WebManager.isAthenaOnline() || WebManager.getApiUrls().isEmpty()) return;
-        if (users.containsKey(uuid)) return;
+        if (fetching.contains(uuid)) return;
 
-        users.putIfAbsent(uuid, null); // temporary null, avoid extra loads
+        fetching.add(uuid); // temporary null, avoid extra loads
 
         JsonObject body = new JsonObject();
         body.addProperty("uuid", uuid.toString());
@@ -43,6 +45,7 @@ public class UserInfoModel extends Model {
                             uuid,
                             new WynntilsUser(
                                     AccountType.valueOf(user.get("accountType").getAsString())));
+                    fetching.remove(uuid);
 
                     return true;
                 })
