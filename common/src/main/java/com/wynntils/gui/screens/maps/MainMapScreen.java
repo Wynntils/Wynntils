@@ -151,7 +151,7 @@ public class MainMapScreen extends Screen {
                 poseStack,
                 cursorX,
                 cursorZ,
-                1.5f,
+                MapFeature.INSTANCE.playerPointerScale,
                 false,
                 MapFeature.INSTANCE.pointerColor,
                 MapFeature.INSTANCE.pointerType);
@@ -190,7 +190,7 @@ public class MainMapScreen extends Screen {
                     mapWidth,
                     mapHeight,
                     1f / currentZoom,
-                    1f,
+                    MapFeature.INSTANCE.poiScale,
                     new Pair<>(mouseX, mouseY),
                     MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
                     false,
