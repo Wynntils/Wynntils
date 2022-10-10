@@ -120,8 +120,12 @@ public class UpdateManager extends CoreManager {
             URL downloadUrl = new URL(LAST_BUILD_DOWNLOAD_PATH + foundArtifact.a());
             InputStream in = downloadUrl.openStream();
 
-            File newJar =
-                    new File(new File(WynntilsMod.getModStorageDir("updates").toURI()), "");
+            File updatesDir = new File(WynntilsMod.getModStorageDir("updates").toURI());
+            FileUtils.mkdir(updatesDir);
+
+            File newJar = new File(updatesDir, "wynntils-update.jar");
+            FileUtils.createNewFile(newJar);
+
             Files.copy(in, newJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             future.complete(UpdateResult.SUCCESSFUL);
