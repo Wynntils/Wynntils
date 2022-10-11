@@ -9,6 +9,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
@@ -40,6 +41,12 @@ public class CustomNametagRendererFeature extends UserFeature {
     public void onNameTagRender(NametagRenderEvent event) {
         if (hideAllNametags) {
             event.setCanceled(true);
+            return;
+        }
+
+        // If we are viewing this player's gears, do not show plus info
+        if (McUtils.mc().screen instanceof GearViewerScreen gearViewerScreen
+                && gearViewerScreen.getPlayer() == event.getEntity()) {
             return;
         }
 

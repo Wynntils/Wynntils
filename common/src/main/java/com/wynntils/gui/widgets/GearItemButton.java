@@ -7,7 +7,6 @@ package com.wynntils.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.GearViewerScreen;
-import com.wynntils.mc.objects.CommonColors;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
@@ -25,7 +24,8 @@ public class GearItemButton extends AbstractButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, x, y, 0, width, height);
+        if (itemStack == null) return;
+
         RenderUtils.renderGuiItem(
                 itemStack,
                 (int) (gearViewerScreen.getTranslationX() + this.x),

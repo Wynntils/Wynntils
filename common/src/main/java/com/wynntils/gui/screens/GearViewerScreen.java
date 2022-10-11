@@ -5,16 +5,17 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.GearItemButton;
 import com.wynntils.gui.widgets.ViewPlayerStatsButton;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,21 +23,28 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class GearViewerScreen extends Screen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
             List.of(new TranslatableComponent("screens.wynntils.gearViewer.viewStats"));
 
     private final Player player;
+    private final ItemStack heldItem;
+    private final List<ItemStack> armorItems;
 
     public GearViewerScreen(Player player) {
         super(TextComponent.EMPTY);
         this.player = player;
-        this.player.setItemSlot(EquipmentSlot.MAINHAND, getParsedItemStack(player.getMainHandItem()));
+        this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
+
+        this.armorItems = new ArrayList<>();
+        for (ItemStack armorSlot : player.getArmorSlots()) {
+            armorItems.add(WynnItemUtils.getParsedItemStack(armorSlot));
+        }
+
+        Collections.reverse(armorItems);
     }
 
     @Override
@@ -54,7 +62,12 @@ public class GearViewerScreen extends Screen {
                 18,
                 18,
                 this,
-                player.getMainHandItem()));
+                heldItem));
+
+        for (int i = 0; i < armorItems.size(); i++) {
+            ItemStack armorItem = armorItems.get(i);
+            this.addRenderableWidget(new GearItemButton(11, 11 + i * 18, 18, 18, this, armorItem));
+        }
     }
 
     @Override
@@ -114,6 +127,7 @@ public class GearViewerScreen extends Screen {
     private void renderPlayerModel() {
         float posX = this.width / 2f;
         float posY = this.height / 2f;
+
         InventoryScreen.renderEntityInInventory((int) posX, (int) posY + 32, 30, 0, 0, player);
     }
 
@@ -135,6 +149,16 @@ public class GearViewerScreen extends Screen {
         return true;
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == McUtils.options().keyInventory.key.getValue()) {
+            this.onClose();
+            return true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
     public float getTranslationX() {
         return (this.width - Texture.GEAR_VIEWER_BACKGROUND.width()) / 2f;
     }
@@ -143,25 +167,7 @@ public class GearViewerScreen extends Screen {
         return (this.height - Texture.GEAR_VIEWER_BACKGROUND.height()) / 2f;
     }
 
-    private ItemStack getParsedItemStack(ItemStack itemStack) {
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
-
-        // can't create lore on crafted items
-        if (itemName.startsWith("Crafted")) {
-            itemStack.setHoverName(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
-            return itemStack;
-        }
-
-        // disable viewing unidentified items
-        if (itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6) {
-            itemStack.setHoverName(new TextComponent("Unidentified Item")
-                    .withStyle(
-                            ItemTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
-            return itemStack;
-        }
-
-        return itemStack;
+    public Player getPlayer() {
+        return player;
     }
 }
