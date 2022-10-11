@@ -20,6 +20,7 @@ import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
+import com.wynntils.features.user.CosmeticsPreviewFeature;
 import com.wynntils.features.user.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.user.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.CustomNametagRendererFeature;
@@ -101,6 +102,7 @@ public final class FeatureRegistry {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
+        registerFeature(new CosmeticsPreviewFeature());
         registerFeature(new CustomNametagRendererFeature());
         registerFeature(new HighlightMatchingItemsFeature());
         registerFeature(new CustomBarsOverlayFeature());

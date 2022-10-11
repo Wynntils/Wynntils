@@ -19,6 +19,7 @@
   "feature.wynntils.chatItem.name": "Chat Item",
   "feature.wynntils.commands.name": "Custom Wynntils Command",
   "feature.wynntils.connectionProgress.name": "Connection Progress",
+  "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Model Preview",
   "feature.wynntils.customBarsOverlay.name": "Custom Health/Mana Bar",
   "feature.wynntils.customBarsOverlay.overlay.awakenedProgressBar.name": "Awakened Bar",
   "feature.wynntils.customBarsOverlay.overlay.baseBar.flip.description": "Should the filling of the bar be flipped?",
