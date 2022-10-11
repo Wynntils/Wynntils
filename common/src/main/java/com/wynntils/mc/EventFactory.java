@@ -107,6 +107,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -116,6 +117,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
@@ -325,6 +327,18 @@ public final class EventFactory {
 
     public static Event onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
         PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, pos, hitVec);
+        return post(event);
+    }
+
+    public static Event onInteract(Player player, InteractionHand hand, Entity target) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+        return post(event);
+    }
+
+    public static Event onInteractAt(
+            Player player, InteractionHand hand, Entity target, EntityHitResult entityHitResult) {
+        PlayerInteractEvent.InteractAt event =
+                new PlayerInteractEvent.InteractAt(player, hand, target, entityHitResult);
         return post(event);
     }
 
