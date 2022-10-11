@@ -10,11 +10,11 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.event.NametagRenderEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.utils.RaycastUtils;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +72,7 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     private static void getItemComponent(NametagRenderEvent event, ItemStack itemStack) {
-        String itemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String itemName = WynnItemUtils.getTranslatedName(itemStack);
 
         if (itemName.contains("Crafted")) {
             event.addInjectedLine(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
