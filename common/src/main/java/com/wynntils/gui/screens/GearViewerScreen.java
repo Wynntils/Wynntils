@@ -5,7 +5,6 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
@@ -13,6 +12,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.GearItemButton;
 import com.wynntils.gui.widgets.ViewPlayerStatsButton;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Widget;
@@ -144,9 +144,7 @@ public class GearViewerScreen extends Screen {
     }
 
     private ItemStack getParsedItemStack(ItemStack itemStack) {
-        String itemName = WebManager.getTranslatedReferences()
-                .get(ComponentUtils.getUnformatted(itemStack.getHoverName()))
-                .replace("֎", "");
+        String itemName = WynnItemUtils.getTranslatedName(itemStack);
 
         // can't create lore on crafted items
         if (itemName.startsWith("Crafted")) {
