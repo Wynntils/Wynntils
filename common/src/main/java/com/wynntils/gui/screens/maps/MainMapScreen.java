@@ -8,9 +8,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.overlays.map.MapFeature;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
@@ -20,6 +23,7 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
@@ -136,6 +140,24 @@ public class MainMapScreen extends Screen {
         renderBackground(poseStack);
 
         renderCursor(poseStack);
+
+        renderCoordinates(poseStack, mouseX, mouseY);
+    }
+
+    private void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
+        int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+        int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        gameX + ", " + gameZ,
+                        this.centerX,
+                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextShadow.OUTLINE);
     }
 
     private void renderCursor(PoseStack poseStack) {
@@ -151,7 +173,7 @@ public class MainMapScreen extends Screen {
                 poseStack,
                 cursorX,
                 cursorZ,
-                1.5f,
+                MapFeature.INSTANCE.playerPointerScale,
                 false,
                 MapFeature.INSTANCE.pointerColor,
                 MapFeature.INSTANCE.pointerType);
@@ -190,7 +212,7 @@ public class MainMapScreen extends Screen {
                     mapWidth,
                     mapHeight,
                     1f / currentZoom,
-                    1f,
+                    MapFeature.INSTANCE.poiScale,
                     new Pair<>(mouseX, mouseY),
                     MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
                     false,
@@ -234,8 +256,20 @@ public class MainMapScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (McUtils.mc().player.isShiftKeyDown()
+                    && CompassModel.getCompassLocation().isPresent()) {
+                Location location = CompassModel.getCompassLocation().get();
+                updateMapCenter((float) location.x, (float) location.z);
+                return true;
+            }
+
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (hovered instanceof WaypointPoi) {
+                CompassModel.reset();
+                return true;
+            }
+
             if (hovered != null) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 CompassModel.setCompassLocation(new Location(hovered.getLocation()));

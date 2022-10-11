@@ -5,50 +5,33 @@
 package com.wynntils.mc.event;
 
 import com.google.common.base.Preconditions;
-import javax.annotation.Nonnull;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 public class PlayerInteractEvent extends PlayerEvent {
     private final InteractionHand hand;
-    private final BlockPos pos;
-
-    private final Direction face;
-
     private InteractionResult cancellationResult = InteractionResult.PASS;
 
-    private PlayerInteractEvent(Player player, InteractionHand hand, BlockPos pos, Direction face) {
-        super(Preconditions.checkNotNull(player, "Null player in PlayerInteractEvent!"));
-        this.hand = Preconditions.checkNotNull(hand, "Null hand in PlayerInteractEvent!");
-        this.pos = Preconditions.checkNotNull(pos, "Null position in PlayerInteractEvent!");
-        this.face = face;
+    private PlayerInteractEvent(Player player, InteractionHand hand) {
+        super(player);
+        this.hand = hand;
     }
 
-    @Nonnull
     public InteractionHand getHand() {
         return this.hand;
     }
 
-    @Nonnull
     public ItemStack getItemStack() {
         return this.getPlayer().getItemInHand(this.hand);
-    }
-
-    @Nonnull
-    public BlockPos getPos() {
-        return this.pos;
-    }
-
-    public Direction getFace() {
-        return this.face;
     }
 
     public Level getWorld() {
@@ -65,12 +48,14 @@ public class PlayerInteractEvent extends PlayerEvent {
 
     @Cancelable
     public static class RightClickBlock extends PlayerInteractEvent {
+        private final BlockPos pos;
         private Event.Result useBlock = Event.Result.DEFAULT;
         private Event.Result useItem = Event.Result.DEFAULT;
         private final BlockHitResult hitVec;
 
         public RightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {
-            super(player, hand, pos, hitVec.getDirection());
+            super(player, hand);
+            this.pos = Preconditions.checkNotNull(pos, "Null position in PlayerInteractEvent!");
             this.hitVec = hitVec;
         }
 
@@ -94,6 +79,10 @@ public class PlayerInteractEvent extends PlayerEvent {
             this.useItem = triggerItem;
         }
 
+        public BlockPos getPos() {
+            return this.pos;
+        }
+
         @Override
         public void setCanceled(boolean canceled) {
             super.setCanceled(canceled);
@@ -101,6 +90,34 @@ public class PlayerInteractEvent extends PlayerEvent {
                 this.useBlock = Event.Result.DENY;
                 this.useItem = Event.Result.DENY;
             }
+        }
+    }
+
+    @Cancelable
+    public static class Interact extends PlayerInteractEvent {
+        private final Entity target;
+
+        public Interact(Player player, InteractionHand hand, Entity target) {
+            super(player, hand);
+            this.target = target;
+        }
+
+        public Entity getTarget() {
+            return target;
+        }
+    }
+
+    @Cancelable
+    public static class InteractAt extends Interact {
+        private final EntityHitResult entityHitResult;
+
+        public InteractAt(Player player, InteractionHand hand, Entity target, EntityHitResult entityHitResult) {
+            super(player, hand, target);
+            this.entityHitResult = entityHitResult;
+        }
+
+        public EntityHitResult getEntityHitResult() {
+            return entityHitResult;
         }
     }
 }

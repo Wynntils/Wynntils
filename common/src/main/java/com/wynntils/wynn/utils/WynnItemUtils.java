@@ -4,10 +4,12 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
@@ -27,6 +29,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemUtils {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
@@ -292,5 +295,12 @@ public final class WynnItemUtils {
             if (lore) toRemove.add(c);
         }
         tooltip.removeAll(toRemove);
+    }
+
+    public static String getTranslatedName(ItemStack itemStack) {
+        String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        return WebManager.getTranslatedReferences()
+                .getOrDefault(unformattedItemName, unformattedItemName)
+                .replace("֎", "");
     }
 }

@@ -52,11 +52,11 @@ public class ClassInfoButton extends AbstractButton {
                 classInfo.itemStack(),
                 (int) (this.x + this.width * 0.08f),
                 (int) (this.y + this.height * 0.25f),
-                this.height * 0.025f);
+                this.height * 0.03f);
 
         poseStack.pushPose();
         poseStack.translate(this.x + this.width * 0.25f, this.y + this.height * 0.16f, 0f);
-        float scale = this.height * 0.025f;
+        float scale = this.height * 0.032f;
         poseStack.scale(scale, scale, 0f);
 
         FontRenderer.getInstance()

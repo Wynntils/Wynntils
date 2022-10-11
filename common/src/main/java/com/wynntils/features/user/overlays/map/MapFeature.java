@@ -31,6 +31,12 @@ public class MapFeature extends UserFeature {
     @Config
     public float minScaleForLabels = 1f;
 
+    @Config
+    public float playerPointerScale = 1.5f;
+
+    @Config
+    public float poiScale = 1f;
+
     @RegisterKeyBind
     public final KeyBind openMapKeybind = new KeyBind("Open Full Screen Map", GLFW.GLFW_KEY_M, false, () -> {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind

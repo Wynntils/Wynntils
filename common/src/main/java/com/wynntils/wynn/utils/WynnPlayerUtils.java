@@ -18,4 +18,13 @@ public final class WynnPlayerUtils {
 
         return PLAYER_GHOST_REGEX.matcher(team.getName()).find();
     }
+
+    public static boolean isNpc(Player player) {
+        return player.getScoreboardName().contains("§");
+    }
+
+    // Returns true if the player is on the same server and is not an npc
+    public static boolean isLocalPlayer(Player player) {
+        return !isNpc(player) && !isPlayerGhost(player);
+    }
 }

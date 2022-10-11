@@ -347,14 +347,16 @@ public class CharacterSelectorScreen extends Screen {
         McUtils.player().resetFallDistance();
         McUtils.player().setSwimming(false);
 
-        int scale = this.height / 5;
+        int scale = this.height / 4;
         InventoryScreen.renderEntityInInventory(
                 (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
 
     private void setScrollOffset(int delta) {
         scrollOffset = MathUtils.clamp(
-                scrollOffset - delta, 0, Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
+                scrollOffset - delta * CHARACTER_INFO_PER_PAGE,
+                0,
+                Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
     }
 
     private void reloadButtons() {
