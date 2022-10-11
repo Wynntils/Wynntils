@@ -14,23 +14,19 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
+import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomNametagRendererFeature extends UserFeature {
-    private static final float RAYCAST_RANGE = 5f;
-
     @Config
     public boolean hideAllNametags = false;
 
@@ -59,30 +55,18 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static void addGearNametag(NametagRenderEvent event) {
         LocalPlayer player = McUtils.player();
 
-        Vec3 start = player.getEyePosition(1f);
-        Vec3 look = player.getLookAngle();
-        Vec3 direction = start.add(look.x * RAYCAST_RANGE, look.y * RAYCAST_RANGE, look.z * RAYCAST_RANGE);
-        AABB bb = player.getBoundingBox()
-                .expandTowards(look.x * RAYCAST_RANGE, look.y * RAYCAST_RANGE, look.z * RAYCAST_RANGE)
-                .expandTowards(1, 1, 1);
+        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
+        if (hitPlayer.isEmpty()) return;
+        if (hitPlayer.get() != event.getEntity()) return;
 
-        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
-                McUtils.mc().level, player, start, direction, bb, (e) -> e instanceof Player);
+        if (!WynnPlayerUtils.isLocalPlayer(player)) return;
 
-        if (hitResult == null) return;
-        if (hitResult.getEntity() != event.getEntity()) return;
-
-        Player hitPlayer = (Player) hitResult.getEntity();
-
-        if (hitPlayer.getScoreboardName().contains("§")) return; // npc
-        if (WynnPlayerUtils.isPlayerGhost(hitPlayer)) return;
-
-        ItemStack heldItem = hitPlayer.getMainHandItem();
+        ItemStack heldItem = hitPlayer.get().getMainHandItem();
         if (heldItem != null) {
             getItemComponent(event, heldItem);
         }
 
-        for (ItemStack armorStack : hitPlayer.getArmorSlots()) {
+        for (ItemStack armorStack : hitPlayer.get().getArmorSlots()) {
             getItemComponent(event, armorStack);
         }
     }
