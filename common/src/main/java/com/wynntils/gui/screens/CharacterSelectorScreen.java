@@ -354,7 +354,9 @@ public class CharacterSelectorScreen extends Screen {
 
     private void setScrollOffset(int delta) {
         scrollOffset = MathUtils.clamp(
-                scrollOffset - delta, 0, Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
+                scrollOffset - delta * CHARACTER_INFO_PER_PAGE,
+                0,
+                Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
     }
 
     private void reloadButtons() {
