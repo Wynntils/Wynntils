@@ -38,7 +38,7 @@ public class CustomNametagRendererFeature extends UserFeature {
     public boolean showAccountType = true;
 
     @Config
-    public boolean showGearOnHover = true;
+    public boolean showGearOnHover = false;
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
