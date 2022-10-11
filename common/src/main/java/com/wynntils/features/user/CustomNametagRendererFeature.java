@@ -22,6 +22,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -86,8 +87,8 @@ public class CustomNametagRendererFeature extends UserFeature {
         }
     }
 
-    private static void getItemComponent(NametagRenderEvent event, ItemStack armorStack) {
-        String itemName = ComponentUtils.getUnformatted(armorStack.getHoverName());
+    private static void getItemComponent(NametagRenderEvent event, ItemStack itemStack) {
+        String itemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
 
         if (itemName.contains("Crafted")) {
             event.addInjectedLine(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
@@ -96,6 +97,16 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         ItemProfile itemProfile = WebManager.getItemsMap().get(itemName);
         if (itemProfile == null) return;
+
+        // this solves an unidentified item showcase exploit
+        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
+        if (itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6) {
+            event.addInjectedLine(new TextComponent("Unidentified Item")
+                    .withStyle(itemProfile.getTier().getChatFormatting()));
+            return;
+        }
 
         event.addInjectedLine(new TextComponent(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting()));
