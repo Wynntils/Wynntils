@@ -256,6 +256,13 @@ public class MainMapScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (McUtils.mc().player.isShiftKeyDown()
+                    && CompassModel.getCompassLocation().isPresent()) {
+                Location location = CompassModel.getCompassLocation().get();
+                updateMapCenter((float) location.x, (float) location.z);
+                return true;
+            }
+
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
