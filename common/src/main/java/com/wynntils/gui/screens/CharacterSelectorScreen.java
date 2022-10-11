@@ -347,7 +347,7 @@ public class CharacterSelectorScreen extends Screen {
         McUtils.player().resetFallDistance();
         McUtils.player().setSwimming(false);
 
-        int scale = this.height / 5;
+        int scale = this.height / 4;
         InventoryScreen.renderEntityInInventory(
                 (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
