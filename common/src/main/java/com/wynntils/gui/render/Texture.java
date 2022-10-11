@@ -11,6 +11,7 @@ public enum Texture {
     EMERALD_COUNT_BACKGROUND("emerald_count_background.png", 24, 24),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
     GEAR_ICONS("gear_icons.png", 64, 128),
+    GEAR_VIEWER_BACKGROUND("gear_viewer_background.png", 103, 92),
     HEALTH_BAR("bars_health.png", 256, 256),
     HIGHLIGHT("highlight.png", 256, 256),
     ITEM_LOCK("item_lock.png", 16, 16),
