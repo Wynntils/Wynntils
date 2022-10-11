@@ -23,6 +23,7 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
@@ -257,6 +258,11 @@ public class MainMapScreen extends Screen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (hovered instanceof WaypointPoi) {
+                CompassModel.reset();
+                return true;
+            }
+
             if (hovered != null) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 CompassModel.setCompassLocation(new Location(hovered.getLocation()));
