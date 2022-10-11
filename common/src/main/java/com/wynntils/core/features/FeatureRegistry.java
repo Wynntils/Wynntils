@@ -30,6 +30,7 @@ import com.wynntils.features.user.FilterAdminCommandsFeature;
 import com.wynntils.features.user.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.user.FixPacketBugsFeature;
 import com.wynntils.features.user.GammabrightFeature;
+import com.wynntils.features.user.GearViewerFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.HighlightMatchingItemsFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
@@ -116,6 +117,7 @@ public final class FeatureRegistry {
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new GearViewerFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxFeature());

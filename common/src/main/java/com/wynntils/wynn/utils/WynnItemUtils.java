@@ -4,20 +4,29 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
+import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -30,6 +39,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class WynnItemUtils {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
@@ -302,5 +312,95 @@ public final class WynnItemUtils {
         return WebManager.getTranslatedReferences()
                 .getOrDefault(unformattedItemName, unformattedItemName)
                 .replace("֎", "");
+    }
+
+    // Get gear item from un-parsed wynn item
+    public static ItemStack getParsedItemStack(ItemStack itemStack) {
+        if (itemStack.getItem() == Items.AIR) {
+            return itemStack;
+        }
+
+        String itemName = WynnItemUtils.getTranslatedName(itemStack);
+
+        // can't create lore on crafted items
+        if (itemName.startsWith("Crafted")) {
+            itemStack.setHoverName(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
+            return itemStack;
+        }
+
+        // disable viewing unidentified items
+        if (itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6) {
+            itemStack.setHoverName(new TextComponent("Unidentified Item")
+                    .withStyle(
+                            ItemTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
+            return itemStack;
+        }
+
+        ItemProfile itemProfile = WebManager.getItemsMap().get(itemName);
+
+        if (itemProfile == null) {
+            return null;
+        }
+
+        // attempt to parse item itemData
+        JsonObject itemData;
+        String rawLore =
+                org.apache.commons.lang3.StringUtils.substringBeforeLast(ItemUtils.getStringLore(itemStack), "}")
+                        + "}"; // remove extra unnecessary info
+        try {
+            itemData = JsonParser.parseString(rawLore).getAsJsonObject();
+        } catch (JsonSyntaxException e) {
+            itemData = new JsonObject(); // invalid or empty itemData on item
+        }
+
+        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+
+        if (itemData.has("identifications")) {
+            JsonArray ids = itemData.getAsJsonArray("identifications");
+            for (int i = 0; i < ids.size(); i++) {
+                JsonObject idInfo = ids.get(i).getAsJsonObject();
+                String id = idInfo.get("type").getAsString();
+                float percent = idInfo.get("percent").getAsInt() / 100f;
+
+                // get wynntils name from internal wynncraft name
+                String translatedId = WebManager.getInternalIdentifications().get(id);
+                if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
+
+                // calculate value
+                IdentificationProfile idContainer = itemProfile.getStatuses().get(translatedId);
+                int value = idContainer.isFixed()
+                        ? idContainer.getBaseValue()
+                        : Math.round(idContainer.getBaseValue() * percent);
+
+                // account for mistaken rounding
+                if (value == 0) {
+                    value = 1;
+                }
+
+                idContainers.add(WynnItemUtils.identificationFromValue(
+                        null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
+            }
+        }
+
+        List<Powder> powders = new ArrayList<>();
+
+        if (itemData.has("powders")) {
+            JsonArray powderData = itemData.getAsJsonArray("powders");
+            for (int i = 0; i < powderData.size(); i++) {
+                String type = powderData.get(i).getAsJsonObject().get("type").getAsString();
+                Powder powder = Powder.valueOf(type.toUpperCase(Locale.ROOT));
+
+                powders.add(powder);
+            }
+        }
+
+        int rerolls = 0;
+        if (itemData.has("identification_rolls")) {
+            rerolls = itemData.get("identification_rolls").getAsInt();
+        }
+
+        return new GearItemStack(itemStack, itemProfile, idContainers, powders, rerolls);
     }
 }

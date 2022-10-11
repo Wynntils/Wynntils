@@ -180,6 +180,34 @@ public class GearItemStack extends WynnItemStack {
         constructTooltips(baseTooltip);
     }
 
+    /** Gear viewer constructor - used when decoding internal json */
+    public GearItemStack(
+            ItemStack oldStack,
+            ItemProfile itemProfile,
+            List<ItemIdentificationContainer> identifications,
+            List<Powder> powders,
+            int rerolls) {
+        super(oldStack);
+
+        this.itemProfile = itemProfile;
+        this.identifications = identifications;
+        this.powders = powders;
+        this.rerolls = rerolls;
+
+        CompoundTag tag = this.getOrCreateTag();
+        tag.putBoolean("Unbreakable", true);
+        if (itemProfile.getItemInfo().isArmorColorValid())
+            tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
+        this.setTag(tag);
+
+        customName = new TextComponent(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
+
+        parseIDs();
+        List<Component> baseTooltip = constructBaseTooltip();
+        constructTooltips(baseTooltip);
+    }
+
     public ItemProfile getItemProfile() {
         return itemProfile;
     }
