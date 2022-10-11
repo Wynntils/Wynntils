@@ -5,7 +5,6 @@
 package com.wynntils.mc.event;
 
 import com.google.common.base.Preconditions;
-import javax.annotation.Nonnull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,16 +22,14 @@ public class PlayerInteractEvent extends PlayerEvent {
     private InteractionResult cancellationResult = InteractionResult.PASS;
 
     private PlayerInteractEvent(Player player, InteractionHand hand) {
-        super(Preconditions.checkNotNull(player, "Null player in PlayerInteractEvent!"));
-        this.hand = Preconditions.checkNotNull(hand, "Null hand in PlayerInteractEvent!");
+        super(player);
+        this.hand = hand;
     }
 
-    @Nonnull
     public InteractionHand getHand() {
         return this.hand;
     }
 
-    @Nonnull
     public ItemStack getItemStack() {
         return this.getPlayer().getItemInHand(this.hand);
     }
@@ -82,7 +79,6 @@ public class PlayerInteractEvent extends PlayerEvent {
             this.useItem = triggerItem;
         }
 
-        @Nonnull
         public BlockPos getPos() {
             return this.pos;
         }
