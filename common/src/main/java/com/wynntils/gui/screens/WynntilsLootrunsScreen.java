@@ -274,7 +274,6 @@ public class WynntilsLootrunsScreen extends WynntilsMenuPagedScreenBase implemen
                             FontRenderer.TextShadow.NONE);
 
             poseStack.popPose();
-
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
