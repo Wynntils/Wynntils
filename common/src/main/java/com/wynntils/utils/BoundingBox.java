@@ -17,7 +17,7 @@ public class BoundingBox {
         this.z2 = z2;
     }
 
-    public boolean isInside(int x, int z) {
+    public boolean contains(int x, int z) {
         return x1 <= x && x <= x2 && z1 <= z && z <= z2;
     }
 

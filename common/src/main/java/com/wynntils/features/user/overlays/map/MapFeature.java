@@ -29,9 +29,6 @@ public class MapFeature extends UserFeature {
     public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
     @Config
-    public float minScaleForLabels = 1f;
-
-    @Config
     public float playerPointerScale = 1.5f;
 
     @Config

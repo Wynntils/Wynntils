@@ -56,12 +56,6 @@ public final class MapModel extends Model {
         loadServices();
     }
 
-    public static Optional<MapTexture> getMapForLocation(int x, int z) {
-        return MAPS.stream()
-                .filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
-                .findFirst();
-    }
-
     public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
         return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
     }

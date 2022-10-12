@@ -26,6 +26,9 @@ import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
@@ -216,20 +219,41 @@ public class MainMapScreen extends Screen {
                     false);
         }
 
-        MapRenderer.renderPOIs(
-                poseStack,
-                mapCenterX,
-                mapCenterZ,
-                centerX,
-                centerZ,
-                mapWidth,
-                mapHeight,
-                1f / currentZoom,
-                MapFeature.INSTANCE.poiScale,
-                new Pair<>(mouseX, mouseY),
-                MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
-                false);
+        hovered = null;
 
+        List<Poi> pois = MapModel.getAllPois()
+                .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                .toList();
+
+        List<Poi> filteredPois = new ArrayList<>();
+
+        // Filter and find hovered
+        for (int i = pois.size() - 1; i >= 0; i--) {
+            Poi poi = pois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
+            float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
+
+            BoundingBox box = BoundingBox.centered((int) poiRenderX, (int) poiRenderZ, (int) poiWidth, (int) poiHeight);
+
+            if (box.intersects(textureBoundingBox)) {
+                filteredPois.add(poi);
+                if (hovered == null && box.contains(mouseX, mouseY)) {
+                    hovered = poi;
+                }
+            }
+        }
+
+        // Render
+        for (Poi poi : filteredPois) {
+            float renderX1 = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float renderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            poi.renderAt(poseStack, renderX1, renderZ, hovered == poi, MapFeature.INSTANCE.poiScale);
+        }
 
         RenderSystem.disableScissor();
     }

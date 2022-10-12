@@ -25,6 +25,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -34,7 +35,12 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.utils.WynnUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -168,19 +174,39 @@ public class MinimapFeature extends UserFeature {
                 poseStack.popPose();
             }
 
-            MapRenderer.renderPOIs(
-                    poseStack,
-                    (float) playerX,
-                    (float) playerZ,
-                    centerX,
-                    centerZ,
-                    width,
-                    height,
-                    this.scale,
-                    this.poiScale,
-                    null,
-                    false,
-                    followPlayerRotation);
+            List<Poi> pois = MapModel.getAllPois()
+                    .filter(poi -> !(poi instanceof LabelPoi))
+                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                    .toList();
+
+            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
+            for (Poi poi : pois) {
+                float poiRenderX;
+                float poiRenderZ;
+
+                if (followPlayerRotation) {
+                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
+                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
+
+                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
+                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
+                } else {
+                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
+                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
+                }
+
+                float poiWidth = poi.getWidth() * poiScale;
+                float poiHeight = poi.getHeight() * poiScale;
+
+                BoundingBox box = BoundingBox.centered((int) poiRenderX, (int) poiRenderZ, (int) poiWidth, (int) poiHeight);
+
+                if (box.intersects(textureBoundingBox)) {
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale);
+                }
+            }
 
             // TODO compass icon
 
