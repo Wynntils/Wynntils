@@ -17,6 +17,7 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
@@ -107,7 +108,6 @@ public final class MapRenderer {
         float mapTopZ = centerZ - height / 2f;
         float mapRightX = centerX + width / 2f;
         float mapBottomZ = centerZ + height / 2f;
-
 
         if (renderMapLabels) {
             renderLabelPois(
@@ -417,21 +417,5 @@ public final class MapRenderer {
     private static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
         double distanceZ = poi.getLocation().getZ() - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
-    }
-
-    public static List<MapTexture> getMapTextures(
-            int mapCenterX, int mapCenterZ, float renderWidth, float renderHeight, float scale) {
-        float renderDistanceX = renderWidth / 2f;
-        // scale is the conversion betweeen in-game ("map") coordinates and render coordinates
-        int mapDistanceX = (int) (renderDistanceX * scale);
-
-        float renderDistanceZ = renderHeight / 2f;
-        int mapDistanceZ = (int) (renderDistanceZ * scale);
-
-        return MapModel.getMapsForBoundingBox(
-                mapCenterX - mapDistanceX,
-                mapCenterX + mapDistanceX,
-                mapCenterZ - mapDistanceZ,
-                mapCenterZ + mapDistanceZ);
     }
 }

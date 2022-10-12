@@ -29,6 +29,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
@@ -107,6 +108,12 @@ public class MinimapFeature extends UserFeature {
             float centerX = renderX + width / 2;
             float centerZ = renderY + height / 2;
 
+            double playerX = McUtils.player().getX();
+            double playerZ = McUtils.player().getZ();
+
+            BoundingBox textureBoundingBox =
+                    BoundingBox.centered((int) centerX, (int) centerZ, (int) (width * scale), (int) (height * scale));
+
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
@@ -139,11 +146,10 @@ public class MinimapFeature extends UserFeature {
                 }
             }
 
-            List<MapTexture> maps = MapRenderer.getMapTextures(
-                    (int) McUtils.player().getX(), (int) McUtils.player().getZ(), width, height, scale);
+            List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
             for (MapTexture map : maps) {
-                float textureX = map.getTextureXPosition(McUtils.player().getX());
-                float textureZ = map.getTextureZPosition(McUtils.player().getZ());
+                float textureX = map.getTextureXPosition(playerX);
+                float textureZ = map.getTextureZPosition(playerZ);
                 MapRenderer.renderMapQuad(
                         map,
                         poseStack,
@@ -164,8 +170,8 @@ public class MinimapFeature extends UserFeature {
 
             MapRenderer.renderPOIs(
                     poseStack,
-                    (float) McUtils.player().getX(),
-                    (float) McUtils.player().getZ(),
+                    (float) playerX,
+                    (float) playerZ,
                     centerX,
                     centerZ,
                     width,
@@ -204,8 +210,8 @@ public class MinimapFeature extends UserFeature {
             if (showCoords) {
                 String coords = String.format(
                         "%s, %s, %s",
-                        (int) McUtils.player().getX(), (int) McUtils.player().getY(), (int)
-                                McUtils.player().getZ());
+                        (int) playerX, (int) McUtils.player().getY(), (int)
+                                playerZ);
 
                 FontRenderer.getInstance()
                         .renderText(

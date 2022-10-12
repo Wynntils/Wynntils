@@ -17,10 +17,12 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
@@ -194,8 +196,10 @@ public class MainMapScreen extends Screen {
                 mapWidth,
                 mapHeight);
 
-        List<MapTexture> maps =
-                MapRenderer.getMapTextures((int) mapCenterX, (int) mapCenterZ, width, height, 1f / currentZoom);
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered((int) mapCenterX, (int) mapCenterZ, (int) (width * 1f / currentZoom), (int) (height * 1f / currentZoom));
+
+        List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);

@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
@@ -77,6 +78,10 @@ public class MapTexture {
 
     public int getZ2() {
         return z2;
+    }
+
+    public BoundingBox getBox() {
+        return new BoundingBox(x1, z1, x2, z2);
     }
 
     public int getTextureHeight() {
