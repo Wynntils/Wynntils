@@ -11,7 +11,8 @@ public class BoundingBox {
     public final float z2;
 
     public static BoundingBox centered(float centerX, float centerZ, float widthX, float widthZ) {
-        return new BoundingBox(centerX - widthX / 2f, centerZ - widthZ / 2f, centerX + widthX / 2f, centerZ + widthZ / 2f);
+        return new BoundingBox(
+                centerX - widthX / 2f, centerZ - widthZ / 2f, centerX + widthX / 2f, centerZ + widthZ / 2f);
     }
 
     public BoundingBox(float x1, float z1, float x2, float z2) {

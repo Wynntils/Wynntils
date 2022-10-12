@@ -197,7 +197,8 @@ public class MinimapFeature extends UserFeature {
                 float poiWidth = poi.getWidth() * poiScale;
                 float poiHeight = poi.getHeight() * poiScale;
 
-                BoundingBox box = BoundingBox.centered(poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
+                BoundingBox box = BoundingBox.centered(
+                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
                     poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale);

@@ -51,7 +51,6 @@ public class LabelPoi extends Poi {
                         VerticalAlignment.Middle,
                         FontRenderer.TextShadow.NORMAL);
         poseStack.popPose();
-
     }
 
     @Override

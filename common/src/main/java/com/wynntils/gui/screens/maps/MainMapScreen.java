@@ -197,8 +197,7 @@ public class MainMapScreen extends Screen {
                 mapHeight);
 
         BoundingBox textureBoundingBox =
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom,
-                        height / currentZoom);
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
         List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
@@ -236,7 +235,8 @@ public class MainMapScreen extends Screen {
             float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
             float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
 
-            BoundingBox filterBox = BoundingBox.centered(poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox filterBox = BoundingBox.centered(
+                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
             if (filterBox.intersects(textureBoundingBox)) {
