@@ -216,7 +216,7 @@ public class MainMapScreen extends Screen {
                     mapWidth,
                     mapHeight,
                     1f / currentZoom,
-                    false);
+                    MapFeature.INSTANCE.renderUsingLinear);
         }
 
         hovered = null;
