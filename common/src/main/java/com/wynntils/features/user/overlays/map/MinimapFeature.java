@@ -30,6 +30,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -117,6 +118,27 @@ public class MinimapFeature extends UserFeature {
             // Always draw a black background to cover transparent map areas
             RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
 
+            // enable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+            }
+
+            // avoid rotational overpass - This is a rather loose oversizing, if possible later
+            // use trignometry, etc. to find a better one
+            float extraFactor = 1f;
+            if (followPlayerRotation) {
+                // 1.5 > sqrt(2);
+                extraFactor = 1.5F;
+
+                if (width > height) {
+                    extraFactor *= width / height;
+                } else {
+                    extraFactor *= height / width;
+                }
+            }
+
             List<MapTexture> maps = MapRenderer.getMapTextures(
                     (int) McUtils.player().getX(), (int) McUtils.player().getZ(), width, height, scale);
             for (MapTexture map : maps) {
@@ -125,23 +147,34 @@ public class MinimapFeature extends UserFeature {
                 MapRenderer.renderMapQuad(
                         map,
                         poseStack,
-                        (float) McUtils.player().getX(),
-                        (float) McUtils.player().getZ(),
                         centerX,
                         centerZ,
                         textureX,
                         textureZ,
-                        width,
-                        height,
+                        width * extraFactor,
+                        height * extraFactor,
                         this.scale,
-                        this.poiScale,
-                        null,
-                        false,
-                        this.followPlayerRotation,
                         this.renderUsingLinear);
             }
 
-            // TODO minimap icons
+            // disable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.popPose();
+            }
+
+            MapRenderer.renderPOIs(
+                    poseStack,
+                    (float) McUtils.player().getX(),
+                    (float) McUtils.player().getZ(),
+                    centerX,
+                    centerZ,
+                    width,
+                    height,
+                    this.scale,
+                    this.poiScale,
+                    null,
+                    false,
+                    followPlayerRotation);
 
             // TODO compass icon
 

@@ -34,8 +34,6 @@ public final class MapRenderer {
     public static void renderMapQuad(
             MapTexture map,
             PoseStack poseStack,
-            float mapCenterX,
-            float mapCenterZ,
             float centerX,
             float centerZ,
             float textureX,
@@ -43,19 +41,8 @@ public final class MapRenderer {
             float width,
             float height,
             float scale,
-            float poiScale,
-            Pair<Integer, Integer> mouseCoordinates,
-            boolean renderMapLabels,
-            boolean followPlayerRotation,
             boolean renderUsingLinear) {
         RenderSystem.disableBlend();
-
-        // enable rotation if necessary
-        if (followPlayerRotation) {
-            poseStack.pushPose();
-            RenderUtils.rotatePose(
-                    poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
-        }
 
         // has to be before setting shader texture
         int option = renderUsingLinear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
@@ -73,22 +60,8 @@ public final class MapRenderer {
         float uScale = 1f / map.getTextureWidth();
         float vScale = 1f / map.getTextureHeight();
 
-        // avoid rotational overpass - This is a rather loose oversizing, if possible later
-        // use trignometry, etc. to find a better one
-        float extraFactor = 1F;
-        if (followPlayerRotation) {
-            // 1.5 > sqrt(2);
-            extraFactor = 1.5F;
-
-            if (width > height) {
-                extraFactor *= width / height;
-            } else {
-                extraFactor *= height / width;
-            }
-        }
-
-        float halfRenderedWidth = width / 2f * extraFactor;
-        float halfRenderedHeight = height / 2f * extraFactor;
+        float halfRenderedWidth = width / 2f;
+        float halfRenderedHeight = height / 2f;
         float halfTextureWidth = halfRenderedWidth * scale;
         float halfTextureHeight = halfRenderedHeight * scale;
 
@@ -114,11 +87,27 @@ public final class MapRenderer {
                 .endVertex();
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
+    }
+
+    public static void renderPOIs(
+            PoseStack poseStack,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float width,
+            float height,
+            float scale,
+            float poiScale,
+            Pair<Integer, Integer> mouseCoordinates,
+            boolean renderMapLabels,
+            boolean followPlayerRotation) {
 
         float mapLeftX = centerX - width / 2f;
         float mapTopZ = centerZ - height / 2f;
         float mapRightX = centerX + width / 2f;
         float mapBottomZ = centerZ + height / 2f;
+
 
         if (renderMapLabels) {
             renderLabelPois(
@@ -132,11 +121,6 @@ public final class MapRenderer {
                     mapTopZ,
                     mapRightX,
                     mapBottomZ);
-        }
-
-        // disable rotation if necessary
-        if (followPlayerRotation) {
-            poseStack.popPose();
         }
 
         renderTexturedPois(

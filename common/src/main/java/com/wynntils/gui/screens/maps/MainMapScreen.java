@@ -203,8 +203,6 @@ public class MainMapScreen extends Screen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
-                    mapCenterX,
-                    mapCenterZ,
                     centerX,
                     centerZ,
                     textureX,
@@ -212,12 +210,23 @@ public class MainMapScreen extends Screen {
                     mapWidth,
                     mapHeight,
                     1f / currentZoom,
-                    MapFeature.INSTANCE.poiScale,
-                    new Pair<>(mouseX, mouseY),
-                    MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
-                    false,
                     false);
         }
+
+        MapRenderer.renderPOIs(
+                poseStack,
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                mapWidth,
+                mapHeight,
+                1f / currentZoom,
+                MapFeature.INSTANCE.poiScale,
+                new Pair<>(mouseX, mouseY),
+                MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
+                false);
+
 
         RenderSystem.disableScissor();
     }
