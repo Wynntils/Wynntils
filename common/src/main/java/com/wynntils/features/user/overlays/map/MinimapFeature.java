@@ -25,21 +25,17 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.utils.WynnUtils;
-
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -201,7 +197,8 @@ public class MinimapFeature extends UserFeature {
                 float poiWidth = poi.getWidth() * poiScale;
                 float poiHeight = poi.getHeight() * poiScale;
 
-                BoundingBox box = BoundingBox.centered((int) poiRenderX, (int) poiRenderZ, (int) poiWidth, (int) poiHeight);
+                BoundingBox box =
+                        BoundingBox.centered((int) poiRenderX, (int) poiRenderZ, (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
                     poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale);
@@ -218,12 +215,7 @@ public class MinimapFeature extends UserFeature {
             }
 
             MapRenderer.renderCursor(
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    this.pointerScale,
-                    this.pointerColor,
-                    this.pointerType);
+                    poseStack, centerX, centerZ, this.pointerScale, this.pointerColor, this.pointerType);
 
             if (!followPlayerRotation) {
                 poseStack.popPose();
@@ -244,9 +236,7 @@ public class MinimapFeature extends UserFeature {
             // Coordinates
             if (showCoords) {
                 String coords = String.format(
-                        "%s, %s, %s",
-                        (int) playerX, (int) McUtils.player().getY(), (int)
-                                playerZ);
+                        "%s, %s, %s", (int) playerX, (int) McUtils.player().getY(), (int) playerZ);
 
                 FontRenderer.getInstance()
                         .renderText(

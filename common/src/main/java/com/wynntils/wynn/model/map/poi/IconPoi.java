@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -26,7 +30,6 @@ public abstract class IconPoi extends Poi {
 
     public abstract Texture getIcon();
 
-
     @Override
     public void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale) {
         // TODO: This is really basic at the moment
@@ -46,8 +49,8 @@ public abstract class IconPoi extends Poi {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 icon.resource(),
-                renderX - width/2,
-                renderZ - height/2,
+                renderX - width / 2,
+                renderZ - height / 2,
                 0,
                 width,
                 height,
@@ -73,5 +76,4 @@ public abstract class IconPoi extends Poi {
 
         poseStack.popPose();
     }
-
 }

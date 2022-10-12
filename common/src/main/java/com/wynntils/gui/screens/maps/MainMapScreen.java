@@ -20,13 +20,11 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -199,7 +197,8 @@ public class MainMapScreen extends Screen {
                 mapHeight);
 
         BoundingBox textureBoundingBox =
-                BoundingBox.centered((int) mapCenterX, (int) mapCenterZ, (int) (width * 1f / currentZoom), (int) (height * 1f / currentZoom));
+                BoundingBox.centered((int) mapCenterX, (int) mapCenterZ, (int) (width * 1f / currentZoom), (int)
+                        (height * 1f / currentZoom));
 
         List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {

@@ -16,7 +16,6 @@ import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
-
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils;
 
 public class BoundingBox {
@@ -7,7 +11,7 @@ public class BoundingBox {
     public final int z2;
 
     public static BoundingBox centered(int centerX, int centerZ, int widthX, int widthZ) {
-        return new BoundingBox(centerX - widthX/2, centerZ - widthZ/2, centerX + widthX/2, centerZ + widthZ/2);
+        return new BoundingBox(centerX - widthX / 2, centerZ - widthZ / 2, centerX + widthX / 2, centerZ + widthZ / 2);
     }
 
     public BoundingBox(int x1, int z1, int x2, int z2) {
@@ -21,8 +25,7 @@ public class BoundingBox {
         return x1 <= x && x <= x2 && z1 <= z && z <= z2;
     }
 
-    public boolean intersects(
-            BoundingBox other) {
+    public boolean intersects(BoundingBox other) {
         boolean xIntersects = x1 < other.x2 && other.x1 < x2;
         boolean zIntersects = z1 < other.z2 && other.z1 < z2;
         return xIntersects && zIntersects;
