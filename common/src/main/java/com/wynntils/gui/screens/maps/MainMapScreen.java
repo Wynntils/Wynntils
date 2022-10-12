@@ -197,8 +197,8 @@ public class MainMapScreen extends Screen {
                 mapHeight);
 
         BoundingBox textureBoundingBox =
-                BoundingBox.centered((int) mapCenterX, (int) mapCenterZ, (int) (width * 1f / currentZoom), (int)
-                        (height * 1f / currentZoom));
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom,
+                        height / currentZoom);
 
         List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
@@ -236,22 +236,25 @@ public class MainMapScreen extends Screen {
             float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
             float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
 
-            BoundingBox box = BoundingBox.centered((int) poiRenderX, (int) poiRenderZ, (int) poiWidth, (int) poiHeight);
+            BoundingBox filterBox = BoundingBox.centered(poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
-            if (box.intersects(textureBoundingBox)) {
+            if (filterBox.intersects(textureBoundingBox)) {
                 filteredPois.add(poi);
-                if (hovered == null && box.contains(mouseX, mouseY)) {
+                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
                     hovered = poi;
                 }
             }
         }
 
-        // Render
-        for (Poi poi : filteredPois) {
-            float renderX1 = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float renderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+        // Reverse and Render
+        for (int i = filteredPois.size() - 1; i >= 0; i--) {
+            Poi poi = filteredPois.get(i);
 
-            poi.renderAt(poseStack, renderX1, renderZ, hovered == poi, MapFeature.INSTANCE.poiScale);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale);
         }
 
         RenderSystem.disableScissor();

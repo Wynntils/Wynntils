@@ -5,29 +5,31 @@
 package com.wynntils.utils;
 
 public class BoundingBox {
-    public final int x1;
-    public final int z1;
-    public final int x2;
-    public final int z2;
+    public final float x1;
+    public final float z1;
+    public final float x2;
+    public final float z2;
 
-    public static BoundingBox centered(int centerX, int centerZ, int widthX, int widthZ) {
-        return new BoundingBox(centerX - widthX / 2, centerZ - widthZ / 2, centerX + widthX / 2, centerZ + widthZ / 2);
+    public static BoundingBox centered(float centerX, float centerZ, float widthX, float widthZ) {
+        return new BoundingBox(centerX - widthX / 2f, centerZ - widthZ / 2f, centerX + widthX / 2f, centerZ + widthZ / 2f);
     }
 
-    public BoundingBox(int x1, int z1, int x2, int z2) {
+    public BoundingBox(float x1, float z1, float x2, float z2) {
         this.x1 = x1;
         this.z1 = z1;
         this.x2 = x2;
         this.z2 = z2;
+
+        assert x1 < x2 && z1 < z2;
     }
 
-    public boolean contains(int x, int z) {
+    public boolean contains(float x, float z) {
         return x1 <= x && x <= x2 && z1 <= z && z <= z2;
     }
 
     public boolean intersects(BoundingBox other) {
-        boolean xIntersects = x1 < other.x2 && other.x1 < x2;
-        boolean zIntersects = z1 < other.z2 && other.z1 < z2;
+        boolean xIntersects = Math.max(x1, other.x1) < Math.min(x2, other.x2);
+        boolean zIntersects = Math.max(z1, other.z1) < Math.min(z2, other.z2);
         return xIntersects && zIntersects;
     }
 }

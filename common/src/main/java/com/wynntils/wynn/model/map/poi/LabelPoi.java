@@ -35,17 +35,23 @@ public class LabelPoi extends Poi {
         // TODO hovered behavior?
         // TODO reimplement minscaleforlabel through fading instead
 
+        poseStack.pushPose();
+        poseStack.translate(renderX, renderZ, 0);
+        poseStack.scale(scale, scale, scale);
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         label.getName(),
-                        renderX,
-                        renderZ,
+                        0,
+                        0,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
                         FontRenderer.TextShadow.NORMAL);
+        poseStack.popPose();
+
     }
 
     @Override
