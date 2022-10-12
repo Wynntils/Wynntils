@@ -364,14 +364,8 @@ public final class MapRenderer {
             float renderX,
             float renderY,
             float pointerScale,
-            boolean followPlayerRotation,
             CustomColor pointerColor,
             PointerType pointerType) {
-        if (!followPlayerRotation) {
-            poseStack.pushPose();
-            RenderUtils.rotatePose(
-                    poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
-        }
 
         float renderedWidth = pointerType.width * pointerScale;
         float renderedHeight = pointerType.height * pointerScale;
@@ -391,10 +385,6 @@ public final class MapRenderer {
                 pointerType.height,
                 Texture.MAP_POINTERS.width(),
                 Texture.MAP_POINTERS.height());
-
-        if (!followPlayerRotation) {
-            poseStack.popPose();
-        }
     }
 
     /**

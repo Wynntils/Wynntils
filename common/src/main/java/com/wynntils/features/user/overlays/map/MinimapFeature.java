@@ -185,14 +185,23 @@ public class MinimapFeature extends UserFeature {
             // TODO compass icon
 
             // cursor
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
+            }
+
             MapRenderer.renderCursor(
                     poseStack,
                     centerX,
                     centerZ,
                     this.pointerScale,
-                    this.followPlayerRotation,
                     this.pointerColor,
                     this.pointerType);
+
+            if (!followPlayerRotation) {
+                poseStack.popPose();
+            }
 
             // disable mask & render border
             switch (maskType) {

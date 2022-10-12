@@ -176,7 +176,6 @@ public class MainMapScreen extends Screen {
                 cursorX,
                 cursorZ,
                 MapFeature.INSTANCE.playerPointerScale,
-                false,
                 MapFeature.INSTANCE.pointerColor,
                 MapFeature.INSTANCE.pointerType);
     }
