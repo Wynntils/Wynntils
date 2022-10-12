@@ -112,7 +112,7 @@ public class MinimapFeature extends UserFeature {
             double playerZ = McUtils.player().getZ();
 
             BoundingBox textureBoundingBox =
-                    BoundingBox.centered((int) centerX, (int) centerZ, (int) (width * scale), (int) (height * scale));
+                    BoundingBox.centered((int) playerX, (int) playerZ, (int) (width * scale), (int) (height * scale));
 
             // enable mask
             switch (maskType) {
