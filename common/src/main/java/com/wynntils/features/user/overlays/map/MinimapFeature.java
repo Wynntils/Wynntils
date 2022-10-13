@@ -172,18 +172,14 @@ public class MinimapFeature extends UserFeature {
             renderPois(poseStack, centerX, centerZ, playerX, playerZ, textureBoundingBox);
 
             // cursor
-            if (!followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(
-                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
-            }
-
             MapRenderer.renderCursor(
-                    poseStack, centerX, centerZ, this.pointerScale, this.pointerColor, this.pointerType);
-
-            if (!followPlayerRotation) {
-                poseStack.popPose();
-            }
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    this.pointerScale,
+                    this.pointerColor,
+                    this.pointerType,
+                    followPlayerRotation);
 
             // disable mask & render border
             switch (maskType) {

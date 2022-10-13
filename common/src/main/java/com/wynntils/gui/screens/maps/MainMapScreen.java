@@ -170,13 +170,15 @@ public class MainMapScreen extends Screen {
 
         float cursorX = (float) (centerX + distanceX * currentZoom);
         float cursorZ = (float) (centerZ + distanceZ * currentZoom);
+
         MapRenderer.renderCursor(
                 poseStack,
                 cursorX,
                 cursorZ,
                 MapFeature.INSTANCE.playerPointerScale,
                 MapFeature.INSTANCE.pointerColor,
-                MapFeature.INSTANCE.pointerType);
+                MapFeature.INSTANCE.pointerType,
+                false);
     }
 
     private void renderMap(PoseStack poseStack, int mouseX, int mouseY) {
@@ -219,13 +221,7 @@ public class MainMapScreen extends Screen {
 
         renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
         // Cursor
-        poseStack.pushPose();
-        RenderUtils.rotatePose(
-                poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
-
         renderCursor(poseStack);
-
-        poseStack.popPose();
 
         RenderSystem.disableScissor();
     }
