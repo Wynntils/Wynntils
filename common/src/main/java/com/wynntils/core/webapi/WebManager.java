@@ -51,6 +51,9 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
+    private static final String MATERIAL_ID_MAP_URL =
+            "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/master/data/pc/1.12/items.json";
+
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
@@ -68,6 +71,7 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, String> internalIdentifications = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+    private static HashMap<Integer, String> materialIdMap = new HashMap<>();
 
     private static String currentSplash = "";
 
@@ -95,6 +99,7 @@ public final class WebManager extends CoreManager {
     private static void loadCommonObjects() {
         WebManager.tryLoadItemList();
         WebManager.tryLoadItemGuesses();
+        WebManager.tryLoadItemMaterialIdMap();
     }
 
     public static boolean isLoggedIn() {
@@ -212,6 +217,27 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
+    }
+
+    private static void tryLoadItemMaterialIdMap() {
+        handler.addAndDispatch(new RequestBuilder(MATERIAL_ID_MAP_URL, "material_id_map")
+                .cacheTo(new File(API_CACHE_ROOT, "material_id_map.json"))
+                .handleJsonArray(json -> {
+                    HashMap<Integer, String> tempMap = new HashMap<>();
+                    for (JsonElement jsonElement : json) {
+                        JsonObject itemObject = jsonElement.getAsJsonObject();
+
+                        tempMap.put(
+                                itemObject.getAsJsonPrimitive("id").getAsInt(),
+                                itemObject.getAsJsonPrimitive("name").getAsString());
+                    }
+
+                    materialIdMap = tempMap;
+
+                    return true;
+                })
+                .useCacheAsBackup()
+                .build());
     }
 
     private static void tryLoadItemList() {
@@ -363,6 +389,10 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, ItemProfile> getItemsMap() {
         return items;
+    }
+
+    public static HashMap<Integer, String> getMaterialIdMap() {
+        return materialIdMap;
     }
 
     public static HashMap<ItemType, String[]> getMaterialTypes() {

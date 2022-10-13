@@ -6,7 +6,7 @@ package com.wynntils.core.webapi.profiles.item;
 
 public enum RequirementType {
     QUEST("Quest Req: "),
-    CLASS("Class Req: "),
+    CLASSTYPE("Class Req: "),
     LEVEL("Combat Lv. Min: "),
     STRENGTH("Strength Min: "),
     AGILITY("Agility Min: "),
