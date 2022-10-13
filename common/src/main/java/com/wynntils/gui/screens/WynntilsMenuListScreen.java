@@ -2,15 +2,13 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.gui.screens.settings;
+package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.TextboxScreen;
-import com.wynntils.gui.screens.WynntilsMenuPagedScreenBase;
 import com.wynntils.gui.widgets.QuestBookSearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
@@ -26,8 +24,6 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extends WynntilsMenuPagedScreenBase
         implements TextboxScreen {
-    protected static final int ELEMENTS_PER_PAGE = 13;
-
     protected int currentPage = 0;
     protected int maxPage = 0;
     protected List<E> elements = new ArrayList<>();
@@ -55,8 +51,6 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
                 s -> reloadElements(),
                 this);
     }
-
-    protected abstract void renderTooltip(PoseStack poseStack, int mouseX, int mouseY);
 
     protected void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
@@ -156,7 +150,8 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
         reloadElementsList(searchTerm);
 
         this.maxPage = Math.max(
-                0, (elements.size() / ELEMENTS_PER_PAGE + (elements.size() % ELEMENTS_PER_PAGE != 0 ? 1 : 0)) - 1);
+                0,
+                (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
 
         for (B button : elementButtons) {
             this.removeWidget(button);
@@ -164,8 +159,8 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
 
         elementButtons.clear();
 
-        final int start = Math.max(0, currentPage * ELEMENTS_PER_PAGE);
-        for (int i = start; i < Math.min(elements.size(), start + ELEMENTS_PER_PAGE); i++) {
+        final int start = Math.max(0, currentPage * getElementsPerPage());
+        for (int i = start; i < Math.min(elements.size(), start + getElementsPerPage()); i++) {
             B button = getButtonFromElement(i);
             elementButtons.add(button);
             this.addRenderableWidget(button);
@@ -189,4 +184,8 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
     // Dummy impl
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {}
+
+    protected int getElementsPerPage() {
+        return 13;
+    }
 }
