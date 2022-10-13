@@ -17,7 +17,8 @@ public abstract class Poi {
         return location;
     }
 
-    public abstract void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale);
+    public abstract void renderAt(
+            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
 
     public abstract int getWidth();
 

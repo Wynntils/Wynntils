@@ -31,7 +31,8 @@ public abstract class IconPoi extends Poi {
     public abstract Texture getIcon();
 
     @Override
-    public void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale) {
+    public void renderAt(
+            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
         // TODO: This is really basic at the moment
         //       Add fading, and other configs
 

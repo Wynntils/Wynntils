@@ -201,7 +201,7 @@ public class MinimapFeature extends UserFeature {
                         poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale);
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
                 }
             }
 
