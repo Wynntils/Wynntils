@@ -112,7 +112,7 @@ public class GearViewerScreen extends Screen {
             return;
         }
 
-        if (hovered instanceof GearItemButton gearItemButton) {
+        if (hovered instanceof GearItemButton gearItemButton && gearItemButton.getItemStack() != null) {
             this.renderTooltip(poseStack, gearItemButton.getItemStack(), mouseX, mouseY);
         }
     }
