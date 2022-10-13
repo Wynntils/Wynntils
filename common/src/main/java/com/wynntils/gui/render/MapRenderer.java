@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.wynntils.features.user.overlays.map.PointerType;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import net.minecraft.client.renderer.GameRenderer;
@@ -87,7 +88,14 @@ public final class MapRenderer {
             float renderY,
             float pointerScale,
             CustomColor pointerColor,
-            PointerType pointerType) {
+            PointerType pointerType,
+            boolean followPlayerRotation) {
+
+        if (!followPlayerRotation) {
+            poseStack.pushPose();
+            RenderUtils.rotatePose(
+                    poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
+        }
 
         float renderedWidth = pointerType.width * pointerScale;
         float renderedHeight = pointerType.height * pointerScale;
@@ -107,6 +115,10 @@ public final class MapRenderer {
                 pointerType.height,
                 Texture.MAP_POINTERS.width(),
                 Texture.MAP_POINTERS.height());
+
+        if (!followPlayerRotation) {
+            poseStack.popPose();
+        }
     }
 
     /**

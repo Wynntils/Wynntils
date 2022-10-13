@@ -31,13 +31,16 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Pair;
+import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
-import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
@@ -170,56 +173,17 @@ public class MinimapFeature extends UserFeature {
                 poseStack.popPose();
             }
 
-            List<Poi> pois = MapModel.getAllPois()
-                    .filter(poi -> !(poi instanceof LabelPoi))
-                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
-                    .toList();
-
-            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
-            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
-            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
-
-            for (Poi poi : pois) {
-                float poiRenderX;
-                float poiRenderZ;
-
-                if (followPlayerRotation) {
-                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
-                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
-
-                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
-                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
-                } else {
-                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
-                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
-                }
-
-                float poiWidth = poi.getWidth() * poiScale;
-                float poiHeight = poi.getHeight() * poiScale;
-
-                BoundingBox box = BoundingBox.centered(
-                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
-
-                if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
-                }
-            }
-
-            // TODO compass icon
+            renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingBox);
 
             // cursor
-            if (!followPlayerRotation) {
-                poseStack.pushPose();
-                RenderUtils.rotatePose(
-                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
-            }
-
             MapRenderer.renderCursor(
-                    poseStack, centerX, centerZ, this.pointerScale, this.pointerColor, this.pointerType);
-
-            if (!followPlayerRotation) {
-                poseStack.popPose();
-            }
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    this.pointerScale,
+                    this.pointerColor,
+                    this.pointerType,
+                    followPlayerRotation);
 
             // disable mask & render border
             switch (maskType) {
@@ -249,6 +213,118 @@ public class MinimapFeature extends UserFeature {
             }
         }
 
+        private void renderPois(
+                PoseStack poseStack,
+                float centerX,
+                float centerZ,
+                float width,
+                float height,
+                double playerX,
+                double playerZ,
+                BoundingBox textureBoundingBox) {
+            List<? extends Poi> pois = MapModel.getServicePois().stream()
+                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                    .toList();
+
+            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
+            for (Poi poi : pois) {
+                Pair<Float, Float> renderLocation = getRenderLocation(
+                        poi, playerX, playerZ, centerX, centerZ, sinRotationRadians, cosRotationRadians);
+                float poiRenderX = renderLocation.a();
+                float poiRenderZ = renderLocation.b();
+
+                float poiWidth = poi.getWidth() * poiScale;
+                float poiHeight = poi.getHeight() * poiScale;
+
+                BoundingBox box = BoundingBox.centered(
+                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
+
+                if (box.intersects(textureBoundingBox)) {
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
+                }
+            }
+
+            // Compass icon
+            Optional<WaypointPoi> compassOpt = CompassModel.getCompassWaypoint();
+
+            if (compassOpt.isEmpty()) return;
+
+            WaypointPoi compass = compassOpt.get();
+
+            Pair<Float, Float> compassLocation = getRenderLocation(
+                    compass, playerX, playerZ, centerX, centerZ, sinRotationRadians, cosRotationRadians);
+            float compassRenderX = compassLocation.a();
+            float compassRenderZ = compassLocation.b();
+
+            final float compassSize = Math.max(compass.getWidth(), compass.getHeight()) * 0.8f * poiScale;
+
+            float compassOffsetX = compassRenderX - centerX;
+            float compassOffsetZ = compassRenderZ - centerZ;
+            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
+
+            compassOffsetX /= distance;
+            compassOffsetZ /= distance;
+
+            float scaledWidth = width - 4 * compassSize;
+            float scaledHeight = height - 4 * compassSize;
+
+            float toBorderScale = 1f;
+
+            if (maskType == MapMaskType.Rectangular) {
+                // Scale as necessary
+                toBorderScale =
+                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
+            } else if (maskType == MapMaskType.Circle) {
+                toBorderScale = scaledWidth
+                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
+                        / 2;
+            }
+
+            if (toBorderScale < distance) {
+                float scaledCompassRenderX = centerX + compassOffsetX * toBorderScale;
+                float scaledCompassRenderZ = centerZ + compassOffsetZ * toBorderScale;
+
+                // Replace with pointer
+                float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
+
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, scaledCompassRenderX, scaledCompassRenderZ, angle);
+                compass.getPointerPoi()
+                        .renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
+                poseStack.popPose();
+            } else {
+                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
+            }
+
+            // TODO render compass text
+        }
+
+        private Pair<Float, Float> getRenderLocation(
+                Poi poi,
+                double playerX,
+                double playerZ,
+                float centerX,
+                float centerZ,
+                float sinRotationRadians,
+                float cosRotationRadians) {
+
+            if (followPlayerRotation) {
+                float dX = (poi.getLocation().getX() - (float) playerX) / scale;
+                float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
+
+                return new Pair<>(
+                        centerX + (dX * cosRotationRadians - dZ * sinRotationRadians),
+                        centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians));
+            } else {
+                return new Pair<>(
+                        MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale),
+                        MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale));
+            }
+        }
+
         private void renderCardinalDirections(
                 PoseStack poseStack, float width, float height, float centerX, float centerZ) {
             if (showCompass == CompassRenderType.None) return;
@@ -260,16 +336,18 @@ public class MinimapFeature extends UserFeature {
                 float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
                 northDX = (float) StrictMath.sin(yawRadians);
                 northDY = (float) StrictMath.cos(yawRadians);
+
+                double toBorderScaleNorth = 1;
+
                 if (maskType == MapMaskType.Rectangular) {
-                    // Scale as necessary
-                    double toSquareScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-                    northDX *= toSquareScaleNorth;
-                    northDY *= toSquareScaleNorth;
+                    toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
-                    northDX *= toSquareScaleNorth;
-                    northDY *= toSquareScaleNorth;
+                    toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
                 }
+
+                northDX *= toBorderScaleNorth;
+                northDY *= toBorderScaleNorth;
+
             } else {
                 northDX = 0;
                 northDY = -height / 2;
@@ -292,16 +370,16 @@ public class MinimapFeature extends UserFeature {
                 eastDX = -northDY;
                 eastDY = northDX;
 
+                double toBorderScaleEast = 1f;
+
                 if (maskType == MapMaskType.Rectangular) {
-                    // Scale as necessary
-                    double toSquareScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
-                    eastDX *= toSquareScaleEast;
-                    eastDY *= toSquareScaleEast;
+                    toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
-                    eastDX *= toSquareScaleEast;
-                    eastDY *= toSquareScaleEast;
+                    toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
                 }
+
+                eastDX *= toBorderScaleEast;
+                eastDY *= toBorderScaleEast;
             } else {
                 eastDX = width / 2;
                 eastDY = 0;

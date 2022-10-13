@@ -12,10 +12,8 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
-import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,9 +31,8 @@ public class LocateCommand extends CommandBase {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
-    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    MapModel.getAllPois().filter(poi -> poi instanceof LabelPoi).map(Poi::getName), builder);
+    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
+            SharedSuggestionProvider.suggest(MapModel.getLabelPois().stream().map(Poi::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -87,9 +84,8 @@ public class LocateCommand extends CommandBase {
 
         ServiceKind selectedKind = matchedKinds.get(0);
 
-        List<Poi> services = new ArrayList<>(MapModel.getAllPois()
-                .filter(poi -> poi instanceof ServicePoi servicePoi
-                        && servicePoi.getKind().equals(selectedKind))
+        List<Poi> services = new ArrayList<>(MapModel.getServicePois().stream()
+                .filter(poi -> poi.getKind().equals(selectedKind))
                 .toList());
 
         // Only keep the 4 closest results
@@ -125,8 +121,8 @@ public class LocateCommand extends CommandBase {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getAllPois()
-                .filter(poi -> poi instanceof LabelPoi && StringUtils.partialMatch(poi.getName(), searchedName))
+        List<Poi> places = new ArrayList<>(MapModel.getLabelPois().stream()
+                .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
         if (places.isEmpty()) {

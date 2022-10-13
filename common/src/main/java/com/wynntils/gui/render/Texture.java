@@ -78,6 +78,7 @@ public enum Texture {
     LIQUID_MERCHANT("map/map_icons/liquid_merchant.png", 15, 17),
     LOST_SPIRIT("map/map_icons/lost_spirit.png", 16, 16),
     PARTY_FINDER("map/map_icons/party_finder.png", 18, 18),
+    POINTER("map/map_icons/pointer.png", 10, 8),
     POTION_MERCHANT("map/map_icons/potion_merchant.png", 16, 18),
     POWDER_MASTER("map/map_icons/powder_master.png", 17, 17),
     SCRIBING_STATION("map/map_icons/scribing_station.png", 18, 17),
