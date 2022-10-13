@@ -123,6 +123,11 @@ public enum ItemTier {
                 .orElse(null);
     }
 
+    public static ItemTier fromBoxDamage(int damage) {
+        if (damage > 6) return NORMAL;
+        return ItemTier.values()[damage];
+    }
+
     public int getItemIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
     }

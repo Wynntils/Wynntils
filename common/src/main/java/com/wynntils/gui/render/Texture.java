@@ -11,6 +11,7 @@ public enum Texture {
     EMERALD_COUNT_BACKGROUND("emerald_count_background.png", 24, 24),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
     GEAR_ICONS("gear_icons.png", 64, 128),
+    GEAR_VIEWER_BACKGROUND("gear_viewer_background.png", 103, 92),
     HEALTH_BAR("bars_health.png", 256, 256),
     HIGHLIGHT("highlight.png", 256, 256),
     ITEM_LOCK("item_lock.png", 16, 16),
@@ -47,6 +48,7 @@ public enum Texture {
 
     // Icons
     MAP_ICON("map_icon.png", 21, 38),
+    LOOTRUN_ICON("lootrun_icon.png", 16, 28),
     OVERLAYS_ICON("overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("quests_icon.png", 24, 34),
     SETTINGS_ICON("settings_icon.png", 17, 34),

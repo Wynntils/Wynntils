@@ -309,6 +309,10 @@ public final class LootrunModel {
         return instance;
     }
 
+    public static LootrunInstance getCurrentLootrun() {
+        return lootrun;
+    }
+
     public static int recompileLootrun(boolean saveToFile) {
         if (recording != null) {
             recordingInformation.setDirty(true);
@@ -340,7 +344,8 @@ public final class LootrunModel {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        return new LootrunInstance(points, chests, notes);
+        return new LootrunInstance(
+                uncompiled.file().getName().replace(".json", ""), uncompiled.path, points, chests, notes);
     }
 
     private static List<Path> sample(Path raw, float sampleRate) {
@@ -566,6 +571,26 @@ public final class LootrunModel {
         LootrunFeature.INSTANCE.enable();
     }
 
+    public static List<LootrunInstance> getLootruns() {
+        List<LootrunInstance> lootruns = new ArrayList<>();
+
+        File[] files = LOOTRUNS.listFiles();
+        for (File file : files != null ? files : new File[0]) {
+            if (file.getName().endsWith(".json")) {
+                try {
+                    FileReader reader = new FileReader(file, StandardCharsets.UTF_8);
+                    JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+                    LootrunUncompiled uncompiled = readJson(file, json);
+                    lootruns.add(compile(uncompiled, false));
+                } catch (IOException e) {
+                    WynntilsMod.warn("Could not parse lootrun file.", e);
+                }
+            }
+        }
+
+        return lootruns;
+    }
+
     public static boolean tryLoadFile(String fileName) {
         String lootrun = fileName + ".json";
         File lootrunFile = new File(LOOTRUNS, lootrun);
@@ -745,7 +770,9 @@ public final class LootrunModel {
         INVALID
     }
 
-    private record LootrunInstance(
+    public record LootrunInstance(
+            String name,
+            Path path,
             Long2ObjectMap<List<ColoredPath>> points,
             Long2ObjectMap<Set<BlockPos>> chests,
             Long2ObjectMap<List<Note>> notes) {}
@@ -852,7 +879,7 @@ public final class LootrunModel {
 
     public record Note(Vec3 position, Component component) {}
 
-    private record ColoredPath(List<ColoredPoint> points) {}
+    public record ColoredPath(List<ColoredPoint> points) {}
 
-    protected record Path(List<Vec3> points) {}
+    public record Path(List<Vec3> points) {}
 }
