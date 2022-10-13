@@ -98,6 +98,8 @@
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.overrideNewMessages.name": "New Message Override",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.name": "Text Shadow",
+  "feature.wynntils.gammabright.gammabrightEnabled.description": "Should gamma be set to a really high value to achieve night-vision like effect?",
+  "feature.wynntils.gammabright.gammabrightEnabled.name": "Gammabright",
   "feature.wynntils.gammabright.name": "Gammabright Keybind",
   "feature.wynntils.gearViewer.name": "Gear Viewer",
   "feature.wynntils.healthPotionBlocker.healthFull": "You are already at full health!",
