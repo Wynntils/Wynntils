@@ -17,13 +17,16 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
@@ -139,8 +142,6 @@ public class MainMapScreen extends Screen {
         renderMap(poseStack, mouseX, mouseY);
         renderBackground(poseStack);
 
-        renderCursor(poseStack);
-
         renderCoordinates(poseStack, mouseX, mouseY);
     }
 
@@ -174,7 +175,6 @@ public class MainMapScreen extends Screen {
                 cursorX,
                 cursorZ,
                 MapFeature.INSTANCE.playerPointerScale,
-                false,
                 MapFeature.INSTANCE.pointerColor,
                 MapFeature.INSTANCE.pointerType);
     }
@@ -194,8 +194,10 @@ public class MainMapScreen extends Screen {
                 mapWidth,
                 mapHeight);
 
-        List<MapTexture> maps =
-                MapRenderer.getMapTextures((int) mapCenterX, (int) mapCenterZ, width, height, 1f / currentZoom);
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+
+        List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
@@ -203,8 +205,6 @@ public class MainMapScreen extends Screen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
-                    mapCenterX,
-                    mapCenterZ,
                     centerX,
                     centerZ,
                     textureX,
@@ -212,12 +212,57 @@ public class MainMapScreen extends Screen {
                     mapWidth,
                     mapHeight,
                     1f / currentZoom,
-                    MapFeature.INSTANCE.poiScale,
-                    new Pair<>(mouseX, mouseY),
-                    MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
-                    false,
-                    false);
+                    MapFeature.INSTANCE.renderUsingLinear);
         }
+
+        hovered = null;
+
+        List<Poi> pois = MapModel.getAllPois()
+                .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                .toList();
+
+        List<Poi> filteredPois = new ArrayList<>();
+
+        // Filter and find hovered
+        for (int i = pois.size() - 1; i >= 0; i--) {
+            Poi poi = pois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
+            float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
+
+            BoundingBox filterBox = BoundingBox.centered(
+                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
+
+            if (filterBox.intersects(textureBoundingBox)) {
+                filteredPois.add(poi);
+                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
+                    hovered = poi;
+                }
+            }
+        }
+
+        // Add hovered poi as last
+        if (hovered != null) {
+            filteredPois.remove(hovered);
+            filteredPois.add(0, hovered);
+        }
+
+        // Reverse and Render
+        for (int i = filteredPois.size() - 1; i >= 0; i--) {
+            Poi poi = filteredPois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale, currentZoom);
+        }
+
+        // Cursor
+        renderCursor(poseStack);
 
         RenderSystem.disableScissor();
     }

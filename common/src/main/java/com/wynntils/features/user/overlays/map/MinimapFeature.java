@@ -29,10 +29,14 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.LabelPoi;
+import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.Comparator;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -106,6 +110,12 @@ public class MinimapFeature extends UserFeature {
             float centerX = renderX + width / 2;
             float centerZ = renderY + height / 2;
 
+            double playerX = McUtils.player().getX();
+            double playerZ = McUtils.player().getZ();
+
+            BoundingBox textureBoundingBox =
+                    BoundingBox.centered((float) playerX, (float) playerZ, width * scale, height * scale);
+
             // enable mask
             switch (maskType) {
                 case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
@@ -117,43 +127,99 @@ public class MinimapFeature extends UserFeature {
             // Always draw a black background to cover transparent map areas
             RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
 
-            List<MapTexture> maps = MapRenderer.getMapTextures(
-                    (int) McUtils.player().getX(), (int) McUtils.player().getZ(), width, height, scale);
+            // enable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+            }
+
+            // avoid rotational overpass - This is a rather loose oversizing, if possible later
+            // use trignometry, etc. to find a better one
+            float extraFactor = 1f;
+            if (followPlayerRotation) {
+                // 1.5 > sqrt(2);
+                extraFactor = 1.5F;
+
+                if (width > height) {
+                    extraFactor *= width / height;
+                } else {
+                    extraFactor *= height / width;
+                }
+            }
+
+            List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
             for (MapTexture map : maps) {
-                float textureX = map.getTextureXPosition(McUtils.player().getX());
-                float textureZ = map.getTextureZPosition(McUtils.player().getZ());
+                float textureX = map.getTextureXPosition(playerX);
+                float textureZ = map.getTextureZPosition(playerZ);
                 MapRenderer.renderMapQuad(
                         map,
                         poseStack,
-                        (float) McUtils.player().getX(),
-                        (float) McUtils.player().getZ(),
                         centerX,
                         centerZ,
                         textureX,
                         textureZ,
-                        width,
-                        height,
+                        width * extraFactor,
+                        height * extraFactor,
                         this.scale,
-                        this.poiScale,
-                        null,
-                        false,
-                        this.followPlayerRotation,
                         this.renderUsingLinear);
             }
 
-            // TODO minimap icons
+            // disable rotation if necessary
+            if (followPlayerRotation) {
+                poseStack.popPose();
+            }
+
+            List<Poi> pois = MapModel.getAllPois()
+                    .filter(poi -> !(poi instanceof LabelPoi))
+                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                    .toList();
+
+            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
+            for (Poi poi : pois) {
+                float poiRenderX;
+                float poiRenderZ;
+
+                if (followPlayerRotation) {
+                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
+                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
+
+                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
+                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
+                } else {
+                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
+                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
+                }
+
+                float poiWidth = poi.getWidth() * poiScale;
+                float poiHeight = poi.getHeight() * poiScale;
+
+                BoundingBox box = BoundingBox.centered(
+                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
+
+                if (box.intersects(textureBoundingBox)) {
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
+                }
+            }
 
             // TODO compass icon
 
             // cursor
+            if (!followPlayerRotation) {
+                poseStack.pushPose();
+                RenderUtils.rotatePose(
+                        poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
+            }
+
             MapRenderer.renderCursor(
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    this.pointerScale,
-                    this.followPlayerRotation,
-                    this.pointerColor,
-                    this.pointerType);
+                    poseStack, centerX, centerZ, this.pointerScale, this.pointerColor, this.pointerType);
+
+            if (!followPlayerRotation) {
+                poseStack.popPose();
+            }
 
             // disable mask & render border
             switch (maskType) {
@@ -170,9 +236,7 @@ public class MinimapFeature extends UserFeature {
             // Coordinates
             if (showCoords) {
                 String coords = String.format(
-                        "%s, %s, %s",
-                        (int) McUtils.player().getX(), (int) McUtils.player().getY(), (int)
-                                McUtils.player().getZ());
+                        "%s, %s, %s", (int) playerX, (int) McUtils.player().getY(), (int) playerZ);
 
                 FontRenderer.getInstance()
                         .renderText(
