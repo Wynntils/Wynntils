@@ -110,7 +110,7 @@ public class LootrunButton extends AbstractButton {
     private void tryDeleteLootrun() {
         File file = new File(LootrunModel.LOOTRUNS, lootrun.name() + ".json");
         file.delete();
-        screen.reloadLootruns();
+        screen.reloadElements();
     }
 
     private boolean isLoaded() {
