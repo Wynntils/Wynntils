@@ -262,7 +262,13 @@ public class MainMapScreen extends Screen {
         }
 
         // Cursor
+        poseStack.pushPose();
+        RenderUtils.rotatePose(
+                poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
+
         renderCursor(poseStack);
+
+        poseStack.popPose();
 
         RenderSystem.disableScissor();
     }

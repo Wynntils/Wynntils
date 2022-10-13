@@ -211,7 +211,7 @@ public class MinimapFeature extends UserFeature {
             if (!followPlayerRotation) {
                 poseStack.pushPose();
                 RenderUtils.rotatePose(
-                        poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
+                        poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
             }
 
             MapRenderer.renderCursor(
