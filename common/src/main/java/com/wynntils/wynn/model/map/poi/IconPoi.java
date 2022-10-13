@@ -14,6 +14,7 @@ import com.wynntils.mc.objects.CommonColors;
 
 public abstract class IconPoi extends Poi {
 
+
     protected IconPoi(MapLocation location) {
         super(location);
     }

@@ -31,12 +31,17 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.Pair;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
@@ -169,7 +174,7 @@ public class MinimapFeature extends UserFeature {
                 poseStack.popPose();
             }
 
-            renderPois(poseStack, centerX, centerZ, playerX, playerZ, textureBoundingBox);
+            renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingBox);
 
             // cursor
             MapRenderer.renderCursor(
@@ -213,6 +218,8 @@ public class MinimapFeature extends UserFeature {
                 PoseStack poseStack,
                 float centerX,
                 float centerZ,
+                float width,
+                float height,
                 double playerX,
                 double playerZ,
                 BoundingBox textureBoundingBox) {
@@ -225,19 +232,10 @@ public class MinimapFeature extends UserFeature {
             float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
 
             for (Poi poi : pois) {
-                float poiRenderX;
-                float poiRenderZ;
-
-                if (followPlayerRotation) {
-                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
-                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
-
-                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
-                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
-                } else {
-                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
-                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
-                }
+                Pair<Float, Float> renderLocation = getRenderLocation(
+                        poi, playerX, playerZ, centerX, centerZ, sinRotationRadians, cosRotationRadians);
+                float poiRenderX = renderLocation.a();
+                float poiRenderZ = renderLocation.b();
 
                 float poiWidth = poi.getWidth() * poiScale;
                 float poiHeight = poi.getHeight() * poiScale;
@@ -250,7 +248,81 @@ public class MinimapFeature extends UserFeature {
                 }
             }
 
-            // TODO compass icon
+            // Compass icon
+            Optional<WaypointPoi> compassOpt = CompassModel.getCompassWaypoint();
+
+            if (compassOpt.isEmpty()) return;
+
+            WaypointPoi compass = compassOpt.get();
+
+            Pair<Float, Float> compassLocation = getRenderLocation(
+                    compass, playerX, playerZ, centerX, centerZ, sinRotationRadians, cosRotationRadians);
+            float compassRenderX = compassLocation.a();
+            float compassRenderZ = compassLocation.b();
+
+            final float compassSize = Math.max(compass.getWidth(), compass.getHeight()) * 0.8f * poiScale;
+
+            float compassOffsetX = compassRenderX - centerX;
+            float compassOffsetZ = compassRenderZ - centerZ;
+            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
+
+            compassOffsetX /= distance;
+            compassOffsetZ /= distance;
+
+            float scaledWidth = width - 4 * compassSize;
+            float scaledHeight = height - 4 * compassSize;
+
+            float toSquareScale = 1f;
+
+            if (maskType == MapMaskType.Rectangular) {
+                // Scale as necessary
+                toSquareScale =
+                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
+            } else if (maskType == MapMaskType.Circle) {
+                toSquareScale = scaledWidth
+                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
+                        / 2;
+            }
+
+            if (toSquareScale < distance) {
+                float scaledCompassRenderX = centerX + compassOffsetX * toSquareScale;
+                float scaledCompassRenderZ = centerZ + compassOffsetZ * toSquareScale;
+
+                // Replace with pointer
+                float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
+
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, scaledCompassRenderX, scaledCompassRenderZ, angle);
+                compass.getPointerPoi().renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
+                poseStack.popPose();
+            } else {
+                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
+            }
+
+            // TODO render compass text
+        }
+
+        private Pair<Float, Float> getRenderLocation(
+                Poi poi,
+                double playerX,
+                double playerZ,
+                float centerX,
+                float centerZ,
+                float sinRotationRadians,
+                float cosRotationRadians) {
+
+            if (followPlayerRotation) {
+                float dX = (poi.getLocation().getX() - (float) playerX) / scale;
+                float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
+
+                return new Pair<>(
+                        centerX + (dX * cosRotationRadians - dZ * sinRotationRadians),
+                        centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians));
+            } else {
+                return new Pair<>(
+                        MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale),
+                        MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale));
+            }
         }
 
         private void renderCardinalDirections(

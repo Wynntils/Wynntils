@@ -4,11 +4,20 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.Texture;
 
 public class WaypointPoi extends IconPoi {
+
+    private final PointerPoi pointer;
+
     public WaypointPoi(MapLocation location) {
         super(location);
+        pointer = new PointerPoi(location);
+    }
+
+    public PointerPoi getPointerPoi() {
+        return pointer;
     }
 
     @Override
@@ -19,5 +28,24 @@ public class WaypointPoi extends IconPoi {
     @Override
     public String getName() {
         return "Waypoint";
+    }
+
+    public static class PointerPoi extends IconPoi {
+
+        public PointerPoi(MapLocation location) {
+            super(location);
+        }
+
+        @Override
+        public Texture getIcon() {
+            return Texture.POINTER;
+        }
+
+        @Override
+        public String getName() {
+            return "Waypoint";
+        }
+
+
     }
 }
