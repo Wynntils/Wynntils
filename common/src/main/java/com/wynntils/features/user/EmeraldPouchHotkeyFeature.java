@@ -37,7 +37,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
 
         if (emeraldPouches.isEmpty()) {
             NotificationManager.queueMessage(new TextRenderTask(
-                    ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.noPouch"),
+                    ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.noPouch"),
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
             EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
@@ -54,7 +54,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 NotificationManager.queueMessage(new TextRenderTask(
-                        ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchKeybind.multipleFilled"),
+                        ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.multipleFilled"),
                         TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             }
         }

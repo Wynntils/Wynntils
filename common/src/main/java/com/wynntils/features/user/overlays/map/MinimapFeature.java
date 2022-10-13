@@ -32,7 +32,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
@@ -293,7 +292,8 @@ public class MinimapFeature extends UserFeature {
 
                 poseStack.pushPose();
                 RenderUtils.rotatePose(poseStack, scaledCompassRenderX, scaledCompassRenderZ, angle);
-                compass.getPointerPoi().renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
+                compass.getPointerPoi()
+                        .renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
                 poseStack.popPose();
             } else {
                 compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);

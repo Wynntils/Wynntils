@@ -35,6 +35,7 @@ import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.HighlightMatchingItemsFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
+import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.LobbyUptimeFeature;
@@ -125,6 +126,7 @@ public final class FeatureRegistry {
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemCompareFeature());
+        registerFeature(new ItemFavoriteFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());

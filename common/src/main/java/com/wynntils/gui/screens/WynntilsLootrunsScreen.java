@@ -10,7 +10,6 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.settings.WynntilsMenuListScreen;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -67,7 +66,6 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
                 this));
     }
 
-    @Override
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
@@ -241,7 +239,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
 
     @Override
     protected LootrunButton getButtonFromElement(int i) {
-        int offset = i % ELEMENTS_PER_PAGE;
+        int offset = i % getElementsPerPage();
         return new LootrunButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,

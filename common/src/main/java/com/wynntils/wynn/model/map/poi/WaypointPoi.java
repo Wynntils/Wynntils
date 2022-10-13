@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.Texture;
 
 public class WaypointPoi extends IconPoi {
@@ -45,7 +44,5 @@ public class WaypointPoi extends IconPoi {
         public String getName() {
             return "Waypoint";
         }
-
-
     }
 }
