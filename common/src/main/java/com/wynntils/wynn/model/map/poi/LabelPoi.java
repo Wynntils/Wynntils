@@ -34,9 +34,9 @@ public class LabelPoi extends Poi {
     private float getAlphaFromScale(float zoom) {
         float alpha =
                 switch (label.getLayer()) {
-                    case PROVINCE -> MathUtils.map(zoom, 0.2f, 3f, 2f, -4f);
-                    case CITY -> MathUtils.map(zoom, 0.2f, 3f, 0f, 2f);
-                    case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 3f, -0.5f, 2f);
+                    case PROVINCE -> MathUtils.map(zoom, 0.2f, 3f, 2f, -5f);
+                    case CITY -> MathUtils.map(zoom, 0.2f, 3f, 0f, 5f);
+                    case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 3f, -0.5f, 6f);
                 };
 
         return MathUtils.clamp(alpha, 0f, 1f);
@@ -91,7 +91,7 @@ public class LabelPoi extends Poi {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        label.getName() + getAlphaFromScale(mapZoom),
+                        label.getName(),
                         0,
                         0,
                         0,
