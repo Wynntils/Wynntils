@@ -4,6 +4,8 @@
  */
 package com.wynntils.gui.screens.maps;
 
+import com.google.common.collect.Iterables;
+import com.google.gson.internal.Streams;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,6 +30,9 @@ import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
@@ -217,9 +222,13 @@ public class MainMapScreen extends Screen {
 
         hovered = null;
 
-        List<Poi> pois = MapModel.getAllPois()
-                .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
-                .toList();
+        List<Poi> pois = new ArrayList<>();
+
+        pois.addAll(MapModel.getServicePois());
+        pois.addAll(MapModel.getLabelPois());
+        CompassModel.getCompassWaypoint().ifPresent(pois::add);
+
+        pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         List<Poi> filteredPois = new ArrayList<>();
 
@@ -245,7 +254,7 @@ public class MainMapScreen extends Screen {
             }
         }
 
-        // Add hovered poi as last
+        // Add hovered poi as first
         if (hovered != null) {
             filteredPois.remove(hovered);
             filteredPois.add(0, hovered);

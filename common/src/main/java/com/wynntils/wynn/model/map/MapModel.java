@@ -16,6 +16,7 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
@@ -46,7 +47,9 @@ public final class MapModel extends Model {
 
     private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
-    private static final Set<Poi> ALL_POIS = new HashSet<>();
+    private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
+    private static final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
+
 
     public static void init() {
         loadMaps();
@@ -54,21 +57,16 @@ public final class MapModel extends Model {
         loadServices();
     }
 
-    public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
-        return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
+    public static Set<LabelPoi> getLabelPois() {
+        return LABEL_POIS;
     }
 
-    public static Stream<Poi> getAllPois() {
-        if (CompassModel.getCompassLocation().isPresent()) {
-            Location location = CompassModel.getCompassLocation().get();
-            // Always render waypoint POI on top
-            WaypointPoi waypointPoi =
-                    new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
+    public static Set<ServicePoi> getServicePois() {
+        return SERVICE_POIS;
+    }
 
-            return Stream.concat(ALL_POIS.stream(), Stream.of(waypointPoi));
-        }
-
-        return ALL_POIS.stream();
+    public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
+        return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
     }
 
     private static void loadMaps() {
@@ -123,7 +121,7 @@ public final class MapModel extends Model {
                 .handleJsonObject(json -> {
                     PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
                     for (Label label : places.labels) {
-                        ALL_POIS.add(new LabelPoi(label));
+                        LABEL_POIS.add(new LabelPoi(label));
                     }
                     return true;
                 })
@@ -144,7 +142,7 @@ public final class MapModel extends Model {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
                             for (MapLocation location : service.locations) {
-                                ALL_POIS.add(new ServicePoi(location, kind));
+                                SERVICE_POIS.add(new ServicePoi(location, kind));
                             }
                         } else {
                             WynntilsMod.warn("Unknown service type in services.json: " + service.type);
@@ -164,7 +162,7 @@ public final class MapModel extends Model {
                     List<MapLocation> mapLocations = GSON.fromJson(json, type);
 
                     for (int i = 0; i < mapLocations.size(); i++) {
-                        ALL_POIS.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
+                        SERVICE_POIS.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;

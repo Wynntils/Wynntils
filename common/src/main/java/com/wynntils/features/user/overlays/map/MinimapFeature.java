@@ -170,8 +170,8 @@ public class MinimapFeature extends UserFeature {
                 poseStack.popPose();
             }
 
-            List<Poi> pois = MapModel.getAllPois()
-                    .filter(poi -> !(poi instanceof LabelPoi))
+            List<? extends Poi> pois = MapModel.getServicePois()
+                    .stream()
                     .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
                     .toList();
 
