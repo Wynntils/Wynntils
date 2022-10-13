@@ -11,7 +11,6 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.settings.WynntilsMenuListScreen;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.DialogueHistoryButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -208,7 +207,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                         FontRenderer.TextShadow.NONE);
     }
 
-    @Override
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
@@ -381,7 +379,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                 .collect(Collectors.toList());
 
         this.maxPage = Math.max(
-                0, (elements.size() / ELEMENTS_PER_PAGE + (elements.size() % ELEMENTS_PER_PAGE != 0 ? 1 : 0)) - 1);
+                0,
+                (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
     }
 
     private Component getPercentageComponent(int count, int totalCount, int tickCount) {
@@ -415,7 +414,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     private void setQuests(List<QuestInfo> quests) {
         this.elements = new ArrayList<>(quests);
         this.maxPage = Math.max(
-                0, (elements.size() / ELEMENTS_PER_PAGE + (elements.size() % ELEMENTS_PER_PAGE != 0 ? 1 : 0)) - 1);
+                0,
+                (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
         this.setCurrentPage(0);
     }
 
@@ -429,7 +429,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
     @Override
     protected QuestButton getButtonFromElement(int i) {
-        int offset = i % ELEMENTS_PER_PAGE;
+        int offset = i % getElementsPerPage();
         return new QuestButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,

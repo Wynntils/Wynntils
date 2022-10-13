@@ -77,6 +77,7 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isHorse, HorseProperty::new);
         registerProperty(WynnItemMatchers::isServerItem, ServerCountProperty::new);
         registerProperty(itemStack -> true, SearchOverlayProperty::new);
+        registerProperty(itemStack -> true, SearchOverlayProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

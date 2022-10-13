@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
+import com.wynntils.core.webapi.WebManager;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,17 +68,24 @@ public class ItemInfoContainer {
         return (r << 16) + (g << 8) + b;
     }
 
-    // TODO get this method working
     public ItemStack asItemStack() {
         if (material == null) {
-            return new ItemStack(Items.AIR);
+            ItemStack stack = new ItemStack(type.getDefaultItem());
+            stack.setDamageValue(type.getDefaultDamage());
+
+            return stack;
         }
 
         if (material.matches("(.*\\d.*)")) {
             String[] split = material.split(":");
 
-            ItemStack stack = new ItemStack(Item.byId(Integer.parseInt(split[0])));
-            if (split.length <= 1) return stack;
+            int id = Integer.parseInt(split[0]);
+
+            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(
+                    "minecraft:" + WebManager.getMaterialIdMap().getOrDefault(id, "stone")));
+            ItemStack stack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+
+            if (split.length == 1) return stack;
 
             stack.setDamageValue(Integer.parseInt(split[1]));
             return stack;
