@@ -81,7 +81,7 @@ public class LabelPoi extends Poi {
         CustomColor color = getRenderedColor(mapZoom, hovered);
 
         if (color.a < 4) {
-            return;  // small enough alphas are turned into 255
+            return; // small enough alphas are turned into 255
         }
 
         poseStack.pushPose();
