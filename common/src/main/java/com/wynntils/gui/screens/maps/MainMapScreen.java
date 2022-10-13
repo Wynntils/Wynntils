@@ -136,14 +136,8 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
-
         renderMap(poseStack, mouseX, mouseY);
         renderBackground(poseStack);
-
-        RenderSystem.disableScissor();
 
         renderCursor(poseStack);
 
@@ -186,6 +180,10 @@ public class MainMapScreen extends Screen {
     }
 
     private void renderMap(PoseStack poseStack, int mouseX, int mouseY) {
+        RenderUtils.enableScissor(
+                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
+                        mapHeight);
+
         // Background black void color
         RenderUtils.drawRect(
                 poseStack,
@@ -220,6 +218,8 @@ public class MainMapScreen extends Screen {
                     false,
                     false);
         }
+
+        RenderSystem.disableScissor();
     }
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
