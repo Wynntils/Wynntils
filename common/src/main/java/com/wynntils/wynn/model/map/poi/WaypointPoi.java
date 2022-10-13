@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.gui.render.Texture;
 
-public class WaypointPoi extends Poi {
+public class WaypointPoi extends IconPoi {
     public WaypointPoi(MapLocation location) {
         super(location);
     }

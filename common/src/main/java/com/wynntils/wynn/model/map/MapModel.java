@@ -14,7 +14,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.objects.Location;
-import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
@@ -55,17 +54,8 @@ public final class MapModel extends Model {
         loadServices();
     }
 
-    public static Optional<MapTexture> getMapForLocation(int x, int z) {
-        return MAPS.stream()
-                .filter(map -> MathUtils.isInside(x, z, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
-                .findFirst();
-    }
-
-    public static List<MapTexture> getMapsForBoundingBox(int x1, int x2, int z1, int z2) {
-        return MAPS.stream()
-                .filter(map -> MathUtils.boundingBoxIntersects(
-                        x1, x2, z1, z2, map.getX1(), map.getX2(), map.getZ1(), map.getZ2()))
-                .toList();
+    public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
+        return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
     }
 
     public static Stream<Poi> getAllPois() {
