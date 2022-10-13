@@ -52,7 +52,7 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
                 0,
                 Texture.QUEST_BOOK_SEARCH.width(),
                 Texture.QUEST_BOOK_SEARCH.height(),
-                this::reloadElements,
+                s -> reloadElements(),
                 this);
     }
 
@@ -155,7 +155,8 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
         elements.clear();
         reloadElementsList(searchTerm);
 
-        this.maxPage = (elements.size() / ELEMENTS_PER_PAGE + (elements.size() % ELEMENTS_PER_PAGE != 0 ? 1 : 0)) - 1;
+        this.maxPage = Math.max(
+                0, (elements.size() / ELEMENTS_PER_PAGE + (elements.size() % ELEMENTS_PER_PAGE != 0 ? 1 : 0)) - 1);
 
         for (B button : elementButtons) {
             this.removeWidget(button);
@@ -177,6 +178,7 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
 
     public void reloadElements() {
         reloadElements(searchWidget.getTextBoxInput());
+        setCurrentPage(0);
     }
 
     @Override
