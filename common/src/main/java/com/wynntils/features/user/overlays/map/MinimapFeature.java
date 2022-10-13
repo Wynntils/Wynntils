@@ -268,8 +268,8 @@ public class MinimapFeature extends UserFeature {
             compassOffsetX /= distance;
             compassOffsetZ /= distance;
 
-            float scaledWidth = width - 4 * compassSize;
-            float scaledHeight = height - 4 * compassSize;
+            float scaledWidth = width - 2 * compassSize;
+            float scaledHeight = height - 2 * compassSize;
 
             float toBorderScale = 1f;
 
