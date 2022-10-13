@@ -12,10 +12,8 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
-import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,9 +31,8 @@ public class LocateCommand extends CommandBase {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
-    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    MapModel.getLabelPois().stream().map(Poi::getName), builder);
+    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
+            SharedSuggestionProvider.suggest(MapModel.getLabelPois().stream().map(Poi::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {

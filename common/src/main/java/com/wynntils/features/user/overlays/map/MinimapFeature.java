@@ -33,7 +33,6 @@ import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
-import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Comparator;
@@ -170,42 +169,7 @@ public class MinimapFeature extends UserFeature {
                 poseStack.popPose();
             }
 
-            List<? extends Poi> pois = MapModel.getServicePois()
-                    .stream()
-                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
-                    .toList();
-
-            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
-            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
-            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
-
-            for (Poi poi : pois) {
-                float poiRenderX;
-                float poiRenderZ;
-
-                if (followPlayerRotation) {
-                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
-                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
-
-                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
-                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
-                } else {
-                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
-                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
-                }
-
-                float poiWidth = poi.getWidth() * poiScale;
-                float poiHeight = poi.getHeight() * poiScale;
-
-                BoundingBox box = BoundingBox.centered(
-                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
-
-                if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
-                }
-            }
-
-            // TODO compass icon
+            renderPois(poseStack, centerX, centerZ, playerX, playerZ, textureBoundingBox);
 
             // cursor
             if (!followPlayerRotation) {
@@ -247,6 +211,50 @@ public class MinimapFeature extends UserFeature {
                                         coords,
                                         TextRenderSetting.CENTERED.withTextShadow(FontRenderer.TextShadow.OUTLINE)));
             }
+        }
+
+        private void renderPois(
+                PoseStack poseStack,
+                float centerX,
+                float centerZ,
+                double playerX,
+                double playerZ,
+                BoundingBox textureBoundingBox) {
+            List<? extends Poi> pois = MapModel.getServicePois().stream()
+                    .sorted(Comparator.comparing(poi -> poi.getLocation().getY()))
+                    .toList();
+
+            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            float sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            float cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+
+            for (Poi poi : pois) {
+                float poiRenderX;
+                float poiRenderZ;
+
+                if (followPlayerRotation) {
+                    float dX = (poi.getLocation().getX() - (float) playerX) / scale;
+                    float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
+
+                    poiRenderX = centerX + (dX * cosRotationRadians - dZ * sinRotationRadians);
+                    poiRenderZ = centerZ + (dX * sinRotationRadians + dZ * cosRotationRadians);
+                } else {
+                    poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, 1f / scale);
+                    poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, 1f / scale);
+                }
+
+                float poiWidth = poi.getWidth() * poiScale;
+                float poiHeight = poi.getHeight() * poiScale;
+
+                BoundingBox box = BoundingBox.centered(
+                        poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
+
+                if (box.intersects(textureBoundingBox)) {
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
+                }
+            }
+
+            // TODO compass icon
         }
 
         private void renderCardinalDirections(

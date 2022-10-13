@@ -4,8 +4,6 @@
  */
 package com.wynntils.gui.screens.maps;
 
-import com.google.common.collect.Iterables;
-import com.google.gson.internal.Streams;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,9 +28,6 @@ import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
@@ -222,6 +217,20 @@ public class MainMapScreen extends Screen {
 
         hovered = null;
 
+        renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
+        // Cursor
+        poseStack.pushPose();
+        RenderUtils.rotatePose(
+                poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
+
+        renderCursor(poseStack);
+
+        poseStack.popPose();
+
+        RenderSystem.disableScissor();
+    }
+
+    private void renderPois(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
         List<Poi> pois = new ArrayList<>();
 
         pois.addAll(MapModel.getServicePois());
@@ -269,17 +278,6 @@ public class MainMapScreen extends Screen {
 
             poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale, currentZoom);
         }
-
-        // Cursor
-        poseStack.pushPose();
-        RenderUtils.rotatePose(
-                poseStack, centerX, centerZ, 180 + McUtils.player().getYRot());
-
-        renderCursor(poseStack);
-
-        poseStack.popPose();
-
-        RenderSystem.disableScissor();
     }
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {

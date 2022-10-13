@@ -13,18 +13,13 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
-import com.wynntils.mc.objects.Location;
 import com.wynntils.utils.BoundingBox;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
-import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
-import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Stream;
 
 public final class MapModel extends Model {
     private static final String PLACES_JSON_URL =
@@ -49,7 +43,6 @@ public final class MapModel extends Model {
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
     private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
     private static final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
-
 
     public static void init() {
         loadMaps();

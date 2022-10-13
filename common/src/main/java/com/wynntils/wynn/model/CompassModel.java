@@ -8,10 +8,9 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import java.util.Optional;
-
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -33,7 +32,6 @@ public final class CompassModel extends Model {
 
             return Optional.of(waypointPoi);
         }
-
 
         return Optional.empty();
     }
