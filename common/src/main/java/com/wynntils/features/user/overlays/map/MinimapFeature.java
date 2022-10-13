@@ -272,21 +272,21 @@ public class MinimapFeature extends UserFeature {
             float scaledWidth = width - 4 * compassSize;
             float scaledHeight = height - 4 * compassSize;
 
-            float toSquareScale = 1f;
+            float toBorderScale = 1f;
 
             if (maskType == MapMaskType.Rectangular) {
                 // Scale as necessary
-                toSquareScale =
+                toBorderScale =
                         Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
             } else if (maskType == MapMaskType.Circle) {
-                toSquareScale = scaledWidth
+                toBorderScale = scaledWidth
                         / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
                         / 2;
             }
 
-            if (toSquareScale < distance) {
-                float scaledCompassRenderX = centerX + compassOffsetX * toSquareScale;
-                float scaledCompassRenderZ = centerZ + compassOffsetZ * toSquareScale;
+            if (toBorderScale < distance) {
+                float scaledCompassRenderX = centerX + compassOffsetX * toBorderScale;
+                float scaledCompassRenderZ = centerZ + compassOffsetZ * toBorderScale;
 
                 // Replace with pointer
                 float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
@@ -336,16 +336,18 @@ public class MinimapFeature extends UserFeature {
                 float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
                 northDX = (float) StrictMath.sin(yawRadians);
                 northDY = (float) StrictMath.cos(yawRadians);
+
+                double toBorderScaleNorth = 1;
+
                 if (maskType == MapMaskType.Rectangular) {
-                    // Scale as necessary
-                    double toSquareScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-                    northDX *= toSquareScaleNorth;
-                    northDY *= toSquareScaleNorth;
+                    toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
-                    northDX *= toSquareScaleNorth;
-                    northDY *= toSquareScaleNorth;
+                    toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
                 }
+
+                northDX *= toBorderScaleNorth;
+                northDY *= toBorderScaleNorth;
+
             } else {
                 northDX = 0;
                 northDY = -height / 2;
@@ -368,16 +370,16 @@ public class MinimapFeature extends UserFeature {
                 eastDX = -northDY;
                 eastDY = northDX;
 
+                double toBorderScaleEast = 1f;
+
                 if (maskType == MapMaskType.Rectangular) {
-                    // Scale as necessary
-                    double toSquareScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
-                    eastDX *= toSquareScaleEast;
-                    eastDY *= toSquareScaleEast;
+                    toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
                 } else if (maskType == MapMaskType.Circle) {
-                    double toSquareScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
-                    eastDX *= toSquareScaleEast;
-                    eastDY *= toSquareScaleEast;
+                    toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
                 }
+
+                eastDX *= toBorderScaleEast;
+                eastDY *= toBorderScaleEast;
             } else {
                 eastDX = width / 2;
                 eastDY = 0;
