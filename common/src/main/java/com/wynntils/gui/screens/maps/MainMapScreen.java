@@ -142,8 +142,6 @@ public class MainMapScreen extends Screen {
         renderMap(poseStack, mouseX, mouseY);
         renderBackground(poseStack);
 
-        renderCursor(poseStack);
-
         renderCoordinates(poseStack, mouseX, mouseY);
     }
 
@@ -247,6 +245,12 @@ public class MainMapScreen extends Screen {
             }
         }
 
+        // Add hovered poi as last
+        if (hovered != null) {
+            filteredPois.remove(hovered);
+            filteredPois.add(0, hovered);
+        }
+
         // Reverse and Render
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             Poi poi = filteredPois.get(i);
@@ -256,6 +260,9 @@ public class MainMapScreen extends Screen {
 
             poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale, currentZoom);
         }
+
+        // Cursor
+        renderCursor(poseStack);
 
         RenderSystem.disableScissor();
     }
