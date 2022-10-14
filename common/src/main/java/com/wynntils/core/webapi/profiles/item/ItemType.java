@@ -65,4 +65,14 @@ public enum ItemType {
             return Optional.empty();
         }
     }
+
+    public boolean isWeapon() {
+        switch (this) {
+            case SPEAR, WAND, DAGGER, BOW, RELIK -> {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
