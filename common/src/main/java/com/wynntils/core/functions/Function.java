@@ -10,19 +10,19 @@ import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class Function<T> implements Translatable {
-    private final String nameCache;
-    private final String translationNameCache;
+    private final String name;
+    private final String translationName;
 
     public Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");
-        this.nameCache = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
-        this.translationNameCache = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+        this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public abstract T getValue(String argument);
 
     public String getName() {
-        return nameCache;
+        return name;
     }
 
     public List<String> getAliases() {
@@ -38,7 +38,7 @@ public abstract class Function<T> implements Translatable {
     }
 
     private String getTranslationKeyName() {
-        return translationNameCache;
+        return translationName;
     }
 
     public String getTranslation(String keySuffix) {
