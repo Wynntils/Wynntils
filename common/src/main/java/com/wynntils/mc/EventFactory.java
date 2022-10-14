@@ -51,7 +51,7 @@ import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
@@ -149,14 +149,24 @@ public final class EventFactory {
         return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
     }
 
-    public static void onRenderLast(
+    public static void onRenderLevelPost(
             LevelRenderer context,
             PoseStack poseStack,
             float partialTick,
             Matrix4f projectionMatrix,
             long finishTimeNano,
             Camera camera) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+        post(new RenderLevelEvent.Post(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+    }
+
+    public static void onRenderLevelPre(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderLevelEvent.Pre(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
     }
 
     public static void onRenderTileLast(

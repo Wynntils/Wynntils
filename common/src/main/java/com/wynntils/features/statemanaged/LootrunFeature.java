@@ -11,7 +11,7 @@ import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -71,7 +71,7 @@ public class LootrunFeature extends StateManagedFeature {
     }
 
     @SubscribeEvent
-    public void onRenderLastLevel(RenderLevelLastEvent event) {
+    public void onRenderLastLevel(RenderLevelEvent event) {
         LootrunModel.render(event.getPoseStack());
     }
 

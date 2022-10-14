@@ -11,6 +11,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
@@ -35,6 +36,8 @@ public class CustomNametagRendererFeature extends UserFeature {
     @Config
     public boolean showGearOnHover = true;
 
+    private Player hitPlayerCache = null;
+
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
         if (hideAllNametags) {
@@ -55,21 +58,25 @@ public class CustomNametagRendererFeature extends UserFeature {
         addAccountTypeNametag(event);
     }
 
-    private static void addGearNametag(NametagRenderEvent event) {
+    @SubscribeEvent
+    public void onRenderLevel(RenderLevelEvent.Pre event) {
+        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
+        hitPlayerCache = hitPlayer.orElse(null);
+    }
+
+    private void addGearNametag(NametagRenderEvent event) {
         LocalPlayer player = McUtils.player();
 
-        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
-        if (hitPlayer.isEmpty()) return;
-        if (hitPlayer.get() != event.getEntity()) return;
+        if (hitPlayerCache != event.getEntity()) return;
 
         if (!WynnPlayerUtils.isLocalPlayer(player)) return;
 
-        ItemStack heldItem = hitPlayer.get().getMainHandItem();
+        ItemStack heldItem = hitPlayerCache.getMainHandItem();
         if (heldItem != null) {
             getItemComponent(event, heldItem);
         }
 
-        for (ItemStack armorStack : hitPlayer.get().getArmorSlots()) {
+        for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
             getItemComponent(event, armorStack);
         }
     }
