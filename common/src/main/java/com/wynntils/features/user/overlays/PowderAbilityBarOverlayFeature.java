@@ -67,8 +67,12 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
             float powderSpecialCharge = ActionBarModel.getPowderSpecialCharge();
             Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
-                    && McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack
-                    && gearItemStack.getItemProfile().getItemInfo().getType().isWeapon()) return;
+                    && (!(McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack)
+                            || !gearItemStack
+                                    .getItemProfile()
+                                    .getItemInfo()
+                                    .getType()
+                                    .isWeapon())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
