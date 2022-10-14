@@ -34,6 +34,7 @@ public class LodManager<T extends IBoundingBox> {
      */
     public LodManager(@Nullable File lodDirectory, @Nonnull LodCreator<T> lodCreator) {
         this.lodDirectory = lodDirectory;
+        this.lodDirectory.mkdirs();
         this.lodCreator = lodCreator;
         cleanupWorker = new CleanupWorker(this);
         cleanupWorker.setDaemon(true);
@@ -65,6 +66,9 @@ public class LodManager<T extends IBoundingBox> {
      * @return The LOD element or {@code  null}.
      */
     public T getLodByUuid(UUID uuid) {
+        if (uuid == null) {
+            return null;
+        }
         cleanupWorker.update(uuid);
         final T cached = cachedLods.get(uuid);
         if (cached != null) {
@@ -87,7 +91,8 @@ public class LodManager<T extends IBoundingBox> {
         return this.lodCreator;
     }
 
-    public LodManager<T> newInstance() {
+    @Override
+    public LodManager<T> clone() {
         return new LodManager<>(this.lodDirectory, this.lodCreator);
     }
 

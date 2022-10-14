@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Spliterator;
@@ -562,7 +563,8 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
      */
     private void requestRebuild() {
         synchronized (this.dataLock) {
-            if (this.pendingInserts.size() + this.pendingDeletes.size() >= DIRTINESS_THRESHOLD) {
+            if (this.pendingInserts.size() + this.pendingDeletes.size()
+                    >= (this.lodManager == null ? DIRTINESS_THRESHOLD : 0)) {
                 this.forceRebuild();
             }
         }
@@ -589,18 +591,19 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
             oldPendingDeletes = this.pendingDeletes;
             strategy = this.splitStrategy;
             leafCount = this.leafCount;
-            lod = this.lodManager;
+            lod = this.lodManager == null ? null : this.lodManager.clone();
         }
+        //        System.out.println(oldTree);
+        //        System.out.println(oldPendingInserts);
+        //        System.out.println(oldPendingDeletes);
+        //        System.out.println(strategy);
+        //        System.out.println(leafCount);
+        //        System.out.println(objectCache);
+        //        System.out.println(lod);
         new Thread(() -> {
                     // build tree
                     final BvhNode<T> rebuiltTree = buildTree(
-                            oldTree,
-                            oldPendingInserts,
-                            oldPendingDeletes,
-                            strategy,
-                            leafCount,
-                            objectCache,
-                            lod == null ? null : lod.newInstance());
+                            oldTree, oldPendingInserts, oldPendingDeletes, strategy, leafCount, objectCache, lod);
                     // apply updated tree
                     synchronized (this.dataLock) {
                         this.rebuildInProgress = false;
@@ -644,7 +647,7 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
     }
 
     private static <T extends IBoundingBox> void buildLod(final BvhNode<T> node, final LodManager<T> lodManager) {
-        LodCreator<T> lodCreator = lodManager.lodCreator();
+        final LodCreator<T> lodCreator = lodManager.lodCreator();
         if (node.getLodElementUuid() == null || lodManager.getLodByUuid(node.getLodElementUuid()) == null) {
             LodElement<T> lodElement;
             if (node.getChildNodes().isEmpty()) {
@@ -655,11 +658,14 @@ public class BoundingVolumeHierarchy<T extends IBoundingBox> implements Set<T> {
                         node.getChildNodes().stream()
                                 .map(BvhNode::getLodElementUuid)
                                 .map(lodManager::getLodByUuid)
+                                .filter(Objects::nonNull)
                                 .toList(),
                         node.getChildNodes().iterator().next().getLodLevel());
             }
-            lodManager.registerLodObject(lodElement);
-            node.setLodElement(lodElement.uuid(), lodElement.lodLevel());
+            if (lodElement != null) {
+                lodManager.registerLodObject(lodElement);
+                node.setLodElement(lodElement.uuid(), lodElement.lodLevel());
+            }
         }
     }
 

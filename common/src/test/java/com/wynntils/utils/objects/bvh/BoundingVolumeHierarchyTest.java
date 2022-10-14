@@ -10,7 +10,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import testUtils.BvhTestUtils;
 
 /**
  * Tests all functionality of the BVH.
@@ -143,7 +143,7 @@ class BoundingVolumeHierarchyTest {
             final long buildTimeStart = System.currentTimeMillis();
             final BoundingVolumeHierarchy<IBoundingBox> bvh = new BoundingVolumeHierarchy<>();
             bvh.addAll(list);
-            Assertions.assertTrue(waitForBvhRebuild(bvh));
+            Assertions.assertTrue(BvhTestUtils.waitForBvhRebuild(bvh));
             final long buildTimeEnd = System.currentTimeMillis();
             long buildTime = buildTimeEnd - buildTimeStart;
             long listTimeSum = 0;
@@ -195,61 +195,6 @@ class BoundingVolumeHierarchyTest {
      */
     private static IBoundingBox generatePointBB(final Random random) {
         return new AxisAlignedBoundingBox(generatePoint(random));
-    }
-
-    /**
-     * Inspects the BVH via reflection to check the rebuild status.
-     * @param bvh to wait for.
-     */
-    private static boolean waitForBvhRebuild(BoundingVolumeHierarchy bvh) {
-        final Class<BoundingVolumeHierarchy> bvhClass = BoundingVolumeHierarchy.class;
-        final Field dataLockField;
-        final Field rebuildInProgressField;
-        final Field pendingInsertsField;
-        final Field pendingDeletesField;
-        final Object dataLock;
-        try {
-            dataLockField = bvhClass.getDeclaredField("dataLock");
-            dataLockField.setAccessible(true);
-            rebuildInProgressField = bvhClass.getDeclaredField("rebuildInProgress");
-            rebuildInProgressField.setAccessible(true);
-            pendingInsertsField = bvhClass.getDeclaredField("pendingInserts");
-            pendingInsertsField.setAccessible(true);
-            pendingDeletesField = bvhClass.getDeclaredField("pendingDeletes");
-            pendingDeletesField.setAccessible(true);
-            dataLock = dataLockField.get(bvh);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return false;
-        }
-        int rebuildDoneCounter = 0;
-        while (true) {
-            synchronized (dataLock) {
-                boolean rebuildInProgress;
-                Set pendingInserts;
-                Set pendingDeletes;
-                try {
-                    rebuildInProgress = rebuildInProgressField.getBoolean(bvh);
-                    pendingInserts = (Set) pendingInsertsField.get(bvh);
-                    pendingDeletes = (Set) pendingDeletesField.get(bvh);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                if (!rebuildInProgress && pendingInserts.size() == 0 && pendingDeletes.size() == 0) {
-                    rebuildDoneCounter++;
-                    if (rebuildDoneCounter == 10) {
-                        return true;
-                    }
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    // don't count this iteration and wait again
-                    rebuildDoneCounter--;
-                }
-            }
-        }
     }
 
     public record Quadruple<A, B, C, D>(A first, B second, C third, D fourth) {}

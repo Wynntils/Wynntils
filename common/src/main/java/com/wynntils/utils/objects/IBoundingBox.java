@@ -67,8 +67,10 @@ public interface IBoundingBox {
     AxisAlignedBoundingBox getBounds();
 
     class AxisAlignedBoundingBox implements IBoundingBox {
-        public static final Vec3 NEUTRAL_LOWER = doubleToVec3(Double.POSITIVE_INFINITY);
-        public static final Vec3 NEUTRAL_UPPER = doubleToVec3(Double.NEGATIVE_INFINITY);
+        private static final Vec3 NEUTRAL_LOWER = doubleToVec3(Double.POSITIVE_INFINITY);
+        private static final Vec3 NEUTRAL_UPPER = doubleToVec3(Double.NEGATIVE_INFINITY);
+        public static final AxisAlignedBoundingBox INFINITE = new AxisAlignedBoundingBox(
+                doubleToVec3(Double.NEGATIVE_INFINITY), doubleToVec3(Double.POSITIVE_INFINITY));
 
         private Vec3 lower;
         private Vec3 upper;

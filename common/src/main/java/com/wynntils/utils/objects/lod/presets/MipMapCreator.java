@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -72,6 +73,9 @@ public class MipMapCreator implements LodCreator<MipMapImage> {
 
     @Override
     public LodElement<MipMapImage> buildLod(Collection<MipMapImage> elements, int lodLevel) {
+        if (elements == null || elements.isEmpty()) {
+            return null;
+        }
         final int lodMultiplier = (int) Math.sqrt(SPLIT_STRATEGY.bucketCount());
         final int tileSize = elements.iterator().next().image.getWidth();
         final int canvasSize = tileSize * lodMultiplier;
@@ -103,7 +107,9 @@ public class MipMapCreator implements LodCreator<MipMapImage> {
     public byte[] lodObjectToByteArray(final MipMapImage element) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(element.image, "PNG", outputStream);
+            // Note: can't use ByteArrayOutputStream directly due to a bug in Java
+            // direct use causes an IndexOutOfBoundsException
+            ImageIO.write(element.image, "PNG", new MemoryCacheImageOutputStream(outputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }
