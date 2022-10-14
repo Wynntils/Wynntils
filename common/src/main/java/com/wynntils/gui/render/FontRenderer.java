@@ -324,9 +324,15 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(List<String> lines, float maxWidth) {
-        return calculateRenderHeight(lines.stream()
-                .map(s -> new TextRenderTask(s, TextRenderSetting.DEFAULT.withMaxWidth(maxWidth)))
-                .toList());
+        int sum = 0;
+        for (String line : lines) {
+            sum += font.wordWrapHeight(line, (int) maxWidth);
+        }
+        return sum;
+    }
+
+    public float calculateRenderHeight(String line, float maxWidth) {
+        return font.wordWrapHeight(line, (int) maxWidth);
     }
 
     public enum TextShadow {

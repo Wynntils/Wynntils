@@ -103,7 +103,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeight = FontRenderer.getInstance()
-                            .calculateRenderHeight(List.of(guildObjective.asObjectiveString()), this.getWidth())
+                            .calculateRenderHeight(guildObjective.asObjectiveString(), this.getWidth())
                     + actualBarHeight;
 
             float renderY = this.getRenderY()
@@ -127,7 +127,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.textShadow);
 
-            float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+            float height = FontRenderer.getInstance().calculateRenderHeight(text, this.getWidth());
 
             if (height > 9) {
                 renderY += height - 9;
@@ -183,12 +183,14 @@ public class ObjectivesOverlayFeature extends UserFeature {
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeightWithoutTextHeight = SPACE_BETWEEN + actualBarHeight;
-            final float fullHeight = (float) (renderedHeightWithoutTextHeight * objectives.size()
-                    - SPACE_BETWEEN
-                    + objectives.stream()
-                            .mapToDouble(objective -> FontRenderer.getInstance()
-                                    .calculateRenderHeight(List.of(objective.asObjectiveString()), this.getWidth()))
-                            .sum());
+
+            int tempHeight = 0;
+            for (WynnObjective objective : objectives) {
+                tempHeight += FontRenderer.getInstance()
+                        .calculateRenderHeight(objective.asObjectiveString(), (int) this.getWidth());
+            }
+
+            final float fullHeight = renderedHeightWithoutTextHeight * objectives.size() - SPACE_BETWEEN + tempHeight;
 
             float offsetY =
                     switch (this.getRenderVerticalAlignment()) {
@@ -220,8 +222,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 this.getRenderHorizontalAlignment(),
                                 this.textShadow);
 
-                final float textHeight =
-                        FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+                final float textHeight = FontRenderer.getInstance().calculateRenderHeight(text, (int) this.getWidth());
 
                 if (textHeight > 9) {
                     renderY += textHeight - 9;
