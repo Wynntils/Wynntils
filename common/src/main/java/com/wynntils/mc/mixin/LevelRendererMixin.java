@@ -36,7 +36,22 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLast(
+        EventFactory.onRenderLevelPost(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @Inject(at = @At("HEAD"), method = "renderLevel")
+    private void renderLevelPre(
+            PoseStack poseStack,
+            float partialTick,
+            long finishNanoTime,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightTexture lightTexture,
+            Matrix4f projectionMatrix,
+            CallbackInfo ci) {
+        EventFactory.onRenderLevelPre(
                 this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
     }
 
