@@ -14,6 +14,7 @@ import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
+import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
@@ -30,9 +31,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomNametagRendererFeature extends UserFeature {
     @Config
     public boolean hideAllNametags = false;
-
-    @Config
-    public boolean showAccountType = true;
 
     @Config
     public boolean showGearOnHover = true;
@@ -54,9 +52,7 @@ public class CustomNametagRendererFeature extends UserFeature {
             addGearNametag(event);
         }
 
-        if (showAccountType) {
-            addAccountTypeNametag(event);
-        }
+        addAccountTypeNametag(event);
     }
 
     private static void addGearNametag(NametagRenderEvent event) {
@@ -104,13 +100,12 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {
-        for (AccountType type : AccountType.values()) {
-            if (type.getComponent() == null) continue;
+        WynntilsUser user = UserInfoModel.getUser(event.getEntity().getUUID());
+        if (user == null) return;
+        AccountType accountType = user.accountType();
+        if (accountType.getComponent() == null) return;
 
-            if (UserInfoModel.isAccountType(event.getEntity().getUUID(), type)) {
-                event.addInjectedLine(type.getComponent());
-            }
-        }
+        event.addInjectedLine(accountType.getComponent());
     }
 
     @Override
