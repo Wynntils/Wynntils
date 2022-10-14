@@ -139,6 +139,6 @@ public class UnidentifiedItemStack extends WynnItemStack {
     }
 
     public List<String> getPossibleItems() {
-        return itemPossibilities;
+        return itemPossibilities == null ? List.of() : itemPossibilities;
     }
 }
