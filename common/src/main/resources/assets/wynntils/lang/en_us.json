@@ -61,8 +61,6 @@
   "feature.wynntils.customNametagRenderer.hideAllNametags.description": "Should all player nametags be hidden?",
   "feature.wynntils.customNametagRenderer.hideAllNametags.name": "Hide All Player Nametags",
   "feature.wynntils.customNametagRenderer.name": "Nametag Rendering",
-  "feature.wynntils.customNametagRenderer.showAccountType.description": "Should the account type be rendered below an user's name?",
-  "feature.wynntils.customNametagRenderer.showAccountType.name": "Show Account Type",
   "feature.wynntils.customNametagRenderer.showGearOnHover.description": "Should a hovered player's gears' name be rendered in the nametag?",
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
   "feature.wynntils.dataStorage.dryBoxes.description": "Dry Boxes for Function variable",
