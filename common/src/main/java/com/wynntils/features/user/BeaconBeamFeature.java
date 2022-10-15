@@ -88,6 +88,6 @@ public class BeaconBeamFeature extends UserFeature {
 
         poseStack.popPose();
 
-        bufferSource.endBatch();
+        bufferSource.endLastBatch();
     }
 }
