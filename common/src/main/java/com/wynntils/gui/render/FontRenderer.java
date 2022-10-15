@@ -10,10 +10,10 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -186,13 +186,12 @@ public final class FontRenderer {
             return;
         }
 
-        List<String> parts = Arrays.stream(StringUtils.wrapTextBySize(text, (int) maxWidth))
-                .filter(s -> !s.isBlank())
-                .toList();
+        List<FormattedText> parts = font.getSplitter().splitLines(text, (int) maxWidth, Style.EMPTY);
+
         String lastPart = "";
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part = getLastPartCodes(lastPart) + parts.get(i);
+            String part = getLastPartCodes(lastPart) + parts.get(i).getString();
             lastPart = part;
             renderText(
                     poseStack,
@@ -248,7 +247,7 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, x, currentY, line);
-            currentY += calculateRenderHeight(List.of(line));
+            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
         }
     }
 
@@ -303,16 +302,8 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                int lines = 1;
-                if (textRenderTask.getText().contains(" ")) {
-                    lines = Arrays.stream(StringUtils.wrapTextBySize(textRenderTask.getText(), (int)
-                                    textRenderTask.getSetting().maxWidth()))
-                            .filter(s -> !s.isBlank())
-                            .toList()
-                            .size();
-                }
-
-                height += lines * font.lineHeight;
+                height += font.wordWrapHeight(textRenderTask.getText(), (int)
+                        textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
         }
