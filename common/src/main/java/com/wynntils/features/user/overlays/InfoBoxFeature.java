@@ -101,7 +101,7 @@ public class InfoBoxFeature extends UserFeature {
                                 CommonColors.WHITE,
                                 this.getRenderHorizontalAlignment(),
                                 this.getRenderVerticalAlignment(),
-                                FontRenderer.TextShadow.OUTLINE);
+                                this.textShadow);
 
                 renderY += FontRenderer.getInstance().getFont().lineHeight;
             }
