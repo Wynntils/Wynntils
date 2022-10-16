@@ -6,6 +6,7 @@ package com.wynntils.core.webapi.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.objects.MaterialMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,12 +99,30 @@ public class IngredientProfile {
 
             int id = Integer.parseInt(split[0]);
 
-            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(
-                    "minecraft:" + WebManager.getMaterialIdMap().getOrDefault(id, "stone")));
+            Optional<Item> item = Optional.empty();
+            boolean variation = false;
+
+            MaterialMapping materialMapping = WebManager.getMaterialIdMap().getOrDefault(id, MaterialMapping.DEFAULT);
+            if (!materialMapping.variations().isEmpty() && split.length > 1) {
+                int damage = Integer.parseInt(split[1]);
+
+                if (materialMapping.variations().containsKey(damage)) {
+                    item = Registry.ITEM.getOptional(new ResourceLocation("minecraft:"
+                            + materialMapping.variations().get(damage).name()));
+                    variation = true;
+                }
+            } else {
+                item = Registry.ITEM.getOptional(new ResourceLocation("minecraft:" + materialMapping.name()));
+            }
+
             itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
 
-            if (split.length > 1) {
-                itemStack.setDamageValue(Integer.parseInt(split[1]));
+            if (!variation && split.length > 1) {
+                int damage = Integer.parseInt(split[1]);
+
+                if (damage > 0) {
+                    itemStack.setDamageValue(Integer.parseInt(split[1]));
+                }
             }
         } else {
             Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));

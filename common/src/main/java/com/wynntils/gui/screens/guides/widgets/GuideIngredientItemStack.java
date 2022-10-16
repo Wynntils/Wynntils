@@ -7,12 +7,10 @@ package com.wynntils.gui.screens.guides.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IngredientItemStack;
@@ -41,7 +39,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(ItemHighlightFeature.inventoryOpacity),
+                color.withAlpha(1f),
                 actualX - 1,
                 actualY - 1,
                 0,
@@ -52,7 +50,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
@@ -73,7 +71,7 @@ public class GuideIngredientItemStack extends AbstractButton {
             return false;
         }
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Utils.openUrl("https://www.wynndata.tk/i/" + Utils.encodeUrl(unformattedName));
             return true;

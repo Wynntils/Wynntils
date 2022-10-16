@@ -7,7 +7,6 @@ package com.wynntils.gui.screens.guides.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
@@ -41,7 +40,7 @@ public class GuideGearItemStack extends AbstractButton {
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(ItemHighlightFeature.inventoryOpacity),
+                color.withAlpha(1f),
                 actualX - 1,
                 actualY - 1,
                 0,

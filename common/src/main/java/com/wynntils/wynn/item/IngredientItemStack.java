@@ -4,15 +4,18 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientItemModifiers;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientModifiers;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -25,10 +28,17 @@ public class IngredientItemStack extends WynnItemStack {
 
     private final List<Component> guideTooltip;
 
-    private IngredientProfile ingredientProfile;
+    private final IngredientProfile ingredientProfile;
 
     public IngredientItemStack(ItemStack stack) {
         super(stack);
+
+        Matcher matcher = WynnItemMatchers.ingredientOrMaterialMatcher(stack.getHoverName());
+        if (!matcher.matches()) {
+            throw new IllegalStateException("Matcher did not match for IngredientItemStack");
+        }
+
+        ingredientProfile = WebManager.getIngredients().get(matcher.group(1));
 
         isGuideStack = false;
         guideTooltip = List.of();
@@ -58,9 +68,13 @@ public class IngredientItemStack extends WynnItemStack {
 
     @Override
     public Component getHoverName() {
-        return new TextComponent(ingredientProfile.getDisplayName())
-                .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent(" " + ingredientProfile.getTier().getTierString()));
+        if (isGuideStack) {
+            return new TextComponent(ingredientProfile.getDisplayName())
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(new TextComponent(" " + ingredientProfile.getTier().getTierString()));
+        }
+
+        return super.getHoverName();
     }
 
     private List<Component> generateGuideTooltip() {

@@ -12,8 +12,8 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.WynntilsMenuScreen;
 import com.wynntils.gui.screens.guides.widgets.GuideIngredientItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -64,7 +64,7 @@ public class WynntilsIngredientGuideScreen
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                new WynntilsGuidesListScreen()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -136,8 +136,9 @@ public class WynntilsIngredientGuideScreen
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
             tooltipLines.add(TextComponent.EMPTY);
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
+
+            String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {

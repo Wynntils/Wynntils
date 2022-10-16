@@ -5,6 +5,7 @@
 package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.objects.MaterialMapping;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,8 +82,9 @@ public class ItemInfoContainer {
 
             int id = Integer.parseInt(split[0]);
 
-            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(
-                    "minecraft:" + WebManager.getMaterialIdMap().getOrDefault(id, "stone")));
+            MaterialMapping materialMapping = WebManager.getMaterialIdMap().getOrDefault(id, MaterialMapping.DEFAULT);
+            Optional<Item> item =
+                    Registry.ITEM.getOptional(new ResourceLocation("minecraft:" + materialMapping.name()));
             ItemStack stack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
 
             if (split.length == 1) return stack;
