@@ -16,6 +16,7 @@ import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
@@ -73,6 +74,10 @@ public final class WebManager extends CoreManager {
     private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
     private static HashMap<Integer, String> materialIdMap = new HashMap<>();
 
+    private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
+    private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
+    private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+
     private static String currentSplash = "";
 
     private static TerritoryUpdateThread territoryUpdateThread;
@@ -100,6 +105,7 @@ public final class WebManager extends CoreManager {
         WebManager.tryLoadItemList();
         WebManager.tryLoadItemGuesses();
         WebManager.tryLoadItemMaterialIdMap();
+        WebManager.tryLoadIngredientList();
     }
 
     public static boolean isLoggedIn() {
@@ -279,6 +285,32 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
+    }
+
+    public static void tryLoadIngredientList() {
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
+
+        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/ingredientList", "ingredientList")
+                .cacheTo(new File(API_CACHE_ROOT, "ingredient_list.json"))
+                .useCacheAsBackup()
+                .handleJsonObject(j -> {
+                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+                    ingredientHeadTextures = gson.fromJson(j.getAsJsonObject("headTextures"), hashmapType);
+
+                    IngredientProfile[] gItems =
+                            gson.fromJson(j.getAsJsonArray("ingredients"), IngredientProfile[].class);
+                    HashMap<String, IngredientProfile> cingredients = new HashMap<>();
+
+                    for (IngredientProfile prof : gItems) {
+                        cingredients.put(prof.getDisplayName(), prof);
+                    }
+
+                    ingredients = cingredients;
+                    directIngredients = cingredients.values();
+
+                    return true;
+                })
+                .build());
     }
 
     private static void tryReloadApiUrls(boolean async) {

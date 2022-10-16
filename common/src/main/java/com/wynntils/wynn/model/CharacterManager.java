@@ -6,6 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.utils.ItemUtils;
@@ -227,15 +228,13 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            Map<ProfessionInfo.ProfessionType, Integer> levels = new HashMap<>();
+            Map<ProfessionType, Integer> levels = new HashMap<>();
             List<String> professionLore = ItemUtils.getLore(professionInfoItem);
             for (String line : professionLore) {
                 Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
 
                 if (matcher.matches()) {
-                    levels.put(
-                            ProfessionInfo.ProfessionType.valueOf(matcher.group(2)),
-                            Integer.parseInt(matcher.group(1)));
+                    levels.put(ProfessionType.fromString(matcher.group(2)), Integer.parseInt(matcher.group(1)));
                 }
             }
 

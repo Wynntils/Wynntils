@@ -58,6 +58,7 @@ public class ItemStackTransformModel extends Model {
         registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
         registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
         registerTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
+        registerTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
