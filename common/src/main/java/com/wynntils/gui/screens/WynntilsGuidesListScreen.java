@@ -22,7 +22,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
-    private static final List<Screen> GUIDES = List.of(new WynntilsItemGuideScreen());
+    private final List<Screen> GUIDES = List.of(new WynntilsItemGuideScreen());
 
     public WynntilsGuidesListScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
