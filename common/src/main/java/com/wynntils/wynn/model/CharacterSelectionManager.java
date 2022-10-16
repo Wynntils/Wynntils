@@ -26,7 +26,8 @@ import org.lwjgl.glfw.GLFW;
 public class CharacterSelectionManager extends CoreManager {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§a\\[\\+\\] Create a new character");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§6\\[>\\] Select (.+)");
-    private static final Pattern CLASS_ITEM_CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
+    private static final Pattern CLASS_ITEM_CLASS_PATTERN =
+            Pattern.compile("§e- §r§7Class: (§r)?(§c§l☠§r)?(§6§l❂§r)?(§3§l⛏§r)?(§5§l⚔§r)?(\\s)?(§r)?§f(?<name>.+)");
     private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
     private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §r§7XP: §r§f(\\d+)%");
     private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §r§7Soul Points: §r§f(\\d+)");
@@ -104,7 +105,7 @@ public class CharacterSelectionManager extends CoreManager {
             Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
 
             if (matcher.matches()) {
-                String classTypeString = matcher.group(1);
+                String classTypeString = matcher.group("name");
                 classType = ClassType.fromName(classTypeString);
                 if (DEFAULT_CLASS_NAME.equals(className)) {
                     className = classTypeString;
