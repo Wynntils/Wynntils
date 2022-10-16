@@ -443,6 +443,18 @@ public final class WebManager extends CoreManager {
         return translatedReferences;
     }
 
+    public static Collection<IngredientProfile> getDirectIngredients() {
+        return directIngredients;
+    }
+
+    public static HashMap<String, IngredientProfile> getIngredients() {
+        return ingredients;
+    }
+
+    public static HashMap<String, String> getIngredientHeadTextures() {
+        return ingredientHeadTextures;
+    }
+
     public static HashMap<String, TerritoryProfile> getTerritories() {
         return territories;
     }

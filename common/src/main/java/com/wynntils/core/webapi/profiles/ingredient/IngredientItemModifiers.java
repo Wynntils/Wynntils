@@ -7,6 +7,7 @@ package com.wynntils.core.webapi.profiles.ingredient;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 
 public class IngredientItemModifiers {
 
@@ -73,25 +74,38 @@ public class IngredientItemModifiers {
                 || agility != 0;
     }
 
-    public List<String> getItemModifierLoreLines() {
+    public List<TextComponent> getItemModifierLoreLines() {
         List<String> itemLore = new ArrayList<>();
 
-        if (durability != 0 && duration != 0)
+        if (durability != 0 && duration != 0) {
             itemLore.add(
                     IngredientItemModifiers.getFormattedModifierText("Durability", durability) + ChatFormatting.GRAY
                             + " or " + IngredientItemModifiers.getFormattedModifierText("Duration", duration));
-        else if (durability != 0)
+        } else if (durability != 0) {
             itemLore.add(IngredientItemModifiers.getFormattedModifierText("Durability", durability));
-        else if (duration != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Duration", duration));
+        } else if (duration != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Duration", duration));
+        }
 
-        if (charges != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Charges", charges));
-        if (strength != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Strength Min.", strength));
-        if (dexterity != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Dexterity Min.", dexterity));
-        if (intelligence != 0)
+        if (charges != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Charges", charges));
+        }
+        if (strength != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Strength Min.", strength));
+        }
+        if (dexterity != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Dexterity Min.", dexterity));
+        }
+        if (intelligence != 0) {
             itemLore.add(IngredientItemModifiers.getFormattedModifierText("Intelligence Min.", intelligence));
-        if (defense != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Defense Min.", defense));
-        if (agility != 0) itemLore.add(IngredientItemModifiers.getFormattedModifierText("Agility Min.", agility));
+        }
+        if (defense != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Defense Min.", defense));
+        }
+        if (agility != 0) {
+            itemLore.add(IngredientItemModifiers.getFormattedModifierText("Agility Min.", agility));
+        }
 
-        return itemLore;
+        return itemLore.stream().map(TextComponent::new).toList();
     }
 }

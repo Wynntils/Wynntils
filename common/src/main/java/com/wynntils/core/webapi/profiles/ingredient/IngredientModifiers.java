@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 
 public class IngredientModifiers {
     int left = 0;
@@ -53,7 +54,7 @@ public class IngredientModifiers {
         };
     }
 
-    public List<String> getModifierLoreLines() {
+    public List<TextComponent> getModifierLoreLines() {
         List<String> itemLore = new ArrayList<>();
 
         if (this.left != 0) {
@@ -75,6 +76,6 @@ public class IngredientModifiers {
             itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("not touching", notTouching)));
         }
 
-        return itemLore;
+        return itemLore.stream().map(TextComponent::new).toList();
     }
 }

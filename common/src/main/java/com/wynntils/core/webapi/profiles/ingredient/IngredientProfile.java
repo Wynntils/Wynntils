@@ -5,9 +5,20 @@
 package com.wynntils.core.webapi.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
+import com.wynntils.core.webapi.WebManager;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class IngredientProfile {
     String name;
@@ -66,5 +77,65 @@ public class IngredientProfile {
 
     public Map<String, IngredientIdentificationContainer> getStatuses() {
         return this.statuses;
+    }
+
+    public IngredientModifiers getIngredientModifiers() {
+        return ingredientModifiers;
+    }
+
+    public IngredientItemModifiers getItemModifiers() {
+        return itemModifiers;
+    }
+
+    public boolean isUntradeable() {
+        return untradeable;
+    }
+
+    public ItemStack asItemStack() {
+        if (material == null) {
+            return new ItemStack(Items.AIR);
+        }
+
+        ItemStack itemStack;
+
+        if (material.matches("(.*\\d.*)")) {
+            String[] split = material.split(":");
+
+            int id = Integer.parseInt(split[0]);
+
+            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(
+                    "minecraft:" + WebManager.getMaterialIdMap().getOrDefault(id, "stone")));
+            itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+
+            if (split.length > 1) {
+                itemStack.setDamageValue(Integer.parseInt(split[1]));
+            }
+        } else {
+            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
+            itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+        }
+
+        itemStack.getOrCreateTag().putBoolean("Unbreakable", true);
+
+        if (itemStack.getItem() == Items.PLAYER_HEAD) {
+            HashMap<String, String> ingredientHeadTextures = WebManager.getIngredientHeadTextures();
+
+            if (ingredientHeadTextures.containsKey(name)) {
+                CompoundTag skullData = new CompoundTag();
+                skullData.putString("Id", UUID.randomUUID().toString());
+
+                CompoundTag properties = new CompoundTag();
+                ListTag textures = new ListTag();
+                CompoundTag textureEntry = new CompoundTag();
+                textureEntry.putString("Value", ingredientHeadTextures.get(name));
+                textures.add(textureEntry);
+                properties.put("textures", textures);
+                skullData.put("Properties", properties);
+
+                itemStack.getOrCreateTag().put("SkullOwner", skullData);
+            }
+        }
+
+        return itemStack;
     }
 }
