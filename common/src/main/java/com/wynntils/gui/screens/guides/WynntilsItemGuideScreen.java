@@ -34,13 +34,10 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private final List<GearItemStack> parsedItemCache;
+    private List<GearItemStack> parsedItemCache;
 
     public WynntilsItemGuideScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.name"));
-
-        parsedItemCache =
-                WebManager.getItemsCollection().stream().map(GearItemStack::new).toList();
     }
 
     @Override
@@ -51,6 +48,12 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
 
     @Override
     protected void init() {
+        if (parsedItemCache == null) {
+            parsedItemCache = WebManager.getItemsCollection().stream()
+                    .map(GearItemStack::new)
+                    .toList();
+        }
+
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
