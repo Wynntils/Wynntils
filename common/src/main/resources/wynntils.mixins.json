@@ -5,6 +5,7 @@
     "ChestMenuMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
+    "ClientPackSourceMixin",
     "CommandSuggestionsMixin",
     "ConnectionMixin",
     "ConnectScreenMixin",

@@ -53,6 +53,7 @@ import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -99,6 +100,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -245,11 +247,17 @@ public final class EventFactory {
     // endregion
 
     // region Screen Events
-    public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
+    public static void onScreenCreatedPost(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent(titleScreen, addButton));
+            postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
             post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
+        }
+    }
+
+    public static void onScreenCreatedPre(Screen screen, Consumer<AbstractWidget> addButton) {
+        if (screen instanceof TitleScreen titleScreen) {
+            postAlways(new TitleScreenInitEvent.Pre(titleScreen, addButton));
         }
     }
 
@@ -396,8 +404,12 @@ public final class EventFactory {
         postAlways(new ConnectedEvent(host, port));
     }
 
-    public static void onResourcePack() {
-        post(new ResourcePackEvent());
+    public static Event onResourcePack(ClientboundResourcePackPacket packet) {
+        return post(new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired()));
+    }
+
+    public static Event onResourcePackClearEvent(String hash) {
+        return postAlways(new ResourcePackClearEvent(hash));
     }
 
     public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {

@@ -31,6 +31,7 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,6 +43,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientPacketListenerMixin {
     @Shadow
     public abstract PlayerInfo getPlayerInfo(UUID uniqueId);
+
+    @Shadow
+    protected abstract void send(ServerboundResourcePackPacket.Action action);
 
     private static boolean isRenderThread() {
         return (McUtils.mc().isSameThread());
@@ -74,9 +78,13 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleResourcePack(Lnet/minecraft/network/protocol/game/ClientboundResourcePackPacket;)V",
-            at = @At("RETURN"))
-    private void handleResourcePackPost(ClientboundResourcePackPacket packet, CallbackInfo ci) {
-        EventFactory.onResourcePack();
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleResourcePackPre(ClientboundResourcePackPacket packet, CallbackInfo ci) {
+        if (EventFactory.onResourcePack(packet).isCanceled()) {
+            this.send(ServerboundResourcePackPacket.Action.SUCCESSFULLY_LOADED);
+            ci.cancel();
+        }
     }
 
     @Inject(
