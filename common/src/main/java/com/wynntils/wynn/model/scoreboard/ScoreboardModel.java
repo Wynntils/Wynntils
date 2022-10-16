@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
-import com.google.common.collect.Maps;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
@@ -183,7 +182,6 @@ public final class ScoreboardModel extends Model {
 
     private static void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {
-
             List<String> skipped = new ArrayList<>();
 
             for (Segment parsedSegment : segments) {
@@ -265,22 +263,20 @@ public final class ScoreboardModel extends Model {
             Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
             score.setScore(scoreboardLine.index());
         }
-
     }
 
     private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
         List<Segment> segments = new ArrayList<>();
 
-        List<String> scoreboardLines = scoreboardCopy.stream()
-                .map(ScoreboardLine::line).toList();
+        List<String> scoreboardLines =
+                scoreboardCopy.stream().map(ScoreboardLine::line).toList();
 
         Segment currentSegment = null;
 
         for (int i = 0; i < scoreboardCopy.size(); i++) {
             String line = scoreboardLines.get(i);
 
-            String strippedLine =
-                    ComponentUtils.stripFormatting(line);
+            String strippedLine = ComponentUtils.stripFormatting(line);
 
             if (strippedLine == null) {
                 continue;
