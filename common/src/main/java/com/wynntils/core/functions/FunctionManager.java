@@ -13,8 +13,6 @@ import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -81,9 +79,13 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static Optional<Function<?>> forName(String functionName) {
-        return FunctionManager.getFunctions().stream()
-                .filter(function -> hasName(function, functionName))
-                .findFirst();
+        for (Function<?> function : FunctionManager.getFunctions()) {
+            if (hasName(function, functionName)) {
+                return Optional.of(function);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private static boolean hasName(Function<?> function, String name) {
@@ -203,7 +205,7 @@ public final class FunctionManager extends CoreManager {
         return dependencies;
     }
 
-    public static TextRenderTask getStringFromLegacyTemplate(String renderableText) {
+    public static String[] getLinesFromLegacyTemplate(String renderableText) {
         StringBuilder builder = new StringBuilder(renderableText.length() + 10);
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
@@ -225,7 +227,7 @@ public final class FunctionManager extends CoreManager {
         }
         m.appendTail(builder);
 
-        return new TextRenderTask(parseColorCodes(builder.toString()), TextRenderSetting.DEFAULT);
+        return parseColorCodes(builder.toString()).split("\n");
     }
 
     private static String parseColorCodes(String toProcess) {

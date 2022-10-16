@@ -11,9 +11,11 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.UserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
+import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
@@ -32,10 +34,9 @@ public class CustomNametagRendererFeature extends UserFeature {
     public boolean hideAllNametags = false;
 
     @Config
-    public boolean showAccountType = true;
-
-    @Config
     public boolean showGearOnHover = true;
+
+    private Player hitPlayerCache = null;
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
@@ -54,26 +55,28 @@ public class CustomNametagRendererFeature extends UserFeature {
             addGearNametag(event);
         }
 
-        if (showAccountType) {
-            addAccountTypeNametag(event);
-        }
+        addAccountTypeNametag(event);
     }
 
-    private static void addGearNametag(NametagRenderEvent event) {
+    @SubscribeEvent
+    public void onRenderLevel(RenderLevelEvent.Pre event) {
+        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
+        hitPlayerCache = hitPlayer.orElse(null);
+    }
+
+    private void addGearNametag(NametagRenderEvent event) {
         LocalPlayer player = McUtils.player();
 
-        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
-        if (hitPlayer.isEmpty()) return;
-        if (hitPlayer.get() != event.getEntity()) return;
+        if (hitPlayerCache != event.getEntity()) return;
 
         if (!WynnPlayerUtils.isLocalPlayer(player)) return;
 
-        ItemStack heldItem = hitPlayer.get().getMainHandItem();
+        ItemStack heldItem = hitPlayerCache.getMainHandItem();
         if (heldItem != null) {
             getItemComponent(event, heldItem);
         }
 
-        for (ItemStack armorStack : hitPlayer.get().getArmorSlots()) {
+        for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
             getItemComponent(event, armorStack);
         }
     }
@@ -104,13 +107,12 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {
-        for (AccountType type : AccountType.values()) {
-            if (type.getComponent() == null) continue;
+        WynntilsUser user = UserInfoModel.getUser(event.getEntity().getUUID());
+        if (user == null) return;
+        AccountType accountType = user.accountType();
+        if (accountType.getComponent() == null) return;
 
-            if (UserInfoModel.isAccountType(event.getEntity().getUUID(), type)) {
-                event.addInjectedLine(type.getComponent());
-            }
-        }
+        event.addInjectedLine(accountType.getComponent());
     }
 
     @Override

@@ -13,9 +13,11 @@ import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
+import com.wynntils.core.webapi.objects.MaterialMapping;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
@@ -51,6 +53,9 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
+    private static final String MATERIAL_ID_MAP_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/materials/materials.json";
+
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
@@ -68,6 +73,11 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, String> internalIdentifications = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+    private static HashMap<Integer, MaterialMapping> materialIdMap = new HashMap<>();
+
+    private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
+    private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
+    private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
 
     private static String currentSplash = "";
 
@@ -95,6 +105,8 @@ public final class WebManager extends CoreManager {
     private static void loadCommonObjects() {
         WebManager.tryLoadItemList();
         WebManager.tryLoadItemGuesses();
+        WebManager.tryLoadItemMaterialIdMap();
+        WebManager.tryLoadIngredientList();
     }
 
     public static boolean isLoggedIn() {
@@ -214,6 +226,42 @@ public final class WebManager extends CoreManager {
         // Check for success
     }
 
+    private static void tryLoadItemMaterialIdMap() {
+        handler.addAndDispatch(new RequestBuilder(MATERIAL_ID_MAP_URL, "material_id_map")
+                .cacheTo(new File(API_CACHE_ROOT, "material_id_map.json"))
+                .handleJsonArray(json -> {
+                    HashMap<Integer, MaterialMapping> tempMap = new HashMap<>();
+                    for (JsonElement jsonElement : json) {
+                        JsonObject itemObject = jsonElement.getAsJsonObject();
+
+                        int id = itemObject.getAsJsonPrimitive("id").getAsInt();
+                        String name = itemObject.getAsJsonPrimitive("name").getAsString();
+                        Map<Integer, MaterialMapping.Variation> variations = new HashMap<>();
+
+                        if (itemObject.has("variations")) {
+                            for (JsonElement variation : itemObject.getAsJsonArray("variations")) {
+                                JsonObject obj = variation.getAsJsonObject();
+                                int metadata =
+                                        obj.getAsJsonPrimitive("metadata").getAsInt();
+                                variations.put(
+                                        metadata,
+                                        new MaterialMapping.Variation(
+                                                metadata,
+                                                obj.getAsJsonPrimitive("name").getAsString()));
+                            }
+                        }
+
+                        tempMap.put(id, new MaterialMapping(id, name, variations));
+                    }
+
+                    materialIdMap = tempMap;
+
+                    return true;
+                })
+                .useCacheAsBackup()
+                .build());
+    }
+
     private static void tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
@@ -253,6 +301,32 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
+    }
+
+    public static void tryLoadIngredientList() {
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
+
+        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/ingredientList", "ingredientList")
+                .cacheTo(new File(API_CACHE_ROOT, "ingredient_list.json"))
+                .useCacheAsBackup()
+                .handleJsonObject(j -> {
+                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+                    ingredientHeadTextures = gson.fromJson(j.getAsJsonObject("headTextures"), hashmapType);
+
+                    IngredientProfile[] gItems =
+                            gson.fromJson(j.getAsJsonArray("ingredients"), IngredientProfile[].class);
+                    HashMap<String, IngredientProfile> cingredients = new HashMap<>();
+
+                    for (IngredientProfile prof : gItems) {
+                        cingredients.put(prof.getDisplayName(), prof);
+                    }
+
+                    ingredients = cingredients;
+                    directIngredients = cingredients.values();
+
+                    return true;
+                })
+                .build());
     }
 
     private static void tryReloadApiUrls(boolean async) {
@@ -365,6 +439,10 @@ public final class WebManager extends CoreManager {
         return items;
     }
 
+    public static HashMap<Integer, MaterialMapping> getMaterialIdMap() {
+        return materialIdMap;
+    }
+
     public static HashMap<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
@@ -379,6 +457,18 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
+    }
+
+    public static Collection<IngredientProfile> getIngredientsCollection() {
+        return directIngredients;
+    }
+
+    public static HashMap<String, IngredientProfile> getIngredients() {
+        return ingredients;
+    }
+
+    public static HashMap<String, String> getIngredientHeadTextures() {
+        return ingredientHeadTextures;
     }
 
     public static HashMap<String, TerritoryProfile> getTerritories() {

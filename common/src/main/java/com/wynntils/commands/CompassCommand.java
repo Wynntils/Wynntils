@@ -13,7 +13,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.poi.LabelPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
@@ -98,9 +97,8 @@ public class CompassCommand extends CommandBase {
         ServiceKind selectedKind = matchedKinds.get(0);
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<Poi> closestServiceOptional = MapModel.getAllPois()
-                .filter(poi -> poi instanceof ServicePoi servicePoi
-                        && servicePoi.getKind().equals(selectedKind))
+        Optional<ServicePoi> closestServiceOptional = MapModel.getServicePois().stream()
+                .filter(poi -> poi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
                         poi.getLocation().getY(),
@@ -125,8 +123,8 @@ public class CompassCommand extends CommandBase {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getAllPois()
-                .filter(poi -> poi instanceof LabelPoi && StringUtils.partialMatch(poi.getName(), searchedName))
+        List<Poi> places = new ArrayList<>(MapModel.getLabelPois().stream()
+                .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
         if (places.isEmpty()) {

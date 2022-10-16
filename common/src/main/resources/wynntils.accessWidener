@@ -27,3 +27,6 @@ accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (L
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
 accessible method net/minecraft/client/renderer/entity/EntityRenderer renderNameTag (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V
+accessible method net/minecraft/client/resources/ClientPackSource checkHash (Ljava/lang/String;Ljava/io/File;)Z
+accessible field net/minecraft/server/packs/repository/Pack supplier Ljava/util/function/Supplier;
+accessible field net/minecraft/server/packs/AbstractPackResources file Ljava/io/File;

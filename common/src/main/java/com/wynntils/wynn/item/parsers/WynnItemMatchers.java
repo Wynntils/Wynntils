@@ -8,6 +8,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -219,6 +220,10 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isIngredient(ItemStack itemStack) {
+        if (itemStack instanceof IngredientItemStack) {
+            return true;
+        }
+
         if (!ingredientOrMaterialMatcher(itemStack.getHoverName()).matches()) {
             return false;
         }

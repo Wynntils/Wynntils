@@ -9,6 +9,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -35,8 +36,8 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
             }
         }
 
-        Optional<QuestInfo> questInfoOpt =
-                QuestManager.getQuestFromName(questName.toString().trim());
+        Optional<QuestInfo> questInfoOpt = QuestManager.getQuestFromName(
+                WynnUtils.normalizeBadString(questName.toString().trim()));
         if (questInfoOpt.isEmpty()) {
             WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + questName);
             return;

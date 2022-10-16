@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class WynncraftButtonFeature extends UserFeature {
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent e) {
+    public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
         ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 

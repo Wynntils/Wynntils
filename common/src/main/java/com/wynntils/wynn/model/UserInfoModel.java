@@ -59,12 +59,6 @@ public class UserInfoModel extends Model {
         return users.getOrDefault(uuid, null);
     }
 
-    public static boolean isAccountType(UUID uuid, AccountType type) {
-        return users.containsKey(uuid)
-                && users.get(uuid) != null
-                && users.get(uuid).accountType() == type;
-    }
-
     private static void clearUserCache() {
         users.clear();
     }

@@ -4,12 +4,12 @@
  */
 package com.wynntils.wynn.model.quests;
 
+import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.objects.ProfessionInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -147,7 +147,7 @@ public class QuestInfo {
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
             MutableComponent base = CharacterManager.getCharacterInfo()
                                     .getProfessionInfo()
-                                    .getLevel(ProfessionInfo.ProfessionType.valueOf(additionalRequirement.a()))
+                                    .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()
                     ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
                     : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
