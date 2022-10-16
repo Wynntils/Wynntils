@@ -36,12 +36,20 @@ public class OverlaySelectionScreen extends Screen {
     protected void init() {
         overlayList = new OverlayList(this);
         this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH / 2,
+                (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
                 this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
                 button -> McUtils.mc().setScreen(new WynntilsMenuScreen())));
+
+        this.addRenderableWidget(new Button(
+                (int) (this.width / 2 + BUTTON_WIDTH * 0.5f),
+                this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                new TranslatableComponent("screens.wynntils.overlaySelection.freeMove"),
+                button -> McUtils.mc().setScreen(new OverlayManagementScreen())));
     }
 
     @Override
