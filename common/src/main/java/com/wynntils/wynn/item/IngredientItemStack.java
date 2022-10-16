@@ -45,7 +45,22 @@ public class IngredientItemStack extends WynnItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-        return isGuideStack ? guideTooltip : super.getTooltipLines(player, isAdvanced);
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.add(getHoverName());
+
+        if (isGuideStack) {
+            tooltip.addAll(guideTooltip);
+            return tooltip;
+        }
+
+        return super.getTooltipLines(player, isAdvanced);
+    }
+
+    @Override
+    public Component getHoverName() {
+        return new TextComponent(ingredientProfile.getDisplayName())
+                .withStyle(ChatFormatting.GRAY)
+                .append(new TextComponent(" " + ingredientProfile.getTier().getTierString()));
     }
 
     private List<Component> generateGuideTooltip() {
@@ -125,5 +140,9 @@ public class IngredientItemStack extends WynnItemStack {
         }
 
         return itemLore;
+    }
+
+    public IngredientProfile getIngredientProfile() {
+        return ingredientProfile;
     }
 }

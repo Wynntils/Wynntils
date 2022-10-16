@@ -443,7 +443,7 @@ public final class WebManager extends CoreManager {
         return translatedReferences;
     }
 
-    public static Collection<IngredientProfile> getDirectIngredients() {
+    public static Collection<IngredientProfile> getIngredientsCollection() {
         return directIngredients;
     }
 

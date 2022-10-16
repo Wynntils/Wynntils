@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -53,10 +52,6 @@ public class IngredientProfile {
         this.statuses = statuses;
         this.itemModifiers = itemModifiers;
         this.ingredientModifiers = ingredientModifiers;
-    }
-
-    public String getIngredientStringFormatted() {
-        return ChatFormatting.GRAY + name + " " + ingredientTier.getTierString();
     }
 
     public String getDisplayName() {

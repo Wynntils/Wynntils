@@ -618,6 +618,7 @@
   "screens.wynntils.wynntilsDialogueHistory.title": "Dialogues",
   "screens.wynntils.wynntilsDialogueHistory.tryReload": "No dialogues found! Try reloading dialogues by pressing the button in the top right corner.",
   "screens.wynntils.wynntilsGuides.description": "See all the guides in Wynntils.",
+  "screens.wynntils.wynntilsGuides.ingredientGuide.name": "Ingredient Guide",
   "screens.wynntils.wynntilsGuides.itemGuide.available": "Available Items",
   "screens.wynntils.wynntilsGuides.itemGuide.favorite": "Shift + Left click to favorite",
   "screens.wynntils.wynntilsGuides.itemGuide.name": "Item Guide",

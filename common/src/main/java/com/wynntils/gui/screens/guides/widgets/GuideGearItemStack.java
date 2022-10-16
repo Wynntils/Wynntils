@@ -21,13 +21,13 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideItemStack extends AbstractButton {
+public class GuideGearItemStack extends AbstractButton {
     private final GearItemStack itemStack;
     private final WynntilsItemGuideScreen screen;
 
-    public GuideItemStack(
+    public GuideGearItemStack(
             int x, int y, int width, int height, GearItemStack itemStack, WynntilsItemGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide ItemStack Button"));
+        super(x, y, width, height, new TextComponent("Guide GearItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }

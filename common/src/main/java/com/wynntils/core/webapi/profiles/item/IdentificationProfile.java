@@ -198,7 +198,9 @@ public class IdentificationProfile {
             else nameBuilder.append(c);
         }
 
-        return StringUtils.capitalizeFirst(nameBuilder.toString()).replaceAll("\\bXp\\b", "XP");
+        return StringUtils.capitalizeFirst(nameBuilder.toString())
+                .replaceAll("\\bXp\\b", "XP")
+                .replaceAll("\\bX P\\b", "XP");
     }
 
     public static String getAsShortName(String longIdName, boolean raw) {
