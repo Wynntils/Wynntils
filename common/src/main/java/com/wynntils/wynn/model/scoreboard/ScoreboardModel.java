@@ -271,52 +271,51 @@ public final class ScoreboardModel extends Model {
     private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
         List<Segment> segments = new ArrayList<>();
 
+        List<String> scoreboardLines = scoreboardCopy.stream()
+                .map(ScoreboardLine::line).toList();
+
         Segment currentSegment = null;
 
         for (int i = 0; i < scoreboardCopy.size(); i++) {
+            String line = scoreboardLines.get(i);
+
             String strippedLine =
-                    ComponentUtils.stripFormatting(scoreboardCopy.get(i).line());
+                    ComponentUtils.stripFormatting(line);
 
             if (strippedLine == null) {
                 continue;
             }
 
-            if (strippedLine.matches("À+")) {
+            if (strippedLine.matches("À+")) { // Segment complete
                 if (currentSegment != null) {
-                    currentSegment.setContent(scoreboardCopy.stream()
-                            .map(ScoreboardLine::line)
-                            .collect(Collectors.toList())
-                            .subList(currentSegment.getStartIndex() + 1, i));
+                    // Sublisting is not a problem as no overlap
+                    currentSegment.setContent(scoreboardLines.subList(currentSegment.getStartIndex() + 1, i));
                     currentSegment.setEndIndex(i - 1);
                     currentSegment.setEnd(strippedLine);
                     segments.add(currentSegment);
                     currentSegment = null;
                 }
+            } else if (currentSegment == null) { // Is header
+                SegmentType type = null;
 
-                continue;
-            }
+                for (SegmentType value : SegmentType.values()) {
+                    if (!value.getHeaderPattern().matcher(strippedLine).matches()) continue;
 
-            for (SegmentType value : SegmentType.values()) {
-                if (!value.getHeaderPattern().matcher(strippedLine).matches()) continue;
+                    type = value;
+                    break;
+                }
 
-                if (currentSegment != null) {
-                    if (currentSegment.getType() != value) {
-                        WynntilsMod.error(
-                                "ScoreboardModel: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
-                    }
+                if (type != null) {
+                    currentSegment = new Segment(type, line, i);
                     continue;
                 }
 
-                currentSegment = new Segment(value, scoreboardCopy.get(i).line(), i);
-                break;
+                WynntilsMod.error(String.format("Failed to parse header of %s", strippedLine));
             }
         }
 
         if (currentSegment != null) {
-            currentSegment.setContent(scoreboardCopy.stream()
-                    .map(ScoreboardLine::line)
-                    .collect(Collectors.toList())
-                    .subList(currentSegment.getStartIndex(), scoreboardCopy.size()));
+            currentSegment.setContent(scoreboardLines.subList(currentSegment.getStartIndex(), scoreboardCopy.size()));
             currentSegment.setEndIndex(scoreboardCopy.size() - 1);
             segments.add(currentSegment);
         }
