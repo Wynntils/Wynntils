@@ -594,6 +594,7 @@
   "screens.wynntils.overlayManagement.testModeOn": "Test mode on",
   "screens.wynntils.overlayManagement.testSettings": "Test",
   "screens.wynntils.overlaySelection.close": "Done",
+  "screens.wynntils.overlaySelection.freeMove": "Free Move",
   "screens.wynntils.overlaySelection.name": "Overlay Selection Screen",
   "screens.wynntils.overlaySelection.overlays": "Overlays",
   "screens.wynntils.searchWidget.defaultSearchText": "Search...",
