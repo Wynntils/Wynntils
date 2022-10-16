@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -49,5 +50,12 @@ public class GammabrightFeature extends UserFeature {
         }
 
         ConfigManager.saveConfig();
+    }
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (configHolder.getFieldName().equals("gammabrightEnabled")) {
+            onGammabrightKeyPress();
+        }
     }
 }
