@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
+import com.google.common.collect.Maps;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
@@ -182,7 +183,6 @@ public final class ScoreboardModel extends Model {
 
     private static void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {
-            Scoreboard scoreboard = McUtils.player().getScoreboard();
 
             List<String> skipped = new ArrayList<>();
 
@@ -194,55 +194,78 @@ public final class ScoreboardModel extends Model {
                 }
             }
 
-            final String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
-
-            Objective objective = scoreboard.getObjective(objectiveName);
-
-            if (objective == null) {
-                objective = scoreboard.addObjective(
-                        objectiveName,
-                        ObjectiveCriteria.DUMMY,
-                        new TextComponent(" play.wynncraft.com")
-                                .withStyle(ChatFormatting.GOLD)
-                                .withStyle(ChatFormatting.BOLD),
-                        ObjectiveCriteria.RenderType.INTEGER);
-            }
-
-            scoreboard.setDisplayObjective(1, objective);
-
-            // Set player team display objective
-            // This fixes scoreboard gui flickering
-            PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
-            if (playerTeam != null) {
-                if (playerTeam.getColor().getId() >= 0) {
-                    int id = playerTeam.getColor().getId() + 3;
-                    scoreboard.setDisplayObjective(id, objective);
-                }
-            }
-
-            for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
-                scoreMap.remove(objective);
-            }
-
-            // Filter and skip leading empty lines
+            // Filter and remove leading and trailining empty lines
             List<ScoreboardLine> toBeAdded = reconstructedScoreboard.stream()
                     .filter(scoreboardLine -> !skipped.contains(scoreboardLine.line()))
-                    .dropWhile(scoreboardLine -> scoreboardLine.line().matches("À+"))
                     .toList();
 
-            boolean allEmpty = true;
+            // index of first and last nonempty lines
+            int frontIndex = -1;
+            int backIndex = -1;
 
-            // Skip trailing empty lines
-            for (int i = toBeAdded.size() - 1; i >= 0; i--) {
-                if (allEmpty && toBeAdded.get(i).line().matches("À+")) {
-                    continue;
-                }
+            for (int i = 0; i < toBeAdded.size(); i++) {
+                if (toBeAdded.get(i).line().matches("À+")) continue;
 
-                allEmpty = false;
-                Score score = scoreboard.getOrCreatePlayerScore(toBeAdded.get(i).line(), objective);
-                score.setScore(toBeAdded.get(i).index());
+                frontIndex = i;
+                break;
             }
+
+            if (frontIndex == -1) { // check if whole scoreboard is empty
+                overrideScoreboard(new ArrayList<>());
+                return;
+            }
+
+            for (int i = toBeAdded.size() - 1; i >= 0; i--) {
+                if (toBeAdded.get(i).line().matches("À+")) continue;
+
+                backIndex = i;
+                break;
+            }
+
+            overrideScoreboard(toBeAdded.subList(frontIndex, backIndex + 1));
         });
+    }
+
+    private static void overrideScoreboard(List<ScoreboardLine> lines) {
+        Scoreboard scoreboard = McUtils.player().getScoreboard();
+
+        String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
+
+        Objective objective;
+
+        if (scoreboard.hasObjective(objectiveName)) {
+            objective = scoreboard.getObjective(objectiveName);
+        } else {
+            objective = scoreboard.addObjective(
+                    objectiveName,
+                    ObjectiveCriteria.DUMMY,
+                    new TextComponent(" play.wynncraft.com")
+                            .withStyle(ChatFormatting.GOLD)
+                            .withStyle(ChatFormatting.BOLD),
+                    ObjectiveCriteria.RenderType.INTEGER);
+        }
+
+        // Set as side bar and player team objective if existing
+        scoreboard.setDisplayObjective(1, objective);
+
+        PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
+        if (playerTeam != null) {
+            if (playerTeam.getColor().getId() >= 0) {
+                int id = playerTeam.getColor().getId() + 3;
+                scoreboard.setDisplayObjective(id, objective);
+            }
+        }
+
+        // Update score map with new values
+        for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
+            scoreMap.remove(objective);
+        }
+
+        for (ScoreboardLine scoreboardLine : lines) {
+            Score score = scoreboard.getOrCreatePlayerScore(scoreboardLine.line(), objective);
+            score.setScore(scoreboardLine.index());
+        }
+
     }
 
     private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
