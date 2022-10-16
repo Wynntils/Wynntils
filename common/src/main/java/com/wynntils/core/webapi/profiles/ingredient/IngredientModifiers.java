@@ -58,10 +58,10 @@ public class IngredientModifiers {
         List<String> itemLore = new ArrayList<>();
 
         if (this.left != 0) {
-            itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("to the left", left)));
+            itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("to the left of", left)));
         }
         if (this.right != 0) {
-            itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("to the right right", right)));
+            itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("to the right of", right)));
         }
         if (this.above != 0) {
             itemLore.addAll(Arrays.asList(IngredientModifiers.getLoreLines("above", above)));
