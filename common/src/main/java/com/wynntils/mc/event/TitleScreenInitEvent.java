@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on initialization of {@link TitleScreen} */
-public class TitleScreenInitEvent extends Event {
+public abstract class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
     private final Consumer<AbstractWidget> addButton;
 
@@ -25,5 +25,17 @@ public class TitleScreenInitEvent extends Event {
 
     public Consumer<AbstractWidget> getAddButton() {
         return addButton;
+    }
+
+    public static class Pre extends TitleScreenInitEvent {
+        public Pre(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
+            super(titleScreen, addButton);
+        }
+    }
+
+    public static class Post extends TitleScreenInitEvent {
+        public Post(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
+            super(titleScreen, addButton);
+        }
     }
 }

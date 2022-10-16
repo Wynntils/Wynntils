@@ -58,11 +58,18 @@ public abstract class ScreenMixin implements TextboxScreen {
         return listener;
     }
 
+    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
+    private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
+        Screen screen = (Screen) (Object) this;
+
+        EventFactory.onScreenCreatedPre(screen, this::addRenderableWidget);
+    }
+
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        EventFactory.onScreenCreated(screen, this::addRenderableWidget);
+        EventFactory.onScreenCreatedPost(screen, this::addRenderableWidget);
     }
 
     @Redirect(

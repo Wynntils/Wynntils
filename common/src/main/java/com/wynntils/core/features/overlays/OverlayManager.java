@@ -149,7 +149,7 @@ public final class OverlayManager extends CoreManager {
 
     // Calculate the sections when loading is finished (this acts as a "game loaded" event)
     @SubscribeEvent
-    public static void gameInitEvent(TitleScreenInitEvent event) {
+    public static void gameInitEvent(TitleScreenInitEvent.Post event) {
         calculateSections();
     }
 

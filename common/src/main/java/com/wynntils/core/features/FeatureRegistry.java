@@ -17,6 +17,7 @@ import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
+import com.wynntils.features.user.AutoApplyResourcePackFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
@@ -101,6 +102,7 @@ public final class FeatureRegistry {
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new BeaconBeamFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
