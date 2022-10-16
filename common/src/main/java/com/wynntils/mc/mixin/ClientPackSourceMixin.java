@@ -31,6 +31,7 @@ public abstract class ClientPackSourceMixin {
 
         PackResources packResources = this.serverPack.supplier.get();
 
+        // We can calculate this here as this is always going to be posted anyway
         if (packResources instanceof AbstractPackResources abstractPackResources) {
             try {
                 String hash = Files.asByteSource(abstractPackResources.file)
