@@ -14,14 +14,14 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuideGearItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuideIngredientItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.item.IngredientItemStack;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -30,14 +30,15 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
+public class WynntilsIngredientGuideScreen
+        extends WynntilsMenuListScreen<IngredientItemStack, GuideIngredientItemStack> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GearItemStack> parsedItemCache;
+    private List<IngredientItemStack> parsedItemCache;
 
-    public WynntilsItemGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.name"));
+    public WynntilsIngredientGuideScreen() {
+        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
     }
 
     @Override
@@ -49,8 +50,8 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = WebManager.getItemsCollection().stream()
-                    .map(GearItemStack::new)
+            parsedItemCache = WebManager.getIngredientsCollection().stream()
+                    .map(IngredientItemStack::new)
                     .toList();
         }
 
@@ -91,7 +92,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
         final float translationY = getTranslationY();
         poseStack.translate(translationX, translationY, 1f);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.itemGuide.name"));
+        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
 
         renderVersion(poseStack);
 
@@ -106,14 +107,38 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
+    @Override
+    protected void renderTitle(PoseStack poseStack, String titleString) {
+        int txWidth = Texture.QUEST_BOOK_TITLE.width();
+        int txHeight = Texture.QUEST_BOOK_TITLE.height();
+        RenderUtils.drawScalingTexturedRect(
+                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+
+        poseStack.pushPose();
+        poseStack.translate(10, 36, 0);
+        poseStack.scale(1.8f, 1.8f, 0f);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        titleString,
+                        0,
+                        0,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextShadow.NORMAL);
+        poseStack.popPose();
+    }
+
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuideGearItemStack guideGearItemStack) {
-            GearItemStack itemStack = guideGearItemStack.getItemStack();
+        if (hovered instanceof GuideIngredientItemStack guideGearItemStack) {
+            IngredientItemStack itemStack = guideGearItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
             tooltipLines.add(TextComponent.EMPTY);
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
+
+            String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
@@ -147,11 +172,11 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     }
 
     @Override
-    protected GuideGearItemStack getButtonFromElement(int i) {
+    protected GuideIngredientItemStack getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideGearItemStack(
+        return new GuideIngredientItemStack(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 

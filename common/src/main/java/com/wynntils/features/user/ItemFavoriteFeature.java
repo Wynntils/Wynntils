@@ -16,6 +16,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -69,6 +70,11 @@ public class ItemFavoriteFeature extends UserFeature {
 
         if (favoriteItems.contains(unformattedName)) {
             return true;
+        }
+
+        if (itemStack instanceof IngredientItemStack ingredientItemStack) {
+            return favoriteItems.contains(
+                    ingredientItemStack.getIngredientProfile().getDisplayName());
         }
 
         if (itemStack instanceof UnidentifiedItemStack unidentifiedItemStack) {

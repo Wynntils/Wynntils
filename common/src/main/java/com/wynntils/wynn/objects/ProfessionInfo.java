@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -32,21 +33,5 @@ public class ProfessionInfo {
     @Override
     public String toString() {
         return "ProfessionInfo{" + "levels=" + StringUtils.join(levels) + '}';
-    }
-
-    public enum ProfessionType {
-        Mining,
-        Woodcutting,
-        Farming,
-        Fishing,
-
-        Armouring,
-        Tailoring,
-        Weaponsmithing,
-        Woodworking,
-        Jeweling,
-        Alchemism,
-        Scribing,
-        Cooking
     }
 }
