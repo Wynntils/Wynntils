@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +46,10 @@ public class IngredientItemStack extends WynnItemStack {
     }
 
     public IngredientItemStack(IngredientProfile ingredientProfile) {
-        super(ingredientProfile.asItemStack());
+        super(ingredientProfile.getIngredientInfo().asItemStack());
+
+        CompoundTag tag = this.getOrCreateTag();
+        tag.putBoolean("Unbreakable", true);
 
         this.ingredientProfile = ingredientProfile;
 
