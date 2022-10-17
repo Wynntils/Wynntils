@@ -5,8 +5,15 @@
 package com.wynntils.core.webapi.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
+import com.wynntils.core.webapi.WebManager;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class IngredientProfile {
     String name;
@@ -78,7 +85,28 @@ public class IngredientProfile {
         return untradeable;
     }
 
-    public IngredientInfo getIngredientInfo() {
-        return ingredientInfo;
+    public ItemStack asItemStack() {
+        ItemStack itemStack = ingredientInfo.asItemStack();
+
+        if (itemStack.getItem() == Items.PLAYER_HEAD) {
+            HashMap<String, String> ingredientHeadTextures = WebManager.getIngredientHeadTextures();
+
+            if (ingredientHeadTextures.containsKey(name)) {
+                CompoundTag skullData = new CompoundTag();
+                skullData.putString("Id", UUID.randomUUID().toString());
+
+                CompoundTag properties = new CompoundTag();
+                ListTag textures = new ListTag();
+                CompoundTag textureEntry = new CompoundTag();
+                textureEntry.putString("Value", ingredientHeadTextures.get(name));
+                textures.add(textureEntry);
+                properties.put("textures", textures);
+                skullData.put("Properties", properties);
+
+                itemStack.getOrCreateTag().put("SkullOwner", skullData);
+            }
+        }
+
+        return itemStack;
     }
 }

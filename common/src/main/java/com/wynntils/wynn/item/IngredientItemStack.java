@@ -46,7 +46,7 @@ public class IngredientItemStack extends WynnItemStack {
     }
 
     public IngredientItemStack(IngredientProfile ingredientProfile) {
-        super(ingredientProfile.getIngredientInfo().asItemStack());
+        super(ingredientProfile.asItemStack());
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
