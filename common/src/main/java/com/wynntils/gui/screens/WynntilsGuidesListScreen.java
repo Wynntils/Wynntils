@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.guides.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
 import com.wynntils.gui.widgets.BackButton;
@@ -23,7 +24,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
-    private final List<Screen> GUIDES = List.of(new WynntilsItemGuideScreen(), new WynntilsIngredientGuideScreen());
+    private final List<Screen> GUIDES = List.of(
+            new WynntilsItemGuideScreen(), new WynntilsIngredientGuideScreen(), new WynntilsEmeraldPouchGuideScreen());
 
     public WynntilsGuidesListScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
