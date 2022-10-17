@@ -10,6 +10,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.features.SkillPointLoadoutsFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -147,6 +148,7 @@ public final class FeatureRegistry {
         registerFeature(new PowderAbilityBarOverlayFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
+        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
