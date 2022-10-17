@@ -630,6 +630,7 @@
   "screens.wynntils.wynntilsGuides.itemGuide.open": "Shift + Right Click to open on WynnData",
   "screens.wynntils.wynntilsGuides.itemGuide.unfavorite": "Shift + Left click to unfavorite",
   "screens.wynntils.wynntilsGuides.name": "Guides",
+  "screens.wynntils.wynntilsGuides.powder.name": "Powder Guide",
   "screens.wynntils.wynntilsGuides.screenDescription": "Here you can see all the guides Wynntils has. These guides usually show all the items of a specific category.",
   "screens.wynntils.wynntilsMenu.close": "Done",
   "screens.wynntils.wynntilsMenu.configs.description": "Change the settings the way you want.",

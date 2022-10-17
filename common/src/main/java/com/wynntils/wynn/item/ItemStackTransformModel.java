@@ -60,6 +60,7 @@ public class ItemStackTransformModel extends Model {
         registerTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
         registerTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
         registerTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
+        registerTransformer(WynnItemMatchers::isPowder, PowderItemStack::new);
 
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);

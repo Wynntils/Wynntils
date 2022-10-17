@@ -10,6 +10,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
+import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ public final class WynnItemMatchers {
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
+            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
     private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
     private static final Pattern PROFESSION_LEVEL_NAME_PATTERN =
             Pattern.compile("§f(.) §6(\\w+?) Profession §8\\[(Gathering|Crafting)\\]");
@@ -186,7 +187,8 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isPowder(ItemStack itemStack) {
-        return powderNameMatcher(itemStack.getHoverName()).matches();
+        return itemStack instanceof PowderItemStack
+                || powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isProfessionLevel(ItemStack itemStack) {

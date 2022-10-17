@@ -183,8 +183,8 @@ public class WynntilsIngredientGuideScreen
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(parsedItemCache.stream()
-                .filter(gearItemStack -> StringUtils.partialMatch(
-                        ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
+                .filter(itemStack ->
+                        StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
                 .toList());
     }
 
