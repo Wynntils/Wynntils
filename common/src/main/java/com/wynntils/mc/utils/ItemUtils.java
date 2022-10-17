@@ -104,7 +104,7 @@ public final class ItemUtils {
      */
     public static void replaceLore(ItemStack stack, ListTag tag) {
         CompoundTag nbt = stack.getOrCreateTag();
-        CompoundTag display = (CompoundTag) getOrCreateTag(nbt, "display", CompoundTag::new);
+        CompoundTag display = stack.getOrCreateTagElement("display");
         display.put("Lore", tag);
         nbt.put("display", display);
         stack.setTag(nbt);

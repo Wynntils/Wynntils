@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
-public class ContainerSetSlotEvent extends Event {
+public abstract class ContainerSetSlotEvent extends Event {
     private final int containerId;
     private final int stateId;
     private final int slot;
@@ -34,5 +34,18 @@ public class ContainerSetSlotEvent extends Event {
 
     public int getStateId() {
         return stateId;
+    }
+
+    public static class Pre extends ContainerSetSlotEvent {
+        public Pre(int containerId, int stateId, int slot, ItemStack itemStack) {
+            super(containerId, stateId, slot, itemStack);
+        }
+    }
+
+    public static class Post extends ContainerSetSlotEvent {
+
+        public Post(int containerId, int stateId, int slot, ItemStack itemStack) {
+            super(containerId, stateId, slot, itemStack);
+        }
     }
 }
