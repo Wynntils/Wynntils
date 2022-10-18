@@ -64,6 +64,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
             if (clientPackSource.checkHash(packHash, file)) {
                 clientPackSource.setServerPack(file, PackSource.DEFAULT);
                 appliedHash = packHash;
+                break;
             }
         }
     }

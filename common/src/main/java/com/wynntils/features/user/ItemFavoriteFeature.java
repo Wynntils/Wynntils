@@ -73,8 +73,9 @@ public class ItemFavoriteFeature extends UserFeature {
         }
 
         if (itemStack instanceof IngredientItemStack ingredientItemStack) {
-            return favoriteItems.contains(
-                    ingredientItemStack.getIngredientProfile().getDisplayName());
+            return ingredientItemStack.getIngredientProfile() != null
+                    && favoriteItems.contains(
+                            ingredientItemStack.getIngredientProfile().getDisplayName());
         }
 
         if (itemStack instanceof UnidentifiedItemStack unidentifiedItemStack) {

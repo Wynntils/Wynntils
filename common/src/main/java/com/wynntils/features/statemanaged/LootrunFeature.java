@@ -31,10 +31,10 @@ public class LootrunFeature extends StateManagedFeature {
     //    public PathType pathType = PathType.TEXTURED;
 
     @Config
-    public CustomColor activePathColour = CommonColors.LIGHT_BLUE;
+    public CustomColor activePathColor = CommonColors.LIGHT_BLUE;
 
     @Config
-    public CustomColor recordingPathColour = CommonColors.RED;
+    public CustomColor recordingPathColor = CommonColors.RED;
 
     @Config
     public boolean rainbowLootRun = false;
