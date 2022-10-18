@@ -5,7 +5,6 @@
 package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -14,14 +13,15 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuideIngredientItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuideEmeraldPouchItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.IngredientItemStack;
+import com.wynntils.wynn.item.EmeraldPouchItemStack;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -30,15 +30,15 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynntilsIngredientGuideScreen
-        extends WynntilsMenuListScreen<IngredientItemStack, GuideIngredientItemStack> {
+public class WynntilsEmeraldPouchGuideScreen
+        extends WynntilsMenuListScreen<EmeraldPouchItemStack, GuideEmeraldPouchItemStack> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<IngredientItemStack> parsedItemCache;
+    private List<EmeraldPouchItemStack> parsedItemCache;
 
-    public WynntilsIngredientGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
+    public WynntilsEmeraldPouchGuideScreen() {
+        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
     }
 
     @Override
@@ -50,9 +50,11 @@ public class WynntilsIngredientGuideScreen
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = WebManager.getIngredientsCollection().stream()
-                    .map(IngredientItemStack::new)
-                    .toList();
+            parsedItemCache = new ArrayList<>();
+
+            for (int i = 1; i <= 9; i++) {
+                parsedItemCache.add(new EmeraldPouchItemStack(i));
+            }
         }
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
@@ -92,7 +94,7 @@ public class WynntilsIngredientGuideScreen
         final float translationY = getTranslationY();
         poseStack.translate(translationX, translationY, 1f);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
+        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
 
         renderVersion(poseStack);
 
@@ -116,7 +118,7 @@ public class WynntilsIngredientGuideScreen
 
         poseStack.pushPose();
         poseStack.translate(10, 36, 0);
-        poseStack.scale(1.8f, 1.8f, 0f);
+        poseStack.scale(1.5f, 1.5f, 0f);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -131,28 +133,26 @@ public class WynntilsIngredientGuideScreen
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuideIngredientItemStack guideGearItemStack) {
-            IngredientItemStack itemStack = guideGearItemStack.getItemStack();
+        if (hovered instanceof GuideEmeraldPouchItemStack guideEmeraldPouchItemStack) {
+            EmeraldPouchItemStack itemStack = guideEmeraldPouchItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
             tooltipLines.add(TextComponent.EMPTY);
-
-            String unformattedName = itemStack.getIngredientProfile().getDisplayName();
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
+            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
+                    ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
                 tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                         .withStyle(ChatFormatting.GREEN));
             }
-            tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.open")
-                    .withStyle(ChatFormatting.RED));
+
             RenderUtils.drawTooltipAt(
                     poseStack,
                     mouseX,
                     mouseY,
                     0,
-                    tooltipLines,
+                    ComponentUtils.wrapTooltips(tooltipLines, 200),
                     FontRenderer.getInstance().getFont(),
                     true);
         }
@@ -172,11 +172,11 @@ public class WynntilsIngredientGuideScreen
     }
 
     @Override
-    protected GuideIngredientItemStack getButtonFromElement(int i) {
+    protected GuideEmeraldPouchItemStack getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideIngredientItemStack(
+        return new GuideEmeraldPouchItemStack(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 
