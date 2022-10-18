@@ -109,8 +109,8 @@ public final class FunctionManager extends CoreManager {
         try {
             Object value = function.getValue(argument);
             return Optional.ofNullable(value);
-        } catch (Exception e) {
-            WynntilsMod.warn("Exception when trying to get value of function " + function);
+        } catch (Throwable throwable) {
+            WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
             McUtils.sendMessageToClient(new TextComponent(String.format(
                             "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
