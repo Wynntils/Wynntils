@@ -16,6 +16,10 @@ public enum FeatureCategory {
     REDIRECTS,
     TOOLTIPS;
 
+    FeatureCategory() {
+        assert !toString().startsWith("core.wynntils");
+    }
+
     @Override
     public String toString() {
         return I18n.get("core.wynntils.category." + this.name().toLowerCase(Locale.ROOT));
