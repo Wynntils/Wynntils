@@ -83,7 +83,7 @@ public class QuestManager extends CoreManager {
         return switch (sortOrder) {
             case LEVEL -> questList.stream()
                     .sorted(Comparator.comparing(QuestInfo::getStatus)
-                            .thenComparing(QuestInfo::getSortLevel)
+                            .thenComparing(QuestInfo::getLevel)
                             .thenComparing(QuestInfo::getName))
                     .toList();
             case DISTANCE -> questList.stream()
@@ -94,7 +94,7 @@ public class QuestManager extends CoreManager {
             case ALPHABETIC -> questList.stream()
                     .sorted(Comparator.comparing(QuestInfo::getStatus)
                             .thenComparing(QuestInfo::getName)
-                            .thenComparing(QuestInfo::getSortLevel))
+                            .thenComparing(QuestInfo::getLevel))
                     .toList();
         };
     }

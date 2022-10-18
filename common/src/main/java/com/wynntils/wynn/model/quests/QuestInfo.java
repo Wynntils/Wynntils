@@ -91,12 +91,6 @@ public class QuestInfo {
         return level;
     }
 
-    public int getSortLevel() {
-        return !isMiniQuest || additionalRequirements.isEmpty()
-                ? level
-                : additionalRequirements.get(0).b();
-    }
-
     public String getNextTask() {
         return nextTask;
     }
