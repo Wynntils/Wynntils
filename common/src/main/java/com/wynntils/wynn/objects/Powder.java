@@ -10,24 +10,26 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH('✤', 10, 2, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN), // light and dark colors are swapped
-    THUNDER('✦', 11, 14, ChatFormatting.YELLOW, ChatFormatting.GOLD),
-    WATER('❉', 12, 6, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA),
-    FIRE('✹', 9, 1, ChatFormatting.RED, ChatFormatting.DARK_RED),
-    AIR('❋', 8, 7, ChatFormatting.WHITE, ChatFormatting.GRAY);
+    EARTH('✤', Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN),
+    THUNDER('✦', Items.YELLOW_DYE, Items.ORANGE_DYE, ChatFormatting.YELLOW, ChatFormatting.GOLD),
+    WATER('❉', Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA),
+    FIRE('✹', Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED),
+    AIR('❋', Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY);
 
     private final char symbol;
-    private final int lowTierDamage;
-    private final int highTierDamage;
+    private final Item lowTierItem;
+    private final Item highTierItem;
     private final ChatFormatting lightColor;
     private final ChatFormatting darkColor;
 
-    Powder(char symbol, int lowTierDamage, int highTierDamage, ChatFormatting lightColor, ChatFormatting darkColor) {
+    Powder(char symbol, Item lowTierItem, Item highTierItem, ChatFormatting lightColor, ChatFormatting darkColor) {
         this.symbol = symbol;
-        this.lowTierDamage = lowTierDamage;
-        this.highTierDamage = highTierDamage;
+        this.lowTierItem = lowTierItem;
+        this.highTierItem = highTierItem;
         this.lightColor = lightColor;
         this.darkColor = darkColor;
     }
@@ -36,24 +38,12 @@ public enum Powder {
         return symbol;
     }
 
-    public String getColorString() {
-        return lightColor.toString();
-    }
-
     public CustomColor getColor() {
         return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
     }
 
-    public ChatFormatting getRawColor() {
-        return lightColor;
-    }
-
     public String getColoredSymbol() {
         return lightColor.toString() + symbol;
-    }
-
-    public String getLetterRepresentation() {
-        return this.name().substring(0, 1).toLowerCase(Locale.ROOT);
     }
 
     public static List<Powder> findPowders(String input) {
@@ -69,12 +59,12 @@ public enum Powder {
         return foundPowders;
     }
 
-    public int getLowTierDamage() {
-        return lowTierDamage;
+    public Item getLowTierItem() {
+        return lowTierItem;
     }
 
-    public int getHighTierDamage() {
-        return highTierDamage;
+    public Item getHighTierItem() {
+        return highTierItem;
     }
 
     public ChatFormatting getLightColor() {

@@ -122,9 +122,6 @@ public class QuestContainerQueries {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                // Very first slot is chat history
-                if (slot == 0) continue;
-
                 ItemStack item = container.items().get(slot);
                 QuestInfo questInfo = QuestInfoParser.parseItem(item, page, true);
                 if (questInfo == null) continue;
