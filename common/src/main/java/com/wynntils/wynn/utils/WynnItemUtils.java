@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
@@ -16,6 +17,7 @@ import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -23,8 +25,10 @@ import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.Skills;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,6 +37,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -402,5 +407,52 @@ public final class WynnItemUtils {
         }
 
         return new GearItemStack(itemStack, itemProfile, idContainers, powders, rerolls);
+    }
+
+    // Gets the player's gear, weapon and accessories
+    // This method only works if GearItemStack transforming is enabled
+    public static List<GearItemStack> getPlayersGearAndWeapon() {
+        List<GearItemStack> gear = new ArrayList<>();
+
+        Iterable<ItemStack> armorSlots = McUtils.player().getArmorSlots();
+        for (ItemStack armorSlot : armorSlots) {
+            if (armorSlot instanceof GearItemStack gearItemStack) {
+                gear.add(gearItemStack);
+            } else {
+                WynntilsMod.warn("Gear Armor was not a GearItemStack instance.");
+            }
+        }
+
+        if (McUtils.player().getMainHandItem() instanceof GearItemStack gearItemStack) {
+            gear.add(gearItemStack);
+        } else {
+            WynntilsMod.warn("Gear Weapon was not a GearItemStack instance.");
+        }
+
+        NonNullList<ItemStack> items = McUtils.player().getInventory().items;
+        for (int i = 9; i < Math.min(12, items.size()); i++) {
+            if (items.get(i) instanceof GearItemStack gearItemStack) {
+                gear.add(gearItemStack);
+            } else {
+                WynntilsMod.warn("Gear Item/Accessory was not a GearItemStack instance.");
+            }
+        }
+
+        return gear;
+    }
+
+    public static Map<Skills, Integer> getSkillSumFromGear(List<GearItemStack> gearList) {
+        Map<Skills, Integer> gearAddedSkillPoints = new HashMap<>();
+        Map<String, Skills> idSkillMap = Skills.getIdSkillMap();
+        for (GearItemStack gearItemStack : gearList) {
+            for (ItemIdentificationContainer identification : gearItemStack.getIdentifications()) {
+                if (idSkillMap.containsKey(identification.shortIdName())) {
+                    Skills skill = idSkillMap.get(identification.shortIdName());
+                    gearAddedSkillPoints.putIfAbsent(skill, 0);
+                    gearAddedSkillPoints.put(skill, gearAddedSkillPoints.get(skill) + identification.value());
+                }
+            }
+        }
+        return gearAddedSkillPoints;
     }
 }

@@ -13,8 +13,12 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.objects.Skills;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -46,6 +50,11 @@ public class SkillPointLoadoutsFeature extends UserFeature {
     private ItemStack loadItem;
 
     @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ItemStackTransformModel.class);
+    }
+
+    @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         saveItem = new ItemStack(Items.WRITABLE_BOOK);
         loadItem = new ItemStack(Items.KNOWLEDGE_BOOK);
@@ -73,11 +82,20 @@ public class SkillPointLoadoutsFeature extends UserFeature {
     public void onContainerClick(ContainerClickEvent event) {
         String itemName = event.getItemStack().getHoverName().getString();
 
-        if (!itemName.equals(saveItem.getHoverName().getString())
-                && !itemName.equals(loadItem.getHoverName().getString())) return;
+        if (!isSaveItem(itemName) && !isLoadItem(itemName)) return;
 
         event.setCanceled(true);
-        System.out.println("event.getItemStack() = " + event.getItemStack());
+
+        if (isSaveItem(itemName)) {
+            List<GearItemStack> gearList = WynnItemUtils.getPlayersGearAndWeapon();
+
+            Map<Skills, Integer> gearAddedSkillPoints = WynnItemUtils.getSkillSumFromGear(gearList);
+
+            for (Map.Entry<Skills, Integer> entry : gearAddedSkillPoints.entrySet()) {
+                System.out.println("entry.getKey() = " + entry.getKey());
+                System.out.println("entry.getValue() = " + entry.getValue());
+            }
+        }
     }
 
     @SubscribeEvent
@@ -112,8 +130,35 @@ public class SkillPointLoadoutsFeature extends UserFeature {
         return containerScreen;
     }
 
-    @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    private boolean isLoadItem(String itemName) {
+        return itemName.equals(loadItem.getHoverName().getString());
+    }
+
+    private boolean isSaveItem(String itemName) {
+        return itemName.equals(saveItem.getHoverName().getString());
+    }
+
+    public static class SkillPointLoadout {
+        private String name;
+        private Map<Skills, Integer> skills;
+        private int combatLevelMin;
+
+        public SkillPointLoadout(String name, Map<Skills, Integer> skills, int combatLevelMin) {
+            this.name = name;
+            this.skills = skills;
+            this.combatLevelMin = combatLevelMin;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Map<Skills, Integer> getSkills() {
+            return skills;
+        }
+
+        public int getCombatLevelMin() {
+            return combatLevelMin;
+        }
     }
 }
