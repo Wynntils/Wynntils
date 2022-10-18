@@ -13,6 +13,7 @@ import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import net.minecraft.network.chat.TextComponent;
 public final class FunctionManager extends CoreManager {
     private static final List<Function<?>> FUNCTIONS = new ArrayList<>();
     private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
+    private static final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
 
     private static void registerFunction(Function<?> function) {
         FUNCTIONS.add(function);
@@ -52,6 +54,9 @@ public final class FunctionManager extends CoreManager {
 
     public static boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
+
+        // try to recover, worst case we disable it again
+        CRASHED_FUNCTIONS.remove(function);
 
         WynntilsMod.registerEventListener(activeFunction);
 
@@ -96,29 +101,50 @@ public final class FunctionManager extends CoreManager {
         return false;
     }
 
+    private static Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+        if (CRASHED_FUNCTIONS.contains(function)) {
+            return Optional.empty();
+        }
+
+        try {
+            Object value = function.getValue(argument);
+            return Optional.ofNullable(value);
+        } catch (Exception e) {
+            WynntilsMod.warn("Exception when trying to get value of function " + function);
+            McUtils.sendMessageToClient(new TextComponent(String.format(
+                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
+                    .withStyle(ChatFormatting.RED));
+
+            FunctionManager.disableFunction(function);
+            CRASHED_FUNCTIONS.add(function);
+        }
+
+        return Optional.empty();
+    }
+
     public static Component getSimpleValueString(
             Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : new TextComponent("");
 
-        Object value = function.getValue(argument);
-        if (value == null) {
+        Optional<Object> value = getFunctionValueSafely(function, argument);
+        if (value.isEmpty()) {
             return header.append(new TextComponent("??"));
         }
 
-        String formattedValue = format(value);
+        String formattedValue = format(value.get());
 
         return header.append(new TextComponent(formattedValue).withStyle(color));
     }
 
     public static String getRawValueString(Function<?> function, String argument) {
-        Object value = function.getValue(argument);
-        if (value == null) {
+        Optional<Object> value = getFunctionValueSafely(function, argument);
+        if (value.isEmpty()) {
             return "??";
         }
 
-        return format(value);
+        return format(value.get());
     }
 
     private static String format(Object value) {
