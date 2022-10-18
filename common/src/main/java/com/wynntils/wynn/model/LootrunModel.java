@@ -87,8 +87,8 @@ public final class LootrunModel {
     }
 
     public static void render(PoseStack poseStack) {
-        renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColour.asInt());
-        renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColour.asInt());
+        renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
+        renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
     }
 
     private static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
@@ -463,8 +463,8 @@ public final class LootrunModel {
                         .add(new ColoredPoint(
                                 location,
                                 recording
-                                        ? LootrunFeature.INSTANCE.recordingPathColour.asInt()
-                                        : LootrunFeature.INSTANCE.activePathColour.asInt()));
+                                        ? LootrunFeature.INSTANCE.recordingPathColor.asInt()
+                                        : LootrunFeature.INSTANCE.activePathColor.asInt()));
             }
         }
 
