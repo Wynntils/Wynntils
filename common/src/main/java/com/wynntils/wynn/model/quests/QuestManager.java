@@ -112,7 +112,15 @@ public class QuestManager extends CoreManager {
     }
 
     public static void openQuestOnWiki(QuestInfo questInfo) {
-        // TODO handle mini quest
+        if (questInfo.isMiniQuest()) {
+            String type = questInfo.getName().split(" ")[0];
+
+            String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
+
+            Utils.openUrl(WIKI_BASE_URL + wikiName);
+            return;
+        }
+
         String url = WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(questInfo.getName());
         Request req = new RequestBuilder(url, "WikiQuestQuery")
                 .handleJsonArray(jsonOutput -> {
