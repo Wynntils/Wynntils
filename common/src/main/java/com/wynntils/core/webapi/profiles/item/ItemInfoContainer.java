@@ -4,8 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.objects.MaterialMapping;
+import com.google.gson.annotations.SerializedName;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,18 +17,25 @@ import net.minecraft.world.item.Items;
 public class ItemInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
-    private final String material;
     private final ItemType type;
     private final String set;
     private final ItemDropType dropType;
     private final String armorColor;
 
-    public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {
-        this.material = material;
+    @SerializedName("name")
+    private final String materialName;
+
+    @SerializedName("damage")
+    private final String metadata;
+
+    public ItemInfoContainer(
+            ItemType type, String set, ItemDropType dropType, String armorColor, String materialName, String metadata) {
         this.type = type;
         this.set = set;
         this.dropType = dropType;
         this.armorColor = armorColor;
+        this.materialName = materialName;
+        this.metadata = metadata;
     }
 
     public ItemDropType getDropType() {
@@ -46,10 +52,6 @@ public class ItemInfoContainer {
 
     public String getSet() {
         return set;
-    }
-
-    public String getMaterial() {
-        return material;
     }
 
     public boolean isArmorColorValid() {
@@ -70,30 +72,20 @@ public class ItemInfoContainer {
     }
 
     public ItemStack asItemStack() {
-        if (material == null) {
+        if (materialName == null) {
             ItemStack stack = new ItemStack(type.getDefaultItem());
             stack.setDamageValue(type.getDefaultDamage());
 
             return stack;
         }
 
-        if (material.matches("(.*\\d.*)")) {
-            String[] split = material.split(":");
+        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(materialName));
+        ItemStack itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
 
-            int id = Integer.parseInt(split[0]);
-
-            MaterialMapping materialMapping = WebManager.getMaterialIdMap().getOrDefault(id, MaterialMapping.DEFAULT);
-            Optional<Item> item =
-                    Registry.ITEM.getOptional(new ResourceLocation("minecraft:" + materialMapping.name()));
-            ItemStack stack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
-
-            if (split.length == 1) return stack;
-
-            stack.setDamageValue(Integer.parseInt(split[1]));
-            return stack;
+        if (metadata != null) {
+            itemStack.setDamageValue(Integer.parseInt(metadata));
         }
 
-        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
-        return item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+        return itemStack;
     }
 }
