@@ -6,17 +6,12 @@ package com.wynntils.core.webapi.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.objects.MaterialMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -33,6 +28,9 @@ public class IngredientProfile {
     Map<String, IngredientIdentificationContainer> statuses;
     IngredientItemModifiers itemModifiers;
     IngredientModifiers ingredientModifiers;
+
+    @SerializedName("itemInfo")
+    IngredientInfo ingredientInfo;
 
     public IngredientProfile(
             String name,
@@ -88,48 +86,7 @@ public class IngredientProfile {
     }
 
     public ItemStack asItemStack() {
-        if (material == null) {
-            return new ItemStack(Items.AIR);
-        }
-
-        ItemStack itemStack;
-
-        if (material.matches("(.*\\d.*)")) {
-            String[] split = material.split(":");
-
-            int id = Integer.parseInt(split[0]);
-
-            Optional<Item> item = Optional.empty();
-            boolean variation = false;
-
-            MaterialMapping materialMapping = WebManager.getMaterialIdMap().getOrDefault(id, MaterialMapping.DEFAULT);
-            if (!materialMapping.variations().isEmpty() && split.length > 1) {
-                int damage = Integer.parseInt(split[1]);
-
-                if (materialMapping.variations().containsKey(damage)) {
-                    item = Registry.ITEM.getOptional(new ResourceLocation("minecraft:"
-                            + materialMapping.variations().get(damage).name()));
-                    variation = true;
-                }
-            } else {
-                item = Registry.ITEM.getOptional(new ResourceLocation("minecraft:" + materialMapping.name()));
-            }
-
-            itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
-
-            if (!variation && split.length > 1) {
-                int damage = Integer.parseInt(split[1]);
-
-                if (damage > 0) {
-                    itemStack.setDamageValue(Integer.parseInt(split[1]));
-                }
-            }
-        } else {
-            Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
-            itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
-        }
-
-        itemStack.getOrCreateTag().putBoolean("Unbreakable", true);
+        ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
             HashMap<String, String> ingredientHeadTextures = WebManager.getIngredientHeadTextures();
