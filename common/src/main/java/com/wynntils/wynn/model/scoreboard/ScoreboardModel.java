@@ -74,40 +74,16 @@ public final class ScoreboardModel extends Model {
         }
 
         List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
-        LinkedList<ScoreboardLineChange> queueCopy = new LinkedList<>(queuedChanges);
-        queuedChanges.clear();
 
-        Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
+        reconstructedScoreboard = processQueuedChanges(queuedChanges, scoreboardCopy);
 
-        for (ScoreboardLine scoreboardLine : scoreboardCopy) {
-            scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
-        }
-
-        Set<String> changedLines = new HashSet<>();
-        while (!queueCopy.isEmpty()) {
-            ScoreboardLineChange processed = queueCopy.pop();
-
-            if (processed.method() == ServerScoreboard.Method.REMOVE) {
-                for (ScoreboardLine lineToRemove : scoreboardLineMap.values().stream()
-                        .filter(scoreboardLine -> Objects.equals(scoreboardLine.line(), processed.lineText()))
-                        .toList()) {
-                    scoreboardLineMap.remove(lineToRemove.index());
-                }
-            } else {
-                ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
-                scoreboardLineMap.put(line.index(), line);
-                changedLines.add(processed.lineText());
-            }
-        }
-
-        scoreboardCopy.clear();
-
-        scoreboardCopy = scoreboardLineMap.values().stream()
-                .sorted(Comparator.comparing(ScoreboardLine::index).reversed())
-                .collect(Collectors.toList());
 
         List<Segment> parsedSegments = calculateSegments(scoreboardCopy);
 
+        queuedChanges.clear();
+
+        // TODO changedLines
+        /*
         for (String changedString : changedLines) {
             int changedLine =
                     scoreboardCopy.stream().map(ScoreboardLine::line).toList().indexOf(changedString);
@@ -145,6 +121,8 @@ public final class ScoreboardModel extends Model {
             }
         }
 
+         */
+
         List<Segment> removedSegments = segments.stream()
                 .filter(segment -> parsedSegments.stream().noneMatch(parsed -> parsed.getType() == segment.getType()))
                 .toList();
@@ -179,6 +157,25 @@ public final class ScoreboardModel extends Model {
 
         handleScoreboardReconstruction();
     };
+
+    private static List<ScoreboardLine> processQueuedChanges(List<ScoreboardLineChange> queuedChanges, List<ScoreboardLine> scoreboard) {
+        Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
+
+        for (ScoreboardLine scoreboardLine : scoreboard) {
+            scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
+        }
+
+        for (ScoreboardLineChange change : queuedChanges) {
+            if (change.method() == ServerScoreboard.Method.REMOVE) {
+                scoreboardLineMap.remove(change.lineIndex());
+            } else {
+                ScoreboardLine line = new ScoreboardLine(change.lineText(), change.lineIndex());
+                scoreboardLineMap.put(line.index(), line);
+            }
+        }
+        
+        return scoreboardLineMap.values().stream().toList();
+    }
 
     private static void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {
