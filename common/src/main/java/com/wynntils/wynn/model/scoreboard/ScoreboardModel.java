@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.ServerScoreboard;
@@ -100,9 +99,11 @@ public final class ScoreboardModel extends Model {
         }
 
         McUtils.mc().doRunTask(() -> handleScoreboardReconstruction(segments));
-    };
+    }
+    ;
 
-    private static List<ScoreboardLine> addQueuedChanges(List<ScoreboardLineChange> queuedChanges, List<ScoreboardLine> scoreboard) {
+    private static List<ScoreboardLine> addQueuedChanges(
+            List<ScoreboardLineChange> queuedChanges, List<ScoreboardLine> scoreboard) {
         Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
 
         for (ScoreboardLine scoreboardLine : scoreboard) {
@@ -117,7 +118,7 @@ public final class ScoreboardModel extends Model {
                 scoreboardLineMap.put(line.index(), line);
             }
         }
-        
+
         return scoreboardLineMap.values().stream().toList();
     }
 
@@ -270,6 +271,7 @@ public final class ScoreboardModel extends Model {
         resetState();
         scoreboardHandlers.clear();
     }
+
     private static void registerHandler(ScoreboardHandler handlerInstance) {
         scoreboardHandlers.add(handlerInstance);
     }

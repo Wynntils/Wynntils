@@ -34,6 +34,7 @@ public final class Segment {
         if (!Objects.equals(header, segment.getHeader())) return false;
         return Objects.equals(content, segment.getContent());
     }
+
     public List<String> getContent() {
         return content;
     }
@@ -53,7 +54,6 @@ public final class Segment {
 
         return lines;
     }
-
 
     public void setContent(List<String> content) {
         this.content = content;
