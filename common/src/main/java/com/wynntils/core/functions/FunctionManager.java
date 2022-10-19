@@ -149,7 +149,7 @@ public final class FunctionManager extends CoreManager {
 
     private static String format(Object value) {
         if (value instanceof Number number) {
-            return NumberFormat.getInstance().format(number);
+            return NumberFormat.getInstance().format(number).replaceAll("\u00A0", " ");
         }
         return value.toString();
     }
