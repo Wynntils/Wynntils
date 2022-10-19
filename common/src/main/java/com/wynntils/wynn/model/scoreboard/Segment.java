@@ -6,44 +6,36 @@ package com.wynntils.wynn.model.scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class Segment {
     private final ScoreboardModel.SegmentType type;
     private final String header;
-    private String end;
     private List<String> content = null;
-    private final int startIndex;
-    private int endIndex = -1;
 
-    private boolean changed;
-
-    public Segment(ScoreboardModel.SegmentType type, String header, int startIndex) {
+    public Segment(ScoreboardModel.SegmentType type, String header) {
         this.type = type;
         this.header = header;
-        this.startIndex = startIndex;
-        this.changed = false;
     }
 
     @Override
     public String toString() {
-        return "Segment[" + "type="
-                + type + ", " + "header="
-                + header + ", " + "content="
-                + content + ", " + "startIndex="
-                + startIndex + ", " + "endIndex="
-                + endIndex + ']';
+        return super.toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Segment segment = (Segment) obj;
+
+        if (type != segment.getType()) return false;
+        if (!Objects.equals(header, segment.getHeader())) return false;
+        return Objects.equals(content, segment.getContent());
+    }
     public List<String> getContent() {
         return content;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public int getEndIndex() {
-        return endIndex;
     }
 
     public ScoreboardModel.SegmentType getType() {
@@ -54,37 +46,16 @@ public final class Segment {
         return header;
     }
 
-    public String getEnd() {
-        return end;
-    }
-
     public List<String> getScoreboardLines() {
-        List<String> lines = new ArrayList<>(this.content);
+        List<String> lines = new ArrayList<>();
         lines.add(this.header);
-        if (this.end != null) {
-            lines.add(this.end);
-        }
+        lines.addAll(this.content);
 
         return lines;
     }
 
-    public boolean isChanged() {
-        return changed;
-    }
 
     public void setContent(List<String> content) {
         this.content = content;
-    }
-
-    public void setEndIndex(int endIndex) {
-        this.endIndex = endIndex;
-    }
-
-    public void setChanged(boolean changed) {
-        this.changed = changed;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
     }
 }
