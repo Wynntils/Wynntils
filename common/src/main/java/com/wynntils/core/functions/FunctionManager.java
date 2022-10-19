@@ -149,7 +149,9 @@ public final class FunctionManager extends CoreManager {
 
     private static String format(Object value) {
         if (value instanceof Number number) {
-            return NumberFormat.getInstance().format(number);
+            // French locale has NBSP
+            // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
+            return NumberFormat.getInstance().format(number).replaceAll("\u00A0", " ");
         }
         return value.toString();
     }
