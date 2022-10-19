@@ -12,6 +12,8 @@ import com.wynntils.wynn.model.scoreboard.Segment;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import net.minecraft.ChatFormatting;
 
 public class QuestScoreboardHandler implements ScoreboardHandler {
@@ -57,5 +59,10 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
     @Override
     public void resetHandler() {
         QuestManager.setCurrentQuest(null);
+    }
+
+    @Override
+    public Set<ScoreboardModel.SegmentType> handledSegments() {
+        return Set.of(ScoreboardModel.SegmentType.Quest);
     }
 }

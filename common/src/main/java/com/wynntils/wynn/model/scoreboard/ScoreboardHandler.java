@@ -4,10 +4,14 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
+import java.util.Set;
+
 public interface ScoreboardHandler {
     void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType);
 
     void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType);
 
     void resetHandler();
+
+    Set<ScoreboardModel.SegmentType> handledSegments();
 }

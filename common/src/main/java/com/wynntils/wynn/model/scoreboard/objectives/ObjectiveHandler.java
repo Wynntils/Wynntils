@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,5 +170,10 @@ public class ObjectiveHandler implements ScoreboardHandler {
             parsedObjectives.add(parsed);
         }
         return parsedObjectives;
+    }
+
+    @Override
+    public Set<ScoreboardModel.SegmentType> handledSegments() {
+        return Set.of(ScoreboardModel.SegmentType.GuildObjective, ScoreboardModel.SegmentType.Objective);
     }
 }

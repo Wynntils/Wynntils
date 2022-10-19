@@ -59,7 +59,7 @@ public final class ScoreboardModel extends Model {
 
     private static final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private static final List<Pair<ScoreboardHandler, Set<SegmentType>>> scoreboardHandlers = new ArrayList<>();
+    private static final List<ScoreboardHandler> scoreboardHandlers = new ArrayList<>();
 
     private static ScheduledExecutorService executor = null;
 
@@ -153,9 +153,9 @@ public final class ScoreboardModel extends Model {
         segments = parsedSegments;
 
         for (Segment segment : removedSegments) {
-            for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b().contains(segment.getType())) {
-                    scoreboardHandler.a().onSegmentRemove(segment, segment.getType());
+            for (ScoreboardHandler scoreboardHandler : scoreboardHandlers) {
+                if (scoreboardHandler.handledSegments().contains(segment.getType())) {
+                    scoreboardHandler.onSegmentRemove(segment, segment.getType());
                 }
             }
         }
@@ -170,9 +170,9 @@ public final class ScoreboardModel extends Model {
         }
 
         for (Segment segment : changedSegments) {
-            for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b().contains(segment.getType())) {
-                    scoreboardHandler.a().onSegmentChange(segment, segment.getType());
+            for (ScoreboardHandler scoreboardHandler : scoreboardHandlers) {
+                if (scoreboardHandler.handledSegments().contains(segment.getType())) {
+                    scoreboardHandler.onSegmentChange(segment, segment.getType());
                 }
             }
         }
@@ -320,8 +320,8 @@ public final class ScoreboardModel extends Model {
     }
 
     public static void init() {
-        registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(QuestManager.SCOREBOARD_HANDLER, SegmentType.Quest);
+        registerHandler(new ObjectiveHandler());
+        registerHandler(QuestManager.SCOREBOARD_HANDLER);
 
         startThread();
     }
@@ -330,13 +330,8 @@ public final class ScoreboardModel extends Model {
         resetState();
         scoreboardHandlers.clear();
     }
-
-    private static void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
-        registerHandler(handlerInstance, Set.of(segmentType));
-    }
-
-    private static void registerHandler(ScoreboardHandler handlerInstance, Set<SegmentType> segmentTypes) {
-        scoreboardHandlers.add(new Pair<>(handlerInstance, segmentTypes));
+    private static void registerHandler(ScoreboardHandler handlerInstance) {
+        scoreboardHandlers.add(handlerInstance);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -370,8 +365,8 @@ public final class ScoreboardModel extends Model {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
-            scoreboardHandler.a().resetHandler();
+        for (ScoreboardHandler scoreboardHandler : scoreboardHandlers) {
+            scoreboardHandler.resetHandler();
         }
     }
 
