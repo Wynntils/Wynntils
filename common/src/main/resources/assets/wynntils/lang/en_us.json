@@ -358,6 +358,7 @@
   "feature.wynntils.map.pointerType.name": "Main Map Pointer Type",
   "feature.wynntils.map.renderUsingLinear.description": "Should the map be rendered using linear textures to avoid aliasing issues?",
   "feature.wynntils.map.renderUsingLinear.name": "Use Linear Rendering",
+  "feature.wynntils.mapPlayers.name": "Map Players",
   "feature.wynntils.minimap.name": "Minimaps",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "What style should the minimap border have?",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "Minimap Border Type",
