@@ -76,16 +76,24 @@ public class PlayerRelationsModel extends Model {
         String coded = ComponentUtils.getCoded(event.getMessage());
         String unformatted = ComponentUtils.stripFormatting(coded);
 
+        if (tryParseFriendMessages(coded)) {
+            return;
+        }
+
+        if (tryParsePartyMessages(coded)) {
+            return;
+        }
+
         if (expectingFriendMessage) {
-            // Skip first message of two, but still expect more messages
-            if (FRIEND_NO_LIST_MESSAGE_PATTERN_1.matcher(coded).matches()) {
+            if (tryParseFriendList(unformatted) || tryParseNoFriendList(coded)) {
                 event.setCanceled(true);
+                expectingFriendMessage = false;
                 return;
             }
 
-            if (tryParseNoFriendList(coded) || tryParseFriendList(unformatted)) {
+            // Skip first message of two, but still expect more messages
+            if (FRIEND_NO_LIST_MESSAGE_PATTERN_1.matcher(coded).matches()) {
                 event.setCanceled(true);
-                expectingFriendMessage = false;
                 return;
             }
         }
@@ -96,14 +104,6 @@ public class PlayerRelationsModel extends Model {
                 expectingPartyMessage = false;
                 return;
             }
-        }
-
-        if (tryParseFriendMessages(coded)) {
-            return;
-        }
-
-        if (tryParsePartyMessages(coded)) {
-            return;
         }
     }
 
