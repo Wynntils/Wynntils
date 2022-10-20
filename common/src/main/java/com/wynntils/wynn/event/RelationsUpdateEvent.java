@@ -7,11 +7,11 @@ package com.wynntils.wynn.event;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.Event;
 
-public class FriendListUpdateEvent extends Event {
+public abstract class RelationsUpdateEvent extends Event {
     private final Set<String> changedPlayers;
     private final ChangeType changeType;
 
-    public FriendListUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
+    public RelationsUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
         this.changedPlayers = changedPlayers;
         this.changeType = changeType;
     }
@@ -22,6 +22,19 @@ public class FriendListUpdateEvent extends Event {
 
     public ChangeType getChangeType() {
         return changeType;
+    }
+
+    public static class FriendList extends RelationsUpdateEvent {
+        public FriendList(Set<String> changedPlayers, ChangeType changeType) {
+            super(changedPlayers, changeType);
+        }
+    }
+
+    public static class PartyList extends RelationsUpdateEvent {
+
+        public PartyList(Set<String> changedPlayers, ChangeType changeType) {
+            super(changedPlayers, changeType);
+        }
     }
 
     public enum ChangeType {
