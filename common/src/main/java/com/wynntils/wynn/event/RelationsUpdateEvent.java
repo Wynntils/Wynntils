@@ -40,6 +40,6 @@ public abstract class RelationsUpdateEvent extends Event {
     public enum ChangeType {
         ADD,
         REMOVE,
-        RELOAD // This is used to indicate that we have a new fully parsed friend list
+        RELOAD // This is used to indicate that we have a new fully parsed relations list
     }
 }
