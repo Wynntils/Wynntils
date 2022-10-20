@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user.overlays.map;
+package com.wynntils.features.user.map;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
