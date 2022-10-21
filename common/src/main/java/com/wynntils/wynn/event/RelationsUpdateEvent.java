@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -38,8 +39,18 @@ public abstract class RelationsUpdateEvent extends Event {
     }
 
     public enum ChangeType {
-        ADD,
-        REMOVE,
-        RELOAD // This is used to indicate that we have a new fully parsed relations list
+        ADD(PacketAction.ADD),
+        REMOVE(PacketAction.REMOVE),
+        RELOAD(PacketAction.RESET); // This is used to indicate that we have a new fully parsed relations list
+
+        private final PacketAction packetAction;
+
+        ChangeType(PacketAction packetAction) {
+            this.packetAction = packetAction;
+        }
+
+        public PacketAction getPacketAction() {
+            return packetAction;
+        }
     }
 }

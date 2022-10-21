@@ -12,6 +12,7 @@ import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
@@ -117,6 +118,7 @@ public class CharacterManager extends CoreManager {
                     // default to oldId
                     currentCharacter =
                             CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + currentCharacter);
                 })
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
@@ -129,6 +131,7 @@ public class CharacterManager extends CoreManager {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
             currentCharacter = CharacterInfo.parseCharacter(e.getItemStack(), e.getSlotNum());
+            WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + currentCharacter);
         }
     }

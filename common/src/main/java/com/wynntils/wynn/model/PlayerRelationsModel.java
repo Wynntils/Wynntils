@@ -52,8 +52,8 @@ public class PlayerRelationsModel extends Model {
         resetRelations();
 
         if (WorldStateManager.onServer()) {
-            requestFriendList();
-            requestPartyList();
+            requestFriendListUpdate();
+            requestPartyListUpdate();
         }
     }
 
@@ -64,8 +64,8 @@ public class PlayerRelationsModel extends Model {
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.WORLD) {
-            requestFriendList();
-            requestPartyList();
+            requestFriendListUpdate();
+            requestPartyListUpdate();
         }
     }
 
@@ -123,7 +123,7 @@ public class PlayerRelationsModel extends Model {
         if (PARTY_SELF_JOIN_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player joined a party.");
 
-            requestPartyList();
+            requestPartyListUpdate();
             return true;
         }
 
@@ -240,13 +240,13 @@ public class PlayerRelationsModel extends Model {
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    private static void requestFriendList() {
+    public static void requestFriendListUpdate() {
         expectingFriendMessage = true;
         McUtils.player().chat("/friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
-    private static void requestPartyList() {
+    public static void requestPartyListUpdate() {
         expectingPartyMessage = true;
         McUtils.player().chat("/party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
