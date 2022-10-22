@@ -9,6 +9,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
+import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -24,7 +25,12 @@ public class WynntilsQuestBookFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
-            "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(new WynntilsMenuScreen()));
+            "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(new WynntilsQuestBookScreen()));
+
+    @RegisterKeyBind
+    private final KeyBind openWynntilsMenu =
+            new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
+                    .setScreen(new WynntilsMenuScreen()));
 
     @Config
     public boolean replaceWynncraftQuestBook = true;
