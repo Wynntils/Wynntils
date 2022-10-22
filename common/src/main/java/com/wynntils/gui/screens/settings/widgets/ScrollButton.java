@@ -20,7 +20,9 @@ public class ScrollButton extends AbstractButton {
     private final int maxScroll;
     private final int perScrollIncrement;
     private final CustomColor scrollAreaColor;
+    private final float requiredChangePerElement;
     private int currentScroll = 0;
+    private double currentUnusedDrag = 0;
 
     private boolean dragging = false;
 
@@ -40,6 +42,7 @@ public class ScrollButton extends AbstractButton {
         this.perScrollIncrement = perScrollIncrement;
         this.onScroll = onScroll;
         this.scrollAreaColor = scrollAreaColor;
+        this.requiredChangePerElement = (y2 - y) / 8f;
     }
 
     @Override
@@ -78,6 +81,7 @@ public class ScrollButton extends AbstractButton {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         dragging = false;
+        currentUnusedDrag = 0;
         return true;
     }
 
@@ -86,7 +90,18 @@ public class ScrollButton extends AbstractButton {
         if (dragY == 0) return true;
 
         if (dragging) {
-            scroll(dragY > 0 ? -1 : 1);
+            currentUnusedDrag += dragY;
+            System.out.println("currentUnusedDrag = " + currentUnusedDrag);
+
+            while (currentUnusedDrag >= requiredChangePerElement) {
+                scroll(-1);
+                currentUnusedDrag -= requiredChangePerElement;
+            }
+
+            while (currentUnusedDrag <= -requiredChangePerElement) {
+                scroll(1);
+                currentUnusedDrag += requiredChangePerElement;
+            }
         }
 
         return true;
