@@ -13,7 +13,6 @@ import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.model.SocketModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.List;
 
 public class SocketFeature extends UserFeature {
@@ -33,8 +32,11 @@ public class SocketFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        // SocketModel needs ActionBarModel for updating player info and HadesUserModel
-        return List.of(PlayerRelationsModel.class, SocketModel.class, HadesUserModel.class, ActionBarModel.class);
+        // SocketModel
+        //      needs ActionBarModel for updating player info
+        //      HadesUserModel for storing remote HadesUser info
+        //      PlayerRelationsModel to parse player relations
+        return List.of(SocketModel.class, PlayerRelationsModel.class, HadesUserModel.class, ActionBarModel.class);
     }
 
     @Override
@@ -59,15 +61,5 @@ public class SocketFeature extends UserFeature {
                 // TODO
             }
         }
-    }
-
-    @Override
-    protected boolean onEnable() {
-        if (WorldStateManager.onWorld()) {
-            PlayerRelationsModel.requestFriendListUpdate();
-            PlayerRelationsModel.requestPartyListUpdate();
-        }
-
-        return true;
     }
 }

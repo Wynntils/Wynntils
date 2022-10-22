@@ -51,11 +51,6 @@ public class PlayerRelationsModel extends Model {
 
     public static void init() {
         resetRelations();
-
-        if (WorldStateManager.onServer()) {
-            requestFriendListUpdate();
-            requestPartyListUpdate();
-        }
     }
 
     public static void disable() {

@@ -10,6 +10,7 @@ import com.wynntils.features.user.SocketFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
+import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.hades.protocol.packets.server.HSPacketAuthenticationResponse;
 import com.wynntils.hades.protocol.packets.server.HSPacketClearMutual;
 import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
@@ -18,6 +19,8 @@ import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.model.PlayerRelationsModel;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -84,6 +87,15 @@ public class SocketClientHandler implements IHadesClientAdapter {
 
         if (WorldStateManager.onServer()) {
             McUtils.sendMessageToClient(userComponent);
+        }
+
+        if (WorldStateManager.onWorld()) {
+            hadesConnection.sendPacket(new HCPacketUpdateWorld(
+                    WorldStateManager.getCurrentWorldName(),
+                    CharacterManager.getCharacterInfo().getId()));
+
+            PlayerRelationsModel.requestFriendListUpdate();
+            PlayerRelationsModel.requestPartyListUpdate();
         }
     }
 
