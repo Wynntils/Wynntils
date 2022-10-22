@@ -13,6 +13,7 @@ import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.objects.account.WynntilsUser;
+import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -74,7 +75,7 @@ public class UserInfoModel extends Model {
     public static void onPlayerJoin(PlayerJoinedWorldEvent event) {
         if (event.getPlayerId() == null || event.getPlayerInfo() == null) return;
         String name = event.getPlayerInfo().getProfile().getName();
-        if (name.contains("\u0001") || name.contains("§")) return; // avoid player npcs
+        if (WynnPlayerUtils.isNpc(name)) return; // avoid player npcs
 
         loadUser(event.getPlayerId());
     }
