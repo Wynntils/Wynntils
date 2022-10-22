@@ -68,6 +68,6 @@ public class PowderGenerator {
     }
 
     public static PowderProfile generatePowderProfile(Powder element, int tier) {
-        return powderProfileMap.get(element).get(tier);
+        return powderProfileMap.get(element).get(tier - 1);
     }
 }
