@@ -123,7 +123,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
         for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
             String emeraldAmount = emeraldAmounts[i];
-            if (emeraldAmount == null || Objects.equals(emeraldAmount, "0")) continue;
+            if (Objects.equals(emeraldAmount, "0")) continue;
 
             final int renderX = -TEXTURE_SIZE;
             final int renderY = renderedCount * TEXTURE_SIZE;

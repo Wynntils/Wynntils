@@ -108,7 +108,7 @@ public final class StringUtils {
     }
 
     public static String formatAmount(double value) {
-        if (value < 0.75) return null;
+        if (value < 0.75) return "0";
 
         int suffix = 0;
         while (suffix < suffixes.length && value >= 750) {
