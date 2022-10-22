@@ -13,6 +13,7 @@ import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.model.SocketModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
+import com.wynntils.wynn.model.WorldStateManager;
 import java.util.List;
 
 public class SocketFeature extends UserFeature {
@@ -58,5 +59,15 @@ public class SocketFeature extends UserFeature {
                 // TODO
             }
         }
+    }
+
+    @Override
+    protected boolean onEnable() {
+        if (WorldStateManager.onWorld()) {
+            PlayerRelationsModel.requestFriendListUpdate();
+            PlayerRelationsModel.requestPartyListUpdate();
+        }
+
+        return true;
     }
 }

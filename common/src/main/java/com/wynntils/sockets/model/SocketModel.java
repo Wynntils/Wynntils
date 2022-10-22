@@ -53,7 +53,7 @@ public class SocketModel extends Model {
 
         try {
             hadesConnection = new HadesNetworkBuilder()
-                    .setAddress(InetAddress.getByName("localhost"), 9000)
+                    .setAddress(InetAddress.getByName("io.wynntils.com"), 9000)
                     .setDirection(PacketDirection.SERVER)
                     .setCompressionThreshold(256)
                     .setHandlerFactory(SocketClientHandler::new)

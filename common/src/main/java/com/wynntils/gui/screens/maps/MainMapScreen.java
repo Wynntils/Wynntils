@@ -246,7 +246,7 @@ public class MainMapScreen extends Screen {
 
             BoundingBox userBox = BoundingBox.centered(gameX, gameZ, PLAYER_HEAD_RENDER_SIZE, PLAYER_HEAD_RENDER_SIZE);
 
-            if (!userBox.intersects(textureBoundingBox)) return;
+            if (!userBox.intersects(textureBoundingBox)) continue;
 
             ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
             RenderUtils.drawTexturedRect(

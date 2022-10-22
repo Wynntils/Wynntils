@@ -45,13 +45,8 @@ public class SocketClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer when WebManager#getAccount is empty.");
         }
 
-        //        hadesConnection.sendPacket(new HCPacketAuthenticate(WebManager.getAccount().get().getToken()));
-
-        if (WynntilsMod.isDevelopmentEnvironment()) {
-            hadesConnection.sendPacket(new HCPacketAuthenticate("84dbc8e5-aa32-4976-ae19-062ba4443b1d"));
-        } else {
-            hadesConnection.sendPacket(new HCPacketAuthenticate("84dbc8e5-bb32-4976-ae19-062ba4443b1d"));
-        }
+        hadesConnection.sendPacket(
+                new HCPacketAuthenticate(WebManager.getAccount().get().getToken()));
     }
 
     @Override
@@ -73,7 +68,7 @@ public class SocketClientHandler implements IHadesClientAdapter {
             case SUCCESS -> {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent =
-                        new TextComponent("Successfully connected to HadesServer").withStyle(ChatFormatting.RED);
+                        new TextComponent("Successfully connected to HadesServer").withStyle(ChatFormatting.GREEN);
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
