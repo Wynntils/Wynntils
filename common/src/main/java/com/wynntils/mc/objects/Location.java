@@ -7,23 +7,29 @@ package com.wynntils.mc.objects;
 import com.mojang.math.Vector3d;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
-public class Location extends Vector3d {
+public class Location extends Vector3d implements Position {
     public Location(double x, double y, double z) {
         super(x, y, z);
     }
 
     public Location(Entity entity) {
-        super(entity.getX(), entity.getY(), entity.getZ());
+        this(entity.getX(), entity.getY(), entity.getZ());
     }
 
     public Location(BlockPos pos) {
-        super(pos.getX(), pos.getY(), pos.getZ());
+        this(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public Location(MapLocation location) {
-        super(location.getX(), location.getY(), location.getZ());
+        this(location.getX(), location.getY(), location.getZ());
+    }
+
+    public Location(Position location) {
+        this(location.x(), location.y(), location.z());
     }
 
     public void add(Vector3d loc) {
@@ -96,6 +102,10 @@ public class Location extends Vector3d {
         return new BlockPos(x, y, z);
     }
 
+    public Vec3 toVec3() {
+        return new Vec3(x, y, z);
+    }
+
     public Location clone() throws CloneNotSupportedException {
         super.clone();
         return new Location(x, y, z);
@@ -118,5 +128,20 @@ public class Location extends Vector3d {
 
     public String toString() {
         return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
+    }
+
+    @Override
+    public double x() {
+        return x;
+    }
+
+    @Override
+    public double y() {
+        return y;
+    }
+
+    @Override
+    public double z() {
+        return z;
     }
 }

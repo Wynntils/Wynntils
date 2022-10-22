@@ -23,13 +23,13 @@ public class PostRequestBuilder extends RequestBuilder {
     /**
      * Set a consumer that will write to a HttpURLConnection
      */
-    public PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
+    private PostRequestBuilder setWriter(ThrowingConsumer<HttpURLConnection, IOException> writer) {
         this.writer = writer;
         return this;
     }
 
     /** Sets the writer to one that just writes the given bytes */
-    public PostRequestBuilder postBytes(byte[] data, String contentType) {
+    private PostRequestBuilder postBytes(byte[] data, String contentType) {
         return setWriter(conn -> {
             conn.addRequestProperty("Content-Type", contentType);
             conn.addRequestProperty("Content-Length", Integer.toString(data.length));
@@ -41,7 +41,7 @@ public class PostRequestBuilder extends RequestBuilder {
 
     /** Sets the writer to a json string from a json element */
     public PostRequestBuilder postJsonElement(JsonElement element) {
-        return postBytes(element.toString().getBytes(), "application/json");
+        return postBytes(element.toString().getBytes(StandardCharsets.UTF_8), "application/json");
     }
 
     private static final byte[] newline = "\r\n".getBytes(StandardCharsets.US_ASCII);

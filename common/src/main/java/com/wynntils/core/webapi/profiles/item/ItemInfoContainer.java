@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles.item;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,13 +17,26 @@ import net.minecraft.world.item.Items;
 public class ItemInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
-    String material;
-    ItemType type;
-    String set;
-    ItemDropType dropType;
-    String armorColor;
+    private final ItemType type;
+    private final String set;
+    private final ItemDropType dropType;
+    private final String armorColor;
 
-    public ItemInfoContainer(String material, ItemType type, String set, ItemDropType dropType, String armorColor) {}
+    @SerializedName("name")
+    private final String materialName;
+
+    @SerializedName("damage")
+    private final String metadata;
+
+    public ItemInfoContainer(
+            ItemType type, String set, ItemDropType dropType, String armorColor, String materialName, String metadata) {
+        this.type = type;
+        this.set = set;
+        this.dropType = dropType;
+        this.armorColor = armorColor;
+        this.materialName = materialName;
+        this.metadata = metadata;
+    }
 
     public ItemDropType getDropType() {
         return dropType;
@@ -38,10 +52,6 @@ public class ItemInfoContainer {
 
     public String getSet() {
         return set;
-    }
-
-    public String getMaterial() {
-        return material;
     }
 
     public boolean isArmorColorValid() {
@@ -61,23 +71,21 @@ public class ItemInfoContainer {
         return (r << 16) + (g << 8) + b;
     }
 
-    // TODO get this method working
     public ItemStack asItemStack() {
-        if (material == null) {
-            return new ItemStack(Items.AIR);
-        }
+        if (materialName == null) {
+            ItemStack stack = new ItemStack(type.getDefaultItem());
+            stack.setDamageValue(type.getDefaultDamage());
 
-        if (material.matches("(.*\\d.*)")) {
-            String[] split = material.split(":");
-
-            ItemStack stack = new ItemStack(Item.byId(Integer.parseInt(split[0])));
-            if (split.length <= 1) return stack;
-
-            stack.setDamageValue(Integer.parseInt(split[1]));
             return stack;
         }
 
-        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(material));
-        return item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(materialName));
+        ItemStack itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
+
+        if (metadata != null) {
+            itemStack.setDamageValue(Integer.parseInt(metadata));
+        }
+
+        return itemStack;
     }
 }

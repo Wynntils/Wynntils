@@ -74,7 +74,11 @@ public final class ConfigManager extends CoreManager {
 
         // set up config file based on uuid, load it if it exists
         userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
-        if (!userConfig.exists()) return;
+        if (!userConfig.exists()) {
+            FileUtils.createNewFile(userConfig);
+            configObject = new JsonObject();
+            return;
+        }
 
         try {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfig), StandardCharsets.UTF_8);

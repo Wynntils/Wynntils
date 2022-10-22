@@ -16,12 +16,12 @@ import com.wynntils.core.functions.FunctionManager;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -60,21 +60,29 @@ public class FunctionCommand extends CommandBase {
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
-        List<Function<?>> functions = FunctionManager.getFunctions().stream().collect(Collectors.toList());
-        functions.sort(Comparator.comparing(Function::getName));
+        List<Function<?>> functions = FunctionManager.getFunctions().stream()
+                .sorted(Comparator.comparing(Function::getName))
+                .toList();
 
         MutableComponent response = new TextComponent("Available functions:").withStyle(ChatFormatting.AQUA);
 
         for (Function<?> function : functions) {
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(function.getName()).withStyle(ChatFormatting.YELLOW));
+            MutableComponent functionComponent = new TextComponent("\n - ").withStyle(ChatFormatting.GRAY);
+
+            functionComponent.append(new TextComponent(function.getName()).withStyle(ChatFormatting.YELLOW));
             if (!function.getAliases().isEmpty()) {
                 String aliasList = String.join(", ", function.getAliases());
 
-                response.append(new TextComponent(" [alias: ").withStyle(ChatFormatting.GRAY))
+                functionComponent
+                        .append(new TextComponent(" [alias: ").withStyle(ChatFormatting.GRAY))
                         .append(new TextComponent(aliasList).withStyle(ChatFormatting.WHITE))
                         .append(new TextComponent("]").withStyle(ChatFormatting.GRAY));
             }
+
+            functionComponent.withStyle(style -> style.withHoverEvent(
+                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(function.getDescription()))));
+
+            response.append(functionComponent);
         }
 
         context.getSource().sendSuccess(response, false);

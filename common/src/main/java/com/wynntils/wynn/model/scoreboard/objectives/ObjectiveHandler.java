@@ -70,7 +70,8 @@ public class ObjectiveHandler implements ScoreboardHandler {
         guildWynnObjective = parsed;
     }
 
-    public static void resetObjectives() {
+    @Override
+    public void resetHandler() {
         guildWynnObjective = null;
         WYNN_OBJECTIVES.clear();
     }
@@ -161,12 +162,9 @@ public class ObjectiveHandler implements ScoreboardHandler {
                 continue;
             }
 
-            WynnObjective parsed = WynnObjective.parseObjectiveLine(line);
-
             // Determine objective type with the formatting code
-            if (Objects.equals(objectiveMatcher.group(1), "b")) {
-                parsed.setGuildObjective(true);
-            }
+            boolean isGuildObjective = Objects.equals(objectiveMatcher.group(1), "b");
+            WynnObjective parsed = WynnObjective.parseObjectiveLine(line, isGuildObjective);
 
             parsedObjectives.add(parsed);
         }

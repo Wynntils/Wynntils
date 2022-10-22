@@ -9,7 +9,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.SearchableScreen;
+import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
@@ -18,8 +18,8 @@ import net.minecraft.client.Minecraft;
 
 public class QuestBookSearchWidget extends SearchWidget {
     public QuestBookSearchWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, SearchableScreen searchableScreen) {
-        super(x, y, width, height, onUpdateConsumer, searchableScreen);
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+        super(x, y, width, height, onUpdateConsumer, textboxScreen);
     }
 
     @Override

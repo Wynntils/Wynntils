@@ -7,17 +7,21 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
+import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
+import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
@@ -39,6 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,6 +52,7 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
+
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
@@ -64,6 +70,10 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, String> internalIdentifications = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+
+    private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
+    private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
+    private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
 
     private static String currentSplash = "";
 
@@ -91,6 +101,7 @@ public final class WebManager extends CoreManager {
     private static void loadCommonObjects() {
         WebManager.tryLoadItemList();
         WebManager.tryLoadItemGuesses();
+        WebManager.tryLoadIngredientList();
     }
 
     public static boolean isLoggedIn() {
@@ -187,7 +198,7 @@ public final class WebManager extends CoreManager {
         territoryUpdateThread = null;
     }
 
-    public static void tryLoadItemGuesses() {
+    private static void tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
                 .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
@@ -210,7 +221,7 @@ public final class WebManager extends CoreManager {
         // Check for success
     }
 
-    public static void tryLoadItemList() {
+    private static void tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
                 .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
@@ -249,6 +260,32 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
+    }
+
+    public static void tryLoadIngredientList() {
+        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
+
+        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/ingredientList", "ingredientList")
+                .cacheTo(new File(API_CACHE_ROOT, "ingredient_list.json"))
+                .useCacheAsBackup()
+                .handleJsonObject(j -> {
+                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+                    ingredientHeadTextures = gson.fromJson(j.getAsJsonObject("headTextures"), hashmapType);
+
+                    IngredientProfile[] gItems =
+                            gson.fromJson(j.getAsJsonArray("ingredients"), IngredientProfile[].class);
+                    HashMap<String, IngredientProfile> cingredients = new HashMap<>();
+
+                    for (IngredientProfile prof : gItems) {
+                        cingredients.put(prof.getDisplayName(), prof);
+                    }
+
+                    ingredients = cingredients;
+                    directIngredients = cingredients.values();
+
+                    return true;
+                })
+                .build());
     }
 
     private static void tryReloadApiUrls(boolean async) {
@@ -294,7 +331,31 @@ public final class WebManager extends CoreManager {
         }
     }
 
-    public static void updateCurrentSplash() {
+    public static void getServerList(Consumer<HashMap<String, ServerProfile>> onReceive) {
+        if (apiUrls == null || !isAthenaOnline()) return;
+        String url = apiUrls.get("Athena") + "/cache/get/serverList";
+
+        Request request = new RequestBuilder(url, "serverList")
+                .handleJsonObject((con, json) -> {
+                    JsonObject servers = json.getAsJsonObject("servers");
+                    HashMap<String, ServerProfile> result = new HashMap<>();
+
+                    long serverTime = Long.parseLong(con.getHeaderField("timestamp"));
+                    for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                        ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
+                        profile.matchTime(serverTime);
+
+                        result.put(entry.getKey(), profile);
+                    }
+
+                    onReceive.accept(result);
+                    return true;
+                })
+                .build();
+        handler.addAndDispatch(request, true);
+    }
+
+    private static void updateCurrentSplash() {
         if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
 
         List<String> splashes = apiUrls.getList("Splashes");
@@ -315,6 +376,10 @@ public final class WebManager extends CoreManager {
         if (apiUrls == null) return null;
 
         return apiUrls.get(key);
+    }
+
+    public static boolean isAthenaOnline() {
+        return (account != null && account.isConnected());
     }
 
     public static boolean isTerritoryListLoaded() {
@@ -347,6 +412,18 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
+    }
+
+    public static Collection<IngredientProfile> getIngredientsCollection() {
+        return directIngredients;
+    }
+
+    public static HashMap<String, IngredientProfile> getIngredients() {
+        return ingredients;
+    }
+
+    public static HashMap<String, String> getIngredientHeadTextures() {
+        return ingredientHeadTextures;
     }
 
     public static HashMap<String, TerritoryProfile> getTerritories() {

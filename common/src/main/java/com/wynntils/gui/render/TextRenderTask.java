@@ -26,9 +26,8 @@ public final class TextRenderTask {
         return this;
     }
 
-    public TextRenderTask setText(String text) {
+    public void setText(String text) {
         this.text = text;
-        return this;
     }
 
     @Override

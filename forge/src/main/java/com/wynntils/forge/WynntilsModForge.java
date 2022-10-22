@@ -5,6 +5,8 @@
 package com.wynntils.forge;
 
 import com.wynntils.core.WynntilsMod;
+import java.io.File;
+import java.nio.file.Path;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -12,6 +14,15 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
     public WynntilsModForge() {
+        Path path = ModLoadingContext.get()
+                .getActiveContainer()
+                .getModInfo()
+                .getOwningFile()
+                .getFile()
+                .getFilePath();
+
+        File modFile = new File(path.toUri());
+
         WynntilsMod.init(
                 WynntilsMod.ModLoader.FORGE,
                 ModLoadingContext.get()
@@ -19,6 +30,7 @@ public class WynntilsModForge {
                         .getModInfo()
                         .getVersion()
                         .toString(),
-                !FMLEnvironment.production);
+                !FMLEnvironment.production,
+                modFile);
     }
 }

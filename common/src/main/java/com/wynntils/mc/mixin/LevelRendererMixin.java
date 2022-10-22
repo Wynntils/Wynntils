@@ -26,7 +26,7 @@ public abstract class LevelRendererMixin {
     private Minecraft minecraft;
 
     @Inject(at = @At("TAIL"), method = "renderLevel")
-    public void renderLevelPost(
+    private void renderLevelPost(
             PoseStack poseStack,
             float partialTick,
             long finishNanoTime,
@@ -36,7 +36,44 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLast(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime);
+        EventFactory.onRenderLevelPost(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @Inject(at = @At("HEAD"), method = "renderLevel")
+    private void renderLevelPre(
+            PoseStack poseStack,
+            float partialTick,
+            long finishNanoTime,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightTexture lightTexture,
+            Matrix4f projectionMatrix,
+            CallbackInfo ci) {
+        EventFactory.onRenderLevelPre(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @Inject(
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+                            ordinal = 2),
+            method = "renderLevel")
+    private void renderTilePost(
+            PoseStack poseStack,
+            float partialTick,
+            long finishNanoTime,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightTexture lightTexture,
+            Matrix4f projectionMatrix,
+            CallbackInfo ci) {
+        EventFactory.onRenderTileLast(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
     }
 }

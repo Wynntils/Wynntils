@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ItemGuessProfile {
-    String range;
-    Map<ItemType, Map<ItemTier, List<String>>> items = new EnumMap<>(ItemType.class);
+    private final String range;
+    private final Map<ItemType, Map<ItemTier, List<String>>> items = new EnumMap<>(ItemType.class);
 
     public ItemGuessProfile(String range) {
         this.range = range;

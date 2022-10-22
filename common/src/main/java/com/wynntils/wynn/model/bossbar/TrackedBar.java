@@ -4,23 +4,21 @@
  */
 package com.wynntils.wynn.model.bossbar;
 
+import com.wynntils.mc.mixin.LerpingBossEventAccessor;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 
-public abstract class TrackedBar {
+public class TrackedBar {
     public final Pattern pattern;
     public final BarType type;
     public final ClassType classType;
 
     private boolean rendered = true;
 
-    protected float progress = 0;
-    protected float targetProgress = 0;
-    protected long setTime = 0;
+    private LerpingBossEvent event = null;
 
     protected int current = 0;
     protected int max = 0;
@@ -33,54 +31,47 @@ public abstract class TrackedBar {
         this.classType = classType;
     }
 
-    public void onAdd() {}
+    public void onUpdateName(Matcher match) {}
 
-    public abstract void onUpdateName(Matcher match);
+    public void onUpdateProgress(float progress) {}
 
     public boolean isRendered() {
         return rendered;
+    }
+
+    public void setEvent(LerpingBossEvent event) {
+        this.event = event;
     }
 
     public void setRendered(boolean rendered) {
         this.rendered = rendered;
     }
 
-    public void setProgress(float progress) {
-        this.progress = this.getProgress();
-        this.targetProgress = progress;
-        this.setTime = Util.getMillis();
+    public float getTargetProgress() {
+        return ((LerpingBossEventAccessor) event).getTargetPercent();
     }
 
-    public float getProgress() {
-        long l = Util.getMillis() - this.setTime;
-        float f = Mth.clamp((float) l / 100.0F, 0.0F, 1.0F);
-        return Mth.lerp(f, this.progress, this.targetProgress);
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public LerpingBossEvent getEvent() {
+        return event;
     }
 
     public UUID getUuid() {
-        return uuid;
+        return event.getId();
     }
 
     void reset() {
-        progress = 0;
-        targetProgress = 0;
-        setTime = 0;
         current = 0;
         max = 0;
+        event = null;
         rendered = true;
-        uuid = null;
     }
 
     public boolean isActive() {
-        return uuid != null;
+        return event != null;
     }
 
     public BossBarModel.BarProgress getBarProgress() {
-        return isActive() ? new BossBarModel.BarProgress(current, max, getProgress()) : null;
+        return isActive() ? new BossBarModel.BarProgress(current, max, event.getProgress()) : null;
     }
 
     public enum BarType {

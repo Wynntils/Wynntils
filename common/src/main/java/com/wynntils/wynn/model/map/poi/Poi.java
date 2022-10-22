@@ -4,12 +4,12 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
-import com.wynntils.gui.render.Texture;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public abstract class Poi {
-    private MapLocation location;
+    private final MapLocation location;
 
-    public Poi(MapLocation location) {
+    protected Poi(MapLocation location) {
         this.location = location;
     }
 
@@ -17,7 +17,12 @@ public abstract class Poi {
         return location;
     }
 
-    public abstract Texture getIcon();
+    public abstract void renderAt(
+            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
+
+    public abstract int getWidth();
+
+    public abstract int getHeight();
 
     public abstract String getName();
 }

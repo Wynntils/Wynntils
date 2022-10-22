@@ -23,7 +23,8 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
 import java.util.List;
@@ -34,7 +35,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class);
+        return List.of(ActionBarModel.class, ItemStackTransformModel.class);
     }
 
     public static class PowderAbilityBarOverlay extends Overlay {
@@ -50,7 +51,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         @Config
         public boolean hideIfNoCharge = true;
 
-        public PowderAbilityBarOverlay() {
+        protected PowderAbilityBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
@@ -66,7 +67,12 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
             float powderSpecialCharge = ActionBarModel.getPowderSpecialCharge();
             Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
-                    && !WynnItemMatchers.isWeapon(McUtils.inventory().getSelected())) return;
+                    && (!(McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack)
+                            || !gearItemStack
+                                    .getItemProfile()
+                                    .getItemInfo()
+                                    .getType()
+                                    .isWeapon())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);

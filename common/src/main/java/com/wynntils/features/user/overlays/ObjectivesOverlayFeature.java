@@ -71,7 +71,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
 
-        public GuildObjectiveOverlay() {
+        protected GuildObjectiveOverlay() {
             super(
                     new OverlayPosition(
                             -5.5f,
@@ -103,7 +103,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeight = FontRenderer.getInstance()
-                            .calculateRenderHeight(List.of(guildObjective.asObjectiveString()), this.getWidth())
+                            .calculateRenderHeight(guildObjective.asObjectiveString(), this.getWidth())
                     + actualBarHeight;
 
             float renderY = this.getRenderY()
@@ -127,7 +127,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.textShadow);
 
-            float height = FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+            float height = FontRenderer.getInstance().calculateRenderHeight(text, this.getWidth());
 
             if (height > 9) {
                 renderY += height - 9;
@@ -162,7 +162,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public CustomColor textColor = CommonColors.GREEN;
 
-        public DailyObjectiveOverlay() {
+        protected DailyObjectiveOverlay() {
             super(
                     new OverlayPosition(
                             -35.5f,
@@ -179,18 +179,18 @@ public class ObjectivesOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
 
-            final float SPACE_BETWEEN = 10;
-
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeightWithoutTextHeight = SPACE_BETWEEN + actualBarHeight;
-            final float fullHeight = (float) (renderedHeightWithoutTextHeight * objectives.size()
-                    - SPACE_BETWEEN
-                    + objectives.stream()
-                            .mapToDouble(objective -> FontRenderer.getInstance()
-                                    .calculateRenderHeight(List.of(objective.asObjectiveString()), this.getWidth()))
-                            .sum());
+
+            int tempHeight = 0;
+            for (WynnObjective objective : objectives) {
+                tempHeight += FontRenderer.getInstance()
+                        .calculateRenderHeight(objective.asObjectiveString(), (int) this.getWidth());
+            }
+
+            final float fullHeight = renderedHeightWithoutTextHeight * objectives.size() - SPACE_BETWEEN + tempHeight;
 
             float offsetY =
                     switch (this.getRenderVerticalAlignment()) {
@@ -222,8 +222,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 this.getRenderHorizontalAlignment(),
                                 this.textShadow);
 
-                final float textHeight =
-                        FontRenderer.getInstance().calculateRenderHeight(List.of(text), this.getWidth());
+                final float textHeight = FontRenderer.getInstance().calculateRenderHeight(text, (int) this.getWidth());
 
                 if (textHeight > 9) {
                     renderY += textHeight - 9;
@@ -257,7 +256,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public abstract static class ObjectiveOverlayBase extends Overlay {
+    protected abstract static class ObjectiveOverlayBase extends Overlay {
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public boolean hideOnInactivity = false;
 

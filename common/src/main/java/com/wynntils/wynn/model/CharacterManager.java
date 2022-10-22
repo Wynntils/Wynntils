@@ -6,6 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.utils.ItemUtils;
@@ -32,7 +33,7 @@ public class CharacterManager extends CoreManager {
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
-            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[(\\d+)%\\]");
+            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
 
@@ -180,7 +181,7 @@ public class CharacterManager extends CoreManager {
             return professionInfo;
         }
 
-        public static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
+        private static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
             List<String> lore = ItemUtils.getLore(itemStack);
 
             int level = 0;
@@ -205,7 +206,7 @@ public class CharacterManager extends CoreManager {
                     classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
         }
 
-        public static CharacterInfo parseCharacterFromCharacterMenu(
+        private static CharacterInfo parseCharacterFromCharacterMenu(
                 ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
             List<String> lore = ItemUtils.getLore(characterInfoItem);
 
@@ -227,15 +228,13 @@ public class CharacterManager extends CoreManager {
             }
             ClassType classType = ClassType.fromName(className);
 
-            Map<ProfessionInfo.ProfessionType, Integer> levels = new HashMap<>();
+            Map<ProfessionType, Integer> levels = new HashMap<>();
             List<String> professionLore = ItemUtils.getLore(professionInfoItem);
             for (String line : professionLore) {
                 Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
 
                 if (matcher.matches()) {
-                    levels.put(
-                            ProfessionInfo.ProfessionType.valueOf(matcher.group(2)),
-                            Integer.parseInt(matcher.group(1)));
+                    levels.put(ProfessionType.fromString(matcher.group(2)), Integer.parseInt(matcher.group(1)));
                 }
             }
 
@@ -310,6 +309,9 @@ public class CharacterManager extends CoreManager {
             int levelIndex = getXpLevel() - 1;
             if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
                 return Integer.MAX_VALUE;
+            }
+            if (levelIndex < 0) {
+                return 0;
             }
             return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
         }

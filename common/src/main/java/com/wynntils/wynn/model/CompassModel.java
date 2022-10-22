@@ -8,6 +8,8 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,9 +20,20 @@ public final class CompassModel extends Model {
     public static void init() {}
 
     public static Optional<Location> getCompassLocation() {
-        if (compassLocation != null) compassLocation.y = McUtils.player().getY();
-
         return Optional.ofNullable(compassLocation);
+    }
+
+    public static Optional<WaypointPoi> getCompassWaypoint() {
+        if (compassLocation != null) {
+            Location location = CompassModel.getCompassLocation().get();
+            // Always render waypoint POI on top
+            WaypointPoi waypointPoi =
+                    new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
+
+            return Optional.of(waypointPoi);
+        }
+
+        return Optional.empty();
     }
 
     public static void setCompassLocation(Location compassLocation) {

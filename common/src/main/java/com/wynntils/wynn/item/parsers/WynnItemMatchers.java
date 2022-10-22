@@ -8,6 +8,9 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.wynn.item.EmeraldPouchItemStack;
+import com.wynntils.wynn.item.IngredientItemStack;
+import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +23,7 @@ import net.minecraft.world.item.Items;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
+    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
@@ -27,8 +31,8 @@ public final class WynnItemMatchers {
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air|Blank) Powder ([IV]{1,3})");
-    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("\\[Tier ([IVX]{1,4})\\]");
+            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
+    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
     private static final Pattern PROFESSION_LEVEL_NAME_PATTERN =
             Pattern.compile("§f(.) §6(\\w+?) Profession §8\\[(Gathering|Crafting)\\]");
     private static final Pattern SKILL_POINT_NAME_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf]. \\w+?§d skill$");
@@ -53,6 +57,10 @@ public final class WynnItemMatchers {
         Component name = itemStack.getHoverName();
         String unformattedLoreLine = ComponentUtils.getCoded(name);
         return unformattedLoreLine.equals("§dUpgrade your §b❉ Intelligence§d skill");
+    }
+
+    public static boolean isServerItem(ItemStack itemStack) {
+        return serverItemMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isHealingPotion(ItemStack itemStack) {
@@ -98,7 +106,8 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isEmeraldPouch(ItemStack itemStack) {
-        return itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
+        return itemStack instanceof EmeraldPouchItemStack
+                || itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
     }
 
     /**
@@ -178,7 +187,8 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isPowder(ItemStack itemStack) {
-        return powderNameMatcher(itemStack.getHoverName()).matches();
+        return itemStack instanceof PowderItemStack
+                || powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
     public static boolean isProfessionLevel(ItemStack itemStack) {
@@ -214,6 +224,10 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isIngredient(ItemStack itemStack) {
+        if (itemStack instanceof IngredientItemStack) {
+            return true;
+        }
+
         if (!ingredientOrMaterialMatcher(itemStack.getHoverName()).matches()) {
             return false;
         }
@@ -237,6 +251,10 @@ public final class WynnItemMatchers {
         return false;
     }
 
+    public static Matcher serverItemMatcher(Component text) {
+        return SERVER_ITEM_PATTERN.matcher(text.getString());
+    }
+
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -250,7 +268,7 @@ public final class WynnItemMatchers {
     }
 
     public static Matcher emeraldPouchTierMatcher(Component text) {
-        return EMERALD_POUCH_TIER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+        return EMERALD_POUCH_TIER_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
     }
 
     public static Matcher professionLevelMatcher(Component text) {

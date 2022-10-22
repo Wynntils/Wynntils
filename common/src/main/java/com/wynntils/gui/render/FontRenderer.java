@@ -10,10 +10,10 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -34,7 +34,7 @@ public final class FontRenderer {
         return font;
     }
 
-    public int renderText(
+    public void renderText(
             PoseStack poseStack,
             String text,
             float x,
@@ -46,7 +46,7 @@ public final class FontRenderer {
         float renderX;
         float renderY;
 
-        if (text == null) return 0;
+        if (text == null) return;
 
         // TODO: Add rainbow color support
 
@@ -61,7 +61,7 @@ public final class FontRenderer {
             case Bottom -> y - font.lineHeight;};
 
         switch (shadow) {
-            case OUTLINE:
+            case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
                 String strippedText = ComponentUtils.stripColorFormatting(text);
 
@@ -71,11 +71,14 @@ public final class FontRenderer {
                 font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
                 font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
 
-                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
-            case NORMAL:
-                return font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
-            default:
-                return font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+            }
+            case NORMAL -> {
+                font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
+            }
+            default -> {
+                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+            }
         }
     }
 
@@ -183,13 +186,12 @@ public final class FontRenderer {
             return;
         }
 
-        List<String> parts = Arrays.stream(StringUtils.wrapTextBySize(text, (int) maxWidth))
-                .filter(s -> !s.isBlank())
-                .toList();
+        List<FormattedText> parts = font.getSplitter().splitLines(text, (int) maxWidth, Style.EMPTY);
+
         String lastPart = "";
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part = getLastPartCodes(lastPart) + parts.get(i);
+            String part = getLastPartCodes(lastPart) + parts.get(i).getString();
             lastPart = part;
             renderText(
                     poseStack,
@@ -208,7 +210,7 @@ public final class FontRenderer {
 
         String lastPartCodes = "";
         int index;
-        while ((index = lastPart.lastIndexOf("§")) != -1) {
+        while ((index = lastPart.lastIndexOf('§')) != -1) {
             if (index >= lastPart.length() - 1) {
                 // trailing §, no format code, skip it
                 lastPart = lastPart.substring(0, index);
@@ -245,7 +247,7 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, x, currentY, line);
-            currentY += calculateRenderHeight(List.of(line));
+            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
         }
     }
 
@@ -300,16 +302,8 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                int lines = 1;
-                if (textRenderTask.getText().contains(" ")) {
-                    lines = Arrays.stream(StringUtils.wrapTextBySize(textRenderTask.getText(), (int)
-                                    textRenderTask.getSetting().maxWidth()))
-                            .filter(s -> !s.isBlank())
-                            .toList()
-                            .size();
-                }
-
-                height += lines * font.lineHeight;
+                height += font.wordWrapHeight(textRenderTask.getText(), (int)
+                        textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
         }
@@ -321,9 +315,15 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(List<String> lines, float maxWidth) {
-        return calculateRenderHeight(lines.stream()
-                .map(s -> new TextRenderTask(s, TextRenderSetting.DEFAULT.withMaxWidth(maxWidth)))
-                .toList());
+        int sum = 0;
+        for (String line : lines) {
+            sum += font.wordWrapHeight(line, (int) maxWidth);
+        }
+        return sum;
+    }
+
+    public float calculateRenderHeight(String line, float maxWidth) {
+        return font.wordWrapHeight(line, (int) maxWidth);
     }
 
     public enum TextShadow {

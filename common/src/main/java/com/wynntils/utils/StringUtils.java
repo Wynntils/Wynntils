@@ -5,8 +5,8 @@
 package com.wynntils.utils;
 
 import com.wynntils.mc.utils.McUtils;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,16 +104,11 @@ public final class StringUtils {
     }
 
     public static String encodeUrl(String url) {
-        try {
-            return URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException ignored) {
-            // will not happen since UTF-8 is part of core charsets
-            return null;
-        }
+        return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
     public static String formatAmount(double value) {
-        if (value < 0.75) return null;
+        if (value < 0.75) return "0";
 
         int suffix = 0;
         while (suffix < suffixes.length && value >= 750) {
@@ -174,7 +169,7 @@ public final class StringUtils {
         Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
         if (rawMatcher.matches()) return "";
 
-        input = input.toLowerCase();
+        input = input.toLowerCase(Locale.ROOT);
         long emeralds = 0;
 
         try {

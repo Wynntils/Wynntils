@@ -9,9 +9,10 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -53,8 +54,8 @@ public final class McUtils {
         return window().getGuiScale();
     }
 
-    public static SoundManager soundManager() {
-        return mc().getSoundManager();
+    public static void playSound(SoundEvent sound) {
+        mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
     }
 
     public static void sendMessageToClient(Component component) {

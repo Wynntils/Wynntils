@@ -68,9 +68,7 @@ public class TranslationFeature extends UserFeature {
                 // We failed to get a translation; send the original message so it's not lost
                 messageToSend = origCoded;
             }
-            McUtils.mc().doRunTask(() -> {
-                McUtils.sendMessageToClient(new TextComponent(messageToSend));
-            });
+            McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(new TextComponent(messageToSend)));
         });
         if (!keepOriginal) {
             e.setCanceled(true);
@@ -114,7 +112,7 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        public TranslatedNpcDialogEvent(Component chatMsg) {
+        protected TranslatedNpcDialogEvent(Component chatMsg) {
             super(chatMsg);
         }
     }

@@ -8,22 +8,28 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.overlays.map.MapFeature;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.MapProfile;
+import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -65,6 +71,11 @@ public class MainMapScreen extends Screen {
     public MainMapScreen() {
         super(new TextComponent("Main Map"));
         centerMapAroundPlayer();
+    }
+
+    public MainMapScreen(float mapCenterX, float mapCenterZ) {
+        super(new TextComponent("Main Map"));
+        updateMapCenter(mapCenterX, mapCenterZ);
     }
 
     @Override
@@ -128,16 +139,26 @@ public class MainMapScreen extends Screen {
 
         RenderSystem.enableDepthTest();
 
-        if (MapModel.isMapLoaded()) {
-            MapProfile map = MapModel.getMaps().get(0);
-            float textureX = map.getTextureXPosition(mapCenterX);
-            float textureZ = map.getTextureZPosition(mapCenterZ);
-
-            renderMap(poseStack, map, textureX, textureZ, mouseX, mouseY);
-        }
+        renderMap(poseStack, mouseX, mouseY);
         renderBackground(poseStack);
 
-        renderCursor(poseStack);
+        renderCoordinates(poseStack, mouseX, mouseY);
+    }
+
+    private void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
+        int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+        int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        gameX + ", " + gameZ,
+                        this.centerX,
+                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
+                        FontRenderer.TextShadow.OUTLINE);
     }
 
     private void renderCursor(PoseStack poseStack) {
@@ -149,18 +170,18 @@ public class MainMapScreen extends Screen {
 
         float cursorX = (float) (centerX + distanceX * currentZoom);
         float cursorZ = (float) (centerZ + distanceZ * currentZoom);
+
         MapRenderer.renderCursor(
                 poseStack,
                 cursorX,
                 cursorZ,
-                1.5f,
-                false,
+                MapFeature.INSTANCE.playerPointerScale,
                 MapFeature.INSTANCE.pointerColor,
-                MapFeature.INSTANCE.pointerType);
+                MapFeature.INSTANCE.pointerType,
+                false);
     }
 
-    private void renderMap(
-            PoseStack poseStack, MapProfile map, float textureX, float textureZ, int mouseX, int mouseY) {
+    private void renderMap(PoseStack poseStack, int mouseX, int mouseY) {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
@@ -174,25 +195,85 @@ public class MainMapScreen extends Screen {
                 0,
                 mapWidth,
                 mapHeight);
-        MapRenderer.renderMapQuad(
-                map,
-                poseStack,
-                mapCenterX,
-                mapCenterZ,
-                centerX,
-                centerZ,
-                textureX,
-                textureZ,
-                mapWidth,
-                mapHeight,
-                1f / currentZoom,
-                1f,
-                new Pair<>(mouseX, mouseY),
-                MapFeature.INSTANCE.minScaleForLabels <= currentZoom,
-                false,
-                false);
+
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+
+        List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
+        for (MapTexture map : maps) {
+            float textureX = map.getTextureXPosition(mapCenterX);
+            float textureZ = map.getTextureZPosition(mapCenterZ);
+
+            MapRenderer.renderMapQuad(
+                    map,
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    textureX,
+                    textureZ,
+                    mapWidth,
+                    mapHeight,
+                    1f / currentZoom,
+                    MapFeature.INSTANCE.renderUsingLinear);
+        }
+
+        hovered = null;
+
+        renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
+        // Cursor
+        renderCursor(poseStack);
 
         RenderSystem.disableScissor();
+    }
+
+    private void renderPois(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
+        List<Poi> pois = new ArrayList<>();
+
+        pois.addAll(MapModel.getServicePois());
+        pois.addAll(MapModel.getLabelPois());
+        CompassModel.getCompassWaypoint().ifPresent(pois::add);
+
+        pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
+
+        List<Poi> filteredPois = new ArrayList<>();
+
+        // Filter and find hovered
+        for (int i = pois.size() - 1; i >= 0; i--) {
+            Poi poi = pois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
+            float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
+
+            BoundingBox filterBox = BoundingBox.centered(
+                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
+
+            if (filterBox.intersects(textureBoundingBox)) {
+                filteredPois.add(poi);
+                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
+                    hovered = poi;
+                }
+            }
+        }
+
+        // Add hovered poi as first
+        if (hovered != null) {
+            filteredPois.remove(hovered);
+            filteredPois.add(0, hovered);
+        }
+
+        // Reverse and Render
+        for (int i = filteredPois.size() - 1; i >= 0; i--) {
+            Poi poi = filteredPois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale, currentZoom);
+        }
     }
 
     private void updateMapCenterIfDragging(int mouseX, int mouseY) {
@@ -229,10 +310,22 @@ public class MainMapScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (McUtils.mc().player.isShiftKeyDown()
+                    && CompassModel.getCompassLocation().isPresent()) {
+                Location location = CompassModel.getCompassLocation().get();
+                updateMapCenter((float) location.x, (float) location.z);
+                return true;
+            }
+
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (hovered instanceof WaypointPoi) {
+                CompassModel.reset();
+                return true;
+            }
+
             if (hovered != null) {
-                McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f));
+                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                 return true;
             }
@@ -253,7 +346,7 @@ public class MainMapScreen extends Screen {
         Location compassLocation = new Location(gameX, 0, gameZ);
         CompassModel.setCompassLocation(compassLocation);
 
-        McUtils.soundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     @Override

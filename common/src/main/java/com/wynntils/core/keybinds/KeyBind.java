@@ -32,11 +32,26 @@ public class KeyBind {
         this.onInventoryPress = onInventoryPress;
     }
 
+    /**
+     * @param name             Name of the keybind
+     * @param keyCode          The keyCode of the default keybind. Use {@link org.lwjgl.glfw.GLFW} for easy
+     *                         key code getting
+     * @param type             Type of key
+     * @param firstPress       Boolean for whether onPress should only be done on first press
+     * @param onPress          Code to run when button is pressed, or null
+     */
+    public KeyBind(String name, int keyCode, InputConstants.Type type, boolean firstPress, Runnable onPress) {
+        this.firstPress = firstPress;
+        this.keyMapping = new KeyMapping(name, type, keyCode, CATEGORY);
+        this.onPress = onPress;
+        this.onInventoryPress = null;
+    }
+
     public KeyBind(String name, int keyCode, boolean firstPress, Runnable onPress) {
         this(name, keyCode, firstPress, onPress, null);
     }
 
-    public boolean isFirstPress() {
+    public boolean onlyFirstPress() {
         return firstPress;
     }
 

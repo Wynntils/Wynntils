@@ -24,17 +24,17 @@ public abstract class MinecraftMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tickPre(CallbackInfo ci) {
+    private void tickPre(CallbackInfo ci) {
         EventFactory.onTickStart();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
-    public void tickPost(CallbackInfo ci) {
+    private void tickPost(CallbackInfo ci) {
         EventFactory.onTickEnd();
     }
 
     @Inject(method = "resizeDisplay", at = @At("RETURN"))
-    public void resizeDisplayPost(CallbackInfo ci) {
+    private void resizeDisplayPost(CallbackInfo ci) {
         EventFactory.onResizeDisplayPost();
     }
 }

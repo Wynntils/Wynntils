@@ -59,7 +59,7 @@ public class QuickCastFeature extends UserFeature {
 
     private SpellDirection[] spellInProgress = NO_SPELL;
 
-    private final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
+    private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private int packetCountdown = 0;
     private int spellCountdown = 0;

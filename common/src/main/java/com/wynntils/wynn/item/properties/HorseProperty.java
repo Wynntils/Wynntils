@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class HorseProperty extends ItemProperty {
 
-    private final Pattern HORSE_PATTERN = Pattern.compile(
+    private static final Pattern HORSE_PATTERN = Pattern.compile(
             "§7Tier (\\d)§6Speed: (\\d+)/(\\d+)§6Jump: \\d+/\\d+§5Armour: None§bXp: (\\d+)/100(?:§cUntradable Item)?(:?§7Name: (.+))?");
     private int xp = -1;
     private int level = -1;

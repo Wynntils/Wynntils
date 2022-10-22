@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
@@ -23,6 +24,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
@@ -36,6 +38,7 @@ import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -44,13 +47,17 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.event.RenderLevelLastEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
@@ -67,26 +74,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -95,6 +109,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -104,6 +119,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
@@ -126,13 +142,43 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static void onRenderLast(
+    public static NametagRenderEvent onNameTagRender(
+            AbstractClientPlayer entity,
+            Component displayName,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight) {
+        return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
+    }
+
+    public static void onRenderLevelPost(
             LevelRenderer context,
             PoseStack poseStack,
             float partialTick,
             Matrix4f projectionMatrix,
-            long finishTimeNano) {
-        post(new RenderLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano));
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderLevelEvent.Post(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+    }
+
+    public static void onRenderLevelPre(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderLevelEvent.Pre(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
+    }
+
+    public static void onRenderTileLast(
+            LevelRenderer context,
+            PoseStack poseStack,
+            float partialTick,
+            Matrix4f projectionMatrix,
+            long finishTimeNano,
+            Camera camera) {
+        post(new RenderTileLevelLastEvent(context, poseStack, partialTick, projectionMatrix, finishTimeNano, camera));
     }
 
     public static void onRenderGuiPre(PoseStack poseStack, float partialTicks, Window window) {
@@ -201,11 +247,17 @@ public final class EventFactory {
     // endregion
 
     // region Screen Events
-    public static void onScreenCreated(Screen screen, Consumer<AbstractWidget> addButton) {
+    public static void onScreenCreatedPost(Screen screen, Consumer<AbstractWidget> addButton) {
         if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent(titleScreen, addButton));
+            postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
             post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
+        }
+    }
+
+    public static void onScreenCreatedPre(Screen screen, Consumer<AbstractWidget> addButton) {
+        if (screen instanceof TitleScreen titleScreen) {
+            postAlways(new TitleScreenInitEvent.Pre(titleScreen, addButton));
         }
     }
 
@@ -226,9 +278,22 @@ public final class EventFactory {
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
 
+    public static void onContainerSetSlot(ClientboundContainerSetSlotPacket packet) {
+        post(new ContainerSetSlotEvent(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
+    }
+
+    public static void onScreenInit(Screen screen) {
+        post(new ScreenInitEvent(screen));
+    }
+
     // endregion
 
     // region Container Events
+    public static void onChestMenuQuickMove(int containerId) {
+        post(new ChestMenuQuickMoveEvent(containerId));
+    }
+
     public static Event onClientboundContainerClosePacket(int containerId) {
         return post(new MenuClosedEvent(containerId));
     }
@@ -283,6 +348,18 @@ public final class EventFactory {
         return post(event);
     }
 
+    public static Event onInteract(Player player, InteractionHand hand, Entity target) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+        return post(event);
+    }
+
+    public static Event onInteractAt(
+            Player player, InteractionHand hand, Entity target, EntityHitResult entityHitResult) {
+        PlayerInteractEvent.InteractAt event =
+                new PlayerInteractEvent.InteractAt(player, hand, target, entityHitResult);
+        return post(event);
+    }
+
     public static Event onUseItem(Player player, Level level, InteractionHand hand) {
         return post(new UseItemEvent(player, level, hand));
     }
@@ -307,6 +384,18 @@ public final class EventFactory {
     // endregion
 
     // region Server Events
+    public static void onPlayerJoinedWorld(ClientboundAddPlayerPacket packet, PlayerInfo playerInfo) {
+        post(new PlayerJoinedWorldEvent(
+                packet.getEntityId(),
+                packet.getPlayerId(),
+                packet.getX(),
+                packet.getY(),
+                packet.getZ(),
+                packet.getxRot(),
+                packet.getyRot(),
+                playerInfo));
+    }
+
     public static void onDisconnect() {
         post(new DisconnectedEvent());
     }
@@ -315,8 +404,12 @@ public final class EventFactory {
         postAlways(new ConnectedEvent(host, port));
     }
 
-    public static void onResourcePack() {
-        post(new ResourcePackEvent());
+    public static Event onResourcePack(ClientboundResourcePackPacket packet) {
+        return post(new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired()));
+    }
+
+    public static Event onResourcePackClearEvent(String hash) {
+        return postAlways(new ResourcePackClearEvent(hash));
     }
 
     public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {

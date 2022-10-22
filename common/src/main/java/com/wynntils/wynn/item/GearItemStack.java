@@ -180,6 +180,34 @@ public class GearItemStack extends WynnItemStack {
         constructTooltips(baseTooltip);
     }
 
+    /** Gear viewer constructor - used when decoding internal json */
+    public GearItemStack(
+            ItemStack oldStack,
+            ItemProfile itemProfile,
+            List<ItemIdentificationContainer> identifications,
+            List<Powder> powders,
+            int rerolls) {
+        super(oldStack);
+
+        this.itemProfile = itemProfile;
+        this.identifications = identifications;
+        this.powders = powders;
+        this.rerolls = rerolls;
+
+        CompoundTag tag = this.getOrCreateTag();
+        tag.putBoolean("Unbreakable", true);
+        if (itemProfile.getItemInfo().isArmorColorValid())
+            tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
+        this.setTag(tag);
+
+        customName = new TextComponent(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
+
+        parseIDs();
+        List<Component> baseTooltip = constructBaseTooltip();
+        constructTooltips(baseTooltip);
+    }
+
     public ItemProfile getItemProfile() {
         return itemProfile;
     }
@@ -222,11 +250,13 @@ public class GearItemStack extends WynnItemStack {
 
             String name = "Perfect " + itemName;
 
-            long time = System.currentTimeMillis();
+            int cycle = 5000;
+
+            int time = (int) (System.currentTimeMillis() % cycle);
             for (int i = 0; i < name.length(); i++) {
-                float cycle = 1000.0f;
+                int hue = (time + i * cycle / 7) % cycle;
                 Style color = Style.EMPTY
-                        .withColor(Color.HSBtoRGB(((time + i * cycle / 7.0f) % cycle) / cycle, 0.8F, 0.8F))
+                        .withColor(Color.HSBtoRGB((hue / (float) cycle), 0.8F, 0.8F))
                         .withItalic(false);
 
                 newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));

@@ -27,7 +27,7 @@ public class EmeraldPouchTierProperty extends ItemProperty implements HighlightP
 
         // parse tier
         Matcher emeraldPouchMatcher = WynnItemMatchers.emeraldPouchTierMatcher(item.getHoverName());
-        String numeral = emeraldPouchMatcher.find() ? emeraldPouchMatcher.group(1) : "I";
+        String numeral = emeraldPouchMatcher.matches() ? emeraldPouchMatcher.group(1) : "I";
 
         // convert from roman to arabic if necessary
         String text = ItemTextOverlayFeature.emeraldPouchTierRomanNumerals

@@ -113,15 +113,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
             super(position, size);
         }
 
-        public float textureHeight() {
+        protected float textureHeight() {
             return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
-        public abstract BossBarModel.BarProgress progress();
+        protected abstract BossBarModel.BarProgress progress();
 
-        public abstract String icon();
+        protected abstract String icon();
 
-        public abstract boolean isActive();
+        protected abstract boolean isActive();
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
@@ -188,7 +188,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
         public HealthTexture healthTexture = HealthTexture.a;
 
-        public HealthBarOverlay() {
+        protected HealthBarOverlay() {
             this(
                     new OverlayPosition(
                             -30,
@@ -199,7 +199,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(81, 21));
         }
 
-        public HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
+        protected HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
             super(overlayPosition, guiScaledOverlaySize);
             textColor = CommonColors.RED;
         }
@@ -243,7 +243,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class BloodPoolBarOverlay extends HealthBarOverlay {
-        public BloodPoolBarOverlay() {
+        protected BloodPoolBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
@@ -274,7 +274,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
         public ManaTexture manaTexture = ManaTexture.a;
 
-        public ManaBarOverlay() {
+        protected ManaBarOverlay() {
             this(
                     new OverlayPosition(
                             -30,
@@ -285,7 +285,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(81, 21));
         }
 
-        public ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
+        protected ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
             super(overlayPosition, guiScaledOverlaySize);
             textColor = CommonColors.LIGHT_BLUE;
         }
@@ -330,7 +330,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class ManaBankBarOverlay extends ManaBarOverlay {
-        public ManaBankBarOverlay() {
+        protected ManaBankBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
@@ -359,7 +359,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
 
-        public AwakenedProgressBarOverlay() {
+        protected AwakenedProgressBarOverlay() {
             super(
                     new OverlayPosition(
                             -70,
@@ -388,7 +388,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     public static class FocusBarOverlay extends BaseBarOverlay {
-        public FocusBarOverlay() {
+        protected FocusBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
@@ -465,15 +465,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
             this.height = height;
         }
 
-        public int getTextureY1() {
+        private int getTextureY1() {
             return textureY1;
         }
 
-        public int getTextureY2() {
+        private int getTextureY2() {
             return textureY2;
         }
 
-        public int getHeight() {
+        private int getHeight() {
             return height;
         }
     }
@@ -498,15 +498,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
             this.height = height;
         }
 
-        public int getTextureY1() {
+        private int getTextureY1() {
             return textureY1;
         }
 
-        public int getTextureY2() {
+        private int getTextureY2() {
             return textureY2;
         }
 
-        public int getHeight() {
+        private int getHeight() {
             return height;
         }
     }

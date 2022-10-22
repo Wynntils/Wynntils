@@ -26,9 +26,9 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wynn.model.quests.QuestInfo;
+import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.quests.QuestHandler;
-import com.wynntils.wynn.model.scoreboard.quests.ScoreboardQuestInfo;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
@@ -67,7 +67,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         private final List<TextRenderTask> toRender = createRenderTaskList();
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
 
-        public QuestInfoOverlay() {
+        protected QuestInfoOverlay() {
             super(
                     new OverlayPosition(
                             5,
@@ -113,7 +113,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            ScoreboardQuestInfo currentQuest = QuestHandler.getCurrentQuest();
+            QuestInfo currentQuest = QuestManager.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;
@@ -123,8 +123,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 // Set at first use; I18n is not available at initialization time
                 toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
             }
-            toRender.get(1).setText(currentQuest.quest());
-            toRender.get(2).setText(currentQuest.description());
+            toRender.get(1).setText(currentQuest.getName());
+            toRender.get(2).setText(currentQuest.getNextTask());
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(

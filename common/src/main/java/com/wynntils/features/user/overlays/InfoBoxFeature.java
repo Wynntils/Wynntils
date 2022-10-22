@@ -19,36 +19,33 @@ import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class InfoBoxFeature extends UserFeature {
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox1Overlay = new InfoBoxOverlay(1);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox2Overlay = new InfoBoxOverlay(2);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox3Overlay = new InfoBoxOverlay(3);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox4Overlay = new InfoBoxOverlay(4);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox5Overlay = new InfoBoxOverlay(5);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox6Overlay = new InfoBoxOverlay(6);
 
     public static class InfoBoxOverlay extends Overlay {
@@ -63,19 +60,10 @@ public class InfoBoxFeature extends UserFeature {
 
         private final int id;
         private final List<Function<?>> functionDependencies = new ArrayList<>();
-        private TextRenderTask renderTask;
+        private String[] cachedLines;
         private long lastUpdate = 0;
 
-        private TextRenderTask getRenderTask(String content) {
-            return FunctionManager.getStringFromLegacyTemplate(content)
-                    .setSetting(TextRenderSetting.DEFAULT
-                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                            .withMaxWidth(this.getWidth())
-                            .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.WHITE))
-                            .withTextShadow(textShadow));
-        }
-
-        public InfoBoxOverlay(int id) {
+        protected InfoBoxOverlay(int id) {
             super(
                     new OverlayPosition(
                             -60 + (15 * id),
@@ -95,19 +83,28 @@ public class InfoBoxFeature extends UserFeature {
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                renderTask = getRenderTask(content);
+                cachedLines = FunctionManager.getLinesFromLegacyTemplate(content);
             }
 
-            FontRenderer.getInstance()
-                    .renderTextWithAlignment(
-                            poseStack,
-                            this.getRenderX(),
-                            this.getRenderY(),
-                            renderTask,
-                            this.getWidth(),
-                            this.getHeight(),
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment());
+            float renderX = this.getRenderX();
+            float renderY = this.getRenderY();
+            for (String line : cachedLines) {
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                line,
+                                renderX,
+                                renderX + this.getWidth(),
+                                renderY,
+                                renderY + this.getHeight(),
+                                0,
+                                CommonColors.WHITE,
+                                this.getRenderHorizontalAlignment(),
+                                this.getRenderVerticalAlignment(),
+                                this.textShadow);
+
+                renderY += FontRenderer.getInstance().getFont().lineHeight;
+            }
         }
 
         @Override
@@ -116,18 +113,24 @@ public class InfoBoxFeature extends UserFeature {
 
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment
-            TextRenderTask toRenderPreview = getRenderTask("&cX: %x%, &9Y: %y%, &aZ: %z%");
 
+            String line = FunctionManager.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
+
+            float renderX = this.getRenderX();
+            float renderY = this.getRenderY();
             FontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderAlignedTextInBox(
                             poseStack,
-                            this.getRenderX(),
-                            this.getRenderY(),
-                            toRenderPreview,
-                            this.getWidth(),
-                            this.getHeight(),
+                            line,
+                            renderX,
+                            renderX + this.getWidth(),
+                            renderY,
+                            renderY + this.getHeight(),
+                            0,
+                            CommonColors.WHITE,
                             this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment());
+                            this.getRenderVerticalAlignment(),
+                            FontRenderer.TextShadow.OUTLINE);
         }
 
         @Override

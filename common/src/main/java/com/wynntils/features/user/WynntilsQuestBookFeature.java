@@ -43,6 +43,13 @@ public class WynntilsQuestBookFeature extends UserFeature {
         tryCancelQuestBookOpen(event);
     }
 
+    @SubscribeEvent
+    public void onInteract(PlayerInteractEvent.Interact event) {
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+
+        tryCancelQuestBookOpen(event);
+    }
+
     private static void tryCancelQuestBookOpen(Event event) {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 

@@ -31,7 +31,7 @@ public final class CrashReportManager {
     }
 
     public abstract static class ICrashContext {
-        public final String name;
+        protected final String name;
 
         protected ICrashContext(String name) {
             this.name = name;

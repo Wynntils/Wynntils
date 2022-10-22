@@ -10,6 +10,7 @@ import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.core.webapi.profiles.item.ItemType;
+import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -30,6 +31,8 @@ import net.minecraft.world.item.TooltipFlag;
 public class UnidentifiedItemStack extends WynnItemStack {
     private final List<Component> tooltip;
     private ItemType itemType;
+    private ItemTier itemTier;
+    private List<String> itemPossibilities;
 
     public UnidentifiedItemStack(ItemStack stack) {
         super(stack);
@@ -38,8 +41,8 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
         if (!ItemGuessFeature.getInstance().isEnabled()) return;
 
-        ItemTier tier = ItemTier.fromComponent(getHoverName());
-        if (tier == null) return;
+        itemTier = ItemTier.fromComponent(getHoverName());
+        if (itemTier == null) return;
 
         String itemTypeStr = itemName.split(" ", 2)[1];
         if (itemTypeStr == null) return;
@@ -69,19 +72,23 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
         if (rarityMap == null) return;
 
-        List<String> items = rarityMap.get(tier);
-        if (items == null || items.isEmpty()) return;
+        itemPossibilities = rarityMap.get(itemTier);
+        if (itemPossibilities == null || itemPossibilities.isEmpty()) return;
 
         tooltip.add(new TranslatableComponent("feature.wynntils.itemGuess.possibilities"));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
-        for (String item : items) {
+        for (String item : itemPossibilities) {
             ItemProfile profile = WebManager.getItemsMap().get(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = new TextComponent(item).withStyle(tier.getChatFormatting());
+            MutableComponent itemDesc = new TextComponent(item).withStyle(itemTier.getChatFormatting());
+
+            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(item)) {
+                itemDesc.withStyle(ChatFormatting.UNDERLINE);
+            }
 
             levelToItems.computeIfAbsent(level, i -> new ArrayList<>()).add(itemDesc);
         }
@@ -98,7 +105,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
             if (ItemGuessFeature.showGuessesPrice && level != -1) {
                 guesses.append(new TextComponent(" [")
                         .append(new TextComponent(
-                                        (tier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
+                                        (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(new TextComponent("]"))
                         .withStyle(ChatFormatting.GRAY));
@@ -124,6 +131,14 @@ public class UnidentifiedItemStack extends WynnItemStack {
     }
 
     public Optional<ItemType> getItemType() {
-        return itemType == null ? Optional.empty() : Optional.of(itemType);
+        return Optional.ofNullable(itemType);
+    }
+
+    public Optional<ItemTier> getItemTier() {
+        return Optional.ofNullable(itemTier);
+    }
+
+    public List<String> getPossibleItems() {
+        return itemPossibilities == null ? List.of() : itemPossibilities;
     }
 }

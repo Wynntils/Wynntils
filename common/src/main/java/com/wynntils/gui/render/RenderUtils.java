@@ -5,6 +5,8 @@
 package com.wynntils.gui.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,13 +27,19 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
@@ -207,6 +215,36 @@ public final class RenderUtils {
         bufferBuilder.end();
         BufferUploader.end(bufferBuilder);
         RenderSystem.disableBlend();
+    }
+
+    public static void drawHoverableTexturedRect(
+            PoseStack poseStack, Texture texture, float x, float y, boolean hovered) {
+        drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                x,
+                y,
+                0,
+                texture.width(),
+                texture.height() / 2f,
+                0,
+                hovered ? texture.height() / 2f : 0,
+                texture.width(),
+                texture.height() / 2f,
+                texture.width(),
+                texture.height());
+    }
+
+    public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
+        drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                x,
+                y,
+                texture.width(),
+                texture.height(),
+                texture.width(),
+                texture.height());
     }
 
     public static void drawTexturedRect(
@@ -946,6 +984,61 @@ public final class RenderUtils {
         poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
                 StrictMath.cos(-Math.toRadians(angle) / 2)));
         poseStack.translate(-centerX, -centerZ, 0);
+    }
+
+    // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
+    public static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
+        BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
+
+        McUtils.mc()
+                .getItemRenderer()
+                .textureManager
+                .getTexture(TextureAtlas.LOCATION_BLOCKS)
+                .setFilter(false, false);
+        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        PoseStack poseStack = RenderSystem.getModelViewStack();
+        poseStack.pushPose();
+        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().blitOffset));
+        poseStack.translate(8.0, 8.0, 0.0);
+        poseStack.scale(1.0F, -1.0F, 1.0F);
+        poseStack.scale(16.0F, 16.0F, 16.0F);
+        poseStack.scale(scale, scale, 0);
+
+        RenderSystem.applyModelViewMatrix();
+        PoseStack poseStack2 = new PoseStack();
+        MultiBufferSource.BufferSource bufferSource =
+                Minecraft.getInstance().renderBuffers().bufferSource();
+        boolean modelUsesBlockLighting = bakedModel.usesBlockLight();
+
+        if (!modelUsesBlockLighting) {
+            Lighting.setupForFlatItems();
+        }
+
+        McUtils.mc()
+                .getItemRenderer()
+                .render(
+                        itemStack,
+                        ItemTransforms.TransformType.GUI,
+                        false,
+                        poseStack2,
+                        bufferSource,
+                        15728880,
+                        OverlayTexture.NO_OVERLAY,
+                        bakedModel);
+
+        bufferSource.endBatch();
+        RenderSystem.enableDepthTest();
+
+        if (!modelUsesBlockLighting) {
+            Lighting.setupFor3DItems();
+        }
+
+        poseStack.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {

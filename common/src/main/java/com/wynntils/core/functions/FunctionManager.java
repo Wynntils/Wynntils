@@ -10,10 +10,10 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
+import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ import net.minecraft.network.chat.TextComponent;
 public final class FunctionManager extends CoreManager {
     private static final List<Function<?>> FUNCTIONS = new ArrayList<>();
     private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
+    private static final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
 
     private static void registerFunction(Function<?> function) {
         FUNCTIONS.add(function);
@@ -53,6 +54,9 @@ public final class FunctionManager extends CoreManager {
 
     public static boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
+
+        // try to recover, worst case we disable it again
+        CRASHED_FUNCTIONS.remove(function);
 
         WynntilsMod.registerEventListener(activeFunction);
 
@@ -80,9 +84,13 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static Optional<Function<?>> forName(String functionName) {
-        return FunctionManager.getFunctions().stream()
-                .filter(function -> hasName(function, functionName))
-                .findFirst();
+        for (Function<?> function : FunctionManager.getFunctions()) {
+            if (hasName(function, functionName)) {
+                return Optional.of(function);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private static boolean hasName(Function<?> function, String name) {
@@ -93,34 +101,57 @@ public final class FunctionManager extends CoreManager {
         return false;
     }
 
+    private static Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+        if (CRASHED_FUNCTIONS.contains(function)) {
+            return Optional.empty();
+        }
+
+        try {
+            Object value = function.getValue(argument);
+            return Optional.ofNullable(value);
+        } catch (Throwable throwable) {
+            WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
+            McUtils.sendMessageToClient(new TextComponent(String.format(
+                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
+                    .withStyle(ChatFormatting.RED));
+
+            FunctionManager.disableFunction(function);
+            CRASHED_FUNCTIONS.add(function);
+        }
+
+        return Optional.empty();
+    }
+
     public static Component getSimpleValueString(
             Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : new TextComponent("");
 
-        Object value = function.getValue(argument);
-        if (value == null) {
+        Optional<Object> value = getFunctionValueSafely(function, argument);
+        if (value.isEmpty()) {
             return header.append(new TextComponent("??"));
         }
 
-        String formattedValue = format(value);
+        String formattedValue = format(value.get());
 
         return header.append(new TextComponent(formattedValue).withStyle(color));
     }
 
     public static String getRawValueString(Function<?> function, String argument) {
-        Object value = function.getValue(argument);
-        if (value == null) {
+        Optional<Object> value = getFunctionValueSafely(function, argument);
+        if (value.isEmpty()) {
             return "??";
         }
 
-        return format(value);
+        return format(value.get());
     }
 
     private static String format(Object value) {
         if (value instanceof Number number) {
-            return NumberFormat.getInstance().format(number);
+            // French locale has NBSP
+            // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
+            return NumberFormat.getInstance().format(number).replaceAll("\u00A0", " ");
         }
         return value.toString();
     }
@@ -202,7 +233,7 @@ public final class FunctionManager extends CoreManager {
         return dependencies;
     }
 
-    public static TextRenderTask getStringFromLegacyTemplate(String renderableText) {
+    public static String[] getLinesFromLegacyTemplate(String renderableText) {
         StringBuilder builder = new StringBuilder(renderableText.length() + 10);
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
@@ -224,7 +255,7 @@ public final class FunctionManager extends CoreManager {
         }
         m.appendTail(builder);
 
-        return new TextRenderTask(parseColorCodes(builder.toString()), TextRenderSetting.DEFAULT);
+        return parseColorCodes(builder.toString()).split("\n");
     }
 
     private static String parseColorCodes(String toProcess) {
@@ -295,6 +326,9 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new HorseFunctions.HorseXpFunction());
         registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
+
+        registerFunction(new LootrunFunctions.DryBoxesFunction());
+        registerFunction(new LootrunFunctions.DryStreakFunction());
 
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());
