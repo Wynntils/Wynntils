@@ -9,6 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
@@ -21,8 +22,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -33,8 +32,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.Vec3;
 
 public class CompassCommand extends CommandBase {
-    private static final Pattern COORDINATE_PATTERN =
-            Pattern.compile("(?<x>[-+]?\\d+)(\\D+(?<y>[-+]?\\d+))?\\D+(?<z>[-+]?\\d+)");
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -79,23 +76,16 @@ public class CompassCommand extends CommandBase {
 
     private int compassAtString(CommandContext<CommandSourceStack> context) {
         String coordinates = StringArgumentType.getString(context, "location");
-        Matcher matcher = COORDINATE_PATTERN.matcher(coordinates);
-
-        if (!matcher.matches()) {
+        Optional<Location> location = LocationUtils.parseFromString(coordinates);
+        if (location.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Incorrect coordinates!"));
             return 0;
         }
 
-        int x = Integer.parseInt(matcher.group("x"));
-        String yString = matcher.group("y");
-        int y = yString != null ? Integer.parseInt(yString) : 0;
-        int z = Integer.parseInt(matcher.group("z"));
-
-        Location location = new Location(x, y, z);
-        CompassModel.setCompassLocation(location);
+        CompassModel.setCompassLocation(location.get());
 
         MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
+        response.append(new TextComponent(location.get().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
