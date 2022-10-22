@@ -6,6 +6,8 @@ package com.wynntils.sockets.objects;
 
 import com.wynntils.hades.protocol.enums.RelationType;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
 import java.util.UUID;
 
 public class HadesUser {
@@ -77,5 +79,14 @@ public class HadesUser {
         this.maxMana = packet.getMaxMana();
 
         this.relationType = packet.getRelationType();
+    }
+
+    public CustomColor getRelationColor() {
+        return switch (this.relationType) {
+            case PARTY -> CommonColors.YELLOW;
+            case FRIEND -> CommonColors.GREEN;
+            case GUILD -> CommonColors.BLUE;
+            case NONE -> CustomColor.NONE;
+        };
     }
 }
