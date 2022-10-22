@@ -42,11 +42,11 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
 
     private static final Pattern UNUSED_POINTS_1 =
-            Pattern.compile("You have (\\d+) unused Skill Points! Right-Click while holding your compass to use them");
+            Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
     private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
-            "You have (\\d+) unused Ability Points! Right-Click while holding your compass to use them");
+            "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
     private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
-            "You have (\\d+) unused Skill Points and (\\d+) unused Ability Points! Right-Click while holding your compass to use them");
+            "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
