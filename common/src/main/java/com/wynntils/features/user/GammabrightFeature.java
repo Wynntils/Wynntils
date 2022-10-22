@@ -27,7 +27,7 @@ public class GammabrightFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
-            new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::applyGammabright);
+            new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::toggleGammaBright);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -48,6 +48,11 @@ public class GammabrightFeature extends UserFeature {
         }
 
         ConfigManager.saveConfig();
+    }
+
+    private void toggleGammaBright() {
+        gammabrightEnabled = !gammabrightEnabled;
+        applyGammabright();
     }
 
     @Override
