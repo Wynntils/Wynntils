@@ -19,6 +19,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.SocketClientHandler;
+import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -36,6 +37,7 @@ public class SocketModel extends Model {
 
     private static HadesConnection hadesConnection;
     private static int tickCountUntilUpdate = 0;
+    private static PlayerStatus lastSentStatus = null;
 
     public static void init() {
         tryCreateConnection();
@@ -60,6 +62,7 @@ public class SocketModel extends Model {
                     .buildClient();
 
             tickCountUntilUpdate = 0;
+            lastSentStatus = null;
         } catch (UnknownHostException e) {
             WynntilsMod.error("Could not resolve Hades host address.", e);
         }
@@ -119,18 +122,40 @@ public class SocketModel extends Model {
         tickCountUntilUpdate--;
 
         if (tickCountUntilUpdate <= 0) {
-            tickCountUntilUpdate = TICKS_PER_UPDATE;
-
             LocalPlayer player = McUtils.player();
 
-            hadesConnection.sendPacket(new HCPacketUpdateStatus(
+            if (lastSentStatus != null
+                    && lastSentStatus.equals(
+                            player.getX(),
+                            player.getY(),
+                            player.getZ(),
+                            ActionBarModel.getCurrentHealth(),
+                            ActionBarModel.getMaxHealth(),
+                            ActionBarModel.getCurrentMana(),
+                            ActionBarModel.getMaxMana())) {
+                tickCountUntilUpdate = 1;
+                return;
+            }
+
+            tickCountUntilUpdate = TICKS_PER_UPDATE;
+
+            lastSentStatus = new PlayerStatus(
                     player.getX(),
                     player.getY(),
                     player.getZ(),
                     ActionBarModel.getCurrentHealth(),
                     ActionBarModel.getMaxHealth(),
                     ActionBarModel.getCurrentMana(),
-                    ActionBarModel.getMaxMana()));
+                    ActionBarModel.getMaxMana());
+
+            hadesConnection.sendPacket(new HCPacketUpdateStatus(
+                    lastSentStatus.x(),
+                    lastSentStatus.y(),
+                    lastSentStatus.z(),
+                    lastSentStatus.health(),
+                    lastSentStatus.maxHealth(),
+                    lastSentStatus.mana(),
+                    lastSentStatus.maxMana()));
         }
     }
 
