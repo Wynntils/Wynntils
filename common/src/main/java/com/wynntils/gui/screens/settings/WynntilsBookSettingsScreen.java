@@ -10,6 +10,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.FontRenderer;
@@ -336,10 +337,12 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         FeatureCategory oldCategory = null;
 
         List<Feature> featureList = FeatureRegistry.getFeatures().stream()
-                .filter(feature -> StringUtils.partialMatch(feature.getTranslatedName(), searchWidget.getTextBoxInput())
+                .filter(feature -> searchMatches(feature)
+                        || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains)
                         || feature.getOverlays().stream()
-                                .anyMatch(overlay -> StringUtils.partialMatch(
-                                        overlay.getTranslatedName(), searchWidget.getTextBoxInput())))
+                                .anyMatch(overlay -> searchMatches(feature)
+                                        || overlay.getVisibleConfigOptions().stream()
+                                                .anyMatch(this::configOptionContains)))
                 .sorted()
                 .toList();
 
@@ -375,6 +378,14 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 CONFIGURABLES_PER_PAGE,
                 this::scrollConfigurableList,
                 CustomColor.NONE);
+    }
+
+    public boolean configOptionContains(ConfigHolder configHolder) {
+        return StringUtils.containsIgnoreCase(configHolder.getDisplayName(), searchWidget.getTextBoxInput());
+    }
+
+    private boolean searchMatches(Translatable translatable) {
+        return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 
     private void reloadConfigButtons() {
