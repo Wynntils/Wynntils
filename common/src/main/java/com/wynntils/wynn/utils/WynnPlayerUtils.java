@@ -20,10 +20,15 @@ public final class WynnPlayerUtils {
     }
 
     public static boolean isNpc(Player player) {
-        return player.getScoreboardName().contains("§");
+        String scoreboardName = player.getScoreboardName();
+        return isNpc(scoreboardName);
     }
 
-    // Returns true if the player is on the same server and is not an npc
+    public static boolean isNpc(String name) {
+        return name.contains("\u0001") || name.contains("§");
+    }
+
+    // Returns true if the player is on the same server and is not a npc
     public static boolean isLocalPlayer(Player player) {
         return !isNpc(player) && !isPlayerGhost(player);
     }
