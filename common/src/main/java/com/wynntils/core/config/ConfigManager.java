@@ -172,7 +172,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static Type findFieldType(Configurable parent, Field configField) {
+    private static Type findFieldTypeOverride(Configurable parent, Field configField) {
         Optional<Field> typeField = Arrays.stream(
                         FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
                 .filter(field ->
@@ -196,9 +196,9 @@ public final class ConfigManager extends CoreManager {
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
 
-            Type type = findFieldType(parent, configField);
+            Type typeOverride = findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, type);
+            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (metadata.visible()) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
