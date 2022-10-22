@@ -21,6 +21,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -57,12 +58,18 @@ public class ConfigButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
+        String displayName = configHolder.getDisplayName();
+
+        if (settingsScreen.configOptionContains(configHolder)) {
+            displayName = ChatFormatting.UNDERLINE + displayName;
+        }
+
         poseStack.pushPose();
         poseStack.scale(0.8f, 0.8f, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        configHolder.getDisplayName(),
+                        displayName,
                         (this.x + 3) / 0.8f,
                         (this.y + 3) / 0.8f,
                         CommonColors.BLACK,
