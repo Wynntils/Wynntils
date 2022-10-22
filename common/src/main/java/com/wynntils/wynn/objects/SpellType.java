@@ -9,7 +9,7 @@ import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 public enum SpellType {
     ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", "Bolt Blizzard", 6, 0),
     ESCAPE(ClassType.Archer, 2, "Escape", "Spider Jump", 3, 0),
-    BOMB(ClassType.Archer, 3, "Bomb", "Creeper Dart", 8, 0),
+    BOMB(ClassType.Archer, 3, "Arrow Bomb", "Creeper Dart", 8, 0),
     ARROW_SHIELD(ClassType.Archer, 4, "Arrow Shield", "Dagger Aura", 8, 1),
 
     SPIN_ATTACK(ClassType.Assassin, 1, "Spin Attack", "Whirlwind", 6, 0),
