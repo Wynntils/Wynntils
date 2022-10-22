@@ -27,12 +27,14 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends CoreManager {
+    private static final int OVERLAY_SECTIONS = 9; // must be a square number
+
     private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
     private static final Map<Overlay, Feature> overlayParent = new HashMap<>();
 
     private static final Set<Overlay> enabledOverlays = new HashSet<>();
 
-    private static final List<SectionCoordinates> sections = new ArrayList<>(9);
+    private static final List<SectionCoordinates> sections = new ArrayList<>(OVERLAY_SECTIONS);
 
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
         overlayInfoMap.put(overlay, overlayInfo);
@@ -57,9 +59,38 @@ public final class OverlayManager extends CoreManager {
 
     @SubscribeEvent
     public static void onRenderPre(RenderEvent.Pre event) {
+        assertSectionsAreCorrect();
+
         McUtils.mc().getProfiler().push("preRenOverlay");
         renderOverlays(event, OverlayInfo.RenderState.Pre);
         McUtils.mc().getProfiler().pop();
+    }
+
+    private static void assertSectionsAreCorrect() {
+        if (sections.isEmpty()) {
+            WynntilsMod.error("We had no calculated sections when trying to render! Forcing recalculation.");
+            calculateSections();
+            return;
+        }
+
+        // this assumes sections are equal in size
+        Window window = McUtils.window();
+        SectionCoordinates section = sections.get(0);
+
+        // account for loss of pixels when section does not perfectly divide screen
+        int sqrt = (int) Math.sqrt(OVERLAY_SECTIONS);
+
+        if (Math.abs((section.x2() - section.x1()) * sqrt - window.getGuiScaledWidth()) >= sqrt) {
+            WynntilsMod.error("We sections with wrong width when trying render! Forcing recalculation.");
+            calculateSections();
+            return;
+        }
+
+        if (Math.abs((section.y2() - section.y1()) * sqrt - window.getGuiScaledHeight()) >= sqrt) {
+            WynntilsMod.error("We sections with wrong height when trying render! Forcing recalculation.");
+            calculateSections();
+            return;
+        }
     }
 
     @SubscribeEvent
@@ -158,12 +189,14 @@ public final class OverlayManager extends CoreManager {
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
 
-        int wT = width / 3;
-        int hT = height / 3;
+        int sqrt = (int) Math.sqrt(OVERLAY_SECTIONS);
+
+        int wT = width / sqrt;
+        int hT = height / sqrt;
 
         sections.clear();
-        for (int h = 0; h < 3; h++) {
-            for (int w = 0; w < 3; w++) {
+        for (int h = 0; h < sqrt; h++) {
+            for (int w = 0; w < sqrt; w++) {
                 sections.add(new SectionCoordinates(w * wT, h * hT, (w + 1) * wT, (h + 1) * hT));
             }
         }
