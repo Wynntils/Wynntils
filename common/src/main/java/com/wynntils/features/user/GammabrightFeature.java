@@ -38,21 +38,20 @@ public class GammabrightFeature extends UserFeature {
 
     private void applyGammabright() {
         double currentGamma = McUtils.options().gamma;
+
         if (gammabrightEnabled) {
-            gammabrightEnabled = false;
-            McUtils.options().gamma = lastGamma;
-        } else {
-            gammabrightEnabled = true;
             lastGamma = currentGamma;
             McUtils.options().gamma = 1000d;
+        } else {
+            McUtils.options().gamma = lastGamma;
         }
-
-        ConfigManager.saveConfig();
     }
 
     private void toggleGammaBright() {
         gammabrightEnabled = !gammabrightEnabled;
         applyGammabright();
+
+        ConfigManager.saveConfig();
     }
 
     @Override
