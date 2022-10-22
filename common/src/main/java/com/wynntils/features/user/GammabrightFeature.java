@@ -27,27 +27,29 @@ public class GammabrightFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
-            new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::onGammabrightKeyPress);
+            new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::toggleGammaBright);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldStateManager.State.WORLD) return;
-        if (!gammabrightEnabled) return;
 
-        lastGamma = McUtils.options().gamma;
-        McUtils.options().gamma = 1000d;
+        applyGammabright();
     }
 
-    private void onGammabrightKeyPress() {
+    private void applyGammabright() {
         double currentGamma = McUtils.options().gamma;
-        if (currentGamma < 1000) {
+
+        if (gammabrightEnabled) {
             lastGamma = currentGamma;
             McUtils.options().gamma = 1000d;
-            gammabrightEnabled = true;
         } else {
-            gammabrightEnabled = false;
             McUtils.options().gamma = lastGamma;
         }
+    }
+
+    private void toggleGammaBright() {
+        gammabrightEnabled = !gammabrightEnabled;
+        applyGammabright();
 
         ConfigManager.saveConfig();
     }
@@ -55,7 +57,7 @@ public class GammabrightFeature extends UserFeature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (configHolder.getFieldName().equals("gammabrightEnabled")) {
-            onGammabrightKeyPress();
+            applyGammabright();
         }
     }
 }
