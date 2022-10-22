@@ -72,7 +72,7 @@ public class UserInfoModel extends Model {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerJoinedWorldEvent event) {
-        if (event.getPlayerId() == null) return;
+        if (event.getPlayerId() == null || event.getPlayerInfo() == null) return;
         String name = event.getPlayerInfo().getProfile().getName();
         if (name.contains("\u0001") || name.contains("§")) return; // avoid player npcs
 
