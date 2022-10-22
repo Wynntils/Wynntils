@@ -6,6 +6,8 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
@@ -194,6 +196,11 @@ public final class FeatureRegistry {
         if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
             feature.setupEventListener();
         }
+
+        // set feature category
+        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
+        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        feature.setCategory(category);
 
         // register key binds
         for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {
