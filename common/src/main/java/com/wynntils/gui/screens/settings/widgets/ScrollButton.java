@@ -91,7 +91,6 @@ public class ScrollButton extends AbstractButton {
 
         if (dragging) {
             currentUnusedDrag += dragY;
-            System.out.println("currentUnusedDrag = " + currentUnusedDrag);
 
             while (currentUnusedDrag >= requiredChangePerElement) {
                 scroll(-1);
