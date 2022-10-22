@@ -236,6 +236,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         if (configurableListScrollButton.isMouseOver(mouseX, mouseY)) {
             configurableListScrollButton.mouseClicked(mouseX, mouseY, button);
         }
+
         if (configListScrollButton != null && configListScrollButton.isMouseOver(mouseX, mouseY)) {
             configListScrollButton.mouseClicked(mouseX, mouseY, button);
         }
@@ -262,11 +263,9 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         mouseX -= getTranslationX();
         mouseY -= getTranslationY();
 
-        if (configurableListScrollButton.isMouseOver(mouseX, mouseY)) {
-            configurableListScrollButton.mouseReleased(mouseX, mouseY, button);
-        }
+        configurableListScrollButton.mouseReleased(mouseX, mouseY, button);
 
-        if (configListScrollButton != null && configListScrollButton.isMouseOver(mouseX, mouseY)) {
+        if (configListScrollButton != null) {
             configListScrollButton.mouseReleased(mouseX, mouseY, button);
         }
 
