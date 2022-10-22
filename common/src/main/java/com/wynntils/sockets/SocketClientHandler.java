@@ -46,7 +46,12 @@ public class SocketClientHandler implements IHadesClientAdapter {
         }
 
         //        hadesConnection.sendPacket(new HCPacketAuthenticate(WebManager.getAccount().get().getToken()));
-        hadesConnection.sendPacket(new HCPacketAuthenticate("84dbc8e5-aa32-4976-ae19-062ba4443b1d"));
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            hadesConnection.sendPacket(new HCPacketAuthenticate("84dbc8e5-aa32-4976-ae19-062ba4443b1d"));
+        } else {
+            hadesConnection.sendPacket(new HCPacketAuthenticate("84dbc8e5-bb32-4976-ae19-062ba4443b1d"));
+        }
     }
 
     @Override
@@ -56,6 +61,8 @@ public class SocketClientHandler implements IHadesClientAdapter {
                     new TextComponent("Disconnected from HadesServer.").withStyle(ChatFormatting.RED));
         }
         WynntilsMod.info("Disconnected from HadesServer.");
+
+        HadesUserModel.getHadesUserMap().clear();
     }
 
     @Override
@@ -115,5 +122,7 @@ public class SocketClientHandler implements IHadesClientAdapter {
             McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis] Disconnected from HadesServer.")
                     .withStyle(ChatFormatting.YELLOW));
         }
+
+        HadesUserModel.getHadesUserMap().clear();
     }
 }

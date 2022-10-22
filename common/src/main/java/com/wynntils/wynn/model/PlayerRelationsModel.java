@@ -9,6 +9,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Arrays;
@@ -63,9 +64,13 @@ public class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
+        HadesUserModel.getHadesUserMap().clear();
+
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             requestFriendListUpdate();
             requestPartyListUpdate();
+        } else {
+            resetRelations();
         }
     }
 
@@ -224,7 +229,7 @@ public class PlayerRelationsModel extends Model {
         String[] friendList = matcher.group(1).split(", ");
 
         friends = Arrays.stream(friendList).collect(Collectors.toSet());
-        WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new RelationsUpdateEvent.FriendList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
 
         WynntilsMod.info("Successfully updated friend list, user has " + friendList.length + " friends.");
         return true;
@@ -250,13 +255,5 @@ public class PlayerRelationsModel extends Model {
         expectingPartyMessage = true;
         McUtils.player().chat("/party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
-    }
-
-    public static Set<String> getFriends() {
-        return friends;
-    }
-
-    public static Set<String> getPartyMembers() {
-        return partyMembers;
     }
 }
