@@ -124,11 +124,15 @@ public class SocketModel extends Model {
         if (tickCountUntilUpdate <= 0) {
             LocalPlayer player = McUtils.player();
 
+            float pX = (float) player.getX();
+            float pY = (float) player.getY();
+            float pZ = (float) player.getZ();
+
             if (lastSentStatus != null
                     && lastSentStatus.equals(
-                            player.getX(),
-                            player.getY(),
-                            player.getZ(),
+                            pX,
+                            pY,
+                            pZ,
                             ActionBarModel.getCurrentHealth(),
                             ActionBarModel.getMaxHealth(),
                             ActionBarModel.getCurrentMana(),
@@ -140,9 +144,9 @@ public class SocketModel extends Model {
             tickCountUntilUpdate = TICKS_PER_UPDATE;
 
             lastSentStatus = new PlayerStatus(
-                    player.getX(),
-                    player.getY(),
-                    player.getZ(),
+                    pX,
+                    pY,
+                    pZ,
                     ActionBarModel.getCurrentHealth(),
                     ActionBarModel.getMaxHealth(),
                     ActionBarModel.getCurrentMana(),

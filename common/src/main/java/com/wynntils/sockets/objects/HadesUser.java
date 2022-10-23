@@ -16,7 +16,7 @@ public class HadesUser {
 
     private RelationType relationType;
 
-    private double x, y, z;
+    private float x, y, z;
     private int health, maxHealth;
     private int mana, maxMana;
 
@@ -39,15 +39,15 @@ public class HadesUser {
         return relationType;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 

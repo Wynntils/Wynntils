@@ -4,8 +4,8 @@
  */
 package com.wynntils.sockets.objects;
 
-public record PlayerStatus(double x, double y, double z, int health, int mana, int maxHealth, int maxMana) {
-    public boolean equals(double x, double y, double z, int health, int mana, int maxHealth, int maxMana) {
+public record PlayerStatus(float x, float y, float z, int health, int mana, int maxHealth, int maxMana) {
+    public boolean equals(float x, float y, float z, int health, int mana, int maxHealth, int maxMana) {
         return this.x == x
                 && this.y == y
                 && this.z == z
