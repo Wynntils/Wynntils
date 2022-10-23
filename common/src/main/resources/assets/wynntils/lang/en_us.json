@@ -281,7 +281,7 @@
   "feature.wynntils.itemTextOverlay.dungeonKeyEnabled.description": "Should we draw an item overlay showing dungeon key?",
   "feature.wynntils.itemTextOverlay.dungeonKeyEnabled.name": "Dungeon Key Specification",
   "feature.wynntils.itemTextOverlay.dungeonKeyShadow.description": "Should the overlay for dungeon keys be drawn with a shadow?",
-  "feature.wynntils.itemTextOverlay.dungeonKeyShadow.name": "DungeonKey Text Shadow",
+  "feature.wynntils.itemTextOverlay.dungeonKeyShadow.name": "Dungeon Key Text Shadow",
   "feature.wynntils.itemTextOverlay.emeraldPouchTierEnabled.description": "Adds the tier numerals to emerald pouch items.",
   "feature.wynntils.itemTextOverlay.emeraldPouchTierEnabled.name": "Emerald Pouch Tier",
   "feature.wynntils.itemTextOverlay.emeraldPouchTierRomanNumerals.description": "Display emerald pouch tier as roman numerals.",
