@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
@@ -22,6 +23,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -58,10 +61,13 @@ public class OverlayManagementScreen extends Screen {
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             new TextComponent("Resize the overlay by dragging the edges or corners."),
             new TextComponent("Move it by dragging the center of the overlay."),
+            new TextComponent("By holding shift, you can disable alignment lines."),
             new TextComponent("Use your arrows to change vertical"),
             new TextComponent("and horizontal alignment."),
             new TextComponent("The overlay name will render respecting"),
-            new TextComponent("the current overlay alignments."));
+            new TextComponent("the current overlay alignments."),
+            new TextComponent("Shift-Middle click on an overlay to reset it to it's original state.")
+                    .withStyle(ChatFormatting.RED));
 
     private static final List<Component> CLOSE_TOOLTIP_LINES =
             List.of(new TextComponent("Click here to stop editing and reset changes."));
@@ -264,6 +270,19 @@ public class OverlayManagementScreen extends Screen {
         if (selectedOverlay == null) return false;
 
         Overlay selected = selectedOverlay;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
+            selectedOverlay.getConfigOptionFromString("position").ifPresent(ConfigHolder::reset);
+            selectedOverlay.getConfigOptionFromString("size").ifPresent(ConfigHolder::reset);
+            selectedOverlay
+                    .getConfigOptionFromString("horizontalAlignmentOverride")
+                    .ifPresent(ConfigHolder::reset);
+            selectedOverlay
+                    .getConfigOptionFromString("verticalAlignmentOverride")
+                    .ifPresent(ConfigHolder::reset);
+
+            return true;
+        }
 
         Vec2 mousePos = new Vec2((float) mouseX, (float) mouseY);
 
