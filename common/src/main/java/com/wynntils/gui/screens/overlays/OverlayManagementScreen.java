@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -207,13 +208,19 @@ public class OverlayManagementScreen extends Screen {
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
-                int toolTipWidth = RenderUtils.getToolTipWidth(
-                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES),
-                        FontRenderer.getInstance().getFont());
+                List<ClientTooltipComponent> clientTooltipComponents =
+                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES);
+                int tooltipWidth = RenderUtils.getToolTipWidth(
+                        clientTooltipComponents, FontRenderer.getInstance().getFont());
+                int tooltipHeight = RenderUtils.getToolTipHeight(clientTooltipComponents);
+
+                float renderX = mouseX > McUtils.window().getGuiScaledWidth() / 2f ? mouseX - tooltipWidth : mouseX;
+                float renderY = mouseY > McUtils.window().getGuiScaledHeight() / 2f ? mouseY - tooltipHeight : mouseY;
+
                 RenderUtils.drawTooltipAt(
                         poseStack,
-                        mouseX - toolTipWidth,
-                        mouseY,
+                        renderX,
+                        renderY,
                         100,
                         HELP_TOOLTIP_LINES,
                         FontRenderer.getInstance().getFont(),
