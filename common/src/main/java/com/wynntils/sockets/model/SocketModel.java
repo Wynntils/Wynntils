@@ -19,6 +19,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.SocketClientHandler;
+import com.wynntils.sockets.events.SocketAuthenticatedEvent;
 import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
@@ -72,6 +73,15 @@ public class SocketModel extends Model {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
         }
+    }
+
+    @SubscribeEvent
+    public static void onAuth(SocketAuthenticatedEvent event) {
+        if (!isSocketOpen() && !WorldStateManager.onWorld()) return;
+
+        hadesConnection.sendPacket(new HCPacketUpdateWorld(
+                WorldStateManager.getCurrentWorldName(),
+                CharacterManager.getCharacterInfo().getId()));
     }
 
     @SubscribeEvent

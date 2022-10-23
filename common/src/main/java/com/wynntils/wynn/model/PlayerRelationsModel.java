@@ -9,6 +9,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.sockets.events.SocketAuthenticatedEvent;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -55,6 +56,14 @@ public class PlayerRelationsModel extends Model {
 
     public static void disable() {
         resetRelations();
+    }
+
+    @SubscribeEvent
+    public static void onAuth(SocketAuthenticatedEvent event) {
+        if (!WorldStateManager.onWorld()) return;
+
+        requestFriendListUpdate();
+        requestPartyListUpdate();
     }
 
     @SubscribeEvent
