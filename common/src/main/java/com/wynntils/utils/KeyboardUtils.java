@@ -11,4 +11,8 @@ public final class KeyboardUtils {
     public static boolean isKeyDown(int keyCode) {
         return GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), keyCode) == 1;
     }
+
+    public static boolean isShiftDown() {
+        return isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) || isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
+    }
 }
