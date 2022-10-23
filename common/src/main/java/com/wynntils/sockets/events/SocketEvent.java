@@ -6,4 +6,8 @@ package com.wynntils.sockets.events;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class SocketAuthenticatedEvent extends Event {}
+public abstract class SocketEvent extends Event {
+    public static class Authenticated extends SocketEvent {}
+
+    public static class Disconnected extends SocketEvent {}
+}

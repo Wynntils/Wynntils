@@ -13,13 +13,14 @@ import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import com.wynntils.hades.protocol.enums.PacketDirection;
 import com.wynntils.hades.protocol.enums.SocialType;
+import com.wynntils.hades.protocol.packets.client.HCPacketPing;
 import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.SocketClientHandler;
-import com.wynntils.sockets.events.SocketAuthenticatedEvent;
+import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
@@ -30,15 +31,20 @@ import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SocketModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
+    private static final int MS_PER_PING = 1000;
 
     private static HadesConnection hadesConnection;
     private static int tickCountUntilUpdate = 0;
-    private static PlayerStatus lastSentStatus = null;
+    private static PlayerStatus lastSentStatus;
+    private static ScheduledExecutorService pingScheduler;
 
     public static void init() {
         tryCreateConnection();
@@ -76,12 +82,26 @@ public class SocketModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onAuth(SocketAuthenticatedEvent event) {
+    public static void onAuth(SocketEvent.Authenticated event) {
         if (!isSocketOpen() && !WorldStateManager.onWorld()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
                 WorldStateManager.getCurrentWorldName(),
                 CharacterManager.getCharacterInfo().getId()));
+
+        pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        pingScheduler.scheduleAtFixedRate(SocketModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
+    }
+
+    @SubscribeEvent
+    public static void onDisconnect(SocketEvent.Disconnected event) {
+        pingScheduler.shutdown();
+    }
+
+    private static void sendPing() {
+        if (!isSocketOpen()) return;
+
+        hadesConnection.sendPacketAndFlush(new HCPacketPing(System.currentTimeMillis()));
     }
 
     @SubscribeEvent
@@ -162,7 +182,7 @@ public class SocketModel extends Model {
                     ActionBarModel.getCurrentMana(),
                     ActionBarModel.getMaxMana());
 
-            hadesConnection.sendPacket(new HCPacketUpdateStatus(
+            hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
                     lastSentStatus.y(),
                     lastSentStatus.z(),

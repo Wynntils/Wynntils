@@ -14,9 +14,10 @@ import com.wynntils.hades.protocol.packets.server.HSPacketAuthenticationResponse
 import com.wynntils.hades.protocol.packets.server.HSPacketClearMutual;
 import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
+import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.events.SocketAuthenticatedEvent;
+import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -52,10 +53,13 @@ public class SocketClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onDisconnect() {
+        WynntilsMod.postEvent(new SocketEvent.Disconnected());
+
         if (WorldStateManager.onServer()) {
             McUtils.sendMessageToClient(
-                    new TextComponent("Disconnected from HadesServer.").withStyle(ChatFormatting.RED));
+                    new TextComponent("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
         }
+
         WynntilsMod.info("Disconnected from HadesServer.");
 
         HadesUserModel.getHadesUserMap().clear();
@@ -64,6 +68,8 @@ public class SocketClientHandler implements IHadesClientAdapter {
     @Override
     public void handleAuthenticationResponse(HSPacketAuthenticationResponse packet) {
         Component userComponent = TextComponent.EMPTY;
+
+        WynntilsMod.postEvent(new SocketEvent.Authenticated());
 
         switch (packet.getResponse()) {
             case SUCCESS -> {
@@ -83,11 +89,15 @@ public class SocketClientHandler implements IHadesClientAdapter {
             }
         }
 
-        WynntilsMod.postEvent(new SocketAuthenticatedEvent());
-
         if (WorldStateManager.onServer()) {
             McUtils.sendMessageToClient(userComponent);
         }
+    }
+
+    @Override
+    public void handlePing(HSPacketPong packet) {
+        // noop at the moment
+        // todo eventually calculate ping
     }
 
     @Override
