@@ -81,13 +81,13 @@ public final class OverlayManager extends CoreManager {
         int sqrt = (int) Math.sqrt(OVERLAY_SECTIONS);
 
         if (Math.abs((section.x2() - section.x1()) * sqrt - window.getGuiScaledWidth()) >= sqrt) {
-            WynntilsMod.error("We sections with wrong width when trying render! Forcing recalculation.");
+            WynntilsMod.error("We had sections with wrong width when trying render! Forcing recalculation.");
             calculateSections();
             return;
         }
 
         if (Math.abs((section.y2() - section.y1()) * sqrt - window.getGuiScaledHeight()) >= sqrt) {
-            WynntilsMod.error("We sections with wrong height when trying render! Forcing recalculation.");
+            WynntilsMod.error("We had sections with wrong height when trying render! Forcing recalculation.");
             calculateSections();
             return;
         }
