@@ -23,6 +23,7 @@ public class GammabrightFeature extends UserFeature {
     @Config
     private boolean gammabrightEnabled = false;
 
+    @Config(visible = false)
     private double lastGamma = 1f;
 
     @RegisterKeyBind
@@ -38,6 +39,8 @@ public class GammabrightFeature extends UserFeature {
 
     private void applyGammabright() {
         double currentGamma = McUtils.options().gamma;
+
+        if (gammabrightEnabled && McUtils.options().gamma == 1000d) return;
 
         if (gammabrightEnabled) {
             lastGamma = currentGamma;
