@@ -40,7 +40,9 @@ public class GammabrightFeature extends UserFeature {
     private void applyGammabright() {
         double currentGamma = McUtils.options().gamma;
 
-        if (gammabrightEnabled && McUtils.options().gamma != 1000d) {
+        if (gammabrightEnabled && McUtils.options().gamma == 1000d) return;
+
+        if (gammabrightEnabled) {
             lastGamma = currentGamma;
             McUtils.options().gamma = 1000d;
         } else {
