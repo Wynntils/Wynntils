@@ -51,7 +51,7 @@ public class GammabrightFeature extends UserFeature {
 
     @Override
     protected boolean onEnable() {
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled && McUtils.options().gamma != 1000d) {
             enableGammabright();
         }
 
