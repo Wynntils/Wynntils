@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class LocationUtils {
     private static final Pattern COORDINATE_PATTERN =
-            Pattern.compile("(?<x>[-+]?\\d+)(\\D{0,5}(?<y>[-+]?\\d+))?\\D{0,5}(?<z>[-+]?\\d+)");
+            Pattern.compile("(?<x>[-+]?\\d+)(\\D{1,5}(?<y>[-+]?\\d+))?\\D{1,5}(?<z>[-+]?\\d+)");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
