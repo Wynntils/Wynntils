@@ -23,6 +23,7 @@ public class GammabrightFeature extends UserFeature {
     @Config
     private boolean gammabrightEnabled = false;
 
+    @Config(visible = false)
     private double lastGamma = 1f;
 
     @RegisterKeyBind
@@ -36,14 +37,35 @@ public class GammabrightFeature extends UserFeature {
         applyGammabright();
     }
 
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (configHolder.getFieldName().equals("gammabrightEnabled")) {
+            applyGammabright();
+        }
+    }
+
+    @Override
+    protected void onDisable() {
+        resetGamma();
+    }
+
+    @Override
+    protected boolean onEnable() {
+        if (gammabrightEnabled) {
+            enableGammabright();
+        }
+
+        return true;
+    }
+
     private void applyGammabright() {
-        double currentGamma = McUtils.options().gamma;
+        if (!isEnabled()) return;
+        if (gammabrightEnabled && McUtils.options().gamma == 1000d) return;
 
         if (gammabrightEnabled) {
-            lastGamma = currentGamma;
-            McUtils.options().gamma = 1000d;
+            enableGammabright();
         } else {
-            McUtils.options().gamma = lastGamma;
+            resetGamma();
         }
     }
 
@@ -54,10 +76,12 @@ public class GammabrightFeature extends UserFeature {
         ConfigManager.saveConfig();
     }
 
-    @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
-        if (configHolder.getFieldName().equals("gammabrightEnabled")) {
-            applyGammabright();
-        }
+    private void resetGamma() {
+        McUtils.options().gamma = lastGamma;
+    }
+
+    private void enableGammabright() {
+        lastGamma = McUtils.options().gamma;
+        McUtils.options().gamma = 1000d;
     }
 }
