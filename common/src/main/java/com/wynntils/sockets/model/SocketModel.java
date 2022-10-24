@@ -83,12 +83,6 @@ public class SocketModel extends Model {
 
     @SubscribeEvent
     public static void onAuth(SocketEvent.Authenticated event) {
-        if (!isSocketOpen() && !WorldStateManager.onWorld()) return;
-
-        hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                WorldStateManager.getCurrentWorldName(),
-                CharacterManager.getCharacterInfo().getId()));
-
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
         pingScheduler.scheduleAtFixedRate(SocketModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
