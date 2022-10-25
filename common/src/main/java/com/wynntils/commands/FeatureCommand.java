@@ -225,8 +225,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        feature.setUserEnabled(false);
-        feature.tryUserToggle();
+        feature.disable();
 
         if (feature.isEnabled()) {
             context.getSource()
@@ -235,8 +234,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        feature.setUserEnabled(true);
-        feature.tryUserToggle();
+        feature.enable();
 
         if (!feature.isEnabled()) {
             context.getSource()
@@ -244,8 +242,6 @@ public class FeatureCommand extends CommandBase {
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
-
-        ConfigManager.saveConfig();
 
         context.getSource()
                 .sendSuccess(
