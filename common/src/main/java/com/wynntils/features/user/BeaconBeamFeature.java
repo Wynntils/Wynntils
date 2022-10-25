@@ -14,10 +14,8 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.phys.Vec3;
@@ -27,22 +25,9 @@ public class BeaconBeamFeature extends UserFeature {
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;
 
-    @Config
-    public boolean autoTrackQuestCoordinates = true;
-
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(CompassModel.class);
-    }
-
-    @SubscribeEvent
-    public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
-
-        Optional<Location> location = event.getQuestInfo().getNextLocation();
-        if (location.isEmpty()) return;
-
-        CompassModel.setCompassLocation(location.get());
     }
 
     @SubscribeEvent
