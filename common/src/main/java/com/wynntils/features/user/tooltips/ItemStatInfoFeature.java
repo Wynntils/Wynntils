@@ -16,29 +16,31 @@ import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
-    @Config
-    public static boolean showStars = true;
+    public static ItemStatInfoFeature INSTANCE;
 
     @Config
-    public static boolean colorLerp = true;
+    public boolean showStars = true;
 
     @Config
-    public static boolean perfect = true;
+    public boolean colorLerp = true;
 
     @Config
-    public static boolean defective = true;
+    public boolean perfect = true;
 
     @Config
-    public static float obfuscationChanceStart = 0.08f;
+    public boolean defective = true;
 
     @Config
-    public static float obfuscationChanceEnd = 0.04f;
+    public float obfuscationChanceStart = 0.08f;
 
     @Config
-    public static boolean reorderIdentifications = true;
+    public float obfuscationChanceEnd = 0.04f;
 
     @Config
-    public static boolean groupIdentifications = true;
+    public boolean reorderIdentifications = true;
+
+    @Config
+    public boolean groupIdentifications = true;
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {

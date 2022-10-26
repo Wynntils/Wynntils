@@ -42,7 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
     @Config
-    public static boolean disableQuestTrackingOnScoreboard = true;
+    public boolean disableQuestTrackingOnScoreboard = true;
 
     @Config
     public boolean autoTrackQuestCoordinates = true;

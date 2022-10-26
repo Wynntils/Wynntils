@@ -39,7 +39,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
         tooltip = getOriginalTooltip();
 
-        if (!ItemGuessFeature.getInstance().isEnabled()) return;
+        if (!ItemGuessFeature.INSTANCE.isEnabled()) return;
 
         itemTier = ItemTier.fromComponent(getHoverName());
         if (itemTier == null) return;
@@ -102,7 +102,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
             guesses.append(
                     new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
 
-            if (ItemGuessFeature.showGuessesPrice && level != -1) {
+            if (ItemGuessFeature.INSTANCE.showGuessesPrice && level != -1) {
                 guesses.append(new TextComponent(" [")
                         .append(new TextComponent(
                                         (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))

@@ -36,18 +36,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ItemLockFeature extends UserFeature {
+    public static ItemLockFeature INSTANCE;
+
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind =
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
-    private static Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
+    private Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
 
     @TypeOverride
-    private static final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
+    private final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
 
     @Config
-    public static boolean blockAllActionsOnLockedItems = false;
+    public boolean blockAllActionsOnLockedItems = false;
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -131,9 +133,9 @@ public class ItemLockFeature extends UserFeature {
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
         if (characterInfo == null) return;
 
-        classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
+        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
 
-        Set<Integer> classSet = classSlotLockMap.get(characterInfo.getId());
+        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(characterInfo.getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

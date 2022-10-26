@@ -40,7 +40,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
         }
 
         // convert from roman to arabic if necessary
-        String text = ItemTextOverlayFeature.powderTierRomanNumerals
+        String text = ItemTextOverlayFeature.INSTANCE.powderTierRomanNumerals
                 ? powderNumeral
                 : String.valueOf(MathUtils.integerFromRoman(powderNumeral));
 
@@ -49,7 +49,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
                         text,
                         TextRenderSetting.DEFAULT
                                 .withCustomColor(highlightColor)
-                                .withTextShadow(ItemTextOverlayFeature.powderTierShadow)),
+                                .withTextShadow(ItemTextOverlayFeature.INSTANCE.powderTierShadow)),
                 -1,
                 1,
                 0.75f);
@@ -57,7 +57,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
 
     @Override
     public boolean isHighlightEnabled() {
-        return ItemHighlightFeature.powderHighlightEnabled;
+        return ItemHighlightFeature.INSTANCE.powderHighlightEnabled;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PowderTierProperty extends ItemProperty implements HighlightPropert
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.powderTierEnabled;
+        return ItemTextOverlayFeature.INSTANCE.powderTierEnabled;
     }
 
     @Override

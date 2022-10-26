@@ -36,7 +36,7 @@ public class ItemFavoriteFeature extends UserFeature {
     public Set<String> favoriteItems = new HashSet<>();
 
     @TypeOverride
-    private static final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
+    private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

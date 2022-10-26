@@ -27,7 +27,7 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
             ampNumeral = ampMatcher.group(1);
         }
 
-        String text = ItemTextOverlayFeature.amplifierTierRomanNumerals
+        String text = ItemTextOverlayFeature.INSTANCE.amplifierTierRomanNumerals
                 ? ampNumeral
                 : String.valueOf(MathUtils.integerFromRoman(ampNumeral));
 
@@ -36,7 +36,7 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
                         text,
                         TextRenderSetting.DEFAULT
                                 .withCustomColor(ItemTier.LEGENDARY.getHighlightColor())
-                                .withTextShadow(ItemTextOverlayFeature.amplifierTierShadow)),
+                                .withTextShadow(ItemTextOverlayFeature.INSTANCE.amplifierTierShadow)),
                 -1,
                 1,
                 0.75f);
@@ -44,7 +44,7 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.amplifierTierEnabled;
+        return ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled;
     }
 
     @Override

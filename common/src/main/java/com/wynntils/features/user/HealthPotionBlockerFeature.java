@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE)
 public class HealthPotionBlockerFeature extends UserFeature {
     @Config
-    public static int threshold = 95;
+    public int threshold = 95;
 
     @SubscribeEvent
     public void onPotionUse(UseItemEvent event) {

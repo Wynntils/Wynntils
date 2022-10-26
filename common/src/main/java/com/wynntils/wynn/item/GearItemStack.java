@@ -245,7 +245,7 @@ public class GearItemStack extends WynnItemStack {
          * Special thanks for Morpheus1101 and SpitefulFox
          * Avaritia Repo: https://github.com/Morpheus1101/Avaritia
          */
-        if (ItemStatInfoFeature.perfect && isPerfect) {
+        if (ItemStatInfoFeature.INSTANCE.perfect && isPerfect) {
             MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD);
 
             String name = "Perfect " + itemName;
@@ -265,21 +265,21 @@ public class GearItemStack extends WynnItemStack {
             return newName;
         }
 
-        if (ItemStatInfoFeature.defective && isDefective) {
+        if (ItemStatInfoFeature.INSTANCE.defective && isDefective) {
             MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
             newName.setStyle(newName.getStyle().withItalic(false));
 
             String name = "Defective " + itemName;
 
-            boolean obfuscated = Math.random() < ItemStatInfoFeature.obfuscationChanceStart;
+            boolean obfuscated = Math.random() < ItemStatInfoFeature.INSTANCE.obfuscationChanceStart;
             StringBuilder current = new StringBuilder();
 
             for (int i = 0; i < name.length() - 1; i++) {
                 current.append(name.charAt(i));
 
                 float chance = MathUtils.lerp(
-                        ItemStatInfoFeature.obfuscationChanceStart,
-                        ItemStatInfoFeature.obfuscationChanceEnd,
+                        ItemStatInfoFeature.INSTANCE.obfuscationChanceStart,
+                        ItemStatInfoFeature.INSTANCE.obfuscationChanceEnd,
                         (i + 1) / (float) (name.length() - 1));
 
                 if (!obfuscated && Math.random() < chance) {
@@ -397,13 +397,13 @@ public class GearItemStack extends WynnItemStack {
             Collection<Component> orderedRanges;
             Collection<Component> orderedRerolls;
 
-            if (ItemStatInfoFeature.reorderIdentifications || isGuideStack) {
+            if (ItemStatInfoFeature.INSTANCE.reorderIdentifications || isGuideStack) {
                 orderedPercents = IdentificationOrderer.INSTANCE.orderComponents(
-                        percentMap, ItemStatInfoFeature.groupIdentifications);
+                        percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
                 orderedRanges = IdentificationOrderer.INSTANCE.orderComponents(
-                        rangeMap, ItemStatInfoFeature.groupIdentifications);
+                        rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
                 orderedRerolls = IdentificationOrderer.INSTANCE.orderComponents(
-                        rerollMap, ItemStatInfoFeature.groupIdentifications);
+                        rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
             } else {
                 orderedPercents = percentMap.values();
                 orderedRanges = rangeMap.values();
