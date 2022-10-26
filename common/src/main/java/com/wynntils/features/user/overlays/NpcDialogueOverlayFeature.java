@@ -30,6 +30,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.LinkedList;
@@ -131,7 +132,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NORMAL;
 
         @Config
-        public boolean renderBackground = true;
+        public float backgroundOpacity = 0.2f;
 
         @Config
         public boolean stripColors = false;
@@ -190,18 +191,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             dialogueRenderTask.getText(),
                             dialogueRenderTask.getSetting().maxWidth());
 
-            if (renderBackground) {
-                // Draw a translucent background
-                int colorAlphaRect = 45;
-                RenderUtils.drawRect(
-                        poseStack,
-                        CommonColors.BLACK.withAlpha(colorAlphaRect),
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        0,
-                        this.getWidth(),
-                        textHeight + 10);
-            }
+            // Draw a translucent background
+            float colorAlphaRect = MathUtils.clamp(255f * backgroundOpacity, 0, 255);
+            RenderUtils.drawRect(
+                    poseStack,
+                    CommonColors.BLACK.withAlpha(colorAlphaRect),
+                    this.getRenderX(),
+                    this.getRenderY(),
+                    0,
+                    this.getWidth(),
+                    textHeight + 10);
 
             // Render the message
             FontRenderer.getInstance()
