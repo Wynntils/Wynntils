@@ -13,6 +13,8 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -29,6 +31,7 @@ import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
 import java.util.List;
 
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class PowderAbilityBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
