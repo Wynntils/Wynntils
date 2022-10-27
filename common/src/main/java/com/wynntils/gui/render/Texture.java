@@ -20,6 +20,7 @@ public enum Texture {
     MANA_BAR("bars_mana.png", 256, 256),
     OVERLAY_SELECTION_GUI("overlay_selection_gui.png", 195, 256),
     UNIVERSAL_BAR("universal_bar.png", 81, 16),
+    VIGNETTE("vignette.png", 512, 512),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
     // Settings Screen
