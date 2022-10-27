@@ -37,20 +37,20 @@ public class IngredientProperty extends TieredCraftingItemProperty {
     @Override
     public CustomColor getHighlightColor() {
         return switch (tier) {
-            case ZERO -> ItemHighlightFeature.zeroStarIngredientHighlightColor;
-            case ONE -> ItemHighlightFeature.oneStarIngredientHighlightColor;
-            case TWO -> ItemHighlightFeature.twoStarIngredientHighlightColor;
-            case THREE -> ItemHighlightFeature.threeStarIngredientHighlightColor;
+            case ZERO -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightColor;
+            case ONE -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightColor;
+            case TWO -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightColor;
+            case THREE -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightColor;
         };
     }
 
     @Override
     public boolean isHighlightEnabled() {
         return switch (tier) {
-            case ZERO -> ItemHighlightFeature.zeroStarIngredientHighlightEnabled;
-            case ONE -> ItemHighlightFeature.oneStarIngredientHighlightEnabled;
-            case TWO -> ItemHighlightFeature.twoStarIngredientHighlightEnabled;
-            case THREE -> ItemHighlightFeature.threeStarIngredientHighlightEnabled;
+            case ZERO -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightEnabled;
+            case ONE -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightEnabled;
+            case TWO -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightEnabled;
+            case THREE -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightEnabled;
         };
     }
 }

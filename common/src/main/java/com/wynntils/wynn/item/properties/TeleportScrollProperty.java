@@ -65,7 +65,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
                         location,
                         TextRenderSetting.DEFAULT
                                 .withCustomColor(textColor)
-                                .withTextShadow(ItemTextOverlayFeature.teleportScrollShadow)),
+                                .withTextShadow(ItemTextOverlayFeature.INSTANCE.teleportScrollShadow)),
                 0,
                 0,
                 1f);
@@ -73,7 +73,7 @@ public class TeleportScrollProperty extends ItemProperty implements TextOverlayP
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.teleportScrollEnabled;
+        return ItemTextOverlayFeature.INSTANCE.teleportScrollEnabled;
     }
 
     @Override

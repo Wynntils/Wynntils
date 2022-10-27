@@ -35,7 +35,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class GameNotificationOverlayFeature extends UserFeature {
-    private static GameNotificationOverlayFeature INSTANCE;
+    public static GameNotificationOverlayFeature INSTANCE;
+
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -49,7 +50,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
         messageQueue.add(new TimedMessageContainer(
-                event.getMessageContainer(), (long) GameNotificationOverlay.messageTimeLimit * 1000));
+                event.getMessageContainer(), (long) gameNotificationOverlay.messageTimeLimit * 1000));
 
         if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
                 && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
@@ -65,12 +66,12 @@ public class GameNotificationOverlayFeature extends UserFeature {
                         timedMessageContainer.getMessageContainer().hashCode() == newContainer.hashCode())
                 .findFirst()
                 .ifPresent(timedMessageContainer -> timedMessageContainer.update(
-                        newContainer, (long) GameNotificationOverlay.messageTimeLimit * 1000));
+                        newContainer, (long) gameNotificationOverlay.messageTimeLimit * 1000));
     }
 
     public static class GameNotificationOverlay extends Overlay {
         @Config
-        public static float messageTimeLimit = 10f;
+        public float messageTimeLimit = 10f;
 
         @Config
         public int messageLimit = 5;
@@ -147,7 +148,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
             if (this.invertGrowth) {
                 while (renderedValues.size() < messageLimit) {
                     renderedValues.add(0, new TimedMessageContainer(new MessageContainer(""), (long)
-                            (GameNotificationOverlay.messageTimeLimit * 1000)));
+                            (this.messageTimeLimit * 1000)));
                 }
             }
 
@@ -182,9 +183,5 @@ public class GameNotificationOverlayFeature extends UserFeature {
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
         }
-    }
-
-    public static GameNotificationOverlayFeature getInstance() {
-        return INSTANCE;
     }
 }
