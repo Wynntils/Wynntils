@@ -50,9 +50,6 @@ public class LowHealthVignetteFeature extends UserFeature {
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
 
-        float healthPercent = (float) ActionBarModel.getCurrentHealth() / ActionBarModel.getMaxHealth();
-        if (healthPercent > lowHealthPercentage / 100f) return;
-
         Window window = McUtils.window();
 
         float[] colorArray = color.asFloatArray();
