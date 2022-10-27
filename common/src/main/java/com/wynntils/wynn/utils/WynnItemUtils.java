@@ -102,7 +102,7 @@ public final class WynnItemUtils {
 
         percentLine.append(statInfo);
 
-        if (ItemStatInfoFeature.showStars)
+        if (ItemStatInfoFeature.INSTANCE.showStars)
             percentLine.append(new TextComponent("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
 
         percentLine.append(new TextComponent(" " + idName).withStyle(ChatFormatting.GRAY));
@@ -206,7 +206,7 @@ public final class WynnItemUtils {
     public static MutableComponent getPercentageTextComponent(float percentage) {
         Style color = Style.EMPTY
                 .withColor(
-                        ItemStatInfoFeature.colorLerp
+                        ItemStatInfoFeature.INSTANCE.colorLerp
                                 ? getPercentageColor(percentage)
                                 : getFlatPercentageColor(percentage))
                 .withItalic(false);

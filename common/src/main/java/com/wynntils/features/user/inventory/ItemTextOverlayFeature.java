@@ -24,56 +24,58 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    @Config
-    public static boolean powderTierEnabled = true;
+    public static ItemTextOverlayFeature INSTANCE;
 
     @Config
-    public static boolean powderTierRomanNumerals = true;
+    public boolean powderTierEnabled = true;
 
     @Config
-    public static FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public boolean powderTierRomanNumerals = true;
 
     @Config
-    public static boolean emeraldPouchTierEnabled = true;
+    public FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public static boolean emeraldPouchTierRomanNumerals = true;
+    public boolean emeraldPouchTierEnabled = true;
 
     @Config
-    public static FontRenderer.TextShadow emeraldPouchTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public boolean emeraldPouchTierRomanNumerals = true;
 
     @Config
-    public static boolean teleportScrollEnabled = true;
+    public FontRenderer.TextShadow emeraldPouchTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public static FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
+    public boolean teleportScrollEnabled = true;
 
     @Config
-    public static boolean dungeonKeyEnabled = true;
+    public FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public static FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
+    public boolean dungeonKeyEnabled = true;
 
     @Config
-    public static boolean amplifierTierEnabled = true;
+    public FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public static boolean amplifierTierRomanNumerals = true;
+    public boolean amplifierTierEnabled = true;
 
     @Config
-    public static FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public boolean amplifierTierRomanNumerals = true;
 
     @Config
-    public static boolean consumableChargeEnabled = true;
+    public FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public static FontRenderer.TextShadow consumableChargeShadow = FontRenderer.TextShadow.NORMAL;
+    public boolean consumableChargeEnabled = true;
 
     @Config
-    public static boolean inventoryTextOverlayEnabled = true;
+    public FontRenderer.TextShadow consumableChargeShadow = FontRenderer.TextShadow.NORMAL;
 
     @Config
-    public static boolean hotbarTextOverlayEnabled = true;
+    public boolean inventoryTextOverlayEnabled = true;
+
+    @Config
+    public boolean hotbarTextOverlayEnabled = true;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {

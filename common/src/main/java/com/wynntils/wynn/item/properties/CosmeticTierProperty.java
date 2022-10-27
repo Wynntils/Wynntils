@@ -26,7 +26,7 @@ public class CosmeticTierProperty extends ItemProperty implements HighlightPrope
 
     @Override
     public boolean isHighlightEnabled() {
-        return ItemHighlightFeature.cosmeticHighlightEnabled;
+        return ItemHighlightFeature.INSTANCE.cosmeticHighlightEnabled;
     }
 
     @Override
