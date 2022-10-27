@@ -30,20 +30,20 @@ public class EmeraldPouchTierProperty extends ItemProperty implements HighlightP
         String numeral = emeraldPouchMatcher.matches() ? emeraldPouchMatcher.group(1) : "I";
 
         // convert from roman to arabic if necessary
-        String text = ItemTextOverlayFeature.emeraldPouchTierRomanNumerals
+        String text = ItemTextOverlayFeature.INSTANCE.emeraldPouchTierRomanNumerals
                 ? numeral
                 : String.valueOf(MathUtils.integerFromRoman(numeral));
 
         TextRenderSetting style = TextRenderSetting.DEFAULT
                 .withCustomColor(highlightColor)
-                .withTextShadow(ItemTextOverlayFeature.emeraldPouchTierShadow);
+                .withTextShadow(ItemTextOverlayFeature.INSTANCE.emeraldPouchTierShadow);
 
         textOverlay = new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
     }
 
     @Override
     public boolean isHighlightEnabled() {
-        return ItemHighlightFeature.emeraldPouchHighlightEnabled;
+        return ItemHighlightFeature.INSTANCE.emeraldPouchHighlightEnabled;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class EmeraldPouchTierProperty extends ItemProperty implements HighlightP
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.emeraldPouchTierEnabled;
+        return ItemTextOverlayFeature.INSTANCE.emeraldPouchTierEnabled;
     }
 
     @Override

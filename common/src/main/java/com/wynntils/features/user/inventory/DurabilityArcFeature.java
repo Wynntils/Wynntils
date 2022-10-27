@@ -26,10 +26,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
     @Config
-    public static boolean renderDurabilityArcInventories = true;
+    public boolean renderDurabilityArcInventories = true;
 
     @Config
-    public static boolean renderDurabilityArcHotbar = true;
+    public boolean renderDurabilityArcHotbar = true;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {

@@ -21,11 +21,11 @@ public class ConsumableChargeProperty extends CustomStackCountProperty {
             charges = consumableMatcher.group(2);
         }
 
-        this.setCustomStackCount(charges, CommonColors.WHITE, ItemTextOverlayFeature.consumableChargeShadow);
+        this.setCustomStackCount(charges, CommonColors.WHITE, ItemTextOverlayFeature.INSTANCE.consumableChargeShadow);
     }
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.consumableChargeEnabled;
+        return ItemTextOverlayFeature.INSTANCE.consumableChargeEnabled;
     }
 }

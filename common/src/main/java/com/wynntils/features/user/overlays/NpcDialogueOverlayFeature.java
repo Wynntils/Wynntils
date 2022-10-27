@@ -56,13 +56,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private String currentDialogue;
 
     @Config
-    public static boolean autoProgress = false;
+    public boolean autoProgress = false;
 
     @Config
-    public static int dialogAutoProgressDefaultTime = 1600; // Milliseconds
+    public int dialogAutoProgressDefaultTime = 1600; // Milliseconds
 
     @Config
-    public static int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
+    public int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
