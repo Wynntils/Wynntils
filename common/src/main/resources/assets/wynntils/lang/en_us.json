@@ -349,6 +349,8 @@
   "feature.wynntils.lootrunUtils.undoSuccessful": "Successfully undid movements.",
   "feature.wynntils.lowHealthVignette.animationSpeed.description": "How fast should the effect pulsate? This only applies to \"Pulse\" effect.",
   "feature.wynntils.lowHealthVignette.animationSpeed.name": "Animation Speed",
+  "feature.wynntils.lowHealthVignette.color.description": "What color should the vignette be?",
+  "feature.wynntils.lowHealthVignette.color.name": "Vignette Color",
   "feature.wynntils.lowHealthVignette.healthVignetteEffect.description": "Which animation should be used for the low health indicator?",
   "feature.wynntils.lowHealthVignette.healthVignetteEffect.name": "Health Vignette Effect",
   "feature.wynntils.lowHealthVignette.lowHealthPercentage.description": "At what percentage should the overlay appear?",

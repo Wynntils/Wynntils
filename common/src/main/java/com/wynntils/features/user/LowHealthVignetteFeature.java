@@ -14,6 +14,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.ActionBarModel;
@@ -33,8 +34,12 @@ public class LowHealthVignetteFeature extends UserFeature {
     @Config
     public HealthVignetteEffect healthVignetteEffect = HealthVignetteEffect.Pulse;
 
+    @Config
+    public CustomColor color = new CustomColor(255, 0, 0);
+
     private float animation = 10f;
     private float value = INTENSITY;
+    private boolean shouldRender = false;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -43,14 +48,15 @@ public class LowHealthVignetteFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
 
         float healthPercent = (float) ActionBarModel.getCurrentHealth() / ActionBarModel.getMaxHealth();
         if (healthPercent > lowHealthPercentage / 100f) return;
 
         Window window = McUtils.window();
 
-        RenderSystem.setShaderColor(1, 0, 0, value);
+        float[] colorArray = color.asFloatArray();
+        RenderSystem.setShaderColor(colorArray[0], colorArray[1], colorArray[2], value);
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
@@ -82,8 +88,10 @@ public class LowHealthVignetteFeature extends UserFeature {
     public void onTick(ClientTickEvent.Start event) {
         float healthPercent = (float) ActionBarModel.getCurrentHealth() / ActionBarModel.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
+        shouldRender = false;
 
         if (healthPercent > threshold) return;
+        shouldRender = true;
 
         switch (healthVignetteEffect) {
             case Pulse -> {
