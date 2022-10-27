@@ -22,13 +22,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
     @Config
-    public static float universalScale = 1f;
+    public float universalScale = 1f;
 
     @Config
-    public static boolean fitToScreen = true;
+    public boolean fitToScreen = true;
 
     @Config
-    public static boolean wrapText = true;
+    public boolean wrapText = true;
 
     private boolean scaledLast = false;
     private Screen currentScreen = null;
