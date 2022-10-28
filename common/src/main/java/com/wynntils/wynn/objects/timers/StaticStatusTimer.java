@@ -11,8 +11,8 @@ public class StaticStatusTimer extends StatusTimer {
 
     private final String fullName;
 
-    public StaticStatusTimer(String prefix, String name, String displayedTime, boolean persistent) {
-        super(name, persistent);
+    public StaticStatusTimer(String prefix, String name, String displayedTime) {
+        super(name);
         this.prefix = prefix;
         this.displayedTime = displayedTime;
         this.fullName = getPrefix() + " " + getName() + " " + getDisplayedTime();

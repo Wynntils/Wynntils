@@ -6,11 +6,9 @@ package com.wynntils.wynn.objects.timers;
 
 public abstract class StatusTimer {
     private final String name; // The name of the consumable (also used to identify it)
-    private final boolean persistent; // If the consumable should persist through death and character changes
 
-    public StatusTimer(String name, boolean persistent) {
+    public StatusTimer(String name) {
         this.name = name;
-        this.persistent = persistent;
     }
 
     /**
@@ -18,13 +16,6 @@ public abstract class StatusTimer {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @return If the consumable should persist through death and character changes
-     */
-    public boolean isPersistent() {
-        return persistent;
     }
 
     public abstract String asString();

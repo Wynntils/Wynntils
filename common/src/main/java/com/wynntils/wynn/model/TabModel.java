@@ -43,8 +43,10 @@ public class TabModel extends Model {
         String footer = event.getFooter();
 
         if (footer.isEmpty()) {
-            timers = new ArrayList<>(); // No timers, get rid of them
-            WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+            if (!timers.isEmpty()) {
+                timers = new ArrayList<>(); // No timers, get rid of them
+                WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+            }
 
             return;
         }
@@ -53,7 +55,7 @@ public class TabModel extends Model {
 
         List<StatusTimer> newTimers = new ArrayList<>();
 
-        String[] effects = footer.split("\\s\\s"); // Effects are split up by 2 spaces
+        String[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
         for (String effect : effects) {
             effect = effect.trim();
             if (effect.isEmpty()) continue;
@@ -62,7 +64,7 @@ public class TabModel extends Model {
             if (!m.find()) continue;
 
             // See comment at TAB_EFFECT_PATTERN definition for what group numbers are
-            newTimers.add(new StaticStatusTimer(m.group(1), m.group(2), m.group(3), false));
+            newTimers.add(new StaticStatusTimer(m.group(1), m.group(2), m.group(3)));
         }
 
         timers = newTimers;
