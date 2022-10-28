@@ -43,6 +43,7 @@ public class FeatureCommand extends CommandBase {
                 .then(this.buildListNode())
                 .then(this.enableFeatureNode())
                 .then(this.disableFeatureNode())
+                .then(this.reloadFeatureNode())
                 .executes(this::syntaxError);
     }
 
@@ -192,6 +193,59 @@ public class FeatureCommand extends CommandBase {
         context.getSource()
                 .sendSuccess(
                         new TextComponent(feature.getTranslatedName() + " was disabled successfully.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
+    private LiteralCommandNode<CommandSourceStack> reloadFeatureNode() {
+        return Commands.literal("reload")
+                .then(Commands.argument("feature", StringArgumentType.word())
+                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                        .executes(this::reloadFeature))
+                .build();
+    }
+
+    private int reloadFeature(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+
+        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+
+        if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
+            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        if (!feature.isEnabled()) {
+            context.getSource()
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName()
+                                    + " is already disabled, cannot reload a disabled feature!")
+                            .withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        feature.disable();
+
+        if (feature.isEnabled()) {
+            context.getSource()
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be disabled!")
+                            .withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        feature.enable();
+
+        if (!feature.isEnabled()) {
+            context.getSource()
+                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be enabled!")
+                            .withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        context.getSource()
+                .sendSuccess(
+                        new TextComponent(feature.getTranslatedName() + " was reloaded successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 

@@ -46,7 +46,7 @@ public class DungeonKeyProperty extends ItemProperty implements TextOverlayPrope
                         dungeon,
                         TextRenderSetting.DEFAULT
                                 .withCustomColor(textColor)
-                                .withTextShadow(ItemTextOverlayFeature.dungeonKeyShadow)),
+                                .withTextShadow(ItemTextOverlayFeature.INSTANCE.dungeonKeyShadow)),
                 -1,
                 1,
                 1f);
@@ -54,7 +54,7 @@ public class DungeonKeyProperty extends ItemProperty implements TextOverlayPrope
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.dungeonKeyEnabled;
+        return ItemTextOverlayFeature.INSTANCE.dungeonKeyEnabled;
     }
 
     @Override

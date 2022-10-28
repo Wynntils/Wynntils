@@ -30,6 +30,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.LinkedList;
@@ -55,13 +56,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private String currentDialogue;
 
     @Config
-    public static boolean autoProgress = false;
+    public boolean autoProgress = false;
 
     @Config
-    public static int dialogAutoProgressDefaultTime = 1600; // Milliseconds
+    public int dialogAutoProgressDefaultTime = 1600; // Milliseconds
 
     @Config
-    public static int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
+    public int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
@@ -127,6 +128,18 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final Overlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     public class NpcDialogueOverlay extends Overlay {
+        @Config
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NORMAL;
+
+        @Config
+        public float backgroundOpacity = 0.2f;
+
+        @Config
+        public boolean stripColors = false;
+
+        @Config
+        public boolean showHelperTexts = true;
+
         private TextRenderSetting renderSetting;
 
         protected NpcDialogueOverlay() {
@@ -146,7 +159,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         private void updateTextRenderSettings() {
             renderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth() - 5)
-                    .withHorizontalAlignment(this.getRenderHorizontalAlignment());
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                    .withVerticalAlignment(this.getRenderVerticalAlignment())
+                    .withTextShadow(textShadow);
         }
 
         @Override
@@ -165,11 +180,19 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
 
         private void renderDialogue(PoseStack poseStack, String currentDialogue) {
-            List<TextRenderTask> dialogueRenderTask = List.of(new TextRenderTask(currentDialogue, renderSetting));
+            TextRenderTask dialogueRenderTask = new TextRenderTask(currentDialogue, renderSetting);
 
-            float textHeight = FontRenderer.getInstance().calculateRenderHeight(dialogueRenderTask);
+            if (stripColors) {
+                dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText()));
+            }
+
+            float textHeight = FontRenderer.getInstance()
+                    .calculateRenderHeight(
+                            dialogueRenderTask.getText(),
+                            dialogueRenderTask.getSetting().maxWidth());
+
             // Draw a translucent background
-            int colorAlphaRect = 45;
+            float colorAlphaRect = MathUtils.clamp(255f * backgroundOpacity, 0, 255);
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.BLACK.withAlpha(colorAlphaRect),
@@ -181,7 +204,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             // Render the message
             FontRenderer.getInstance()
-                    .renderTextsWithAlignment(
+                    .renderTextWithAlignment(
                             poseStack,
                             this.getRenderX() + 5,
                             this.getRenderY() + 5,
@@ -191,35 +214,37 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
-            // Render "To continue" message
-            List<TextRenderTask> renderTaskList = new LinkedList<>();
-            TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
-            renderTaskList.add(pressSneakMessage);
+            if (showHelperTexts) {
+                // Render "To continue" message
+                List<TextRenderTask> renderTaskList = new LinkedList<>();
+                TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+                renderTaskList.add(pressSneakMessage);
 
-            if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
-                long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
-                TextRenderTask autoProgressMessage = new TextRenderTask(
-                        ChatFormatting.GREEN + "Auto-progress: "
-                                + Math.max(0, Math.round(timeUntilProgress / 1000f))
-                                + " seconds (Press "
-                                + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
-                                        .getKeyMapping()
-                                        .getTranslatedKeyMessage())
-                                + " to cancel)",
-                        renderSetting);
-                renderTaskList.add(autoProgressMessage);
+                if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
+                    long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
+                    TextRenderTask autoProgressMessage = new TextRenderTask(
+                            ChatFormatting.GREEN + "Auto-progress: "
+                                    + Math.max(0, Math.round(timeUntilProgress / 1000f))
+                                    + " seconds (Press "
+                                    + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
+                                            .getKeyMapping()
+                                            .getTranslatedKeyMessage())
+                                    + " to cancel)",
+                            renderSetting);
+                    renderTaskList.add(autoProgressMessage);
+                }
+
+                FontRenderer.getInstance()
+                        .renderTextsWithAlignment(
+                                poseStack,
+                                this.getRenderX() + 5,
+                                this.getRenderY() + 20 + textHeight,
+                                renderTaskList,
+                                (this.getRenderedWidth() - 15) / (float) McUtils.guiScale(),
+                                (this.getRenderedHeight() - 15) / (float) McUtils.guiScale(),
+                                this.getRenderHorizontalAlignment(),
+                                this.getRenderVerticalAlignment());
             }
-
-            FontRenderer.getInstance()
-                    .renderTextsWithAlignment(
-                            poseStack,
-                            this.getRenderX() + 5,
-                            this.getRenderY() + 20 + textHeight,
-                            renderTaskList,
-                            (this.getRenderedWidth() - 15) / (float) McUtils.guiScale(),
-                            (this.getRenderedHeight() - 15) / (float) McUtils.guiScale(),
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment());
         }
 
         @Override

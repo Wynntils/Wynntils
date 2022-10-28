@@ -38,7 +38,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
     private static final float SPACE_BETWEEN = 10;
 
     @Config
-    public static boolean disableObjectiveTrackingOnScoreboard = true;
+    public boolean disableObjectiveTrackingOnScoreboard = true;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {

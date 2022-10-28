@@ -33,7 +33,7 @@ public final class NotificationManager {
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
         // Overlay is not enabled, send in chat
-        if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
+        if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
             sendOrEditNotification(msgContainer);
         }
 
@@ -46,7 +46,7 @@ public final class NotificationManager {
         WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
 
         // Overlay is not enabled, send in chat
-        if (!GameNotificationOverlayFeature.getInstance().isEnabled()) {
+        if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
             sendOrEditNotification(msgContainer);
         }
     }

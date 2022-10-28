@@ -380,7 +380,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     public boolean configOptionContains(ConfigHolder configHolder) {
-        return StringUtils.containsIgnoreCase(configHolder.getDisplayName(), searchWidget.getTextBoxInput());
+        return !searchWidget.getTextBoxInput().isEmpty()
+                && StringUtils.containsIgnoreCase(configHolder.getDisplayName(), searchWidget.getTextBoxInput());
     }
 
     private boolean searchMatches(Translatable translatable) {
