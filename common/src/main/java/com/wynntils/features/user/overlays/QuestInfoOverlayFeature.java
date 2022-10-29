@@ -104,6 +104,23 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(300, 50),
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle);
+
+            toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+
+            toRenderPreview
+                    .get(0)
+                    .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+            toRenderPreview
+                    .get(1)
+                    .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
+            toRenderPreview
+                    .get(2)
+                    .setText(
+                            """
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
+                            tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
+                            pellentesque egestas volutpat. \
+                            """);
         }
 
         private List<TextRenderTask> createRenderTaskList() {
@@ -145,11 +162,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 return;
             }
 
-            if (toRender.get(0).getText() == null) {
-                // Set at first use; I18n is not available at initialization time
-                // TODO check if above comment still valid
-                toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
-            }
             toRender.get(1).setText(currentQuest.getName());
             toRender.get(2).setText(currentQuest.getNextTask());
 
@@ -167,23 +179,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            if (toRenderPreview.get(0).getText() == null) {
-                // Set at first use; I18n is not available at initialization time
-                toRenderPreview
-                        .get(0)
-                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
-                toRenderPreview
-                        .get(1)
-                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
-                toRenderPreview
-                        .get(2)
-                        .setText(
-                                """
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
-                                tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
-                                pellentesque egestas volutpat. \
-                                """);
-            }
             updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
             FontRenderer.getInstance()
