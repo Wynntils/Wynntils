@@ -160,7 +160,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             renderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth() - 5)
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withVerticalAlignment(this.getRenderVerticalAlignment())
                     .withTextShadow(textShadow);
         }
 
@@ -192,15 +191,22 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             dialogueRenderTask.getSetting().maxWidth());
 
             // Draw a translucent background
+            float rectHeight = textHeight + 10;
+            float rectRenderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - rectHeight) / 2f;
+                        case Bottom -> this.getRenderY() + this.getHeight() - rectHeight;
+                    };
             int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity, 0, 255));
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.BLACK.withAlpha(colorAlphaRect),
                     this.getRenderX(),
-                    this.getRenderY(),
+                    rectRenderY,
                     0,
                     this.getWidth(),
-                    textHeight + 10);
+                    rectHeight);
 
             // Render the message
             FontRenderer.getInstance()
