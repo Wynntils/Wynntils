@@ -14,8 +14,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -45,16 +43,20 @@ public final class ConfigManager extends CoreManager {
     private static Gson gson;
 
     public static void registerFeature(Feature feature) {
-        List<ConfigHolder> featureConfigOptions = collectConfigOptions(feature);
+        for (Overlay overlay : feature.getOverlays()) {
+            registerConfigOptions(overlay);
+        }
 
-        registerConfigOptions(feature, featureConfigOptions);
+        registerConfigOptions(feature);
     }
 
-    private static void registerConfigOptions(
-            Configurable configurable, List<ConfigHolder> featureConfigOptions) {
-        configurable.addConfigOptions(featureConfigOptions);
-        loadConfigOptions(featureConfigOptions, false);
-        CONFIG_HOLDERS.addAll(featureConfigOptions);
+
+    private static void registerConfigOptions(Configurable configurable) {
+        List<ConfigHolder> configOptions = getConfigOptions(configurable);
+
+        configurable.addConfigOptions(configOptions);
+        loadConfigOptions(configOptions, false);
+        CONFIG_HOLDERS.addAll(configOptions);
     }
 
     public static void init() {
@@ -89,6 +91,10 @@ public final class ConfigManager extends CoreManager {
         } catch (IOException e) {
             WynntilsMod.error("Failed to load user config file!", e);
         }
+    }
+
+    public static void loadAllConfigOptions(boolean resetIfNotFound) {
+        loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
     }
 
     public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
@@ -167,45 +173,33 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static List<ConfigHolder> collectConfigOptions(Feature feature) {
-        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
-        feature.setCategory(category);
-        loadFeatureOverlayConfigOptions(category, feature);
-        return getConfigOptions(category, feature);
-    }
+    private static Type findFieldTypeOverride(Configurable parent, Field configField) {
+        Optional<Field> typeField = Arrays.stream(
+                        FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
+                .filter(field ->
+                        field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
+                .findFirst();
 
-    private static void loadFeatureOverlayConfigOptions(FeatureCategory category, Feature feature) {
-        // collect feature's overlays' config options
-        for (Overlay overlay : feature.getOverlays()) {
-            List<ConfigHolder> options = getConfigOptions(category, overlay);
-
-            registerConfigOptions(overlay, options);
+        if (typeField.isPresent()) {
+            try {
+                return (Type) FieldUtils.readField(typeField.get(), parent, true);
+            } catch (IllegalAccessException e) {
+                WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
+            }
         }
+
+        return null;
     }
 
-    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
+    private static List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
 
-            Optional<Field> typeField = Arrays.stream(
-                            FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                    .filter(field ->
-                            field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
-                    .findFirst();
+            Type typeOverride = findFieldTypeOverride(parent, configField);
 
-            Type type = null;
-            if (typeField.isPresent()) {
-                try {
-                    type = (Type) FieldUtils.readField(typeField.get(), parent, true);
-                } catch (IllegalAccessException e) {
-                    WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
-                }
-            }
-
-            ConfigHolder configHolder = new ConfigHolder(parent, configField, category, metadata, type);
+            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (metadata.visible()) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {

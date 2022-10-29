@@ -16,10 +16,10 @@ import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
-    private static ItemGuessFeature INSTANCE;
+    public static ItemGuessFeature INSTANCE;
 
     @Config
-    public static boolean showGuessesPrice = true;
+    public boolean showGuessesPrice = true;
 
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
@@ -29,9 +29,5 @@ public class ItemGuessFeature extends UserFeature {
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ItemStackTransformModel.class);
-    }
-
-    public static ItemGuessFeature getInstance() {
-        return INSTANCE;
     }
 }

@@ -24,13 +24,17 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
+import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,11 +42,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
     @Config
-    public static boolean disableQuestTrackingOnScoreboard = true;
+    public boolean disableQuestTrackingOnScoreboard = true;
+
+    @Config
+    public boolean autoTrackQuestCoordinates = true;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ScoreboardModel.class);
+        return List.of(ScoreboardModel.class, CompassModel.class);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -52,6 +59,16 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 && event.getSegment().getType() == ScoreboardModel.SegmentType.Quest) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
+        if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
+
+        Optional<Location> location = event.getQuestInfo().getNextLocation();
+        if (location.isEmpty()) return;
+
+        CompassModel.setCompassLocation(location.get());
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

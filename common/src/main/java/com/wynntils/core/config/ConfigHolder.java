@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.FeatureCategory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -24,22 +23,19 @@ public class ConfigHolder {
     private final Field field;
     private final Type fieldType;
 
-    private final FeatureCategory category;
     private final Config metadata;
 
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(
-            Configurable parent, Field field, FeatureCategory category, Config metadata, Type typeOverride) {
+    public ConfigHolder(Configurable parent, Field field, Config metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
 
         this.parent = parent;
         this.field = field;
-        this.category = category;
         this.metadata = metadata;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
@@ -47,20 +43,24 @@ public class ConfigHolder {
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        Object valueTemp = this.getValue();
-        Type fieldTypeTemp =
-                typeOverride == null ? (valueTemp == null ? this.field.getType() : valueTemp.getClass()) : typeOverride;
+        this.fieldType = calculateType(typeOverride, getValue(), field);
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
         this.defaultValue =
-                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), fieldTypeTemp);
+                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), this.fieldType);
+    }
 
-        if (typeOverride == null && this.defaultValue != null) {
-            fieldTypeTemp = defaultValue.getClass();
+    private Type calculateType(Type typeOverride, Object value, Field field) {
+        if (typeOverride != null) {
+            return typeOverride;
         }
 
-        this.fieldType = fieldTypeTemp;
+        if (value != null) {
+            return value.getClass();
+        }
+
+        return field.getType();
     }
 
     public Type getType() {
@@ -100,10 +100,6 @@ public class ConfigHolder {
     private String getDeclaringFeatureNameCamelCase() {
         String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
-
-    public FeatureCategory getCategory() {
-        return category;
     }
 
     public Config getMetadata() {

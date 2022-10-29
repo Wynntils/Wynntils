@@ -26,116 +26,118 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    @Config
-    public static boolean normalHighlightEnabled = true;
+    public static ItemHighlightFeature INSTANCE;
 
     @Config
-    public static CustomColor normalHighlightColor = new CustomColor(255, 255, 255);
+    public boolean normalHighlightEnabled = true;
 
     @Config
-    public static boolean uniqueHighlightEnabled = true;
+    public CustomColor normalHighlightColor = new CustomColor(255, 255, 255);
 
     @Config
-    public static CustomColor uniqueHighlightColor = new CustomColor(255, 255, 0);
+    public boolean uniqueHighlightEnabled = true;
 
     @Config
-    public static boolean rareHighlightEnabled = true;
+    public CustomColor uniqueHighlightColor = new CustomColor(255, 255, 0);
 
     @Config
-    public static CustomColor rareHighlightColor = new CustomColor(255, 0, 255);
+    public boolean rareHighlightEnabled = true;
 
     @Config
-    public static boolean setHighlightEnabled = true;
+    public CustomColor rareHighlightColor = new CustomColor(255, 0, 255);
 
     @Config
-    public static CustomColor setHighlightColor = new CustomColor(0, 255, 0);
+    public boolean setHighlightEnabled = true;
 
     @Config
-    public static boolean legendaryHighlightEnabled = true;
+    public CustomColor setHighlightColor = new CustomColor(0, 255, 0);
 
     @Config
-    public static CustomColor legendaryHighlightColor = new CustomColor(0, 255, 255);
+    public boolean legendaryHighlightEnabled = true;
 
     @Config
-    public static boolean fabledHighlightEnabled = true;
+    public CustomColor legendaryHighlightColor = new CustomColor(0, 255, 255);
 
     @Config
-    public static CustomColor fabledHighlightColor = new CustomColor(255, 85, 85);
+    public boolean fabledHighlightEnabled = true;
 
     @Config
-    public static boolean mythicHighlightEnabled = true;
+    public CustomColor fabledHighlightColor = new CustomColor(255, 85, 85);
 
     @Config
-    public static CustomColor mythicHighlightColor = new CustomColor(76, 0, 76);
+    public boolean mythicHighlightEnabled = true;
 
     @Config
-    public static boolean craftedHighlightEnabled = true;
+    public CustomColor mythicHighlightColor = new CustomColor(76, 0, 76);
 
     @Config
-    public static CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
+    public boolean craftedHighlightEnabled = true;
 
     @Config
-    public static boolean zeroStarIngredientHighlightEnabled = true;
+    public CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
 
     @Config
-    public static CustomColor zeroStarIngredientHighlightColor = new CustomColor(102, 102, 102);
+    public boolean zeroStarIngredientHighlightEnabled = true;
 
     @Config
-    public static boolean oneStarIngredientHighlightEnabled = true;
+    public CustomColor zeroStarIngredientHighlightColor = new CustomColor(102, 102, 102);
 
     @Config
-    public static CustomColor oneStarIngredientHighlightColor = new CustomColor(255, 247, 153);
+    public boolean oneStarIngredientHighlightEnabled = true;
 
     @Config
-    public static boolean twoStarIngredientHighlightEnabled = true;
+    public CustomColor oneStarIngredientHighlightColor = new CustomColor(255, 247, 153);
 
     @Config
-    public static CustomColor twoStarIngredientHighlightColor = new CustomColor(255, 255, 0);
+    public boolean twoStarIngredientHighlightEnabled = true;
 
     @Config
-    public static boolean threeStarIngredientHighlightEnabled = true;
+    public CustomColor twoStarIngredientHighlightColor = new CustomColor(255, 255, 0);
 
     @Config
-    public static CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
+    public boolean threeStarIngredientHighlightEnabled = true;
 
     @Config
-    public static boolean oneStarMaterialHighlightEnabled = true;
+    public CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
 
     @Config
-    public static CustomColor oneStarMaterialHighlightColor = new CustomColor(255, 247, 153);
+    public boolean oneStarMaterialHighlightEnabled = true;
 
     @Config
-    public static boolean twoStarMaterialHighlightEnabled = true;
+    public CustomColor oneStarMaterialHighlightColor = new CustomColor(255, 247, 153);
 
     @Config
-    public static CustomColor twoStarMaterialHighlightColor = new CustomColor(255, 255, 0);
+    public boolean twoStarMaterialHighlightEnabled = true;
 
     @Config
-    public static boolean threeStarMaterialHighlightEnabled = true;
+    public CustomColor twoStarMaterialHighlightColor = new CustomColor(255, 255, 0);
 
     @Config
-    public static CustomColor threeStarMaterialHighlightColor = new CustomColor(230, 77, 0);
+    public boolean threeStarMaterialHighlightEnabled = true;
 
     @Config
-    public static boolean cosmeticHighlightEnabled = true;
+    public CustomColor threeStarMaterialHighlightColor = new CustomColor(230, 77, 0);
 
     @Config
-    public static boolean powderHighlightEnabled = true;
+    public boolean cosmeticHighlightEnabled = true;
 
     @Config
-    public static boolean emeraldPouchHighlightEnabled = true;
+    public boolean powderHighlightEnabled = true;
 
     @Config
-    public static boolean inventoryHighlightEnabled = true;
+    public boolean emeraldPouchHighlightEnabled = true;
 
     @Config
-    public static float inventoryOpacity = 1f;
+    public boolean inventoryHighlightEnabled = true;
 
     @Config
-    public static boolean hotbarHighlightEnabled = true;
+    public float inventoryOpacity = 1f;
 
     @Config
-    public static float hotbarOpacity = .5f;
+    public boolean hotbarHighlightEnabled = true;
+
+    @Config
+    public float hotbarOpacity = .5f;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {

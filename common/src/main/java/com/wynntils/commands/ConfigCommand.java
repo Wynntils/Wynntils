@@ -188,7 +188,7 @@ public class ConfigCommand extends CommandBase {
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
         ConfigManager.loadConfigFile();
-        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        ConfigManager.loadAllConfigOptions(true);
         ConfigManager.saveConfig();
 
         context.getSource()
@@ -234,7 +234,7 @@ public class ConfigCommand extends CommandBase {
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
         if (overlay == null) return 0;
 
-        overlay.getVisibleConfigOptions().forEach(ConfigHolder::reset);
+        overlay.getConfigOptions().forEach(ConfigHolder::reset);
 
         ConfigManager.saveConfig();
 

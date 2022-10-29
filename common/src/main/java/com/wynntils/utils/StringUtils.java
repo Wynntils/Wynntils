@@ -207,4 +207,8 @@ public final class StringUtils {
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
     }
+
+    public static boolean containsIgnoreCase(String string, String string2) {
+        return org.apache.commons.lang3.StringUtils.containsIgnoreCase(string, string2);
+    }
 }

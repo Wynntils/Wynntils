@@ -6,6 +6,8 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
@@ -40,6 +42,7 @@ import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
 import com.wynntils.features.user.LobbyUptimeFeature;
+import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
@@ -47,7 +50,7 @@ import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TradeMarketPriceConversionFeature;
 import com.wynntils.features.user.TranslationFeature;
-import com.wynntils.features.user.UpdateReminderFeature;
+import com.wynntils.features.user.UpdatesFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.WynntilsQuestBookFeature;
@@ -136,6 +139,7 @@ public final class FeatureRegistry {
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LobbyUptimeFeature());
+        registerFeature(new LowHealthVignetteFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());
@@ -152,7 +156,7 @@ public final class FeatureRegistry {
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
-        registerFeature(new UpdateReminderFeature());
+        registerFeature(new UpdatesFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
@@ -194,6 +198,11 @@ public final class FeatureRegistry {
         if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
             feature.setupEventListener();
         }
+
+        // set feature category
+        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
+        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        feature.setCategory(category);
 
         // register key binds
         for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {

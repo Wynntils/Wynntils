@@ -28,9 +28,9 @@ public class MaterialProperty extends TieredCraftingItemProperty {
     public CustomColor getHighlightColor() {
         return switch (tier) {
             case ZERO -> CustomColor.NONE;
-            case ONE -> ItemHighlightFeature.oneStarMaterialHighlightColor;
-            case TWO -> ItemHighlightFeature.twoStarMaterialHighlightColor;
-            case THREE -> ItemHighlightFeature.threeStarMaterialHighlightColor;
+            case ONE -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightColor;
+            case TWO -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightColor;
+            case THREE -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightColor;
         };
     }
 
@@ -38,9 +38,9 @@ public class MaterialProperty extends TieredCraftingItemProperty {
     public boolean isHighlightEnabled() {
         return switch (tier) {
             case ZERO -> false; // should not happen
-            case ONE -> ItemHighlightFeature.oneStarMaterialHighlightEnabled;
-            case TWO -> ItemHighlightFeature.twoStarMaterialHighlightEnabled;
-            case THREE -> ItemHighlightFeature.threeStarMaterialHighlightEnabled;
+            case ONE -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightEnabled;
+            case TWO -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightEnabled;
+            case THREE -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightEnabled;
         };
     }
 }
