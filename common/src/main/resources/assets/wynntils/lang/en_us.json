@@ -503,6 +503,7 @@
   "feature.wynntils.updates.name": "Updates",
   "feature.wynntils.updates.updateReminder.description": "Should there be a reminder to update if a new version exists on your first join?",
   "feature.wynntils.updates.updateReminder.name": "Update Reminder",
+  "feature.wynntils.userFeature.userEnabled.description": "Should this feature be enabled?",
   "feature.wynntils.userFeature.userEnabled.name": "Enabled",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",
   "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",

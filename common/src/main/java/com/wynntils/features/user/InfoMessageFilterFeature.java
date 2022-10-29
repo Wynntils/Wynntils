@@ -99,7 +99,6 @@ public class InfoMessageFilterFeature extends UserFeature {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
         String msg = e.getCodedMessage();
-        System.out.println(msg);
         String uncoloredMsg = ComponentUtils.stripFormatting(e.getCodedMessage());
         MessageType messageType = e.getMessageType();
 
