@@ -107,9 +107,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
             toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
 
-            toRenderPreview
-                    .get(0)
-                    .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+            toRenderPreview.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
             toRenderPreview
                     .get(1)
                     .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
