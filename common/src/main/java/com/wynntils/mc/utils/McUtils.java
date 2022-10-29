@@ -5,6 +5,7 @@
 package com.wynntils.mc.utils;
 
 import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.WynntilsMod;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -59,6 +60,11 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
+        if (player() == null) {
+            WynntilsMod.error(
+                    "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
+            return;
+        }
         player().sendMessage(component, Util.NIL_UUID);
     }
 
