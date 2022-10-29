@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class HighlightMatchingItemsFeature extends UserFeature {
+public class ContainerSearchFeature extends UserFeature {
     private static final Pattern BANK_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s§0 Bank");
     private static final Pattern GUILD_BANK_PATTERN = Pattern.compile(".+: Bank \\(.+\\)");
     private static final Pattern MEMBER_LIST_PATTERN = Pattern.compile(".+: Members");
