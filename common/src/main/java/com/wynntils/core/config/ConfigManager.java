@@ -51,7 +51,7 @@ public final class ConfigManager extends CoreManager {
     }
 
     private static void registerConfigOptions(
-            AbstractConfigurable configurable, List<ConfigHolder> featureConfigOptions) {
+            Configurable configurable, List<ConfigHolder> featureConfigOptions) {
         configurable.addConfigOptions(featureConfigOptions);
         loadConfigOptions(featureConfigOptions, false);
         CONFIG_HOLDERS.addAll(featureConfigOptions);
