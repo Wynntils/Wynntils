@@ -83,7 +83,6 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
 
     protected abstract void onConfigUpdate(ConfigHolder configHolder);
 
-
     /** Gets the name of a feature */
     @Override
     public String getTranslatedName() {
