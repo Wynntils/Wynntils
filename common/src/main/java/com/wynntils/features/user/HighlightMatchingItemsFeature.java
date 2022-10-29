@@ -9,15 +9,20 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.widgets.SearchWidget;
+import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,6 +43,8 @@ public class HighlightMatchingItemsFeature extends UserFeature {
 
     @Config
     public CustomColor highlightColor = CommonColors.MAGENTA;
+
+    private SearchWidget lastSearchWidget;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
@@ -67,6 +74,21 @@ public class HighlightMatchingItemsFeature extends UserFeature {
         RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
 
+    @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent event) {
+        forceUpdateSearch();
+    }
+
+    @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent event) {
+        forceUpdateSearch();
+    }
+
+    @SubscribeEvent
+    public void onContainerClose(ContainerCloseEvent.Post event) {
+        lastSearchWidget = null;
+    }
+
     public boolean shouldAddSearch(String title) {
         if (filterInBank && BANK_PATTERN.matcher(title).matches()) {
             return true;
@@ -84,13 +106,21 @@ public class HighlightMatchingItemsFeature extends UserFeature {
     }
 
     private void addSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
-        screen.addRenderableWidget(new SearchWidget(
+        SearchWidget searchWidget = new SearchWidget(
                 renderX + screen.imageWidth - 100,
                 renderY - 20,
                 100,
                 20,
                 s -> highlightMatchingItems(s, screen),
-                (TextboxScreen) screen));
+                (TextboxScreen) screen);
+
+        if (lastSearchWidget != null) {
+            searchWidget.setTextBoxInput(lastSearchWidget.getTextBoxInput());
+        }
+
+        lastSearchWidget = searchWidget;
+
+        screen.addRenderableWidget(lastSearchWidget);
     }
 
     private void highlightMatchingItems(String search, AbstractContainerScreen<?> screen) {
@@ -104,6 +134,13 @@ public class HighlightMatchingItemsFeature extends UserFeature {
             boolean filtered = !search.equals("") && name.contains(search);
 
             wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
+        }
+    }
+
+    private void forceUpdateSearch() {
+        Screen screen = McUtils.mc().screen;
+        if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
+            highlightMatchingItems(lastSearchWidget.getTextBoxInput(), abstractContainerScreen);
         }
     }
 }
