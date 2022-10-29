@@ -152,7 +152,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             OverlayPosition.AnchorSection.Middle),
                     new GuiScaledOverlaySize(200, 150),
                     HorizontalAlignment.Left,
-                    VerticalAlignment.Top);
+                    VerticalAlignment.Middle);
             updateTextRenderSettings();
         }
 
@@ -160,7 +160,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             renderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth() - 5)
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withVerticalAlignment(this.getRenderVerticalAlignment())
                     .withTextShadow(textShadow);
         }
 
@@ -192,25 +191,32 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             dialogueRenderTask.getSetting().maxWidth());
 
             // Draw a translucent background
-            float colorAlphaRect = MathUtils.clamp(255f * backgroundOpacity, 0, 255);
+            float rectHeight = textHeight + 10;
+            float rectRenderY =
+                    switch (this.getRenderVerticalAlignment()) {
+                        case Top -> this.getRenderY();
+                        case Middle -> this.getRenderY() + (this.getHeight() - rectHeight) / 2f;
+                        case Bottom -> this.getRenderY() + this.getHeight() - rectHeight;
+                    };
+            int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity, 0, 255));
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.BLACK.withAlpha(colorAlphaRect),
                     this.getRenderX(),
-                    this.getRenderY(),
+                    rectRenderY,
                     0,
                     this.getWidth(),
-                    textHeight + 10);
+                    rectHeight);
 
             // Render the message
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
-                            this.getRenderX() + 5,
-                            this.getRenderY() + 5,
+                            this.getRenderX(),
+                            this.getRenderY(),
                             dialogueRenderTask,
-                            (this.getRenderedWidth() - 10) / (float) McUtils.guiScale(),
-                            (this.getRenderedHeight() - 10) / (float) McUtils.guiScale(),
+                            this.getWidth(),
+                            this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
