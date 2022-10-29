@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class HighlightMatchingItemsFeature extends UserFeature {
@@ -131,7 +132,7 @@ public class HighlightMatchingItemsFeature extends UserFeature {
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
-            boolean filtered = !search.equals("") && name.contains(search);
+            boolean filtered = !search.equals("") && name.contains(search) && item.getItem() != Items.AIR;
 
             wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
         }
