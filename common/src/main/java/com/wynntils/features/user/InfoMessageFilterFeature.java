@@ -66,6 +66,13 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
             Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
+    private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
+            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aa (?<class>.+)");
+    private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
+            "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?a (?<class>.+)");
+    private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
+    private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
+
     @Config
     private boolean hideWelcome = true;
 
@@ -83,6 +90,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType unusedPoints = FilterType.REDIRECT;
+
+    @Config
+    private FilterType friendJoin = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -119,6 +129,23 @@ public class InfoMessageFilterFeature extends UserFeature {
             if (hideWelcome) {
                 if (WELCOME_1.matcher(msg).find() || WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
+                    return;
+                }
+            }
+
+            if (friendJoin != FilterType.KEEP) {
+                Matcher matcher = FRIEND_JOIN_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (friendJoin == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group("name");
+                    String server = matcher.group("server");
+                    String playerClass = matcher.group("class");
+
+                    sendFriendJoinMessage(playerName, server, playerClass);
                     return;
                 }
             }
@@ -204,6 +231,21 @@ public class InfoMessageFilterFeature extends UserFeature {
                     e.setCanceled(true);
                 }
             }
+
+            if (friendJoin != FilterType.KEEP) {
+                Matcher matcher = FRIEND_LEAVE_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (friendJoin == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group("name");
+
+                    sendFriendLeaveMessage(playerName);
+                    return;
+                }
+            }
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
@@ -262,7 +304,53 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
+
+            if (friendJoin != FilterType.KEEP) {
+                Matcher matcher = BACKGROUND_FRIEND_JOIN_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (friendJoin == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group("name");
+                    String server = matcher.group("server");
+                    String playerClass = matcher.group("class");
+
+                    sendFriendJoinMessage(playerName, server, playerClass);
+                    return;
+                }
+
+                matcher = BACKGROUND_FRIEND_LEAVE_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (friendJoin == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String playerName = matcher.group("name");
+
+                    sendFriendLeaveMessage(playerName);
+                    return;
+                }
+            }
         }
+    }
+
+    private void sendFriendLeaveMessage(String playerName) {
+        NotificationManager.queueMessage(new TextComponent("← ")
+                .withStyle(ChatFormatting.RED)
+                .append(new TextComponent(playerName).withStyle(ChatFormatting.DARK_GREEN)));
+    }
+
+    private static void sendFriendJoinMessage(String playerName, String server, String playerClass) {
+        NotificationManager.queueMessage(new TextComponent("→ ")
+                .withStyle(ChatFormatting.GREEN)
+                .append(new TextComponent(playerName + " [")
+                        .withStyle(ChatFormatting.DARK_GREEN)
+                        .append(new TextComponent(server + "/" + playerClass)
+                                .withStyle(ChatFormatting.GREEN)
+                                .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN)))));
     }
 
     private static void sendLoginMessage(String playerName, String rank) {

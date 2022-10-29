@@ -81,15 +81,25 @@ public class GearItemStack extends WynnItemStack {
         List<Component> baseTooltip = new ArrayList<>();
 
         boolean hasIds = false;
-        boolean endOfIDs = false;
+        boolean setBonusIDs = false;
         for (Component loreLine : lore) {
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
 
             if (unformattedLoreLine.equals("Set Bonus:")) {
-                endOfIDs = true;
+                baseTooltip.add(loreLine);
+                setBonusIDs = true;
+                continue;
             }
 
-            if (endOfIDs) continue;
+            if (setBonusIDs) {
+                baseTooltip.add(loreLine);
+
+                if (unformattedLoreLine.isBlank()) {
+                    setBonusIDs = false;
+                }
+
+                continue;
+            }
 
             if (unformattedLoreLine.contains("] Powder Slots")) {
                 powders = Powder.findPowders(unformattedLoreLine);
