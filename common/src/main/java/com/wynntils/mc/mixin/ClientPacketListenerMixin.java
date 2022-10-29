@@ -125,9 +125,18 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onContainerSetContent(packet).isCanceled()) {
+        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method =
+                    "handleContainerContent(Lnet/minecraft/network/protocol/game/ClientboundContainerSetContentPacket;)V",
+            at = @At("RETURN"))
+    private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onContainerSetContentPost(packet);
     }
 
     @Inject(method = "handleContainerSetSlot", at = @At("HEAD"))

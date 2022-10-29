@@ -65,7 +65,7 @@ public class CharacterSelectionManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onContainerItemsSet(ContainerSetContentEvent event) {
+    public static void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
         if (event.getContainerId() != containerId) {
             return;
         }
