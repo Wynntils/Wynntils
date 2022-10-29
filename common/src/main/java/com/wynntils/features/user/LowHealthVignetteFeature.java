@@ -18,6 +18,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.model.WorldStateManager;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,6 +50,7 @@ public class LowHealthVignetteFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!WorldStateManager.onWorld()) return;
 
         Window window = McUtils.window();
 
