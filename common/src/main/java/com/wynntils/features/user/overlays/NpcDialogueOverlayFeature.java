@@ -192,7 +192,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             dialogueRenderTask.getSetting().maxWidth());
 
             // Draw a translucent background
-            float colorAlphaRect = MathUtils.clamp(255f * backgroundOpacity, 0, 255);
+            int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity, 0, 255));
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.BLACK.withAlpha(colorAlphaRect),
