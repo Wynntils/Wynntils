@@ -152,7 +152,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             OverlayPosition.AnchorSection.Middle),
                     new GuiScaledOverlaySize(200, 150),
                     HorizontalAlignment.Left,
-                    VerticalAlignment.Top);
+                    VerticalAlignment.Middle);
             updateTextRenderSettings();
         }
 
@@ -212,11 +212,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             FontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
-                            this.getRenderX() + 5,
-                            this.getRenderY() + 5,
+                            this.getRenderX(),
+                            this.getRenderY(),
                             dialogueRenderTask,
-                            (this.getRenderedWidth() - 10) / (float) McUtils.guiScale(),
-                            (this.getRenderedHeight() - 10) / (float) McUtils.guiScale(),
+                            this.getWidth(),
+                            this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
