@@ -496,7 +496,7 @@ public final class EventFactory {
     }
 
     public static void onResizeDisplayPost() {
-        post(new DisplayResizeEvent());
+        postAlways(new DisplayResizeEvent());
     }
 
     // endregion
