@@ -184,7 +184,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, AbstractConfigurable parent) {
+    private static List<ConfigHolder> getConfigOptions(FeatureCategory category, Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
