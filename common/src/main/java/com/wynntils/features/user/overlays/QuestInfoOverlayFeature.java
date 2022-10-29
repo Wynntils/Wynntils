@@ -35,6 +35,7 @@ import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,14 +62,22 @@ public class QuestInfoOverlayFeature extends UserFeature {
         }
     }
 
+    private static final Supplier<Location> supplier = () -> {
+        QuestInfo questInfo = QuestManager.getCurrentQuest();
+
+        if (questInfo == null) return null;
+
+        Optional<Location> location = questInfo.getNextLocation();
+
+        if (location.isEmpty()) return null;
+
+        return location.get();
+    };
+
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
-
-        Optional<Location> location = event.getQuestInfo().getNextLocation();
-        if (location.isEmpty()) return;
-
-        CompassModel.setCompassLocation(location.get());
+        // set if valid
+        CompassModel.setDynamicCompassLocation(supplier);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -138,6 +147,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
             if (toRender.get(0).getText() == null) {
                 // Set at first use; I18n is not available at initialization time
+                // TODO check if above comment still valid
                 toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
             }
             toRender.get(1).setText(currentQuest.getName());
