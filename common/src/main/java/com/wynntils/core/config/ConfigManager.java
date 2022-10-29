@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.AbstractConfigurable;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.managers.CoreManager;
@@ -49,7 +49,6 @@ public final class ConfigManager extends CoreManager {
 
         registerConfigOptions(feature);
     }
-
 
     private static void registerConfigOptions(Configurable configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
