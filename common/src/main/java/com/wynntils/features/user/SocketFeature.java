@@ -42,7 +42,13 @@ public class SocketFeature extends UserFeature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         switch (configHolder.getFieldName()) {
-            case "getOtherPlayerInfo" -> HadesUserModel.getHadesUserMap().clear();
+            case "getOtherPlayerInfo" -> {
+                if (getOtherPlayerInfo) {
+                    SocketModel.resendWorldData();
+                } else {
+                    HadesUserModel.getHadesUserMap().clear();
+                }
+            }
             case "shareWithParty" -> {
                 if (shareWithParty) {
                     PlayerRelationsModel.requestPartyListUpdate();

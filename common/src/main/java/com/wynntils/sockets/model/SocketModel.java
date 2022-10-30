@@ -122,17 +122,14 @@ public class SocketModel extends Model {
     public static void onWorldStateChange(WorldStateEvent event) {
         if (!isSocketOpen()) return;
 
-        hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                event.getWorldName(), CharacterManager.getCharacterInfo().getId()));
+        resendWorldData();
     }
 
     @SubscribeEvent
     public static void onClassChange(CharacterUpdateEvent event) {
         if (!isSocketOpen()) return;
 
-        hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                WorldStateManager.getCurrentWorldName(),
-                CharacterManager.getCharacterInfo().getId()));
+        resendWorldData();
     }
 
     @SubscribeEvent
@@ -187,10 +184,16 @@ public class SocketModel extends Model {
         }
     }
 
+    public static void resendWorldData() {
+        hadesConnection.sendPacket(new HCPacketUpdateWorld(
+                WorldStateManager.getCurrentWorldName(),
+                CharacterManager.getCharacterInfo().getId()));
+    }
+
     public static void resetSocialType(SocialType socialType) {
         if (!isSocketOpen()) return;
 
-        hadesConnection.sendPacket(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
+        hadesConnection.sendPacketAndFlush(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
     }
 
     private static boolean isSocketOpen() {
