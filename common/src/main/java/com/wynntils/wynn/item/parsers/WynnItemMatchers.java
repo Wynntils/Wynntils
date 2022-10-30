@@ -9,6 +9,7 @@ import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
+import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -127,6 +128,10 @@ public final class WynnItemMatchers {
      * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
      */
     public static boolean isGear(ItemStack itemStack) {
+        if (itemStack instanceof GearItemStack) {
+            return true;
+        }
+
         for (Component line : ItemUtils.getTooltipLines(itemStack)) {
             if (rarityLineMatcher(line).find()) return true;
         }

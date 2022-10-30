@@ -27,12 +27,35 @@ public class UpdateManager extends CoreManager {
     private static final Pattern ARTIFACT_PATTERN =
             Pattern.compile("(.+)/build/libs/wynntils-(.+)\\+(\\d+).MC1.18.2-(.+).jar");
 
+    private static final String LAST_BUILD_NUMBER_PATH =
+            "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/api/json?tree=number";
+
     private static final String LAST_BUILD_DOWNLOAD_PATH =
             "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/artifact/";
     private static final String LAST_BUILD_RELATIVE_PATHS =
             "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/api/json?tree=artifacts%5BrelativePath%5D";
 
     public static void init() {}
+
+    public static CompletableFuture<Integer> getLatestBuild() {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+
+        Request versionFetch = new RequestBuilder(LAST_BUILD_NUMBER_PATH, "latest_build")
+                .handleJsonObject((jsonObject) -> {
+                    int buildNumber = jsonObject.getAsJsonPrimitive("number").getAsInt();
+
+                    future.complete(buildNumber);
+
+                    return true;
+                })
+                .build();
+
+        RequestHandler handler = new RequestHandler();
+
+        handler.addAndDispatch(versionFetch, true);
+
+        return future;
+    }
 
     public static CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
