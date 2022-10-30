@@ -6,23 +6,15 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public abstract class Poi {
-    private final MapLocation location;
+public interface Poi {
 
-    protected Poi(MapLocation location) {
-        this.location = location;
-    }
+    MapLocation getLocation();
 
-    public MapLocation getLocation() {
-        return location;
-    }
+    void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
 
-    public abstract void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
+    int getWidth();
 
-    public abstract int getWidth();
+    int getHeight();
 
-    public abstract int getHeight();
-
-    public abstract String getName();
+    String getName();
 }
