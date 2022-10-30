@@ -121,12 +121,24 @@ public abstract class Feature extends AbstractConfigurable
     /** Called on init of Feature */
     protected void onInit(ImmutableList.Builder<Condition> conditions) {}
 
+    /**
+     * Called on enabling of Feature
+     */
+    protected boolean onEnable() {
+        return true;
+    }
+
+    /** Called on disabling of Feature */
+    protected void onDisable() {}
+
+
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED) return;
 
         if (!canEnable()) return;
 
+        onEnable();
         state = FeatureState.ENABLED;
 
         ManagerRegistry.addAllDependencies(this);
@@ -143,6 +155,8 @@ public abstract class Feature extends AbstractConfigurable
     /** Called for a feature's deactivation */
     public final void disable() {
         if (state != FeatureState.ENABLED) return;
+
+        onDisable();
 
         state = FeatureState.DISABLED;
 
