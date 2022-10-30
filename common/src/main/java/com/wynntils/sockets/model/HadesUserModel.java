@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HadesUserModel extends Model {
-    private static Map<UUID, HadesUser> hadesUserMap = new HashMap<>();
+    private static Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
     public static void init() {
         hadesUserMap = new HashMap<>();

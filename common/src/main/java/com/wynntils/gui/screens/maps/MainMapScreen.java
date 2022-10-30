@@ -236,8 +236,8 @@ public class MainMapScreen extends Screen {
 
     private void renderPlayerIcons(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
         for (HadesUser user : HadesUserModel.getHadesUserMap().values()) {
-            float gameX = (float) user.getX();
-            float gameZ = (float) user.getZ();
+            float gameX = user.getX();
+            float gameZ = user.getZ();
 
             float renderX =
                     MapRenderer.getRenderX(gameX, mapCenterX, centerX, currentZoom) - PLAYER_HEAD_RENDER_SIZE / 2f;
