@@ -20,6 +20,8 @@ import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -141,6 +143,18 @@ public class QuestManager extends CoreManager {
 
     public static QuestInfo getCurrentQuest() {
         return currentQuest;
+    }
+
+    public static Location getCurrentQuestLocation() {
+        QuestInfo questInfo = QuestManager.getCurrentQuest();
+
+        if (questInfo == null) return null;
+
+        Optional<Location> location = questInfo.getNextLocation();
+
+        if (location.isEmpty()) return null;
+
+        return location.get();
     }
 
     protected static void setCurrentQuest(QuestInfo questInfo) {

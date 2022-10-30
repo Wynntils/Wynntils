@@ -62,22 +62,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
         }
     }
 
-    private static final Supplier<Location> supplier = () -> {
-        QuestInfo questInfo = QuestManager.getCurrentQuest();
-
-        if (questInfo == null) return null;
-
-        Optional<Location> location = questInfo.getNextLocation();
-
-        if (location.isEmpty()) return null;
-
-        return location.get();
-    };
-
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         // set if valid
-        CompassModel.setDynamicCompassLocation(supplier);
+        CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
