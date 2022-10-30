@@ -250,12 +250,16 @@ public class PlayerRelationsModel extends Model {
     }
 
     public static void requestFriendListUpdate() {
+        if (McUtils.player() == null) return;
+
         expectingFriendMessage = true;
         McUtils.player().chat("/friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
     public static void requestPartyListUpdate() {
+        if (McUtils.player() == null) return;
+
         expectingPartyMessage = true;
         McUtils.player().chat("/party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
