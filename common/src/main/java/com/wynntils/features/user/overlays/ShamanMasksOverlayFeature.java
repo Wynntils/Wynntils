@@ -19,9 +19,11 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.wynn.model.ShamanMaskModel;
 import com.wynntils.wynn.objects.ShamanMaskType;
 import java.util.List;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanMasksOverlayFeature extends UserFeature {
     public static ShamanMasksOverlayFeature INSTANCE;
@@ -35,6 +37,14 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ShamanMaskModel.class);
+    }
+
+    @SubscribeEvent
+    public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
+        if (ShamanMasksOverlayFeature.INSTANCE.hideMaskTitles
+                && ShamanMasksOverlayFeature.INSTANCE.shamanMaskOverlay.isEnabled()) {
+            event.setCanceled(true);
+        }
     }
 
     public static class ShamanMaskOverlay extends Overlay {

@@ -4,10 +4,11 @@
  */
 package com.wynntils.wynn.model;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.features.user.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.ShamanMaskType;
 import java.util.regex.Matcher;
@@ -27,9 +28,10 @@ public class ShamanMaskModel extends Model {
 
         if (title.contains("Mask of the ") || title.contains("➤")) {
             parseMask(title);
+            ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
+            WynntilsMod.postEvent(maskEvent);
 
-            if (ShamanMasksOverlayFeature.INSTANCE.hideMaskTitles
-                    && ShamanMasksOverlayFeature.INSTANCE.shamanMaskOverlay.isEnabled()) {
+            if (maskEvent.isCanceled()) {
                 event.setCanceled(true);
             }
         }
