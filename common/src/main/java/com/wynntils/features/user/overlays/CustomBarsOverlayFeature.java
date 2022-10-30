@@ -36,12 +36,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
 
-    @Config
-    public boolean shouldDisplayOnActionBar = false;
-
-    @Config
-    public boolean shouldDisplayOnBossBar = false;
-
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ActionBarModel.class, BossBarModel.class);
@@ -49,22 +43,22 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (shouldDisplayOnActionBar || !manaBarOverlay.isEnabled()) return;
+        if (!manaBarOverlay.isEnabled() || ((BaseBarOverlay) manaBarOverlay).shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
+        if (!healthBarOverlay.isEnabled() || ((BaseBarOverlay) healthBarOverlay).shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        Overlay overlay =
-                switch (event.getType()) {
+        BaseBarOverlay overlay =
+                (BaseBarOverlay) switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
                     case MANABANK -> manaBarOverlay;
                     case AWAKENED -> awakenedProgressBarOverlay;
@@ -72,7 +66,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     case CORRUPTED -> corruptedBarOverlay;
                 };
 
-        if (overlay.isEnabled() && !shouldDisplayOnBossBar) {
+        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
     }
@@ -104,6 +98,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
         public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+        public boolean shouldDisplayOriginal = false;
 
         // hacky override of custom color
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
