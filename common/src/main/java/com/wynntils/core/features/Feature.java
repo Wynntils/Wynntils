@@ -22,8 +22,6 @@ import com.wynntils.mc.event.WebSetupEvent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -34,16 +32,14 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature implements Translatable, Configurable, Comparable<Feature>, ModelDependant {
+public abstract class Feature extends AbstractConfigurable
+        implements Translatable, Comparable<Feature>, ModelDependant {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
-    private final List<ConfigHolder> configOptions = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
-    private boolean enabled = false;
-
-    protected boolean initFinished = false;
+    protected FeatureState state = FeatureState.UNINITALIZED;
 
     private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
@@ -56,7 +52,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
         if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
 
-        initFinished = true;
+        state = FeatureState.DISABLED;
 
         assert !getTranslatedName().startsWith("feature.wynntils.");
     }
@@ -117,7 +113,7 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         return this.getClass().getSimpleName();
     }
 
-    protected String getNameCamelCase() {
+    private String getNameCamelCase() {
         String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
@@ -127,10 +123,6 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /**
      * Called on enabling of Feature
-     *
-     * <p>Return false to cancel enabling, return true to continue. Note that if a feature's enable
-     * is cancelled it isn't called again by the conditions and must be done so manually, likely by
-     * the user.
      */
     protected boolean onEnable() {
         return true;
@@ -141,12 +133,12 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called to activate a feature */
     public final void enable() {
-        if (enabled) throw new IllegalStateException("Feature can not be enabled as it already is enabled");
+        if (state != FeatureState.DISABLED) return;
 
         if (!canEnable()) return;
-        if (!onEnable()) return;
 
-        enabled = true;
+        onEnable();
+        state = FeatureState.ENABLED;
 
         ManagerRegistry.addAllDependencies(this);
 
@@ -161,11 +153,11 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
 
     /** Called for a feature's deactivation */
     public final void disable() {
-        if (!enabled) throw new IllegalStateException("Feature can not be disabled as it already is disabled");
+        if (state != FeatureState.ENABLED) return;
 
         onDisable();
 
-        enabled = false;
+        state = FeatureState.DISABLED;
 
         ManagerRegistry.removeAllDependencies(this);
 
@@ -178,21 +170,9 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         }
     }
 
-    public final void tryEnable() {
-        if (enabled) return;
-
-        enable();
-    }
-
-    public final void tryDisable() {
-        if (!enabled) return;
-
-        disable();
-    }
-
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
-        return enabled;
+        return state == FeatureState.ENABLED;
     }
 
     /** Whether a feature can be enabled */
@@ -209,41 +189,8 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         return List.of();
     }
 
-    public boolean canUserEnable() {
-        return this instanceof UserFeature;
-    }
-
-    /** Registers the feature's config options. Called by ConfigManager when feature is loaded */
-    @Override
-    public final void addConfigOptions(List<ConfigHolder> options) {
-        configOptions.addAll(options);
-    }
-
-    /** Returns all config options registered in this feature */
-    public final List<ConfigHolder> getConfigOptions() {
-        return configOptions;
-    }
-
-    /** Returns all config options registered in this feature that should be visible to the user */
-    public final List<ConfigHolder> getVisibleConfigOptions() {
-        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
-    }
-
-    /** Returns the config option matching the given name, if it exists */
-    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getVisibleConfigOptions().stream()
-                .filter(c -> c.getFieldName().equals(name))
-                .findFirst();
-    }
-
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
-
-    @Override
-    public String getConfigJsonName() {
-        String name = this.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
 
     public FeatureCategory getCategory() {
         return category;
@@ -296,5 +243,11 @@ public abstract class Feature implements Translatable, Configurable, Comparable<
         public void setSatisfied(boolean satisfied) {
             this.satisfied = satisfied;
         }
+    }
+
+    public enum FeatureState {
+        UNINITALIZED,
+        DISABLED,
+        ENABLED;
     }
 }

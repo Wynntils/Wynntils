@@ -237,9 +237,9 @@ public final class FeatureRegistry {
         if (feature instanceof UserFeature userFeature) {
             if (!userFeature.userEnabled) return; // not enabled by user
 
-            userFeature.tryEnable();
+            userFeature.enable();
         } else if (!startDisabled) {
-            feature.tryEnable();
+            feature.enable();
         }
     }
 
