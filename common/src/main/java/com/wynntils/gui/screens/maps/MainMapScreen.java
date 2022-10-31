@@ -329,7 +329,8 @@ public class MainMapScreen extends Screen {
                 if (hovered.hasStaticLocation()) {
                     CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                 } else {
-                    CompassModel.setDynamicCompassLocation(() -> hovered.getLocation().asLocation());
+                    CompassModel.setDynamicCompassLocation(
+                            () -> hovered.getLocation().asLocation());
                 }
                 return true;
             }
