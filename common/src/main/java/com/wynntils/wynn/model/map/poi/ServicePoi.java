@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.gui.render.Texture;
 
-public class ServicePoi extends IconPoi {
+public class ServicePoi extends StaticIconPoi {
     private final ServiceKind kind;
 
     public ServicePoi(MapLocation location, ServiceKind kind) {

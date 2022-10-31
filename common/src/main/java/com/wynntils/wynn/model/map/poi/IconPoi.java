@@ -13,22 +13,6 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 
 public abstract class IconPoi implements Poi {
-    MapLocation location;
-
-    protected IconPoi(MapLocation location) {
-        this.location = location;
-    }
-
-    @Override
-    public boolean hasStaticLocation() {
-        return true;
-    }
-
-    @Override
-    public MapLocation getLocation() {
-        return location;
-    }
-
     @Override
     public int getWidth() {
         return getIcon().width();
