@@ -20,6 +20,11 @@ public abstract class IconPoi implements Poi {
     }
 
     @Override
+    public boolean hasStaticLocation() {
+        return true;
+    }
+
+    @Override
     public MapLocation getLocation() {
         return location;
     }

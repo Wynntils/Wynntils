@@ -10,6 +10,8 @@ public interface Poi {
 
     MapLocation getLocation();
 
+    boolean hasStaticLocation();
+
     void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
 
     int getWidth();

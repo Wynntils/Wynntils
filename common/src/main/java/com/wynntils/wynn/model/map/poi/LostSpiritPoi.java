@@ -7,7 +7,6 @@ package com.wynntils.wynn.model.map.poi;
 public class LostSpiritPoi extends ServicePoi {
 
     private final int number;
-
     public LostSpiritPoi(MapLocation location, int number) {
         super(location, ServiceKind.LOST_SPRIT);
 
