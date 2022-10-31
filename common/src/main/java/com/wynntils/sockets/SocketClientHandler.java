@@ -47,7 +47,7 @@ public class SocketClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer when WebManager#getAccount is empty.");
         }
 
-        hadesConnection.sendPacket(
+        hadesConnection.sendPacketAndFlush(
                 new HCPacketAuthenticate(WebManager.getAccount().get().getToken()));
     }
 
