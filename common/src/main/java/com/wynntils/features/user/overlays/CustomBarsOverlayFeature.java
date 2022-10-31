@@ -57,8 +57,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        BaseBarOverlay overlay =
-                (BaseBarOverlay) switch (event.getType()) {
+        BaseBarOverlay overlay = (BaseBarOverlay)
+                switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
                     case MANABANK -> manaBarOverlay;
                     case AWAKENED -> awakenedProgressBarOverlay;
