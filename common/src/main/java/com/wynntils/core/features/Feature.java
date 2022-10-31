@@ -131,7 +131,6 @@ public abstract class Feature extends AbstractConfigurable
     /** Called on disabling of Feature */
     protected void onDisable() {}
 
-
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED) return;
