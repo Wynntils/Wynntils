@@ -23,7 +23,6 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NotificationEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
@@ -166,8 +165,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
                                                     .customColor()
                                                     .withAlpha(messageContainer.getRemainingTime() / 1000f))))
                                     .toList(),
-                            this.getRenderedWidth() / (float) McUtils.guiScale(),
-                            this.getRenderedHeight() / (float) McUtils.guiScale(),
+                            this.getWidth(),
+                            this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
@@ -181,6 +180,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
             textRenderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                    .withVerticalAlignment(this.getRenderVerticalAlignment())
                     .withTextShadow(textShadow);
         }
     }
