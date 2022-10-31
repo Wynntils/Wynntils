@@ -120,16 +120,12 @@ public class SocketModel extends Model {
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
-        if (!isSocketOpen()) return;
-
-        resendWorldData();
+        tryResendWorldData();
     }
 
     @SubscribeEvent
     public static void onClassChange(CharacterUpdateEvent event) {
-        if (!isSocketOpen()) return;
-
-        resendWorldData();
+        tryResendWorldData();
     }
 
     @SubscribeEvent
@@ -184,7 +180,9 @@ public class SocketModel extends Model {
         }
     }
 
-    public static void resendWorldData() {
+    public static void tryResendWorldData() {
+        if (!isSocketOpen()) return;
+
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
                 WorldStateManager.getCurrentWorldName(),
                 CharacterManager.getCharacterInfo().getId()));

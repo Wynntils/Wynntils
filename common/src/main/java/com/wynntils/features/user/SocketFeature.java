@@ -44,7 +44,7 @@ public class SocketFeature extends UserFeature {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo) {
-                    SocketModel.resendWorldData();
+                    SocketModel.tryResendWorldData();
                 } else {
                     HadesUserModel.getHadesUserMap().clear();
                 }
