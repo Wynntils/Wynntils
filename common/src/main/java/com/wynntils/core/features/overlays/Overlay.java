@@ -10,21 +10,17 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay implements Translatable, Configurable, Comparable<Overlay> {
-    private final List<ConfigHolder> configOptions = new ArrayList<>();
+public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
 
     @Config(key = "overlay.wynntils.overlay.position", visible = false)
     protected OverlayPosition position;
@@ -86,32 +82,6 @@ public abstract class Overlay implements Translatable, Configurable, Comparable<
     }
 
     protected abstract void onConfigUpdate(ConfigHolder configHolder);
-
-    /** Registers the overlay's config options. Called by ConfigManager when overlay is loaded */
-    @Override
-    public final void addConfigOptions(List<ConfigHolder> options) {
-        configOptions.addAll(options);
-    }
-
-    /** Returns all config options registered in this overlay that should be visible to the user */
-    public final List<ConfigHolder> getVisibleConfigOptions() {
-        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
-    }
-
-    /** Returns the config option matching the given name, if it exists */
-    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return configOptions.stream().filter(c -> c.getFieldName().equals(name)).findFirst();
-    }
-
-    public List<ConfigHolder> getConfigOptions() {
-        return configOptions;
-    }
-
-    @Override
-    public String getConfigJsonName() {
-        String name = this.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
 
     /** Gets the name of a feature */
     @Override

@@ -6,11 +6,22 @@ package com.wynntils.core.features;
 
 import com.wynntils.core.config.ConfigHolder;
 import java.util.List;
+import java.util.Optional;
 
 public interface Configurable {
     void updateConfigOption(ConfigHolder configHolder);
 
+    /** Registers the configurable's config options. Called by ConfigManager when loaded */
     void addConfigOptions(List<ConfigHolder> options);
+
+    /** Returns all configurable options registered that should be visible to the user */
+    List<ConfigHolder> getVisibleConfigOptions();
+
+    /** Returns all configurable options  that should be visible to the user */
+    List<ConfigHolder> getConfigOptions();
+
+    /** Returns the config option matching the given name, if it exists */
+    Optional<ConfigHolder> getConfigOptionFromString(String name);
 
     String getConfigJsonName();
 }
