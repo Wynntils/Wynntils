@@ -143,6 +143,18 @@ public class QuestManager extends CoreManager {
         return currentQuest;
     }
 
+    public static Location getCurrentQuestLocation() {
+        QuestInfo questInfo = QuestManager.getCurrentQuest();
+
+        if (questInfo == null) return null;
+
+        Optional<Location> location = questInfo.getNextLocation();
+
+        if (location.isEmpty()) return null;
+
+        return location.get();
+    }
+
     protected static void setCurrentQuest(QuestInfo questInfo) {
         currentQuest = questInfo;
         WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));

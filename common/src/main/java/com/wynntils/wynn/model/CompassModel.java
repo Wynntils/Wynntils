@@ -5,30 +5,54 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.Model;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CompassModel extends Model {
-    private static Location compassLocation = null;
+    private static Supplier<Location> locationSupplier = null;
+    private static Location compassLocation = null; // this field acts as a cache for the supplier
 
     public static void init() {}
+
+    @SubscribeEvent
+    public void onTick(ClientTickEvent.Start e) {
+        if (locationSupplier == null) return;
+
+        Location newLocation = locationSupplier.get();
+
+        if (newLocation == null) { // drop location
+            reset();
+        } else if (compassLocation != newLocation) { // update location
+            compassLocation = newLocation;
+
+            if (McUtils.mc().level != null) {
+                McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+            }
+        }
+    }
 
     public static Optional<Location> getCompassLocation() {
         return Optional.ofNullable(compassLocation);
     }
 
     public static Optional<WaypointPoi> getCompassWaypoint() {
-        if (compassLocation != null) {
-            Location location = CompassModel.getCompassLocation().get();
-            // Always render waypoint POI on top
-            WaypointPoi waypointPoi =
-                    new WaypointPoi(new MapLocation((int) location.x, Integer.MAX_VALUE, (int) location.z));
+        if (locationSupplier != null && locationSupplier.get() != null) {
+            WaypointPoi waypointPoi = new WaypointPoi(() -> {
+                Location location = locationSupplier.get();
+
+                // Make sure to always render on top
+                location.set(location.x, Double.MAX_VALUE, location.z);
+
+                return MapLocation.fromLocation(location);
+            });
 
             return Optional.of(waypointPoi);
         }
@@ -36,16 +60,23 @@ public final class CompassModel extends Model {
         return Optional.empty();
     }
 
-    public static void setCompassLocation(Location compassLocation) {
-        CompassModel.compassLocation = compassLocation;
-
-        if (McUtils.mc().level != null) {
-            McUtils.mc().level.setDefaultSpawnPos(compassLocation.toBlockPos(), 0);
+    public static void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
+        if (compassSupplier == null) {
+            return;
         }
+
+        locationSupplier = compassSupplier;
+        compassLocation = compassSupplier.get();
+    }
+
+    public static void setCompassLocation(Location location) {
+        locationSupplier = () -> location;
+        compassLocation = location;
     }
 
     public static void reset() {
         compassLocation = null;
+        locationSupplier = null;
 
         if (McUtils.mc().level != null) {
             // We can't remove the compass behavior, so arbitrarily set it to our
@@ -61,15 +92,12 @@ public final class CompassModel extends Model {
         if (McUtils.player() == null) {
             // Reset compass
             compassLocation = null;
+            locationSupplier = null;
 
             if (McUtils.mc().level != null) {
                 McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
             }
-
-            return;
-        }
-
-        if (compassLocation != null) {
+        } else if (locationSupplier != null) {
             // If we have a set location, do not update our spawn point
             e.setCanceled(true);
         }
