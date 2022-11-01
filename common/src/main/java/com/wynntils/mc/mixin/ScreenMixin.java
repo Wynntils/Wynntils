@@ -109,10 +109,12 @@ public abstract class ScreenMixin implements TextboxScreen {
         EventFactory.onScreenInit((Screen) (Object) this);
     }
 
+    @Unique
     public TextInputBoxWidget getFocusedTextInput() {
         return focusedTextInput;
     }
 
+    @Unique
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
     }
