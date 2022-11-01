@@ -19,6 +19,7 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +149,13 @@ public abstract class Feature extends AbstractConfigurable
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
             KeyBindManager.registerKeybind(keyBind);
+        }
+
+        // Reload configs to load new keybinds
+        if (!keyBinds.isEmpty() && FeatureRegistry.isInitCompleted()) {
+            synchronized (McUtils.options()) {
+                McUtils.mc().options.load();
+            }
         }
     }
 

@@ -43,10 +43,6 @@ public class KeyBind {
     public KeyBind(String name, int keyCode, InputConstants.Type type, boolean firstPress, Runnable onPress) {
         this.firstPress = firstPress;
         this.keyMapping = new KeyMapping(name, type, keyCode, CATEGORY);
-
-        // Unbound by default
-        keyMapping.setKey(InputConstants.UNKNOWN);
-        KeyMapping.resetMapping();
         this.onPress = onPress;
         this.onInventoryPress = null;
     }

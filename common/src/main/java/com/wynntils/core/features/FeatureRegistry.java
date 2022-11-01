@@ -90,6 +90,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
 public final class FeatureRegistry {
+    private static boolean initCompleted = false;
     private static final List<Feature> FEATURES = new ArrayList<>();
 
     public static void init() {
@@ -174,10 +175,14 @@ public final class FeatureRegistry {
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
-        // but we cannot move it earlier to the init process because of I18n
-        McUtils.mc().options.load();
+        // but we cannot move it earlier to the init process because of I18n\
+        synchronized (McUtils.options()) {
+            McUtils.mc().options.load();
+        }
 
         addCrashCallbacks();
+
+        initCompleted = true;
     }
 
     private static void registerFeature(Feature feature) {
@@ -247,6 +252,10 @@ public final class FeatureRegistry {
 
     public static List<Feature> getFeatures() {
         return FEATURES;
+    }
+
+    public static boolean isInitCompleted() {
+        return initCompleted;
     }
 
     public static Optional<Feature> getFeatureFromString(String featureName) {
