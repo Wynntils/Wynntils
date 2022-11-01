@@ -109,7 +109,7 @@ public class OverlayManagementScreen extends Screen {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
         selectedOverlay = null;
         fixedSelection = false;
-        animationLengthRemaining = ANIMATION_LENGTH;
+        animationLengthRemaining = 0;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class OverlayManagementScreen extends Screen {
                         overlay.getRenderY() + overlay.getHeight(),
                         1,
                         1.8f);
-                int colorAlphaRect = !fixedSelection && overlay == selectedOverlay
+                int colorAlphaRect = fixedSelection && overlay == selectedOverlay
                         ? (int) Math.max(MathUtils.map(animationLengthRemaining, 0, ANIMATION_LENGTH, 30, 255), 30)
                         : 30;
                 RenderUtils.drawRect(

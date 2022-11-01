@@ -31,7 +31,7 @@ public abstract class AbstractConfigurable implements Configurable {
 
     @Override
     public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getVisibleConfigOptions().stream()
+        return getConfigOptions().stream()
                 .filter(c -> c.getFieldName().equals(name))
                 .findFirst();
     }
