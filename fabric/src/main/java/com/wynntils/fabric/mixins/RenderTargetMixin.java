@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.fabric.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -14,10 +18,15 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  */
 @Mixin(RenderTarget.class)
 public class RenderTargetMixin {
-    @ModifyArgs(method = "createBuffers",
-            at = @At(value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/platform/GlStateManager;texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
-                    ordinal = 0))
+    @ModifyArgs(
+            method = "createBuffers",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
+                            ordinal = 0,
+                            remap = false))
     public void init(Args args) {
         if (RenderUtils.isStencilEnabled()) {
             args.set(2, GL30.GL_DEPTH32F_STENCIL8);
@@ -26,9 +35,20 @@ public class RenderTargetMixin {
         }
     }
 
-    @ModifyArgs (method = "createBuffers",
-            at = @At (value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;framebufferTexture2D(IIIII)V"),
-            slice = @Slice(from = @At (value = "FIELD", target = "Lnet/minecraft/client/gl/Framebuffer;useDepthAttachment:Z", ordinal = 1)))
+    @ModifyArgs(
+            method = "createBuffers",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
+                            remap = false),
+            slice =
+                    @Slice(
+                            from =
+                                    @At(
+                                            value = "FIELD",
+                                            target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
+                                            ordinal = 1)))
     public void init2(Args args) {
         if (RenderUtils.isStencilEnabled()) {
             args.set(1, GL30.GL_DEPTH_STENCIL_ATTACHMENT);

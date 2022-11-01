@@ -1088,15 +1088,15 @@ public final class RenderUtils {
 
         enableStencil();
         GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+        // No method
+        // GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, stencilBit, stencilBit);
         RenderSystem.stencilMask(stencilBit);
         RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, false);
-
-        RenderSystem.colorMask(false, false, false, false);
-        RenderSystem.depthMask(false);
 
         int width = texture.width();
         int height = texture.height();
@@ -1105,7 +1105,7 @@ public final class RenderUtils {
                 texture.resource(),
                 x1,
                 y1,
-                1000f,
+                0f,
                 x2 - x1,
                 y2 - y1,
                 tx1,
@@ -1117,25 +1117,18 @@ public final class RenderUtils {
 
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
-
-        RenderSystem.stencilMask(stencilBit);
+        RenderSystem.stencilMask(0x00);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
         RenderSystem.stencilFunc(GL11.GL_EQUAL, stencilBit, stencilBit);
 
         GL11.glDisable(GL11.GL_ALPHA_TEST);
-        disableStencil();
-
     }
 
     /**
      * Clears the active rendering mask from the screen.
      */
     public static void clearMask() {
-        RenderSystem.depthMask(true);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        disableStencil();
     }
 
     public static boolean isStencilEnabled() {
