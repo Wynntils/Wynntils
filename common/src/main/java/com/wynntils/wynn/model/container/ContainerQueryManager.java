@@ -102,7 +102,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onContainerSetContent(ContainerSetContentEvent e) {
+    public static void onContainerSetContent(ContainerSetContentEvent.Pre e) {
         if (currentStep == null) return;
         // We got an inventory update, can happen all the time
         if (e.getContainerId() == 0) return;
