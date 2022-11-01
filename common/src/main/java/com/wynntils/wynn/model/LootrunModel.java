@@ -78,14 +78,6 @@ public final class LootrunModel {
         return state;
     }
 
-    private static void enableFeature() {
-        LootrunFeature.INSTANCE.tryEnable();
-    }
-
-    private static void disableFeature() {
-        LootrunFeature.INSTANCE.tryDisable();
-    }
-
     public static void render(PoseStack poseStack) {
         renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
         renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
@@ -553,7 +545,7 @@ public final class LootrunModel {
     }
 
     public static void clearCurrentLootrun() {
-        disableFeature();
+        LootrunFeature.INSTANCE.disable();
         state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
@@ -576,7 +568,7 @@ public final class LootrunModel {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new Path(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
-        enableFeature();
+        LootrunFeature.INSTANCE.enable();
     }
 
     public static List<LootrunInstance> getLootruns() {
@@ -609,7 +601,7 @@ public final class LootrunModel {
                 uncompiled = readJson(lootrunFile, json);
                 LootrunModel.lootrun = compile(uncompiled, false);
                 state = LootrunState.LOADED;
-                enableFeature();
+                LootrunFeature.INSTANCE.enable();
                 file.close();
                 return true;
             } catch (IOException e) {
