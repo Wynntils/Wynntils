@@ -17,14 +17,14 @@ description = "The best Wynncraft mod you'll probably find!"
 [[dependencies.wynntils]]
 modId = "forge"
 mandatory = true
-versionRange = "[40,)"
+versionRange = "[40.1.84,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.wynntils]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,)"
+versionRange = "[1.18.2]"
 ordering = "NONE"
 side = "BOTH"
 
