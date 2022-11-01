@@ -38,7 +38,7 @@ public class EmeraldPouchTierProperty extends ItemProperty implements HighlightP
                 .withCustomColor(highlightColor)
                 .withTextShadow(ItemTextOverlayFeature.INSTANCE.emeraldPouchTierShadow);
 
-        textOverlay = new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
+        textOverlay = new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
     }
 
     @Override

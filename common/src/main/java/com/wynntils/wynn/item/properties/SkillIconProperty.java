@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.item.properties;
 
+import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CustomColor;
@@ -29,7 +30,14 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
         }
 
         textOverlay = new TextOverlay(
-                new TextRenderTask(icon, TextRenderSetting.DEFAULT.withCustomColor(color)), -1, 1, .75f);
+                new TextRenderTask(
+                        icon,
+                        TextRenderSetting.DEFAULT
+                                .withCustomColor(color)
+                                .withTextShadow(ItemTextOverlayFeature.INSTANCE.skillIconShadow)),
+                -1,
+                1,
+                0.9f);
     }
 
     @Override
@@ -39,6 +47,6 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return true;
+        return ItemTextOverlayFeature.INSTANCE.skillIconEnabled;
     }
 }
