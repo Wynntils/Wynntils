@@ -142,14 +142,4 @@ public final class MapRenderer {
         double distanceZ = poi.getLocation().getZ() - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
     }
-
-    public static float getRenderX(float gameX, float mapCenterX, float centerX, float currentZoom) {
-        double distanceX = gameX - mapCenterX;
-        return (float) (centerX + distanceX * currentZoom);
-    }
-
-    public static float getRenderZ(float gameZ, float mapCenterZ, float centerZ, float currentZoom) {
-        double distanceZ = gameZ - mapCenterZ;
-        return (float) (centerZ + distanceZ * currentZoom);
-    }
 }
