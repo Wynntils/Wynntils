@@ -52,9 +52,6 @@ public final class RenderUtils {
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
 
-    // whether we are using stencil buffer
-    private static boolean stencilEnabled = false;
-
     // See https://github.com/MinecraftForge/MinecraftForge/issues/8083 as to why this uses TRIANGLE_STRIPS.
     // TLDR: New OpenGL only supports TRIANGLES and Minecraft patched QUADS to be usable ATM, but LINES patch is broken
     // and you can't use it.
@@ -1044,16 +1041,6 @@ public final class RenderUtils {
         RenderSystem.applyModelViewMatrix();
     }
 
-    public static void enableStencil() {
-        stencilEnabled = true;
-        GL11.glEnable(GL11.GL_STENCIL_TEST);
-    }
-
-    public static void disableStencil() {
-        stencilEnabled = false;
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
-    }
-
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
@@ -1084,7 +1071,7 @@ public final class RenderUtils {
             float ty2) {
         // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
-        enableStencil();
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderSystem.colorMask(false, false, false, false);
         RenderSystem.depthMask(false);
@@ -1121,11 +1108,7 @@ public final class RenderUtils {
      * Clears the active rendering mask from the screen.
      */
     public static void clearMask() {
-        disableStencil();
-    }
-
-    public static boolean isStencilEnabled() {
-        return stencilEnabled;
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
     }
 
     private static final class ClipboardImage implements Transferable {
