@@ -157,6 +157,10 @@ public class WorldStateManager extends CoreManager {
         }
     }
 
+    public static String getCurrentWorldName() {
+        return currentWorldName;
+    }
+
     public enum State {
         NOT_CONNECTED,
         CONNECTING,

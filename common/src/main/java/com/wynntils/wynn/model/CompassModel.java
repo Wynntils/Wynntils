@@ -23,7 +23,7 @@ public final class CompassModel extends Model {
     public static void init() {}
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.Start e) {
+    public static void onTick(ClientTickEvent.Start e) {
         if (locationSupplier == null) return;
 
         Location newLocation = locationSupplier.get();

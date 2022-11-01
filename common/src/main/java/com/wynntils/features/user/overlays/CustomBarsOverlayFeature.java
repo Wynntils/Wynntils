@@ -29,6 +29,8 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
+import com.wynntils.wynn.objects.HealthTexture;
+import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -440,71 +442,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return BossBarModel.corruptedBar.isActive();
-        }
-    }
-
-    public enum HealthTexture {
-        Wynn(0, 17, 8),
-        Grune(84, 99, 7),
-        Aether(100, 115, 7),
-        Skull(116, 131, 8),
-        Skyrim(132, 147, 8),
-        Rune(148, 163, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(68, 83, 7);
-        private final int textureY1, textureY2, height;
-
-        HealthTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
-        }
-
-        private int getTextureY1() {
-            return textureY1;
-        }
-
-        private int getTextureY2() {
-            return textureY2;
-        }
-
-        private int getHeight() {
-            return height;
-        }
-    }
-
-    public enum ManaTexture {
-        Wynn(0, 17, 8),
-        Brune(83, 100, 8),
-        Aether(116, 131, 7),
-        Skull(143, 147, 8),
-        Inverse(100, 115, 7),
-        Skyrim(148, 163, 8),
-        Rune(164, 179, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(83, 100, 8);
-        private final int textureY1, textureY2, height;
-
-        ManaTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
-        }
-
-        private int getTextureY1() {
-            return textureY1;
-        }
-
-        private int getTextureY2() {
-            return textureY2;
-        }
-
-        private int getHeight() {
-            return height;
         }
     }
 }
