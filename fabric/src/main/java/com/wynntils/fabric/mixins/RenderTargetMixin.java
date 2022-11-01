@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  */
 @Mixin(RenderTarget.class)
 public class RenderTargetMixin {
+
     @ModifyArgs(
             method = "createBuffers",
             at =
@@ -28,11 +29,9 @@ public class RenderTargetMixin {
                             ordinal = 0,
                             remap = false))
     public void init(Args args) {
-        if (RenderUtils.isStencilEnabled()) {
-            args.set(2, GL30.GL_DEPTH32F_STENCIL8);
-            args.set(6, GL30.GL_DEPTH_STENCIL);
-            args.set(7, GL30.GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
-        }
+        args.set(2, GL30.GL_DEPTH32F_STENCIL8);
+        args.set(6, GL30.GL_DEPTH_STENCIL);
+        args.set(7, GL30.GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
     }
 
     @ModifyArgs(
@@ -50,8 +49,6 @@ public class RenderTargetMixin {
                                             target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
                                             ordinal = 1)))
     public void init2(Args args) {
-        if (RenderUtils.isStencilEnabled()) {
-            args.set(1, GL30.GL_DEPTH_STENCIL_ATTACHMENT);
-        }
+        args.set(1, GL30.GL_DEPTH_STENCIL_ATTACHMENT);
     }
 }
