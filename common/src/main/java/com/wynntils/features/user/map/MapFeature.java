@@ -40,7 +40,13 @@ public class MapFeature extends UserFeature {
     public float poiScale = 1f;
 
     @Config(subcategory = "Remote Players")
-    public boolean renderRemotePlayers = true;
+    public boolean renderRemoteFriendPlayers = true;
+
+    @Config(subcategory = "Remote Players")
+    public boolean renderRemotePartyPlayers = true;
+
+    @Config(subcategory = "Remote Players")
+    public boolean renderRemoteGuildPlayers = true;
 
     @Config(subcategory = "Remote Players")
     public HealthTexture remotePlayerHealthTexture = HealthTexture.a;

@@ -228,9 +228,7 @@ public class MainMapScreen extends Screen {
 
         renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
 
-        if (MapFeature.INSTANCE.renderRemotePlayers) {
-            renderPlayerIcons(poseStack, textureBoundingBox, mouseX, mouseY);
-        }
+        renderPlayerIcons(poseStack, textureBoundingBox);
 
         // Cursor
         renderCursor(poseStack);
@@ -238,8 +236,17 @@ public class MainMapScreen extends Screen {
         RenderSystem.disableScissor();
     }
 
-    private void renderPlayerIcons(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
-        for (HadesUser user : HadesUserModel.getHadesUserMap().values()) {
+    public void renderPlayerIcons(PoseStack poseStack, BoundingBox textureBoundingBox) {
+        List<HadesUser> rendered = HadesUserModel.getHadesUserMap().values().stream()
+                .filter(hadesUser -> switch (hadesUser.getRelationType()) {
+                    case PARTY -> MapFeature.INSTANCE.renderRemotePartyPlayers;
+                    case FRIEND -> MapFeature.INSTANCE.renderRemoteFriendPlayers;
+                    case GUILD -> MapFeature.INSTANCE.renderRemoteGuildPlayers;
+                    case NONE -> false;
+                })
+                .toList();
+
+        for (HadesUser user : rendered) {
             float gameX = user.getX();
             float gameZ = user.getZ();
 
