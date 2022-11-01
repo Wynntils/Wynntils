@@ -237,9 +237,10 @@ public class MainMapScreen extends Screen {
         pois.addAll(MapModel.getLabelPois());
 
         List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
-                .filter(hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
-                        || (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers))
+                .filter(
+                        hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
+                                || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                        /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
                 .sorted(Comparator.comparing(
                         hadesUser -> hadesUser.getMapLocation().getY()))
                 .toList();

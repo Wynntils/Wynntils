@@ -45,8 +45,8 @@ public class MapFeature extends UserFeature {
     @Config(subcategory = "Remote Players")
     public boolean renderRemotePartyPlayers = true;
 
-    @Config(subcategory = "Remote Players")
-    public boolean renderRemoteGuildPlayers = true;
+    //    @Config(subcategory = "Remote Players")
+    //    public boolean renderRemoteGuildPlayers = true;
 
     @Config(subcategory = "Remote Players")
     public HealthTexture remotePlayerHealthTexture = HealthTexture.a;
