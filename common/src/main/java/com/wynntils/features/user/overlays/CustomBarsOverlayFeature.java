@@ -38,12 +38,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
 
-    @Config
-    public boolean shouldDisplayOnActionBar = false;
-
-    @Config
-    public boolean shouldDisplayOnBossBar = false;
-
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ActionBarModel.class, BossBarModel.class);
@@ -51,21 +45,21 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (shouldDisplayOnActionBar || !manaBarOverlay.isEnabled()) return;
+        if (!manaBarOverlay.isEnabled() || manaBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
+        if (!healthBarOverlay.isEnabled() || healthBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        Overlay overlay =
+        BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
                     case MANABANK -> manaBarOverlay;
@@ -74,31 +68,31 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     case CORRUPTED -> corruptedBarOverlay;
                 };
 
-        if (overlay.isEnabled() && !shouldDisplayOnBossBar) {
+        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay healthBarOverlay = new HealthBarOverlay();
+    private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay manaBarOverlay = new ManaBarOverlay();
+    private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay manaBankBarOverlay = new ManaBankBarOverlay();
+    private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay focusBarOverlay = new FocusBarOverlay();
+    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay corruptedBarOverlay = new CorruptedBarOverlay();
+    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
 
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
@@ -106,6 +100,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
         public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+        public boolean shouldDisplayOriginal = false;
 
         // hacky override of custom color
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
