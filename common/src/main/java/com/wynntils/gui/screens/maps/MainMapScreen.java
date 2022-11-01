@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.overlays.map.MapFeature;
+import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
@@ -17,12 +17,15 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.sockets.model.HadesUserModel;
+import com.wynntils.sockets.objects.HadesUser;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.PlayerPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
@@ -220,6 +223,7 @@ public class MainMapScreen extends Screen {
         hovered = null;
 
         renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
+
         // Cursor
         renderCursor(poseStack);
 
@@ -231,9 +235,21 @@ public class MainMapScreen extends Screen {
 
         pois.addAll(MapModel.getServicePois());
         pois.addAll(MapModel.getLabelPois());
-        CompassModel.getCompassWaypoint().ifPresent(pois::add);
+
+        List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
+                .filter(
+                        hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
+                                || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                        /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
+                .sorted(Comparator.comparing(
+                        hadesUser -> hadesUser.getMapLocation().getY()))
+                .toList();
 
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
+
+        // Make sure compass and player pois are on top
+        pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
+        CompassModel.getCompassWaypoint().ifPresent(pois::add);
 
         List<Poi> filteredPois = new ArrayList<>();
 
@@ -329,8 +345,9 @@ public class MainMapScreen extends Screen {
                 if (hovered.hasStaticLocation()) {
                     CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                 } else {
+                    final Poi finalHovered = hovered;
                     CompassModel.setDynamicCompassLocation(
-                            () -> hovered.getLocation().asLocation());
+                            () -> finalHovered.getLocation().asLocation());
                 }
                 return true;
             }

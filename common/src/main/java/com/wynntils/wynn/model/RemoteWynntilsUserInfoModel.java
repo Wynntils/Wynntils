@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class UserInfoModel extends Model {
+public class RemoteWynntilsUserInfoModel extends Model {
     public static void init() {}
 
     private static final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
