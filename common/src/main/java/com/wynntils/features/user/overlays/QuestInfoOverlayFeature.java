@@ -24,7 +24,6 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
@@ -34,7 +33,6 @@ import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,12 +61,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (event.getQuestInfo() == null || !autoTrackQuestCoordinates) return;
-
-        Optional<Location> location = event.getQuestInfo().getNextLocation();
-        if (location.isEmpty()) return;
-
-        CompassModel.setCompassLocation(location.get());
+        // set if valid
+        CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -95,6 +89,21 @@ public class QuestInfoOverlayFeature extends UserFeature {
                     new GuiScaledOverlaySize(300, 50),
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle);
+
+            toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+
+            toRenderPreview.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+            toRenderPreview
+                    .get(1)
+                    .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
+            toRenderPreview
+                    .get(2)
+                    .setText(
+                            """
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
+                            tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
+                            pellentesque egestas volutpat. \
+                            """);
         }
 
         private List<TextRenderTask> createRenderTaskList() {
@@ -136,10 +145,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
                 return;
             }
 
-            if (toRender.get(0).getText() == null) {
-                // Set at first use; I18n is not available at initialization time
-                toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
-            }
             toRender.get(1).setText(currentQuest.getName());
             toRender.get(2).setText(currentQuest.getNextTask());
 
@@ -157,23 +162,6 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            if (toRenderPreview.get(0).getText() == null) {
-                // Set at first use; I18n is not available at initialization time
-                toRenderPreview
-                        .get(0)
-                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
-                toRenderPreview
-                        .get(1)
-                        .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
-                toRenderPreview
-                        .get(2)
-                        .setText(
-                                """
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
-                                tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
-                                pellentesque egestas volutpat. \
-                                """);
-            }
             updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
             FontRenderer.getInstance()
