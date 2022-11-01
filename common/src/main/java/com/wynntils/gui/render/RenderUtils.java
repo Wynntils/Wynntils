@@ -1072,7 +1072,6 @@ public final class RenderUtils {
         // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderSystem.colorMask(false, false, false, false);
         RenderSystem.depthMask(false);
         RenderSystem.stencilOp(GL11.GL_INCR, GL11.GL_KEEP, GL11.GL_KEEP);
@@ -1096,7 +1095,6 @@ public final class RenderUtils {
                 width,
                 height);
 
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
         RenderSystem.stencilMask(0x00);
