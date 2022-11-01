@@ -34,8 +34,6 @@ public final class WynnItemMatchers {
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
     private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
-    private static final Pattern PROFESSION_LEVEL_NAME_PATTERN =
-            Pattern.compile("§f(.) §6(\\w+?) Profession §8\\[(Gathering|Crafting)\\]");
     private static final Pattern SKILL_POINT_NAME_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf]. \\w+?§d skill$");
 
     private static final Pattern SKILL_ICON_PATTERN =
@@ -196,10 +194,6 @@ public final class WynnItemMatchers {
                 || powderNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static boolean isProfessionLevel(ItemStack itemStack) {
-        return professionLevelMatcher(itemStack.getHoverName()).matches();
-    }
-
     public static boolean isSkillTyped(ItemStack itemStack) {
         return skillIconMatcher(itemStack.getHoverName()).matches();
     }
@@ -274,10 +268,6 @@ public final class WynnItemMatchers {
 
     public static Matcher emeraldPouchTierMatcher(Component text) {
         return EMERALD_POUCH_TIER_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
-    }
-
-    public static Matcher professionLevelMatcher(Component text) {
-        return PROFESSION_LEVEL_NAME_PATTERN.matcher(ComponentUtils.getCoded(text));
     }
 
     public static Matcher skillIconMatcher(Component text) {
