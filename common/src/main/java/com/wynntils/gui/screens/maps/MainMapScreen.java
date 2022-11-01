@@ -249,6 +249,8 @@ public class MainMapScreen extends Screen {
             if (!userBox.intersects(textureBoundingBox)) continue;
 
             ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
+
+            // head
             RenderUtils.drawTexturedRect(
                     poseStack,
                     skin,
@@ -258,6 +260,22 @@ public class MainMapScreen extends Screen {
                     PLAYER_HEAD_RENDER_SIZE,
                     PLAYER_HEAD_RENDER_SIZE,
                     8,
+                    8,
+                    8,
+                    8,
+                    64,
+                    64);
+
+            // hat
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    skin,
+                    renderX,
+                    renderY,
+                    1,
+                    PLAYER_HEAD_RENDER_SIZE,
+                    PLAYER_HEAD_RENDER_SIZE,
+                    40,
                     8,
                     8,
                     8,
