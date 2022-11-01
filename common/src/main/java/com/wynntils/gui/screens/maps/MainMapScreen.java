@@ -326,7 +326,12 @@ public class MainMapScreen extends Screen {
 
             if (hovered != null) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
-                CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                if (hovered.hasStaticLocation()) {
+                    CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                } else {
+                    CompassModel.setDynamicCompassLocation(
+                            () -> hovered.getLocation().asLocation());
+                }
                 return true;
             }
 
