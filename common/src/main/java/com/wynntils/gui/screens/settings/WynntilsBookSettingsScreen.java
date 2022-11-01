@@ -168,8 +168,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
         configurableListScrollButton.renderButton(poseStack, mouseX, mouseY, partialTick);
 
-        for (int i = configurableScrollOffset;
-                i < Math.min(configurables.size(), configurableScrollOffset + CONFIGURABLES_PER_PAGE);
+        for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
+                i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
                 i++) {
             AbstractButton featureButton = configurables.get(i);
             featureButton.render(poseStack, mouseX, mouseY, partialTick);
@@ -217,8 +217,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             }
         }
 
-        for (int i = configurableScrollOffset;
-                i < Math.min(configurables.size(), configurableScrollOffset + CONFIGURABLES_PER_PAGE);
+        for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
+                i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
                 i++) {
             AbstractButton featureButton = configurables.get(i);
             if (featureButton.isMouseOver(mouseX, mouseY)) {
@@ -286,10 +286,16 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     private void scrollConfigurableList(double delta) {
-        configurableScrollOffset = MathUtils.clamp(
-                (int) (configurableScrollOffset - delta),
+        int roundedUpPageNeed = Math.max(
                 0,
-                Math.max(0, configurables.size() - CONFIGURABLES_PER_PAGE));
+                configurables.size() / CONFIGURABLES_PER_PAGE
+                        + (configurables.size() > CONFIGURABLES_PER_PAGE
+                                        && configurables.size() % CONFIGURABLES_PER_PAGE != 0
+                                ? 1
+                                : 0)
+                        - 1);
+
+        configurableScrollOffset = MathUtils.clamp((int) (configurableScrollOffset - delta), 0, roundedUpPageNeed);
     }
 
     private void scrollConfigList(double delta) {
@@ -367,14 +373,22 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
             }
         }
 
+        int roundedUpPageNeed = Math.max(
+                0,
+                configurables.size() / CONFIGURABLES_PER_PAGE
+                        + (configurables.size() > CONFIGURABLES_PER_PAGE
+                                        && configurables.size() % CONFIGURABLES_PER_PAGE != 0
+                                ? 1
+                                : 0)
+                        - 1);
         configurableListScrollButton = new ScrollButton(
                 23,
                 17,
                 Texture.SETTING_BACKGROUND.height() - 50,
                 Texture.SETTING_SCROLL_BUTTON.width(),
                 Texture.SETTING_SCROLL_BUTTON.height() / 2,
-                Math.max(0, configurables.size() - CONFIGURABLES_PER_PAGE),
-                CONFIGURABLES_PER_PAGE,
+                roundedUpPageNeed,
+                1,
                 this::scrollConfigurableList,
                 CustomColor.NONE);
     }
