@@ -48,6 +48,15 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
             "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
+    private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
+            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aa (?<class>.+)");
+    private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
+
+    private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
+            "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+    private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
+            "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
             Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
@@ -66,11 +75,8 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
             Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
-    private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
-            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aa (?<class>.+)");
     private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
             "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?a (?<class>.+)");
-    private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
     private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
     @Config
@@ -93,6 +99,12 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType friendJoin = FilterType.REDIRECT;
+
+    @Config
+    private FilterType toolDurability = FilterType.REDIRECT;
+
+    @Config
+    private FilterType craftedDurability = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -243,6 +255,36 @@ public class InfoMessageFilterFeature extends UserFeature {
                     String playerName = matcher.group("name");
 
                     sendFriendLeaveMessage(playerName);
+                    return;
+                }
+            }
+
+            if (toolDurability != FilterType.KEEP) {
+                Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (toolDurability == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
+
+                    return;
+                }
+            }
+
+            if (craftedDurability != FilterType.KEEP) {
+                Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (craftedDurability == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
+
                     return;
                 }
             }
