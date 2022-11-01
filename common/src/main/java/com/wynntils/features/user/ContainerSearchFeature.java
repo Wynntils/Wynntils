@@ -21,9 +21,9 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
@@ -46,7 +46,7 @@ public class ContainerSearchFeature extends UserFeature {
     public CustomColor highlightColor = CommonColors.MAGENTA;
 
     private SearchWidget lastSearchWidget;
-    private ContainerType currentContainerType;
+    private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
 
     @SubscribeEvent
@@ -61,10 +61,10 @@ public class ContainerSearchFeature extends UserFeature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        ContainerType containerType = getCurrentContainerType(title);
-        if (containerType == null) return;
+        SearchableContainerType SearchableContainerType = getCurrentSearchableContainerType(title);
+        if (SearchableContainerType == null) return;
 
-        currentContainerType = containerType;
+        currentSearchableContainerType = SearchableContainerType;
 
         addSearchWidget(screen, renderX, renderY);
     }
@@ -97,7 +97,7 @@ public class ContainerSearchFeature extends UserFeature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
-        currentContainerType = null;
+        currentSearchableContainerType = null;
         autoSearching = false;
     }
 
@@ -105,8 +105,8 @@ public class ContainerSearchFeature extends UserFeature {
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
         if (lastSearchWidget == null
-                || currentContainerType == null
-                || currentContainerType.nextItemSlot == -1
+                || currentSearchableContainerType == null
+                || currentSearchableContainerType.getNextItemSlot() == -1
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
         autoSearching = true;
@@ -121,34 +121,41 @@ public class ContainerSearchFeature extends UserFeature {
         String name = ComponentUtils.getCoded(abstractContainerScreen
                 .getMenu()
                 .getItems()
-                .get(currentContainerType.getNextItemSlot())
+                .get(currentSearchableContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!currentContainerType.nextItemPattern.matcher(name).matches()) {
+        if (!currentSearchableContainerType.getNextItemPattern().matcher(name).matches()) {
             autoSearching = false;
             return;
         }
 
         ContainerUtils.clickOnSlot(
-                currentContainerType.getNextItemSlot(),
+                currentSearchableContainerType.getNextItemSlot(),
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private ContainerType getCurrentContainerType(String title) {
-        if (filterInBank && ContainerType.BANK.getTitlePattern().matcher(title).matches()) {
-            return ContainerType.BANK;
+    private SearchableContainerType getCurrentSearchableContainerType(String title) {
+        if (filterInBank
+                && SearchableContainerType.BANK.getTitlePattern().matcher(title).matches()) {
+            return SearchableContainerType.BANK;
         }
 
         if (filterInGuildBank
-                && ContainerType.GUILD_BANK.getTitlePattern().matcher(title).matches()) {
-            return ContainerType.GUILD_BANK;
+                && SearchableContainerType.GUILD_BANK
+                        .getTitlePattern()
+                        .matcher(title)
+                        .matches()) {
+            return SearchableContainerType.GUILD_BANK;
         }
 
         if (filterInGuildMemberList
-                && ContainerType.MEMBER_LIST.getTitlePattern().matcher(title).matches()) {
-            return ContainerType.MEMBER_LIST;
+                && SearchableContainerType.MEMBER_LIST
+                        .getTitlePattern()
+                        .matcher(title)
+                        .matches()) {
+            return SearchableContainerType.MEMBER_LIST;
         }
 
         return null;
@@ -192,37 +199,6 @@ public class ContainerSearchFeature extends UserFeature {
         Screen screen = McUtils.mc().screen;
         if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             matchItems(lastSearchWidget.getTextBoxInput(), abstractContainerScreen);
-        }
-    }
-
-    public enum ContainerType {
-        BANK(
-                Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s§0 Bank"),
-                Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
-                8),
-        GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), null, -1),
-        MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28);
-
-        private final Pattern titlePattern;
-        private final Pattern nextItemPattern;
-        private final int nextItemSlot;
-
-        ContainerType(Pattern titlePattern, Pattern nextItemPattern, int nextItemSlot) {
-            this.titlePattern = titlePattern;
-            this.nextItemPattern = nextItemPattern;
-            this.nextItemSlot = nextItemSlot;
-        }
-
-        public Pattern getTitlePattern() {
-            return titlePattern;
-        }
-
-        public int getNextItemSlot() {
-            return nextItemSlot;
-        }
-
-        public Pattern getNextItemPattern() {
-            return nextItemPattern;
         }
     }
 }
