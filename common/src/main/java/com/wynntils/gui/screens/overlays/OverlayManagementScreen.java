@@ -51,11 +51,11 @@ public class OverlayManagementScreen extends Screen {
     private static final int ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS = 4;
     private static final int ALIGNMENT_SNAP_DISTANCE = 1;
     // Bigger this value is, the harder it is to not align overlay to alignment line
-    private static final double ALIGNMENT_SNAP_HARDNESS = 12;
+    private static final double ALIGNMENT_SNAP_HARDNESS = 6;
 
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
-    private static final int MAX_CLICK_DISTANCE = 10;
+    private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
