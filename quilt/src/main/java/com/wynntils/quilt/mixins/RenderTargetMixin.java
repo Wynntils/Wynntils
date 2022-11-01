@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.fabric.mixins;
+package com.wynntils.quilt.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import org.lwjgl.opengl.GL30;
