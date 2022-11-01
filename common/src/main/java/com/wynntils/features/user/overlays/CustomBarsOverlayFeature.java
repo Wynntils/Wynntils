@@ -43,21 +43,21 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (!manaBarOverlay.isEnabled() || ((BaseBarOverlay) manaBarOverlay).shouldDisplayOriginal) return;
+        if (!manaBarOverlay.isEnabled() || manaBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (!healthBarOverlay.isEnabled() || ((BaseBarOverlay) healthBarOverlay).shouldDisplayOriginal) return;
+        if (!healthBarOverlay.isEnabled() || healthBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        BaseBarOverlay overlay = (BaseBarOverlay)
+        BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
                     case MANABANK -> manaBarOverlay;
@@ -72,25 +72,25 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay healthBarOverlay = new HealthBarOverlay();
+    private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay manaBarOverlay = new ManaBarOverlay();
+    private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay manaBankBarOverlay = new ManaBankBarOverlay();
+    private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay focusBarOverlay = new FocusBarOverlay();
+    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay corruptedBarOverlay = new CorruptedBarOverlay();
+    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
 
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
