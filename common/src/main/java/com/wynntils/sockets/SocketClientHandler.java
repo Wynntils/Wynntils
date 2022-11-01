@@ -69,13 +69,12 @@ public class SocketClientHandler implements IHadesClientAdapter {
     public void handleAuthenticationResponse(HSPacketAuthenticationResponse packet) {
         Component userComponent = TextComponent.EMPTY;
 
-        WynntilsMod.postEvent(new SocketEvent.Authenticated());
-
         switch (packet.getResponse()) {
             case SUCCESS -> {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent =
                         new TextComponent("Successfully connected to HadesServer").withStyle(ChatFormatting.GREEN);
+                WynntilsMod.postEvent(new SocketEvent.Authenticated());
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
