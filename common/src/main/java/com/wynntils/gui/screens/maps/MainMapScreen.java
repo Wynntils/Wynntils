@@ -238,12 +238,9 @@ public class MainMapScreen extends Screen {
 
     public void renderPlayerIcons(PoseStack poseStack, BoundingBox textureBoundingBox) {
         List<HadesUser> rendered = HadesUserModel.getHadesUserMap().values().stream()
-                .filter(hadesUser -> switch (hadesUser.getRelationType()) {
-                    case PARTY -> MapFeature.INSTANCE.renderRemotePartyPlayers;
-                    case FRIEND -> MapFeature.INSTANCE.renderRemoteFriendPlayers;
-                    case GUILD -> MapFeature.INSTANCE.renderRemoteGuildPlayers;
-                    case NONE -> false;
-                })
+                .filter(hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
+                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                        || (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers))
                 .toList();
 
         for (HadesUser user : rendered) {

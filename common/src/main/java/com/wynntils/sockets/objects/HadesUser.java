@@ -4,7 +4,6 @@
  */
 package com.wynntils.sockets.objects;
 
-import com.wynntils.hades.protocol.enums.RelationType;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -14,8 +13,9 @@ public class HadesUser {
     private final UUID uuid;
     private final String name;
 
-    private RelationType relationType;
-
+    boolean isPartyMember;
+    boolean isMutualFriend;
+    boolean isGuildMember;
     private float x, y, z;
     private int health, maxHealth;
     private int mana, maxMana;
@@ -35,8 +35,16 @@ public class HadesUser {
         return name;
     }
 
-    public RelationType getRelationType() {
-        return relationType;
+    public boolean isPartyMember() {
+        return isPartyMember;
+    }
+
+    public boolean isMutualFriend() {
+        return isMutualFriend;
+    }
+
+    public boolean isGuildMember() {
+        return isGuildMember;
     }
 
     public float getX() {
@@ -78,15 +86,16 @@ public class HadesUser {
         this.mana = packet.getMana();
         this.maxMana = packet.getMaxMana();
 
-        this.relationType = packet.getRelationType();
+        this.isPartyMember = packet.isPartyMember();
+        this.isMutualFriend = packet.isMutualFriend();
+        this.isGuildMember = packet.isGuildMember();
     }
 
     public CustomColor getRelationColor() {
-        return switch (this.relationType) {
-            case PARTY -> CommonColors.YELLOW;
-            case FRIEND -> CommonColors.GREEN;
-            case GUILD -> CommonColors.BLUE;
-            case NONE -> CustomColor.NONE;
-        };
+        if (isPartyMember) return CommonColors.YELLOW;
+        if (isMutualFriend) return CommonColors.GREEN;
+        if (isGuildMember) return CommonColors.LIGHT_BLUE;
+
+        return CustomColor.NONE;
     }
 }
