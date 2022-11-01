@@ -9,14 +9,14 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.hades.protocol.enums.SocialType;
+import com.wynntils.sockets.model.HadesModel;
 import com.wynntils.sockets.model.HadesUserModel;
-import com.wynntils.sockets.model.SocketModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
 import java.util.List;
 
-public class SocketFeature extends UserFeature {
-    public static SocketFeature INSTANCE;
+public class HadesFeature extends UserFeature {
+    public static HadesFeature INSTANCE;
 
     @Config
     public boolean getOtherPlayerInfo = true;
@@ -36,7 +36,7 @@ public class SocketFeature extends UserFeature {
         //      needs ActionBarModel for updating player info
         //      HadesUserModel for storing remote HadesUser info
         //      PlayerRelationsModel to parse player relations
-        return List.of(SocketModel.class, PlayerRelationsModel.class, HadesUserModel.class, ActionBarModel.class);
+        return List.of(HadesModel.class, PlayerRelationsModel.class, HadesUserModel.class, ActionBarModel.class);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SocketFeature extends UserFeature {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo) {
-                    SocketModel.tryResendWorldData();
+                    HadesModel.tryResendWorldData();
                 } else {
                     HadesUserModel.getHadesUserMap().clear();
                 }
@@ -53,14 +53,14 @@ public class SocketFeature extends UserFeature {
                 if (shareWithParty) {
                     PlayerRelationsModel.requestPartyListUpdate();
                 } else {
-                    SocketModel.resetSocialType(SocialType.PARTY);
+                    HadesModel.resetSocialType(SocialType.PARTY);
                 }
             }
             case "shareWithFriends" -> {
                 if (shareWithFriends) {
                     PlayerRelationsModel.requestFriendListUpdate();
                 } else {
-                    SocketModel.resetSocialType(SocialType.FRIEND);
+                    HadesModel.resetSocialType(SocialType.FRIEND);
                 }
             }
             case "shareWithGuild" -> {

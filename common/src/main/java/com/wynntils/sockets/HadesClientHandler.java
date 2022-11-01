@@ -6,7 +6,7 @@ package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.features.user.SocketFeature;
+import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
@@ -26,10 +26,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
-public class SocketClientHandler implements IHadesClientAdapter {
+public class HadesClientHandler implements IHadesClientAdapter {
     private final HadesConnection hadesConnection;
 
-    public SocketClientHandler(HadesConnection hadesConnection) {
+    public HadesClientHandler(HadesConnection hadesConnection) {
         this.hadesConnection = hadesConnection;
     }
 
@@ -101,7 +101,7 @@ public class SocketClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
-        if (!SocketFeature.INSTANCE.getOtherPlayerInfo) return;
+        if (!HadesFeature.INSTANCE.getOtherPlayerInfo) return;
 
         Optional<HadesUser> userOptional = HadesUserModel.getUser(packet.getUser());
         if (userOptional.isPresent()) {

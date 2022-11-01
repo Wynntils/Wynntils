@@ -7,7 +7,7 @@ package com.wynntils.sockets.model;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.features.user.SocketFeature;
+import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
@@ -19,7 +19,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.SocketClientHandler;
+import com.wynntils.sockets.HadesClientHandler;
 import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class SocketModel extends Model {
+public class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
@@ -65,7 +65,7 @@ public class SocketModel extends Model {
                     .setAddress(InetAddress.getByName("io.wynntils.com"), 9000)
                     .setDirection(PacketDirection.SERVER)
                     .setCompressionThreshold(256)
-                    .setHandlerFactory(SocketClientHandler::new)
+                    .setHandlerFactory(HadesClientHandler::new)
                     .buildClient();
 
             tickCountUntilUpdate = 0;
@@ -84,7 +84,7 @@ public class SocketModel extends Model {
     @SubscribeEvent
     public static void onAuth(SocketEvent.Authenticated event) {
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
-        pingScheduler.scheduleAtFixedRate(SocketModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
+        pingScheduler.scheduleAtFixedRate(HadesModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
@@ -100,7 +100,7 @@ public class SocketModel extends Model {
 
     @SubscribeEvent
     public static void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
-        if (!SocketFeature.INSTANCE.shareWithFriends || !isSocketOpen()) return;
+        if (!HadesFeature.INSTANCE.shareWithFriends || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -110,7 +110,7 @@ public class SocketModel extends Model {
 
     @SubscribeEvent
     public static void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
-        if (!SocketFeature.INSTANCE.shareWithParty || !isSocketOpen()) return;
+        if (!HadesFeature.INSTANCE.shareWithParty || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -132,9 +132,9 @@ public class SocketModel extends Model {
     public static void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
         if (!WorldStateManager.onWorld()) return;
-        if (!SocketFeature.INSTANCE.shareWithParty
-                && !SocketFeature.INSTANCE.shareWithGuild
-                && !SocketFeature.INSTANCE.shareWithFriends) return;
+        if (!HadesFeature.INSTANCE.shareWithParty
+                && !HadesFeature.INSTANCE.shareWithGuild
+                && !HadesFeature.INSTANCE.shareWithFriends) return;
 
         tickCountUntilUpdate--;
 
