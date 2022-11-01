@@ -29,18 +29,14 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
+import com.wynntils.wynn.objects.HealthTexture;
+import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-
-    @Config
-    public boolean shouldDisplayOnActionBar = false;
-
-    @Config
-    public boolean shouldDisplayOnBossBar = false;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -49,21 +45,21 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (shouldDisplayOnActionBar || !manaBarOverlay.isEnabled()) return;
+        if (!manaBarOverlay.isEnabled() || manaBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (shouldDisplayOnActionBar || !healthBarOverlay.isEnabled()) return;
+        if (!healthBarOverlay.isEnabled() || healthBarOverlay.shouldDisplayOriginal) return;
 
         event.setMessage("");
     }
 
     @SubscribeEvent
     public void onBossBarAdd(CustomBarAddEvent event) {
-        Overlay overlay =
+        BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
                     case MANABANK -> manaBarOverlay;
@@ -72,31 +68,31 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     case CORRUPTED -> corruptedBarOverlay;
                 };
 
-        if (overlay.isEnabled() && !shouldDisplayOnBossBar) {
+        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay healthBarOverlay = new HealthBarOverlay();
+    private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
-    private final Overlay manaBarOverlay = new ManaBarOverlay();
+    private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay manaBankBarOverlay = new ManaBankBarOverlay();
+    private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay focusBarOverlay = new FocusBarOverlay();
+    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay corruptedBarOverlay = new CorruptedBarOverlay();
+    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
 
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
@@ -104,6 +100,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
         public boolean flip = false;
+
+        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+        public boolean shouldDisplayOriginal = false;
 
         // hacky override of custom color
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
@@ -443,71 +442,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return BossBarModel.corruptedBar.isActive();
-        }
-    }
-
-    public enum HealthTexture {
-        Wynn(0, 17, 8),
-        Grune(84, 99, 7),
-        Aether(100, 115, 7),
-        Skull(116, 131, 8),
-        Skyrim(132, 147, 8),
-        Rune(148, 163, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(68, 83, 7);
-        private final int textureY1, textureY2, height;
-
-        HealthTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
-        }
-
-        private int getTextureY1() {
-            return textureY1;
-        }
-
-        private int getTextureY2() {
-            return textureY2;
-        }
-
-        private int getHeight() {
-            return height;
-        }
-    }
-
-    public enum ManaTexture {
-        Wynn(0, 17, 8),
-        Brune(83, 100, 8),
-        Aether(116, 131, 7),
-        Skull(143, 147, 8),
-        Inverse(100, 115, 7),
-        Skyrim(148, 163, 8),
-        Rune(164, 179, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(83, 100, 8);
-        private final int textureY1, textureY2, height;
-
-        ManaTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
-        }
-
-        private int getTextureY1() {
-            return textureY1;
-        }
-
-        private int getTextureY2() {
-            return textureY2;
-        }
-
-        private int getHeight() {
-            return height;
         }
     }
 }

@@ -41,4 +41,10 @@ public class MapLocation {
     public String asChatCoordinates() {
         return x + " " + y + " " + z;
     }
+
+    public static MapLocation fromLocation(Location location) {
+        if (location == null) return null;
+
+        return new MapLocation((int) location.x, (int) location.y, (int) location.z);
+    }
 }
