@@ -11,14 +11,26 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 
-public class LabelPoi extends Poi {
+public class LabelPoi implements Poi {
+    MapLocation location;
+
     private static final int LABEL_Y = 64;
 
     private final Label label;
 
     public LabelPoi(Label label) {
-        super(new MapLocation(label.getX(), LABEL_Y, label.getZ()));
+        location = new MapLocation(label.getX(), LABEL_Y, label.getZ());
         this.label = label;
+    }
+
+    @Override
+    public boolean hasStaticLocation() {
+        return true;
+    }
+
+    @Override
+    public MapLocation getLocation() {
+        return location;
     }
 
     @Override

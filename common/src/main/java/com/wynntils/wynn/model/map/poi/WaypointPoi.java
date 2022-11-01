@@ -5,14 +5,15 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.gui.render.Texture;
+import java.util.function.Supplier;
 
-public class WaypointPoi extends IconPoi {
+public class WaypointPoi extends DynamicIconPoi {
 
     private final PointerPoi pointer;
 
-    public WaypointPoi(MapLocation location) {
-        super(location);
-        pointer = new PointerPoi(location);
+    public WaypointPoi(Supplier<MapLocation> locationSupplier) {
+        super(locationSupplier);
+        pointer = new PointerPoi(locationSupplier);
     }
 
     public PointerPoi getPointerPoi() {
@@ -29,10 +30,10 @@ public class WaypointPoi extends IconPoi {
         return "Waypoint";
     }
 
-    public static class PointerPoi extends IconPoi {
+    public static class PointerPoi extends DynamicIconPoi {
 
-        public PointerPoi(MapLocation location) {
-            super(location);
+        public PointerPoi(Supplier<MapLocation> locationSupplier) {
+            super(locationSupplier);
         }
 
         @Override

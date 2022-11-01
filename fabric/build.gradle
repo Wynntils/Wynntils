@@ -67,6 +67,9 @@ dependencies {
         exclude group: 'cpw.mods', module: 'modlauncher'
     }
 
+    // Hades Protocol
+    shadowImplementation("com.wynntils.hades:hades:${rootProject.hades_version}") { transitive false }
+
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
     runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.2"

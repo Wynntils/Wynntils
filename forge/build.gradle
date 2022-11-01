@@ -32,6 +32,9 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    // Hades Protocol
+    include(forgeRuntimeLibrary("com.wynntils.hades:hades:${rootProject.hades_version}"))
 }
 
 processResources {

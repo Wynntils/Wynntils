@@ -1069,8 +1069,14 @@ public final class RenderUtils {
             float ty1,
             float tx2,
             float ty2) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.colorMask(false, false, false, true);
+        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
+
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+        RenderSystem.stencilOp(GL11.GL_INCR, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_NEVER, 0, 0);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, false);
 
         int width = texture.width();
         int height = texture.height();
@@ -1079,7 +1085,7 @@ public final class RenderUtils {
                 texture.resource(),
                 x1,
                 y1,
-                1000f,
+                0f,
                 x2 - x1,
                 y2 - y1,
                 tx1,
@@ -1088,20 +1094,19 @@ public final class RenderUtils {
                 ty2 - ty1,
                 width,
                 height);
+
         RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.depthMask(false);
-        RenderSystem.depthFunc(GL11.GL_GREATER);
+        RenderSystem.depthMask(true);
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_NOTEQUAL, 0, 1);
     }
 
     /**
      * Clears the active rendering mask from the screen.
      */
     public static void clearMask() {
-        RenderSystem.depthMask(true);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
     }
 
     private static final class ClipboardImage implements Transferable {

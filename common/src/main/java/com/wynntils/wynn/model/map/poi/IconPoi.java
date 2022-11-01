@@ -12,12 +12,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 
-public abstract class IconPoi extends Poi {
-
-    protected IconPoi(MapLocation location) {
-        super(location);
-    }
-
+public abstract class IconPoi implements Poi {
     @Override
     public int getWidth() {
         return getIcon().width();
