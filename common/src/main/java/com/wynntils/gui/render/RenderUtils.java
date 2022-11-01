@@ -1058,8 +1058,6 @@ public final class RenderUtils {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
 
-    private static int stencilBit = 0xff;
-
     /**
      * Creates a mask that will remove anything drawn after
      * this and before the next {clearMask()}(or {endGL()})
@@ -1088,14 +1086,10 @@ public final class RenderUtils {
 
         enableStencil();
         GL11.glEnable(GL11.GL_ALPHA_TEST);
-        // No method
-        // GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-
         RenderSystem.colorMask(false, false, false, false);
         RenderSystem.depthMask(false);
-        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
-        RenderSystem.stencilFunc(GL11.GL_ALWAYS, stencilBit, stencilBit);
-        RenderSystem.stencilMask(stencilBit);
+        RenderSystem.stencilOp(GL11.GL_INCR, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_NEVER, 0, 0);
         RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, false);
 
         int width = texture.width();
@@ -1115,13 +1109,12 @@ public final class RenderUtils {
                 width,
                 height);
 
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
         RenderSystem.stencilMask(0x00);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        RenderSystem.stencilFunc(GL11.GL_EQUAL, stencilBit, stencilBit);
-
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        RenderSystem.stencilFunc(GL11.GL_NOTEQUAL, 0, 1);
     }
 
     /**
