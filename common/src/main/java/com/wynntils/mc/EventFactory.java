@@ -273,8 +273,13 @@ public final class EventFactory {
         return post(new MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()));
     }
 
-    public static ContainerSetContentEvent onContainerSetContent(ClientboundContainerSetContentPacket packet) {
-        return post(new ContainerSetContentEvent(
+    public static ContainerSetContentEvent onContainerSetContentPre(ClientboundContainerSetContentPacket packet) {
+        return post(new ContainerSetContentEvent.Pre(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+    }
+
+    public static void onContainerSetContentPost(ClientboundContainerSetContentPacket packet) {
+        post(new ContainerSetContentEvent.Post(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
 

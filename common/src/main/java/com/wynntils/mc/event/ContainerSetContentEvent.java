@@ -9,8 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
-@Cancelable
-public class ContainerSetContentEvent extends Event {
+public abstract class ContainerSetContentEvent extends Event {
     private final List<ItemStack> items;
     private final ItemStack carriedItem;
     private final int containerId;
@@ -37,5 +36,18 @@ public class ContainerSetContentEvent extends Event {
 
     public int getStateId() {
         return stateId;
+    }
+
+    @Cancelable
+    public static class Pre extends ContainerSetContentEvent {
+        public Pre(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
+            super(items, carriedItem, containerId, stateId);
+        }
+    }
+
+    public static class Post extends ContainerSetContentEvent {
+        public Post(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
+            super(items, carriedItem, containerId, stateId);
+        }
     }
 }
