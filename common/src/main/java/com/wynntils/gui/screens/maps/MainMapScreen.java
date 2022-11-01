@@ -17,7 +17,6 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.mc.utils.PlayerInfoUtils;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
 import com.wynntils.utils.BoundingBox;
@@ -26,24 +25,21 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.PlayerPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import com.wynntils.wynn.objects.HealthTexture;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class MainMapScreen extends Screen {
     private static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
-    private static final float PLAYER_HEAD_RENDER_SIZE = 20;
 
     private boolean holdingMapKey = false;
 
@@ -228,96 +224,10 @@ public class MainMapScreen extends Screen {
 
         renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
 
-        renderPlayerIcons(poseStack, textureBoundingBox);
-
         // Cursor
         renderCursor(poseStack);
 
         RenderSystem.disableScissor();
-    }
-
-    public void renderPlayerIcons(PoseStack poseStack, BoundingBox textureBoundingBox) {
-        List<HadesUser> rendered = HadesUserModel.getHadesUserMap().values().stream()
-                .filter(hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
-                        || (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers))
-                .toList();
-
-        for (HadesUser user : rendered) {
-            float gameX = user.getX();
-            float gameZ = user.getZ();
-
-            float renderX =
-                    MapRenderer.getRenderX(gameX, mapCenterX, centerX, currentZoom) - PLAYER_HEAD_RENDER_SIZE / 2f;
-            float renderY =
-                    MapRenderer.getRenderZ(gameZ, mapCenterZ, centerZ, currentZoom) - PLAYER_HEAD_RENDER_SIZE / 2f;
-
-            BoundingBox userBox = BoundingBox.centered(gameX, gameZ, PLAYER_HEAD_RENDER_SIZE, PLAYER_HEAD_RENDER_SIZE);
-
-            if (!userBox.intersects(textureBoundingBox)) continue;
-
-            ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
-
-            // head
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    renderX,
-                    renderY,
-                    0,
-                    PLAYER_HEAD_RENDER_SIZE,
-                    PLAYER_HEAD_RENDER_SIZE,
-                    8,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-
-            // hat
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    renderX,
-                    renderY,
-                    1,
-                    PLAYER_HEAD_RENDER_SIZE,
-                    PLAYER_HEAD_RENDER_SIZE,
-                    40,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-
-            HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
-
-            RenderUtils.drawProgressBar(
-                    poseStack,
-                    Texture.HEALTH_BAR,
-                    renderX - 10,
-                    renderY + PLAYER_HEAD_RENDER_SIZE + 1,
-                    renderX + PLAYER_HEAD_RENDER_SIZE + 10,
-                    renderY + PLAYER_HEAD_RENDER_SIZE + 7,
-                    0,
-                    healthTexture.getTextureY1(),
-                    81,
-                    healthTexture.getTextureY2(),
-                    (float) user.getHealth() / user.getMaxHealth());
-
-            Font font = FontRenderer.getInstance().getFont();
-            int width = font.width(user.getName());
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            user.getName(),
-                            renderX - (width - PLAYER_HEAD_RENDER_SIZE) / 2f,
-                            renderY + PLAYER_HEAD_RENDER_SIZE + 8,
-                            user.getRelationColor(),
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
-                            MapFeature.INSTANCE.remotePlayerNameShadow);
-        }
     }
 
     private void renderPois(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
@@ -325,9 +235,22 @@ public class MainMapScreen extends Screen {
 
         pois.addAll(MapModel.getServicePois());
         pois.addAll(MapModel.getLabelPois());
-        CompassModel.getCompassWaypoint().ifPresent(pois::add);
+
+        List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
+                .filter(hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
+                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                        || (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers))
+                .toList();
 
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
+
+        // Make sure compass and player pois are on top
+        pois.addAll(renderedPlayers.stream()
+                .map(PlayerPoi::new)
+                .sorted(Comparator.comparing(
+                        playerPoi -> playerPoi.getLocation().getY()))
+                .toList());
+        CompassModel.getCompassWaypoint().ifPresent(pois::add);
 
         List<Poi> filteredPois = new ArrayList<>();
 
@@ -423,8 +346,9 @@ public class MainMapScreen extends Screen {
                 if (hovered.hasStaticLocation()) {
                     CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                 } else {
+                    Poi finalHovered = hovered;
                     CompassModel.setDynamicCompassLocation(
-                            () -> hovered.getLocation().asLocation());
+                            () -> finalHovered.getLocation().asLocation());
                 }
                 return true;
             }

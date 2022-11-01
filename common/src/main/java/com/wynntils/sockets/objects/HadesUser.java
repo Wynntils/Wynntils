@@ -7,6 +7,7 @@ package com.wynntils.sockets.objects;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.wynn.model.map.poi.MapLocation;
 import java.util.UUID;
 
 public class HadesUser {
@@ -17,6 +18,7 @@ public class HadesUser {
     boolean isMutualFriend;
     boolean isGuildMember;
     private float x, y, z;
+    private MapLocation mapLocation;
     private int health, maxHealth;
     private int mana, maxMana;
 
@@ -59,6 +61,10 @@ public class HadesUser {
         return z;
     }
 
+    public MapLocation getMapLocation() {
+        return mapLocation;
+    }
+
     public int getHealth() {
         return health;
     }
@@ -79,6 +85,7 @@ public class HadesUser {
         this.x = packet.getX();
         this.y = packet.getY();
         this.z = packet.getZ();
+        this.mapLocation = new MapLocation((int) x, (int) y, (int) z);
 
         this.health = packet.getHealth();
         this.maxHealth = packet.getMaxHealth();
