@@ -240,16 +240,14 @@ public class MainMapScreen extends Screen {
                 .filter(hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
                         || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
                         || (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers))
+                .sorted(Comparator.comparing(
+                        hadesUser -> hadesUser.getMapLocation().getY()))
                 .toList();
 
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
-        pois.addAll(renderedPlayers.stream()
-                .map(PlayerPoi::new)
-                .sorted(Comparator.comparing(
-                        playerPoi -> playerPoi.getLocation().getY()))
-                .toList());
+        pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
 
         List<Poi> filteredPois = new ArrayList<>();
