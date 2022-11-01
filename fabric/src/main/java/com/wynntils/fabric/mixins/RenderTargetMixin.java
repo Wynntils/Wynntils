@@ -5,7 +5,6 @@
 package com.wynntils.fabric.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.wynntils.gui.render.RenderUtils;
 import org.lwjgl.opengl.GL30;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

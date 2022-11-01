@@ -7,7 +7,6 @@ package com.wynntils.forge;
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.nio.file.Path;
-
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;

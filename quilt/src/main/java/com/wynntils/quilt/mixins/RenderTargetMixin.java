@@ -5,7 +5,6 @@
 package com.wynntils.fabric.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.wynntils.gui.render.RenderUtils;
 import org.lwjgl.opengl.GL30;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,12 +21,12 @@ public class RenderTargetMixin {
     @ModifyArgs(
             method = "createBuffers",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
-                    ordinal = 0,
-                    remap = false))
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
+                            ordinal = 0,
+                            remap = false))
     public void init(Args args) {
         args.set(2, GL30.GL_DEPTH32F_STENCIL8);
         args.set(6, GL30.GL_DEPTH_STENCIL);
@@ -37,17 +36,17 @@ public class RenderTargetMixin {
     @ModifyArgs(
             method = "createBuffers",
             at =
-            @At(
-                    value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
-                    remap = false),
-            slice =
-            @Slice(
-                    from =
                     @At(
-                            value = "FIELD",
-                            target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
-                            ordinal = 1)))
+                            value = "INVOKE",
+                            target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
+                            remap = false),
+            slice =
+                    @Slice(
+                            from =
+                                    @At(
+                                            value = "FIELD",
+                                            target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
+                                            ordinal = 1)))
     public void init2(Args args) {
         args.set(1, GL30.GL_DEPTH_STENCIL_ATTACHMENT);
     }
