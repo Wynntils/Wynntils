@@ -21,15 +21,21 @@ public enum SearchableContainerType {
         this.nextItemSlot = nextItemSlot;
     }
 
-    public Pattern getTitlePattern() {
-        return titlePattern;
-    }
-
     public int getNextItemSlot() {
         return nextItemSlot;
     }
 
     public Pattern getNextItemPattern() {
         return nextItemPattern;
+    }
+
+    public static SearchableContainerType getContainerType(String title) {
+        for (SearchableContainerType type : SearchableContainerType.values()) {
+            if (type.titlePattern.matcher(title).matches()) {
+                return type;
+            }
+        }
+
+        return null;
     }
 }

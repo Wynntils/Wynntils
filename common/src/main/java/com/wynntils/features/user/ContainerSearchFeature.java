@@ -137,25 +137,18 @@ public class ContainerSearchFeature extends UserFeature {
     }
 
     private SearchableContainerType getCurrentSearchableContainerType(String title) {
-        if (filterInBank
-                && SearchableContainerType.BANK.getTitlePattern().matcher(title).matches()) {
+        SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
+
+        if (containerType == SearchableContainerType.BANK && filterInBank) {
             return SearchableContainerType.BANK;
         }
 
-        if (filterInGuildBank
-                && SearchableContainerType.GUILD_BANK
-                        .getTitlePattern()
-                        .matcher(title)
-                        .matches()) {
-            return SearchableContainerType.GUILD_BANK;
+        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank) {
+            return SearchableContainerType.BANK;
         }
 
-        if (filterInGuildMemberList
-                && SearchableContainerType.MEMBER_LIST
-                        .getTitlePattern()
-                        .matcher(title)
-                        .matches()) {
-            return SearchableContainerType.MEMBER_LIST;
+        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList) {
+            return SearchableContainerType.BANK;
         }
 
         return null;
