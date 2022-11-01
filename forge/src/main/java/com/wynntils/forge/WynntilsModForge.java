@@ -7,7 +7,6 @@ package com.wynntils.forge;
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.nio.file.Path;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -23,8 +22,6 @@ public class WynntilsModForge {
                 .getFilePath();
 
         File modFile = new File(path.toUri());
-
-        Minecraft.getInstance().getMainRenderTarget().enableStencil();
 
         WynntilsMod.init(
                 WynntilsMod.ModLoader.FORGE,
