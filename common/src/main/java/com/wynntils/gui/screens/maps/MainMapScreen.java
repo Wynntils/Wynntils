@@ -28,6 +28,7 @@ import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import com.wynntils.wynn.objects.HealthTexture;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -226,7 +227,10 @@ public class MainMapScreen extends Screen {
         hovered = null;
 
         renderPois(poseStack, textureBoundingBox, mouseX, mouseY);
-        renderPlayerIcons(poseStack, textureBoundingBox, mouseX, mouseY);
+
+        if (MapFeature.INSTANCE.renderRemotePlayers) {
+            renderPlayerIcons(poseStack, textureBoundingBox, mouseX, mouseY);
+        }
 
         // Cursor
         renderCursor(poseStack);
@@ -282,6 +286,21 @@ public class MainMapScreen extends Screen {
                     64,
                     64);
 
+            HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
+
+            RenderUtils.drawProgressBar(
+                    poseStack,
+                    Texture.HEALTH_BAR,
+                    renderX - 10,
+                    renderY + PLAYER_HEAD_RENDER_SIZE + 1,
+                    renderX + PLAYER_HEAD_RENDER_SIZE + 10,
+                    renderY + PLAYER_HEAD_RENDER_SIZE + 7,
+                    0,
+                    healthTexture.getTextureY1(),
+                    81,
+                    healthTexture.getTextureY2(),
+                    (float) user.getHealth() / user.getMaxHealth());
+
             Font font = FontRenderer.getInstance().getFont();
             int width = font.width(user.getName());
             FontRenderer.getInstance()
@@ -289,11 +308,11 @@ public class MainMapScreen extends Screen {
                             poseStack,
                             user.getName(),
                             renderX - (width - PLAYER_HEAD_RENDER_SIZE) / 2f,
-                            renderY + PLAYER_HEAD_RENDER_SIZE / 2f + font.lineHeight + 2,
+                            renderY + PLAYER_HEAD_RENDER_SIZE + 8,
                             user.getRelationColor(),
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NORMAL);
+                            MapFeature.INSTANCE.remotePlayerNameShadow);
         }
     }
 

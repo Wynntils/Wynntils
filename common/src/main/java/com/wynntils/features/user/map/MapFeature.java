@@ -11,10 +11,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
+import com.wynntils.wynn.objects.HealthTexture;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
@@ -36,6 +38,15 @@ public class MapFeature extends UserFeature {
 
     @Config
     public float poiScale = 1f;
+
+    @Config(subcategory = "Remote Players")
+    public boolean renderRemotePlayers = true;
+
+    @Config(subcategory = "Remote Players")
+    public HealthTexture remotePlayerHealthTexture = HealthTexture.a;
+
+    @Config(subcategory = "Remote Players")
+    public FontRenderer.TextShadow remotePlayerNameShadow = FontRenderer.TextShadow.OUTLINE;
 
     @RegisterKeyBind
     public final KeyBind openMapKeybind = new KeyBind("Open Full Screen Map", GLFW.GLFW_KEY_M, false, () -> {
