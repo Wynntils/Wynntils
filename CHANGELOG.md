@@ -1,3 +1,12 @@
+## [0.0.1-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.0...v0.0.1-alpha.1) (2022-11-02)
+
+
+### Bug Fixes
+
+*  pre release ([b557041](https://github.com/Wynntils/Artemis/commit/b55704131dd43f1b51f00a9a85cd900fa8d6a4d0))
+* BeaconBeamFeature not rendering correctly ([#638](https://github.com/Wynntils/Artemis/issues/638)) ([a5eb7df](https://github.com/Wynntils/Artemis/commit/a5eb7df47e8d35604ac57a483724fe35066d66c4))
+* Make updating async ([#639](https://github.com/Wynntils/Artemis/issues/639)) ([5123f50](https://github.com/Wynntils/Artemis/commit/5123f50bfcb86eeda29d3b6cb777349dead16a47))
+
 ## [0.0.1-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.0...v0.0.1-alpha.0) (2022-11-02)
 
 
@@ -49,21 +58,6 @@
 * Revert "use MenuType instead of resource locations" ([6abddd0](https://github.com/Wynntils/Artemis/commit/6abddd05f549da37a7df4b46c053d32beb6d8d4b))
 
 
-### Miscellaneous Chores
-
-* add classifers to jar files ([#141](https://github.com/Wynntils/Artemis/issues/141)) ([e1175af](https://github.com/Wynntils/Artemis/commit/e1175af64ece345ff731f7551c3a6eb2b8b17cff))
-* Add CODEOWNERS ([#612](https://github.com/Wynntils/Artemis/issues/612)) ([2382b29](https://github.com/Wynntils/Artemis/commit/2382b299186835abfdbe04733609d159b28846ac))
-* Empty commit to trigger CI ([b17fd37](https://github.com/Wynntils/Artemis/commit/b17fd37edbcf675c9ce3f976386147c8ddb3a728))
-* Remove account type config ([#551](https://github.com/Wynntils/Artemis/issues/551)) ([1afdabc](https://github.com/Wynntils/Artemis/commit/1afdabca4fc35e1f5361a84fedd875de20b4dfbb))
-* remove check for forks ([#103](https://github.com/Wynntils/Artemis/issues/103)) ([01096f0](https://github.com/Wynntils/Artemis/commit/01096f0b08ef23f14bd8781ecbedf1f07cdf52cc))
-* Remove lost spirit ([#634](https://github.com/Wynntils/Artemis/issues/634)) ([eb7ec05](https://github.com/Wynntils/Artemis/commit/eb7ec05e3e58d5a07c08f21d4d03baf9f11ead60))
-* remove spotless check from ci build ([0420ac5](https://github.com/Wynntils/Artemis/commit/0420ac5fc629cf13541497cb19c22027675264a5))
-* update github actions ([3471cc5](https://github.com/Wynntils/Artemis/commit/3471cc5fd3ab65271902f8a38be0354aacb44782))
-* Update loader and Devauth versions ([#124](https://github.com/Wynntils/Artemis/issues/124)) ([5e21944](https://github.com/Wynntils/Artemis/commit/5e21944718f398942b7044e5456b320e254adb30))
-* Update loaders and loom ([#627](https://github.com/Wynntils/Artemis/issues/627)) ([2ffbfc1](https://github.com/Wynntils/Artemis/commit/2ffbfc1c8a18644e324e251398c9d171d379d41a))
-* Update qodana ([b6cf6e7](https://github.com/Wynntils/Artemis/commit/b6cf6e74231aeaaddae9daaeb885ce0052fcf210))
-
-
 ### New Features
 
 * /compass supports non-standard coordinates ([#598](https://github.com/Wynntils/Artemis/issues/598)) ([170a544](https://github.com/Wynntils/Artemis/commit/170a5447385829940a87cdfebd22d8f37bf81d65))
@@ -86,4 +80,21 @@
 * Setting screen search now supports searching for config options ([#594](https://github.com/Wynntils/Artemis/issues/594)) ([cf83a3d](https://github.com/Wynntils/Artemis/commit/cf83a3d70e3100875495b753ea2e2d928553262e))
 * Unidentified Item Icons ([#271](https://github.com/Wynntils/Artemis/issues/271)) ([3d73347](https://github.com/Wynntils/Artemis/commit/3d73347b00718981381f3670a32ae09d35b5528f))
 
+
+### Miscellaneous Chores
+
+* add classifers to jar files ([#141](https://github.com/Wynntils/Artemis/issues/141)) ([e1175af](https://github.com/Wynntils/Artemis/commit/e1175af64ece345ff731f7551c3a6eb2b8b17cff))
+* Add CODEOWNERS ([#612](https://github.com/Wynntils/Artemis/issues/612)) ([2382b29](https://github.com/Wynntils/Artemis/commit/2382b299186835abfdbe04733609d159b28846ac))
+* Empty commit to trigger CI ([b17fd37](https://github.com/Wynntils/Artemis/commit/b17fd37edbcf675c9ce3f976386147c8ddb3a728))
+* **release:** v0.0.1-alpha.0 [skip ci] ([7076250](https://github.com/Wynntils/Artemis/commit/70762508451342d5395ad456ba555140f12348ec))
+* Remove account type config ([#551](https://github.com/Wynntils/Artemis/issues/551)) ([1afdabc](https://github.com/Wynntils/Artemis/commit/1afdabca4fc35e1f5361a84fedd875de20b4dfbb))
+* remove check for forks ([#103](https://github.com/Wynntils/Artemis/issues/103)) ([01096f0](https://github.com/Wynntils/Artemis/commit/01096f0b08ef23f14bd8781ecbedf1f07cdf52cc))
+* Remove lost spirit ([#634](https://github.com/Wynntils/Artemis/issues/634)) ([eb7ec05](https://github.com/Wynntils/Artemis/commit/eb7ec05e3e58d5a07c08f21d4d03baf9f11ead60))
+* remove spotless check from ci build ([0420ac5](https://github.com/Wynntils/Artemis/commit/0420ac5fc629cf13541497cb19c22027675264a5))
+* update github actions ([3471cc5](https://github.com/Wynntils/Artemis/commit/3471cc5fd3ab65271902f8a38be0354aacb44782))
+* Update loader and Devauth versions ([#124](https://github.com/Wynntils/Artemis/issues/124)) ([5e21944](https://github.com/Wynntils/Artemis/commit/5e21944718f398942b7044e5456b320e254adb30))
+* Update loaders and loom ([#627](https://github.com/Wynntils/Artemis/issues/627)) ([2ffbfc1](https://github.com/Wynntils/Artemis/commit/2ffbfc1c8a18644e324e251398c9d171d379d41a))
+* Update qodana ([b6cf6e7](https://github.com/Wynntils/Artemis/commit/b6cf6e74231aeaaddae9daaeb885ce0052fcf210))
+
 ## 0.0.0 (2021-12-09)
+

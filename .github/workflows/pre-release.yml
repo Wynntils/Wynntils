@@ -74,17 +74,6 @@ jobs:
           java-version: 17
           cache: "gradle"
 
-      - name: Format with spotless
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: spotlessApply --build-cache
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_user_name: 'WynntilsBot'
-          commit_user_email: 'admin@wynntils.com'
-          commit_message: 'ci: spotless formatting [skip ci]'
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         env:
