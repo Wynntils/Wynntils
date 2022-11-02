@@ -7,19 +7,14 @@ package com.wynntils.mc.event;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.Event;
 
-/**
- * Fired when {@link net.minecraft.client.renderer.entity.LivingEntityRenderer} checks whether an
- * entity should be rendered translucent or not
- */
-public class LivingEntityRenderTranslucentCheckEvent extends Event {
-    private boolean translucent;
+public class LivingEntityArmorTranslucenceEvent extends Event {
+
     private final LivingEntity entity;
     private float translucence;
 
-    public LivingEntityRenderTranslucentCheckEvent(boolean translucent, LivingEntity entity, float translucence) {
-        this.translucent = translucent;
+    public LivingEntityArmorTranslucenceEvent(LivingEntity entity) {
         this.entity = entity;
-        this.translucence = translucence;
+        this.translucence = 1.0f;
     }
 
     public LivingEntity getEntity() {
@@ -32,10 +27,5 @@ public class LivingEntityRenderTranslucentCheckEvent extends Event {
 
     public void setTranslucence(float translucence) {
         this.translucence = translucence;
-        this.translucent = translucence >= 1.0f;
-    }
-
-    public boolean isTranslucent() {
-        return translucent;
     }
 }

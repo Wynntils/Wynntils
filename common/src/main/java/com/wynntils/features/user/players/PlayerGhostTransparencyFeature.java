@@ -9,7 +9,8 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
+import com.wynntils.mc.event.LivingEntityArmorTranslucenceEvent;
+import com.wynntils.mc.event.LivingEntityRenderTranslucenceEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +21,22 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
     @Config
     public float playerGhostTranslucenceLevel = 0.75f;
 
+    @Config
+    public boolean transparentGhostArmor = true;
+
     @SubscribeEvent
-    public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
+    public void onGhostArmorRender(LivingEntityArmorTranslucenceEvent e) {
+        if (!WynnUtils.onWorld()) return;
+
+        if (!(e.getEntity() instanceof Player player)) return;
+
+        if (WynnPlayerUtils.isPlayerGhost(player) && transparentGhostArmor) {
+            e.setTranslucence(playerGhostTranslucenceLevel);
+        }
+    }
+
+    @SubscribeEvent
+    public void onTranslucentCheck(LivingEntityRenderTranslucenceEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         if (!(e.getEntity() instanceof Player player)) return;
