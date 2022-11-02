@@ -1,9 +1,26 @@
+## [0.0.1-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2022-11-02)
+
+
+### Bug Fixes
+
+* Increase query timeout to make queries work when Wynncraft lags ([#642](https://github.com/Wynntils/Artemis/issues/642)) ([a4490ee](https://github.com/Wynntils/Artemis/commit/a4490ee83b655a99556cd0477fd835f0eed40332))
+
+
+### Build System
+
+* **gradle:** ignore changelog file from spotless [skip ci] ([49020ef](https://github.com/Wynntils/Artemis/commit/49020ef38a740747b7999995f79a32e472ad8927))
+
 ## [0.0.1-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.1...v0.0.1-alpha.2) (2022-11-02)
 
 
 ### Bug Fixes
 
 * Mark and display development builds correctly  ([#641](https://github.com/Wynntils/Artemis/issues/641)) ([51757b9](https://github.com/Wynntils/Artemis/commit/51757b9df28d60505d87f7d9f8382f8ba3d2569d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.2 [skip ci] ([425c966](https://github.com/Wynntils/Artemis/commit/425c966c3eb73261dd780196e17d657624b2ed21))
 
 ## [0.0.1-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.0...v0.0.1-alpha.1) (2022-11-02)
 
