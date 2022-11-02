@@ -24,6 +24,7 @@ public class WynntilsModForge {
 
         File modFile = new File(path.toUri());
 
+        // Enable stencil support
         Minecraft.getInstance().getMainRenderTarget().enableStencil();
 
         WynntilsMod.init(

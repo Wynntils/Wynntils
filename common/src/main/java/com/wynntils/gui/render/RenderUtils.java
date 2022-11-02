@@ -1072,12 +1072,18 @@ public final class RenderUtils {
         // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
         RenderSystem.colorMask(false, false, false, false);
         RenderSystem.depthMask(false);
-        RenderSystem.stencilOp(GL11.GL_INCR, GL11.GL_KEEP, GL11.GL_KEEP);
-        RenderSystem.stencilFunc(GL11.GL_NEVER, 0, 0);
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, false);
 
+        // Draw textured image
         int width = texture.width();
         int height = texture.height();
         drawTexturedRect(
@@ -1095,11 +1101,14 @@ public final class RenderUtils {
                 width,
                 height);
 
+        // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthMask(true);
+
+        // Only write to stencil area
         RenderSystem.stencilMask(0x00);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        RenderSystem.stencilFunc(GL11.GL_NOTEQUAL, 0, 1);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
     /**
