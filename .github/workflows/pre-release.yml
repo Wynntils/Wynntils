@@ -28,7 +28,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: DevScyu/conventional-changelog-action@v4
+        uses: TriPSs/conventional-changelog-action@v3.17.0
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
