@@ -97,4 +97,3 @@
 * Update qodana ([b6cf6e7](https://github.com/Wynntils/Artemis/commit/b6cf6e74231aeaaddae9daaeb885ce0052fcf210))
 
 ## 0.0.0 (2021-12-09)
-
