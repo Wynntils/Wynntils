@@ -149,8 +149,11 @@ public class TerritoryProfile {
             String friendlyName = territoryName.replace('’', '\'');
 
             String guild;
-            if (territory.get("guild").isJsonNull()) guild = "Unknown";
-            else guild = territory.get("guild").getAsString();
+            if (territory.get("guild").isJsonNull()) {
+                guild = "Unknown";
+            } else {
+                guild = territory.get("guild").getAsString();
+            }
 
             Date acquired = null;
             try {
@@ -164,16 +167,21 @@ public class TerritoryProfile {
             }
 
             String guildPrefix;
-            if (territory.get("guildPrefix").isJsonNull()) guildPrefix = "UNK";
-            else guildPrefix = territory.get("guildPrefix").getAsString();
+            if (territory.get("guildPrefix").isJsonNull()) {
+                guildPrefix = "UNK";
+            } else {
+                guildPrefix = territory.get("guildPrefix").getAsString();
+            }
 
             int level = territory.get("level").getAsInt();
 
             CustomColor guildColor;
-            if (territory.get("guildColor").getAsString().isEmpty()) guildColor = StringUtils.colorFromString(guild);
-            else
+            if (territory.get("guildColor").getAsString().isEmpty()) {
+                guildColor = StringUtils.colorFromString(guild);
+            } else {
                 guildColor =
                         CustomColor.fromHexString(territory.get("guildColor").getAsString());
+            }
 
             return new TerritoryProfile(
                     territoryName,
