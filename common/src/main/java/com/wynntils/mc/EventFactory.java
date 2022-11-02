@@ -10,16 +10,64 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.*;
+import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.BossHealthUpdateEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
+import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.DisplayResizeEvent;
+import com.wynntils.mc.event.DrawPotionGlintEvent;
+import com.wynntils.mc.event.DropHeldItemEvent;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
+import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
+import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.PlayerJoinedWorldEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.ResourcePackClearEvent;
+import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ScoreboardSetScoreEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetEntityPassengersEvent;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
+import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
@@ -94,9 +142,6 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static PlayerGhostArmorRenderEvent onArmorRender(LivingEntity entity) {
-        return post(new PlayerGhostArmorRenderEvent(entity));
-    }
     public static NametagRenderEvent onNameTagRender(
             AbstractClientPlayer entity,
             Component displayName,
