@@ -57,16 +57,10 @@ public class WynntilsCommand extends CommandBase {
 
         if (WynntilsMod.getVersion().isEmpty()) {
             buildText = new TextComponent("Unknown Version");
+        } else if (WynntilsMod.isDevelopmentBuild()) {
+            buildText = new TextComponent("Development Build");
         } else {
             buildText = new TextComponent("Version " + WynntilsMod.getVersion());
-        }
-
-        buildText.append("\n");
-
-        if (WynntilsMod.getBuildNumber() == -1) {
-            buildText.append(new TextComponent("Unknown Build"));
-        } else {
-            buildText.append(new TextComponent("Build " + WynntilsMod.getBuildNumber()));
         }
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));

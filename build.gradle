@@ -13,6 +13,12 @@ architectury {
 // or ~/.gradle/gradle.properties on Linux/MacOS.
 def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
 
+// If we are running in a CI environment, we want to use the version else dev version
+version = "0.0.1-alpha.3"
+if (!System.getenv("CI")) {
+    version = "DEV"
+}
+
 subprojects {
     apply plugin: "dev.architectury.loom"
 
@@ -59,15 +65,13 @@ subprojects {
     }
 }
 
-def versionObj = new Version(major: 1, minor: 1, patch: 0)
-
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
     apply plugin: "com.diffplug.spotless"
 
     archivesBaseName = rootProject.archives_base_name
-    version = versionObj.toString(rootProject.minecraft_version)
+    version = rootProject.version
 
     repositories {
         maven { url "https://maven.parchmentmc.org/" }
@@ -120,24 +124,12 @@ allprojects {
         format 'misc', {
             // define the files to apply `misc` to
             target '*.gradle', '*.md', '.gitignore', '*.properties'
+            targetExclude('CHANGELOG.md')
 
             // define the steps to apply to those files
             trimTrailingWhitespace()
             indentWithSpaces()
             endWithNewline()
         }
-    }
-}
-
-class Version {
-    int major, minor, patch
-
-    static String getBuild() {
-        System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?: "DEV"
-    }
-
-    //If someone can find a way to access the mcVersion without using it as a param please do
-    String toString(Object minecraft_version) {
-        "${major}.${minor}.${patch}+${this.build}.MC${minecraft_version}"
     }
 }
