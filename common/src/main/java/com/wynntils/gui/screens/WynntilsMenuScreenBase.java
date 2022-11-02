@@ -40,7 +40,7 @@ public abstract class WynntilsMenuScreenBase extends Screen {
         // FIXME: Replace with better scaling support
 
         poseStack.pushPose();
-        String version = "Build " + WynntilsMod.getBuildNumber();
+        String version = WynntilsMod.getVersion();
         poseStack.scale(0.7f, 0.7f, 0);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

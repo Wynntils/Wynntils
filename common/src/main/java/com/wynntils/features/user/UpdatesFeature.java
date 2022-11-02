@@ -11,6 +11,7 @@ import com.wynntils.core.managers.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -37,55 +38,62 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        UpdateManager.getLatestBuild().whenCompleteAsync((buildNumber, throwable) -> {
-            if (buildNumber == WynntilsMod.getBuildNumber()) {
-                WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
-                return;
-            }
-
-            if (updateReminder) {
-                remindToUpdateIfExists(buildNumber);
-            }
-
-            if (autoUpdate) {
-                if (WynntilsMod.isDevelopmentEnvironment()) {
-                    WynntilsMod.info("Tried to auto-update, but we are in development environment.");
+        CompletableFuture.runAsync(() -> {
+            UpdateManager.getLatestBuild().whenCompleteAsync((version, throwable) -> {
+                if (version == null) {
+                    WynntilsMod.info("Couldn't fetch latest version, not attempting update reminder or auto-update.");
                     return;
                 }
 
-                WynntilsMod.info("Attempting to auto-update.");
+                if (Objects.equals(version, WynntilsMod.getVersion())) {
+                    WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
+                    return;
+                }
 
-                McUtils.sendMessageToClient(new TextComponent("Auto-updating...").withStyle(ChatFormatting.YELLOW));
+                if (updateReminder) {
+                    remindToUpdateIfExists(version);
+                }
 
-                CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
-
-                completableFuture.whenCompleteAsync((result, t) -> {
-                    switch (result) {
-                        case SUCCESSFUL -> McUtils.sendMessageToClient(new TextComponent(
-                                        "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
-                                .withStyle(ChatFormatting.DARK_GREEN));
-                        case ERROR -> McUtils.sendMessageToClient(
-                                new TextComponent("Error applying Wynntils/Artemis update.")
-                                        .withStyle(ChatFormatting.DARK_RED));
-                        case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                new TextComponent("Wynntils/Artemis is already on latest version.")
-                                        .withStyle(ChatFormatting.YELLOW));
+                if (autoUpdate) {
+                    if (WynntilsMod.isDevelopmentEnvironment()) {
+                        WynntilsMod.info("Tried to auto-update, but we are in development environment.");
+                        return;
                     }
-                });
-            }
+
+                    WynntilsMod.info("Attempting to auto-update.");
+
+                    McUtils.sendMessageToClient(new TextComponent("Auto-updating...").withStyle(ChatFormatting.YELLOW));
+
+                    CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
+
+                    completableFuture.whenCompleteAsync((result, t) -> {
+                        switch (result) {
+                            case SUCCESSFUL -> McUtils.sendMessageToClient(new TextComponent(
+                                            "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
+                                    .withStyle(ChatFormatting.DARK_GREEN));
+                            case ERROR -> McUtils.sendMessageToClient(
+                                    new TextComponent("Error applying Wynntils/Artemis update.")
+                                            .withStyle(ChatFormatting.DARK_RED));
+                            case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
+                                    new TextComponent("Wynntils/Artemis is already on latest version.")
+                                            .withStyle(ChatFormatting.YELLOW));
+                        }
+                    });
+                }
+            });
         });
     }
 
-    private static void remindToUpdateIfExists(Integer buildNumber) {
+    private static void remindToUpdateIfExists(String newVersion) {
         TextComponent clickable = new TextComponent("here.");
         clickable.setStyle(clickable
                 .getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                 .withUnderlined(true)
                 .withBold(true));
-        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Build " + buildNumber
+        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Version " + newVersion
                         + " is the latest version, but you are using build "
-                        + WynntilsMod.getBuildNumber() + ". Please consider updating by clicking ")
+                        + WynntilsMod.getVersion() + ". Please consider updating by clicking ")
                 .append(clickable)
                 .append(new TextComponent(
                         "\nPlease note that Artemis is in alpha, and newer builds might introduce bugs."))
