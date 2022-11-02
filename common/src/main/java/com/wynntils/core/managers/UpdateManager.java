@@ -54,8 +54,7 @@ public class UpdateManager extends CoreManager {
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-            String latestMd5 =
-                    jsonObject.getAsJsonPrimitive("md5").getAsString();
+            String latestMd5 = jsonObject.getAsJsonPrimitive("md5").getAsString();
 
             String currentMd5 = getCurrentMd5();
             if (Objects.equals(currentMd5, latestMd5)) {
@@ -68,8 +67,7 @@ public class UpdateManager extends CoreManager {
                 return future;
             }
 
-            String latestDownload =
-                    jsonObject.getAsJsonPrimitive("url").getAsString();
+            String latestDownload = jsonObject.getAsJsonPrimitive("url").getAsString();
 
             tryFetchNewUpdate(latestDownload, future);
 
