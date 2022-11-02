@@ -14,7 +14,6 @@ jobs:
       skipped: ${{ steps.changelog.outputs.skipped }}
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
       changelog: ${{ steps.changelog.outputs.changelog }}
-      build_number: ${{ steps.extract.outputs.build_number }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,7 +27,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: DevScyu/conventional-changelog-action@v4
+        uses: TriPSs/conventional-changelog-action@v3.17.0
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
@@ -39,10 +38,6 @@ jobs:
           skip-git-pull: true
           pre-release: true
           pre-release-identifier: alpha
-
-      - name: Extract build information
-        id: extract
-        run: "echo ::set-output name=build_number::`echo ${{ steps.changelog.outputs.tag }} | cut -d'.' -f4`"
 
       - name: Upload version information
         uses: actions/upload-artifact@v3
@@ -76,8 +71,6 @@ jobs:
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
-        env:
-          BUILD_NUMBER: ${{ needs.changelog.outputs.build_number }}
         with:
           arguments: build -x spotlessCheck --build-cache
 
