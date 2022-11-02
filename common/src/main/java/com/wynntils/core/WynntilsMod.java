@@ -13,8 +13,6 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
@@ -32,7 +30,6 @@ public final class WynntilsMod {
 
     private static ModLoader modLoader;
     private static String version = "";
-    private static int buildNumber = -1;
     private static boolean developmentEnvironment;
     private static boolean featuresInited = false;
     private static IEventBus eventBus;
@@ -105,10 +102,6 @@ public final class WynntilsMod {
         return version;
     }
 
-    public static int getBuildNumber() {
-        return buildNumber;
-    }
-
     public static boolean isDevelopmentEnvironment() {
         return developmentEnvironment;
     }
@@ -162,7 +155,15 @@ public final class WynntilsMod {
         // Setup mod core properties
         modLoader = loader;
         developmentEnvironment = isDevelopmentEnvironment;
-        parseVersion(modVersion);
+
+        version = "v" + modVersion;
+
+        LOGGER.info(
+                "Wynntils: Starting version {} (using {} on Minecraft {})",
+                version,
+                modLoader,
+                Minecraft.getInstance().getLaunchedVersion());
+
         addCrashCallbacks();
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
@@ -176,27 +177,6 @@ public final class WynntilsMod {
         LOGGER.info(
                 "Wynntils: {} features are now loaded and ready",
                 FeatureRegistry.getFeatures().size());
-    }
-
-    private static void parseVersion(String versionString) {
-        LOGGER.info(
-                "Wynntils: Starting version {} (using {} on Minecraft {})",
-                versionString,
-                modLoader,
-                Minecraft.getInstance().getLaunchedVersion());
-
-        Matcher result = Pattern.compile("^(\\d+\\.\\d+\\.\\d+)\\+(DEV|\\d+).+").matcher(versionString);
-
-        if (!result.find()) {
-            LOGGER.warn("Unable to parse mod version");
-        }
-
-        version = result.group(1);
-
-        try {
-            buildNumber = Integer.parseInt(result.group(2));
-        } catch (NumberFormatException ignored) {
-        }
     }
 
     private static void addCrashCallbacks() {
