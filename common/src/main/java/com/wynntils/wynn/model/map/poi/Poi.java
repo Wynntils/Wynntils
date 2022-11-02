@@ -14,9 +14,9 @@ public interface Poi {
 
     void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
 
-    int getWidth();
+    int getWidth(float mapZoom, float scale);
 
-    int getHeight();
+    int getHeight(float mapZoom, float scale);
 
     String getName();
 }

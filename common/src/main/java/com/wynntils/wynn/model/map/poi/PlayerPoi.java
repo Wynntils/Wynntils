@@ -108,12 +108,12 @@ public class PlayerPoi implements Poi {
     }
 
     @Override
-    public int getWidth() {
+    public int getWidth(float mapZoom, float scale) {
         return (int) (PLAYER_HEAD_RENDER_SIZE + 20);
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight(float mapZoom, float scale) {
         return (int) (PLAYER_HEAD_RENDER_SIZE + 17);
     }
 
