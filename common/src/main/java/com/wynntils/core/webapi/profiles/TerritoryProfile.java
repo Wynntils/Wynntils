@@ -168,7 +168,7 @@ public class TerritoryProfile {
 
             String guildPrefix;
             if (territory.get("guildPrefix").isJsonNull()) {
-                guildPrefix = "UNK";
+                guildPrefix = "UNKNOWN";
             } else {
                 guildPrefix = territory.get("guildPrefix").getAsString();
             }
