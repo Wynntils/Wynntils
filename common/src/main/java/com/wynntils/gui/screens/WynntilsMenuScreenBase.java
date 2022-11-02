@@ -46,9 +46,8 @@ public abstract class WynntilsMenuScreenBase extends Screen {
                 .renderAlignedTextInBox(
                         poseStack,
                         version,
-                        0,
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 1.3f / 2f
-                                + FontRenderer.getInstance().getFont().width(version),
+                        59f * 1.3f,
+                        (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
                         0,
                         CommonColors.YELLOW,
