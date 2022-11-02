@@ -16,7 +16,6 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
-import com.wynntils.wynn.model.map.poi.LostSpiritPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
@@ -140,22 +139,6 @@ public final class MapModel extends Model {
                         } else {
                             WynntilsMod.warn("Unknown service type in services.json: " + service.type);
                         }
-                    }
-
-                    return true;
-                })
-                .build());
-
-        handler.addAndDispatch(new RequestBuilder(SPIRITS_JSON_URL, "maps-spirits")
-                .cacheTo(new File(mapDirectory, "spirits.json"))
-                .useCacheAsBackup()
-                .handleJsonArray(json -> {
-                    Type type = new TypeToken<List<MapLocation>>() {}.getType();
-
-                    List<MapLocation> mapLocations = GSON.fromJson(json, type);
-
-                    for (int i = 0; i < mapLocations.size(); i++) {
-                        SERVICE_POIS.add(new LostSpiritPoi(mapLocations.get(i), i + 1));
                     }
 
                     return true;
