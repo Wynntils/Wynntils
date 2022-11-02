@@ -21,3 +21,8 @@ classes/
 
 .architectury-transformer/
 .DS_Store
+
+# Files generated during github actions
+node_modules
+package-lock.json
+package.json

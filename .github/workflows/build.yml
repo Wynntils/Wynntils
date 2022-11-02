@@ -3,11 +3,6 @@ name: Spotless and Build
 on:
   workflow_dispatch:
   pull_request_target:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.md'
 
 jobs:
   format-and-build:
@@ -38,9 +33,9 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_user_name: 'Wynntils'
+          commit_user_name: 'WynntilsBot'
           commit_user_email: 'admin@wynntils.com'
-          commit_message: 'chore: spotless formatting'
+          commit_message: 'ci: spotless formatting [skip ci]'
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
