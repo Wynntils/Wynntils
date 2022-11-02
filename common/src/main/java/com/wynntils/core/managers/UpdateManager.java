@@ -4,143 +4,93 @@
  */
 package com.wynntils.core.managers;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.utils.Pair;
+import com.wynntils.utils.MD5Verification;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UpdateManager extends CoreManager {
-    private static final Pattern ARTIFACT_PATTERN =
-            Pattern.compile("(.+)/build/libs/wynntils-(.+)\\+(\\d+).MC1.18.2-(.+).jar");
-
-    private static final String LAST_BUILD_NUMBER_PATH =
-            "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/api/json?tree=number";
-
-    private static final String LAST_BUILD_DOWNLOAD_PATH =
-            "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/artifact/";
-    private static final String LAST_BUILD_RELATIVE_PATHS =
-            "https://ci.wynntils.com/job/Artemis/lastSuccessfulBuild/api/json?tree=artifacts%5BrelativePath%5D";
+    private static final String LAST_BUILD_CHECK_PATH = "https://athena.wynntils.com/version/latest/ce";
 
     public static void init() {}
 
-    public static CompletableFuture<Integer> getLatestBuild() {
-        CompletableFuture<Integer> future = new CompletableFuture<>();
+    public static CompletableFuture<String> getLatestBuild() {
+        CompletableFuture<String> future = new CompletableFuture<>();
 
-        Request versionFetch = new RequestBuilder(LAST_BUILD_NUMBER_PATH, "latest_build")
-                .handleJsonObject((jsonObject) -> {
-                    int buildNumber = jsonObject.getAsJsonPrimitive("number").getAsInt();
+        try {
+            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
+            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-                    future.complete(buildNumber);
+            String version = jsonObject.getAsJsonPrimitive("version").getAsString();
+            future.complete(version);
 
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(versionFetch, true);
-
-        return future;
+            return future;
+        } catch (IOException e) {
+            WynntilsMod.error("Exception while trying to fetch update.", e);
+            future.complete(null);
+            return future;
+        }
     }
 
     public static CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
-        Request versionRequest = new RequestBuilder(LAST_BUILD_RELATIVE_PATHS, "update_paths")
-                .handleJsonObject(jsonObject -> {
-                    JsonArray artifacts = jsonObject.getAsJsonArray("artifacts");
+        try {
+            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
+            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-                    Pair<String, Boolean> foundArtifact = findNewestArtifact(artifacts);
-                    if (foundArtifact.b()) {
-                        future.complete(UpdateResult.ALREADY_ON_LATEST);
-                        return false;
-                    }
+            String latestMd5 =
+                    jsonObject.getAsJsonArray("md5").getAsJsonPrimitive().getAsString();
 
-                    if (foundArtifact.a() == null) {
-                        future.complete(UpdateResult.ERROR);
-                        return false;
-                    }
-
-                    tryFetchNewUpdate(foundArtifact, future);
-
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(versionRequest, true);
-
-        return future;
-    }
-
-    private static Pair<String, Boolean> findNewestArtifact(JsonArray artifacts) {
-        final String expectedModLoader = WynntilsMod.getModLoader().toString().toLowerCase(Locale.ROOT);
-        final int currentBuild = WynntilsMod.getBuildNumber();
-
-        String foundArtifact = null;
-        boolean alreadyOnLatest = false;
-
-        for (JsonElement artifact : artifacts) {
-            String artifactPath = artifact.getAsJsonObject()
-                    .getAsJsonPrimitive("relativePath")
-                    .getAsString();
-            Matcher matcher = ARTIFACT_PATTERN.matcher(artifactPath);
-
-            if (matcher.matches()) {
-                if (!matcher.group(1).equals(expectedModLoader)) {
-                    WynntilsMod.info(
-                            "Found build for " + matcher.group(1) + ", but current loader is " + expectedModLoader);
-                    continue;
-                }
-
-                int buildNumber = Integer.parseInt(matcher.group(3));
-
-                if (buildNumber <= currentBuild) {
-                    foundArtifact = artifactPath;
-                    alreadyOnLatest = true;
-                    WynntilsMod.info("Found build " + buildNumber + ", but current build is " + currentBuild);
-                    continue;
-                }
-
-                foundArtifact = artifactPath;
-                break;
+            String currentMd5 = getCurrentMd5();
+            if (Objects.equals(currentMd5, latestMd5)) {
+                future.complete(UpdateResult.ALREADY_ON_LATEST);
+                return future;
             }
-        }
 
-        if (foundArtifact == null) {
-            WynntilsMod.warn("Tried to update, but could not find target artifact.");
-            return new Pair<>(null, false);
-        }
+            if (latestMd5 == null) {
+                future.complete(UpdateResult.ERROR);
+                return future;
+            }
 
-        if (alreadyOnLatest) {
-            WynntilsMod.warn("Tried to update, but mod is already up to date.");
-            return new Pair<>(foundArtifact, true);
-        }
+            String latestDownload =
+                    jsonObject.getAsJsonArray("url").getAsJsonPrimitive().getAsString();
 
-        WynntilsMod.info("Found update artifact " + foundArtifact);
-        return new Pair<>(foundArtifact, false);
+            tryFetchNewUpdate(latestDownload, future);
+
+            return future;
+        } catch (IOException e) {
+            WynntilsMod.error("Exception while trying to load new update.", e);
+            future.complete(UpdateResult.ERROR);
+            return future;
+        }
     }
 
-    private static void tryFetchNewUpdate(Pair<String, Boolean> foundArtifact, CompletableFuture<UpdateResult> future) {
+    private static String getCurrentMd5() {
+        MD5Verification verification = new MD5Verification(WynntilsMod.getModJar());
+        return verification.getMd5();
+    }
+
+    private static void tryFetchNewUpdate(String latestUrl, CompletableFuture<UpdateResult> future) {
         File oldJar = WynntilsMod.getModJar();
 
         try {
-            URL downloadUrl = new URL(LAST_BUILD_DOWNLOAD_PATH + foundArtifact.a());
+            URL downloadUrl = new URL(latestUrl);
             InputStream in = downloadUrl.openStream();
 
             File updatesDir = new File(WynntilsMod.getModStorageDir("updates").toURI());

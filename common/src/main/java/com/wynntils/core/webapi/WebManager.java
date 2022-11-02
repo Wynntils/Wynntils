@@ -83,9 +83,8 @@ public final class WebManager extends CoreManager {
     private static WynntilsAccount account = null;
 
     private static final String USER_AGENT = String.format(
-            "Wynntils Artemis\\%s-%d (%s) %s",
+            "Wynntils Artemis\\%s (%s) %s",
             WynntilsMod.getVersion(),
-            WynntilsMod.getBuildNumber(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
@@ -362,7 +361,7 @@ public final class WebManager extends CoreManager {
         currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
     }
 
-    private static URLConnection generateURLRequest(String url) throws IOException {
+    public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", USER_AGENT);
         if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));

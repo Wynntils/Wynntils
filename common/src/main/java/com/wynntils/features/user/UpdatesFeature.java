@@ -11,6 +11,7 @@ import com.wynntils.core.managers.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -37,14 +38,19 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        UpdateManager.getLatestBuild().whenCompleteAsync((buildNumber, throwable) -> {
-            if (buildNumber == WynntilsMod.getBuildNumber()) {
+        UpdateManager.getLatestBuild().whenCompleteAsync((version, throwable) -> {
+            if (version == null) {
+                WynntilsMod.info("Couldn't fetch latest version, not attempting update reminder or auto-update.");
+                return;
+            }
+
+            if (Objects.equals(version, WynntilsMod.getVersion())) {
                 WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
                 return;
             }
 
             if (updateReminder) {
-                remindToUpdateIfExists(buildNumber);
+                remindToUpdateIfExists(version);
             }
 
             if (autoUpdate) {
@@ -76,16 +82,16 @@ public class UpdatesFeature extends UserFeature {
         });
     }
 
-    private static void remindToUpdateIfExists(Integer buildNumber) {
+    private static void remindToUpdateIfExists(String newVersion) {
         TextComponent clickable = new TextComponent("here.");
         clickable.setStyle(clickable
                 .getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                 .withUnderlined(true)
                 .withBold(true));
-        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Build " + buildNumber
+        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Version " + newVersion
                         + " is the latest version, but you are using build "
-                        + WynntilsMod.getBuildNumber() + ". Please consider updating by clicking ")
+                        + WynntilsMod.getVersion() + ". Please consider updating by clicking ")
                 .append(clickable)
                 .append(new TextComponent(
                         "\nPlease note that Artemis is in alpha, and newer builds might introduce bugs."))
