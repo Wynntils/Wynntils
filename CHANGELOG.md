@@ -87,4 +87,3 @@
 * Unidentified Item Icons ([#271](https://github.com/Wynntils/Artemis/issues/271)) ([3d73347](https://github.com/Wynntils/Artemis/commit/3d73347b00718981381f3670a32ae09d35b5528f))
 
 ## 0.0.0 (2021-12-09)
-

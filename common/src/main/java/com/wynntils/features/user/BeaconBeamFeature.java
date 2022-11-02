@@ -16,7 +16,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.CompassModel;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.phys.Vec3;
@@ -33,16 +32,14 @@ public class BeaconBeamFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
-        Optional<Location> compassLocation = CompassModel.getCompassLocation();
-        if (compassLocation.isEmpty()) return;
+        if (CompassModel.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
         Vec3 camera = event.getCamera().getPosition();
-        Location location = compassLocation.get();
-        location.set(location.x, 0, location.z);
+        Location location = CompassModel.getCompassLocation().get();
 
         double dx = location.x - camera.x;
         double dy = location.y - camera.y;
