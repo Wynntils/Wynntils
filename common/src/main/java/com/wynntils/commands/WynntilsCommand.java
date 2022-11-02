@@ -57,6 +57,8 @@ public class WynntilsCommand extends CommandBase {
 
         if (WynntilsMod.getVersion().isEmpty()) {
             buildText = new TextComponent("Unknown Version");
+        } else if (WynntilsMod.isDevelopmentBuild()) {
+            buildText = new TextComponent("Development Build");
         } else {
             buildText = new TextComponent("Version " + WynntilsMod.getVersion());
         }

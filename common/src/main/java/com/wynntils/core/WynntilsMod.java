@@ -30,6 +30,7 @@ public final class WynntilsMod {
 
     private static ModLoader modLoader;
     private static String version = "";
+    private static boolean developmentBuild = false;
     private static boolean developmentEnvironment;
     private static boolean featuresInited = false;
     private static IEventBus eventBus;
@@ -102,6 +103,10 @@ public final class WynntilsMod {
         return version;
     }
 
+    public static boolean isDevelopmentBuild() {
+        return developmentBuild;
+    }
+
     public static boolean isDevelopmentEnvironment() {
         return developmentEnvironment;
     }
@@ -156,7 +161,7 @@ public final class WynntilsMod {
         modLoader = loader;
         developmentEnvironment = isDevelopmentEnvironment;
 
-        version = "v" + modVersion;
+        parseVersion(modVersion);
 
         LOGGER.info(
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
@@ -169,6 +174,16 @@ public final class WynntilsMod {
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         ManagerRegistry.init();
+    }
+
+    private static void parseVersion(String modVersion) {
+        if (modVersion.equals("DEV")) {
+            version = modVersion;
+            developmentBuild = true;
+        } else {
+            version = "v" + modVersion;
+            developmentBuild = false;
+        }
     }
 
     private static void initFeatures() {
