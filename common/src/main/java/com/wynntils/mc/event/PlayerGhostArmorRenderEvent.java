@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.event;
 
 import net.minecraft.world.entity.player.Player;
@@ -26,5 +30,4 @@ public class PlayerGhostArmorRenderEvent extends Event {
     public void setRenderGhostArmor(boolean renderGhostArmor) {
         this.renderGhostArmor = renderGhostArmor;
     }
-
 }
