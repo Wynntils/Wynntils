@@ -461,7 +461,7 @@
   "feature.wynntils.playerGhostTransparency.name": "Transparent Player Ghost",
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.description": "The level of translucence that should be applied to player ghosts",
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Player Ghost Translucence",
-  "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Should player ghost's armor be transparent?",
+  "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Should player ghosts' armor be transparent?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Transparent Ghost Armor",
   "feature.wynntils.pouchRedirect.name": "Pouch Message Redirect",
   "feature.wynntils.pouchRedirect.redirectEmeraldPouch.description": "Should messages about emeralds being added to your pouch be redirected to the game update ticker?",
