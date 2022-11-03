@@ -10,11 +10,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import net.minecraft.ChatFormatting;
-
 import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 
 public class CustomColor {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);

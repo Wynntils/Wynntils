@@ -10,12 +10,11 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import java.awt.Color;
+import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-
-import java.awt.Color;
-import java.util.List;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -88,7 +87,14 @@ public final class FontRenderer {
         }
     }
 
-    private void renderRainbowText(PoseStack poseStack, String text, float x, float y, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, TextShadow shadow) {
+    private void renderRainbowText(
+            PoseStack poseStack,
+            String text,
+            float x,
+            float y,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
         float renderX;
         float renderY;
 
@@ -103,7 +109,7 @@ public final class FontRenderer {
             case Bottom -> y - font.lineHeight;};
 
         for (char c : text.toCharArray()) {
-            long dif = ((long)renderX * 10) - ((long)renderX * 10);
+            long dif = ((long) renderX * 10) - ((long) renderX * 10);
 
             String s = String.valueOf(c);
 
@@ -115,7 +121,8 @@ public final class FontRenderer {
             CustomColor color = CustomColor.fromInt(colorInt);
 
             // rendering shadows
-            float originPosX = x; float originPosY = y;
+            float originPosX = x;
+            float originPosY = y;
             switch (shadow) {
                 case OUTLINE -> {
                     int shadowColor = SHADOW_COLOR.withAlpha(color.a).asInt();
