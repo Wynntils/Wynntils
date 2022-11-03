@@ -20,14 +20,15 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.objects.ClassInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.TranslatableComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterSelectorScreen extends Screen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;

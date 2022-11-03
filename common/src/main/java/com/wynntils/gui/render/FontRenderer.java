@@ -10,16 +10,19 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+
+import java.awt.Color;
+import java.util.List;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
+    private static final int CHAR_SPACING = 0;
     private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
     private FontRenderer() {
@@ -48,7 +51,10 @@ public final class FontRenderer {
 
         if (text == null) return;
 
-        // TODO: Add rainbow color support
+        if (customColor == CommonColors.RAINBOW) {
+            renderRainbowText(poseStack, text, x, y, horizontalAlignment, verticalAlignment, shadow);
+            return;
+        }
 
         renderX = switch (horizontalAlignment) {
             case Left -> x;
@@ -79,6 +85,59 @@ public final class FontRenderer {
             default -> {
                 font.draw(poseStack, text, renderX, renderY, customColor.asInt());
             }
+        }
+    }
+
+    private void renderRainbowText(PoseStack poseStack, String text, float x, float y, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, TextShadow shadow) {
+        float renderX;
+        float renderY;
+
+        renderX = switch (horizontalAlignment) {
+            case Left -> x;
+            case Center -> x - (font.width(text) / 2f);
+            case Right -> x - font.width(text);};
+
+        renderY = switch (verticalAlignment) {
+            case Top -> y;
+            case Middle -> y - (font.lineHeight / 2f);
+            case Bottom -> y - font.lineHeight;};
+
+        for (char c : text.toCharArray()) {
+            long dif = ((long)renderX * 10) - ((long)renderX * 10);
+
+            String s = String.valueOf(c);
+
+            // color settings
+            long time = System.currentTimeMillis() - dif;
+            float z = 2000.0F;
+
+            int colorInt = Color.HSBtoRGB((float) (time % (int) z) / z, 0.8F, 0.8F);
+            CustomColor color = CustomColor.fromInt(colorInt);
+
+            // rendering shadows
+            float originPosX = x; float originPosY = y;
+            switch (shadow) {
+                case OUTLINE -> {
+                    int shadowColor = SHADOW_COLOR.withAlpha(color.a).asInt();
+                    String strippedText = ComponentUtils.stripColorFormatting(s);
+                    font.draw(poseStack, strippedText, renderX + 1, renderY, shadowColor);
+                    font.draw(poseStack, strippedText, renderX - 1, renderY, shadowColor);
+                    font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
+                    font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
+
+                    font.draw(poseStack, s, renderX, renderY, color.asInt());
+                }
+                case NORMAL -> {
+                    font.drawShadow(poseStack, s, renderX, renderY, color.asInt());
+                }
+                default -> {
+                    font.draw(poseStack, s, renderX, renderY, color.asInt());
+                }
+            }
+
+            // rendering the text
+            float charLength = font.width(s);
+            renderX += charLength + CHAR_SPACING;
         }
     }
 

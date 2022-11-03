@@ -10,13 +10,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import net.minecraft.ChatFormatting;
+
 import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 
 public class CustomColor {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
+    public static final CustomColor RAINBOW = new CustomColor(-1, -1, -1, 0);
 
     private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})");
     private static final Pattern STRING_PATTERN = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");

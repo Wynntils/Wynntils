@@ -23,5 +23,5 @@ public final class CommonColors {
     public static final CustomColor ORANGE = CustomColor.fromInt(0xff9000).withAlpha(255);
     public static final CustomColor WHITE = CustomColor.fromInt(0xffffff).withAlpha(255);
 
-    // TODO Add rainbow
+    public static final CustomColor RAINBOW = CustomColor.RAINBOW;
 }
