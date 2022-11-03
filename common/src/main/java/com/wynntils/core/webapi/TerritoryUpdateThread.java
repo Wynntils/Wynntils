@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.request.RequestHandler;
 
 public class TerritoryUpdateThread extends Thread {
+    private static final int TERRITORY_UPDATE_MS = 15000;
+
     public TerritoryUpdateThread(String name) {
         super(name);
     }
@@ -17,13 +19,13 @@ public class TerritoryUpdateThread extends Thread {
         RequestHandler handler = new RequestHandler();
 
         try {
-            Thread.sleep(30000);
+            Thread.sleep(TERRITORY_UPDATE_MS);
             while (!isInterrupted()) {
-                WebManager.tryLoadTerritories(handler);
+                TerritoryManager.tryLoadTerritories(handler);
                 handler.dispatch();
 
                 // TODO: Add events
-                Thread.sleep(30000);
+                Thread.sleep(TERRITORY_UPDATE_MS);
             }
         } catch (InterruptedException ignored) {
         }

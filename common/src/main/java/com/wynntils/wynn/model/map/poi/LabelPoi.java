@@ -34,13 +34,13 @@ public class LabelPoi implements Poi {
     }
 
     @Override
-    public int getWidth() {
-        return FontRenderer.getInstance().getFont().width(label.getName());
+    public int getWidth(float mapZoom, float scale) {
+        return (int) (FontRenderer.getInstance().getFont().width(label.getName()) * scale);
     }
 
     @Override
-    public int getHeight() {
-        return FontRenderer.getInstance().getFont().lineHeight;
+    public int getHeight(float mapZoom, float scale) {
+        return (int) (FontRenderer.getInstance().getFont().lineHeight * scale);
     }
 
     private float getAlphaFromScale(float zoom) {

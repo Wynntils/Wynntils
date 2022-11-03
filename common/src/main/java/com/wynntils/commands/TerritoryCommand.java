@@ -10,11 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
-import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,11 +29,11 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) -> {
-                            if (!WebManager.isTerritoryListLoaded() && !WebManager.tryLoadTerritories()) {
+                            if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
                                 return Suggestions.empty();
                             }
 
-                            Map<String, TerritoryProfile> territories = WebManager.getTerritories();
+                            Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
 
                             return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
                         })
@@ -52,7 +51,7 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!WebManager.isTerritoryListLoaded() && !WebManager.tryLoadTerritories()) {
+        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
             context.getSource()
                     .sendFailure(new TextComponent("Can't access territory data").withStyle(ChatFormatting.RED));
             return 1;
@@ -60,7 +59,7 @@ public class TerritoryCommand extends CommandBase {
 
         String territoryArg = context.getArgument("territory", String.class);
 
-        HashMap<String, TerritoryProfile> territories = WebManager.getTerritories();
+        Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
 
         if (!territories.containsKey(territoryArg)) {
             context.getSource()
