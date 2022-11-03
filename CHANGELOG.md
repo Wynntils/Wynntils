@@ -1,3 +1,10 @@
+## [0.0.1-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2022-11-03)
+
+
+### New Features
+
+* Render guild territories on main map ([#643](https://github.com/Wynntils/Artemis/issues/643)) ([24c6960](https://github.com/Wynntils/Artemis/commit/24c6960230e19c02a48262f848a10ccc3d543bf4))
+
 ## [0.0.1-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2022-11-02)
 
 
@@ -9,6 +16,11 @@
 ### Build System
 
 * **gradle:** ignore changelog file from spotless [skip ci] ([49020ef](https://github.com/Wynntils/Artemis/commit/49020ef38a740747b7999995f79a32e472ad8927))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.3 [skip ci] ([6e6344a](https://github.com/Wynntils/Artemis/commit/6e6344ae664b76cdc212d7d7d769e54d14f3cf84))
 
 ## [0.0.1-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.1...v0.0.1-alpha.2) (2022-11-02)
 
@@ -124,6 +136,4 @@
 * Update loader and Devauth versions ([#124](https://github.com/Wynntils/Artemis/issues/124)) ([5e21944](https://github.com/Wynntils/Artemis/commit/5e21944718f398942b7044e5456b320e254adb30))
 * Update loaders and loom ([#627](https://github.com/Wynntils/Artemis/issues/627)) ([2ffbfc1](https://github.com/Wynntils/Artemis/commit/2ffbfc1c8a18644e324e251398c9d171d379d41a))
 * Update qodana ([b6cf6e7](https://github.com/Wynntils/Artemis/commit/b6cf6e74231aeaaddae9daaeb885ce0052fcf210))
-
-## 0.0.0 (2021-12-09)
 
