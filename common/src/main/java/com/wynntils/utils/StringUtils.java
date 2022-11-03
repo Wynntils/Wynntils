@@ -4,15 +4,19 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.CRC32;
 import net.minecraft.client.gui.Font;
 
 public final class StringUtils {
@@ -27,6 +31,8 @@ public final class StringUtils {
 
     private static final int stackSize = 64;
     private static final double taxAmount = 1.05;
+
+    private static final Map<String, CustomColor> registeredColors = new HashMap<>();
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
@@ -210,5 +216,25 @@ public final class StringUtils {
 
     public static boolean containsIgnoreCase(String string, String string2) {
         return org.apache.commons.lang3.StringUtils.containsIgnoreCase(string, string2);
+    }
+
+    /**
+     * Generates a Color based in the input string
+     * The color will be always the same if the string is the same
+     *
+     * @param input the input stream
+     * @return the color
+     */
+    public static CustomColor colorFromString(String input) {
+        if (registeredColors.containsKey(input)) return registeredColors.get(input);
+
+        CRC32 crc32 = new CRC32();
+        crc32.update(input.getBytes(StandardCharsets.UTF_8));
+
+        CustomColor color =
+                CustomColor.fromInt(((int) crc32.getValue()) & 0xFFFFFF).withAlpha(255);
+        registeredColors.put(input, color);
+
+        return color;
     }
 }

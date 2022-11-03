@@ -12,6 +12,7 @@ import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
@@ -45,6 +46,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
+        registerPersistentDependency(TerritoryManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WorldStateManager.class);
 

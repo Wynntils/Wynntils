@@ -15,4 +15,8 @@ public final class KeyboardUtils {
     public static boolean isShiftDown() {
         return isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) || isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
     }
+
+    public static boolean isControlDown() {
+        return isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL);
+    }
 }

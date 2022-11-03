@@ -230,6 +230,7 @@ public class MinimapFeature extends UserFeature {
                 cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
             }
 
+            float currentZoom = 1f / scale;
             for (Poi poi : MapModel.getServicePois()) {
 
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
@@ -245,14 +246,14 @@ public class MinimapFeature extends UserFeature {
                 float poiRenderX = centerX + dX;
                 float poiRenderZ = centerZ + dZ;
 
-                float poiWidth = poi.getWidth() * poiScale;
-                float poiHeight = poi.getHeight() * poiScale;
+                float poiWidth = poi.getWidth(currentZoom, poiScale);
+                float poiHeight = poi.getHeight(currentZoom, poiScale);
 
                 BoundingBox box = BoundingBox.centered(
                         poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, 1f / scale);
+                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
                 }
             }
 
@@ -273,7 +274,8 @@ public class MinimapFeature extends UserFeature {
                 compassOffsetX = tempCompassOffsetX;
             }
 
-            final float compassSize = Math.max(compass.getWidth(), compass.getHeight()) * 0.8f * poiScale;
+            final float compassSize =
+                    Math.max(compass.getWidth(currentZoom, poiScale), compass.getHeight(currentZoom, poiScale)) * 0.8f;
 
             float compassRenderX = compassOffsetX + centerX;
             float compassRenderZ = compassOffsetZ + centerZ;
@@ -307,10 +309,10 @@ public class MinimapFeature extends UserFeature {
                 poseStack.pushPose();
                 RenderUtils.rotatePose(poseStack, scaledCompassRenderX, scaledCompassRenderZ, angle);
                 compass.getPointerPoi()
-                        .renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
+                        .renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, currentZoom);
                 poseStack.popPose();
             } else {
-                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
+                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, currentZoom);
             }
 
             // TODO render compass text
