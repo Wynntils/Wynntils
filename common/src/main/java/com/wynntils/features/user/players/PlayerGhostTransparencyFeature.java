@@ -37,9 +37,7 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
 
     @SubscribeEvent
     public void onGhostArmorRender(PlayerGhostArmorRenderEvent e) {
-        if (!WynnUtils.onWorld()) return;
-
-        if (WynnPlayerUtils.isPlayerGhost((Player) e.getEntity())) {
+        if (WynnPlayerUtils.isPlayerGhost(e.getPlayer())) {
             e.setRenderGhostArmor(!transparentPlayerGhostArmor);
         }
     }

@@ -19,7 +19,10 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity> {
     private void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
         if (!(livingEntity instanceof Player))
             return;
-        PlayerGhostArmorRenderEvent event = EventFactory.onArmorRender(livingEntity);
+
+        Player p = (Player) livingEntity;
+
+        PlayerGhostArmorRenderEvent event = EventFactory.onArmorRender(p);
         if (!event.shouldRenderGhostArmor())
             ci.cancel();
     }
