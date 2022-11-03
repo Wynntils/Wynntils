@@ -304,7 +304,7 @@ public final class WebManager extends CoreManager {
         handler.addAndDispatch(request, true);
     }
 
-    public static void updateDiscoveries(RequestHandler handler) {
+    public static void updateDiscoveries() {
         if (apiUrls == null) return;
 
         String url = apiUrls.get("Discoveries");

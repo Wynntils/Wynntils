@@ -49,6 +49,7 @@ public enum Texture {
     QUEST_STARTED("quest_started_icon.png", 7, 7),
 
     // Icons
+    DISCOVERIES_ICON("discoveries_icon.png", 16, 32),
     GUIDES_ICON("guides_icon.png", 18, 34),
     MAP_ICON("map_icon.png", 21, 38),
     LOOTRUN_ICON("lootrun_icon.png", 16, 28),
