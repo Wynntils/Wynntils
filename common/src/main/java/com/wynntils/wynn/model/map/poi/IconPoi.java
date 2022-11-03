@@ -14,13 +14,13 @@ import com.wynntils.mc.objects.CommonColors;
 
 public abstract class IconPoi implements Poi {
     @Override
-    public int getWidth() {
-        return getIcon().width();
+    public int getWidth(float mapZoom, float scale) {
+        return (int) (getIcon().width() * scale);
     }
 
     @Override
-    public int getHeight() {
-        return getIcon().height();
+    public int getHeight(float mapZoom, float scale) {
+        return (int) (getIcon().height() * scale);
     }
 
     public abstract Texture getIcon();
