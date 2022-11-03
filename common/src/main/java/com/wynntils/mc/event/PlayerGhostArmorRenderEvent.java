@@ -12,8 +12,8 @@ import net.minecraftforge.eventbus.api.Event;
 public class PlayerGhostArmorRenderEvent extends Event {
     private final Player player;
 
-    public PlayerGhostArmorRenderEvent(Player p) {
-        this.player = p;
+    public PlayerGhostArmorRenderEvent(Player player) {
+        this.player = player;
     }
 
     public Player getPlayer() {
