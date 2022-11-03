@@ -35,10 +35,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity> {
             float netHeadYaw,
             float headPitch,
             CallbackInfo ci) {
-        if (!(livingEntity instanceof Player)) return;
+        if (!(livingEntity instanceof Player player)) return;
 
-        Player p = (Player) livingEntity;
-
-        if (EventFactory.onArmorRender(p).isCanceled()) ci.cancel();
+        if (EventFactory.onArmorRender(player).isCanceled()) ci.cancel();
     }
 }
