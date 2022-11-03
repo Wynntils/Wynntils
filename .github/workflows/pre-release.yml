@@ -15,7 +15,7 @@ jobs:
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
     needs: [changelog] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Gradle data
         uses: actions/cache@v3
@@ -63,7 +63,7 @@ jobs:
           name: build
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: 17
