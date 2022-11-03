@@ -10,7 +10,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
-import com.wynntils.mc.event.PlayerGhostArmorRenderEvent;
+import com.wynntils.mc.event.PlayerArmorRenderEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +33,7 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onGhostArmorRender(PlayerGhostArmorRenderEvent event) {
+    public void onGhostArmorRender(PlayerArmorRenderEvent event) {
         if (WynnPlayerUtils.isPlayerGhost(event.getPlayer())) {
             event.setCanceled(true);
         }

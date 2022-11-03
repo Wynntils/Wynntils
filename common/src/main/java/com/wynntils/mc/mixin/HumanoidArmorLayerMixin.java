@@ -37,6 +37,6 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity> {
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (EventFactory.onArmorRender(player).isCanceled()) ci.cancel();
+        if (EventFactory.onPlayerArmorRender(player).isCanceled()) ci.cancel();
     }
 }

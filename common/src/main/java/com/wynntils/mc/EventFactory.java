@@ -42,7 +42,7 @@ import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
-import com.wynntils.mc.event.PlayerGhostArmorRenderEvent;
+import com.wynntils.mc.event.PlayerArmorRenderEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
@@ -143,8 +143,8 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static PlayerGhostArmorRenderEvent onArmorRender(Player player) {
-        return post(new PlayerGhostArmorRenderEvent(player));
+    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player) {
+        return post(new PlayerArmorRenderEvent(player));
     }
 
     public static NametagRenderEvent onNameTagRender(

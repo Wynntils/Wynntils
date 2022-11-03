@@ -9,10 +9,10 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class PlayerGhostArmorRenderEvent extends Event {
+public class PlayerArmorRenderEvent extends Event {
     private final Player player;
 
-    public PlayerGhostArmorRenderEvent(Player player) {
+    public PlayerArmorRenderEvent(Player player) {
         this.player = player;
     }
 
