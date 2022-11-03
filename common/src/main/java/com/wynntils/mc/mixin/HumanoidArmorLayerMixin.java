@@ -21,7 +21,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity> {
     @Inject(
             method =
                     "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V",
-            at = @At("INVOKE"),
+            at = @At("HEAD"),
             cancellable = true)
     private void render(
             PoseStack matrixStack,
