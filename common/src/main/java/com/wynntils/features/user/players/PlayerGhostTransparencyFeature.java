@@ -38,7 +38,7 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
     @SubscribeEvent
     public void onGhostArmorRender(PlayerGhostArmorRenderEvent e) {
         if (WynnPlayerUtils.isPlayerGhost(e.getPlayer())) {
-            e.setRenderGhostArmor(!transparentPlayerGhostArmor);
+            e.setCanceled(true);
         }
     }
 }

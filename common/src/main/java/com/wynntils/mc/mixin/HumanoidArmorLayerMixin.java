@@ -6,7 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.PlayerGhostArmorRenderEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +39,6 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity> {
 
         Player p = (Player) livingEntity;
 
-        PlayerGhostArmorRenderEvent event = EventFactory.onArmorRender(p);
-        if (!event.shouldRenderGhostArmor()) ci.cancel();
+        if (EventFactory.onArmorRender(p).isCanceled()) ci.cancel();
     }
 }
