@@ -98,7 +98,7 @@ public class CustomCommandKeybindsFeature extends UserFeature {
         if (!configHolder.getFieldName().startsWith("keybindCommand")) return;
 
         String value = (String) configHolder.getValue();
-        String newValue = value.trim();
+        String newValue = value;
         if (!newValue.startsWith("/")) {
             newValue = "/" + newValue;
         }
