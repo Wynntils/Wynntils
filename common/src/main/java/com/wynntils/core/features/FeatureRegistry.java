@@ -185,7 +185,13 @@ public final class FeatureRegistry {
     private static void registerFeature(Feature feature) {
         FEATURES.add(feature);
 
-        initializeFeature(feature);
+        try {
+            initializeFeature(feature);
+        } catch (Throwable exception) {
+            // Log and fail gracefully, don't make other features fail to init
+            WynntilsMod.error(
+                    "Failed to initialize feature " + feature.getClass().getSimpleName(), exception);
+        }
     }
 
     private static void initializeFeature(Feature feature) {
