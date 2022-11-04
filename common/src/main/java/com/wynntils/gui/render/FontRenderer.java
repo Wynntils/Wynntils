@@ -10,13 +10,12 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
-
 import java.awt.Color;
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -25,7 +24,9 @@ public final class FontRenderer {
     private static final int NEWLINE_OFFSET = 10;
     private static final int CHAR_SPACING = 0;
     private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
-    private static final char[] COLOR_CODES = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'r' };
+    private static final char[] COLOR_CODES = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'r'
+    };
 
     private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
