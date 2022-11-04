@@ -5,8 +5,8 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.DiscoveryProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -18,29 +18,53 @@ import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
+import com.wynntils.wynn.model.discoveries.DiscoveryManager;
+import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryProfile, DiscoveryButton> {
+public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.name")
                     .withStyle(ChatFormatting.WHITE),
             new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    private final List<DiscoveryProfile> currentDiscoveries = new ArrayList<>();
+    private final List<DiscoveryInfo> webDiscoveryInfoCache = new ArrayList<>();
 
     public WynntilsDiscoveriesScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name"));
+
+        // Only register this once
+        WynntilsMod.registerEventListener(this);
+    }
+
+    @SubscribeEvent
+    public void onDiscoveryUpdate(DiscoveriesUpdatedEvent event) {
+        if (McUtils.mc().screen != this) return;
+
+        if (event instanceof DiscoveriesUpdatedEvent.Api) {
+            webDiscoveryInfoCache.clear();
+            webDiscoveryInfoCache.addAll(
+                    WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
+        }
+
+        this.reloadElementsList(searchWidget.getTextBoxInput());
     }
 
     @Override
     public void onClose() {
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
+        WynntilsMod.unregisterEventListener(this);
+
         super.onClose();
     }
 
@@ -96,7 +120,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryP
 
         renderButtons(poseStack, mouseX, mouseY, partialTick);
 
-        if (currentDiscoveries.isEmpty()) {
+        if (elements.isEmpty()) {
             renderNoDiscoveries(poseStack);
         }
 
@@ -175,13 +199,18 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryP
 
     @Override
     protected DiscoveryButton getButtonFromElement(int i) {
-        return new DiscoveryButton(0, 0, 0, 0);
+        return new DiscoveryButton(0, 0, 0, 0, null);
     }
 
     @Override
-    protected void reloadElementsList(String searchTerm) {}
+    protected void reloadElementsList(String searchTerm) {
+        elements.addAll(Stream.concat(webDiscoveryInfoCache.stream(), DiscoveryManager.getAllDiscoveries())
+                .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
+                .toList());
+    }
 
     private void reloadDiscoveries() {
         WebManager.updateDiscoveries();
+        DiscoveryManager.queryDiscoveries();
     }
 }

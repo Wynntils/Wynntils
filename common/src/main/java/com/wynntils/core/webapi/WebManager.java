@@ -28,6 +28,7 @@ import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
+import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import java.io.File;
 import java.io.IOException;
@@ -314,6 +315,7 @@ public final class WebManager extends CoreManager {
                     Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
                     discoveries = gson.fromJson(discoveriesJson, type);
+                    WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Api());
                     return true;
                 })
                 .build());
