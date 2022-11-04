@@ -7,6 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -27,6 +28,7 @@ import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.PlayerPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -250,6 +252,9 @@ public class MainMapScreen extends Screen {
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
+        if (KeyboardUtils.isControlDown()) {
+            pois.addAll(TerritoryManager.getTerritoryPois());
+        }
 
         List<Poi> filteredPois = new ArrayList<>();
 
@@ -260,8 +265,8 @@ public class MainMapScreen extends Screen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
-            float poiWidth = poi.getWidth() * MapFeature.INSTANCE.poiScale;
-            float poiHeight = poi.getHeight() * MapFeature.INSTANCE.poiScale;
+            float poiWidth = poi.getWidth(currentZoom, MapFeature.INSTANCE.poiScale);
+            float poiHeight = poi.getHeight(currentZoom, MapFeature.INSTANCE.poiScale);
 
             BoundingBox filterBox = BoundingBox.centered(
                     poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
@@ -340,7 +345,7 @@ public class MainMapScreen extends Screen {
                 return true;
             }
 
-            if (hovered != null) {
+            if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
                     CompassModel.setCompassLocation(new Location(hovered.getLocation()));

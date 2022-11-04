@@ -12,6 +12,7 @@
     "CrashReportMixin",
     "EntityLookupMixin",
     "GuiMixin",
+    "HumanoidArmorLayerMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
     "KeyMappingMixin",

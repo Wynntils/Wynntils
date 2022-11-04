@@ -31,24 +31,27 @@ public class UpdateCommand extends CommandBase {
             return 0;
         }
 
-        WynntilsMod.info("Attempting to fetch Wynntils update.");
-        CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
+        CompletableFuture.runAsync(() -> {
+            WynntilsMod.info("Attempting to fetch Wynntils update.");
+            CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
 
-        completableFuture.whenComplete((result, throwable) -> {
-            switch (result) {
-                case SUCCESSFUL -> McUtils.sendMessageToClient(
-                        new TextComponent("Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
-                                .withStyle(ChatFormatting.DARK_GREEN));
-                case ERROR -> McUtils.sendMessageToClient(new TextComponent("Error applying Wynntils/Artemis update.")
-                        .withStyle(ChatFormatting.DARK_RED));
-                case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                        new TextComponent("Wynntils/Artemis is already on latest version.")
-                                .withStyle(ChatFormatting.YELLOW));
-            }
+            completableFuture.whenComplete((result, throwable) -> {
+                switch (result) {
+                    case SUCCESSFUL -> McUtils.sendMessageToClient(new TextComponent(
+                                    "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
+                            .withStyle(ChatFormatting.DARK_GREEN));
+                    case ERROR -> McUtils.sendMessageToClient(
+                            new TextComponent("Error applying Wynntils/Artemis update.")
+                                    .withStyle(ChatFormatting.DARK_RED));
+                    case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
+                            new TextComponent("Wynntils/Artemis is already on latest version.")
+                                    .withStyle(ChatFormatting.YELLOW));
+                }
+            });
+
+            context.getSource()
+                    .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
         });
-
-        context.getSource()
-                .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }
