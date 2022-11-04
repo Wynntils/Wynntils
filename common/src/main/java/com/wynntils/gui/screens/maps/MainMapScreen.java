@@ -420,8 +420,4 @@ public class MainMapScreen extends Screen {
     public void setHoldingMapKey(boolean holdingMapKey) {
         this.holdingMapKey = holdingMapKey;
     }
-
-    public void setHovered(Poi hovered) {
-        this.hovered = hovered;
-    }
 }

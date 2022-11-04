@@ -31,6 +31,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
@@ -39,6 +40,7 @@ import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.Font;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
@@ -277,11 +279,13 @@ public class MinimapFeature extends UserFeature {
 
             float compassRenderX = compassOffsetX + centerX;
             float compassRenderZ = compassOffsetZ + centerZ;
-            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
 
+            // Normalize offset for later
+            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
             compassOffsetX /= distance;
             compassOffsetZ /= distance;
 
+            // Subtract compassSize so scaled remains within boundary
             float scaledWidth = width - 2 * compassSize;
             float scaledHeight = height - 2 * compassSize;
 
@@ -298,22 +302,52 @@ public class MinimapFeature extends UserFeature {
             }
 
             if (toBorderScale < distance) {
-                float scaledCompassRenderX = centerX + compassOffsetX * toBorderScale;
-                float scaledCompassRenderZ = centerZ + compassOffsetZ * toBorderScale;
+                // Scale to border
+                compassRenderX = centerX + compassOffsetX * toBorderScale;
+                compassRenderZ = centerZ + compassOffsetZ * toBorderScale;
 
                 // Replace with pointer
                 float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
 
                 poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, scaledCompassRenderX, scaledCompassRenderZ, angle);
+                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
                 compass.getPointerPoi()
-                        .renderAt(poseStack, scaledCompassRenderX, scaledCompassRenderZ, false, poiScale, 1f / scale);
+                        .renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
                 poseStack.popPose();
             } else {
                 compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
             }
 
-            // TODO render compass text
+            poseStack.pushPose();
+            poseStack.translate(centerX, centerZ, 0);
+            poseStack.scale(0.8f, 0.8f, 1);
+            poseStack.translate(-centerX, -centerZ, 0);
+
+            FontRenderer fontRenderer = FontRenderer.getInstance();
+            Font font = fontRenderer.getFont();
+
+            String text = StringUtils.integerToShortString(Math.round(distance * scale)) + "m";
+            float w = font.width(text) / 2f, h = font.lineHeight / 2f;
+
+            RenderUtils.drawRect(
+                    poseStack,
+                    new CustomColor(0f, 0f, 0f, 0.7f),
+                    compassRenderX - w - 3f,
+                    compassRenderZ - h - 1f,
+                    0,
+                    2 * w + 6,
+                    2 * h + 1);
+            fontRenderer.renderText(
+                    poseStack,
+                    text,
+                    compassRenderX,
+                    compassRenderZ - 3f,
+                    CommonColors.WHITE,
+                    HorizontalAlignment.Center,
+                    VerticalAlignment.Top,
+                    FontRenderer.TextShadow.NORMAL);
+
+            poseStack.popPose();
         }
 
         private void renderCardinalDirections(
