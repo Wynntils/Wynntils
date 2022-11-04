@@ -23,6 +23,20 @@ public enum Texture {
     VIGNETTE("vignette.png", 512, 512),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
 
+    // Discovery Screen
+    DISCOVERED_SECRET("discovered_secret.png", 19, 36),
+    DISCOVERED_SECRET_ICON("discovered_secret_icon.png", 5, 7),
+    DISCOVERED_TERRITORY("discovered_territory.png", 17, 40),
+    DISCOVERED_TERRITORY_ICON("discovered_territory_icon.png", 8, 7),
+    DISCOVERED_WORLD("discovered_world.png", 18, 34),
+    DISCOVERED_WORLD_ICON("discovered_world_icon.png", 5, 7),
+    UNDISCOVERED_SECRET("undiscovered_secret.png", 17, 30),
+    UNDISCOVERED_SECRET_ICON("undiscovered_secret_icon.png", 11, 7),
+    UNDISCOVERED_TERRITORY("undiscovered_territory.png", 21, 38),
+    UNDISCOVERED_TERRITORY_ICON("undiscovered_territory_icon.png", 6, 7),
+    UNDISCOVERED_WORLD("undiscovered_world.png", 21, 34),
+    UNDISCOVERED_WORLD_ICON("undiscovered_world_icon.png", 11, 7),
+
     // Settings Screen
     SETTING_BACKGROUND("book.png", 400, 220),
     SETTING_SCROLL_AREA("book_scrollarea.png", 168, 175),
@@ -55,6 +69,7 @@ public enum Texture {
     LOOTRUN_ICON("lootrun_icon.png", 16, 28),
     OVERLAYS_ICON("overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("quests_icon.png", 24, 34),
+    SECRET_DISCOVERIES("secret_discoveries.png", 16, 26),
     SETTINGS_ICON("settings_icon.png", 17, 34),
 
     // Map related
