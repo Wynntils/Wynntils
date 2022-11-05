@@ -1,9 +1,26 @@
+## [0.0.1-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2022-11-05)
+
+
+### Bug Fixes
+
+* Fix ability redirect regex to work in dialogues as well ([#651](https://github.com/Wynntils/Artemis/issues/651)) ([f2dce94](https://github.com/Wynntils/Artemis/commit/f2dce946f212b9fa714981f3baa913e987557635))
+
+
+### New Features
+
+* armor transparency ([#644](https://github.com/Wynntils/Artemis/issues/644)) ([ff38a56](https://github.com/Wynntils/Artemis/commit/ff38a561b13dd35ee8292937cb93b1b4a09e374d))
+
 ## [0.0.1-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2022-11-03)
 
 
 ### Bug Fixes
 
 * Make the mod loading fail gracefully if a feature couldn't init ([#645](https://github.com/Wynntils/Artemis/issues/645)) ([989385a](https://github.com/Wynntils/Artemis/commit/989385aefeb9c30b620736fb680c940b3b93501d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.6 [skip ci] ([beac1e0](https://github.com/Wynntils/Artemis/commit/beac1e0346cf04ec9e1a1b222995cf664874e4d1))
 
 ## [0.0.1-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2022-11-03)
 
@@ -45,16 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.3 [skip ci] ([6e6344a](https://github.com/Wynntils/Artemis/commit/6e6344ae664b76cdc212d7d7d769e54d14f3cf84))
-
-## [0.0.1-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.1...v0.0.1-alpha.2) (2022-11-02)
-
-
-### Bug Fixes
-
-* Mark and display development builds correctly  ([#641](https://github.com/Wynntils/Artemis/issues/641)) ([51757b9](https://github.com/Wynntils/Artemis/commit/51757b9df28d60505d87f7d9f8382f8ba3d2569d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.2 [skip ci] ([425c966](https://github.com/Wynntils/Artemis/commit/425c966c3eb73261dd780196e17d657624b2ed21))
 
