@@ -10,6 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ public class TerritoryProfile {
 
     private final String guild;
     private final String guildPrefix;
-    private final String guildColor;
+    private final CustomColor guildColor;
     private final String attacker;
     private final Date acquired;
 
@@ -37,7 +39,7 @@ public class TerritoryProfile {
             String name,
             String friendlyName,
             String guildPrefix,
-            String guildColor,
+            CustomColor guildColor,
             int level,
             int startX,
             int startZ,
@@ -83,7 +85,7 @@ public class TerritoryProfile {
         return friendlyName;
     }
 
-    public String getGuildColor() {
+    public CustomColor getGuildColor() {
         return guildColor;
     }
 
@@ -147,8 +149,11 @@ public class TerritoryProfile {
             String friendlyName = territoryName.replace('’', '\'');
 
             String guild;
-            if (territory.get("guild").isJsonNull()) guild = "Unknown";
-            else guild = territory.get("guild").getAsString();
+            if (territory.get("guild").isJsonNull()) {
+                guild = "Unknown";
+            } else {
+                guild = territory.get("guild").getAsString();
+            }
 
             Date acquired = null;
             try {
@@ -162,14 +167,21 @@ public class TerritoryProfile {
             }
 
             String guildPrefix;
-            if (territory.get("guildPrefix").isJsonNull()) guildPrefix = "UNK";
-            else guildPrefix = territory.get("guildPrefix").getAsString();
+            if (territory.get("guildPrefix").isJsonNull()) {
+                guildPrefix = "UNKNOWN";
+            } else {
+                guildPrefix = territory.get("guildPrefix").getAsString();
+            }
 
             int level = territory.get("level").getAsInt();
 
-            String guildColor;
-            if (territory.get("guildColor").getAsString().isEmpty()) guildColor = null;
-            else guildColor = territory.get("guildColor").getAsString();
+            CustomColor guildColor;
+            if (territory.get("guildColor").getAsString().isEmpty()) {
+                guildColor = StringUtils.colorFromString(guild);
+            } else {
+                guildColor =
+                        CustomColor.fromHexString(territory.get("guildColor").getAsString());
+            }
 
             return new TerritoryProfile(
                     territoryName,

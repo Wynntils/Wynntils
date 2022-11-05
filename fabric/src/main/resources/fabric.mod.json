@@ -7,7 +7,7 @@
     "sources": "https://github.com/Wynntils/Artemis"
   },
   "depends": {
-    "minecraft": ">=1.18.2"
+    "minecraft": "1.18.2"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
@@ -20,8 +20,7 @@
   "id": "wynntils",
   "license": "GNU AGPL 3",
   "mixins": [
-    "wynntils.mixins.json",
-    "wynntils.mixins.fabric.json"
+    "wynntils.mixins.json"
   ],
   "name": "Wynntils",
   "schemaVersion": 1,

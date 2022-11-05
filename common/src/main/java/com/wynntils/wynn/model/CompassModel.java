@@ -48,9 +48,6 @@ public final class CompassModel extends Model {
             WaypointPoi waypointPoi = new WaypointPoi(() -> {
                 Location location = locationSupplier.get();
 
-                // Make sure to always render on top
-                location.set(location.x, Double.MAX_VALUE, location.z);
-
                 return MapLocation.fromLocation(location);
             });
 

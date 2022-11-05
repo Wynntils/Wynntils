@@ -15,7 +15,6 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
@@ -77,15 +76,11 @@ public final class WebManager extends CoreManager {
 
     private static String currentSplash = "";
 
-    private static TerritoryUpdateThread territoryUpdateThread;
-    private static final HashMap<String, TerritoryProfile> territories = new HashMap<>();
-
     private static WynntilsAccount account = null;
 
     private static final String USER_AGENT = String.format(
-            "Wynntils Artemis\\%s-%d (%s) %s",
+            "Wynntils Artemis\\%s (%s) %s",
             WynntilsMod.getVersion(),
-            WynntilsMod.getBuildNumber(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
@@ -122,11 +117,6 @@ public final class WebManager extends CoreManager {
         internalIdentifications = null;
         majorIds = null;
         materialTypes = null;
-
-        // tryLoadTerritories
-        territories.clear();
-
-        updateTerritoryThreadStatus(false);
     }
 
     private static void setupUserAccount() {
@@ -152,50 +142,6 @@ public final class WebManager extends CoreManager {
 
             McUtils.sendMessageToClient(failed);
         }
-    }
-
-    public static boolean tryLoadTerritories() {
-        return tryLoadTerritories(handler);
-    }
-
-    public static boolean tryLoadTerritories(RequestHandler handler) {
-        if (apiUrls == null || !apiUrls.hasKey("Athena")) return false;
-        String url = apiUrls.get("Athena") + "/cache/get/territoryList";
-        handler.addAndDispatch(new RequestBuilder(url, "territory")
-                .cacheTo(new File(API_CACHE_ROOT, "territories.json"))
-                .handleJsonObject(json -> {
-                    if (!json.has("territories")) return false;
-
-                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.registerTypeHierarchyAdapter(
-                            TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
-                    Gson gson = builder.create();
-
-                    territories.clear();
-                    territories.putAll(gson.fromJson(json.get("territories"), type));
-                    return true;
-                })
-                .build());
-
-        return isTerritoryListLoaded();
-    }
-
-    private static void updateTerritoryThreadStatus(boolean start) {
-        if (start) {
-            if (territoryUpdateThread == null) {
-                territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
-                territoryUpdateThread.start();
-                return;
-            }
-            return;
-        }
-
-        if (territoryUpdateThread != null) {
-            territoryUpdateThread.interrupt();
-        }
-        territoryUpdateThread = null;
     }
 
     private static void tryLoadItemGuesses() {
@@ -362,7 +308,7 @@ public final class WebManager extends CoreManager {
         currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
     }
 
-    private static URLConnection generateURLRequest(String url) throws IOException {
+    public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", USER_AGENT);
         if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
@@ -380,10 +326,6 @@ public final class WebManager extends CoreManager {
 
     public static boolean isAthenaOnline() {
         return (account != null && account.isConnected());
-    }
-
-    public static boolean isTerritoryListLoaded() {
-        return !territories.isEmpty();
     }
 
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
@@ -424,10 +366,6 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
-    }
-
-    public static HashMap<String, TerritoryProfile> getTerritories() {
-        return territories;
     }
 
     public static String getUserAgent() {
