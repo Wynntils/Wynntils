@@ -14,6 +14,7 @@ jobs:
       skipped: ${{ steps.changelog.outputs.skipped }}
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
       changelog: ${{ steps.changelog.outputs.changelog }}
+      release_id: ${{ steps.release.outputs.id }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -38,6 +39,16 @@ jobs:
           skip-git-pull: true
           pre-release: true
           pre-release-identifier: alpha
+
+      - name: Create release
+        if: ${{ steps.changelog.outputs.skipped != 'true' }}
+        id: release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: true
+          prerelease: true
 
       - name: Upload version information
         uses: actions/upload-artifact@v3
@@ -73,6 +84,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build -x spotlessCheck --build-cache
+
+      - name: Upload files to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.changelog.outputs.tag }}
+          draft: true
+          prerelease: true
+          files: "**/build/libs/*-*.jar"
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -124,15 +143,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, changelog]
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Publish Release
+        uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: build
-
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: "**/build/libs/*-*.jar"
-          tag_name: ${{ needs.changelog.outputs.tag }}
-          prerelease: true
-          body: ${{ needs.changelog.outputs.clean_changelog }}
-          target_commitish: ${{ github.sha }}
+          release_id: ${{ needs.changelog.outputs.release_id }}
