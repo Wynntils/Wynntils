@@ -12,6 +12,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
@@ -304,6 +305,7 @@ public final class ScoreboardModel extends Model {
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(QuestManager.SCOREBOARD_HANDLER, SegmentType.Quest);
+        registerHandler(GuildAttackTimerModel.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
         startThread();
     }
