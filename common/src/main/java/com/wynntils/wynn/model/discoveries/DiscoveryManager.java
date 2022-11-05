@@ -42,7 +42,7 @@ public class DiscoveryManager extends CoreManager {
     public static void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
         secretDiscoveries = newDiscoveries;
 
-        WynntilsMod.info("Discovered " + secretDiscoveries.size() + "secret discoveries");
+        WynntilsMod.info("Discovered " + secretDiscoveries.size() + " secret discoveries");
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
     }
 

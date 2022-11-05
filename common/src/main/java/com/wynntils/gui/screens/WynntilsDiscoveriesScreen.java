@@ -14,6 +14,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.DiscoveryButton;
+import com.wynntils.gui.widgets.DiscoveryFilterButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
@@ -23,11 +24,13 @@ import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -39,6 +42,16 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                     .withStyle(ChatFormatting.GRAY));
 
     private final List<DiscoveryInfo> webDiscoveryInfoCache = new ArrayList<>();
+
+    private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
+
+    // Filters
+    private boolean showFoundSecrets = true;
+    private boolean showUndiscoveredSecrets = false;
+    private boolean showFoundWorld = true;
+    private boolean showUndiscoveredWorld = false;
+    private boolean showFoundTerritory = true;
+    private boolean showUndiscoveredTerritory = false;
 
     public WynntilsDiscoveriesScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name"));
@@ -57,7 +70,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                     WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
         }
 
-        this.reloadElementsList(searchWidget.getTextBoxInput());
+        this.reloadElements();
     }
 
     @Override
@@ -70,9 +83,118 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected void init() {
+        reloadDiscoveries();
+
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
+
+        filterButtons.clear();
+
+        filterButtons.add(new DiscoveryFilterButton(
+                35,
+                125,
+                30,
+                30,
+                Texture.DISCOVERED_TERRITORY,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent(
+                                        "screens.wynntils.wynntilsDiscoveries.showFoundTerritory.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showFoundTerritory = !showFoundTerritory;
+                    reloadElements();
+                },
+                () -> showFoundTerritory));
+        filterButtons.add(new DiscoveryFilterButton(
+                70,
+                125,
+                30,
+                30,
+                Texture.DISCOVERED_WORLD,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundWorld.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showFoundWorld = !showFoundWorld;
+                    reloadElements();
+                },
+                () -> showFoundWorld));
+        filterButtons.add(new DiscoveryFilterButton(
+                105,
+                125,
+                30,
+                30,
+                Texture.DISCOVERED_SECRET,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundSecret.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showFoundSecrets = !showFoundSecrets;
+                    reloadElements();
+                },
+                () -> showFoundSecrets));
+        filterButtons.add(new DiscoveryFilterButton(
+                35,
+                160,
+                30,
+                30,
+                Texture.UNDISCOVERED_TERRITORY,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent(
+                                        "screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showUndiscoveredTerritory = !showUndiscoveredTerritory;
+                    reloadElements();
+                },
+                () -> showUndiscoveredTerritory));
+        filterButtons.add(new DiscoveryFilterButton(
+                70,
+                160,
+                30,
+                30,
+                Texture.UNDISCOVERED_WORLD,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showUndiscoveredWorld = !showUndiscoveredWorld;
+                    reloadElements();
+                },
+                () -> showUndiscoveredWorld));
+        filterButtons.add(new DiscoveryFilterButton(
+                105,
+                160,
+                30,
+                30,
+                Texture.UNDISCOVERED_SECRET,
+                true,
+                List.of(new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showUndiscoveredSecrets = !showUndiscoveredSecrets;
+                    reloadElements();
+                },
+                () -> showUndiscoveredSecrets));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -102,6 +224,10 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 Texture.FORWARD_ARROW.height(),
                 true,
                 this));
+
+        for (DiscoveryFilterButton filterButton : filterButtons) {
+            this.addRenderableWidget(filterButton);
+        }
     }
 
     @Override
@@ -141,6 +267,10 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
         if (this.hovered instanceof ReloadButton) {
             tooltipLines = RELOAD_TOOLTIP;
+        } else if (this.hovered instanceof DiscoveryFilterButton filterButton) {
+            tooltipLines = filterButton.getTooltipLines();
+        } else if (this.hovered instanceof DiscoveryButton discoveryButton) {
+            tooltipLines = discoveryButton.getTooltipLines();
         }
 
         if (tooltipLines.isEmpty()) return;
@@ -199,13 +329,34 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected DiscoveryButton getButtonFromElement(int i) {
-        return new DiscoveryButton(0, 0, 0, 0, null);
+        int offset = i % getElementsPerPage();
+        return new DiscoveryButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                offset * 13 + 25,
+                Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                9,
+                elements.get(i));
     }
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Stream.concat(webDiscoveryInfoCache.stream(), DiscoveryManager.getAllDiscoveries())
+        elements.addAll(Stream.concat(
+                        webDiscoveryInfoCache.stream()
+                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                                    case TERRITORY -> showUndiscoveredTerritory;
+                                    case WORLD -> showUndiscoveredWorld;
+                                    case SECRET -> showUndiscoveredSecrets;
+                                })
+                                .filter(discoveryInfo -> DiscoveryManager.getAllDiscoveries()
+                                        .noneMatch(
+                                                discovery -> discovery.getName().equals(discoveryInfo.getName()))),
+                        DiscoveryManager.getAllDiscoveries().filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                            case TERRITORY -> showFoundTerritory;
+                            case WORLD -> showFoundWorld;
+                            case SECRET -> showFoundSecrets;
+                        }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
+                .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());
     }
 

@@ -25,7 +25,8 @@ public class DiscoveryInfo {
     private final String description;
     private final int minLevel;
     private final TerritoryProfile guildTerritory;
-    boolean discovered;
+    private final boolean discovered;
+    private final List<String> requirements;
     private List<Component> displayLore;
 
     public DiscoveryInfo(DiscoveryProfile discoveryProfile) {
@@ -35,6 +36,7 @@ public class DiscoveryInfo {
         this.minLevel = discoveryProfile.getLevel();
         this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = false;
+        this.requirements = discoveryProfile.getRequirements();
 
         generateLore();
     }
@@ -46,6 +48,7 @@ public class DiscoveryInfo {
         this.minLevel = minLevel;
         this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = true;
+        this.requirements = List.of();
 
         generateLore();
     }
@@ -87,13 +90,13 @@ public class DiscoveryInfo {
         if (CharacterManager.getCharacterInfo().getLevel() >= minLevel) {
             displayLore.add(new TextComponent("✔")
                     .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent("Combat Lv. Min: ")
+                    .append(new TextComponent(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
                             .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         } else {
             displayLore.add(new TextComponent("✘")
                     .withStyle(ChatFormatting.RED)
-                    .append(new TextComponent("Combat Lv. Min: ")
+                    .append(new TextComponent(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
                             .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         }
@@ -108,7 +111,8 @@ public class DiscoveryInfo {
 
         if (!description.isEmpty()) {
             displayLore.add(TextComponent.EMPTY);
-            displayLore.add(new TextComponent(description).withStyle(ChatFormatting.GRAY));
+            displayLore.addAll(ComponentUtils.wrapTooltips(
+                    List.of(new TextComponent(description).withStyle(ChatFormatting.GRAY)), 300));
         }
     }
 
@@ -118,5 +122,25 @@ public class DiscoveryInfo {
 
     public String getName() {
         return name;
+    }
+
+    public DiscoveryType getType() {
+        return type;
+    }
+
+    public boolean isDiscovered() {
+        return discovered;
+    }
+
+    public int getMinLevel() {
+        return minLevel;
+    }
+
+    public TerritoryProfile getGuildTerritory() {
+        return guildTerritory;
+    }
+
+    public List<String> getRequirements() {
+        return requirements;
     }
 }

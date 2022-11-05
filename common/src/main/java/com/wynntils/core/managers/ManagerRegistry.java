@@ -14,6 +14,7 @@ import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -45,6 +46,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(DiscoveryManager.class);
         registerPersistentDependency(FunctionManager.class);
         registerPersistentDependency(KeyBindManager.class);
+        registerPersistentDependency(MinecraftSchedulerManager.class);
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);

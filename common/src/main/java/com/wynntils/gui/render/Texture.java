@@ -30,7 +30,7 @@ public enum Texture {
     DISCOVERED_TERRITORY_ICON("discovered_territory_icon.png", 8, 7),
     DISCOVERED_WORLD("discovered_world.png", 18, 34),
     DISCOVERED_WORLD_ICON("discovered_world_icon.png", 5, 7),
-    UNDISCOVERED_SECRET("undiscovered_secret.png", 17, 30),
+    UNDISCOVERED_SECRET("undiscovered_secret.png", 17, 32),
     UNDISCOVERED_SECRET_ICON("undiscovered_secret_icon.png", 11, 7),
     UNDISCOVERED_TERRITORY("undiscovered_territory.png", 21, 38),
     UNDISCOVERED_TERRITORY_ICON("undiscovered_territory_icon.png", 6, 7),
