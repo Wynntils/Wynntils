@@ -15,6 +15,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.DiscoveryButton;
 import com.wynntils.gui.widgets.DiscoveryFilterButton;
+import com.wynntils.gui.widgets.DiscoveryProgressButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
@@ -228,6 +229,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
         for (DiscoveryFilterButton filterButton : filterButtons) {
             this.addRenderableWidget(filterButton);
         }
+
+        this.addRenderableWidget(new DiscoveryProgressButton(50, 10, 20, 20, false));
+        this.addRenderableWidget(new DiscoveryProgressButton(75, 10, 20, 20, true));
     }
 
     @Override
@@ -271,6 +275,12 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
             tooltipLines = filterButton.getTooltipLines();
         } else if (this.hovered instanceof DiscoveryButton discoveryButton) {
             tooltipLines = discoveryButton.getTooltipLines();
+        } else if (this.hovered instanceof DiscoveryProgressButton progressButton) {
+            if (progressButton.isSecretDiscoveryButton()) {
+                tooltipLines = DiscoveryManager.getSecretDiscoveriesTooltip();
+            } else {
+                tooltipLines = DiscoveryManager.getDiscoveriesTooltip();
+            }
         }
 
         if (tooltipLines.isEmpty()) return;

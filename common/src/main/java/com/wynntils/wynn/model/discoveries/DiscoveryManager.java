@@ -11,6 +11,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -19,6 +20,9 @@ public class DiscoveryManager extends CoreManager {
 
     private static List<DiscoveryInfo> discoveries = List.of();
     private static List<DiscoveryInfo> secretDiscoveries = List.of();
+
+    private static List<Component> discoveriesTooltip = List.of();
+    private static List<Component> secretDiscoveriesTooltip = List.of();
 
     public static void init() {}
 
@@ -44,6 +48,22 @@ public class DiscoveryManager extends CoreManager {
 
         WynntilsMod.info("Discovered " + secretDiscoveries.size() + " secret discoveries");
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
+    }
+
+    public static void setDiscoveriesTooltip(List<Component> newTooltip) {
+        discoveriesTooltip = newTooltip;
+    }
+
+    public static void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
+        secretDiscoveriesTooltip = newTooltip;
+    }
+
+    public static List<Component> getDiscoveriesTooltip() {
+        return discoveriesTooltip;
+    }
+
+    public static List<Component> getSecretDiscoveriesTooltip() {
+        return secretDiscoveriesTooltip;
     }
 
     public static Stream<DiscoveryInfo> getAllDiscoveries() {

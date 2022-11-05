@@ -82,6 +82,10 @@ public class DiscoveryContainerQueries {
                                 return;
                             }
 
+                            DiscoveryManager.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
+                            DiscoveryManager.setSecretDiscoveriesTooltip(
+                                    ItemUtils.getTooltipLines(secretDiscoveriesItem));
+
                             int discoveryPages =
                                     discoveryCount / DISCOVERIES_PER_PAGE + discoveryCount % DISCOVERIES_PER_PAGE == 0
                                             ? 0

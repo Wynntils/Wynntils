@@ -69,7 +69,7 @@ public enum Texture {
     LOOTRUN_ICON("lootrun_icon.png", 16, 28),
     OVERLAYS_ICON("overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("quests_icon.png", 24, 34),
-    SECRET_DISCOVERIES("secret_discoveries.png", 16, 26),
+    SECRET_DISCOVERIES_ICON("secret_discoveries.png", 16, 26),
     SETTINGS_ICON("settings_icon.png", 17, 34),
 
     // Map related
