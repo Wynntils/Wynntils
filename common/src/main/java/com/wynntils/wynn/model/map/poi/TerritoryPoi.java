@@ -12,6 +12,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.wynn.model.GuildAttackTimerModel;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
@@ -75,6 +76,25 @@ public class TerritoryPoi implements Poi {
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
                         FontRenderer.TextShadow.OUTLINE);
+
+        GuildAttackTimerModel.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
+                .ifPresent(attackTimer -> {
+                    final String timeLeft = attackTimer.timeUntil();
+
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    poseStack,
+                                    timeLeft,
+                                    actualRenderX,
+                                    actualRenderX + renderWidth,
+                                    actualRenderZ,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.Center,
+                                    VerticalAlignment.Bottom,
+                                    FontRenderer.TextShadow.OUTLINE);
+                });
 
         if (hovered) {
             FontRenderer.getInstance()

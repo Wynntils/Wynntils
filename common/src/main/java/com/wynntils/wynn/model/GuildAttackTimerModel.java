@@ -10,6 +10,7 @@ import com.wynntils.wynn.model.scoreboard.guild.GuildAttackHandler;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,5 +42,11 @@ public class GuildAttackTimerModel extends Model {
 
     public static List<TerritoryAttackTimer> getAttackTimers() {
         return attackTimers;
+    }
+
+    public static Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
+        return attackTimers.stream()
+                .filter(t -> t.territory().equals(territory))
+                .findFirst();
     }
 }
