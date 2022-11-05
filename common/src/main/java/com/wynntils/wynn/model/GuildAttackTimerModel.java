@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GuildAttackTimerModel extends Model {
-    private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+:.+) §3(.+)");
+    private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     public static final GuildAttackHandler SCOREBOARD_HANDLER = new GuildAttackHandler();
 
     private static List<TerritoryAttackTimer> attackTimers = List.of();
@@ -29,7 +29,8 @@ public class GuildAttackTimerModel extends Model {
             Matcher matcher = GUILD_ATTACK_PATTERN.matcher(line);
 
             if (matcher.matches()) {
-                newList.add(new TerritoryAttackTimer(matcher.group(2), matcher.group(1)));
+                newList.add(new TerritoryAttackTimer(
+                        matcher.group(3), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))));
             }
         }
 

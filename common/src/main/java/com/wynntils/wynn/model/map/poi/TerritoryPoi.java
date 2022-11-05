@@ -79,7 +79,7 @@ public class TerritoryPoi implements Poi {
 
         GuildAttackTimerModel.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
                 .ifPresent(attackTimer -> {
-                    final String timeLeft = attackTimer.timeUntil();
+                    final String timeLeft = attackTimer.timerString();
 
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(

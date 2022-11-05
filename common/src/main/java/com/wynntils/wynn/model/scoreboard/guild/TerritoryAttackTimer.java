@@ -6,8 +6,16 @@ package com.wynntils.wynn.model.scoreboard.guild;
 
 import net.minecraft.ChatFormatting;
 
-public record TerritoryAttackTimer(String territory, String timeUntil) {
+public record TerritoryAttackTimer(String territory, int minutes, int seconds) {
     public String asString() {
-        return ChatFormatting.GRAY + territory + ChatFormatting.AQUA + " " + timeUntil;
+        return ChatFormatting.GRAY + territory + ChatFormatting.AQUA + " " + timerString();
+    }
+
+    public int asSeconds() {
+        return minutes * 60 + seconds;
+    }
+
+    public String timerString() {
+        return "%02d:%02d".formatted(minutes, seconds);
     }
 }

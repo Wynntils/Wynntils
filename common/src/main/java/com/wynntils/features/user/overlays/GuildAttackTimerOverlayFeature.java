@@ -25,6 +25,8 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -79,6 +81,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             GuildAttackTimerModel.getAttackTimers().stream()
+                                    .sorted(Comparator.comparing(TerritoryAttackTimer::asSeconds))
                                     .map(territoryAttackTimer ->
                                             new TextRenderTask(territoryAttackTimer.asString(), textRenderSetting))
                                     .toList(),
