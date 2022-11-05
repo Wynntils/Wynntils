@@ -1,9 +1,21 @@
+## [0.0.1-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2022-11-03)
+
+
+### Bug Fixes
+
+* Make the mod loading fail gracefully if a feature couldn't init ([#645](https://github.com/Wynntils/Artemis/issues/645)) ([989385a](https://github.com/Wynntils/Artemis/commit/989385aefeb9c30b620736fb680c940b3b93501d))
+
 ## [0.0.1-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2022-11-03)
 
 
 ### Bug Fixes
 
 * Don't trim custom commands ([3dbe9b7](https://github.com/Wynntils/Artemis/commit/3dbe9b74fdff10b09e3fe241c99332fd12ffc7fd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.5 [skip ci] ([e30482c](https://github.com/Wynntils/Artemis/commit/e30482ce94287551a8c174ad9ba8cd65bc37fdd4))
 
 ## [0.0.1-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2022-11-03)
 
@@ -45,18 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.2 [skip ci] ([425c966](https://github.com/Wynntils/Artemis/commit/425c966c3eb73261dd780196e17d657624b2ed21))
-
-## [0.0.1-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.0...v0.0.1-alpha.1) (2022-11-02)
-
-
-### Bug Fixes
-
-*  pre release ([b557041](https://github.com/Wynntils/Artemis/commit/b55704131dd43f1b51f00a9a85cd900fa8d6a4d0))
-* BeaconBeamFeature not rendering correctly ([#638](https://github.com/Wynntils/Artemis/issues/638)) ([a5eb7df](https://github.com/Wynntils/Artemis/commit/a5eb7df47e8d35604ac57a483724fe35066d66c4))
-* Make updating async ([#639](https://github.com/Wynntils/Artemis/issues/639)) ([5123f50](https://github.com/Wynntils/Artemis/commit/5123f50bfcb86eeda29d3b6cb777349dead16a47))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.1 [skip ci] ([a42cf96](https://github.com/Wynntils/Artemis/commit/a42cf96df49fc49ce85fafbea32ea0839008a0f2))
 
