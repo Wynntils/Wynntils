@@ -7,6 +7,7 @@ package com.wynntils.wynn.item.parsers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -14,16 +15,17 @@ import net.minecraft.world.item.ItemStack;
 /** Tools for retrieving information about emerald pouches */
 public final class EmeraldPouchParser {
     private static final Pattern POUCH_USAGE_PATTERN =
-            Pattern.compile("§6§l(\\d* ?\\d* ?\\d*)" + EmeraldSymbols.E_STRING);
+            Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
 
     public static int getPouchUsage(ItemStack stack) {
-        String lore = ItemUtils.getStringLore(stack);
-        Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore);
-        if (!usageMatcher.find()) {
-            return 0;
-        }
+        LinkedList<String> lore = ItemUtils.getLore(stack);
+        if (lore.isEmpty()) return 0;
+
+        Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore.get(0));
+        if (!usageMatcher.matches()) return 0;
+
         return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
     }
 
