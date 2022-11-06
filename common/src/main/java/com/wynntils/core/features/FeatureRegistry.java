@@ -49,6 +49,7 @@ import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
+import com.wynntils.features.user.TerritoryDefenseMessageFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TradeMarketPriceConversionFeature;
 import com.wynntils.features.user.TranslationFeature;
@@ -164,6 +165,7 @@ public final class FeatureRegistry {
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new WynncraftButtonFeature());
