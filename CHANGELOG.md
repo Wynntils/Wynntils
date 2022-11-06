@@ -1,9 +1,21 @@
+## [0.0.1-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.13...v0.0.1-alpha.14) (2022-11-06)
+
+
+### New Features
+
+* Add AuraTimerOverlayFeature ([#653](https://github.com/Wynntils/Artemis/issues/653)) ([de2da91](https://github.com/Wynntils/Artemis/commit/de2da914d6899325946060827eb967be989edbaa))
+
 ## [0.0.1-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.12...v0.0.1-alpha.13) (2022-11-06)
 
 
 ### New Features
 
 * Auto message territory defense on attack ([#650](https://github.com/Wynntils/Artemis/issues/650)) ([f7ab62d](https://github.com/Wynntils/Artemis/commit/f7ab62d426bc75d08c557c154392fcbfa58e9014))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.13 [skip ci] ([6c151d6](https://github.com/Wynntils/Artemis/commit/6c151d68c31e820f8b09327963d7d401cf186a3b))
 
 ## [0.0.1-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.11...v0.0.1-alpha.12) (2022-11-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.10 [skip ci] ([7261adb](https://github.com/Wynntils/Artemis/commit/7261adb9c8f0339d7cf90cdf805ec5f07a2d7128))
-
-## [0.0.1-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2022-11-06)
-
-
-### Bug Fixes
-
-* Fix multiple issues with mini-quest summary ([#648](https://github.com/Wynntils/Artemis/issues/648)) ([45a4357](https://github.com/Wynntils/Artemis/commit/45a43578a393923c08993fd48a3cbb1d1ce434e4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.9 [skip ci] ([870fff5](https://github.com/Wynntils/Artemis/commit/870fff5c7187a06c5c150306fb4ec88c4099cdba))
 
