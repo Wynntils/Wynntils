@@ -4,23 +4,51 @@
  */
 package com.wynntils.wynn.model;
 
+import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.objects.TimedSet;
+import com.wynntils.utils.Pair;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.model.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.guild.GuildAttackHandler;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
+    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
+
     public static final GuildAttackHandler SCOREBOARD_HANDLER = new GuildAttackHandler();
+    private static final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     private static List<TerritoryAttackTimer> attackTimers = List.of();
 
     public static void init() {}
+
+    @SubscribeEvent
+    public static void onMessage(ChatMessageReceivedEvent event) {
+        if (event.getRecipientType() != RecipientType.GUILD) return;
+
+        Matcher matcher = GUILD_DEFENSE_CHAT_PATTERN.matcher(event.getCodedMessage());
+        if (!matcher.matches()) return;
+
+        Optional<TerritoryAttackTimer> territory = attackTimers.stream()
+                .filter(territoryAttackTimer -> territoryAttackTimer.territory().equals(matcher.group(1))
+                        && !territoryAttackTimer.isDefenseKnown())
+                .findFirst();
+
+        if (territory.isPresent()) {
+            territory.get().setDefense(matcher.group(2));
+        } else {
+            territoryDefenseSet.put(new Pair<>(matcher.group(1), matcher.group(2)));
+        }
+    }
 
     public static void processChanges(Segment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
@@ -29,8 +57,31 @@ public class GuildAttackTimerModel extends Model {
             Matcher matcher = GUILD_ATTACK_PATTERN.matcher(line);
 
             if (matcher.matches()) {
-                newList.add(new TerritoryAttackTimer(
-                        matcher.group(3), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))));
+                TerritoryAttackTimer timer = new TerritoryAttackTimer(
+                        matcher.group(3), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                newList.add(timer);
+
+                boolean foundDefense = false;
+                Optional<TerritoryAttackTimer> oldTimer = attackTimers.stream()
+                        .filter(territoryAttackTimer ->
+                                territoryAttackTimer.territory().equals(timer.territory()))
+                        .findFirst();
+
+                if (oldTimer.isPresent()) {
+                    if (oldTimer.get().isDefenseKnown()) {
+                        timer.setDefense(oldTimer.get().defense());
+                        foundDefense = true;
+                    }
+                }
+
+                if (!foundDefense) {
+                    for (Pair<String, String> defensePair : territoryDefenseSet) {
+                        if (defensePair.a().equals(timer.territory())) {
+                            timer.setDefense(defensePair.b());
+                            break;
+                        }
+                    }
+                }
             }
         }
 
