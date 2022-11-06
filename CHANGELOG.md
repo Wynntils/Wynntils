@@ -1,9 +1,21 @@
+## [0.0.1-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2022-11-06)
+
+
+### Bug Fixes
+
+* Fix multiple issues with mini-quest summary ([#648](https://github.com/Wynntils/Artemis/issues/648)) ([45a4357](https://github.com/Wynntils/Artemis/commit/45a43578a393923c08993fd48a3cbb1d1ce434e4))
+
 ## [0.0.1-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2022-11-06)
 
 
 ### Bug Fixes
 
 * Fix multiple memory leaks ([#652](https://github.com/Wynntils/Artemis/issues/652)) ([f042de6](https://github.com/Wynntils/Artemis/commit/f042de638a628d6483409f67ce7babda9acd03e9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.8 [skip ci] ([8c0648e](https://github.com/Wynntils/Artemis/commit/8c0648e3a7357ce95b76164c535fef6befef1038))
 
 ## [0.0.1-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2022-11-05)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.5 [skip ci] ([e30482c](https://github.com/Wynntils/Artemis/commit/e30482ce94287551a8c174ad9ba8cd65bc37fdd4))
-
-## [0.0.1-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2022-11-03)
-
-
-### New Features
-
-* Render guild territories on main map ([#643](https://github.com/Wynntils/Artemis/issues/643)) ([24c6960](https://github.com/Wynntils/Artemis/commit/24c6960230e19c02a48262f848a10ccc3d543bf4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.4 [skip ci] ([1257025](https://github.com/Wynntils/Artemis/commit/12570256905d1a6c148d11c8101d86b14886bfc8))
 
