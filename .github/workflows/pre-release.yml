@@ -91,7 +91,10 @@ jobs:
           tag_name: ${{ needs.changelog.outputs.tag }}
           draft: true
           prerelease: true
-          files: "**/build/libs/*-*.jar"
+          files: |
+            **/build/libs/*-fabric.jar
+            **/build/libs/*-forge.jar
+            **/build/libs/*-quilt.jar
 
       - name: Upload build
         uses: actions/upload-artifact@v3
