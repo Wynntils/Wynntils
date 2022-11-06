@@ -18,6 +18,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
+import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
@@ -91,11 +92,15 @@ public class ItemFavoriteFeature extends UserFeature {
 
     private static String getUnformattedItemName(ItemStack itemStack) {
         String unformattedName;
+
         if (itemStack instanceof GearItemStack gearItemStack) {
             unformattedName = gearItemStack.getItemProfile().getDisplayName();
+        } else if (itemStack instanceof WynnItemStack wynnItemStack) {
+            unformattedName = wynnItemStack.getSimpleName();
         } else {
             unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         }
+
         return unformattedName;
     }
 

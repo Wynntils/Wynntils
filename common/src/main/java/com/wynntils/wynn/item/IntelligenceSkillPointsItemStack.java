@@ -69,7 +69,7 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
                     closestUpgradeLevel = nextUpgrade;
                 }
                 int manaCost = spell.getManaCost(level, intelligencePoints);
-                String spellName = characterInfo.isReskinned() ? spell.getReskinned() : spell.getName();
+                String spellName = spell.getName();
                 String spellInfo = ChatFormatting.LIGHT_PURPLE + spellName + " Spell: " + ChatFormatting.AQUA + "-"
                         + manaCost + " ✺";
                 if (nextUpgrade < Integer.MAX_VALUE) {
