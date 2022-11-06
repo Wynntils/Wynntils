@@ -16,7 +16,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.utils.DiscoveryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -86,11 +85,11 @@ public class DiscoveryButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            DiscoveryUtils.setDiscoveryCompass(discoveryInfo);
+            DiscoveryManager.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            DiscoveryUtils.openDiscoveryOnMap(discoveryInfo);
+            DiscoveryManager.openDiscoveryOnMap(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.getType() == DiscoveryType.SECRET) {
-            DiscoveryUtils.openSecretDiscoveryWiki(discoveryInfo);
+            DiscoveryManager.openSecretDiscoveryWiki(discoveryInfo);
         }
 
         return true;

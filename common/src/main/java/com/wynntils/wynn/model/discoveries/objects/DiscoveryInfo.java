@@ -27,7 +27,7 @@ public class DiscoveryInfo {
     private final TerritoryProfile guildTerritory;
     private final boolean discovered;
     private final List<String> requirements;
-    private List<Component> displayLore;
+    private List<Component> displayLore = null;
 
     public DiscoveryInfo(DiscoveryProfile discoveryProfile) {
         this.name = discoveryProfile.getName();
@@ -37,8 +37,6 @@ public class DiscoveryInfo {
         this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = false;
         this.requirements = discoveryProfile.getRequirements();
-
-        generateLore();
     }
 
     private DiscoveryInfo(String name, DiscoveryType type, String description, int minLevel) {
@@ -49,8 +47,6 @@ public class DiscoveryInfo {
         this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = true;
         this.requirements = List.of();
-
-        generateLore();
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
@@ -82,7 +78,7 @@ public class DiscoveryInfo {
         return new DiscoveryInfo(ComponentUtils.stripFormatting(name), type, description, minLevel);
     }
 
-    private void generateLore() {
+    private List<Component> generateLore() {
         displayLore = new ArrayList<>();
 
         displayLore.add(new TextComponent(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
@@ -114,10 +110,12 @@ public class DiscoveryInfo {
             displayLore.addAll(ComponentUtils.wrapTooltips(
                     List.of(new TextComponent(description).withStyle(ChatFormatting.GRAY)), 300));
         }
+
+        return displayLore;
     }
 
     public List<Component> getLore() {
-        return displayLore;
+        return displayLore == null ? displayLore = generateLore() : displayLore;
     }
 
     public String getName() {

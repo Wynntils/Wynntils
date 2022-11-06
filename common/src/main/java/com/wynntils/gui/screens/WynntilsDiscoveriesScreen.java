@@ -350,6 +350,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected void reloadElementsList(String searchTerm) {
+        // We need to filter duplicates
         elements.addAll(Stream.concat(
                         webDiscoveryInfoCache.stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {

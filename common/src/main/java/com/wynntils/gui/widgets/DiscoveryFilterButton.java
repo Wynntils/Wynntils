@@ -74,7 +74,6 @@ public class DiscoveryFilterButton extends AbstractButton {
                     texture.height(),
                     texture.width(),
                     texture.height());
-            ;
         } else {
             if (this.isHovered) {
                 RenderUtils.drawTexturedRect(
