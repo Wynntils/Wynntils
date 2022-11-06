@@ -46,6 +46,12 @@ public class GuildAttackTimerModel extends Model {
         if (territory.isPresent()) {
             territory.get().setDefense(matcher.group(2));
         } else {
+            for (Pair<String, String> defensePair : territoryDefenseSet) {
+                if (defensePair.a().equals(matcher.group(1))) {
+                    return; // do not put it in the set twice
+                }
+            }
+
             territoryDefenseSet.put(new Pair<>(matcher.group(1), matcher.group(2)));
         }
     }
