@@ -17,7 +17,6 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -47,11 +46,6 @@ public class AuraTimerOverlayFeature extends UserFeature {
         if (!event.getComponent().getString().equals(AURA_TITLE)) return;
 
         lastAuraProc = System.currentTimeMillis();
-    }
-
-    @SubscribeEvent
-    public void onKey(InventoryKeyPressEvent event) {
-        // lastAuraProc = System.currentTimeMillis();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
