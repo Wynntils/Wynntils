@@ -1,9 +1,21 @@
+## [0.0.1-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.12...v0.0.1-alpha.13) (2022-11-06)
+
+
+### New Features
+
+* Auto message territory defense on attack ([#650](https://github.com/Wynntils/Artemis/issues/650)) ([f7ab62d](https://github.com/Wynntils/Artemis/commit/f7ab62d426bc75d08c557c154392fcbfa58e9014))
+
 ## [0.0.1-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.11...v0.0.1-alpha.12) (2022-11-06)
 
 
 ### New Features
 
 * Add Discoveries Screen ([#646](https://github.com/Wynntils/Artemis/issues/646)) ([dec9b42](https://github.com/Wynntils/Artemis/commit/dec9b42fdd22f4862181795373b976491eb613b0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.12 [skip ci] ([e90846c](https://github.com/Wynntils/Artemis/commit/e90846cea7ae391466133e9a7171418362c217ee))
 
 ## [0.0.1-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.10...v0.0.1-alpha.11) (2022-11-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.9 [skip ci] ([870fff5](https://github.com/Wynntils/Artemis/commit/870fff5c7187a06c5c150306fb4ec88c4099cdba))
-
-## [0.0.1-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2022-11-06)
-
-
-### Bug Fixes
-
-* Fix multiple memory leaks ([#652](https://github.com/Wynntils/Artemis/issues/652)) ([f042de6](https://github.com/Wynntils/Artemis/commit/f042de638a628d6483409f67ce7babda9acd03e9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.8 [skip ci] ([8c0648e](https://github.com/Wynntils/Artemis/commit/8c0648e3a7357ce95b76164c535fef6befef1038))
 
