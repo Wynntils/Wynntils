@@ -176,7 +176,7 @@ public class QuestManager extends CoreManager {
     }
 
     /** Shared between the container query classes */
-    protected static String getQuestBookTitle(int pageNum) {
+    public static String getQuestBookTitle(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
     }
 

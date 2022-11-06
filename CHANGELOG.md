@@ -1,65 +1,55 @@
-## [0.0.1-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2022-11-05)
-
-
-### Bug Fixes
-
-* Fix ability redirect regex to work in dialogues as well ([#651](https://github.com/Wynntils/Artemis/issues/651)) ([f2dce94](https://github.com/Wynntils/Artemis/commit/f2dce946f212b9fa714981f3baa913e987557635))
+## [0.0.1-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.11...v0.0.1-alpha.12) (2022-11-06)
 
 
 ### New Features
 
-* armor transparency ([#644](https://github.com/Wynntils/Artemis/issues/644)) ([ff38a56](https://github.com/Wynntils/Artemis/commit/ff38a561b13dd35ee8292937cb93b1b4a09e374d))
+* Add Discoveries Screen ([#646](https://github.com/Wynntils/Artemis/issues/646)) ([dec9b42](https://github.com/Wynntils/Artemis/commit/dec9b42fdd22f4862181795373b976491eb613b0))
 
-## [0.0.1-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2022-11-03)
-
-
-### Bug Fixes
-
-* Make the mod loading fail gracefully if a feature couldn't init ([#645](https://github.com/Wynntils/Artemis/issues/645)) ([989385a](https://github.com/Wynntils/Artemis/commit/989385aefeb9c30b620736fb680c940b3b93501d))
+## [0.0.1-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.10...v0.0.1-alpha.11) (2022-11-06)
 
 
-### Miscellaneous Chores
+### Code Refactoring
 
-* **release:** v0.0.1-alpha.6 [skip ci] ([beac1e0](https://github.com/Wynntils/Artemis/commit/beac1e0346cf04ec9e1a1b222995cf664874e4d1))
-
-## [0.0.1-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2022-11-03)
-
-
-### Bug Fixes
-
-* Don't trim custom commands ([3dbe9b7](https://github.com/Wynntils/Artemis/commit/3dbe9b74fdff10b09e3fe241c99332fd12ffc7fd))
+* Abstract map screen code ([#655](https://github.com/Wynntils/Artemis/issues/655)) ([dcb657c](https://github.com/Wynntils/Artemis/commit/dcb657c4fb7a286d9e57097ab924fb9c5e250112))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.5 [skip ci] ([e30482c](https://github.com/Wynntils/Artemis/commit/e30482ce94287551a8c174ad9ba8cd65bc37fdd4))
+* **release:** v0.0.1-alpha.11 [skip ci] ([84c62b7](https://github.com/Wynntils/Artemis/commit/84c62b73a172a73f6d86fa239058162441cc0544))
 
-## [0.0.1-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2022-11-03)
+## [0.0.1-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2022-11-06)
 
 
 ### New Features
 
-* Render guild territories on main map ([#643](https://github.com/Wynntils/Artemis/issues/643)) ([24c6960](https://github.com/Wynntils/Artemis/commit/24c6960230e19c02a48262f848a10ccc3d543bf4))
+* Add Guild Attack Timer overlay (and render attack timer on map) ([#649](https://github.com/Wynntils/Artemis/issues/649)) ([7ba7cc6](https://github.com/Wynntils/Artemis/commit/7ba7cc6a7dababf39f345cd5a4b19aab511e784e))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.4 [skip ci] ([1257025](https://github.com/Wynntils/Artemis/commit/12570256905d1a6c148d11c8101d86b14886bfc8))
+* **release:** v0.0.1-alpha.10 [skip ci] ([7261adb](https://github.com/Wynntils/Artemis/commit/7261adb9c8f0339d7cf90cdf805ec5f07a2d7128))
 
-## [0.0.1-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2022-11-02)
+## [0.0.1-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2022-11-06)
 
 
 ### Bug Fixes
 
-* Increase query timeout to make queries work when Wynncraft lags ([#642](https://github.com/Wynntils/Artemis/issues/642)) ([a4490ee](https://github.com/Wynntils/Artemis/commit/a4490ee83b655a99556cd0477fd835f0eed40332))
-
-
-### Build System
-
-* **gradle:** ignore changelog file from spotless [skip ci] ([49020ef](https://github.com/Wynntils/Artemis/commit/49020ef38a740747b7999995f79a32e472ad8927))
+* Fix multiple issues with mini-quest summary ([#648](https://github.com/Wynntils/Artemis/issues/648)) ([45a4357](https://github.com/Wynntils/Artemis/commit/45a43578a393923c08993fd48a3cbb1d1ce434e4))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.3 [skip ci] ([6e6344a](https://github.com/Wynntils/Artemis/commit/6e6344ae664b76cdc212d7d7d769e54d14f3cf84))
+* **release:** v0.0.1-alpha.9 [skip ci] ([870fff5](https://github.com/Wynntils/Artemis/commit/870fff5c7187a06c5c150306fb4ec88c4099cdba))
+
+## [0.0.1-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2022-11-06)
+
+
+### Bug Fixes
+
+* Fix multiple memory leaks ([#652](https://github.com/Wynntils/Artemis/issues/652)) ([f042de6](https://github.com/Wynntils/Artemis/commit/f042de638a628d6483409f67ce7babda9acd03e9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.8 [skip ci] ([8c0648e](https://github.com/Wynntils/Artemis/commit/8c0648e3a7357ce95b76164c535fef6befef1038))
 
