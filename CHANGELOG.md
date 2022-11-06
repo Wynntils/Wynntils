@@ -1,3 +1,10 @@
+## [0.0.1-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2022-11-06)
+
+
+### Bug Fixes
+
+* Fix multiple memory leaks ([#652](https://github.com/Wynntils/Artemis/issues/652)) ([f042de6](https://github.com/Wynntils/Artemis/commit/f042de638a628d6483409f67ce7babda9acd03e9))
+
 ## [0.0.1-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2022-11-05)
 
 
@@ -9,6 +16,11 @@
 ### New Features
 
 * armor transparency ([#644](https://github.com/Wynntils/Artemis/issues/644)) ([ff38a56](https://github.com/Wynntils/Artemis/commit/ff38a561b13dd35ee8292937cb93b1b4a09e374d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.7 [skip ci] ([d150d9f](https://github.com/Wynntils/Artemis/commit/d150d9f5dea7b233ee60d710842417b29545d1fe))
 
 ## [0.0.1-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2022-11-03)
 
@@ -45,21 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.4 [skip ci] ([1257025](https://github.com/Wynntils/Artemis/commit/12570256905d1a6c148d11c8101d86b14886bfc8))
-
-## [0.0.1-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2022-11-02)
-
-
-### Bug Fixes
-
-* Increase query timeout to make queries work when Wynncraft lags ([#642](https://github.com/Wynntils/Artemis/issues/642)) ([a4490ee](https://github.com/Wynntils/Artemis/commit/a4490ee83b655a99556cd0477fd835f0eed40332))
-
-
-### Build System
-
-* **gradle:** ignore changelog file from spotless [skip ci] ([49020ef](https://github.com/Wynntils/Artemis/commit/49020ef38a740747b7999995f79a32e472ad8927))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.3 [skip ci] ([6e6344a](https://github.com/Wynntils/Artemis/commit/6e6344ae664b76cdc212d7d7d769e54d14f3cf84))
 
