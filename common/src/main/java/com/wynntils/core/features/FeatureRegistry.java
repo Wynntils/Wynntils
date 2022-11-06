@@ -67,6 +67,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.map.MinimapFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.user.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.user.overlays.InfoBoxFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
@@ -127,6 +128,7 @@ public final class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
+        registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxFeature());
