@@ -106,7 +106,8 @@ public final class WynnItemMatchers {
 
     public static boolean isEmeraldPouch(ItemStack itemStack) {
         return itemStack instanceof EmeraldPouchItemStack
-                || itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
+                || (itemStack.getItem() == Items.DIAMOND_AXE
+                        && itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier"));
     }
 
     /**
