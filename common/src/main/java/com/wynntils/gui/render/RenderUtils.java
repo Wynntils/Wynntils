@@ -1041,6 +1041,38 @@ public final class RenderUtils {
         RenderSystem.applyModelViewMatrix();
     }
 
+    public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
+        float[] colorArray = color.asFloatArray();
+        RenderSystem.setShaderColor(colorArray[0], colorArray[1], colorArray[2], alpha);
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.depthMask(false);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        Window window = McUtils.window();
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.VIGNETTE.resource(),
+                0,
+                0,
+                0,
+                window.getGuiScaledWidth(),
+                window.getGuiScaledHeight(),
+                0,
+                0,
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height(),
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height());
+
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+    }
+
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
