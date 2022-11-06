@@ -14,7 +14,7 @@ architectury {
 def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
 
 // If we are running in a CI environment, we want to use the version else dev version
-version = "0.0.1-alpha.6"
+version = "0.0.1-alpha.8"
 if (!System.getenv("CI")) {
     version = "DEV"
 }
