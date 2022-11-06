@@ -1,9 +1,21 @@
+## [0.0.1-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2022-11-06)
+
+
+### New Features
+
+* Add Guild Attack Timer overlay (and render attack timer on map) ([#649](https://github.com/Wynntils/Artemis/issues/649)) ([7ba7cc6](https://github.com/Wynntils/Artemis/commit/7ba7cc6a7dababf39f345cd5a4b19aab511e784e))
+
 ## [0.0.1-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2022-11-06)
 
 
 ### Bug Fixes
 
 * Fix multiple issues with mini-quest summary ([#648](https://github.com/Wynntils/Artemis/issues/648)) ([45a4357](https://github.com/Wynntils/Artemis/commit/45a43578a393923c08993fd48a3cbb1d1ce434e4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.9 [skip ci] ([870fff5](https://github.com/Wynntils/Artemis/commit/870fff5c7187a06c5c150306fb4ec88c4099cdba))
 
 ## [0.0.1-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2022-11-06)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.6 [skip ci] ([beac1e0](https://github.com/Wynntils/Artemis/commit/beac1e0346cf04ec9e1a1b222995cf664874e4d1))
-
-## [0.0.1-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2022-11-03)
-
-
-### Bug Fixes
-
-* Don't trim custom commands ([3dbe9b7](https://github.com/Wynntils/Artemis/commit/3dbe9b74fdff10b09e3fe241c99332fd12ffc7fd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.5 [skip ci] ([e30482c](https://github.com/Wynntils/Artemis/commit/e30482ce94287551a8c174ad9ba8cd65bc37fdd4))
 
