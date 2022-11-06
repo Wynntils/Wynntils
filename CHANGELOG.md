@@ -1,9 +1,21 @@
+## [0.0.1-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.14...v0.0.1-alpha.15) (2022-11-06)
+
+
+### New Features
+
+* Parse defense in GuildAttackTimerOverlayFeature ([#656](https://github.com/Wynntils/Artemis/issues/656)) ([6dcca9f](https://github.com/Wynntils/Artemis/commit/6dcca9f779088322d1343d596607b8899305efa2))
+
 ## [0.0.1-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.13...v0.0.1-alpha.14) (2022-11-06)
 
 
 ### New Features
 
 * Add AuraTimerOverlayFeature ([#653](https://github.com/Wynntils/Artemis/issues/653)) ([de2da91](https://github.com/Wynntils/Artemis/commit/de2da914d6899325946060827eb967be989edbaa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.14 [skip ci] ([5d43560](https://github.com/Wynntils/Artemis/commit/5d43560e9bad30d3b423aecfa0a50d91b7e80d46))
 
 ## [0.0.1-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.12...v0.0.1-alpha.13) (2022-11-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.11 [skip ci] ([84c62b7](https://github.com/Wynntils/Artemis/commit/84c62b73a172a73f6d86fa239058162441cc0544))
-
-## [0.0.1-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2022-11-06)
-
-
-### New Features
-
-* Add Guild Attack Timer overlay (and render attack timer on map) ([#649](https://github.com/Wynntils/Artemis/issues/649)) ([7ba7cc6](https://github.com/Wynntils/Artemis/commit/7ba7cc6a7dababf39f345cd5a4b19aab511e784e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.10 [skip ci] ([7261adb](https://github.com/Wynntils/Artemis/commit/7261adb9c8f0339d7cf90cdf805ec5f07a2d7128))
 
