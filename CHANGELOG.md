@@ -1,9 +1,21 @@
+## [0.0.1-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.11...v0.0.1-alpha.12) (2022-11-06)
+
+
+### New Features
+
+* Add Discoveries Screen ([#646](https://github.com/Wynntils/Artemis/issues/646)) ([dec9b42](https://github.com/Wynntils/Artemis/commit/dec9b42fdd22f4862181795373b976491eb613b0))
+
 ## [0.0.1-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.10...v0.0.1-alpha.11) (2022-11-06)
 
 
 ### Code Refactoring
 
 * Abstract map screen code ([#655](https://github.com/Wynntils/Artemis/issues/655)) ([dcb657c](https://github.com/Wynntils/Artemis/commit/dcb657c4fb7a286d9e57097ab924fb9c5e250112))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.11 [skip ci] ([84c62b7](https://github.com/Wynntils/Artemis/commit/84c62b73a172a73f6d86fa239058162441cc0544))
 
 ## [0.0.1-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2022-11-06)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.8 [skip ci] ([8c0648e](https://github.com/Wynntils/Artemis/commit/8c0648e3a7357ce95b76164c535fef6befef1038))
-
-## [0.0.1-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2022-11-05)
-
-
-### Bug Fixes
-
-* Fix ability redirect regex to work in dialogues as well ([#651](https://github.com/Wynntils/Artemis/issues/651)) ([f2dce94](https://github.com/Wynntils/Artemis/commit/f2dce946f212b9fa714981f3baa913e987557635))
-
-
-### New Features
-
-* armor transparency ([#644](https://github.com/Wynntils/Artemis/issues/644)) ([ff38a56](https://github.com/Wynntils/Artemis/commit/ff38a561b13dd35ee8292937cb93b1b4a09e374d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.7 [skip ci] ([d150d9f](https://github.com/Wynntils/Artemis/commit/d150d9f5dea7b233ee60d710842417b29545d1fe))
 
