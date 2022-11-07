@@ -12,19 +12,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GuildTerritory {
+public class GuildTerritoryInfo {
     private static final Pattern GENERATOR_PATTERN =
             Pattern.compile("(.\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
     private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\s)?([0-9]+)\\/([0-9]+) stored");
-    private static final Pattern TREASURY_PATTERN = Pattern.compile("Territory Defences: (.+)");
-    private static final Pattern DEFENSE_PATTERN = Pattern.compile("✦ Treasury: (.+)");
+    private static final Pattern DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
+    private static final Pattern TREASURY_PATTERN = Pattern.compile("✦ Treasury: (.+)");
 
     HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
     HashMap<GuildResource, Integer> generators = new HashMap<>();
     List<String> tradingRoutes = new ArrayList<>();
 
-    String treasury;
-    String defences;
+    GuildResourceValues treasury;
+    GuildResourceValues defences;
 
     boolean headquarters;
     CustomColor color;
@@ -54,7 +54,7 @@ public class GuildTerritory {
      * @param raw the input achievement description without colors
      * @param colored the input achievement description with colors
      */
-    public GuildTerritory(String[] raw, String[] colored, boolean headquarters) {
+    public GuildTerritoryInfo(String[] raw, String[] colored, boolean headquarters) {
         this.headquarters = headquarters;
 
         for (int i = 0; i < raw.length; i++) {
@@ -70,14 +70,14 @@ public class GuildTerritory {
             // treasury parsing
             Matcher treasureMatcher = TREASURY_PATTERN.matcher(unformatted);
             if (treasureMatcher.matches()) {
-                treasury = treasureMatcher.group(1);
+                treasury = GuildResourceValues.fromString(treasureMatcher.group(1));
                 continue;
             }
 
             // defence parsing
             Matcher defenseMatcher = DEFENSE_PATTERN.matcher(unformatted);
             if (defenseMatcher.matches()) {
-                defences = defenseMatcher.group(1);
+                defences = GuildResourceValues.fromString(defenseMatcher.group(1));
                 continue;
             }
 
@@ -161,11 +161,11 @@ public class GuildTerritory {
         return storage.get(resource);
     }
 
-    public String getTreasury() {
+    public GuildResourceValues getTreasury() {
         return treasury;
     }
 
-    public String getDefences() {
+    public GuildResourceValues getDefences() {
         return defences;
     }
 

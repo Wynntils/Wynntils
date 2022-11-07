@@ -139,6 +139,8 @@
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.name": "Text Shadow",
   "feature.wynntils.guildMap.name": "Guild Map",
+  "feature.wynntils.guildMap.renderUsingLinear.description": "Should the map be rendered using linear textures to avoid aliasing issues?",
+  "feature.wynntils.guildMap.renderUsingLinear.name": "Use Linear Rendering",
   "feature.wynntils.hades.getOtherPlayerInfo.description": "Do you want to get your mutuals' info? Disable this config if you only want to share your info, but do not want to load other player's data.",
   "feature.wynntils.hades.getOtherPlayerInfo.name": "Get Other Players' Info",
   "feature.wynntils.hades.name": "Hades",

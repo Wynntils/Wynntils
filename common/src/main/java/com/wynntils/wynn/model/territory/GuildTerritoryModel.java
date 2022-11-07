@@ -5,9 +5,13 @@
 package com.wynntils.wynn.model.territory;
 
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.webapi.TerritoryManager;
+import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.model.territory.objects.GuildTerritory;
+import com.wynntils.wynn.model.map.poi.TerritoryPoi;
+import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.advancements.Advancement;
@@ -16,17 +20,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildTerritoryModel extends Model {
-    private static Map<String, GuildTerritory> guildTerritoryHashMap = new HashMap<>();
+    private static Map<String, TerritoryPoi> guildTerritoryHashMap = new HashMap<>();
 
     public static void init() {}
 
     public static void disable() {
-        guildTerritoryHashMap.clear();
+        guildTerritoryHashMap = Map.of();
     }
 
     @SubscribeEvent
     public static void onAdvancementUpdate(AdvancementUpdateEvent event) {
-        Map<String, GuildTerritory> tempMap = new HashMap<>();
+        Map<String, GuildTerritoryInfo> tempMap = new HashMap<>();
+        Map<String, TerritoryPoi> newMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Advancement.Builder> added :
                 event.getAdded().entrySet()) {
@@ -55,10 +60,27 @@ public class GuildTerritoryModel extends Model {
             String[] colored = description.split("\n");
             String[] raw = ComponentUtils.stripFormatting(description).split("\n");
 
-            GuildTerritory container = new GuildTerritory(raw, colored, headquarters);
+            GuildTerritoryInfo container = new GuildTerritoryInfo(raw, colored, headquarters);
             tempMap.put(territoryName, container);
         }
 
-        guildTerritoryHashMap = tempMap;
+        for (Map.Entry<String, GuildTerritoryInfo> entry : tempMap.entrySet()) {
+            TerritoryProfile territoryProfile =
+                    TerritoryManager.getTerritories().get(entry.getKey());
+
+            if (territoryProfile == null) continue;
+
+            newMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+        }
+
+        guildTerritoryHashMap = newMap;
+    }
+
+    public static Collection<TerritoryPoi> getGuildTerritoryPois() {
+        return guildTerritoryHashMap.values();
+    }
+
+    public static Map<String, TerritoryPoi> getGuildTerritoryMap() {
+        return guildTerritoryHashMap;
     }
 }
