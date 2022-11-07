@@ -234,7 +234,7 @@ public abstract class ClientPacketListenerMixin {
         EventFactory.onPlayerJoinedWorld(packet, this.getPlayerInfo(packet.getPlayerId()));
     }
 
-    @Inject(method = "handleUpdateAdvancementsPacket", at = @At("HEAD"))
+    @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         EventFactory.onUpdateAdvancements(packet);
