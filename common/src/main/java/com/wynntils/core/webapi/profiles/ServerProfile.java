@@ -35,6 +35,14 @@ public class ServerProfile {
                         - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
     }
 
+    public int getUptimeMinutes() {
+        long millis = System.currentTimeMillis() - firstSeen;
+
+        return (int) Math.floor((TimeUnit.MILLISECONDS.toHours(millis) * 60)
+                + (TimeUnit.MILLISECONDS.toMinutes(millis)
+                        - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))));
+    }
+
     /**
      * This makes the firstSeen match the user computer time instead of the server time
      * @param serverTime the input server time

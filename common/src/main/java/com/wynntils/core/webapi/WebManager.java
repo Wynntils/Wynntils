@@ -30,6 +30,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
+import com.wynntils.wynn.objects.account.PlayerAccount;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,7 +52,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
-/** Provides and loads web content on demand */
+/**
+ * Provides and loads web content on demand
+ */
 public final class WebManager extends CoreManager {
 
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
@@ -75,6 +78,7 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+    private static PlayerAccount playerAccount = null;
 
     private static List<DiscoveryProfile> discoveries = new ArrayList<>();
 
@@ -171,6 +175,25 @@ public final class WebManager extends CoreManager {
         // Check for success
     }
 
+    public static void updatePlayerStats() {
+        String url =
+                "https://api.wynncraft.com/v2/player/" + McUtils.mc().getUser().getName() + "/stats";
+        handler.addAndDispatch(new RequestBuilder(url, "player_profile")
+                .cacheTo(new File(API_CACHE_ROOT, "player_stats.json"))
+                .handleJsonObject(json -> {
+                    Type type = new TypeToken<PlayerAccount>() {}.getType();
+
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(type, new PlayerAccount.PlayerAccountDeserializer());
+                    Gson gson = gsonBuilder.create();
+
+                    playerAccount = gson.fromJson(json, type);
+                    return true;
+                })
+                .useCacheAsBackup()
+                .build());
+    }
+
     private static void tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
         handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
@@ -260,7 +283,7 @@ public final class WebManager extends CoreManager {
      * Request all online players to WynnAPI
      *
      * @return a {@link HashMap} who the key is the server and the value is an array containing all
-     *     players on it
+     * players on it
      * @throws IOException thrown by URLConnection
      */
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
@@ -386,6 +409,10 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
+    }
+
+    public static PlayerAccount getPlayerAccount() {
+        return playerAccount;
     }
 
     public static List<DiscoveryProfile> getDiscoveries() {

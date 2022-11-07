@@ -25,6 +25,10 @@ public class ServerListModel extends Model {
         return availableServers.get(worldId);
     }
 
+    public static Map<String, ServerProfile> getAvailableServers() {
+        return availableServers;
+    }
+
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldStateManager.State.HUB
