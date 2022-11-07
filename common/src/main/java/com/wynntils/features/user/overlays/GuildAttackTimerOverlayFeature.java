@@ -64,11 +64,11 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             165,
-                            0,
+                            -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
-                    new GuiScaledOverlaySize(170, 110));
+                    new GuiScaledOverlaySize(200, 110));
 
             updateTextRenderSetting();
         }
