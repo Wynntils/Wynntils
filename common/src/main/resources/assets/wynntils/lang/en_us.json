@@ -138,6 +138,7 @@
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.name": "Guild Attack Timer",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.name": "Text Shadow",
+  "feature.wynntils.guildMap.name": "Guild Map",
   "feature.wynntils.hades.getOtherPlayerInfo.description": "Do you want to get your mutuals' info? Disable this config if you only want to share your info, but do not want to load other player's data.",
   "feature.wynntils.hades.getOtherPlayerInfo.name": "Get Other Players' Info",
   "feature.wynntils.hades.name": "Hades",
