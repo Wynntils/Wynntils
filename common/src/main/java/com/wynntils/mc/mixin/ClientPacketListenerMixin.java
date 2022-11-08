@@ -31,6 +31,7 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -231,5 +232,11 @@ public abstract class ClientPacketListenerMixin {
     private void handleAddPlayer(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         EventFactory.onPlayerJoinedWorld(packet, this.getPlayerInfo(packet.getPlayerId()));
+    }
+
+    @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
+    private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onUpdateAdvancements(packet);
     }
 }

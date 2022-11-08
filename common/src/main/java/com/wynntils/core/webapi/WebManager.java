@@ -13,6 +13,7 @@ import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
+import com.wynntils.core.webapi.profiles.DiscoveryProfile;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
@@ -27,6 +28,7 @@ import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
+import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +75,8 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+
+    private static List<DiscoveryProfile> discoveries = new ArrayList<>();
 
     private static String currentSplash = "";
 
@@ -301,6 +305,22 @@ public final class WebManager extends CoreManager {
         handler.addAndDispatch(request, true);
     }
 
+    public static void updateDiscoveries() {
+        if (apiUrls == null) return;
+
+        String url = apiUrls.get("Discoveries");
+        handler.addRequest(new RequestBuilder(url, "discoveries")
+                .cacheTo(new File(API_CACHE_ROOT, "discoveries.json"))
+                .handleJsonArray(discoveriesJson -> {
+                    Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+
+                    discoveries = gson.fromJson(discoveriesJson, type);
+                    WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Api());
+                    return true;
+                })
+                .build());
+    }
+
     private static void updateCurrentSplash() {
         if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
 
@@ -366,6 +386,10 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
+    }
+
+    public static List<DiscoveryProfile> getDiscoveries() {
+        return discoveries;
     }
 
     public static String getUserAgent() {
