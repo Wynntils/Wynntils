@@ -1,9 +1,21 @@
+## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
+
+
+### New Features
+
+* Mob HP Formatting ([#661](https://github.com/Wynntils/Artemis/issues/661)) ([dde606e](https://github.com/Wynntils/Artemis/commit/dde606e67310a4ec2c0d4774a448b8daf909f4fc))
+
 ## [0.0.1-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.16...v0.0.1-alpha.17) (2022-11-08)
 
 
 ### Bug Fixes
 
 * Add missing texture files ([e15f6fb](https://github.com/Wynntils/Artemis/commit/e15f6fb008e417b15acfcf4b0f1cceb904b6a50a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.17 [skip ci] ([dc9b2c0](https://github.com/Wynntils/Artemis/commit/dc9b2c0862f3fda3f65a26ea27cdfe2d9e942b7f))
 
 ## [0.0.1-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.15...v0.0.1-alpha.16) (2022-11-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.14 [skip ci] ([5d43560](https://github.com/Wynntils/Artemis/commit/5d43560e9bad30d3b423aecfa0a50d91b7e80d46))
-
-## [0.0.1-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.12...v0.0.1-alpha.13) (2022-11-06)
-
-
-### New Features
-
-* Auto message territory defense on attack ([#650](https://github.com/Wynntils/Artemis/issues/650)) ([f7ab62d](https://github.com/Wynntils/Artemis/commit/f7ab62d426bc75d08c557c154392fcbfa58e9014))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.13 [skip ci] ([6c151d6](https://github.com/Wynntils/Artemis/commit/6c151d68c31e820f8b09327963d7d401cf186a3b))
 
