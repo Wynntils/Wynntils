@@ -269,12 +269,13 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                 int maxLevel = i + 24;
 
                 long count = elements.stream()
-                        .filter(questInfo -> questInfo.getLevel() >= minLevel && questInfo.getLevel() <= maxLevel)
+                        .filter(questInfo ->
+                                questInfo.getSortLevel() >= minLevel && questInfo.getSortLevel() <= maxLevel)
                         .count();
                 long completedCount = elements.stream()
                         .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED
-                                && questInfo.getLevel() >= minLevel
-                                && questInfo.getLevel() <= maxLevel)
+                                && questInfo.getSortLevel() >= minLevel
+                                && questInfo.getSortLevel() <= maxLevel)
                         .count();
 
                 tooltipLines.add(new TextComponent("- Lv. " + minLevel + "-" + maxLevel)
@@ -285,15 +286,21 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
             }
 
             long count = elements.stream()
-                    .filter(questInfo -> questInfo.getLevel() >= 101)
+                    .filter(questInfo -> questInfo.getSortLevel() >= 101)
                     .count();
-            long completedCount = elements.stream()
-                    .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getLevel() >= 101)
-                    .count();
-            tooltipLines.add(new TextComponent("- Lv. 101+")
-                    .append(new TextComponent(" [" + completedCount + "/" + count + "]").withStyle(ChatFormatting.GRAY))
-                    .append(" ")
-                    .append(getPercentageComponent((int) completedCount, (int) count, 5)));
+            long completedCount;
+
+            if (count > 0) {
+                completedCount = elements.stream()
+                        .filter(questInfo ->
+                                questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getSortLevel() >= 101)
+                        .count();
+                tooltipLines.add(new TextComponent("- Lv. 101+")
+                        .append(new TextComponent(" [" + completedCount + "/" + count + "]")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(" ")
+                        .append(getPercentageComponent((int) completedCount, (int) count, 5)));
+            }
 
             count = elements.size();
             completedCount = elements.stream()
@@ -301,7 +308,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                     .count();
 
             tooltipLines.add(new TextComponent(""));
-            tooltipLines.add(new TextComponent("Total Quests: ")
+            tooltipLines.add(new TextComponent(this.miniQuestMode ? "Total Mini-Quests: " : "Total Quests: ")
                     .withStyle(ChatFormatting.AQUA)
                     .append(new TextComponent("[" + completedCount + "/" + count + "]")
                             .withStyle(ChatFormatting.DARK_AQUA)));
