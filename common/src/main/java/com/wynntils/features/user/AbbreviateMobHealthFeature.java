@@ -1,19 +1,22 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket.AddOperation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket.AddOperation;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AbbreviateMobHealthFeature extends UserFeature {
 
@@ -54,7 +57,7 @@ public class AbbreviateMobHealthFeature extends UserFeature {
         static String formatNumber(int num) {
             for (Abbreviation abbr : Abbreviation.values()) {
                 if (num >= abbr.value) {
-                    BigDecimal shortened = new BigDecimal(num/abbr.value).setScale(precision, RoundingMode.HALF_UP);
+                    BigDecimal shortened = new BigDecimal(num / abbr.value).setScale(precision, RoundingMode.HALF_UP);
                     return shortened.toPlainString() + abbr.name();
                 }
             }
