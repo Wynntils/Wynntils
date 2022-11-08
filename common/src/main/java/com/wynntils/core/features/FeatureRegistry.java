@@ -18,7 +18,9 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
-import com.wynntils.features.user.*;
+import com.wynntils.features.user.WynncraftButtonFeature;
+import com.wynntils.features.user.WynncraftPauseScreenFeature;
+import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
@@ -44,6 +46,7 @@ import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
+import com.wynntils.features.user.GuildStarsToRankFeature;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -93,6 +96,7 @@ public final class FeatureRegistry {
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
+        registerFeature(new GuildStarsToRankFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxFeature());
@@ -134,7 +138,6 @@ public final class FeatureRegistry {
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsQuestBookFeature());
-        registerFeature(new GuildStarsToRankFeature());
 
         // save/create config file after loading all features' options
         ConfigManager.saveConfig();

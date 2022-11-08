@@ -23,11 +23,11 @@ public class GuildStarsToRankFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        String message = event.getMessage().getString();
+        String message = event.getCoded();
         Matcher match = guildMessage.matcher(message);
-        if (!userEnabled || !(match.matches())) return;
+        if (!(match.matches())) return;
         MutableComponent newMessage = new TextComponent(String.format(
-                "§3[§b%s §3%s§3] §b", GuildRank.fromInt(match.group(1).length()).getRank(), match.group(2)));
+                "§3[§b%s §3%s§3] §b", GuildRank.fromStars(match.group(1).length()).getRank(), match.group(2)));
 
         MutableComponent tc = new TextComponent("");
         String sentMessage = match.group(3);

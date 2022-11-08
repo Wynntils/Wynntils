@@ -14,29 +14,20 @@ public enum GuildRank {
     None("None", "");
 
     private final String rank;
-    private final String stars;
+    private final int stars;
 
-    GuildRank(String rank, String stars) {
+    GuildRank(String rank, int stars) {
         this.rank = rank;
         this.stars = stars;
     }
 
-    public static GuildRank fromInt(int stars) {
+    public static GuildRank fromStars(int stars) {
         for (GuildRank type : values()) {
-            if (stars == type.getStars().length()) {
+            if (stars == type.getStars()) {
                 return type;
             }
         }
         return GuildRank.None;
-    }
-
-    public static GuildRank fromStars(String stars) {
-        for (GuildRank type : values()) {
-            if (stars.equalsIgnoreCase(type.getStars())) {
-                return type;
-            }
-        }
-        return GuildRank.Recruit;
     }
 
     public static GuildRank fromString(String rank) {
