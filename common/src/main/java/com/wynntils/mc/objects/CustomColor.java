@@ -10,10 +10,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.wynntils.utils.MathUtils;
 import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.Mth;
 
 public class CustomColor {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
@@ -82,6 +84,30 @@ public class CustomColor {
     /** 0xAARRGGBB format */
     public static CustomColor fromInt(int num) {
         return new CustomColor(num >> 16 & 255, num >> 8 & 255, num & 255, num >> 24 & 255);
+    }
+
+    public static CustomColor fromHSV(float h, float s, float v, float a) {
+        a = MathUtils.clamp(a, 0, 1);
+        if (v <= 0) return new CustomColor(0, 0, 0, a);
+        if (v > 1) v = 1;
+        if (s <= 0) return new CustomColor(v, v, v, a);
+        if (s > 1) s = 1;
+
+        float vh = ((h % 1 + 1) * 6) % 6;
+
+        int vi = Mth.fastFloor(vh);
+        float v1 = v * (1 - s);
+        float v2 = v * (1 - s * (vh - vi));
+        float v3 = v * (1 - s * (1 - (vh - vi)));
+
+        return switch (vi) {
+            case 0 -> new CustomColor(v, v3, v1, a);
+            case 1 -> new CustomColor(v2, v, v1, a);
+            case 2 -> new CustomColor(v1, v, v3, a);
+            case 3 -> new CustomColor(v1, v2, v, a);
+            case 4 -> new CustomColor(v3, v1, v, a);
+            default -> new CustomColor(v, v1, v2, a);
+        };
     }
 
     /** "#rrggbb" or "rrggbb" */

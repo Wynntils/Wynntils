@@ -11,6 +11,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -108,6 +109,7 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -446,6 +448,11 @@ public final class EventFactory {
     public static BossHealthUpdateEvent onBossHealthUpdate(
             ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
         return post(new BossHealthUpdateEvent(packet, bossEvents));
+    }
+
+    public static void onUpdateAdvancements(ClientboundUpdateAdvancementsPacket packet) {
+        post(new AdvancementUpdateEvent(
+                packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
     }
 
     public static SetSpawnEvent onSetSpawn(BlockPos spawnPos) {
