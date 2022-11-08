@@ -1,9 +1,21 @@
+## [0.0.1-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.18...v0.0.1-alpha.19) (2022-11-08)
+
+
+### New Features
+
+* item stat decimal setting ([#663](https://github.com/Wynntils/Artemis/issues/663)) ([d29e489](https://github.com/Wynntils/Artemis/commit/d29e4890ebaa20eb91b08d10d263ee4aee6d7e66))
+
 ## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
 
 
 ### New Features
 
 * Mob HP Formatting ([#661](https://github.com/Wynntils/Artemis/issues/661)) ([dde606e](https://github.com/Wynntils/Artemis/commit/dde606e67310a4ec2c0d4774a448b8daf909f4fc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.18 [skip ci] ([63cdd8b](https://github.com/Wynntils/Artemis/commit/63cdd8b13fba94f5af1bd1f8fe595682036ca4c5))
 
 ## [0.0.1-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.16...v0.0.1-alpha.17) (2022-11-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.15 [skip ci] ([26aa7d8](https://github.com/Wynntils/Artemis/commit/26aa7d8f7aeb4add2caf5a35523124890b8545dc))
-
-## [0.0.1-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.13...v0.0.1-alpha.14) (2022-11-06)
-
-
-### New Features
-
-* Add AuraTimerOverlayFeature ([#653](https://github.com/Wynntils/Artemis/issues/653)) ([de2da91](https://github.com/Wynntils/Artemis/commit/de2da914d6899325946060827eb967be989edbaa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.14 [skip ci] ([5d43560](https://github.com/Wynntils/Artemis/commit/5d43560e9bad30d3b423aecfa0a50d91b7e80d46))
 
