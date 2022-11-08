@@ -76,6 +76,7 @@ public class GuildMapScreen extends AbstractMapScreen {
         List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
 
         // Render trading routes
+        // We render them in both directions because optimizing it is not cheap either
         for (Poi poi : filteredPois) {
             if (!(poi instanceof TerritoryPoi territoryPoi)) continue;
 
