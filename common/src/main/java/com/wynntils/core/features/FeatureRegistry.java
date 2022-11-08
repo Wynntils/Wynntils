@@ -18,6 +18,7 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.user.AbbreviateMobHealthFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.AuraTimerOverlayFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
@@ -109,6 +110,7 @@ public final class FeatureRegistry {
         registerFeature(new DataStorageFeature());
 
         // user
+        registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
