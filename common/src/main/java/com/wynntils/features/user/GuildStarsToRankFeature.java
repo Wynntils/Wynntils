@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildStarsToRankFeature extends UserFeature {
 
-    private static final Pattern guildMessage = Pattern.compile("§3\\[§b(★*)§3(.+)§3\\] (.*)");
+    private static final Pattern guildMessage = Pattern.compile("§3\\[(?:§b)?(★{0,5})§3(.+)§3\\] (.*)");
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
