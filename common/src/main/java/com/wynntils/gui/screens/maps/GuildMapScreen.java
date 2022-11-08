@@ -242,10 +242,10 @@ public class GuildMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            ChatFormatting.RED + "Guild Headquarters",
+                            "Guild Headquarters",
                             10,
                             10 + renderYOffset,
-                            CommonColors.WHITE,
+                            CommonColors.RED,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
                             FontRenderer.TextShadow.OUTLINE);
