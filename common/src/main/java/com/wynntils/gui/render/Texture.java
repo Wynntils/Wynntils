@@ -107,6 +107,12 @@ public enum Texture {
     WEAPONSMITHING_STATION("map/map_icons/weaponsmithing_station.png", 18, 15),
     WOODWORKING_STATION("map/map_icons/woodworking_station.png", 17, 15),
 
+    // Guild Map
+    GUILD_HEADQUARTERS_ICON("map/guild_map/guild_headquarters_icon.png", 16, 13),
+    TERRITORY_NAME_BOX("map/guild_map/territory_name_box.png", 200, 20),
+    TERRITORY_TOOLTIP_CENTER("map/guild_map/territory_tooltip_center.png", 200, 5),
+    TERRITORY_TOOLTIP_TOP("map/guild_map/territory_tooltip_top.png", 200, 10),
+
     // Character Selection UI
     ADD_BUTTON("character_selection_ui/add_button.png", 14, 28),
     BACKGROUND_SPLASH("character_selection_ui/background_splash.png", 1920, 1027),

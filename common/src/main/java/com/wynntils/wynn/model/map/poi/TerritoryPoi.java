@@ -9,10 +9,14 @@ import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
+import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
@@ -20,42 +24,53 @@ public class TerritoryPoi implements Poi {
     private final int width;
     private final int height;
 
+    private final GuildTerritoryInfo territoryInfo;
+
     public TerritoryPoi(TerritoryProfile territoryProfile) {
         this.territoryProfile = territoryProfile;
         this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
         this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
         this.territoryCenter =
                 new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
+
+        this.territoryInfo = null;
     }
 
-    @Override
-    public MapLocation getLocation() {
-        return territoryCenter;
-    }
+    public TerritoryPoi(TerritoryProfile territoryProfile, GuildTerritoryInfo territoryInfo) {
+        this.territoryProfile = territoryProfile;
+        this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
+        this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
+        this.territoryCenter =
+                new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
 
-    @Override
-    public boolean hasStaticLocation() {
-        return true;
+        this.territoryInfo = territoryInfo;
     }
 
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
         poseStack.pushPose();
-        poseStack.translate(0, 0, 1000);
+        poseStack.translate(0, 0, 100);
 
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
         final float actualRenderX = renderX - renderWidth / 2f;
         final float actualRenderZ = renderZ - renderHeight / 2f;
 
-        final CustomColor guildColor = territoryProfile.getGuildColor();
+        CustomColor color;
+        if (territoryInfo != null
+                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
+                && guildMapScreen.isResourceMode()) {
+            color = territoryInfo.getColor();
+        } else {
+            color = territoryProfile.getGuildColor();
+        }
 
         RenderUtils.drawRect(
-                poseStack, guildColor.withAlpha(65), actualRenderX, actualRenderZ, 0, renderWidth, renderHeight);
+                poseStack, color.withAlpha(65), actualRenderX, actualRenderZ, 0, renderWidth, renderHeight);
         RenderUtils.drawRectBorders(
                 poseStack,
-                guildColor,
+                color,
                 actualRenderX,
                 actualRenderZ,
                 actualRenderX + renderWidth,
@@ -63,19 +78,27 @@ public class TerritoryPoi implements Poi {
                 0,
                 1.5f);
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        territoryProfile.getGuildPrefix(),
-                        actualRenderX,
-                        actualRenderX + renderWidth,
-                        actualRenderZ,
-                        actualRenderZ + renderHeight,
-                        0,
-                        guildColor,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.OUTLINE);
+        if (territoryInfo != null && territoryInfo.isHeadquarters()) {
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    Texture.GUILD_HEADQUARTERS_ICON,
+                    actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS_ICON.width() / 2f,
+                    actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS_ICON.height() / 2f);
+        } else {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            territoryProfile.getGuildPrefix(),
+                            actualRenderX,
+                            actualRenderX + renderWidth,
+                            actualRenderZ,
+                            actualRenderZ + renderHeight,
+                            0,
+                            color,
+                            HorizontalAlignment.Center,
+                            VerticalAlignment.Middle,
+                            FontRenderer.TextShadow.OUTLINE);
+        }
 
         GuildAttackTimerModel.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
                 .ifPresent(attackTimer -> {
@@ -116,6 +139,16 @@ public class TerritoryPoi implements Poi {
     }
 
     @Override
+    public MapLocation getLocation() {
+        return territoryCenter;
+    }
+
+    @Override
+    public boolean hasStaticLocation() {
+        return true;
+    }
+
+    @Override
     public int getWidth(float mapZoom, float scale) {
         return (int) (width * mapZoom);
     }
@@ -128,5 +161,13 @@ public class TerritoryPoi implements Poi {
     @Override
     public String getName() {
         return territoryProfile.getName();
+    }
+
+    public GuildTerritoryInfo getTerritoryInfo() {
+        return territoryInfo;
+    }
+
+    public TerritoryProfile getTerritoryProfile() {
+        return territoryProfile;
     }
 }
