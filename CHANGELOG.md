@@ -1,55 +1,55 @@
-## [0.0.1-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.14...v0.0.1-alpha.15) (2022-11-06)
+## [0.0.1-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.19...v0.0.1-alpha.20) (2022-11-09)
+
+
+### Bug Fixes
+
+* Fix discovery queries ([c4f0571](https://github.com/Wynntils/Artemis/commit/c4f0571ee3f5ad04b279c375b8a36d549c0ddcaf))
+
+## [0.0.1-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.18...v0.0.1-alpha.19) (2022-11-08)
 
 
 ### New Features
 
-* Parse defense in GuildAttackTimerOverlayFeature ([#656](https://github.com/Wynntils/Artemis/issues/656)) ([6dcca9f](https://github.com/Wynntils/Artemis/commit/6dcca9f779088322d1343d596607b8899305efa2))
+* item stat decimal setting ([#663](https://github.com/Wynntils/Artemis/issues/663)) ([d29e489](https://github.com/Wynntils/Artemis/commit/d29e4890ebaa20eb91b08d10d263ee4aee6d7e66))
 
-## [0.0.1-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.13...v0.0.1-alpha.14) (2022-11-06)
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.19 [skip ci] ([479bf40](https://github.com/Wynntils/Artemis/commit/479bf4033c4f934a91214a789f92cb730b92d4fa))
+
+## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
 
 
 ### New Features
 
-* Add AuraTimerOverlayFeature ([#653](https://github.com/Wynntils/Artemis/issues/653)) ([de2da91](https://github.com/Wynntils/Artemis/commit/de2da914d6899325946060827eb967be989edbaa))
+* Mob HP Formatting ([#661](https://github.com/Wynntils/Artemis/issues/661)) ([dde606e](https://github.com/Wynntils/Artemis/commit/dde606e67310a4ec2c0d4774a448b8daf909f4fc))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.14 [skip ci] ([5d43560](https://github.com/Wynntils/Artemis/commit/5d43560e9bad30d3b423aecfa0a50d91b7e80d46))
+* **release:** v0.0.1-alpha.18 [skip ci] ([63cdd8b](https://github.com/Wynntils/Artemis/commit/63cdd8b13fba94f5af1bd1f8fe595682036ca4c5))
 
-## [0.0.1-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.12...v0.0.1-alpha.13) (2022-11-06)
+## [0.0.1-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.16...v0.0.1-alpha.17) (2022-11-08)
+
+
+### Bug Fixes
+
+* Add missing texture files ([e15f6fb](https://github.com/Wynntils/Artemis/commit/e15f6fb008e417b15acfcf4b0f1cceb904b6a50a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.17 [skip ci] ([dc9b2c0](https://github.com/Wynntils/Artemis/commit/dc9b2c0862f3fda3f65a26ea27cdfe2d9e942b7f))
+
+## [0.0.1-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.15...v0.0.1-alpha.16) (2022-11-08)
 
 
 ### New Features
 
-* Auto message territory defense on attack ([#650](https://github.com/Wynntils/Artemis/issues/650)) ([f7ab62d](https://github.com/Wynntils/Artemis/commit/f7ab62d426bc75d08c557c154392fcbfa58e9014))
+* Add GuildMapScreen ([#657](https://github.com/Wynntils/Artemis/issues/657)) ([1b1ae3b](https://github.com/Wynntils/Artemis/commit/1b1ae3b3331293a23014a1fc16839609bc2515ef))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.13 [skip ci] ([6c151d6](https://github.com/Wynntils/Artemis/commit/6c151d68c31e820f8b09327963d7d401cf186a3b))
-
-## [0.0.1-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.11...v0.0.1-alpha.12) (2022-11-06)
-
-
-### New Features
-
-* Add Discoveries Screen ([#646](https://github.com/Wynntils/Artemis/issues/646)) ([dec9b42](https://github.com/Wynntils/Artemis/commit/dec9b42fdd22f4862181795373b976491eb613b0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.12 [skip ci] ([e90846c](https://github.com/Wynntils/Artemis/commit/e90846cea7ae391466133e9a7171418362c217ee))
-
-## [0.0.1-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.10...v0.0.1-alpha.11) (2022-11-06)
-
-
-### Code Refactoring
-
-* Abstract map screen code ([#655](https://github.com/Wynntils/Artemis/issues/655)) ([dcb657c](https://github.com/Wynntils/Artemis/commit/dcb657c4fb7a286d9e57097ab924fb9c5e250112))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.11 [skip ci] ([84c62b7](https://github.com/Wynntils/Artemis/commit/84c62b73a172a73f6d86fa239058162441cc0544))
+* **release:** v0.0.1-alpha.16 [skip ci] ([5af3201](https://github.com/Wynntils/Artemis/commit/5af3201730cd71208145f8a3c16889cb069ed562))
 

@@ -25,6 +25,9 @@ public class ItemStatInfoFeature extends UserFeature {
     public boolean colorLerp = true;
 
     @Config
+    public int decimalPlaces = 1;
+
+    @Config
     public boolean perfect = true;
 
     @Config

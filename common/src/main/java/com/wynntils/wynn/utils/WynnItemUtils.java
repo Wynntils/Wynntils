@@ -24,6 +24,8 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -210,7 +212,10 @@ public final class WynnItemUtils {
                                 ? getPercentageColor(percentage)
                                 : getFlatPercentageColor(percentage))
                 .withItalic(false);
-        return new TextComponent(String.format(Utils.getGameLocale(), " [%.1f%%]", percentage)).withStyle(color);
+        String percentString = new BigDecimal(percentage)
+                .setScale(ItemStatInfoFeature.INSTANCE.decimalPlaces, RoundingMode.DOWN)
+                .toPlainString();
+        return new TextComponent(" [" + percentString + "%]").withStyle(color);
     }
 
     /**

@@ -18,6 +18,7 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.user.AbbreviateMobHealthFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.AuraTimerOverlayFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
@@ -65,6 +66,7 @@ import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
+import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.map.MinimapFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
@@ -108,6 +110,7 @@ public final class FeatureRegistry {
         registerFeature(new DataStorageFeature());
 
         // user
+        registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
@@ -132,6 +135,7 @@ public final class FeatureRegistry {
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
+        registerFeature(new GuildMapFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxFeature());

@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
-import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
@@ -29,8 +28,6 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class MainMapScreen extends AbstractMapScreen {
-    private Poi hovered = null;
-
     public MainMapScreen() {
         super();
         centerMapAroundPlayer();
@@ -60,11 +57,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        renderPois(
-                poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                mouseX,
-                mouseY);
+        renderPois(poseStack, mouseX, mouseY);
 
         // Cursor
         renderCursor(
@@ -80,9 +73,7 @@ public class MainMapScreen extends AbstractMapScreen {
         renderCoordinates(poseStack, mouseX, mouseY);
     }
 
-    private void renderPois(PoseStack poseStack, BoundingBox textureBoundingBox, int mouseX, int mouseY) {
-        hovered = null;
-
+    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
         List<Poi> pois = new ArrayList<>();
 
         pois.addAll(MapModel.getServicePois());
@@ -106,45 +97,13 @@ public class MainMapScreen extends AbstractMapScreen {
             pois.addAll(TerritoryManager.getTerritoryPois());
         }
 
-        List<Poi> filteredPois = new ArrayList<>();
-
-        // Filter and find hovered
-        for (int i = pois.size() - 1; i >= 0; i--) {
-            Poi poi = pois.get(i);
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
-
-            float poiWidth = poi.getWidth(currentZoom, MapFeature.INSTANCE.poiScale);
-            float poiHeight = poi.getHeight(currentZoom, MapFeature.INSTANCE.poiScale);
-
-            BoundingBox filterBox = BoundingBox.centered(
-                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
-            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
-
-            if (filterBox.intersects(textureBoundingBox)) {
-                filteredPois.add(poi);
-                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
-                    hovered = poi;
-                }
-            }
-        }
-
-        // Add hovered poi as first
-        if (hovered != null) {
-            filteredPois.remove(hovered);
-            filteredPois.add(0, hovered);
-        }
-
-        // Reverse and Render
-        for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            Poi poi = filteredPois.get(i);
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
-
-            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, MapFeature.INSTANCE.poiScale, currentZoom);
-        }
+        renderPois(
+                pois,
+                poseStack,
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                MapFeature.INSTANCE.poiScale,
+                mouseX,
+                mouseY);
     }
 
     @Override
