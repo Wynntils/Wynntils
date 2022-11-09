@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class HadesModel extends Model {
@@ -131,7 +132,7 @@ public class HadesModel extends Model {
     @SubscribeEvent
     public static void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
-        if (!WorldStateManager.onWorld()) return;
+        if (!WorldStateManager.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
