@@ -23,7 +23,7 @@ public class GuildStarsToRankFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        String message = event.getCoded();
+        String message = event.getCodedMessage();
         Matcher match = guildMessage.matcher(message);
         if (!(match.matches())) return;
         MutableComponent newMessage = new TextComponent(String.format(
