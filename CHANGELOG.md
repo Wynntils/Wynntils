@@ -1,9 +1,21 @@
+## [0.0.1-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.22...v0.0.1-alpha.23) (2022-11-10)
+
+
+### Bug Fixes
+
+* Render player shadows correctly when injecting nametags ([#666](https://github.com/Wynntils/Artemis/issues/666)) ([b694e53](https://github.com/Wynntils/Artemis/commit/b694e5318393291ca87037f90151e259c5fc3111))
+
 ## [0.0.1-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.21...v0.0.1-alpha.22) (2022-11-10)
 
 
 ### New Features
 
 * player armor hiding ([#664](https://github.com/Wynntils/Artemis/issues/664)) ([7cb833d](https://github.com/Wynntils/Artemis/commit/7cb833d49e2dca2cf0c54a69e666f8736e73e7d4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.22 [skip ci] ([3045a95](https://github.com/Wynntils/Artemis/commit/3045a957100bd321276dc219a866d6e993652e64))
 
 ## [0.0.1-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.20...v0.0.1-alpha.21) (2022-11-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.19 [skip ci] ([479bf40](https://github.com/Wynntils/Artemis/commit/479bf4033c4f934a91214a789f92cb730b92d4fa))
-
-## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
-
-
-### New Features
-
-* Mob HP Formatting ([#661](https://github.com/Wynntils/Artemis/issues/661)) ([dde606e](https://github.com/Wynntils/Artemis/commit/dde606e67310a4ec2c0d4774a448b8daf909f4fc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.18 [skip ci] ([63cdd8b](https://github.com/Wynntils/Artemis/commit/63cdd8b13fba94f5af1bd1f8fe595682036ca4c5))
 
