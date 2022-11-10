@@ -6,6 +6,7 @@ package com.wynntils.core.webapi.profiles.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.item.IdentificationOrderer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class IdentificationProfile {
     private final IdentificationModifier type;
     private final int baseValue;
     private final boolean isFixed;
+    private transient boolean isInverted;
     private transient int min;
     private transient int max;
 
@@ -27,18 +29,20 @@ public class IdentificationProfile {
         this.type = type;
         this.baseValue = baseValue;
         this.isFixed = isFixed;
-        calculateMinMax();
     }
 
-    public void calculateMinMax() {
+    public void calculateMinMax(String shortId) {
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;
             max = baseValue;
             return;
         }
 
-        min = (int) Math.round(baseValue * (baseValue < 0 ? 1.3 : 0.3));
-        max = (int) Math.round(baseValue * (baseValue < 0 ? 0.7 : 1.3));
+        isInverted = IdentificationOrderer.INSTANCE.isInverted(shortId);
+
+        boolean positive = (baseValue > 0) ^ isInverted;
+        min = (int) Math.round(baseValue * (positive ? 0.3 : 1.3));
+        max = (int) Math.round(baseValue * (positive ? 1.3 : 0.7));
     }
 
     public void registerIdType(String name) {
@@ -60,6 +64,10 @@ public class IdentificationProfile {
 
     public int getBaseValue() {
         return baseValue;
+    }
+
+    public boolean isInverted() {
+        return isInverted;
     }
 
     public boolean isFixed() {
@@ -92,7 +100,7 @@ public class IdentificationProfile {
      *     versa with `increase`. Likewise, the stars are accounted as inverted
      * @return A {@link ReidentificationChances} of the result (All from 0 to 1)
      */
-    public ReidentificationChances getChances(int currentValue, boolean isInverted, int starCount) {
+    public ReidentificationChances getChances(int currentValue, int starCount) {
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
         // that some items that have had its stats shifted from positive to negative to
         // break the bounds
@@ -117,43 +125,25 @@ public class IdentificationProfile {
 
         if (baseValue > 0) {
             // We can further bound the possible rolls using the star count
-            int starMin;
-            int starMax;
+            int starMin = 30;
+            int starMax = 130;
 
             switch (starCount) {
                 case 0:
-                    if (isInverted) {
-                        starMin = 60;
-                        starMax = 130;
-                    } else {
-                        starMin = 30;
-                        starMax = 100;
-                    }
+                    starMin = 30;
+                    starMax = 100;
                     break;
                 case 1:
-                    if (isInverted) {
-                        starMin = 36;
-                        starMax = 59;
-                    } else {
-                        starMin = 101;
-                        starMax = 124;
-                    }
+                    starMin = 101;
+                    starMax = 124;
                     break;
                 case 2:
-                    if (isInverted) {
-                        starMin = 31;
-                        starMax = 35;
-                    } else {
-                        starMin = 125;
-                        starMax = 129;
-                    }
+                    starMin = 125;
+                    starMax = 129;
                     break;
                 case 3:
                     return new ReidentificationChances(100 / 101d, 1 / 101d, 0d);
                 default:
-                    starMin = 30;
-                    starMax = 130;
-
                     WynntilsMod.warn("Invalid star count of " + starCount);
             }
 
@@ -165,7 +155,7 @@ public class IdentificationProfile {
             return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d).flipIf(isInverted);
         } else {
             double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 80);
+            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
 
             double avg = (lowerRollBound + higherRollBound) / 2d;
 
@@ -183,7 +173,7 @@ public class IdentificationProfile {
      * @return true if this is a valid value (If false, the API is probably wrong)
      */
     public boolean isInvalidValue(int currentValue) {
-        return currentValue > max || currentValue < min;
+        return isInverted ? (currentValue > min || currentValue < max) : (currentValue > max || currentValue < min);
     }
 
     public static String getAsLongName(String shortName) {
