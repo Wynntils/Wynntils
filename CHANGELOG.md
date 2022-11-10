@@ -1,9 +1,21 @@
+## [0.0.1-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.24...v0.0.1-alpha.25) (2022-11-10)
+
+
+### Miscellaneous Chores
+
+* Rebuild for quilt ([60b1d88](https://github.com/Wynntils/Artemis/commit/60b1d88b7407e6ce1d7159426ca3aa399eed900f))
+
 ## [0.0.1-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.23...v0.0.1-alpha.24) (2022-11-10)
 
 
 ### New Features
 
 * Stencils and support for compass distance ([#631](https://github.com/Wynntils/Artemis/issues/631)) ([197860e](https://github.com/Wynntils/Artemis/commit/197860ea4681a9bd2f2cec37e8878fb73cd071d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.24 [skip ci] ([042925b](https://github.com/Wynntils/Artemis/commit/042925b1326d70662e698a2fab59fb160ea00cf6))
 
 ## [0.0.1-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.22...v0.0.1-alpha.23) (2022-11-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.21 [skip ci] ([e4e233f](https://github.com/Wynntils/Artemis/commit/e4e233f733cb7ebbd3abae6a46587c02c33cd93d))
-
-## [0.0.1-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.19...v0.0.1-alpha.20) (2022-11-09)
-
-
-### Bug Fixes
-
-* Fix discovery queries ([c4f0571](https://github.com/Wynntils/Artemis/commit/c4f0571ee3f5ad04b279c375b8a36d549c0ddcaf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.20 [skip ci] ([e62743c](https://github.com/Wynntils/Artemis/commit/e62743cc88a91fa9f4ec9a05b3731d95b58cf462))
 
