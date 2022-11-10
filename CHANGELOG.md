@@ -1,9 +1,33 @@
+## [0.0.1-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.22...v0.0.1-alpha.23) (2022-11-10)
+
+
+### Bug Fixes
+
+* Render player shadows correctly when injecting nametags ([#666](https://github.com/Wynntils/Artemis/issues/666)) ([b694e53](https://github.com/Wynntils/Artemis/commit/b694e5318393291ca87037f90151e259c5fc3111))
+
+## [0.0.1-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.21...v0.0.1-alpha.22) (2022-11-10)
+
+
+### New Features
+
+* player armor hiding ([#664](https://github.com/Wynntils/Artemis/issues/664)) ([7cb833d](https://github.com/Wynntils/Artemis/commit/7cb833d49e2dca2cf0c54a69e666f8736e73e7d4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.22 [skip ci] ([3045a95](https://github.com/Wynntils/Artemis/commit/3045a957100bd321276dc219a866d6e993652e64))
+
 ## [0.0.1-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.20...v0.0.1-alpha.21) (2022-11-09)
 
 
 ### Bug Fixes
 
 * Do not send data when player is in special states ([#667](https://github.com/Wynntils/Artemis/issues/667)) ([23e04af](https://github.com/Wynntils/Artemis/commit/23e04afbb337a323dab8e6edcac9822958340006))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.21 [skip ci] ([e4e233f](https://github.com/Wynntils/Artemis/commit/e4e233f733cb7ebbd3abae6a46587c02c33cd93d))
 
 ## [0.0.1-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.19...v0.0.1-alpha.20) (2022-11-09)
 
@@ -28,28 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.19 [skip ci] ([479bf40](https://github.com/Wynntils/Artemis/commit/479bf4033c4f934a91214a789f92cb730b92d4fa))
-
-## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
-
-
-### New Features
-
-* Mob HP Formatting ([#661](https://github.com/Wynntils/Artemis/issues/661)) ([dde606e](https://github.com/Wynntils/Artemis/commit/dde606e67310a4ec2c0d4774a448b8daf909f4fc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.18 [skip ci] ([63cdd8b](https://github.com/Wynntils/Artemis/commit/63cdd8b13fba94f5af1bd1f8fe595682036ca4c5))
-
-## [0.0.1-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.16...v0.0.1-alpha.17) (2022-11-08)
-
-
-### Bug Fixes
-
-* Add missing texture files ([e15f6fb](https://github.com/Wynntils/Artemis/commit/e15f6fb008e417b15acfcf4b0f1cceb904b6a50a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.17 [skip ci] ([dc9b2c0](https://github.com/Wynntils/Artemis/commit/dc9b2c0862f3fda3f65a26ea27cdfe2d9e942b7f))
 

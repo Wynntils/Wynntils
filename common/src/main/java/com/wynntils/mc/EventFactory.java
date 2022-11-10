@@ -113,6 +113,7 @@ import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -145,8 +146,8 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player) {
-        return post(new PlayerArmorRenderEvent(player));
+    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
+        return post(new PlayerArmorRenderEvent(player, slot));
     }
 
     public static NametagRenderEvent onNameTagRender(
