@@ -1,9 +1,33 @@
+## [0.0.1-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.20...v0.0.1-alpha.21) (2022-11-09)
+
+
+### Bug Fixes
+
+* Do not send data when player is in special states ([#667](https://github.com/Wynntils/Artemis/issues/667)) ([23e04af](https://github.com/Wynntils/Artemis/commit/23e04afbb337a323dab8e6edcac9822958340006))
+
+## [0.0.1-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.19...v0.0.1-alpha.20) (2022-11-09)
+
+
+### Bug Fixes
+
+* Fix discovery queries ([c4f0571](https://github.com/Wynntils/Artemis/commit/c4f0571ee3f5ad04b279c375b8a36d549c0ddcaf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.20 [skip ci] ([e62743c](https://github.com/Wynntils/Artemis/commit/e62743cc88a91fa9f4ec9a05b3731d95b58cf462))
+
 ## [0.0.1-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.18...v0.0.1-alpha.19) (2022-11-08)
 
 
 ### New Features
 
 * item stat decimal setting ([#663](https://github.com/Wynntils/Artemis/issues/663)) ([d29e489](https://github.com/Wynntils/Artemis/commit/d29e4890ebaa20eb91b08d10d263ee4aee6d7e66))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.19 [skip ci] ([479bf40](https://github.com/Wynntils/Artemis/commit/479bf4033c4f934a91214a789f92cb730b92d4fa))
 
 ## [0.0.1-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.17...v0.0.1-alpha.18) (2022-11-08)
 
@@ -28,28 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.17 [skip ci] ([dc9b2c0](https://github.com/Wynntils/Artemis/commit/dc9b2c0862f3fda3f65a26ea27cdfe2d9e942b7f))
-
-## [0.0.1-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.15...v0.0.1-alpha.16) (2022-11-08)
-
-
-### New Features
-
-* Add GuildMapScreen ([#657](https://github.com/Wynntils/Artemis/issues/657)) ([1b1ae3b](https://github.com/Wynntils/Artemis/commit/1b1ae3b3331293a23014a1fc16839609bc2515ef))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.16 [skip ci] ([5af3201](https://github.com/Wynntils/Artemis/commit/5af3201730cd71208145f8a3c16889cb069ed562))
-
-## [0.0.1-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.14...v0.0.1-alpha.15) (2022-11-06)
-
-
-### New Features
-
-* Parse defense in GuildAttackTimerOverlayFeature ([#656](https://github.com/Wynntils/Artemis/issues/656)) ([6dcca9f](https://github.com/Wynntils/Artemis/commit/6dcca9f779088322d1343d596607b8899305efa2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.15 [skip ci] ([26aa7d8](https://github.com/Wynntils/Artemis/commit/26aa7d8f7aeb4add2caf5a35523124890b8545dc))
 
