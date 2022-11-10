@@ -1,9 +1,17 @@
+## [0.0.1-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.25...v0.0.1-alpha.26) (2022-11-10)
+
+
+### Bug Fixes
+
+* update spell cost ID ranges ([#668](https://github.com/Wynntils/Artemis/issues/668)) ([2b8b59d](https://github.com/Wynntils/Artemis/commit/2b8b59d91ccd1f206498964bc0dbf868bcb33644))
+
 ## [0.0.1-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.24...v0.0.1-alpha.25) (2022-11-10)
 
 
 ### Miscellaneous Chores
 
 * Rebuild for quilt ([60b1d88](https://github.com/Wynntils/Artemis/commit/60b1d88b7407e6ce1d7159426ca3aa399eed900f))
+* **release:** v0.0.1-alpha.25 [skip ci] ([a064176](https://github.com/Wynntils/Artemis/commit/a06417623234a795e6ec9706188f4826ad3f9063))
 
 ## [0.0.1-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.23...v0.0.1-alpha.24) (2022-11-10)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.22 [skip ci] ([3045a95](https://github.com/Wynntils/Artemis/commit/3045a957100bd321276dc219a866d6e993652e64))
-
-## [0.0.1-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.20...v0.0.1-alpha.21) (2022-11-09)
-
-
-### Bug Fixes
-
-* Do not send data when player is in special states ([#667](https://github.com/Wynntils/Artemis/issues/667)) ([23e04af](https://github.com/Wynntils/Artemis/commit/23e04afbb337a323dab8e6edcac9822958340006))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.21 [skip ci] ([e4e233f](https://github.com/Wynntils/Artemis/commit/e4e233f733cb7ebbd3abae6a46587c02c33cd93d))
 
