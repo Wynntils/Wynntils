@@ -6,9 +6,8 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,24 +16,28 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HumanoidArmorLayer.class)
-public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, A extends HumanoidModel<T>> {
+@Mixin(CustomHeadLayer.class)
+public abstract class CustomHeadLayerMixin<T extends LivingEntity> {
 
     @Inject(
             method =
-                    "renderArmorPiece(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/model/HumanoidModel;)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void renderArmorPiece(
-            PoseStack poseStack,
+    private void render(
+            PoseStack matrixStack,
             MultiBufferSource buffer,
+            int packedLight,
             T livingEntity,
-            EquipmentSlot slot,
-            int i,
-            A model,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialTicks,
+            float ageInTicks,
+            float netHeadYaw,
+            float headPitch,
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (EventFactory.onPlayerArmorRender(player, slot).isCanceled()) ci.cancel();
+        if (EventFactory.onPlayerArmorRender(player, EquipmentSlot.HEAD).isCanceled()) ci.cancel();
     }
 }
