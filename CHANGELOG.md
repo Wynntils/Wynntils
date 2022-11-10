@@ -1,9 +1,21 @@
+## [0.0.1-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.23...v0.0.1-alpha.24) (2022-11-10)
+
+
+### New Features
+
+* Stencils and support for compass distance ([#631](https://github.com/Wynntils/Artemis/issues/631)) ([197860e](https://github.com/Wynntils/Artemis/commit/197860ea4681a9bd2f2cec37e8878fb73cd071d6))
+
 ## [0.0.1-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.22...v0.0.1-alpha.23) (2022-11-10)
 
 
 ### Bug Fixes
 
 * Render player shadows correctly when injecting nametags ([#666](https://github.com/Wynntils/Artemis/issues/666)) ([b694e53](https://github.com/Wynntils/Artemis/commit/b694e5318393291ca87037f90151e259c5fc3111))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.23 [skip ci] ([a6b33ee](https://github.com/Wynntils/Artemis/commit/a6b33ee75036016e3cefd10a8f01306b946d62cb))
 
 ## [0.0.1-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.21...v0.0.1-alpha.22) (2022-11-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.20 [skip ci] ([e62743c](https://github.com/Wynntils/Artemis/commit/e62743cc88a91fa9f4ec9a05b3731d95b58cf462))
-
-## [0.0.1-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.18...v0.0.1-alpha.19) (2022-11-08)
-
-
-### New Features
-
-* item stat decimal setting ([#663](https://github.com/Wynntils/Artemis/issues/663)) ([d29e489](https://github.com/Wynntils/Artemis/commit/d29e4890ebaa20eb91b08d10d263ee4aee6d7e66))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.19 [skip ci] ([479bf40](https://github.com/Wynntils/Artemis/commit/479bf4033c4f934a91214a789f92cb730b92d4fa))
 
