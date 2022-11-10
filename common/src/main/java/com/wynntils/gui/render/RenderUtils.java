@@ -1101,9 +1101,21 @@ public final class RenderUtils {
             float ty1,
             float tx2,
             float ty2) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.colorMask(false, false, false, true);
+        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        // Draw textured image
         int width = texture.width();
         int height = texture.height();
         drawTexturedRect(
@@ -1111,7 +1123,7 @@ public final class RenderUtils {
                 texture.resource(),
                 x1,
                 y1,
-                1000f,
+                0f,
                 x2 - x1,
                 y2 - y1,
                 tx1,
@@ -1120,20 +1132,22 @@ public final class RenderUtils {
                 ty2 - ty1,
                 width,
                 height);
+
+        // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.depthMask(false);
-        RenderSystem.depthFunc(GL11.GL_GREATER);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
     /**
      * Clears the active rendering mask from the screen.
      */
     public static void clearMask() {
-        RenderSystem.depthMask(true);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
     }
 
     private static final class ClipboardImage implements Transferable {
