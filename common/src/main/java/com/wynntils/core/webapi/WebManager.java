@@ -17,7 +17,6 @@ import com.wynntils.core.webapi.profiles.DiscoveryProfile;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
@@ -194,7 +193,7 @@ public final class WebManager extends CoreManager {
 
                     HashMap<String, ItemProfile> citems = new HashMap<>();
                     for (ItemProfile prof : gItems) {
-                        prof.getStatuses().values().forEach(IdentificationProfile::calculateMinMax);
+                        prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
                         prof.addMajorIds(majorIds);
                         citems.put(prof.getDisplayName(), prof);
                     }
