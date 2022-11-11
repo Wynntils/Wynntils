@@ -5,11 +5,16 @@
 package com.wynntils.fabric.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 /*
@@ -17,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  */
 @Mixin(RenderTarget.class)
 public class RenderTargetMixin {
+    @Shadow
+    protected int depthBufferId;
 
     @ModifyArgs(
             method = "createBuffers",
@@ -33,7 +40,7 @@ public class RenderTargetMixin {
         args.set(7, GL30.GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
     }
 
-    @ModifyArgs(
+    @Inject(
             method = "createBuffers",
             at =
                     @At(
@@ -47,7 +54,8 @@ public class RenderTargetMixin {
                                             value = "FIELD",
                                             target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
                                             ordinal = 1)))
-    public void init2(Args args) {
-        args.set(1, GL30.GL_DEPTH_STENCIL_ATTACHMENT);
+    public void init2(int width, int height, boolean clearError, CallbackInfo ci) {
+        GlStateManager._glFramebufferTexture2D(
+                GL30.GL_FRAMEBUFFER, GL30.GL_STENCIL_ATTACHMENT, GL11.GL_TEXTURE_2D, this.depthBufferId, 0);
     }
 }
