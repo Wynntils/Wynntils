@@ -35,12 +35,12 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     public CustomColor textColor = CommonColors.WHITE;
 
     @Config
-    public int backgroundOpacity = 80;
+    public float backgroundOpacity = 0.2f;
 
     @Config
     public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NONE;
 
-    private Vector3d ndc = null;
+    private Vector3d normalizedDeviceCoordinates = null;
     private String distanceText;
 
     @Override
@@ -85,7 +85,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        if (CompassModel.getCompassLocation().isEmpty() || ndc == null || isOnScreen()) return;
+        if (CompassModel.getCompassLocation().isEmpty() || normalizedDeviceCoordinates == null || isOnScreen()) return;
 
         Window window = event.getWindow();
 
@@ -93,8 +93,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
         WynntilsMod.info(String.valueOf(backgroundWidth));
 
-        float displayPositionX = (float) ((ndc.x + 1.0f) / 2.0f) * window.getGuiScaledWidth();
-        float displayPositionY = (float) ((1.0f - ndc.y) / 2.0f) * window.getGuiScaledHeight();
+        float displayPositionX = (float) ((normalizedDeviceCoordinates.x + 1.0f) / 2.0f) * window.getGuiScaledWidth();
+        float displayPositionY = (float) ((1.0f - normalizedDeviceCoordinates.y) / 2.0f) * window.getGuiScaledHeight();
 
         RenderUtils.drawRect(
                 event.getPoseStack(),
@@ -119,18 +119,19 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                         textShadow);
     }
 
-    // ndc range check, make sure the point is on screen
-    // z check is flipped to countereact matrix transformation in onRenderGuiPost
-    // possible behavior change?
     private boolean isOnScreen() {
-        return !(ndc.x > 1 || ndc.x < -1 || ndc.y > 1 || ndc.y < -1 || !(ndc.z > 1));
+        return normalizedDeviceCoordinates.x <= 1
+                && normalizedDeviceCoordinates.x >= -1
+                && normalizedDeviceCoordinates.y <= 1
+                && normalizedDeviceCoordinates.y >= -1
+                && normalizedDeviceCoordinates.z > 1;
     }
 
     private void worldToNdc(Vector3f delta, Matrix4f projection) {
         Vector4f clipCoords = new Vector4f(delta.x(), delta.y(), delta.z(), 1.0f);
         clipCoords.transform(projection);
 
-        this.ndc = new Vector3d(
+        this.normalizedDeviceCoordinates = new Vector3d(
                 clipCoords.x() / clipCoords.w(), clipCoords.y() / clipCoords.w(), clipCoords.z() / clipCoords.w());
     }
 }
