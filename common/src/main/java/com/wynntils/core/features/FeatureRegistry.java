@@ -23,6 +23,7 @@ import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.AuraTimerOverlayFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
+import com.wynntils.features.user.BeaconDistanceFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.ContainerSearchFeature;
@@ -118,6 +119,7 @@ public final class FeatureRegistry {
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new BeaconBeamFeature());
+        registerFeature(new BeaconDistanceFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
