@@ -52,6 +52,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.RenderChatEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
@@ -78,6 +79,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -207,6 +209,10 @@ public final class EventFactory {
 
     public static RenderEvent.Pre onRenderFoodPre(PoseStack poseStack, Window window) {
         return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
+    }
+
+    public static RenderChatEvent onRenderChatPre(PoseStack poseStack, Window window, ChatComponent chat) {
+        return post(new RenderChatEvent(poseStack, window, chat));
     }
 
     public static void onContainerRender(

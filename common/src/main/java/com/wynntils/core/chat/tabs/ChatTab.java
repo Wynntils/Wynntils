@@ -15,23 +15,38 @@ public class ChatTab {
 
     // Filters, inactive one is null
     private Set<RecipientType> filteredTypes;
-    private Pattern customRegex;
+    private String customRegexString;
 
-    public ChatTab(String name, Set<RecipientType> filteredTypes, Pattern customRegex) {
+    private transient Pattern customRegex;
+
+    public ChatTab(String name, boolean lowPriority, Set<RecipientType> filteredTypes, String customRegexString) {
         this.name = name;
+        this.lowPriority = lowPriority;
         this.filteredTypes = filteredTypes;
-        this.customRegex = customRegex;
+        this.customRegexString = customRegexString;
+
+        if (customRegexString != null) {
+            this.customRegex = Pattern.compile(customRegexString);
+        }
     }
 
     public boolean matchMessageFromEvent(ChatMessageReceivedEvent event) {
+        if (customRegexString != null) {
+            return customRegex.matcher(event.getCodedMessage()).matches();
+        }
+
         if (filteredTypes != null) {
             return filteredTypes.contains(event.getRecipientType());
         }
 
-        if (customRegex != null) {
-            return customRegex.matcher(event.getCodedMessage()).matches();
-        }
-
         return false;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isLowPriority() {
+        return lowPriority;
     }
 }
