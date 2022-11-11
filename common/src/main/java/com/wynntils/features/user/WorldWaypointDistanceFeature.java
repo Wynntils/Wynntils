@@ -9,12 +9,14 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -27,7 +29,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class BeaconDistanceFeature extends UserFeature {
+public class WorldWaypointDistanceFeature extends UserFeature {
 
     @Config
     public CustomColor textColor = CommonColors.WHITE;
@@ -54,12 +56,10 @@ public class BeaconDistanceFeature extends UserFeature {
         Matrix4f projection = event.getProjectionMatrix().copy();
         Camera camera = event.getCamera();
         Vec3 cameraPos = camera.getPosition();
-        Vector3f positiveX = new Vector3f(1.0f, 0.0f, 0.0f);
-        Vector3f positiveY = new Vector3f(0.0f, 1.0f, 0.0f);
 
         // apply camera rotation
-        projection.multiply(positiveX.rotationDegrees(camera.getXRot()));
-        projection.multiply(positiveY.rotationDegrees(camera.getYRot() + 180.0F));
+        projection.multiply(Vector3f.XP.rotationDegrees(camera.getXRot()));
+        projection.multiply(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
         // offset to put text to the center of the block
         float dx = (float) (location.x + 0.5 - cameraPos.x);
@@ -91,6 +91,7 @@ public class BeaconDistanceFeature extends UserFeature {
 
         float backgroundWidth = FontRenderer.getInstance().getFont().width(distanceText);
         float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
+        WynntilsMod.info(String.valueOf(backgroundWidth));
 
         float displayPositionX = (float) ((ndc.x + 1.0f) / 2.0f) * window.getGuiScaledWidth();
         float displayPositionY = (float) ((1.0f - ndc.y) / 2.0f) * window.getGuiScaledHeight();
@@ -98,8 +99,8 @@ public class BeaconDistanceFeature extends UserFeature {
         RenderUtils.drawRect(
                 event.getPoseStack(),
                 CommonColors.BLACK.withAlpha(backgroundOpacity),
-                displayPositionX - (backgroundHeight / 2) - 2,
-                displayPositionY - 2,
+                displayPositionX - (backgroundWidth / 2) - 2,
+                displayPositionY - (backgroundHeight / 2) - 2,
                 0,
                 backgroundWidth + 3,
                 backgroundHeight + 2);
@@ -107,12 +108,14 @@ public class BeaconDistanceFeature extends UserFeature {
                 .renderAlignedTextInBox(
                         event.getPoseStack(),
                         distanceText,
-                        displayPositionX - (backgroundHeight / 2),
+                        displayPositionX - backgroundWidth,
                         displayPositionX + backgroundWidth,
-                        displayPositionY,
+                        displayPositionY - backgroundHeight,
                         displayPositionY + backgroundHeight,
+                        0,
                         textColor,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Middle,
                         textShadow);
     }
 
