@@ -1,9 +1,21 @@
+## [0.0.1-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.26...v0.0.1-alpha.27) (2022-11-11)
+
+
+### Bug Fixes
+
+* Use separate buffers for depth and stencil ([#670](https://github.com/Wynntils/Artemis/issues/670)) ([2e88a9b](https://github.com/Wynntils/Artemis/commit/2e88a9b9882772a8577ab065d4a69d147f09fd0a))
+
 ## [0.0.1-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.25...v0.0.1-alpha.26) (2022-11-10)
 
 
 ### Bug Fixes
 
 * update spell cost ID ranges ([#668](https://github.com/Wynntils/Artemis/issues/668)) ([2b8b59d](https://github.com/Wynntils/Artemis/commit/2b8b59d91ccd1f206498964bc0dbf868bcb33644))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.26 [skip ci] ([8568940](https://github.com/Wynntils/Artemis/commit/8568940a6df96893e2629732499f5387cc46ec69))
 
 ## [0.0.1-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.24...v0.0.1-alpha.25) (2022-11-10)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.23 [skip ci] ([a6b33ee](https://github.com/Wynntils/Artemis/commit/a6b33ee75036016e3cefd10a8f01306b946d62cb))
-
-## [0.0.1-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.21...v0.0.1-alpha.22) (2022-11-10)
-
-
-### New Features
-
-* player armor hiding ([#664](https://github.com/Wynntils/Artemis/issues/664)) ([7cb833d](https://github.com/Wynntils/Artemis/commit/7cb833d49e2dca2cf0c54a69e666f8736e73e7d4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.22 [skip ci] ([3045a95](https://github.com/Wynntils/Artemis/commit/3045a957100bd321276dc219a866d6e993652e64))
 
