@@ -119,7 +119,6 @@ public final class FeatureRegistry {
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new BeaconBeamFeature());
-        registerFeature(new WorldWaypointDistanceFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
@@ -178,6 +177,7 @@ public final class FeatureRegistry {
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new UnidentifiedItemIconFeature());
+        registerFeature(new WorldWaypointDistanceFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsQuestBookFeature());
