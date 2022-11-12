@@ -28,6 +28,7 @@ import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.Comparator;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -85,6 +86,23 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
                                     .map(territoryAttackTimer ->
                                             new TextRenderTask(territoryAttackTimer.asString(), textRenderSetting))
                                     .toList(),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask(
+                                    ChatFormatting.GRAY + "Detlas" + ChatFormatting.YELLOW + " (High)"
+                                            + ChatFormatting.AQUA + " 02:31",
+                                    textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

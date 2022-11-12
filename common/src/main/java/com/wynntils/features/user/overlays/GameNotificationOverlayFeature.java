@@ -172,6 +172,20 @@ public class GameNotificationOverlayFeature extends UserFeature {
         }
 
         @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]", textRenderSetting),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             updateTextRenderSetting();
         }
