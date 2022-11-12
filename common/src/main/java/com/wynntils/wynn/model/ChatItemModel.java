@@ -95,7 +95,8 @@ public final class ChatItemModel {
             if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
                 translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
             } else { // raw value
-                translatedValue = idValue - idProfile.getMin();
+                // min/max must be flipped for inverted IDs to avoid negative values
+                translatedValue = idProfile.isInverted() ? idValue - idProfile.getMax() : idValue - idProfile.getMin();
             }
 
             // stars
@@ -173,7 +174,8 @@ public final class ChatItemModel {
                             .setScale(0, RoundingMode.HALF_UP)
                             .intValue();
                 } else {
-                    value = encodedValue + status.getMin();
+                    // min/max must be flipped for inverted IDs due to encoding
+                    value = status.isInverted() ? encodedValue + status.getMax() : encodedValue + status.getMin();
                 }
 
                 // stars
