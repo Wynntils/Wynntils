@@ -1,9 +1,21 @@
+## [0.0.1-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.29...v0.0.1-alpha.30) (2022-11-12)
+
+
+### Bug Fixes
+
+* Fix stencil mask buffer not clearing ([d1ccf44](https://github.com/Wynntils/Artemis/commit/d1ccf4456bf1d881a35a62188b0a6d9cc3d437ec))
+
 ## [0.0.1-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.28...v0.0.1-alpha.29) (2022-11-12)
 
 
 ### Bug Fixes
 
 * account for both types of boss bar name packets ([#674](https://github.com/Wynntils/Artemis/issues/674)) ([af8199e](https://github.com/Wynntils/Artemis/commit/af8199eb4d36125fd4ca611d45bc2ee2e8651eff))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.29 [skip ci] ([84d33de](https://github.com/Wynntils/Artemis/commit/84d33dee388a04fb677607136f3f82e92bd039ee))
 
 ## [0.0.1-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.27...v0.0.1-alpha.28) (2022-11-12)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.26 [skip ci] ([8568940](https://github.com/Wynntils/Artemis/commit/8568940a6df96893e2629732499f5387cc46ec69))
-
-## [0.0.1-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.24...v0.0.1-alpha.25) (2022-11-10)
-
-
-### Miscellaneous Chores
-
-* Rebuild for quilt ([60b1d88](https://github.com/Wynntils/Artemis/commit/60b1d88b7407e6ce1d7159426ca3aa399eed900f))
-* **release:** v0.0.1-alpha.25 [skip ci] ([a064176](https://github.com/Wynntils/Artemis/commit/a06417623234a795e6ec9706188f4826ad3f9063))
 
