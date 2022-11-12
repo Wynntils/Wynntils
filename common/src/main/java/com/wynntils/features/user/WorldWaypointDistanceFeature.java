@@ -80,7 +80,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             dz *= posScale;
         }
 
-        worldToNdc(new Vector3f(dx, dy, dz), projection);
+        this.normalizedDeviceCoordinates = worldToNdc(new Vector3f(dx, dy, dz), projection);
     }
 
     @SubscribeEvent
@@ -91,7 +91,6 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         float backgroundWidth = FontRenderer.getInstance().getFont().width(distanceText);
         float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
-        WynntilsMod.info(String.valueOf(backgroundWidth));
 
         float displayPositionX = (float) ((normalizedDeviceCoordinates.x + 1.0f) / 2.0f) * window.getGuiScaledWidth();
         float displayPositionY = (float) ((1.0f - normalizedDeviceCoordinates.y) / 2.0f) * window.getGuiScaledHeight();
@@ -127,11 +126,11 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                 && normalizedDeviceCoordinates.z > 1;
     }
 
-    private void worldToNdc(Vector3f delta, Matrix4f projection) {
+    private Vector3d worldToNdc(Vector3f delta, Matrix4f projection) {
         Vector4f clipCoords = new Vector4f(delta.x(), delta.y(), delta.z(), 1.0f);
         clipCoords.transform(projection);
 
-        this.normalizedDeviceCoordinates = new Vector3d(
+        return new Vector3d(
                 clipCoords.x() / clipCoords.w(), clipCoords.y() / clipCoords.w(), clipCoords.z() / clipCoords.w());
     }
 }
