@@ -11,10 +11,12 @@ import com.wynntils.utils.StringUtils;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.AddOperation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket.UpdateNameOperation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AbbreviateMobHealthFeature extends UserFeature {
@@ -26,16 +28,26 @@ public class AbbreviateMobHealthFeature extends UserFeature {
         ClientboundBossEventPacket packet = event.getPacket();
         Operation operation = ((ClientboundBossEventPacketAccessor) packet).getOperation();
 
-        if (!(operation instanceof AddOperation addOperation)) return;
+        if (operation instanceof AddOperation addOperation) {
+            addOperation.name = transformHealthComponent(addOperation.name);
+            return;
+        }
 
-        String name = addOperation.name.getString();
+        if (operation instanceof UpdateNameOperation updateOperation) {
+            updateOperation.name = transformHealthComponent(updateOperation.name);
+            return;
+        }
+    }
+
+    private Component transformHealthComponent(Component component) {
+        String name = component.getString();
         Matcher healthMatcher = MOB_HEALTH_PATTERN.matcher(name);
-        if (!healthMatcher.matches()) return;
+        if (!healthMatcher.matches()) return component;
 
         int rawHealth = Integer.parseInt(healthMatcher.group(2));
         String formattedHealth = StringUtils.integerToShortString(rawHealth).toUpperCase(Locale.ROOT);
 
         String formattedName = healthMatcher.replaceAll("$1" + formattedHealth + "$3");
-        addOperation.name = new TextComponent(formattedName);
+        return new TextComponent(formattedName);
     }
 }
