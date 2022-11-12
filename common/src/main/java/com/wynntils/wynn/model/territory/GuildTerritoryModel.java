@@ -14,15 +14,18 @@ import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildTerritoryModel extends Model {
-    private static Map<String, TerritoryPoi> guildTerritoryHashMap = new HashMap<>();
+    private static Map<String, TerritoryPoi> guildTerritoryHashMap = new ConcurrentHashMap<>();
 
-    public static void init() {}
+    public static void init() {
+        guildTerritoryHashMap = new ConcurrentHashMap<>();
+    }
 
     public static void disable() {
         guildTerritoryHashMap = Map.of();
@@ -31,7 +34,6 @@ public class GuildTerritoryModel extends Model {
     @SubscribeEvent
     public static void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, GuildTerritoryInfo> tempMap = new HashMap<>();
-        Map<String, TerritoryPoi> newMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Advancement.Builder> added :
                 event.getAdded().entrySet()) {
@@ -70,10 +72,8 @@ public class GuildTerritoryModel extends Model {
 
             if (territoryProfile == null) continue;
 
-            newMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+            guildTerritoryHashMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
         }
-
-        guildTerritoryHashMap = newMap;
     }
 
     public static Collection<TerritoryPoi> getGuildTerritoryPois() {

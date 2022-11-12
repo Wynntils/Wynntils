@@ -1,9 +1,21 @@
+## [0.0.1-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.30...v0.0.1-alpha.31) (2022-11-12)
+
+
+### Bug Fixes
+
+* GuildTerritoryModel should account for partial updates ([#675](https://github.com/Wynntils/Artemis/issues/675)) ([9762eb1](https://github.com/Wynntils/Artemis/commit/9762eb170501ae5629cd60bfb9158fa182d77702))
+
 ## [0.0.1-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.29...v0.0.1-alpha.30) (2022-11-12)
 
 
 ### Bug Fixes
 
 * Fix stencil mask buffer not clearing ([d1ccf44](https://github.com/Wynntils/Artemis/commit/d1ccf4456bf1d881a35a62188b0a6d9cc3d437ec))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.30 [skip ci] ([e8f0537](https://github.com/Wynntils/Artemis/commit/e8f053798544591eaa5cb48a2637b4f1295c07ef))
 
 ## [0.0.1-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.28...v0.0.1-alpha.29) (2022-11-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.27 [skip ci] ([2d9de95](https://github.com/Wynntils/Artemis/commit/2d9de95d7581352d42816724ca5fd2fa3139f71b))
-
-## [0.0.1-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.25...v0.0.1-alpha.26) (2022-11-10)
-
-
-### Bug Fixes
-
-* update spell cost ID ranges ([#668](https://github.com/Wynntils/Artemis/issues/668)) ([2b8b59d](https://github.com/Wynntils/Artemis/commit/2b8b59d91ccd1f206498964bc0dbf868bcb33644))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.26 [skip ci] ([8568940](https://github.com/Wynntils/Artemis/commit/8568940a6df96893e2629732499f5387cc46ec69))
 
