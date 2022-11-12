@@ -57,6 +57,7 @@ import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TradeMarketPriceConversionFeature;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.features.user.UpdatesFeature;
+import com.wynntils.features.user.WorldWaypointDistanceFeature;
 import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.WynntilsQuestBookFeature;
@@ -178,6 +179,7 @@ public final class FeatureRegistry {
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new UnidentifiedItemIconFeature());
+        registerFeature(new WorldWaypointDistanceFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsQuestBookFeature());
