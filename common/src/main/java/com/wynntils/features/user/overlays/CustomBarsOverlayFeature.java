@@ -62,7 +62,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
-                    case MANABANK -> manaBarOverlay;
+                    case MANABANK -> manaBankBarOverlay;
                     case AWAKENED -> awakenedProgressBarOverlay;
                     case FOCUS -> focusBarOverlay;
                     case CORRUPTED -> corruptedBarOverlay;

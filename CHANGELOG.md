@@ -1,9 +1,21 @@
+## [0.0.1-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.27...v0.0.1-alpha.28) (2022-11-12)
+
+
+### Bug Fixes
+
+* Mana bank bar bugs ([#673](https://github.com/Wynntils/Artemis/issues/673)) ([73dfdd4](https://github.com/Wynntils/Artemis/commit/73dfdd445c1480bb9c669675c7b10783321a856b))
+
 ## [0.0.1-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.26...v0.0.1-alpha.27) (2022-11-11)
 
 
 ### Bug Fixes
 
 * Use separate buffers for depth and stencil ([#670](https://github.com/Wynntils/Artemis/issues/670)) ([2e88a9b](https://github.com/Wynntils/Artemis/commit/2e88a9b9882772a8577ab065d4a69d147f09fd0a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.27 [skip ci] ([2d9de95](https://github.com/Wynntils/Artemis/commit/2d9de95d7581352d42816724ca5fd2fa3139f71b))
 
 ## [0.0.1-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.25...v0.0.1-alpha.26) (2022-11-10)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.24 [skip ci] ([042925b](https://github.com/Wynntils/Artemis/commit/042925b1326d70662e698a2fab59fb160ea00cf6))
-
-## [0.0.1-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.22...v0.0.1-alpha.23) (2022-11-10)
-
-
-### Bug Fixes
-
-* Render player shadows correctly when injecting nametags ([#666](https://github.com/Wynntils/Artemis/issues/666)) ([b694e53](https://github.com/Wynntils/Artemis/commit/b694e5318393291ca87037f90151e259c5fc3111))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.23 [skip ci] ([a6b33ee](https://github.com/Wynntils/Artemis/commit/a6b33ee75036016e3cefd10a8f01306b946d62cb))
 
