@@ -1104,10 +1104,10 @@ public final class RenderUtils {
         // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
 
         // Enable writing to stencil
         RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 
