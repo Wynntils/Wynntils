@@ -59,19 +59,21 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
+
+        // Load web cache when we create this instance, so we don't have to force an api update while the screen is
+        // already open
+        reloadWebDiscoveryCache();
     }
 
     @SubscribeEvent
     public void onDiscoveryUpdate(DiscoveriesUpdatedEvent event) {
-        if (McUtils.mc().screen != this) return;
-
         if (event instanceof DiscoveriesUpdatedEvent.Api) {
-            webDiscoveryInfoCache.clear();
-            webDiscoveryInfoCache.addAll(
-                    WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
+            reloadWebDiscoveryCache();
         }
 
-        this.reloadElements();
+        if (McUtils.mc().screen == this) {
+            this.reloadElements();
+        }
     }
 
     @Override
@@ -374,5 +376,14 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     private void reloadDiscoveries() {
         WebManager.updateDiscoveries();
         DiscoveryManager.queryDiscoveries();
+
+        // Try force reload even if the web request failed
+        reloadWebDiscoveryCache();
+    }
+
+    private void reloadWebDiscoveryCache() {
+        webDiscoveryInfoCache.clear();
+        webDiscoveryInfoCache.addAll(
+                WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
     }
 }
