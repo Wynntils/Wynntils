@@ -36,3 +36,4 @@ accessible method net/minecraft/client/renderer/entity/EntityRenderer renderName
 accessible method net/minecraft/client/resources/ClientPackSource checkHash (Ljava/lang/String;Ljava/io/File;)Z
 accessible field net/minecraft/server/packs/repository/Pack supplier Ljava/util/function/Supplier;
 accessible field net/minecraft/server/packs/AbstractPackResources file Ljava/io/File;
+accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;

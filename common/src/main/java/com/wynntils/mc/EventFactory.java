@@ -62,6 +62,7 @@ import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -304,6 +305,11 @@ public final class EventFactory {
 
     public static void onScreenInit(Screen screen) {
         post(new ScreenInitEvent(screen));
+    }
+
+    public static void onScreenRenderPost(
+            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        post(new ScreenRenderEvent(screen, poseStack, mouseX, mouseY, partialTick));
     }
 
     // endregion

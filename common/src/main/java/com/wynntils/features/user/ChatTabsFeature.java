@@ -14,8 +14,10 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.RenderChatEvent;
+import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -46,7 +48,7 @@ public class ChatTabsFeature extends UserFeature {
     }
 
     // We do this here, and not in ChatTabModel to not introduce a feature-model dependency.
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : chatTabs) {
@@ -71,12 +73,28 @@ public class ChatTabsFeature extends UserFeature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (event.getScreen() instanceof ChatScreen chatScreen) {
-            // TODO: Inject chat tab buttons
+            int xOffset = 0;
+
+            for (ChatTab chatTab : chatTabs) {
+                chatScreen.addRenderableWidget(new ChatTabButton(xOffset + 2, chatScreen.height - 35, 40, 13, chatTab));
+                xOffset += 43;
+            }
         }
     }
 
     @SubscribeEvent
-    public void onChatRender(RenderChatEvent event) {
-        // TODO: Inject focused chat tab here
+    public void onScreenOpened(ScreenOpenedEvent event) {
+        if (event.getScreen() instanceof ChatScreen && !chatTabs.isEmpty() && ChatTabModel.getFocusedTab() == null) {
+            ChatTabModel.setFocusedTab(chatTabs.get(0));
+        }
+    }
+
+    @SubscribeEvent
+    public void onScreenRender(ScreenRenderEvent event) {
+        if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
+
+        // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
+        // rendering command suggestions on top of chat tab buttons.
+        chatScreen.commandSuggestions.render(event.getPoseStack(), event.getMouseX(), event.getMouseY());
     }
 }
