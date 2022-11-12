@@ -1,9 +1,21 @@
+## [0.0.1-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.34...v0.0.1-alpha.35) (2022-11-12)
+
+
+### Bug Fixes
+
+* correct chat encoding/decoding of spell cost ids ([#679](https://github.com/Wynntils/Artemis/issues/679)) ([e7c0225](https://github.com/Wynntils/Artemis/commit/e7c022556d3172f84f3b447c1446c8767d5138df))
+
 ## [0.0.1-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.33...v0.0.1-alpha.34) (2022-11-12)
 
 
 ### Bug Fixes
 
 * Add missing render previews for some overlays ([#678](https://github.com/Wynntils/Artemis/issues/678)) ([d849c27](https://github.com/Wynntils/Artemis/commit/d849c27948e4b88fcc9fd33f75a2e9151b3c66ea))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.34 [skip ci] ([4849191](https://github.com/Wynntils/Artemis/commit/4849191f2e5f056c4a21406ca544a005f0971c19))
 
 ## [0.0.1-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.32...v0.0.1-alpha.33) (2022-11-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.31 [skip ci] ([b25eaea](https://github.com/Wynntils/Artemis/commit/b25eaea61d619ba9c97ff57004477d39488b4d48))
-
-## [0.0.1-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.29...v0.0.1-alpha.30) (2022-11-12)
-
-
-### Bug Fixes
-
-* Fix stencil mask buffer not clearing ([d1ccf44](https://github.com/Wynntils/Artemis/commit/d1ccf4456bf1d881a35a62188b0a6d9cc3d437ec))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.30 [skip ci] ([e8f0537](https://github.com/Wynntils/Artemis/commit/e8f053798544591eaa5cb48a2637b4f1295c07ef))
 
