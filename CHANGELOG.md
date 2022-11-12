@@ -1,9 +1,21 @@
+## [0.0.1-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.32...v0.0.1-alpha.33) (2022-11-12)
+
+
+### Bug Fixes
+
+* Do not expose MinecraftSchedulerManager queue ([#677](https://github.com/Wynntils/Artemis/issues/677)) ([bc08262](https://github.com/Wynntils/Artemis/commit/bc08262363ff62d111b9682c7a0fbba249f83286))
+
 ## [0.0.1-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.31...v0.0.1-alpha.32) (2022-11-12)
 
 
 ### Bug Fixes
 
 * WynntilsDiscoveriesScreen should load web cache more often ([#676](https://github.com/Wynntils/Artemis/issues/676)) ([f11c2b4](https://github.com/Wynntils/Artemis/commit/f11c2b46047377c2b61d6afcac1352b28057300b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.32 [skip ci] ([e1998b2](https://github.com/Wynntils/Artemis/commit/e1998b2507a44e7b05f193f383deb50298c29250))
 
 ## [0.0.1-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.30...v0.0.1-alpha.31) (2022-11-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.29 [skip ci] ([84d33de](https://github.com/Wynntils/Artemis/commit/84d33dee388a04fb677607136f3f82e92bd039ee))
-
-## [0.0.1-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.27...v0.0.1-alpha.28) (2022-11-12)
-
-
-### Bug Fixes
-
-* Mana bank bar bugs ([#673](https://github.com/Wynntils/Artemis/issues/673)) ([73dfdd4](https://github.com/Wynntils/Artemis/commit/73dfdd445c1480bb9c669675c7b10783321a856b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.28 [skip ci] ([a67d946](https://github.com/Wynntils/Artemis/commit/a67d9460e882ad15ce3359ff585be4136da1150e))
 
