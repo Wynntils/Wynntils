@@ -1,9 +1,21 @@
+## [0.0.1-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.31...v0.0.1-alpha.32) (2022-11-12)
+
+
+### Bug Fixes
+
+* WynntilsDiscoveriesScreen should load web cache more often ([#676](https://github.com/Wynntils/Artemis/issues/676)) ([f11c2b4](https://github.com/Wynntils/Artemis/commit/f11c2b46047377c2b61d6afcac1352b28057300b))
+
 ## [0.0.1-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.30...v0.0.1-alpha.31) (2022-11-12)
 
 
 ### Bug Fixes
 
 * GuildTerritoryModel should account for partial updates ([#675](https://github.com/Wynntils/Artemis/issues/675)) ([9762eb1](https://github.com/Wynntils/Artemis/commit/9762eb170501ae5629cd60bfb9158fa182d77702))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.31 [skip ci] ([b25eaea](https://github.com/Wynntils/Artemis/commit/b25eaea61d619ba9c97ff57004477d39488b4d48))
 
 ## [0.0.1-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.29...v0.0.1-alpha.30) (2022-11-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.28 [skip ci] ([a67d946](https://github.com/Wynntils/Artemis/commit/a67d9460e882ad15ce3359ff585be4136da1150e))
-
-## [0.0.1-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.26...v0.0.1-alpha.27) (2022-11-11)
-
-
-### Bug Fixes
-
-* Use separate buffers for depth and stencil ([#670](https://github.com/Wynntils/Artemis/issues/670)) ([2e88a9b](https://github.com/Wynntils/Artemis/commit/2e88a9b9882772a8577ab065d4a69d147f09fd0a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.27 [skip ci] ([2d9de95](https://github.com/Wynntils/Artemis/commit/2d9de95d7581352d42816724ca5fd2fa3139f71b))
 
