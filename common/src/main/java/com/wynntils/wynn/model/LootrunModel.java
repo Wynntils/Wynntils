@@ -344,8 +344,9 @@ public final class LootrunModel {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        return new LootrunInstance(
-                uncompiled.file().getName().replace(".json", ""), uncompiled.path, points, chests, notes);
+        String lootrunName =
+                recording ? "recorded_lootrun" : uncompiled.file().getName().replace(".json", "");
+        return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
     }
 
     private static List<Path> sample(Path raw, float sampleRate) {
