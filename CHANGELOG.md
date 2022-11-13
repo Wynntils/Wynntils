@@ -1,9 +1,21 @@
+## [0.0.1-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.37...v0.0.1-alpha.38) (2022-11-13)
+
+
+### Bug Fixes
+
+* Fix status overlay not parsing some statuses ([#683](https://github.com/Wynntils/Artemis/issues/683)) ([e839d98](https://github.com/Wynntils/Artemis/commit/e839d981ae2fc823ae80f5dd21832203e710d880))
+
 ## [0.0.1-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.36...v0.0.1-alpha.37) (2022-11-13)
 
 
 ### Bug Fixes
 
 * Lootrun recording fixes ([#680](https://github.com/Wynntils/Artemis/issues/680)) ([9d38028](https://github.com/Wynntils/Artemis/commit/9d380289c8b45d27ef1d2a12297412dd43bee6c2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.37 [skip ci] ([221e06e](https://github.com/Wynntils/Artemis/commit/221e06ef42c2938cf6d48e58c6af97680dce21af))
 
 ## [0.0.1-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.35...v0.0.1-alpha.36) (2022-11-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.34 [skip ci] ([4849191](https://github.com/Wynntils/Artemis/commit/4849191f2e5f056c4a21406ca544a005f0971c19))
-
-## [0.0.1-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.32...v0.0.1-alpha.33) (2022-11-12)
-
-
-### Bug Fixes
-
-* Do not expose MinecraftSchedulerManager queue ([#677](https://github.com/Wynntils/Artemis/issues/677)) ([bc08262](https://github.com/Wynntils/Artemis/commit/bc08262363ff62d111b9682c7a0fbba249f83286))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.33 [skip ci] ([aaf985d](https://github.com/Wynntils/Artemis/commit/aaf985d6a8dce9aeca992137630c175a84185fc2))
 
