@@ -81,6 +81,20 @@ public class StatusOverlayFeature extends UserFeature {
         }
 
         @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask("§8⬤ §7 Purification 00:02", textRenderSetting),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             updateTextRenderSetting();
             StatusOverlayFeature.this.recalculateRenderCache();
