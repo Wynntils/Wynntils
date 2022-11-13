@@ -1,9 +1,21 @@
+## [0.0.1-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.35...v0.0.1-alpha.36) (2022-11-13)
+
+
+### New Features
+
+* Add player cursor to the guild map ([#681](https://github.com/Wynntils/Artemis/issues/681)) ([5cb0c2a](https://github.com/Wynntils/Artemis/commit/5cb0c2a7f25ca49c61d84c2c16a9791b5dffff7b))
+
 ## [0.0.1-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.34...v0.0.1-alpha.35) (2022-11-12)
 
 
 ### Bug Fixes
 
 * correct chat encoding/decoding of spell cost ids ([#679](https://github.com/Wynntils/Artemis/issues/679)) ([e7c0225](https://github.com/Wynntils/Artemis/commit/e7c022556d3172f84f3b447c1446c8767d5138df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.35 [skip ci] ([ed52cfa](https://github.com/Wynntils/Artemis/commit/ed52cfa3138ca12c6b008d35f9b6f3eea5effaa5))
 
 ## [0.0.1-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.33...v0.0.1-alpha.34) (2022-11-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.32 [skip ci] ([e1998b2](https://github.com/Wynntils/Artemis/commit/e1998b2507a44e7b05f193f383deb50298c29250))
-
-## [0.0.1-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.30...v0.0.1-alpha.31) (2022-11-12)
-
-
-### Bug Fixes
-
-* GuildTerritoryModel should account for partial updates ([#675](https://github.com/Wynntils/Artemis/issues/675)) ([9762eb1](https://github.com/Wynntils/Artemis/commit/9762eb170501ae5629cd60bfb9158fa182d77702))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.31 [skip ci] ([b25eaea](https://github.com/Wynntils/Artemis/commit/b25eaea61d619ba9c97ff57004477d39488b4d48))
 
