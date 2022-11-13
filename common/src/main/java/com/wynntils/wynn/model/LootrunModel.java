@@ -125,7 +125,7 @@ public final class LootrunModel {
                     renderChests(poseStack, lootrun, color, source, chunkLong);
                 }
 
-                if (lootrun.notes().containsKey(chunkLong) && LootrunFeature.INSTANCE.showNotes) {
+                if (LootrunFeature.INSTANCE.showNotes && lootrun.notes().containsKey(chunkLong)) {
                     renderNotes(poseStack, lootrun, color, source, chunkLong);
                 }
             }
@@ -344,8 +344,11 @@ public final class LootrunModel {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        String lootrunName =
-                recording ? "recorded_lootrun" : uncompiled.file().getName().replace(".json", "");
+        String lootrunName = recording
+                ? "recorded_lootrun"
+                : (uncompiled.file() == null
+                        ? "lootrun"
+                        : uncompiled.file().getName().replace(".json", ""));
         return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
     }
 
@@ -558,7 +561,7 @@ public final class LootrunModel {
     public static void stopRecording() {
         // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
-        lootrun = recordingCompiled;
+        lootrun = compile(recording, false);
         uncompiled = recording;
         recording = null;
         recordingCompiled = null;
