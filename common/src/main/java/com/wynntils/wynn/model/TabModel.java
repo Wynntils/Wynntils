@@ -30,7 +30,7 @@ public class TabModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern TAB_EFFECT_PATTERN =
-            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%-+\\da-zA-Z\\s]+?) §[84a]\\((.+?)\\).*");
+            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z\\s]+?) §[84a]\\((.+?)\\).*");
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
