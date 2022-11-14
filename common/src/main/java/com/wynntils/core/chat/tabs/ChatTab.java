@@ -13,7 +13,7 @@ public class ChatTab {
     private String name;
     private boolean lowPriority;
 
-    // Filters, inactive one is null
+    // Filters
     private Set<RecipientType> filteredTypes;
     private String customRegexString;
 
@@ -31,15 +31,15 @@ public class ChatTab {
     }
 
     public boolean matchMessageFromEvent(ChatMessageReceivedEvent event) {
-        if (customRegexString != null) {
-            return customRegex.matcher(event.getCodedMessage()).matches();
+        if (filteredTypes != null && !filteredTypes.contains(event.getRecipientType())) {
+            return false;
         }
 
-        if (filteredTypes != null) {
-            return filteredTypes.contains(event.getRecipientType());
+        if (customRegex == null) {
+            return true;
         }
 
-        return false;
+        return customRegex.matcher(event.getCodedMessage()).matches();
     }
 
     public String getName() {
