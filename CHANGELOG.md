@@ -1,55 +1,55 @@
-## [0.0.1-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.29...v0.0.1-alpha.30) (2022-11-12)
+## [0.0.1-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.37...v0.0.1-alpha.38) (2022-11-13)
 
 
 ### Bug Fixes
 
-* Fix stencil mask buffer not clearing ([d1ccf44](https://github.com/Wynntils/Artemis/commit/d1ccf4456bf1d881a35a62188b0a6d9cc3d437ec))
+* Fix status overlay not parsing some statuses ([#683](https://github.com/Wynntils/Artemis/issues/683)) ([e839d98](https://github.com/Wynntils/Artemis/commit/e839d981ae2fc823ae80f5dd21832203e710d880))
 
-## [0.0.1-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.28...v0.0.1-alpha.29) (2022-11-12)
+## [0.0.1-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.36...v0.0.1-alpha.37) (2022-11-13)
 
 
 ### Bug Fixes
 
-* account for both types of boss bar name packets ([#674](https://github.com/Wynntils/Artemis/issues/674)) ([af8199e](https://github.com/Wynntils/Artemis/commit/af8199eb4d36125fd4ca611d45bc2ee2e8651eff))
+* Lootrun recording fixes ([#680](https://github.com/Wynntils/Artemis/issues/680)) ([9d38028](https://github.com/Wynntils/Artemis/commit/9d380289c8b45d27ef1d2a12297412dd43bee6c2))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.29 [skip ci] ([84d33de](https://github.com/Wynntils/Artemis/commit/84d33dee388a04fb677607136f3f82e92bd039ee))
+* **release:** v0.0.1-alpha.37 [skip ci] ([221e06e](https://github.com/Wynntils/Artemis/commit/221e06ef42c2938cf6d48e58c6af97680dce21af))
 
-## [0.0.1-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.27...v0.0.1-alpha.28) (2022-11-12)
-
-
-### Bug Fixes
-
-* Mana bank bar bugs ([#673](https://github.com/Wynntils/Artemis/issues/673)) ([73dfdd4](https://github.com/Wynntils/Artemis/commit/73dfdd445c1480bb9c669675c7b10783321a856b))
+## [0.0.1-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.35...v0.0.1-alpha.36) (2022-11-13)
 
 
-### Miscellaneous Chores
+### New Features
 
-* **release:** v0.0.1-alpha.28 [skip ci] ([a67d946](https://github.com/Wynntils/Artemis/commit/a67d9460e882ad15ce3359ff585be4136da1150e))
-
-## [0.0.1-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.26...v0.0.1-alpha.27) (2022-11-11)
-
-
-### Bug Fixes
-
-* Use separate buffers for depth and stencil ([#670](https://github.com/Wynntils/Artemis/issues/670)) ([2e88a9b](https://github.com/Wynntils/Artemis/commit/2e88a9b9882772a8577ab065d4a69d147f09fd0a))
+* Add player cursor to the guild map ([#681](https://github.com/Wynntils/Artemis/issues/681)) ([5cb0c2a](https://github.com/Wynntils/Artemis/commit/5cb0c2a7f25ca49c61d84c2c16a9791b5dffff7b))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.27 [skip ci] ([2d9de95](https://github.com/Wynntils/Artemis/commit/2d9de95d7581352d42816724ca5fd2fa3139f71b))
+* **release:** v0.0.1-alpha.36 [skip ci] ([b806030](https://github.com/Wynntils/Artemis/commit/b806030b51d3f3a0a483058e16c80b9f0f1e0b1e))
 
-## [0.0.1-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.25...v0.0.1-alpha.26) (2022-11-10)
+## [0.0.1-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.34...v0.0.1-alpha.35) (2022-11-12)
 
 
 ### Bug Fixes
 
-* update spell cost ID ranges ([#668](https://github.com/Wynntils/Artemis/issues/668)) ([2b8b59d](https://github.com/Wynntils/Artemis/commit/2b8b59d91ccd1f206498964bc0dbf868bcb33644))
+* correct chat encoding/decoding of spell cost ids ([#679](https://github.com/Wynntils/Artemis/issues/679)) ([e7c0225](https://github.com/Wynntils/Artemis/commit/e7c022556d3172f84f3b447c1446c8767d5138df))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.26 [skip ci] ([8568940](https://github.com/Wynntils/Artemis/commit/8568940a6df96893e2629732499f5387cc46ec69))
+* **release:** v0.0.1-alpha.35 [skip ci] ([ed52cfa](https://github.com/Wynntils/Artemis/commit/ed52cfa3138ca12c6b008d35f9b6f3eea5effaa5))
+
+## [0.0.1-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.33...v0.0.1-alpha.34) (2022-11-12)
+
+
+### Bug Fixes
+
+* Add missing render previews for some overlays ([#678](https://github.com/Wynntils/Artemis/issues/678)) ([d849c27](https://github.com/Wynntils/Artemis/commit/d849c27948e4b88fcc9fd33f75a2e9151b3c66ea))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.34 [skip ci] ([4849191](https://github.com/Wynntils/Artemis/commit/4849191f2e5f056c4a21406ca544a005f0971c19))
 

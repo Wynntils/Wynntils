@@ -6,7 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.MinecraftSchedulerManager;
-import java.util.Queue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,12 +28,7 @@ public abstract class MinecraftMixin {
     private void tickPre(CallbackInfo ci) {
         EventFactory.onTickStart();
 
-        Queue<Runnable> runnableQueue = MinecraftSchedulerManager.getQueue();
-        while (!runnableQueue.isEmpty()) {
-            Runnable runnable = runnableQueue.remove();
-
-            runnable.run();
-        }
+        MinecraftSchedulerManager.onTick();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
