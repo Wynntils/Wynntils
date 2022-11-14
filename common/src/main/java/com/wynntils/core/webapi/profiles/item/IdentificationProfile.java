@@ -32,13 +32,13 @@ public class IdentificationProfile {
     }
 
     public void calculateMinMax(String shortId) {
+        isInverted = IdentificationOrderer.INSTANCE.isInverted(shortId);
+
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;
             max = baseValue;
             return;
         }
-
-        isInverted = IdentificationOrderer.INSTANCE.isInverted(shortId);
 
         boolean positive = (baseValue > 0) ^ isInverted;
         min = (int) Math.round(baseValue * (positive ? 0.3 : 1.3));
