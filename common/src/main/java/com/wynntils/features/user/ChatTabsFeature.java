@@ -117,6 +117,7 @@ public class ChatTabsFeature extends UserFeature {
         if (event.getNewState() == WorldStateManager.State.WORLD
                 && !chatTabs.isEmpty()
                 && ChatTabModel.getFocusedTab() == null) {
+            // We joined wynn, time to override our focused tab.
             ChatTabModel.setFocusedTab(chatTabs.get(0));
         }
     }

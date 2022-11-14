@@ -12,7 +12,6 @@ import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,13 +28,6 @@ public abstract class GuiMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
-
-    @Shadow
-    @Final
-    private ChatComponent chat;
-
-    @Shadow
-    private int tickCount;
 
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
