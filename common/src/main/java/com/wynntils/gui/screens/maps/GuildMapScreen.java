@@ -54,6 +54,8 @@ public class GuildMapScreen extends AbstractMapScreen {
 
         renderPois(poseStack, mouseX, mouseY);
 
+        renderCursor(poseStack, 1.5f, GuildMapFeature.INSTANCE.pointerColor, GuildMapFeature.INSTANCE.pointerType);
+
         RenderSystem.disableScissor();
 
         renderBackground(poseStack);

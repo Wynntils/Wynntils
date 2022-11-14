@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import java.util.List;
@@ -23,6 +24,12 @@ public class GuildMapFeature extends UserFeature {
 
     @Config
     public boolean renderUsingLinear = true;
+
+    @Config
+    public PointerType pointerType = PointerType.Arrow;
+
+    @Config
+    public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
     @RegisterKeyBind
     public final KeyBind openGuildMapKeybind = new KeyBind("Open Guild Map", GLFW.GLFW_KEY_J, false, () -> {

@@ -18,7 +18,9 @@ public class MinecraftSchedulerManager extends CoreManager {
         queue.add(runnable);
     }
 
-    public static Queue<Runnable> getQueue() {
-        return queue;
+    public static void onTick() {
+        while (!queue.isEmpty()) {
+            queue.remove().run();
+        }
     }
 }
