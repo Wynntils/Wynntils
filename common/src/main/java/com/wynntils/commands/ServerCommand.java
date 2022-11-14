@@ -11,12 +11,15 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -76,9 +79,9 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
-        Map<String, List<String>> onlinePlayers;
+        HashMap<String, ServerProfile> servers;
         try {
-            onlinePlayers = WebManager.getOnlinePlayers();
+            servers = WebManager.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
@@ -96,14 +99,19 @@ public class ServerCommand extends CommandBase {
         } catch (Exception ignored) {
         }
 
-        if (!onlinePlayers.containsKey(server)) {
+        if (!servers.containsKey(server)) {
             context.getSource().sendFailure(new TextComponent(server + " not found.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        List<String> players = onlinePlayers.get(server);
-        MutableComponent message = new TextComponent("Online players on " + server + ": " + players.size() + "\n")
-                .withStyle(ChatFormatting.DARK_AQUA);
+        ServerProfile serverProfile = servers.get(server);
+        Set<String> players = serverProfile.getPlayers();
+        MutableComponent message = new TextComponent(server + ":" + "\n")
+                .withStyle(ChatFormatting.GOLD)
+                .append(new TextComponent("Uptime: " + serverProfile.getUptime() + "\n")
+                        .withStyle(ChatFormatting.DARK_AQUA))
+                .append(new TextComponent("Online players on " + server + ": " + players.size() + "\n")
+                        .withStyle(ChatFormatting.DARK_AQUA));
 
         if (players.isEmpty()) {
             message.append(new TextComponent("No players!").withStyle(ChatFormatting.AQUA));

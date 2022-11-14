@@ -20,7 +20,6 @@ import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
@@ -43,7 +42,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -280,28 +278,26 @@ public final class WebManager extends CoreManager {
         }
     }
 
-    public static void getServerList(Consumer<HashMap<String, ServerProfile>> onReceive) {
-        if (apiUrls == null || !isAthenaOnline()) return;
+    public static HashMap<String, ServerProfile> getServerList() throws IOException {
+        if (apiUrls == null || !isAthenaOnline()) return new HashMap<>();
         String url = apiUrls.get("Athena") + "/cache/get/serverList";
 
-        Request request = new RequestBuilder(url, "serverList")
-                .handleJsonObject((con, json) -> {
-                    JsonObject servers = json.getAsJsonObject("servers");
-                    HashMap<String, ServerProfile> result = new HashMap<>();
+        URLConnection st = generateURLRequest(url);
+        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-                    long serverTime = Long.parseLong(con.getHeaderField("timestamp"));
-                    for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-                        ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
-                        profile.matchTime(serverTime);
+        JsonObject servers = json.getAsJsonObject("servers");
+        HashMap<String, ServerProfile> result = new HashMap<>();
 
-                        result.put(entry.getKey(), profile);
-                    }
+        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
+        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+            ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
+            profile.matchTime(serverTime);
 
-                    onReceive.accept(result);
-                    return true;
-                })
-                .build();
-        handler.addAndDispatch(request, true);
+            result.put(entry.getKey(), profile);
+        }
+
+        return result;
     }
 
     public static void updateDiscoveries() {
