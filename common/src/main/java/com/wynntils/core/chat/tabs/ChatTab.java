@@ -5,7 +5,7 @@
 package com.wynntils.core.chat.tabs;
 
 import com.wynntils.core.chat.RecipientType;
-import com.wynntils.mc.event.LocalMessageEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -40,7 +40,7 @@ public class ChatTab {
         return true;
     }
 
-    public boolean matchMessageFromEvent(LocalMessageEvent event) {
+    public boolean matchMessageFromEvent(ClientsideMessageEvent event) {
         if (customRegexString == null) {
             return false;
         }

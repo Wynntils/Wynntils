@@ -18,6 +18,7 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -36,7 +37,6 @@ import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
-import com.wynntils.mc.event.LocalMessageEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
@@ -402,8 +402,8 @@ public final class EventFactory {
         return post(new ChatPacketReceivedEvent(type, message));
     }
 
-    public static LocalMessageEvent onLocalMessage(Component component) {
-        return post(new LocalMessageEvent(component));
+    public static ClientsideMessageEvent onLocalMessage(Component component) {
+        return post(new ClientsideMessageEvent(component));
     }
 
     // endregion

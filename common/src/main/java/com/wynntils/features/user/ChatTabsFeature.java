@@ -15,7 +15,7 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.widgets.ChatTabButton;
-import com.wynntils.mc.event.LocalMessageEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
@@ -76,7 +76,7 @@ public class ChatTabsFeature extends UserFeature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onLocalChat(LocalMessageEvent event) {
+    public void onClientsideChat(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : chatTabs) {
             if (chatTab.isLowPriority()) continue;
