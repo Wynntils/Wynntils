@@ -32,8 +32,12 @@ public class ChatTab {
             return false;
         }
 
-        return customRegexString == null
-                || getCustomRegex().matcher(event.getCodedMessage()).matches();
+        if (customRegexString != null
+                && !getCustomRegex().matcher(event.getCodedMessage()).matches()) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean matchMessageFromEvent(LocalMessageEvent event) {
