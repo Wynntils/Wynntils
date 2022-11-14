@@ -1,9 +1,21 @@
+## [0.0.1-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.39...v0.0.1-alpha.40) (2022-11-14)
+
+
+### New Features
+
+* Add /server list up to list servers with uptimes (and show uptime with /server info) ([#686](https://github.com/Wynntils/Artemis/issues/686)) ([68d229d](https://github.com/Wynntils/Artemis/commit/68d229da47ae3aa07091996af86b0f3516910a66))
+
 ## [0.0.1-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.38...v0.0.1-alpha.39) (2022-11-14)
 
 
 ### Bug Fixes
 
 * Fix friend join redirect for archers ([b033164](https://github.com/Wynntils/Artemis/commit/b0331640be335dbe95d9bb98f901c992618636a7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.39 [skip ci] ([3cf1e8e](https://github.com/Wynntils/Artemis/commit/3cf1e8e6e67942da9436f7311f5369420ef34709))
 
 ## [0.0.1-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.37...v0.0.1-alpha.38) (2022-11-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.36 [skip ci] ([b806030](https://github.com/Wynntils/Artemis/commit/b806030b51d3f3a0a483058e16c80b9f0f1e0b1e))
-
-## [0.0.1-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.34...v0.0.1-alpha.35) (2022-11-12)
-
-
-### Bug Fixes
-
-* correct chat encoding/decoding of spell cost ids ([#679](https://github.com/Wynntils/Artemis/issues/679)) ([e7c0225](https://github.com/Wynntils/Artemis/commit/e7c022556d3172f84f3b447c1446c8767d5138df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.35 [skip ci] ([ed52cfa](https://github.com/Wynntils/Artemis/commit/ed52cfa3138ca12c6b008d35f9b6f3eea5effaa5))
 
