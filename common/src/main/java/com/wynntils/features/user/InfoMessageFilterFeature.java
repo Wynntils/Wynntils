@@ -49,7 +49,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
     private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
-            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aa (?<class>.+)");
+            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
     private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
 
     private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
@@ -76,7 +76,7 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
     private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
-            "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?a (?<class>.+)");
+            "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
     private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
     @Config
