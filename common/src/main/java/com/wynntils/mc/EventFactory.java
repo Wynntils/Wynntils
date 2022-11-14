@@ -402,8 +402,8 @@ public final class EventFactory {
         return post(new ChatPacketReceivedEvent(type, message));
     }
 
-    public static void onLocalMessage(Component component) {
-        post(new LocalMessageEvent(component));
+    public static LocalMessageEvent onLocalMessage(Component component) {
+        return post(new LocalMessageEvent(component));
     }
 
     // endregion

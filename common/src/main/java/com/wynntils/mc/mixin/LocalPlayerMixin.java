@@ -43,10 +43,12 @@ public abstract class LocalPlayerMixin {
         }
     }
 
-    @Inject(method = "sendMessage", at = @At("HEAD"))
+    @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
     private void onSendMessage(Component component, UUID senderUUID, CallbackInfo ci) {
         if ((Object) this != McUtils.player()) return;
 
-        EventFactory.onLocalMessage(component);
+        if (EventFactory.onLocalMessage(component).isCanceled()) {
+            ci.cancel();
+        }
     }
 }

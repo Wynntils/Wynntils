@@ -6,15 +6,12 @@ package com.wynntils.forge.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.RenderChatEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ForgeIngameGui.class)
@@ -46,22 +43,5 @@ public abstract class ForgeIngameGuiMixin extends Gui {
         if (EventFactory.onRenderFoodPre(poseStack, this.minecraft.getWindow()).isCanceled()) {
             ci.cancel();
         }
-    }
-
-    @Redirect(
-            method = "render",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/components/ChatComponent;render(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"))
-    private void onRenderChatPre(ChatComponent instance, PoseStack poseStack, int tickCount) {
-        RenderChatEvent event = EventFactory.onRenderChatPre(poseStack, this.minecraft.getWindow(), this.chat);
-        if (event.isCanceled()) {
-            return;
-        }
-
-        // This is either this.chat or modified by the event, we render it either way.
-        event.getRenderedChat().render(poseStack, this.tickCount);
     }
 }

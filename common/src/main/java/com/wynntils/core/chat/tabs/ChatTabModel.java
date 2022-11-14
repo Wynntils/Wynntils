@@ -5,12 +5,15 @@
 package com.wynntils.core.chat.tabs;
 
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.RenderChatEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatTabModel extends Model {
@@ -29,12 +32,23 @@ public class ChatTabModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onChatRender(RenderChatEvent event) {
+    public static void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
+            chatTabData.clear();
+            return;
+        }
+
+        if (event.getNewState() != WorldStateManager.State.WORLD) {
+            setFocusedTab(null);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onChatPacket(ChatPacketReceivedEvent event) {
         if (focusedTab == null) return;
 
-        // EMPTY_CHAT_COMPONENT is a dummy component that is used to render an empty chat, as chatTabData instance is
-        // only created when there is a message.
-        event.setRenderedChat(chatTabData.getOrDefault(focusedTab, EMPTY_CHAT_COMPONENT));
+        // Cancel all remaining messages, if we have a focused tab, we will handle it.
+        event.setCanceled(true);
     }
 
     public static void addMessageToTab(ChatTab tab, Component message) {
@@ -45,6 +59,12 @@ public class ChatTabModel extends Model {
 
     public static void setFocusedTab(ChatTab focused) {
         focusedTab = focused;
+
+        if (focusedTab == null) {
+            McUtils.mc().gui.chat = EMPTY_CHAT_COMPONENT;
+        } else {
+            McUtils.mc().gui.chat = chatTabData.getOrDefault(focusedTab, EMPTY_CHAT_COMPONENT);
+        }
     }
 
     public static ChatTab getFocusedTab() {

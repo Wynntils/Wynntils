@@ -70,6 +70,9 @@ public class ChatTabsFeature extends UserFeature {
                 ChatTabModel.addMessageToTab(chatTab, event.getMessage());
             }
         }
+
+        // We've already sent this message to every matching tab, so we can cancel it.
+        event.setCanceled(true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -92,6 +95,9 @@ public class ChatTabsFeature extends UserFeature {
                 ChatTabModel.addMessageToTab(chatTab, event.getComponent());
             }
         }
+
+        // We've already sent this message to every matching tab, so we can cancel it.
+        event.setCanceled(true);
     }
 
     @SubscribeEvent

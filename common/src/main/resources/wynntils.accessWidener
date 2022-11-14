@@ -37,3 +37,5 @@ accessible method net/minecraft/client/resources/ClientPackSource checkHash (Lja
 accessible field net/minecraft/server/packs/repository/Pack supplier Ljava/util/function/Supplier;
 accessible field net/minecraft/server/packs/AbstractPackResources file Ljava/io/File;
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
+accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
+mutable field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;

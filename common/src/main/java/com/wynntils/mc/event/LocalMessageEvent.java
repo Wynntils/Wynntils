@@ -6,9 +6,11 @@ package com.wynntils.mc.event;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 // Fired when a message is sent to the local chat.
+@Cancelable
 public class LocalMessageEvent extends Event {
     private final Component component;
     private final String codedMessage;
