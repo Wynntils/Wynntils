@@ -5,6 +5,7 @@
 package com.wynntils.core.chat.tabs;
 
 import com.wynntils.core.chat.RecipientType;
+import com.wynntils.mc.event.LocalMessageEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -24,22 +25,23 @@ public class ChatTab {
         this.lowPriority = lowPriority;
         this.filteredTypes = filteredTypes;
         this.customRegexString = customRegexString;
-
-        if (customRegexString != null) {
-            this.customRegex = Pattern.compile(customRegexString);
-        }
     }
 
     public boolean matchMessageFromEvent(ChatMessageReceivedEvent event) {
-        if (filteredTypes != null && !filteredTypes.contains(event.getRecipientType())) {
+        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(event.getRecipientType())) {
             return false;
         }
 
-        if (customRegex == null) {
-            return true;
+        return customRegexString == null
+                || getCustomRegex().matcher(event.getCodedMessage()).matches();
+    }
+
+    public boolean matchMessageFromEvent(LocalMessageEvent event) {
+        if (customRegexString == null) {
+            return false;
         }
 
-        return customRegex.matcher(event.getCodedMessage()).matches();
+        return getCustomRegex().matcher(event.getCodedMessage()).matches();
     }
 
     public String getName() {
@@ -48,5 +50,11 @@ public class ChatTab {
 
     public boolean isLowPriority() {
         return lowPriority;
+    }
+
+    public Pattern getCustomRegex() {
+        return customRegex == null && customRegexString != null
+                ? customRegex = Pattern.compile(customRegexString, Pattern.DOTALL)
+                : customRegex;
     }
 }

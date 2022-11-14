@@ -15,10 +15,12 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.widgets.ChatTabButton;
+import com.wynntils.mc.event.LocalMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.WorldStateManager;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ChatTabsFeature extends UserFeature {
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
-            new ChatTab("All", true, Sets.newHashSet(RecipientType.values()), null),
+            new ChatTab("All", true, null, ".*"),
             new ChatTab("Global", true, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", true, Sets.newHashSet(RecipientType.LOCAL), null),
             new ChatTab("Guild", true, Sets.newHashSet(RecipientType.GUILD), null),
@@ -40,7 +42,7 @@ public class ChatTabsFeature extends UserFeature {
             new ChatTab("Shout", true, Sets.newHashSet(RecipientType.SHOUT), null));
 
     @TypeOverride
-    public Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
+    private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -70,6 +72,28 @@ public class ChatTabsFeature extends UserFeature {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLocalChat(LocalMessageEvent event) {
+        // Firstly, find the FIRST matching tab with high priority
+        for (ChatTab chatTab : chatTabs) {
+            if (chatTab.isLowPriority()) continue;
+
+            if (chatTab.matchMessageFromEvent(event)) {
+                ChatTabModel.addMessageToTab(chatTab, event.getComponent());
+                return;
+            }
+        }
+
+        // Secondly, match ALL tabs with low priority
+        for (ChatTab chatTab : chatTabs) {
+            if (!chatTab.isLowPriority()) continue;
+
+            if (chatTab.matchMessageFromEvent(event)) {
+                ChatTabModel.addMessageToTab(chatTab, event.getComponent());
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (event.getScreen() instanceof ChatScreen chatScreen) {
@@ -83,8 +107,10 @@ public class ChatTabsFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent event) {
-        if (event.getScreen() instanceof ChatScreen && !chatTabs.isEmpty() && ChatTabModel.getFocusedTab() == null) {
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() == WorldStateManager.State.WORLD
+                && !chatTabs.isEmpty()
+                && ChatTabModel.getFocusedTab() == null) {
             ChatTabModel.setFocusedTab(chatTabs.get(0));
         }
     }

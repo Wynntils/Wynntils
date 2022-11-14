@@ -6,14 +6,18 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.utils.McUtils;
+import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
@@ -37,5 +41,12 @@ public abstract class LocalPlayerMixin {
         if (EventFactory.onDropPre(fullStack).isCanceled()) {
             cir.cancel();
         }
+    }
+
+    @Inject(method = "sendMessage", at = @At("HEAD"))
+    private void onSendMessage(Component component, UUID senderUUID, CallbackInfo ci) {
+        if ((Object) this != McUtils.player()) return;
+
+        EventFactory.onLocalMessage(component);
     }
 }

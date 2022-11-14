@@ -34,10 +34,8 @@ public class QuestContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book: " + msg);
-                    McUtils.player()
-                            .sendMessage(
-                                    new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED),
-                                    null);
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(QuestManager.getQuestBookTitle(1))
@@ -89,10 +87,8 @@ public class QuestContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Mini Quest Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book for mini quests: " + msg);
-                    McUtils.player()
-                            .sendMessage(
-                                    new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED),
-                                    null);
+                    McUtils.sendMessageToClient(
+                            new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(QuestManager.getQuestBookTitle(1))
