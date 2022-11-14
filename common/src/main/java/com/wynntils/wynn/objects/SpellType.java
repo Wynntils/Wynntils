@@ -14,7 +14,7 @@ public enum SpellType {
     ARROW_SHIELD(ClassType.Archer, 4, "Arrow Shield", 8, 1),
 
     SPIN_ATTACK(ClassType.Assassin, 1, "Spin Attack", 6, 0),
-    VANISH(ClassType.Assassin, 2, "Vanish", 2, 0),
+    VANISH(ClassType.Assassin, 2, "Dash", 2, 0),
     MULTI_HIT(ClassType.Assassin, 3, "Multi Hit", 8, 0),
     SMOKE_BOMB(ClassType.Assassin, 4, "Smoke Bomb", 8, 0),
 
