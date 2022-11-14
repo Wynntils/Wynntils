@@ -41,8 +41,12 @@ public class ChatTab {
     }
 
     public boolean matchMessageFromEvent(ClientsideMessageEvent event) {
-        if (customRegexString == null) {
+        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(RecipientType.CLIENTSIDE)) {
             return false;
+        }
+
+        if (customRegexString == null) {
+            return true;
         }
 
         return getCustomRegex().matcher(event.getCodedMessage()).matches();

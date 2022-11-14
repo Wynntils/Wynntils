@@ -61,7 +61,8 @@ public class ChatTabModel extends Model {
         if (focusedTab == null) {
             McUtils.mc().gui.chat = EMPTY_CHAT_COMPONENT;
         } else {
-            McUtils.mc().gui.chat = chatTabData.getOrDefault(focusedTab, EMPTY_CHAT_COMPONENT);
+            chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
+            McUtils.mc().gui.chat = chatTabData.get(focusedTab);
         }
     }
 

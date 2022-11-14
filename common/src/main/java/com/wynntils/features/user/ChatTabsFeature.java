@@ -33,7 +33,7 @@ public class ChatTabsFeature extends UserFeature {
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
-            new ChatTab("All", true, null, ".*"),
+            new ChatTab("All", true, null, null),
             new ChatTab("Global", true, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", true, Sets.newHashSet(RecipientType.LOCAL), null),
             new ChatTab("Guild", true, Sets.newHashSet(RecipientType.GUILD), null),

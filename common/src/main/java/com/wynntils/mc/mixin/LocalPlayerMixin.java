@@ -47,7 +47,7 @@ public abstract class LocalPlayerMixin {
     private void onSendMessage(Component component, UUID senderUUID, CallbackInfo ci) {
         if ((Object) this != McUtils.player()) return;
 
-        if (EventFactory.onLocalMessage(component).isCanceled()) {
+        if (EventFactory.onClientsideMessage(component).isCanceled()) {
             ci.cancel();
         }
     }

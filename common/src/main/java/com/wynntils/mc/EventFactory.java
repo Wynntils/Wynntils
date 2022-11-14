@@ -402,7 +402,7 @@ public final class EventFactory {
         return post(new ChatPacketReceivedEvent(type, message));
     }
 
-    public static ClientsideMessageEvent onLocalMessage(Component component) {
+    public static ClientsideMessageEvent onClientsideMessage(Component component) {
         return post(new ClientsideMessageEvent(component));
     }
 
