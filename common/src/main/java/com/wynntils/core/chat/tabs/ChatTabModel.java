@@ -21,11 +21,9 @@ public class ChatTabModel extends Model {
 
     private static ChatTab focusedTab = null;
 
-    private static Map<ChatTab, ChatComponent> chatTabData = Map.of();
+    private static final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
 
-    public static void init() {
-        chatTabData = new ConcurrentHashMap<>();
-    }
+    public static void init() {}
 
     public static void disable() {
         chatTabData.clear();
