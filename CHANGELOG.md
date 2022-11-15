@@ -1,9 +1,21 @@
+## [0.0.1-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.44...v0.0.1-alpha.45) (2022-11-15)
+
+
+### Bug Fixes
+
+* Disable feature as soon as possible on crash ([808a123](https://github.com/Wynntils/Artemis/commit/808a123caaeb06c3b19f00e997da74c30e71ec5c))
+
 ## [0.0.1-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.43...v0.0.1-alpha.44) (2022-11-15)
 
 
 ### Bug Fixes
 
 * Fix a bug which chat tabs that made action bar messages disappear ([3f12e56](https://github.com/Wynntils/Artemis/commit/3f12e567261184e1716339fc7304035b737c839e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.44 [skip ci] ([4726113](https://github.com/Wynntils/Artemis/commit/4726113d2a96dd3038aa6cbf609587b715b5eed7))
 
 ## [0.0.1-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.42...v0.0.1-alpha.43) (2022-11-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.41 [skip ci] ([a85359a](https://github.com/Wynntils/Artemis/commit/a85359a6ea7c56383aad77368f26d0151ba786f2))
-
-## [0.0.1-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.39...v0.0.1-alpha.40) (2022-11-14)
-
-
-### New Features
-
-* Add /server list up to list servers with uptimes (and show uptime with /server info) ([#686](https://github.com/Wynntils/Artemis/issues/686)) ([68d229d](https://github.com/Wynntils/Artemis/commit/68d229da47ae3aa07091996af86b0f3516910a66))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.40 [skip ci] ([4f2498c](https://github.com/Wynntils/Artemis/commit/4f2498c06a0e3059c5e5042e81bf99ecde13c5da))
 
