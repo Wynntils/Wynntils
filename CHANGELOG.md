@@ -1,9 +1,21 @@
+## [0.0.1-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.43...v0.0.1-alpha.44) (2022-11-15)
+
+
+### Bug Fixes
+
+* Fix a bug which chat tabs that made action bar messages disappear ([3f12e56](https://github.com/Wynntils/Artemis/commit/3f12e567261184e1716339fc7304035b737c839e))
+
 ## [0.0.1-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.42...v0.0.1-alpha.43) (2022-11-15)
 
 
 ### Bug Fixes
 
 * Add all ProfessionTypes ([#688](https://github.com/Wynntils/Artemis/issues/688)) ([93f737d](https://github.com/Wynntils/Artemis/commit/93f737d111cc48406d2113be94df21eba2e53b82))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.43 [skip ci] ([9a14c4e](https://github.com/Wynntils/Artemis/commit/9a14c4eca8ca47da076c8390a5bae03944d7ff82))
 
 ## [0.0.1-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.41...v0.0.1-alpha.42) (2022-11-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.40 [skip ci] ([4f2498c](https://github.com/Wynntils/Artemis/commit/4f2498c06a0e3059c5e5042e81bf99ecde13c5da))
-
-## [0.0.1-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.38...v0.0.1-alpha.39) (2022-11-14)
-
-
-### Bug Fixes
-
-* Fix friend join redirect for archers ([b033164](https://github.com/Wynntils/Artemis/commit/b0331640be335dbe95d9bb98f901c992618636a7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.39 [skip ci] ([3cf1e8e](https://github.com/Wynntils/Artemis/commit/3cf1e8e6e67942da9436f7311f5369420ef34709))
 
