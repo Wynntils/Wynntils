@@ -108,8 +108,6 @@ public final class ChatModel extends Model {
     }
 
     private static void handleMultilineMessage(Component message) {
-        String msg = ComponentUtils.getCoded(message);
-
         List<Component> lines = ComponentUtils.splitComponentInLines(message);
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);

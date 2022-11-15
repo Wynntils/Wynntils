@@ -18,6 +18,7 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -61,6 +62,7 @@ import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -300,6 +302,11 @@ public final class EventFactory {
         post(new ScreenInitEvent(screen));
     }
 
+    public static void onScreenRenderPost(
+            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        post(new ScreenRenderEvent(screen, poseStack, mouseX, mouseY, partialTick));
+    }
+
     // endregion
 
     // region Container Events
@@ -394,6 +401,11 @@ public final class EventFactory {
     public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
         return post(new ChatPacketReceivedEvent(type, message));
     }
+
+    public static ClientsideMessageEvent onClientsideMessage(Component component) {
+        return post(new ClientsideMessageEvent(component));
+    }
+
     // endregion
 
     // region Server Events
