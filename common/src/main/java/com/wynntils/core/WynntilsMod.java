@@ -85,14 +85,14 @@ public final class WynntilsMod {
             return;
         }
 
+        feature.setUserEnabled(false);
+        feature.tryUserToggle();
+
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");
         McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
                         + "' has crashed and will be disabled")
                 .withStyle(ChatFormatting.RED));
-
-        feature.setUserEnabled(false);
-        feature.tryUserToggle();
     }
 
     public static File getModJar() {
