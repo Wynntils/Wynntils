@@ -1,9 +1,21 @@
+## [0.0.1-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.40...v0.0.1-alpha.41) (2022-11-14)
+
+
+### Bug Fixes
+
+* Misc. spell cost ID fixes ([#684](https://github.com/Wynntils/Artemis/issues/684)) ([32154e6](https://github.com/Wynntils/Artemis/commit/32154e64706af75e639ea8bb046e5d6f9d7a0789))
+
 ## [0.0.1-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.39...v0.0.1-alpha.40) (2022-11-14)
 
 
 ### New Features
 
 * Add /server list up to list servers with uptimes (and show uptime with /server info) ([#686](https://github.com/Wynntils/Artemis/issues/686)) ([68d229d](https://github.com/Wynntils/Artemis/commit/68d229da47ae3aa07091996af86b0f3516910a66))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.40 [skip ci] ([4f2498c](https://github.com/Wynntils/Artemis/commit/4f2498c06a0e3059c5e5042e81bf99ecde13c5da))
 
 ## [0.0.1-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.38...v0.0.1-alpha.39) (2022-11-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.37 [skip ci] ([221e06e](https://github.com/Wynntils/Artemis/commit/221e06ef42c2938cf6d48e58c6af97680dce21af))
-
-## [0.0.1-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.35...v0.0.1-alpha.36) (2022-11-13)
-
-
-### New Features
-
-* Add player cursor to the guild map ([#681](https://github.com/Wynntils/Artemis/issues/681)) ([5cb0c2a](https://github.com/Wynntils/Artemis/commit/5cb0c2a7f25ca49c61d84c2c16a9791b5dffff7b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.36 [skip ci] ([b806030](https://github.com/Wynntils/Artemis/commit/b806030b51d3f3a0a483058e16c80b9f0f1e0b1e))
 
