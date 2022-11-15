@@ -1,9 +1,21 @@
+## [0.0.1-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.46...v0.0.1-alpha.47) (2022-11-15)
+
+
+### Bug Fixes
+
+* fix chat tabs loading from config ([#690](https://github.com/Wynntils/Artemis/issues/690)) ([6d4fe44](https://github.com/Wynntils/Artemis/commit/6d4fe44817717189b3a94f4d0509003494429845))
+
 ## [0.0.1-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.45...v0.0.1-alpha.46) (2022-11-15)
 
 
 ### Bug Fixes
 
 * Auto-apply chat tabs on feature reload ([#689](https://github.com/Wynntils/Artemis/issues/689)) ([33f4c75](https://github.com/Wynntils/Artemis/commit/33f4c754a07938d5dcf077fcc104ecbae6cea351))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.46 [skip ci] ([9c2e17a](https://github.com/Wynntils/Artemis/commit/9c2e17a695569fc750c4b6c1ebe7471aa6096e08))
 
 ## [0.0.1-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.44...v0.0.1-alpha.45) (2022-11-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.43 [skip ci] ([9a14c4e](https://github.com/Wynntils/Artemis/commit/9a14c4eca8ca47da076c8390a5bae03944d7ff82))
-
-## [0.0.1-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.41...v0.0.1-alpha.42) (2022-11-15)
-
-
-### New Features
-
-* Add Chat Tabs ([#671](https://github.com/Wynntils/Artemis/issues/671)) ([29a2ca5](https://github.com/Wynntils/Artemis/commit/29a2ca5a33b670f891b7253bc7d12369ba6b9b28))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.42 [skip ci] ([f880c94](https://github.com/Wynntils/Artemis/commit/f880c9410ff9ea49ade1679f8915535df6612435))
 
