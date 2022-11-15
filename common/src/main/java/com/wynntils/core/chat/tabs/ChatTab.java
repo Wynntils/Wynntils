@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ChatTab {
     private String name;
-    private boolean lowPriority;
+    private boolean consuming;
 
     // Filters
     private Set<RecipientType> filteredTypes;
@@ -20,9 +20,9 @@ public class ChatTab {
 
     private transient Pattern customRegex;
 
-    public ChatTab(String name, boolean lowPriority, Set<RecipientType> filteredTypes, String customRegexString) {
+    public ChatTab(String name, boolean consuming, Set<RecipientType> filteredTypes, String customRegexString) {
         this.name = name;
-        this.lowPriority = lowPriority;
+        this.consuming = consuming;
         this.filteredTypes = filteredTypes;
         this.customRegexString = customRegexString;
     }
@@ -56,8 +56,8 @@ public class ChatTab {
         return name;
     }
 
-    public boolean isLowPriority() {
-        return lowPriority;
+    public boolean isConsuming() {
+        return consuming;
     }
 
     public Pattern getCustomRegex() {
