@@ -12,6 +12,7 @@ import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,6 +44,7 @@ public class ChatTabModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onChatPacket(ChatPacketReceivedEvent event) {
+        if (event.getType() != ChatType.CHAT) return;
         if (focusedTab == null) return;
 
         // Cancel all remaining messages, if we have a focused tab, we will handle it.
