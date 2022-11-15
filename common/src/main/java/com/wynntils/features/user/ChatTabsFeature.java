@@ -79,7 +79,7 @@ public class ChatTabsFeature extends UserFeature {
     public void onClientsideChat(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : chatTabs) {
-            if (chatTab.isConsuming()) continue;
+            if (!chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
                 ChatTabModel.addMessageToTab(chatTab, event.getComponent());
@@ -89,7 +89,7 @@ public class ChatTabsFeature extends UserFeature {
 
         // Secondly, match ALL tabs with low priority
         for (ChatTab chatTab : chatTabs) {
-            if (!chatTab.isConsuming()) continue;
+            if (chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
                 ChatTabModel.addMessageToTab(chatTab, event.getComponent());
