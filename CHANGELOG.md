@@ -1,9 +1,21 @@
+## [0.0.1-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.42...v0.0.1-alpha.43) (2022-11-15)
+
+
+### Bug Fixes
+
+* Add all ProfessionTypes ([#688](https://github.com/Wynntils/Artemis/issues/688)) ([93f737d](https://github.com/Wynntils/Artemis/commit/93f737d111cc48406d2113be94df21eba2e53b82))
+
 ## [0.0.1-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.41...v0.0.1-alpha.42) (2022-11-15)
 
 
 ### New Features
 
 * Add Chat Tabs ([#671](https://github.com/Wynntils/Artemis/issues/671)) ([29a2ca5](https://github.com/Wynntils/Artemis/commit/29a2ca5a33b670f891b7253bc7d12369ba6b9b28))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.42 [skip ci] ([f880c94](https://github.com/Wynntils/Artemis/commit/f880c9410ff9ea49ade1679f8915535df6612435))
 
 ## [0.0.1-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.40...v0.0.1-alpha.41) (2022-11-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.39 [skip ci] ([3cf1e8e](https://github.com/Wynntils/Artemis/commit/3cf1e8e6e67942da9436f7311f5369420ef34709))
-
-## [0.0.1-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.37...v0.0.1-alpha.38) (2022-11-13)
-
-
-### Bug Fixes
-
-* Fix status overlay not parsing some statuses ([#683](https://github.com/Wynntils/Artemis/issues/683)) ([e839d98](https://github.com/Wynntils/Artemis/commit/e839d981ae2fc823ae80f5dd21832203e710d880))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.38 [skip ci] ([f69f9c7](https://github.com/Wynntils/Artemis/commit/f69f9c7e83af1989d966c1a0529abff883a1c919))
 
