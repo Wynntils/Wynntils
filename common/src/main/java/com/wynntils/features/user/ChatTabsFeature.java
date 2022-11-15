@@ -130,4 +130,9 @@ public class ChatTabsFeature extends UserFeature {
         // rendering command suggestions on top of chat tab buttons.
         chatScreen.commandSuggestions.render(event.getPoseStack(), event.getMouseX(), event.getMouseY());
     }
+
+    @Override
+    protected void postEnable() {
+        ChatTabModel.setFocusedTab(chatTabs.get(0));
+    }
 }
