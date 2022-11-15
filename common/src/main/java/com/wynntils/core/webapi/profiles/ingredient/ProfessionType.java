@@ -7,14 +7,20 @@ package com.wynntils.core.webapi.profiles.ingredient;
 import java.util.Locale;
 
 public enum ProfessionType {
-    WEAPONSMITHING("Weaponsmithing", "Ⓖ"),
-    WOODWORKING("Woodworking", "Ⓘ"),
-    ARMOURING("Armouring", "Ⓗ"),
-    TAILORING("Tailoring", "Ⓕ"),
-    JEWELING("Jeweling", "Ⓓ"),
-    COOKING("Cooking", "Ⓐ"),
+    WOODCUTTING("Woodcutting", "Ⓒ"),
+    MINING("Mining", "Ⓑ"),
+    FISHING("Fishing", "Ⓚ"),
+    FARMING("Farming", "Ⓙ"),
+
+    // crafting
     ALCHEMISM("Alchemism", "Ⓛ"),
-    SCRIBING("Scribing", "Ⓔ");
+    ARMOURING("Armouring", "Ⓗ"),
+    COOKING("Cooking", "Ⓐ"),
+    JEWELING("Jeweling", "Ⓓ"),
+    SCRIBING("Scribing", "Ⓔ"),
+    TAILORING("Tailoring", "Ⓕ"),
+    WEAPONSMITHING("Weaponsmithing", "Ⓖ"),
+    WOODWORKING("Woodworking", "Ⓘ");
 
     final String professionName;
     final String professionIconChar;
@@ -33,16 +39,6 @@ public enum ProfessionType {
     }
 
     public static ProfessionType fromString(String type) {
-        return switch (type.toLowerCase(Locale.ROOT)) {
-            case "weaponsmithing" -> WEAPONSMITHING;
-            case "woodworking" -> WOODWORKING;
-            case "armouring" -> ARMOURING;
-            case "tailoring" -> TAILORING;
-            case "jeweling" -> JEWELING;
-            case "cooking" -> COOKING;
-            case "alchemism" -> ALCHEMISM;
-            case "scribing" -> SCRIBING;
-            default -> null;
-        };
+        return ProfessionType.valueOf(type.toUpperCase(Locale.ROOT));
     }
 }
