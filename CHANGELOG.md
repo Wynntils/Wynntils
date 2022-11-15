@@ -1,9 +1,21 @@
+## [0.0.1-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.45...v0.0.1-alpha.46) (2022-11-15)
+
+
+### Bug Fixes
+
+* Auto-apply chat tabs on feature reload ([#689](https://github.com/Wynntils/Artemis/issues/689)) ([33f4c75](https://github.com/Wynntils/Artemis/commit/33f4c754a07938d5dcf077fcc104ecbae6cea351))
+
 ## [0.0.1-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.44...v0.0.1-alpha.45) (2022-11-15)
 
 
 ### Bug Fixes
 
 * Disable feature as soon as possible on crash ([808a123](https://github.com/Wynntils/Artemis/commit/808a123caaeb06c3b19f00e997da74c30e71ec5c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.45 [skip ci] ([4876d80](https://github.com/Wynntils/Artemis/commit/4876d808a85d3cf582b1a9bc398473a49084d57d))
 
 ## [0.0.1-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.43...v0.0.1-alpha.44) (2022-11-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.42 [skip ci] ([f880c94](https://github.com/Wynntils/Artemis/commit/f880c9410ff9ea49ade1679f8915535df6612435))
-
-## [0.0.1-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.40...v0.0.1-alpha.41) (2022-11-14)
-
-
-### Bug Fixes
-
-* Misc. spell cost ID fixes ([#684](https://github.com/Wynntils/Artemis/issues/684)) ([32154e6](https://github.com/Wynntils/Artemis/commit/32154e64706af75e639ea8bb046e5d6f9d7a0789))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.41 [skip ci] ([a85359a](https://github.com/Wynntils/Artemis/commit/a85359a6ea7c56383aad77368f26d0151ba786f2))
 
