@@ -23,11 +23,10 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CompassModel;
+import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.List;
 
 public class WorldWaypointDistanceFeature extends UserFeature {
 
