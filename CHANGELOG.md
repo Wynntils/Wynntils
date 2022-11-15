@@ -1,9 +1,21 @@
+## [0.0.1-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.41...v0.0.1-alpha.42) (2022-11-15)
+
+
+### New Features
+
+* Add Chat Tabs ([#671](https://github.com/Wynntils/Artemis/issues/671)) ([29a2ca5](https://github.com/Wynntils/Artemis/commit/29a2ca5a33b670f891b7253bc7d12369ba6b9b28))
+
 ## [0.0.1-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.40...v0.0.1-alpha.41) (2022-11-14)
 
 
 ### Bug Fixes
 
 * Misc. spell cost ID fixes ([#684](https://github.com/Wynntils/Artemis/issues/684)) ([32154e6](https://github.com/Wynntils/Artemis/commit/32154e64706af75e639ea8bb046e5d6f9d7a0789))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.41 [skip ci] ([a85359a](https://github.com/Wynntils/Artemis/commit/a85359a6ea7c56383aad77368f26d0151ba786f2))
 
 ## [0.0.1-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.39...v0.0.1-alpha.40) (2022-11-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.38 [skip ci] ([f69f9c7](https://github.com/Wynntils/Artemis/commit/f69f9c7e83af1989d966c1a0529abff883a1c919))
-
-## [0.0.1-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.36...v0.0.1-alpha.37) (2022-11-13)
-
-
-### Bug Fixes
-
-* Lootrun recording fixes ([#680](https://github.com/Wynntils/Artemis/issues/680)) ([9d38028](https://github.com/Wynntils/Artemis/commit/9d380289c8b45d27ef1d2a12297412dd43bee6c2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.37 [skip ci] ([221e06e](https://github.com/Wynntils/Artemis/commit/221e06ef42c2938cf6d48e58c6af97680dce21af))
 
