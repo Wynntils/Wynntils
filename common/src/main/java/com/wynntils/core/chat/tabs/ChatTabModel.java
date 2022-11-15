@@ -18,8 +18,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatTabModel extends Model {
-    private static final ChatComponent EMPTY_CHAT_COMPONENT = new ChatComponent(McUtils.mc());
-
     private static ChatTab focusedTab = null;
 
     private static final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
@@ -28,6 +26,7 @@ public class ChatTabModel extends Model {
 
     public static void disable() {
         chatTabData.clear();
+        setFocusedTab(null);
     }
 
     @SubscribeEvent
@@ -61,7 +60,7 @@ public class ChatTabModel extends Model {
         focusedTab = focused;
 
         if (focusedTab == null) {
-            McUtils.mc().gui.chat = EMPTY_CHAT_COMPONENT;
+            McUtils.mc().gui.chat = new ChatComponent(McUtils.mc());
         } else {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
