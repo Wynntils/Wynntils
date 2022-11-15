@@ -11,6 +11,7 @@ import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
 import com.wynntils.core.chat.tabs.ChatTabModel;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
@@ -18,6 +19,7 @@ import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -133,6 +135,23 @@ public class ChatTabsFeature extends UserFeature {
 
     @Override
     protected void postEnable() {
+        if (chatTabs.isEmpty()) return;
+
         ChatTabModel.setFocusedTab(chatTabs.get(0));
+    }
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (!chatTabs.isEmpty()) {
+            ChatTabModel.setFocusedTab(chatTabs.get(0));
+        }
+
+        if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
+            // Reload chat tab buttons
+            chatScreen.init(
+                    McUtils.mc(),
+                    McUtils.mc().getWindow().getGuiScaledWidth(),
+                    McUtils.mc().getWindow().getGuiScaledHeight());
+        }
     }
 }
