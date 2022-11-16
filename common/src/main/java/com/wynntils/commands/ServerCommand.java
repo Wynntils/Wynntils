@@ -137,9 +137,9 @@ public class ServerCommand extends CommandBase {
             HoverEvent switchCommandHover = new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT, new TextComponent("Switch to " + ChatFormatting.BLUE + server));
             Style style =
-                        serverLine.getStyle().withHoverEvent(switchCommandHover).withClickEvent(switchCommand);
-                serverLine.withStyle(style);
-                world.append(serverLine);
+                    serverLine.getStyle().withHoverEvent(switchCommandHover).withClickEvent(switchCommand);
+            serverLine.withStyle(style);
+            world.append(serverLine);
             world.append(ChatFormatting.AQUA + " in " + minuteColor + uptimeMinutes
                     + (uptimeMinutes == 1 || uptimeMinutes == 0 ? " minute" : " minutes"));
             context.getSource().sendSuccess(world, false);
