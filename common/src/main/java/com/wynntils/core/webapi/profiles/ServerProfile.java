@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.webapi.profiles;
 
-import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
