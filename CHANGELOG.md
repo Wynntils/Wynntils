@@ -1,9 +1,21 @@
+## [0.0.1-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.48...v0.0.1-alpha.49) (2022-11-16)
+
+
+### Bug Fixes
+
+* Fix chat history resetting ([#693](https://github.com/Wynntils/Artemis/issues/693)) ([f2f8b4b](https://github.com/Wynntils/Artemis/commit/f2f8b4b9a7c89984c71f29c3218f8caa2acf1ed7))
+
 ## [0.0.1-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.47...v0.0.1-alpha.48) (2022-11-16)
 
 
 ### Bug Fixes
 
 * Fix chat items not parsing + feature crash when screenshot copy fails ([#692](https://github.com/Wynntils/Artemis/issues/692)) ([e062909](https://github.com/Wynntils/Artemis/commit/e062909a21a114c596397673bdd5f53332a2c102))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.48 [skip ci] ([06cad19](https://github.com/Wynntils/Artemis/commit/06cad19d97798ce058567ad802e1d0b03353badf))
 
 ## [0.0.1-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.46...v0.0.1-alpha.47) (2022-11-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.45 [skip ci] ([4876d80](https://github.com/Wynntils/Artemis/commit/4876d808a85d3cf582b1a9bc398473a49084d57d))
-
-## [0.0.1-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.43...v0.0.1-alpha.44) (2022-11-15)
-
-
-### Bug Fixes
-
-* Fix a bug which chat tabs that made action bar messages disappear ([3f12e56](https://github.com/Wynntils/Artemis/commit/3f12e567261184e1716339fc7304035b737c839e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.44 [skip ci] ([4726113](https://github.com/Wynntils/Artemis/commit/4726113d2a96dd3038aa6cbf609587b715b5eed7))
 
