@@ -6,10 +6,10 @@ package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class ChatItemFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatPacketReceivedEvent e) {
+    public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
