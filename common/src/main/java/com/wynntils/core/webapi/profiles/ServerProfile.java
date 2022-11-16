@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.webapi.profiles;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -36,11 +37,7 @@ public class ServerProfile {
     }
 
     public int getUptimeMinutes() {
-        long millis = System.currentTimeMillis() - firstSeen;
-
-        return (int) Math.floor((TimeUnit.MILLISECONDS.toHours(millis) * 60)
-                + (TimeUnit.MILLISECONDS.toMinutes(millis)
-                        - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))));
+        return (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - firstSeen);
     }
 
     /**
