@@ -21,11 +21,13 @@ public class ChatTabModel extends Model {
     private static ChatTab focusedTab = null;
 
     private static final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
+    private static final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
 
     public static void init() {}
 
     public static void disable() {
         chatTabData.clear();
+        unreadMessages.clear();
         setFocusedTab(null);
     }
 
@@ -33,6 +35,7 @@ public class ChatTabModel extends Model {
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
             chatTabData.clear();
+            unreadMessages.clear();
             setFocusedTab(null);
         }
     }
@@ -50,6 +53,10 @@ public class ChatTabModel extends Model {
         chatTabData.putIfAbsent(tab, new ChatComponent(McUtils.mc()));
 
         chatTabData.get(tab).addMessage(message);
+
+        if (focusedTab != tab) {
+            unreadMessages.put(tab, true);
+        }
     }
 
     public static void setFocusedTab(ChatTab focused) {
@@ -59,11 +66,16 @@ public class ChatTabModel extends Model {
             McUtils.mc().gui.chat = new ChatComponent(McUtils.mc());
         } else {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
+            unreadMessages.put(focused, false);
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
         }
     }
 
     public static ChatTab getFocusedTab() {
         return focusedTab;
+    }
+
+    public static boolean hasUnreadMessages(ChatTab tab) {
+        return unreadMessages.getOrDefault(tab, false);
     }
 }
