@@ -30,7 +30,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
-import com.wynntils.wynn.objects.account.PlayerAccount;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -78,7 +78,6 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
-    private static PlayerAccount playerAccount = null;
 
     private static List<DiscoveryProfile> discoveries = new ArrayList<>();
 
@@ -173,25 +172,6 @@ public final class WebManager extends CoreManager {
                 .build());
 
         // Check for success
-    }
-
-    public static void updatePlayerStats() {
-        String url =
-                "https://api.wynncraft.com/v2/player/" + McUtils.mc().getUser().getName() + "/stats";
-        handler.addAndDispatch(new RequestBuilder(url, "player_profile")
-                .cacheTo(new File(API_CACHE_ROOT, "player_stats.json"))
-                .handleJsonObject(json -> {
-                    Type type = new TypeToken<PlayerAccount>() {}.getType();
-
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(type, new PlayerAccount.PlayerAccountDeserializer());
-                    Gson gson = gsonBuilder.create();
-
-                    playerAccount = gson.fromJson(json, type);
-                    return true;
-                })
-                .useCacheAsBackup()
-                .build());
     }
 
     private static void tryLoadItemList() {
@@ -409,10 +389,6 @@ public final class WebManager extends CoreManager {
 
     public static HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
-    }
-
-    public static PlayerAccount getPlayerAccount() {
-        return playerAccount;
     }
 
     public static List<DiscoveryProfile> getDiscoveries() {

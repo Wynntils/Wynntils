@@ -15,7 +15,6 @@ import com.wynntils.core.webapi.ServerListModel;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.objects.account.PlayerAccount;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.io.IOException;
 import java.util.HashMap;
@@ -133,25 +132,13 @@ public class ServerCommand extends CommandBase {
             }
             MutableComponent world = new TextComponent(ChatFormatting.BOLD + "-" + ChatFormatting.GOLD);
             TextComponent serverLine = new TextComponent(ChatFormatting.BLUE + server + "- ");
-            WebManager.updatePlayerStats();
-            PlayerAccount playerAccount = WebManager.getPlayerAccount();
-            if (playerAccount.getTag().isHeroPlus()) {
-                ClickEvent switchCommand = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/switch " + server);
-                HoverEvent switchCommandHover = new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT, new TextComponent("Switch to " + ChatFormatting.BLUE + server));
-                Style style =
+            ClickEvent switchCommand = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/switch " + server);
+            HoverEvent switchCommandHover = new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT, new TextComponent("Switch to " + ChatFormatting.BLUE + server));
+            Style style =
                         serverLine.getStyle().withHoverEvent(switchCommandHover).withClickEvent(switchCommand);
                 serverLine.withStyle(style);
                 world.append(serverLine);
-            } else {
-                serverLine
-                        .getStyle()
-                        .withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                new TextComponent(
-                                        ChatFormatting.RED + "HERO or higher rank is required to use /switch")));
-                world.append(serverLine);
-            }
             world.append(ChatFormatting.AQUA + " in " + minuteColor + uptimeMinutes
                     + (uptimeMinutes == 1 || uptimeMinutes == 0 ? " minute" : " minutes"));
             context.getSource().sendSuccess(world, false);
