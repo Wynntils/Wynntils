@@ -33,10 +33,6 @@ public class ChatTabModel extends Model {
     public static void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
             chatTabData.clear();
-            return;
-        }
-
-        if (event.getNewState() != WorldStateManager.State.WORLD) {
             setFocusedTab(null);
         }
     }
