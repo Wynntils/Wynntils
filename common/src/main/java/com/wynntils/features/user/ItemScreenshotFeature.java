@@ -108,13 +108,15 @@ public class ItemScreenshotFeature extends UserFeature {
         BufferedImage bi = RenderUtils.createScreenshot(fb);
         try {
             RenderUtils.copyImageToClipboard(bi);
+            McUtils.sendMessageToClient(
+                    new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
+                            .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
+            McUtils.sendMessageToClient(
+                    new TranslatableComponent("feature.wynntils.itemScreenshot.error", stack.getHoverName())
+                            .withStyle(ChatFormatting.RED));
         }
-
-        McUtils.sendMessageToClient(
-                new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
-                        .withStyle(ChatFormatting.GREEN));
 
         // chat item prompt
         if (stack instanceof GearItemStack gearItem) {
