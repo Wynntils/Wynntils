@@ -5,7 +5,9 @@
 package com.wynntils.features.user;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
@@ -13,6 +15,7 @@ import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import net.minecraft.client.gui.components.EditBox;
@@ -27,6 +30,11 @@ public class ChatItemFeature extends UserFeature {
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new WebLoadedCondition());
+    }
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(ChatModel.class);
     }
 
     @SubscribeEvent
