@@ -1,3 +1,10 @@
+## [0.0.1-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.50...v0.0.1-alpha.51) (2022-11-16)
+
+
+### New Features
+
+* Make chat tabs with unread messages yellow ([#696](https://github.com/Wynntils/Artemis/issues/696)) ([b833454](https://github.com/Wynntils/Artemis/commit/b8334547f289a466b1b4d91604b5f8e490996da0))
+
 ## [0.0.1-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.49...v0.0.1-alpha.50) (2022-11-16)
 
 
@@ -5,6 +12,11 @@
 
 * Add correct dependency ([72ce97c](https://github.com/Wynntils/Artemis/commit/72ce97c09a80834626015e53f00425ab88ebacd0))
 * Let the user know about failed item screenshots ([7c8a519](https://github.com/Wynntils/Artemis/commit/7c8a5193c07e6a9fb7717b705836c28d1efbcb0b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.50 [skip ci] ([ababffd](https://github.com/Wynntils/Artemis/commit/ababffd4e9fe78ea02f6603f0e14f9f46eb2f09c))
 
 ## [0.0.1-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.48...v0.0.1-alpha.49) (2022-11-16)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.47 [skip ci] ([ef664e1](https://github.com/Wynntils/Artemis/commit/ef664e1d7eda2ed578419e9efc0248adaa90a094))
-
-## [0.0.1-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.45...v0.0.1-alpha.46) (2022-11-15)
-
-
-### Bug Fixes
-
-* Auto-apply chat tabs on feature reload ([#689](https://github.com/Wynntils/Artemis/issues/689)) ([33f4c75](https://github.com/Wynntils/Artemis/commit/33f4c754a07938d5dcf077fcc104ecbae6cea351))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.46 [skip ci] ([9c2e17a](https://github.com/Wynntils/Artemis/commit/9c2e17a695569fc750c4b6c1ebe7471aa6096e08))
 
