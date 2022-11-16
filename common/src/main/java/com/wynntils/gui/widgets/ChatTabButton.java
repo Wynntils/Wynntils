@@ -31,7 +31,9 @@ public class ChatTabButton extends AbstractButton {
 
         RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
 
-        CustomColor color = ChatTabModel.getFocusedTab() == tab ? CommonColors.GREEN : CommonColors.WHITE;
+        CustomColor color = ChatTabModel.getFocusedTab() == tab
+                ? CommonColors.GREEN
+                : (ChatTabModel.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
