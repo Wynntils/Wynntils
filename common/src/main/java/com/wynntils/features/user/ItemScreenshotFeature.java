@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -20,6 +21,7 @@ import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -104,7 +106,11 @@ public class ItemScreenshotFeature extends UserFeature {
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
         BufferedImage bi = RenderUtils.createScreenshot(fb);
-        RenderUtils.copyImageToClipboard(bi);
+        try {
+            RenderUtils.copyImageToClipboard(bi);
+        } catch (HeadlessException ex) {
+            WynntilsMod.error("Failed to copy image to clipboard", ex);
+        }
 
         McUtils.sendMessageToClient(
                 new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
