@@ -82,7 +82,7 @@ public class PlayerRelationsModel extends Model {
     public static void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.SYSTEM) return;
 
-        String coded = event.getCodedMessage();
+        String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
         if (tryParseFriendMessages(coded)) {
