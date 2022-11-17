@@ -8,6 +8,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -218,7 +219,7 @@ public final class ChatItemModel {
 
     public static Component insertItemComponents(Component message) {
         // no item tooltips to insert
-        if (!ENCODED_PATTERN.matcher(message.getString()).find()) return message;
+        if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
         List<MutableComponent> components =
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
@@ -227,7 +228,7 @@ public final class ChatItemModel {
         MutableComponent temp = new TextComponent("");
 
         for (Component comp : components) {
-            Matcher m = ENCODED_PATTERN.matcher(comp.getString());
+            Matcher m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp));
             if (!m.find()) {
                 Component newComponent = comp.copy();
                 temp.append(newComponent);
@@ -235,7 +236,7 @@ public final class ChatItemModel {
             }
 
             do {
-                String text = comp.getString();
+                String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 GearItemStack item = decodeItem(m.group());
@@ -253,7 +254,7 @@ public final class ChatItemModel {
                 temp.append(itemComponent);
 
                 comp = new TextComponent(text.substring(m.end())).withStyle(style);
-                m = ENCODED_PATTERN.matcher(comp.getString()); // recreate matcher for new substring
+                m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
             } while (m.find()); // search for multiple items in the same message
 
             temp.append(comp); // leftover text after item(s)
