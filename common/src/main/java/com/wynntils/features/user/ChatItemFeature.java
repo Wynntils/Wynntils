@@ -72,7 +72,7 @@ public class ChatItemFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
-        if (!ChatItemModel.chatItemMatcher(message.getString()).find()) return; // no chat items to replace
+        if (!ChatItemModel.chatItemMatcher(e.getCodedMessage()).find()) return; // no chat items to replace
 
         e.setMessage(ChatItemModel.insertItemComponents(message));
     }
