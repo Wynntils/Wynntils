@@ -1,9 +1,21 @@
+## [0.0.1-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.54...v0.0.1-alpha.55) (2022-11-17)
+
+
+### New Features
+
+* Add tier 10 emerald pouch to pouch guide ([#700](https://github.com/Wynntils/Artemis/issues/700)) ([935317d](https://github.com/Wynntils/Artemis/commit/935317df4491e4e77a6fe0b36ddee810f396b0ab))
+
 ## [0.0.1-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.53...v0.0.1-alpha.54) (2022-11-17)
 
 
 ### Bug Fixes
 
 * Fix Figura crash and black config screen ([#698](https://github.com/Wynntils/Artemis/issues/698)) ([348e397](https://github.com/Wynntils/Artemis/commit/348e39718dab10cb7e061d4a724a824b9c991da4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.54 [skip ci] ([ab3b450](https://github.com/Wynntils/Artemis/commit/ab3b45012a13499ed9fee40ba49c933c288708fb))
 
 ## [0.0.1-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.52...v0.0.1-alpha.53) (2022-11-17)
 
@@ -41,17 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.51 [skip ci] ([f8680b3](https://github.com/Wynntils/Artemis/commit/f8680b39b7bbf1824299bb78cc31057e4958fd0c))
-
-## [0.0.1-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.49...v0.0.1-alpha.50) (2022-11-16)
-
-
-### Bug Fixes
-
-* Add correct dependency ([72ce97c](https://github.com/Wynntils/Artemis/commit/72ce97c09a80834626015e53f00425ab88ebacd0))
-* Let the user know about failed item screenshots ([7c8a519](https://github.com/Wynntils/Artemis/commit/7c8a5193c07e6a9fb7717b705836c28d1efbcb0b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.50 [skip ci] ([ababffd](https://github.com/Wynntils/Artemis/commit/ababffd4e9fe78ea02f6603f0e14f9f46eb2f09c))
 

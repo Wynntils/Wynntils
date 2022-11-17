@@ -52,7 +52,7 @@ public class WynntilsEmeraldPouchGuideScreen
         if (parsedItemCache == null) {
             parsedItemCache = new ArrayList<>();
 
-            for (int i = 1; i <= 9; i++) {
+            for (int i = 1; i <= 10; i++) {
                 parsedItemCache.add(new EmeraldPouchItemStack(i));
             }
         }
