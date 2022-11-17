@@ -1,9 +1,21 @@
+## [0.0.1-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.55...v0.0.1-alpha.56) (2022-11-17)
+
+
+### Bug Fixes
+
+* Fix colors disappearing when a message has chat items ([#699](https://github.com/Wynntils/Artemis/issues/699)) ([96bdc33](https://github.com/Wynntils/Artemis/commit/96bdc33648bfbd3d43f0a4012e2959531b576063))
+
 ## [0.0.1-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.54...v0.0.1-alpha.55) (2022-11-17)
 
 
 ### New Features
 
 * Add tier 10 emerald pouch to pouch guide ([#700](https://github.com/Wynntils/Artemis/issues/700)) ([935317d](https://github.com/Wynntils/Artemis/commit/935317df4491e4e77a6fe0b36ddee810f396b0ab))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.55 [skip ci] ([fd29c51](https://github.com/Wynntils/Artemis/commit/fd29c514ea49ebb19bf0768c3aed016c224783f8))
 
 ## [0.0.1-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.53...v0.0.1-alpha.54) (2022-11-17)
 
@@ -41,16 +53,4 @@
 
 * Build ([20f8d67](https://github.com/Wynntils/Artemis/commit/20f8d674bbb0f1a0a80bd187bb195b4e1df4532c))
 * **release:** v0.0.1-alpha.52 [skip ci] ([993e74a](https://github.com/Wynntils/Artemis/commit/993e74a4a577575db04d9434ebcbb75afabc0509))
-
-## [0.0.1-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.50...v0.0.1-alpha.51) (2022-11-16)
-
-
-### New Features
-
-* Make chat tabs with unread messages yellow ([#696](https://github.com/Wynntils/Artemis/issues/696)) ([b833454](https://github.com/Wynntils/Artemis/commit/b8334547f289a466b1b4d91604b5f8e490996da0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.51 [skip ci] ([f8680b3](https://github.com/Wynntils/Artemis/commit/f8680b39b7bbf1824299bb78cc31057e4958fd0c))
 
