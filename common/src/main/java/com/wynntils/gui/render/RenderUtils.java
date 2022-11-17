@@ -1147,7 +1147,14 @@ public final class RenderUtils {
      * Clears the active rendering mask from the screen.
      */
     public static void clearMask() {
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+
+        // Turn off writing to stencil buffer.
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilMask(0x00);
+
+        // Always succeed in the stencil test, no matter what.
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
     private static final class ClipboardImage implements Transferable {
