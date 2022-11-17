@@ -30,7 +30,7 @@
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
   "feature.wynntils.chatItem.name": "Chat Item",
   "feature.wynntils.chatTabs.name": "Chat Tabs",
-  "feature.wynntils.chatTimestamp.formatPattern.description": "String used for formatting the timestamps",
+  "feature.wynntils.chatTimestamp.formatPattern.description": "How should the timestamp look like in chat?",
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
   "feature.wynntils.chatTimestamp.name": "Chat Timestamps",
   "feature.wynntils.commands.name": "Custom Wynntils Command",
