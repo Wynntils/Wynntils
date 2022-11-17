@@ -25,6 +25,8 @@ public class ChatTimestampFeature extends UserFeature {
     @Config
     public String formatPattern = "HH:mm:ss";
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
+
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(ChatModel.class);
@@ -44,8 +46,6 @@ public class ChatTimestampFeature extends UserFeature {
                     .withStyle(ChatFormatting.DARK_RED));
         }
     }
-
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
