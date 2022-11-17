@@ -32,7 +32,7 @@
   "feature.wynntils.chatTabs.name": "Chat Tabs",
   "feature.wynntils.chatTimestamp.formatPattern.description": "How should the timestamp look like in chat?",
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
-  "feature.wynntils.chatTimestamp.invalidFormatMsg": "Invalid timestamp format specified in config! Timestamps will be disabled until a valid format is set",
+  "feature.wynntils.chatTimestamp.invalidFormatMsg": "Invalid timestamp format specified in config! Timestamps will be disabled until a valid format is set.",
   "feature.wynntils.chatTimestamp.name": "Chat Timestamps",
   "feature.wynntils.commands.name": "Custom Wynntils Command",
   "feature.wynntils.connectionProgress.name": "Connection Progress",
