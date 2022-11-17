@@ -18,8 +18,9 @@ Pull Request
 All pull requests are welcome. We'll analyse it and if we determine it should a part of the mod, we'll accept it. Note that the process of a pull request getting merged here is likely more strenuous than legacy. To begin, one pull request could be porting features from legacy.
 
 We welcome all forms of assistance. =)
+<br>
 
-<br>We require you to name your pull request according to the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits</a> specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build. </strong>
+<strong>We require you to name your pull request according to the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits</a> specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build. </strong>
 
 Workspace Setup
 ========
