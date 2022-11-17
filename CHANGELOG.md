@@ -1,9 +1,26 @@
+## [0.0.1-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.51...v0.0.1-alpha.52) (2022-11-17)
+
+
+### New Features
+
+* Add chat timestamps ([#697](https://github.com/Wynntils/Artemis/issues/697)) ([1a0a533](https://github.com/Wynntils/Artemis/commit/1a0a5336b88e80590f99a575c43f4b5e91d2cc4c))
+
+
+### Miscellaneous Chores
+
+* Build ([20f8d67](https://github.com/Wynntils/Artemis/commit/20f8d674bbb0f1a0a80bd187bb195b4e1df4532c))
+
 ## [0.0.1-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.50...v0.0.1-alpha.51) (2022-11-16)
 
 
 ### New Features
 
 * Make chat tabs with unread messages yellow ([#696](https://github.com/Wynntils/Artemis/issues/696)) ([b833454](https://github.com/Wynntils/Artemis/commit/b8334547f289a466b1b4d91604b5f8e490996da0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.51 [skip ci] ([f8680b3](https://github.com/Wynntils/Artemis/commit/f8680b39b7bbf1824299bb78cc31057e4958fd0c))
 
 ## [0.0.1-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.49...v0.0.1-alpha.50) (2022-11-16)
 
@@ -41,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.48 [skip ci] ([06cad19](https://github.com/Wynntils/Artemis/commit/06cad19d97798ce058567ad802e1d0b03353badf))
-
-## [0.0.1-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.46...v0.0.1-alpha.47) (2022-11-15)
-
-
-### Bug Fixes
-
-* fix chat tabs loading from config ([#690](https://github.com/Wynntils/Artemis/issues/690)) ([6d4fe44](https://github.com/Wynntils/Artemis/commit/6d4fe44817717189b3a94f4d0509003494429845))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.47 [skip ci] ([ef664e1](https://github.com/Wynntils/Artemis/commit/ef664e1d7eda2ed578419e9efc0248adaa90a094))
 
