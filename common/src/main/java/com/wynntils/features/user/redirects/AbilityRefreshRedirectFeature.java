@@ -29,11 +29,11 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = REFRESH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getCodedMessage()));
+        Matcher matcher = REFRESH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
         if (matcher.matches()) {
             event.setCanceled(true);
 
-            NotificationManager.queueMessage(event.getMessage());
+            NotificationManager.queueMessage(event.getOriginalMessage());
         }
     }
 }

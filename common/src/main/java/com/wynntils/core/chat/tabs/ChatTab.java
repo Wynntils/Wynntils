@@ -33,7 +33,7 @@ public class ChatTab {
         }
 
         if (customRegexString != null
-                && !getCustomRegex().matcher(event.getCodedMessage()).matches()) {
+                && !getCustomRegex().matcher(event.getOriginalCodedMessage()).matches()) {
             return false;
         }
 
