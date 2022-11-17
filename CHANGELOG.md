@@ -1,9 +1,21 @@
+## [0.0.1-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.53...v0.0.1-alpha.54) (2022-11-17)
+
+
+### Bug Fixes
+
+* Fix Figura crash and black config screen ([#698](https://github.com/Wynntils/Artemis/issues/698)) ([348e397](https://github.com/Wynntils/Artemis/commit/348e39718dab10cb7e061d4a724a824b9c991da4))
+
 ## [0.0.1-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.52...v0.0.1-alpha.53) (2022-11-17)
 
 
 ### Bug Fixes
 
 * Do not render lootruns twice a frame ([7488aa2](https://github.com/Wynntils/Artemis/commit/7488aa25f142959febf5ca489ee078c610b3971f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.53 [skip ci] ([cd5cd8d](https://github.com/Wynntils/Artemis/commit/cd5cd8d945805c39487f8cff1c25bdd5198e9868))
 
 ## [0.0.1-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.51...v0.0.1-alpha.52) (2022-11-17)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.50 [skip ci] ([ababffd](https://github.com/Wynntils/Artemis/commit/ababffd4e9fe78ea02f6603f0e14f9f46eb2f09c))
-
-## [0.0.1-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.48...v0.0.1-alpha.49) (2022-11-16)
-
-
-### Bug Fixes
-
-* Fix chat history resetting ([#693](https://github.com/Wynntils/Artemis/issues/693)) ([f2f8b4b](https://github.com/Wynntils/Artemis/commit/f2f8b4b9a7c89984c71f29c3218f8caa2acf1ed7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.49 [skip ci] ([b04fbca](https://github.com/Wynntils/Artemis/commit/b04fbcacb39312edc4a0619ab64b5e29faf7415d))
 
