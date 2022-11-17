@@ -24,7 +24,8 @@ public class ChatTimestampFeature extends UserFeature {
     public void onChat(ChatMessageReceivedEvent event) {
         Component message = event.getMessage();
 
-        // use the user specified formatter and if that formatter fails for whatever reason handle it as gracefully as we can
+        // use the user specified formatter and if that formatter fails for whatever reason handle it as gracefully as
+        // we can
         MutableComponent timestamp;
         try {
             LocalDateTime date = LocalDateTime.now();
