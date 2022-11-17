@@ -1,3 +1,10 @@
+## [0.0.1-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.52...v0.0.1-alpha.53) (2022-11-17)
+
+
+### Bug Fixes
+
+* Do not render lootruns twice a frame ([7488aa2](https://github.com/Wynntils/Artemis/commit/7488aa25f142959febf5ca489ee078c610b3971f))
+
 ## [0.0.1-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.51...v0.0.1-alpha.52) (2022-11-17)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * Build ([20f8d67](https://github.com/Wynntils/Artemis/commit/20f8d674bbb0f1a0a80bd187bb195b4e1df4532c))
+* **release:** v0.0.1-alpha.52 [skip ci] ([993e74a](https://github.com/Wynntils/Artemis/commit/993e74a4a577575db04d9434ebcbb75afabc0509))
 
 ## [0.0.1-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.50...v0.0.1-alpha.51) (2022-11-16)
 
@@ -46,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.49 [skip ci] ([b04fbca](https://github.com/Wynntils/Artemis/commit/b04fbcacb39312edc4a0619ab64b5e29faf7415d))
-
-## [0.0.1-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.47...v0.0.1-alpha.48) (2022-11-16)
-
-
-### Bug Fixes
-
-* Fix chat items not parsing + feature crash when screenshot copy fails ([#692](https://github.com/Wynntils/Artemis/issues/692)) ([e062909](https://github.com/Wynntils/Artemis/commit/e062909a21a114c596397673bdd5f53332a2c102))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.48 [skip ci] ([06cad19](https://github.com/Wynntils/Artemis/commit/06cad19d97798ce058567ad802e1d0b03353badf))
 
