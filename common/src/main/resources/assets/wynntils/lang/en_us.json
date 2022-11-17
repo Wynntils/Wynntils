@@ -31,7 +31,7 @@
   "feature.wynntils.chatItem.name": "Chat Item",
   "feature.wynntils.chatTabs.name": "Chat Tabs",
   "feature.wynntils.chatTimestamp.formatPattern.description": "String used for formatting the timestamps",
-  "feature.wynntils.chatTimestamp.formatPattern.name": "Time formatting string",
+  "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
   "feature.wynntils.chatTimestamp.name": "Chat Timestamps",
   "feature.wynntils.commands.name": "Custom Wynntils Command",
   "feature.wynntils.connectionProgress.name": "Connection Progress",
