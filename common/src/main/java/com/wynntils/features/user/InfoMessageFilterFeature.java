@@ -110,8 +110,8 @@ public class InfoMessageFilterFeature extends UserFeature {
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        String msg = e.getCodedMessage();
-        String uncoloredMsg = ComponentUtils.stripFormatting(e.getCodedMessage());
+        String msg = e.getOriginalCodedMessage();
+        String uncoloredMsg = ComponentUtils.stripFormatting(msg);
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.NORMAL) {
