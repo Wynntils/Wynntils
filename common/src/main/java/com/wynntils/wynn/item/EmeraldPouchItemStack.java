@@ -71,6 +71,10 @@ public class EmeraldPouchItemStack extends WynnItemStack {
             }
         }
 
+        if (tier >= 10) {
+            rows = 6;
+        }
+
         if (tier >= 7) {
             totalString = tier - 6 + "stx";
         } else if (tier >= 4) {
