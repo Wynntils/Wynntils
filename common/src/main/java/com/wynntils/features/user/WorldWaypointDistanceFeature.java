@@ -39,8 +39,12 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     @Config
     public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NONE;
 
+    @Config
+    public int maxWaypointTextDistance = 5000;
+
     private Vector3d normalizedDeviceCoordinates = null;
     private String distanceText;
+    private double distance;
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -67,7 +71,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
-        double distance = Math.sqrt(squaredDistance);
+        distance = Math.sqrt(squaredDistance);
         int maxDistance = McUtils.mc().options.renderDistance * 16;
 
         this.distanceText = Math.round((float) distance) + "m";
@@ -84,7 +88,10 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        if (CompassModel.getCompassLocation().isEmpty() || normalizedDeviceCoordinates == null || isOnScreen()) return;
+        if (CompassModel.getCompassLocation().isEmpty()
+                || normalizedDeviceCoordinates == null
+                || isOnScreen()
+                || (maxWaypointTextDistance != 0 && maxWaypointTextDistance < distance)) return;
 
         Window window = event.getWindow();
 
