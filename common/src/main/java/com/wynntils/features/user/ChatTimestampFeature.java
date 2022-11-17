@@ -37,9 +37,7 @@ public class ChatTimestampFeature extends UserFeature {
     protected void onConfigUpdate(ConfigHolder configHolder) {
         // Try to set the new format string and if it fails revert to the default
         try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(formatPattern);
-
-            formatter = fmt;
+            formatter = DateTimeFormatter.ofPattern(formatPattern);
         } catch (Exception e) {
             formatter = null;
 
