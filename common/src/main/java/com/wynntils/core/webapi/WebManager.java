@@ -26,8 +26,8 @@ import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
+import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -72,8 +72,7 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
-
-    private static List<DiscoveryProfile> discoveries = new ArrayList<>();
+    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static String currentSplash = "";
 
@@ -309,8 +308,9 @@ public final class WebManager extends CoreManager {
                 .handleJsonArray(discoveriesJson -> {
                     Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-                    discoveries = gson.fromJson(discoveriesJson, type);
-                    WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Api());
+                    List<DiscoveryProfile> discoveries = gson.fromJson(discoveriesJson, type);
+                    discoveryInfoList =
+                            discoveries.stream().map(DiscoveryInfo::new).toList();
                     return true;
                 })
                 .build());
@@ -383,8 +383,8 @@ public final class WebManager extends CoreManager {
         return ingredientHeadTextures;
     }
 
-    public static List<DiscoveryProfile> getDiscoveries() {
-        return discoveries;
+    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+        return discoveryInfoList;
     }
 
     public static String getUserAgent() {
