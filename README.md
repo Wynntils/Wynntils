@@ -42,5 +42,5 @@ By default, this is `C:\Users\<your username>\.gradle\gradle.properties` on Wind
 License
 ========
 
-Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/development/LICENSE)<br>
+Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/alpha/LICENSE)<br>
 Unless specified otherwise, All the assets **are over Wynntils domain © Wynntils**.
