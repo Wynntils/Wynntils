@@ -42,8 +42,6 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
             new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    private final List<DiscoveryInfo> webDiscoveryInfoCache = new ArrayList<>();
-
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -59,18 +57,10 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
-
-        // Load web cache when we create this instance, so we don't have to force an api update while the screen is
-        // already open
-        reloadWebDiscoveryCache();
     }
 
     @SubscribeEvent
     public void onDiscoveryUpdate(DiscoveriesUpdatedEvent event) {
-        if (event instanceof DiscoveriesUpdatedEvent.Api) {
-            reloadWebDiscoveryCache();
-        }
-
         if (McUtils.mc().screen == this) {
             this.reloadElements();
         }
@@ -354,7 +344,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        webDiscoveryInfoCache.stream()
+                        WebManager.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
@@ -376,14 +366,5 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     private void reloadDiscoveries() {
         WebManager.updateDiscoveries();
         DiscoveryManager.queryDiscoveries();
-
-        // Try force reload even if the web request failed
-        reloadWebDiscoveryCache();
-    }
-
-    private void reloadWebDiscoveryCache() {
-        webDiscoveryInfoCache.clear();
-        webDiscoveryInfoCache.addAll(
-                WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
     }
 }

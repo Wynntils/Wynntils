@@ -10,6 +10,4 @@ public abstract class DiscoveriesUpdatedEvent extends Event {
     public static class Normal extends DiscoveriesUpdatedEvent {}
 
     public static class Secret extends DiscoveriesUpdatedEvent {}
-
-    public static class Api extends DiscoveriesUpdatedEvent {}
 }
