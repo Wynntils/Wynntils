@@ -253,7 +253,9 @@ public final class ChatItemModel {
                 Component itemComponent = createItemComponent(item);
                 temp.append(itemComponent);
 
-                comp = new TextComponent(text.substring(m.end())).withStyle(style);
+                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                                + text.substring(m.end()))
+                        .withStyle(style);
                 m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
             } while (m.find()); // search for multiple items in the same message
 

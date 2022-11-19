@@ -242,7 +242,8 @@ public final class FontRenderer {
         String lastPart = "";
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part = getLastPartCodes(lastPart) + parts.get(i).getString();
+            String part =
+                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString();
             lastPart = part;
             renderText(
                     poseStack,
@@ -267,31 +268,6 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
         renderText(poseStack, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
-    }
-
-    private String getLastPartCodes(String lastPart) {
-        if (!lastPart.contains("§")) return "";
-
-        String lastPartCodes = "";
-        int index;
-        while ((index = lastPart.lastIndexOf('§')) != -1) {
-            if (index >= lastPart.length() - 1) {
-                // trailing §, no format code, skip it
-                lastPart = lastPart.substring(0, index);
-                continue;
-            }
-            String thisCode = lastPart.substring(index, index + 2);
-            if (thisCode.charAt(1) == 'r') {
-                // it's a reset code, we can stop looking
-                break;
-            }
-            // prepend to codes since we're going backwards
-            lastPartCodes = thisCode + lastPartCodes;
-
-            lastPart = lastPart.substring(0, index);
-        }
-
-        return lastPartCodes;
     }
 
     public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
