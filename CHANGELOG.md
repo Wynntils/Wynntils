@@ -1,9 +1,21 @@
+## [0.0.1-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.57...v0.0.1-alpha.58) (2022-11-19)
+
+
+### Bug Fixes
+
+* Do not scan quest book on entering world ([#706](https://github.com/Wynntils/Artemis/issues/706)) ([7e8cd8c](https://github.com/Wynntils/Artemis/commit/7e8cd8c119a0ceaa62f382a9721422144c5e672b))
+
 ## [0.0.1-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.56...v0.0.1-alpha.57) (2022-11-18)
 
 
 ### Bug Fixes
 
 * Fix discovery screen api cache issues ([#703](https://github.com/Wynntils/Artemis/issues/703)) ([14d410f](https://github.com/Wynntils/Artemis/commit/14d410f517c91fd73a9445cea08a0fb3b15acc47))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.57 [skip ci] ([d338834](https://github.com/Wynntils/Artemis/commit/d33883423f0bd5264c41b497ae93758e02e68daa))
 
 ## [0.0.1-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.55...v0.0.1-alpha.56) (2022-11-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.54 [skip ci] ([ab3b450](https://github.com/Wynntils/Artemis/commit/ab3b45012a13499ed9fee40ba49c933c288708fb))
-
-## [0.0.1-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.52...v0.0.1-alpha.53) (2022-11-17)
-
-
-### Bug Fixes
-
-* Do not render lootruns twice a frame ([7488aa2](https://github.com/Wynntils/Artemis/commit/7488aa25f142959febf5ca489ee078c610b3971f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.53 [skip ci] ([cd5cd8d](https://github.com/Wynntils/Artemis/commit/cd5cd8d945805c39487f8cff1c25bdd5198e9868))
 
