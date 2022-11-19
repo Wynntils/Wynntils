@@ -1,9 +1,21 @@
+## [0.0.1-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.59...v0.0.1-alpha.60) (2022-11-19)
+
+
+### Bug Fixes
+
+* Fix chat tabs resetting on config reload ([#705](https://github.com/Wynntils/Artemis/issues/705)) ([811bda2](https://github.com/Wynntils/Artemis/commit/811bda2acad77b356ed98b0c7fa37a5cb2b8ac18))
+
 ## [0.0.1-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.58...v0.0.1-alpha.59) (2022-11-19)
 
 
 ### New Features
 
 * Add /bombbell command ([#704](https://github.com/Wynntils/Artemis/issues/704)) ([2e43dbd](https://github.com/Wynntils/Artemis/commit/2e43dbdb43b500d1d944bd67c7869d665798a4d9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.59 [skip ci] ([fc7d743](https://github.com/Wynntils/Artemis/commit/fc7d743b4456edc259240d133138ffc54f48c881))
 
 ## [0.0.1-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.57...v0.0.1-alpha.58) (2022-11-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.56 [skip ci] ([6af1bf0](https://github.com/Wynntils/Artemis/commit/6af1bf0905f30b5d870d6e9905ead1eada92f3a9))
-
-## [0.0.1-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.54...v0.0.1-alpha.55) (2022-11-17)
-
-
-### New Features
-
-* Add tier 10 emerald pouch to pouch guide ([#700](https://github.com/Wynntils/Artemis/issues/700)) ([935317d](https://github.com/Wynntils/Artemis/commit/935317df4491e4e77a6fe0b36ddee810f396b0ab))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.55 [skip ci] ([fd29c51](https://github.com/Wynntils/Artemis/commit/fd29c514ea49ebb19bf0768c3aed016c224783f8))
 
