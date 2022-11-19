@@ -65,7 +65,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             165,
-                            -5,
+                            5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),

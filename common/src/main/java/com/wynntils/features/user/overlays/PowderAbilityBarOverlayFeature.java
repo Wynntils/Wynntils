@@ -57,7 +57,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         protected PowderAbilityBarOverlay() {
             super(
                     new OverlayPosition(
-                            -30,
+                            30,
                             150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,

@@ -82,7 +82,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             5,
-                            -5,
+                            5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),

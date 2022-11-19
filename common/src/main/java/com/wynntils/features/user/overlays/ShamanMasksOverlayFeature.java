@@ -57,7 +57,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
         protected ShamanMaskOverlay() {
             super(
                     new OverlayPosition(
-                            -60,
+                            60,
                             150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,

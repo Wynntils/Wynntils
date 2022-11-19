@@ -86,35 +86,35 @@ public class OverlayPosition {
 
     public static OverlayPosition getBestPositionFor(
             Overlay overlay, float oldRenderX, float oldRenderY, float offsetX, float offsetY) {
-        Vec2 topLeftOfOverlay = new Vec2(overlay.getRenderX(), overlay.getRenderY());
+        Vec2 referencePoint = new Vec2(
+                overlay.getRenderX() + overlay.getWidth() / 2f, overlay.getRenderY() + overlay.getHeight() / 2f);
 
         // 1. Get the best section (section with the top left point of overlay)
         AnchorSection section = Arrays.stream(AnchorSection.values())
                 .filter(anchorSection ->
-                        OverlayManager.getSection(anchorSection).overlaps(topLeftOfOverlay.x, topLeftOfOverlay.y))
+                        OverlayManager.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
                 .findAny()
                 .orElse(AnchorSection.Middle);
+
         SectionCoordinates sectionCoordinates = OverlayManager.getSection(section);
 
         // 2. Calculate the best alignment inside the section
-        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
+        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
 
-        float distanceToCornerHorizontally =
-                Math.abs((sectionCoordinates.x1() + sectionCoordinates.x2()) / 2f - topLeftOfOverlay.x);
-        if (Math.abs(sectionCoordinates.x1() - topLeftOfOverlay.x) < distanceToCornerHorizontally) {
+        float horizontalChunkWidth = (sectionCoordinates.x2() - sectionCoordinates.x1()) / 3f;
+        if (referencePoint.x < sectionCoordinates.x1() + horizontalChunkWidth) {
             horizontalAlignment = HorizontalAlignment.Left;
-        } else if (Math.abs(sectionCoordinates.x2() - topLeftOfOverlay.x) < distanceToCornerHorizontally) {
-            horizontalAlignment = HorizontalAlignment.Right;
+        } else if (referencePoint.x < sectionCoordinates.x1() + horizontalChunkWidth * 2) {
+            horizontalAlignment = HorizontalAlignment.Center;
         }
 
-        VerticalAlignment verticalAlignment = VerticalAlignment.Middle;
+        VerticalAlignment verticalAlignment = VerticalAlignment.Bottom;
 
-        float distanceToCornerVertically =
-                Math.abs((sectionCoordinates.y1() + sectionCoordinates.y2()) / 2f - topLeftOfOverlay.y);
-        if (Math.abs(sectionCoordinates.y1() - topLeftOfOverlay.y) < distanceToCornerVertically) {
+        float verticalChunkHeight = (sectionCoordinates.y2() - sectionCoordinates.y1()) / 3f;
+        if (referencePoint.y < sectionCoordinates.y1() + verticalChunkHeight) {
             verticalAlignment = VerticalAlignment.Top;
-        } else if (Math.abs(sectionCoordinates.y2() - topLeftOfOverlay.y) < distanceToCornerVertically) {
-            verticalAlignment = VerticalAlignment.Bottom;
+        } else if (referencePoint.y < sectionCoordinates.y1() + verticalChunkHeight * 2) {
+            verticalAlignment = VerticalAlignment.Middle;
         }
 
         // 3. Calculate render positions for new alignment
@@ -125,9 +125,17 @@ public class OverlayPosition {
         float renderY = overlay.getRenderY(newOverlayPositionTemp);
 
         // 4. Calculate the alignment offsets to match the current render position, but factor in argument offsets
+        float newVerticalOffset = oldRenderY - renderY + offsetY;
+        float newHorizontalOffset = oldRenderX - renderX + offsetX;
         return new OverlayPosition(
-                oldRenderY - renderY + offsetY,
-                oldRenderX - renderX + offsetX,
+                switch (verticalAlignment) {
+                    case Top, Middle -> newVerticalOffset;
+                    case Bottom -> -newVerticalOffset;
+                },
+                switch (horizontalAlignment) {
+                    case Left, Center -> newHorizontalOffset;
+                    case Right -> -newHorizontalOffset;
+                },
                 verticalAlignment,
                 horizontalAlignment,
                 section);
