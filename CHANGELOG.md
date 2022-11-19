@@ -1,9 +1,21 @@
+## [0.0.1-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.56...v0.0.1-alpha.57) (2022-11-18)
+
+
+### Bug Fixes
+
+* Fix discovery screen api cache issues ([#703](https://github.com/Wynntils/Artemis/issues/703)) ([14d410f](https://github.com/Wynntils/Artemis/commit/14d410f517c91fd73a9445cea08a0fb3b15acc47))
+
 ## [0.0.1-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.55...v0.0.1-alpha.56) (2022-11-17)
 
 
 ### Bug Fixes
 
 * Fix colors disappearing when a message has chat items ([#699](https://github.com/Wynntils/Artemis/issues/699)) ([96bdc33](https://github.com/Wynntils/Artemis/commit/96bdc33648bfbd3d43f0a4012e2959531b576063))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.56 [skip ci] ([6af1bf0](https://github.com/Wynntils/Artemis/commit/6af1bf0905f30b5d870d6e9905ead1eada92f3a9))
 
 ## [0.0.1-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.54...v0.0.1-alpha.55) (2022-11-17)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.53 [skip ci] ([cd5cd8d](https://github.com/Wynntils/Artemis/commit/cd5cd8d945805c39487f8cff1c25bdd5198e9868))
-
-## [0.0.1-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.51...v0.0.1-alpha.52) (2022-11-17)
-
-
-### New Features
-
-* Add chat timestamps ([#697](https://github.com/Wynntils/Artemis/issues/697)) ([1a0a533](https://github.com/Wynntils/Artemis/commit/1a0a5336b88e80590f99a575c43f4b5e91d2cc4c))
-
-
-### Miscellaneous Chores
-
-* Build ([20f8d67](https://github.com/Wynntils/Artemis/commit/20f8d674bbb0f1a0a80bd187bb195b4e1df4532c))
-* **release:** v0.0.1-alpha.52 [skip ci] ([993e74a](https://github.com/Wynntils/Artemis/commit/993e74a4a577575db04d9434ebcbb75afabc0509))
 
