@@ -29,14 +29,4 @@ public abstract class FixedOverlaySize extends OverlaySize {
     public float getHeight() {
         return (float) (this.height / McUtils.guiScale());
     }
-
-    @Override
-    public float getRenderedWidth() {
-        return getWidth();
-    }
-
-    @Override
-    public float getRenderedHeight() {
-        return getHeight();
-    }
 }

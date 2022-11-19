@@ -141,14 +141,6 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return this.size.getHeight();
     }
 
-    public float getRenderedWidth() {
-        return this.size.getRenderedWidth();
-    }
-
-    public float getRenderedHeight() {
-        return this.size.getRenderedHeight();
-    }
-
     public OverlaySize getSize() {
         return size;
     }

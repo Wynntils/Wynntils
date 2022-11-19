@@ -246,8 +246,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                                 this.getRenderX() + 5,
                                 this.getRenderY() + 20 + textHeight,
                                 renderTaskList,
-                                (this.getRenderedWidth() - 15) / (float) McUtils.guiScale(),
-                                (this.getRenderedHeight() - 15) / (float) McUtils.guiScale(),
+                                this.getWidth() - 30,
+                                this.getHeight() - 30,
                                 this.getRenderHorizontalAlignment(),
                                 this.getRenderVerticalAlignment());
             }

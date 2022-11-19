@@ -42,10 +42,6 @@ public abstract class OverlaySize {
 
     public abstract float getHeight();
 
-    public abstract float getRenderedWidth();
-
-    public abstract float getRenderedHeight();
-
     public void setWidth(float newWidth) {
         this.width = Math.max(newWidth, MINIMUM_WIDTH);
     }
