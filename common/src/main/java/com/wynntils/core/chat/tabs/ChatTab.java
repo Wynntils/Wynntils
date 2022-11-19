@@ -7,6 +7,7 @@ package com.wynntils.core.chat.tabs;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -64,5 +65,22 @@ public class ChatTab {
         return customRegex == null && customRegexString != null
                 ? customRegex = Pattern.compile(customRegexString, Pattern.DOTALL)
                 : customRegex;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        ChatTab chatTab = (ChatTab) other;
+        return consuming == chatTab.consuming
+                && Objects.equals(name, chatTab.name)
+                && Objects.equals(filteredTypes, chatTab.filteredTypes)
+                && Objects.equals(customRegexString, chatTab.customRegexString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, consuming, filteredTypes, customRegexString);
     }
 }
