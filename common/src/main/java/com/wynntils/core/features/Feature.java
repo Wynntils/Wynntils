@@ -160,6 +160,7 @@ public abstract class Feature extends AbstractConfigurable
                 McUtils.mc().options.load();
             }
         }
+
         postEnable();
     }
 

@@ -197,7 +197,7 @@ public final class FeatureRegistry {
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
-        // but we cannot move it earlier to the init process because of I18n\
+        // but we cannot move it earlier to the init process because of I18n
         synchronized (McUtils.options()) {
             McUtils.mc().options.load();
         }
