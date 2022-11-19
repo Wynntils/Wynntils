@@ -168,7 +168,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return switch (position.getHorizontalAlignment()) {
             case Left -> section.x1() + position.getHorizontalOffset();
             case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
-            case Right -> section.x2() - position.getHorizontalOffset() - this.getWidth();
+            case Right -> section.x2() + position.getHorizontalOffset() - this.getWidth();
         };
     }
 
@@ -177,7 +177,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return switch (position.getVerticalAlignment()) {
             case Top -> section.y1() + position.getVerticalOffset();
             case Middle -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
-            case Bottom -> section.y2() - position.getVerticalOffset() - this.getHeight();
+            case Bottom -> section.y2() + position.getVerticalOffset() - this.getHeight();
         };
     }
 

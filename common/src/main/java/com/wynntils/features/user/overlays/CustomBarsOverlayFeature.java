@@ -190,7 +190,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected HealthBarOverlay() {
             this(
                     new OverlayPosition(
-                            30,
+                            -30,
                             -52,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -245,7 +245,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected BloodPoolBarOverlay() {
             super(
                     new OverlayPosition(
-                            30,
+                            -30,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -276,7 +276,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected ManaBarOverlay() {
             this(
                     new OverlayPosition(
-                            30,
+                            -30,
                             52,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -332,7 +332,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected ManaBankBarOverlay() {
             super(
                     new OverlayPosition(
-                            30,
+                            -30,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -361,7 +361,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected AwakenedProgressBarOverlay() {
             super(
                     new OverlayPosition(
-                            70,
+                            -70,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -390,7 +390,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected FocusBarOverlay() {
             super(
                     new OverlayPosition(
-                            30,
+                            -30,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
@@ -420,7 +420,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected CorruptedBarOverlay() {
             super(
                     new OverlayPosition(
-                            70,
+                            -70,
                             -150,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,

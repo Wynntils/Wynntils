@@ -125,17 +125,9 @@ public class OverlayPosition {
         float renderY = overlay.getRenderY(newOverlayPositionTemp);
 
         // 4. Calculate the alignment offsets to match the current render position, but factor in argument offsets
-        float newVerticalOffset = oldRenderY - renderY + offsetY;
-        float newHorizontalOffset = oldRenderX - renderX + offsetX;
         return new OverlayPosition(
-                switch (verticalAlignment) {
-                    case Top, Middle -> newVerticalOffset;
-                    case Bottom -> -newVerticalOffset;
-                },
-                switch (horizontalAlignment) {
-                    case Left, Center -> newHorizontalOffset;
-                    case Right -> -newHorizontalOffset;
-                },
+                oldRenderY - renderY + offsetY,
+                oldRenderX - renderX + offsetX,
                 verticalAlignment,
                 horizontalAlignment,
                 section);

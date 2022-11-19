@@ -93,7 +93,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             -20,
-                            5,
+                            -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
