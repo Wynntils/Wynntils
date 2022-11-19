@@ -9,6 +9,7 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.wynntils.commands.BombBellCommand;
 import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
@@ -53,6 +54,7 @@ public final class ClientCommandManager extends CoreManager {
     }
 
     public static void init() {
+        registerCommand(new BombBellCommand());
         registerCommand(new CompassCommand());
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());

@@ -1,3 +1,51 @@
+## [0.0.1-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.60...v0.0.1-alpha.61) (2022-11-19)
+
+
+### Bug Fixes
+
+* Fix chat items resetting text colors after they appear ([#710](https://github.com/Wynntils/Artemis/issues/710)) ([072b0c9](https://github.com/Wynntils/Artemis/commit/072b0c964de131064a32dae1509ca0a6cc4cbacc))
+
+
+### New Features
+
+* Support overflowing health and mana in bars ([#707](https://github.com/Wynntils/Artemis/issues/707)) ([d4a1d19](https://github.com/Wynntils/Artemis/commit/d4a1d19d3a0033d07fc0da0223515a188ea053dd))
+
+## [0.0.1-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.59...v0.0.1-alpha.60) (2022-11-19)
+
+
+### Bug Fixes
+
+* Fix chat tabs resetting on config reload ([#705](https://github.com/Wynntils/Artemis/issues/705)) ([811bda2](https://github.com/Wynntils/Artemis/commit/811bda2acad77b356ed98b0c7fa37a5cb2b8ac18))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.60 [skip ci] ([7cff713](https://github.com/Wynntils/Artemis/commit/7cff71325a60b9fc731b1a46e3213e23b34f5ffd))
+
+## [0.0.1-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.58...v0.0.1-alpha.59) (2022-11-19)
+
+
+### New Features
+
+* Add /bombbell command ([#704](https://github.com/Wynntils/Artemis/issues/704)) ([2e43dbd](https://github.com/Wynntils/Artemis/commit/2e43dbdb43b500d1d944bd67c7869d665798a4d9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.59 [skip ci] ([fc7d743](https://github.com/Wynntils/Artemis/commit/fc7d743b4456edc259240d133138ffc54f48c881))
+
+## [0.0.1-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.57...v0.0.1-alpha.58) (2022-11-19)
+
+
+### Bug Fixes
+
+* Do not scan quest book on entering world ([#706](https://github.com/Wynntils/Artemis/issues/706)) ([7e8cd8c](https://github.com/Wynntils/Artemis/commit/7e8cd8c119a0ceaa62f382a9721422144c5e672b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.58 [skip ci] ([b11bd13](https://github.com/Wynntils/Artemis/commit/b11bd139efc8dc51b710d497bbaba2c94dccc371))
+
 ## [0.0.1-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.56...v0.0.1-alpha.57) (2022-11-18)
 
 
@@ -5,51 +53,8 @@
 
 * Fix discovery screen api cache issues ([#703](https://github.com/Wynntils/Artemis/issues/703)) ([14d410f](https://github.com/Wynntils/Artemis/commit/14d410f517c91fd73a9445cea08a0fb3b15acc47))
 
-## [0.0.1-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.55...v0.0.1-alpha.56) (2022-11-17)
-
-
-### Bug Fixes
-
-* Fix colors disappearing when a message has chat items ([#699](https://github.com/Wynntils/Artemis/issues/699)) ([96bdc33](https://github.com/Wynntils/Artemis/commit/96bdc33648bfbd3d43f0a4012e2959531b576063))
-
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.56 [skip ci] ([6af1bf0](https://github.com/Wynntils/Artemis/commit/6af1bf0905f30b5d870d6e9905ead1eada92f3a9))
-
-## [0.0.1-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.54...v0.0.1-alpha.55) (2022-11-17)
-
-
-### New Features
-
-* Add tier 10 emerald pouch to pouch guide ([#700](https://github.com/Wynntils/Artemis/issues/700)) ([935317d](https://github.com/Wynntils/Artemis/commit/935317df4491e4e77a6fe0b36ddee810f396b0ab))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.55 [skip ci] ([fd29c51](https://github.com/Wynntils/Artemis/commit/fd29c514ea49ebb19bf0768c3aed016c224783f8))
-
-## [0.0.1-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.53...v0.0.1-alpha.54) (2022-11-17)
-
-
-### Bug Fixes
-
-* Fix Figura crash and black config screen ([#698](https://github.com/Wynntils/Artemis/issues/698)) ([348e397](https://github.com/Wynntils/Artemis/commit/348e39718dab10cb7e061d4a724a824b9c991da4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.54 [skip ci] ([ab3b450](https://github.com/Wynntils/Artemis/commit/ab3b45012a13499ed9fee40ba49c933c288708fb))
-
-## [0.0.1-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.52...v0.0.1-alpha.53) (2022-11-17)
-
-
-### Bug Fixes
-
-* Do not render lootruns twice a frame ([7488aa2](https://github.com/Wynntils/Artemis/commit/7488aa25f142959febf5ca489ee078c610b3971f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.53 [skip ci] ([cd5cd8d](https://github.com/Wynntils/Artemis/commit/cd5cd8d945805c39487f8cff1c25bdd5198e9868))
+* **release:** v0.0.1-alpha.57 [skip ci] ([d338834](https://github.com/Wynntils/Artemis/commit/d33883423f0bd5264c41b497ae93758e02e68daa))
 
