@@ -586,7 +586,7 @@ public final class LootrunModel {
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
                     LootrunUncompiled uncompiled = readJson(file, json);
                     lootruns.add(compile(uncompiled, false));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     WynntilsMod.warn("Could not parse lootrun file.", e);
                 }
             }
@@ -608,7 +608,7 @@ public final class LootrunModel {
                 LootrunFeature.INSTANCE.enable();
                 file.close();
                 return true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 WynntilsMod.error("Error when trying to load lootrun file.", e);
                 return false;
             }
