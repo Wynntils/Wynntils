@@ -227,8 +227,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
             if (progress > 1) { // overflowing health
-                CustomColor yellow = CommonColors.YELLOW;
-
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
                 int textureY1 = healthTexture.getTextureY1();
