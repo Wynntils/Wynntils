@@ -45,8 +45,7 @@ public class BombBellCommand extends CommandBase {
         for (BombInfo bomb : BombBellModel.getBombBells()) {
             response.append(new TextComponent("\n" + bomb.bomb().getName())
                             .withStyle(ChatFormatting.WHITE)
-                            .append(" on ")
-                            .withStyle(ChatFormatting.GRAY)
+                            .append(new TextComponent(" on ").withStyle(ChatFormatting.GRAY))
                             .append(new TextComponent(bomb.server()).withStyle(ChatFormatting.WHITE)))
                     .append(new TextComponent(" for: ")
                             .withStyle(ChatFormatting.GRAY)
