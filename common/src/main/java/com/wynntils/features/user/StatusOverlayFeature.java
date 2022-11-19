@@ -57,7 +57,7 @@ public class StatusOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             55,
-                            -5,
+                            5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),

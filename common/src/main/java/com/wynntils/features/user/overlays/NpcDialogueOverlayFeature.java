@@ -149,9 +149,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             0,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.Middle),
-                    new GuiScaledOverlaySize(200, 150),
-                    HorizontalAlignment.Left,
+                            OverlayPosition.AnchorSection.BottomMiddle),
+                    new GuiScaledOverlaySize(400, 50),
+                    HorizontalAlignment.Center,
                     VerticalAlignment.Middle);
             updateTextRenderSettings();
         }
