@@ -10,6 +10,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.ChatType;
@@ -60,13 +61,18 @@ public class ChatTabModel extends Model {
     }
 
     public static void setFocusedTab(ChatTab focused) {
+        if (Objects.equals(focusedTab, focused)) {
+            // do not create new chat component if we are already focused on the tab
+            return;
+        }
+
         focusedTab = focused;
 
         if (focusedTab == null) {
             McUtils.mc().gui.chat = new ChatComponent(McUtils.mc());
         } else {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
-            unreadMessages.put(focused, false);
+            unreadMessages.put(focusedTab, false);
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
         }
     }
