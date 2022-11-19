@@ -769,7 +769,7 @@ public final class RenderUtils {
                 progress);
     }
 
-    private static void drawProgressBarForeground(
+    public static void drawProgressBarForeground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -888,7 +888,7 @@ public final class RenderUtils {
         BufferUploader.end(bufferBuilder);
     }
 
-    private static void drawProgressBarBackground(
+    public static void drawProgressBarBackground(
             PoseStack poseStack,
             Texture texture,
             float x1,
