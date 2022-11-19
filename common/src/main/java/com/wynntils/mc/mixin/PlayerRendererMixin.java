@@ -32,13 +32,15 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
                     "renderNameTag(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void redirectNameTagRender(
+    public void onNameTagRenderPre(
             AbstractClientPlayer entity,
             Component displayName,
             PoseStack matrixStack,
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
+        matrixStack.pushPose();
+
         NametagRenderEvent event = EventFactory.onNameTagRender(entity, displayName, matrixStack, buffer, packedLight);
         if (event.isCanceled()) {
             ci.cancel();
@@ -51,5 +53,12 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
             super.renderNameTag(entity, component, matrixStack, buffer, packedLight);
             matrixStack.translate(0.0, 0.25875f, 0.0);
         }
+
+        super.renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
+
+        matrixStack.popPose();
+
+        // Cancel the original method, we already rendered the name (this acts as a non-intrusive redirect)
+        ci.cancel();
     }
 }

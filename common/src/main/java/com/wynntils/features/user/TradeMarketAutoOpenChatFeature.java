@@ -26,7 +26,7 @@ public class TradeMarketAutoOpenChatFeature extends UserFeature {
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!WynnUtils.onWorld()) return;
 
-        if (TYPE_TO_CHAT_PATTERN.matcher(event.getCodedMessage()).matches()) {
+        if (TYPE_TO_CHAT_PATTERN.matcher(event.getOriginalCodedMessage()).matches()) {
             openChatWhenContainerClosed = true;
         }
     }

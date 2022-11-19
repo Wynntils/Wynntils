@@ -125,7 +125,7 @@ public final class LootrunModel {
                     renderChests(poseStack, lootrun, color, source, chunkLong);
                 }
 
-                if (lootrun.notes().containsKey(chunkLong) && LootrunFeature.INSTANCE.showNotes) {
+                if (LootrunFeature.INSTANCE.showNotes && lootrun.notes().containsKey(chunkLong)) {
                     renderNotes(poseStack, lootrun, color, source, chunkLong);
                 }
             }
@@ -344,8 +344,12 @@ public final class LootrunModel {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        return new LootrunInstance(
-                uncompiled.file().getName().replace(".json", ""), uncompiled.path, points, chests, notes);
+        String lootrunName = recording
+                ? "recorded_lootrun"
+                : (uncompiled.file() == null
+                        ? "lootrun"
+                        : uncompiled.file().getName().replace(".json", ""));
+        return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
     }
 
     private static List<Path> sample(Path raw, float sampleRate) {
@@ -557,7 +561,7 @@ public final class LootrunModel {
     public static void stopRecording() {
         // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
-        lootrun = recordingCompiled;
+        lootrun = compile(recording, false);
         uncompiled = recording;
         recording = null;
         recordingCompiled = null;
@@ -582,7 +586,7 @@ public final class LootrunModel {
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
                     LootrunUncompiled uncompiled = readJson(file, json);
                     lootruns.add(compile(uncompiled, false));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     WynntilsMod.warn("Could not parse lootrun file.", e);
                 }
             }
@@ -604,7 +608,7 @@ public final class LootrunModel {
                 LootrunFeature.INSTANCE.enable();
                 file.close();
                 return true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 WynntilsMod.error("Error when trying to load lootrun file.", e);
                 return false;
             }

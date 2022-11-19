@@ -5,12 +5,13 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.managers.Model;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.model.HadesUserModel;
+import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Arrays;
@@ -19,7 +20,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.ChatType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -79,10 +79,10 @@ public class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onChatReceived(ChatPacketReceivedEvent event) {
-        if (event.getType() != ChatType.SYSTEM) return;
+    public static void onChatReceived(ChatMessageReceivedEvent event) {
+        if (event.getMessageType() != MessageType.SYSTEM) return;
 
-        String coded = ComponentUtils.getCoded(event.getMessage());
+        String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
         if (tryParseFriendMessages(coded)) {

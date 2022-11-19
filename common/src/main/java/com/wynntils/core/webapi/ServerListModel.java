@@ -4,10 +4,12 @@
  */
 package com.wynntils.core.webapi;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,7 +20,11 @@ public class ServerListModel extends Model {
     public static void init() {}
 
     public static synchronized void updateServers() {
-        WebManager.getServerList((servers) -> availableServers = servers);
+        try {
+            availableServers = WebManager.getServerList();
+        } catch (IOException e) {
+            WynntilsMod.error("Failed to update server list", e);
+        }
     }
 
     public static ServerProfile getServer(String worldId) {
@@ -30,6 +36,7 @@ public class ServerListModel extends Model {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
-        updateServers();
+        // Run async to avoid blocking the render thread
+        new Thread(ServerListModel::updateServers).start();
     }
 }

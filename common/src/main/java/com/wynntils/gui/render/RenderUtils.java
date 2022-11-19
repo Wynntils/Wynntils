@@ -769,7 +769,7 @@ public final class RenderUtils {
                 progress);
     }
 
-    private static void drawProgressBarForeground(
+    public static void drawProgressBarForeground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -888,7 +888,7 @@ public final class RenderUtils {
         BufferUploader.end(bufferBuilder);
     }
 
-    private static void drawProgressBarBackground(
+    public static void drawProgressBarBackground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -1041,6 +1041,38 @@ public final class RenderUtils {
         RenderSystem.applyModelViewMatrix();
     }
 
+    public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
+        float[] colorArray = color.asFloatArray();
+        RenderSystem.setShaderColor(colorArray[0], colorArray[1], colorArray[2], alpha);
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.depthMask(false);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        Window window = McUtils.window();
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.VIGNETTE.resource(),
+                0,
+                0,
+                0,
+                window.getGuiScaledWidth(),
+                window.getGuiScaledHeight(),
+                0,
+                0,
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height(),
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height());
+
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+    }
+
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
@@ -1069,9 +1101,21 @@ public final class RenderUtils {
             float ty1,
             float tx2,
             float ty2) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.colorMask(false, false, false, true);
+        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        // Draw textured image
         int width = texture.width();
         int height = texture.height();
         drawTexturedRect(
@@ -1079,7 +1123,7 @@ public final class RenderUtils {
                 texture.resource(),
                 x1,
                 y1,
-                1000f,
+                0f,
                 x2 - x1,
                 y2 - y1,
                 tx1,
@@ -1088,20 +1132,30 @@ public final class RenderUtils {
                 ty2 - ty1,
                 width,
                 height);
+
+        // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.depthMask(false);
-        RenderSystem.depthFunc(GL11.GL_GREATER);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
     /**
      * Clears the active rendering mask from the screen.
+     * Based on Figura <a href="https://github.com/Kingdom-of-The-Moon/FiguraRewriteRewrite"> code</a>.
      */
     public static void clearMask() {
-        RenderSystem.depthMask(true);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+
+        // Turn off writing to stencil buffer.
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilMask(0x00);
+
+        // Always succeed in the stencil test, no matter what.
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
     private static final class ClipboardImage implements Transferable {

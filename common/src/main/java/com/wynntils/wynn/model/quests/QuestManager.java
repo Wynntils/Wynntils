@@ -16,7 +16,6 @@ import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -44,15 +43,6 @@ public class QuestManager extends CoreManager {
     public static void onWorldStateChanged(WorldStateEvent e) {
         quests = List.of();
         dialogueHistory = List.of();
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onWorldStateChangedLast(WorldStateEvent e) {
-        // Rescan quest book in background as the last thing we do
-        // when entering a world
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
-            CONTAINER_QUERIES.queryQuestBook();
-        }
     }
 
     public static void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -176,7 +166,7 @@ public class QuestManager extends CoreManager {
     }
 
     /** Shared between the container query classes */
-    protected static String getQuestBookTitle(int pageNum) {
+    public static String getQuestBookTitle(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
     }
 

@@ -42,7 +42,8 @@ public final class FontRenderer {
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
-            TextShadow shadow) {
+            TextShadow shadow,
+            float textScale) {
         float renderX;
         float renderY;
 
@@ -52,13 +53,17 @@ public final class FontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case Left -> x;
-            case Center -> x - (font.width(text) / 2f);
-            case Right -> x - font.width(text);};
+            case Center -> x - (font.width(text) / 2f * textScale);
+            case Right -> x - font.width(text) * textScale;};
 
         renderY = switch (verticalAlignment) {
             case Top -> y;
-            case Middle -> y - (font.lineHeight / 2f);
-            case Bottom -> y - font.lineHeight;};
+            case Middle -> y - (font.lineHeight / 2f * textScale);
+            case Bottom -> y - font.lineHeight * textScale;};
+
+        poseStack.pushPose();
+        poseStack.translate(renderX, renderY, 0);
+        poseStack.scale(textScale, textScale, 0);
 
         switch (shadow) {
             case OUTLINE -> {
@@ -66,20 +71,34 @@ public final class FontRenderer {
                 String strippedText = ComponentUtils.stripColorFormatting(text);
 
                 // draw outline behind text
-                font.draw(poseStack, strippedText, renderX + 1, renderY, shadowColor);
-                font.draw(poseStack, strippedText, renderX - 1, renderY, shadowColor);
-                font.draw(poseStack, strippedText, renderX, renderY + 1, shadowColor);
-                font.draw(poseStack, strippedText, renderX, renderY - 1, shadowColor);
+                font.draw(poseStack, strippedText, 1, 0, shadowColor);
+                font.draw(poseStack, strippedText, -1, 0, shadowColor);
+                font.draw(poseStack, strippedText, 0, 1, shadowColor);
+                font.draw(poseStack, strippedText, 0, -1, shadowColor);
 
-                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+                font.draw(poseStack, text, 0, 0, customColor.asInt());
             }
             case NORMAL -> {
-                font.drawShadow(poseStack, text, renderX, renderY, customColor.asInt());
+                font.drawShadow(poseStack, text, 0, 0, customColor.asInt());
             }
             default -> {
-                font.draw(poseStack, text, renderX, renderY, customColor.asInt());
+                font.draw(poseStack, text, 0, 0, customColor.asInt());
             }
         }
+
+        poseStack.popPose();
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            String text,
+            float x,
+            float y,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
+        renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
     public void renderAlignedTextInBox(
@@ -93,7 +112,8 @@ public final class FontRenderer {
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
-            TextShadow textShadow) {
+            TextShadow textShadow,
+            float textScale) {
 
         float renderX =
                 switch (horizontalAlignment) {
@@ -118,7 +138,35 @@ public final class FontRenderer {
                 customColor,
                 horizontalAlignment,
                 verticalAlignment,
-                textShadow);
+                textShadow,
+                textScale);
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow) {
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                1f);
     }
 
     public void renderAlignedTextInBox(
@@ -142,7 +190,8 @@ public final class FontRenderer {
                 customColor,
                 horizontalAlignment,
                 VerticalAlignment.Top,
-                textShadow);
+                textShadow,
+                1f);
     }
 
     public void renderAlignedTextInBox(
@@ -166,7 +215,8 @@ public final class FontRenderer {
                 customColor,
                 HorizontalAlignment.Left,
                 verticalAlignment,
-                textShadow);
+                textShadow,
+                1f);
     }
 
     public void renderText(
@@ -178,11 +228,12 @@ public final class FontRenderer {
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
-            TextShadow shadow) {
+            TextShadow shadow,
+            float textScale) {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text) < maxWidth) {
-            renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow);
+            renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
@@ -191,7 +242,8 @@ public final class FontRenderer {
         String lastPart = "";
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part = getLastPartCodes(lastPart) + parts.get(i).getString();
+            String part =
+                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString();
             lastPart = part;
             renderText(
                     poseStack,
@@ -205,29 +257,17 @@ public final class FontRenderer {
         }
     }
 
-    private String getLastPartCodes(String lastPart) {
-        if (!lastPart.contains("§")) return "";
-
-        String lastPartCodes = "";
-        int index;
-        while ((index = lastPart.lastIndexOf('§')) != -1) {
-            if (index >= lastPart.length() - 1) {
-                // trailing §, no format code, skip it
-                lastPart = lastPart.substring(0, index);
-                continue;
-            }
-            String thisCode = lastPart.substring(index, index + 2);
-            if (thisCode.charAt(1) == 'r') {
-                // it's a reset code, we can stop looking
-                break;
-            }
-            // prepend to codes since we're going backwards
-            lastPartCodes = thisCode + lastPartCodes;
-
-            lastPart = lastPart.substring(0, index);
-        }
-
-        return lastPartCodes;
+    public void renderText(
+            PoseStack poseStack,
+            String text,
+            float x,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
+        renderText(poseStack, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
     public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {

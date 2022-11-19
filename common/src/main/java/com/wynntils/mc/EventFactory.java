@@ -11,12 +11,14 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -60,6 +62,7 @@ import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -108,9 +111,11 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -143,8 +148,8 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player) {
-        return post(new PlayerArmorRenderEvent(player));
+    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
+        return post(new PlayerArmorRenderEvent(player, slot));
     }
 
     public static NametagRenderEvent onNameTagRender(
@@ -297,6 +302,11 @@ public final class EventFactory {
         post(new ScreenInitEvent(screen));
     }
 
+    public static void onScreenRenderPost(
+            Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        post(new ScreenRenderEvent(screen, poseStack, mouseX, mouseY, partialTick));
+    }
+
     // endregion
 
     // region Container Events
@@ -391,6 +401,11 @@ public final class EventFactory {
     public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
         return post(new ChatPacketReceivedEvent(type, message));
     }
+
+    public static ClientsideMessageEvent onClientsideMessage(Component component) {
+        return post(new ClientsideMessageEvent(component));
+    }
+
     // endregion
 
     // region Server Events
@@ -446,6 +461,11 @@ public final class EventFactory {
     public static BossHealthUpdateEvent onBossHealthUpdate(
             ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
         return post(new BossHealthUpdateEvent(packet, bossEvents));
+    }
+
+    public static void onUpdateAdvancements(ClientboundUpdateAdvancementsPacket packet) {
+        post(new AdvancementUpdateEvent(
+                packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
     }
 
     public static SetSpawnEvent onSetSpawn(BlockPos spawnPos) {

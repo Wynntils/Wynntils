@@ -8,6 +8,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -95,7 +96,8 @@ public final class ChatItemModel {
             if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
                 translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
             } else { // raw value
-                translatedValue = idValue - idProfile.getMin();
+                // min/max must be flipped for inverted IDs to avoid negative values
+                translatedValue = idProfile.isInverted() ? idValue - idProfile.getMax() : idValue - idProfile.getMin();
             }
 
             // stars
@@ -173,7 +175,8 @@ public final class ChatItemModel {
                             .setScale(0, RoundingMode.HALF_UP)
                             .intValue();
                 } else {
-                    value = encodedValue + status.getMin();
+                    // min/max must be flipped for inverted IDs due to encoding
+                    value = status.isInverted() ? encodedValue + status.getMax() : encodedValue + status.getMin();
                 }
 
                 // stars
@@ -216,7 +219,7 @@ public final class ChatItemModel {
 
     public static Component insertItemComponents(Component message) {
         // no item tooltips to insert
-        if (!ENCODED_PATTERN.matcher(message.getString()).find()) return message;
+        if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
         List<MutableComponent> components =
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
@@ -225,7 +228,7 @@ public final class ChatItemModel {
         MutableComponent temp = new TextComponent("");
 
         for (Component comp : components) {
-            Matcher m = ENCODED_PATTERN.matcher(comp.getString());
+            Matcher m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp));
             if (!m.find()) {
                 Component newComponent = comp.copy();
                 temp.append(newComponent);
@@ -233,7 +236,7 @@ public final class ChatItemModel {
             }
 
             do {
-                String text = comp.getString();
+                String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 GearItemStack item = decodeItem(m.group());
@@ -250,8 +253,10 @@ public final class ChatItemModel {
                 Component itemComponent = createItemComponent(item);
                 temp.append(itemComponent);
 
-                comp = new TextComponent(text.substring(m.end())).withStyle(style);
-                m = ENCODED_PATTERN.matcher(comp.getString()); // recreate matcher for new substring
+                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                                + text.substring(m.end()))
+                        .withStyle(style);
+                m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
             } while (m.find()); // search for multiple items in the same message
 
             temp.append(comp); // leftover text after item(s)

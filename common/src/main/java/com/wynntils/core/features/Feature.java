@@ -132,6 +132,9 @@ public abstract class Feature extends AbstractConfigurable
     /** Called on disabling of Feature */
     protected void onDisable() {}
 
+    /** Called after successfully enabling a feature, after everything is set up. */
+    protected void postEnable() {}
+
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED) return;
@@ -157,6 +160,7 @@ public abstract class Feature extends AbstractConfigurable
                 McUtils.mc().options.load();
             }
         }
+        postEnable();
     }
 
     /** Called for a feature's deactivation */

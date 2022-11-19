@@ -57,7 +57,7 @@ public class StatusOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             55,
-                            0,
+                            -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
@@ -74,6 +74,20 @@ public class StatusOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             StatusOverlayFeature.this.renderCache,
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask("§8⬤ §7 Purification 00:02", textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

@@ -10,6 +10,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,8 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class AbilityRefreshRedirectFeature extends UserFeature {
-    private static final Pattern REFRESH_PATTERN =
-            Pattern.compile("§8\\[§r§7⬤§r§8\\] §r§7(.+)§r§8 has been refreshed!");
+    private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -29,11 +29,11 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = REFRESH_PATTERN.matcher(event.getCodedMessage());
+        Matcher matcher = REFRESH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
         if (matcher.matches()) {
             event.setCanceled(true);
 
-            NotificationManager.queueMessage(event.getMessage());
+            NotificationManager.queueMessage(event.getOriginalMessage());
         }
     }
 }

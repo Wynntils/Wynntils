@@ -71,7 +71,7 @@ public class LootrunFeature extends StateManagedFeature {
     }
 
     @SubscribeEvent
-    public void onRenderLastLevel(RenderLevelEvent event) {
+    public void onRenderLastLevel(RenderLevelEvent.Post event) {
         LootrunModel.render(event.getPoseStack());
     }
 
