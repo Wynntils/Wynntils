@@ -6,14 +6,17 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
+import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -22,6 +25,13 @@ public class WynncraftPauseScreenFeature extends UserFeature {
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
         PauseScreen pauseScreen = event.getPauseScreen();
         List<Widget> renderables = new ArrayList<>(pauseScreen.renderables);
+
+        Button territoryMap = replaceButtonFunction(
+                (Button) renderables.get(1),
+                new TranslatableComponent("feature.wynntils.wynncraftPauseScreen.territoryMap.name")
+                        .withStyle(ChatFormatting.DARK_AQUA),
+                (button) -> McUtils.mc().setScreen(new GuildMapScreen()));
+        renderables.set(1, territoryMap);
 
         Button wynntilsMenu = replaceButtonFunction(
                 (Button) renderables.get(2),
@@ -58,8 +68,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
         }
     }
 
-    private Button replaceButtonFunction(
-            Button widget, TranslatableComponent translatableComponent, Button.OnPress onPress) {
+    private Button replaceButtonFunction(Button widget, Component translatableComponent, Button.OnPress onPress) {
         return new Button(widget.x, widget.y, widget.getWidth(), widget.getHeight(), translatableComponent, onPress);
     }
 }
