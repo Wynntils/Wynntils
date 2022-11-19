@@ -10,6 +10,7 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.Optional;
@@ -52,12 +53,15 @@ public final class WynntilsMod {
         try {
             return eventBus.post(event);
         } catch (Throwable t) {
-            handleExceptionInEventListener(t);
+            // TODO: This is a temporary fix for a crash that occurs when an error happens in a client-side message
+            //       event, and we send a new message about disabling X feature,
+            //       causing a new exception in client-side message event.
+            handleExceptionInEventListener(t, !(event instanceof ClientsideMessageEvent));
             return false;
         }
     }
 
-    private static void handleExceptionInEventListener(Throwable t) {
+    private static void handleExceptionInEventListener(Throwable t, boolean sendMessageToUser) {
         StackTraceElement[] stackTrace = t.getStackTrace();
         String crashingFeatureName = null;
         for (StackTraceElement line : stackTrace) {
@@ -90,9 +94,11 @@ public final class WynntilsMod {
 
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");
-        McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
-                        + "' has crashed and will be disabled")
-                .withStyle(ChatFormatting.RED));
+        if (sendMessageToUser) {
+            McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
+                            + "' has crashed and will be disabled")
+                    .withStyle(ChatFormatting.RED));
+        }
     }
 
     public static File getModJar() {
