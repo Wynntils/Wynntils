@@ -66,7 +66,7 @@ public class InfoBoxFeature extends UserFeature {
         protected InfoBoxOverlay(int id) {
             super(
                     new OverlayPosition(
-                            -60 + (15 * id),
+                            -80 + (15 * id),
                             5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,

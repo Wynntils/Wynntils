@@ -92,8 +92,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
         protected GameNotificationOverlay() {
             super(
                     new OverlayPosition(
-                            0,
-                            0,
+                            -20,
+                            -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
