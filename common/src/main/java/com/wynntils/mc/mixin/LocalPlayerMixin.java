@@ -24,7 +24,6 @@ public abstract class LocalPlayerMixin {
 
     @Inject(method = "chatSigned", at = @At("HEAD"), cancellable = true)
     private void onChatPre(String plain, Component decorated, CallbackInfo ci) {
-        // FIXME: What the fuck is plain and decorated
         ChatSentEvent result = EventFactory.onChatSent(plain);
         if (result.isCanceled()) {
             ci.cancel();
