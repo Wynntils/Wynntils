@@ -373,12 +373,9 @@ public final class LootrunModel {
         List<Path> result = new ArrayList<>();
         for (Path current : vec3s) {
             float distance = 0f;
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX =
-                    CubicSpline.builder(LootrunFloatFunction.getInstance());
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY =
-                    CubicSpline.builder(LootrunFloatFunction.getInstance());
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ =
-                    CubicSpline.builder(LootrunFloatFunction.getInstance());
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
@@ -890,28 +887,4 @@ public final class LootrunModel {
     public record ColoredPath(List<ColoredPoint> points) {}
 
     public record Path(List<Vec3> points) {}
-
-    private static class LootrunFloatFunction implements ToFloatFunction<Float> {
-        private static final LootrunFloatFunction INSTANCE = new LootrunFloatFunction();
-
-        @Override
-        public float apply(Float value) {
-            return value;
-        }
-
-        @Override
-        public float minValue() {
-            return Float.MIN_VALUE;
-        }
-
-        @Override
-        public float maxValue() {
-            return Float.MAX_VALUE;
-        }
-
-        public static LootrunFloatFunction getInstance() {
-            return INSTANCE;
-        }
-    }
-    ;
 }
