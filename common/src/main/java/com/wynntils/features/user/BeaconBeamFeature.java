@@ -46,7 +46,7 @@ public class BeaconBeamFeature extends UserFeature {
         double dz = location.z - camera.z;
 
         double distance = MathUtils.magnitude(dx, dz);
-        int maxDistance = McUtils.mc().options.renderDistance * 16;
+        int maxDistance = McUtils.mc().options.renderDistance().get() * 16;
 
         if (distance > maxDistance) {
             double scale = maxDistance / distance;

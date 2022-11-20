@@ -17,7 +17,7 @@ import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.GearItemStack;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuideGearItemStack extends AbstractButton {
@@ -26,7 +26,7 @@ public class GuideGearItemStack extends AbstractButton {
 
     public GuideGearItemStack(
             int x, int y, int width, int height, GearItemStack itemStack, WynntilsItemGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide GearItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }

@@ -17,7 +17,7 @@ import com.wynntils.utils.StringUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class GuidesButton extends AbstractButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -26,7 +26,7 @@ public class GuidesButton extends AbstractButton {
     private final Screen guideScreen;
 
     public GuidesButton(int x, int y, int width, int height, Screen guideScreen) {
-        super(x, y, width, height, new TextComponent("Guides Button"));
+        super(x, y, width, height, Component.literal("Guides Button"));
         this.guideScreen = guideScreen;
     }
 

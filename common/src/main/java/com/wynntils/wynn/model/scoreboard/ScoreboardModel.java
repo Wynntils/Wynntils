@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
@@ -203,7 +203,7 @@ public final class ScoreboardModel extends Model {
                 objective = scoreboard.addObjective(
                         objectiveName,
                         ObjectiveCriteria.DUMMY,
-                        new TextComponent(" play.wynncraft.com")
+                        Component.literal(" play.wynncraft.com")
                                 .withStyle(ChatFormatting.GOLD)
                                 .withStyle(ChatFormatting.BOLD),
                         ObjectiveCriteria.RenderType.INTEGER);

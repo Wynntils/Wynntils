@@ -12,13 +12,13 @@ import com.wynntils.mc.objects.CommonColors;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class CategoryButton extends AbstractButton {
     private final FeatureCategory featureCategory;
 
     public CategoryButton(int x, int y, int width, int height, FeatureCategory featureCategory) {
-        super(x, y, width, height, new TranslatableComponent(featureCategory.toString()));
+        super(x, y, width, height, Component.translatable(featureCategory.toString()));
         this.featureCategory = featureCategory;
     }
 

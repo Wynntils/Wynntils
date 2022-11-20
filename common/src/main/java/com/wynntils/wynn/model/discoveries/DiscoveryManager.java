@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -122,7 +121,7 @@ public class DiscoveryManager extends CoreManager {
         String queryUrl = WebManager.getApiUrl("WikiDiscoveryQuery");
 
         if (queryUrl == null) {
-            McUtils.sendMessageToClient(new TextComponent(
+            McUtils.sendMessageToClient(Component.literal(
                     ChatFormatting.RED + "Unable to find discovery coordinates. ApiUrls are not loaded."));
             return;
         }
@@ -130,7 +129,7 @@ public class DiscoveryManager extends CoreManager {
         Request query = new RequestBuilder(queryUrl + WebUtils.encodeForWikiTitle(name), "SecretWikiQuery")
                 .handleJsonObject(jsonOutput -> {
                     if (jsonOutput.has("error")) { // Returns error if page does not exist
-                        McUtils.sendMessageToClient(new TextComponent(
+                        McUtils.sendMessageToClient(Component.literal(
                                 ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
                         return true;
                     }
@@ -158,13 +157,13 @@ public class DiscoveryManager extends CoreManager {
                         x = Integer.parseInt(xLocation.substring(12, xEnd));
                         z = Integer.parseInt(zLocation.substring(12, zEnd));
                     } catch (NumberFormatException e) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
+                        McUtils.sendMessageToClient(Component.literal(ChatFormatting.RED
                                 + "Unable to find discovery coordinates. (Wiki template not located)"));
                         return true;
                     }
 
                     if (x == 0 && z == 0) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
+                        McUtils.sendMessageToClient(Component.literal(ChatFormatting.RED
                                 + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
                         return true;
                     }

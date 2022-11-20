@@ -27,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class ChatItemModel {
@@ -225,7 +224,7 @@ public final class ChatItemModel {
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
         components.add(0, message.plainCopy().withStyle(message.getStyle()));
 
-        MutableComponent temp = new TextComponent("");
+        MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
             Matcher m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp));
@@ -245,7 +244,7 @@ public final class ChatItemModel {
                     continue;
                 }
 
-                MutableComponent preText = new TextComponent(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(text.substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -253,7 +252,7 @@ public final class ChatItemModel {
                 Component itemComponent = createItemComponent(item);
                 temp.append(itemComponent);
 
-                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
                                 + text.substring(m.end()))
                         .withStyle(style);
                 m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
@@ -266,7 +265,7 @@ public final class ChatItemModel {
     }
 
     private static Component createItemComponent(GearItemStack item) {
-        MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
+        MutableComponent itemComponent = Component.literal(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());
 

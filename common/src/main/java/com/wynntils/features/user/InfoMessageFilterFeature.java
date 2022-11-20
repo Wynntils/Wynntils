@@ -15,7 +15,7 @@ import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
@@ -220,21 +220,22 @@ public class InfoMessageFilterFeature extends UserFeature {
 
                 if (unusedPoints == FilterType.REDIRECT) {
                     if (unusedSkillPoints != 0) {
-                        NotificationManager.queueMessage(new TextComponent("You have ")
+                        NotificationManager.queueMessage(Component.literal("You have ")
                                 .withStyle(ChatFormatting.DARK_RED)
-                                .append(new TextComponent(String.valueOf(unusedSkillPoints))
+                                .append(Component.literal(String.valueOf(unusedSkillPoints))
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.DARK_RED))
-                                .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED)));
+                                .append(Component.literal(" unused skill points")
+                                        .withStyle(ChatFormatting.DARK_RED)));
                     }
 
                     if (unusedAbilityPoints != 0) {
-                        NotificationManager.queueMessage(new TextComponent("You have ")
+                        NotificationManager.queueMessage(Component.literal("You have ")
                                 .withStyle(ChatFormatting.DARK_RED)
-                                .append(new TextComponent(String.valueOf(unusedAbilityPoints))
+                                .append(Component.literal(String.valueOf(unusedAbilityPoints))
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.DARK_RED))
-                                .append(new TextComponent(" unused ability points")
+                                .append(Component.literal(" unused ability points")
                                         .withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
@@ -268,7 +269,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     }
 
                     NotificationManager.queueMessage(
-                            new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
+                            Component.literal("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
 
                     return;
                 }
@@ -283,7 +284,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     }
 
                     NotificationManager.queueMessage(
-                            new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
+                            Component.literal("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
 
                     return;
                 }
@@ -380,19 +381,19 @@ public class InfoMessageFilterFeature extends UserFeature {
     }
 
     private void sendFriendLeaveMessage(String playerName) {
-        NotificationManager.queueMessage(new TextComponent("← ")
+        NotificationManager.queueMessage(Component.literal("← ")
                 .withStyle(ChatFormatting.RED)
-                .append(new TextComponent(playerName).withStyle(ChatFormatting.DARK_GREEN)));
+                .append(Component.literal(playerName).withStyle(ChatFormatting.DARK_GREEN)));
     }
 
     private static void sendFriendJoinMessage(String playerName, String server, String playerClass) {
-        NotificationManager.queueMessage(new TextComponent("→ ")
+        NotificationManager.queueMessage(Component.literal("→ ")
                 .withStyle(ChatFormatting.GREEN)
-                .append(new TextComponent(playerName + " [")
+                .append(Component.literal(playerName + " [")
                         .withStyle(ChatFormatting.DARK_GREEN)
-                        .append(new TextComponent(server + "/" + playerClass)
+                        .append(Component.literal(server + "/" + playerClass)
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN)))));
+                                .append(Component.literal("]").withStyle(ChatFormatting.DARK_GREEN)))));
     }
 
     private static void sendLoginMessage(String playerName, String rank) {

@@ -19,7 +19,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.PowderItemStack;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuidePowderItemStack extends AbstractButton {
@@ -28,7 +28,7 @@ public class GuidePowderItemStack extends AbstractButton {
 
     public GuidePowderItemStack(
             int x, int y, int width, int height, PowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide PowderItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide PowderItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }

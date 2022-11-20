@@ -25,9 +25,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class FeatureCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> USER_FEATURE_SUGGESTION_PROVIDER =
@@ -48,7 +48,7 @@ public class FeatureCommand extends CommandBase {
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
 
@@ -62,7 +62,8 @@ public class FeatureCommand extends CommandBase {
                 .sorted(Feature::compareTo)
                 .toList();
 
-        MutableComponent response = new TextComponent("Currently registered features:").withStyle(ChatFormatting.AQUA);
+        MutableComponent response =
+                Component.literal("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
         FeatureCategory lastCategory = null;
 
@@ -90,15 +91,15 @@ public class FeatureCommand extends CommandBase {
 
             if (!Objects.equals(lastCategory, feature.getCategory())) {
                 lastCategory = feature.getCategory();
-                response.append(new TextComponent("\n" + lastCategory.toString() + ":")
+                response.append(Component.literal("\n" + lastCategory.toString() + ":")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
                         .withStyle(ChatFormatting.BOLD));
             }
 
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(translatedName)
+            response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(translatedName)
                             .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT, new TextComponent(superclass.getSimpleName()))))
+                                    HoverEvent.Action.SHOW_TEXT, Component.literal(superclass.getSimpleName()))))
                             .withStyle(color));
         }
 
@@ -121,13 +122,14 @@ public class FeatureCommand extends CommandBase {
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
-            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " is already enabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " is already enabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -137,7 +139,7 @@ public class FeatureCommand extends CommandBase {
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be enabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " could not be enabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -146,7 +148,7 @@ public class FeatureCommand extends CommandBase {
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent(feature.getTranslatedName() + " was enabled successfully.")
+                        Component.literal(feature.getTranslatedName() + " was enabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -167,13 +169,14 @@ public class FeatureCommand extends CommandBase {
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
-            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " is already disabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " is already disabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -183,7 +186,7 @@ public class FeatureCommand extends CommandBase {
 
         if (feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be disabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " could not be disabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -192,7 +195,7 @@ public class FeatureCommand extends CommandBase {
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent(feature.getTranslatedName() + " was disabled successfully.")
+                        Component.literal(feature.getTranslatedName() + " was disabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -213,13 +216,14 @@ public class FeatureCommand extends CommandBase {
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
-            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName()
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName()
                                     + " is already disabled, cannot reload a disabled feature!")
                             .withStyle(ChatFormatting.RED));
             return 1;
@@ -229,7 +233,7 @@ public class FeatureCommand extends CommandBase {
 
         if (feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be disabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " could not be disabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
@@ -238,14 +242,14 @@ public class FeatureCommand extends CommandBase {
 
         if (!feature.isEnabled()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Feature " + feature.getTranslatedName() + " could not be enabled!")
+                    .sendFailure(Component.literal("Feature " + feature.getTranslatedName() + " could not be enabled!")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent(feature.getTranslatedName() + " was reloaded successfully.")
+                        Component.literal(feature.getTranslatedName() + " was reloaded successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 

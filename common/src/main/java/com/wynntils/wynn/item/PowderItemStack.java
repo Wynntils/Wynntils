@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -59,7 +58,7 @@ public class PowderItemStack extends WynnItemStack {
     @Override
     public Component getHoverName() {
         return generated
-                ? new TextComponent(
+                ? Component.literal(
                                 element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
                         .withStyle(element.getLightColor())
                 : super.getHoverName();
@@ -89,35 +88,35 @@ public class PowderItemStack extends WynnItemStack {
         String name = element.getName();
         Powder opposingElement = element.getOpposingElement();
 
-        itemLore.add(new TextComponent("Tier " + tier + " [")
+        itemLore.add(Component.literal("Tier " + tier + " [")
                 .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent(tierStringBuilder))
-                .append(new TextComponent("]").withStyle(ChatFormatting.GRAY)));
-        itemLore.add(TextComponent.EMPTY);
-        itemLore.add(new TextComponent("Effect on Weapons:").withStyle(element.getDarkColor()));
-        itemLore.add(new TextComponent(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderProfile.min()
+                .append(Component.literal(tierStringBuilder))
+                .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
+        itemLore.add(Component.empty());
+        itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
+        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderProfile.min()
                 + "-" + powderProfile.max() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
                 + ChatFormatting.GRAY + "Damage"));
-        itemLore.add(new TextComponent(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
                 + powderProfile.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral" + ChatFormatting.GRAY
                 + " to " + element.getLightColor() + element.getSymbol() + " " + name));
-        itemLore.add(TextComponent.EMPTY);
-        itemLore.add(new TextComponent("Effect on Armour:").withStyle(element.getDarkColor()));
-        itemLore.add(new TextComponent(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+        itemLore.add(Component.empty());
+        itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
+        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
                 + powderProfile.addedDefence() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
                 + ChatFormatting.GRAY + "Defence"));
-        itemLore.add(new TextComponent(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
+        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
                 + powderProfile.removedDefence() + " " + opposingElement.getLightColor() + opposingElement.getSymbol()
                 + " " + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
                 + ChatFormatting.GRAY + "Defence"));
-        itemLore.add(TextComponent.EMPTY);
-        itemLore.add(new TextComponent(
+        itemLore.add(Component.empty());
+        itemLore.add(Component.literal(
                         "Add this powder to your items by visiting a Powder Master or use it as an ingredient when crafting.")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         if (tier > 3) {
-            itemLore.add(TextComponent.EMPTY);
-            itemLore.add(new TextComponent(
+            itemLore.add(Component.empty());
+            itemLore.add(Component.literal(
                             "Adding 2 powders of tier 4-6 at the powder master will unlock a special attack/effect.")
                     .withStyle(ChatFormatting.DARK_GRAY));
         }

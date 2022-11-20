@@ -11,13 +11,13 @@ import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends AbstractButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public SortOrderWidget(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
-        super(x, y, width, height, new TextComponent("Sort Order Button"));
+        super(x, y, width, height, Component.literal("Sort Order Button"));
         this.questBookScreen = questBookScreen;
     }
 

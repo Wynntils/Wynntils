@@ -4,23 +4,30 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.mc.mixin.accessors.ClientboundCommandsPacketAccessor;
 import com.wynntils.mc.utils.McUtils;
+import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
@@ -30,14 +37,15 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
@@ -48,6 +56,16 @@ public abstract class ClientPacketListenerMixin {
     @Shadow
     protected abstract void send(ServerboundResourcePackPacket.Action action);
 
+    @Shadow
+    private RegistryAccess.Frozen registryAccess;
+
+    @Shadow
+    private CommandDispatcher<SharedSuggestionProvider> commands;
+
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+
     private static boolean isRenderThread() {
         return (McUtils.mc().isSameThread());
     }
@@ -57,8 +75,12 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"))
     private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
-        ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
+        RootCommandNode<SharedSuggestionProvider> root = packet.getRoot(new CommandBuildContext(this.registryAccess));
+        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
+        if (event.getRoot() != root) {
+            // We modified command root, so inject it
+            this.commands = new CommandDispatcher<>(event.getRoot());
+        }
     }
 
     @Inject(
@@ -199,19 +221,50 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Redirect(
-            method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
+    @Inject(
+            method = "handlePlayerChat",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
-    private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
+            cancellable = true)
+    private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
+                com.wynntils.mc.objects.ChatType.CHAT, packet.message().serverContent());
         if (result.isCanceled()) return;
 
-        gui.handleChat(chatType, result.getMessage(), uuid);
+        if (!result.getMessage().equals(packet.message().serverContent())) {
+            PlayerChatMessage modified = packet.message().withUnsignedContent(result.getMessage());
+
+            // Because of the injection point, we know this option is present
+            Optional<ChatType.Bound> optional = packet.resolveChatType(this.registryAccess);
+            this.minecraft.getChatListener().handleChatMessage(modified, optional.get());
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method = "handleSystemChat",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"),
+            cancellable = true)
+    private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
+                packet.overlay() ? com.wynntils.mc.objects.ChatType.GAME_INFO : com.wynntils.mc.objects.ChatType.SYSTEM,
+                packet.content());
+        if (result.isCanceled()) return;
+
+        if (!result.getMessage().equals(packet.content())) {
+
+            this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
+            ci.cancel();
+        }
     }
 
     @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)

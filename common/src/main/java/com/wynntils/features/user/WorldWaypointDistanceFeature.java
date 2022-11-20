@@ -72,7 +72,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
         distance = Math.sqrt(squaredDistance);
-        int maxDistance = McUtils.mc().options.renderDistance * 16;
+        int maxDistance = McUtils.mc().options.renderDistance().get() * 16;
 
         this.distanceText = Math.round((float) distance) + "m";
 

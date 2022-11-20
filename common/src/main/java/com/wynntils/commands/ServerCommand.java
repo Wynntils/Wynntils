@@ -24,8 +24,8 @@ import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class ServerCommand extends CommandBase {
     @Override
@@ -58,13 +58,13 @@ public class ServerCommand extends CommandBase {
 
     private int serverInfoHelp(CommandContext<CommandSourceStack> context) {
         context.getSource()
-                .sendFailure(new TextComponent("Usage: /s i,info <server> | Example: \"/s i WC1\"")
+                .sendFailure(Component.literal("Usage: /s i,info <server> | Example: \"/s i WC1\"")
                         .withStyle(ChatFormatting.RED));
         return 1;
     }
 
     private int serverHelp(CommandContext<CommandSourceStack> context) {
-        MutableComponent text = new TextComponent(
+        MutableComponent text = Component.literal(
                         """
                 /s <command> [options]
 
@@ -87,8 +87,8 @@ public class ServerCommand extends CommandBase {
             servers = WebManager.getServerList();
         } catch (IOException e) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("Failed to get server data from API.")
+                            .withStyle(ChatFormatting.RED));
             return 1;
         }
 
@@ -103,23 +103,24 @@ public class ServerCommand extends CommandBase {
         }
 
         if (!servers.containsKey(server)) {
-            context.getSource().sendFailure(new TextComponent(server + " not found.").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal(server + " not found.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
         ServerProfile serverProfile = servers.get(server);
         Set<String> players = serverProfile.getPlayers();
-        MutableComponent message = new TextComponent(server + ":" + "\n")
+        MutableComponent message = Component.literal(server + ":" + "\n")
                 .withStyle(ChatFormatting.GOLD)
-                .append(new TextComponent("Uptime: " + serverProfile.getUptime() + "\n")
+                .append(Component.literal("Uptime: " + serverProfile.getUptime() + "\n")
                         .withStyle(ChatFormatting.DARK_AQUA))
-                .append(new TextComponent("Online players on " + server + ": " + players.size() + "\n")
+                .append(Component.literal("Online players on " + server + ": " + players.size() + "\n")
                         .withStyle(ChatFormatting.DARK_AQUA));
 
         if (players.isEmpty()) {
-            message.append(new TextComponent("No players!").withStyle(ChatFormatting.AQUA));
+            message.append(Component.literal("No players!").withStyle(ChatFormatting.AQUA));
         } else {
-            message.append(new TextComponent(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
+            message.append(Component.literal(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
         }
 
         context.getSource().sendSuccess(message, false);
@@ -133,12 +134,12 @@ public class ServerCommand extends CommandBase {
             onlinePlayers = WebManager.getOnlinePlayers();
         } catch (IOException e) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("Failed to get server data from API.")
+                            .withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
+        MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
         for (String serverType : WynnUtils.getWynnServerTypes()) {
             List<String> currentTypeServers = onlinePlayers.keySet().stream()
@@ -155,11 +156,12 @@ public class ServerCommand extends CommandBase {
 
             message.append("\n");
 
-            message.append(new TextComponent(
+            message.append(Component.literal(
                             StringUtils.capitalizeFirst(serverType) + " (" + currentTypeServers.size() + "):\n")
                     .withStyle(ChatFormatting.GOLD));
 
-            message.append(new TextComponent(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
+            message.append(
+                    Component.literal(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
         }
 
         context.getSource().sendSuccess(message, false);
@@ -173,18 +175,18 @@ public class ServerCommand extends CommandBase {
             servers = WebManager.getServerList();
         } catch (IOException e) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("Failed to get server data from API.")
+                            .withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
+        MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
         for (Map.Entry<String, ServerProfile> entry : servers.entrySet().stream()
                 .sorted(Comparator.comparing(profile -> profile.getValue().getUptime()))
                 .toList()) {
             message.append("\n");
             message.append(
-                    new TextComponent(entry.getKey() + ": " + entry.getValue().getUptime())
+                    Component.literal(entry.getKey() + ": " + entry.getValue().getUptime())
                             .withStyle(ChatFormatting.AQUA));
         }
 

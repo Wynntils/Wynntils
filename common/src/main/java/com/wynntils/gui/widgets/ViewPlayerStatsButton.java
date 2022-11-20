@@ -8,7 +8,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 public class ViewPlayerStatsButton extends AbstractButton {
@@ -17,7 +17,7 @@ public class ViewPlayerStatsButton extends AbstractButton {
     private final String playerName;
 
     public ViewPlayerStatsButton(int x, int y, int width, int height, String playerName) {
-        super(x, y, width, height, new TextComponent("↵"));
+        super(x, y, width, height, Component.literal("↵"));
         this.playerName = playerName;
     }
 

@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class UpdateCommand extends CommandBase {
     @Override
@@ -25,7 +25,7 @@ public class UpdateCommand extends CommandBase {
     private int update(CommandContext<CommandSourceStack> context) {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             context.getSource()
-                    .sendFailure(new TextComponent("Development environment detected, cannot update!")
+                    .sendFailure(Component.literal("Development environment detected, cannot update!")
                             .withStyle(ChatFormatting.DARK_RED));
             WynntilsMod.error("Development environment detected, cannot update!");
             return 0;
@@ -37,20 +37,20 @@ public class UpdateCommand extends CommandBase {
 
             completableFuture.whenComplete((result, throwable) -> {
                 switch (result) {
-                    case SUCCESSFUL -> McUtils.sendMessageToClient(new TextComponent(
+                    case SUCCESSFUL -> McUtils.sendMessageToClient(Component.literal(
                                     "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
                             .withStyle(ChatFormatting.DARK_GREEN));
                     case ERROR -> McUtils.sendMessageToClient(
-                            new TextComponent("Error applying Wynntils/Artemis update.")
+                            Component.literal("Error applying Wynntils/Artemis update.")
                                     .withStyle(ChatFormatting.DARK_RED));
                     case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                            new TextComponent("Wynntils/Artemis is already on latest version.")
+                            Component.literal("Wynntils/Artemis is already on latest version.")
                                     .withStyle(ChatFormatting.YELLOW));
                 }
             });
 
             context.getSource()
-                    .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
+                    .sendSuccess(Component.literal("Downloading update!").withStyle(ChatFormatting.GREEN), false);
         });
 
         return 1;

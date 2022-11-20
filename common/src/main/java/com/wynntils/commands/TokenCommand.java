@@ -14,10 +14,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 public class TokenCommand extends CommandBase {
     @Override
@@ -29,15 +29,15 @@ public class TokenCommand extends CommandBase {
         Optional<WynntilsAccount> account = WebManager.getAccount();
         account.ifPresentOrElse(
                 wynntilsAccount -> {
-                    MutableComponent text = new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
+                    MutableComponent text = Component.literal("Wynntils Token ").withStyle(ChatFormatting.AQUA);
 
                     String token = wynntilsAccount.getToken();
 
-                    MutableComponent response = new TextComponent(token)
+                    MutableComponent response = Component.literal(token)
                             .withStyle(Style.EMPTY
                                     .withHoverEvent(new HoverEvent(
                                             HoverEvent.Action.SHOW_TEXT,
-                                            new TextComponent("Click me to register an" + " account.")))
+                                            Component.literal("Click me to register an" + " account.")))
                                     .withClickEvent((new ClickEvent(
                                             ClickEvent.Action.OPEN_URL,
                                             "https://account.wynntils.com/register.php?token=" + token)))
@@ -49,10 +49,10 @@ public class TokenCommand extends CommandBase {
                     context.getSource().sendSuccess(text, false);
                 },
                 () -> {
-                    MutableComponent failed = new TextComponent(
+                    MutableComponent failed = Component.literal(
                                     "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                             .withStyle(ChatFormatting.GREEN);
-                    failed.append(new TextComponent("/wynntils reload")
+                    failed.append(Component.literal("/wynntils reload")
                             .withStyle(Style.EMPTY
                                     .withColor(ChatFormatting.AQUA)
                                     .withClickEvent(

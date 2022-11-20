@@ -13,7 +13,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.NotificationEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public final class NotificationManager {
     public static MessageContainer queueMessage(String message) {
@@ -55,6 +54,6 @@ public final class NotificationManager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(new TextComponent(msgContainer.getRenderTask().getText()), msgContainer.hashCode());
+                .addMessage(Component.literal(msgContainer.getRenderTask().getText()));
     }
 }

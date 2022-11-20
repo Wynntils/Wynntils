@@ -10,7 +10,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsMenuPagedScreenBase;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class PageSelectorButton extends AbstractButton {
     private final boolean forward;
@@ -18,7 +18,7 @@ public class PageSelectorButton extends AbstractButton {
 
     public PageSelectorButton(
             int x, int y, int width, int height, boolean forward, WynntilsMenuPagedScreenBase screen) {
-        super(x, y, width, height, new TextComponent("Page Selector Button"));
+        super(x, y, width, height, Component.literal("Page Selector Button"));
         this.forward = forward;
         this.screen = screen;
     }

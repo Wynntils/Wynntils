@@ -170,8 +170,7 @@ public final class RenderUtils {
                     .endVertex();
         }
 
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -212,8 +211,8 @@ public final class RenderUtils {
                 .vertex(matrix, x, y, z)
                 .color(color.r, color.g, color.b, color.a)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -311,8 +310,7 @@ public final class RenderUtils {
                 .vertex(matrix, x, y, z)
                 .uv(uOffset * uScale, vOffset * vScale)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void drawScalingTexturedRect(
@@ -389,8 +387,7 @@ public final class RenderUtils {
                 .uv(uOffset * uScale, vOffset * vScale)
                 .color(color.r, color.g, color.b, color.a)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -440,8 +437,7 @@ public final class RenderUtils {
                     .endVertex();
         }
 
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -618,8 +614,7 @@ public final class RenderUtils {
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();
 
@@ -815,8 +810,7 @@ public final class RenderUtils {
         bufferBuilder.vertex(matrix, xMin, yMax, 0).uv(txMin, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMax, 0).uv(txMax, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMin, 0).uv(txMax, tyMin).endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     private static void drawProgressBarForegroundWithColor(
@@ -884,8 +878,7 @@ public final class RenderUtils {
                 .uv(txMax, tyMin)
                 .color(customColor.asInt())
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void drawProgressBarBackground(
@@ -919,8 +912,7 @@ public final class RenderUtils {
         bufferBuilder.vertex(matrix, xMin, yMax, 0).uv(txMin, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMax, 0).uv(txMax, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMin, 0).uv(txMax, tyMin).endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void fillGradient(

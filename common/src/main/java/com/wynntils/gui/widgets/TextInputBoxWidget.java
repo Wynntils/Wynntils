@@ -20,7 +20,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
@@ -51,7 +50,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public TextInputBoxWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(x, y, width, height, TextComponent.EMPTY);
+        super(x, y, width, height, Component.empty());
         this.onUpdateConsumer = onUpdateConsumer;
         this.textboxScreen = textboxScreen;
     }

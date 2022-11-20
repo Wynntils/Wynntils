@@ -39,7 +39,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -98,21 +97,21 @@ public final class WynnItemUtils {
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
 
-        MutableComponent percentLine = new TextComponent("");
+        MutableComponent percentLine = Component.literal("");
 
-        MutableComponent statInfo = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(shortIdName));
+        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + type.getInGame(shortIdName));
         statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         percentLine.append(statInfo);
 
         if (ItemStatInfoFeature.INSTANCE.showStars)
-            percentLine.append(new TextComponent("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
+            percentLine.append(Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
 
-        percentLine.append(new TextComponent(" " + idName).withStyle(ChatFormatting.GRAY));
+        percentLine.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
 
         boolean isNew = idProfile == null || idProfile.isInvalidValue(value);
 
-        if (isNew) percentLine.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
+        if (isNew) percentLine.append(Component.literal(" [NEW]").withStyle(ChatFormatting.GOLD));
 
         MutableComponent rangeLine = percentLine.copy();
         MutableComponent rerollLine = percentLine.copy();
@@ -171,7 +170,7 @@ public final class WynnItemUtils {
             boolean inverted = idProfile.isInverted();
             if (idProfile.hasConstantValue()) {
                 int value = idProfile.getBaseValue();
-                line = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(idName));
+                line = Component.literal((value > 0 ? "+" : "") + value + type.getInGame(idName));
                 line.setStyle(
                         Style.EMPTY.withColor(inverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
             } else {
@@ -179,13 +178,13 @@ public final class WynnItemUtils {
                 int max = idProfile.getMax();
                 ChatFormatting mainColor = inverted ^ (min > 0) ? ChatFormatting.GREEN : ChatFormatting.RED;
                 ChatFormatting textColor = inverted ^ (min > 0) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-                line = new TextComponent((min > 0 ? "+" : "") + min).withStyle(mainColor);
-                line.append(new TextComponent(" to ").withStyle(textColor));
-                line.append(
-                        new TextComponent((max > 0 ? "+" : "") + max + type.getInGame(idName)).withStyle(mainColor));
+                line = Component.literal((min > 0 ? "+" : "") + min).withStyle(mainColor);
+                line.append(Component.literal(" to ").withStyle(textColor));
+                line.append(Component.literal((max > 0 ? "+" : "") + max + type.getInGame(idName))
+                        .withStyle(mainColor));
             }
 
-            line.append(new TextComponent(" " + IdentificationProfile.getAsLongName(idName))
+            line.append(Component.literal(" " + IdentificationProfile.getAsLongName(idName))
                     .withStyle(ChatFormatting.GRAY));
 
             ItemIdentificationContainer id =
@@ -212,7 +211,7 @@ public final class WynnItemUtils {
         String percentString = new BigDecimal(percentage)
                 .setScale(ItemStatInfoFeature.INSTANCE.decimalPlaces, RoundingMode.DOWN)
                 .toPlainString();
-        return new TextComponent(" [" + percentString + "%]").withStyle(color);
+        return Component.literal(" [" + percentString + "%]").withStyle(color);
     }
 
     /**
@@ -223,8 +222,8 @@ public final class WynnItemUtils {
      * @return the styled ID range text component
      */
     public static MutableComponent getRangeTextComponent(int min, int max) {
-        return new TextComponent(" [")
-                .append(new TextComponent(min + ", " + max).withStyle(ChatFormatting.GREEN))
+        return Component.literal(" [")
+                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")
                 .withStyle(ChatFormatting.DARK_GREEN);
     }
@@ -238,11 +237,11 @@ public final class WynnItemUtils {
      * @return the styled reroll chance text component
      */
     public static MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
-        return new TextComponent(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
+        return Component.literal(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
                 .withStyle(ChatFormatting.AQUA)
-                .append(new TextComponent(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
+                .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
                         .withStyle(ChatFormatting.GREEN))
-                .append(new TextComponent(String.format(Utils.getGameLocale(), " \u21E9%.1f%%", decrease * 100))
+                .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E9%.1f%%", decrease * 100))
                         .withStyle(ChatFormatting.RED));
     }
 
@@ -326,7 +325,7 @@ public final class WynnItemUtils {
 
         // can't create lore on crafted items
         if (itemName.startsWith("Crafted")) {
-            itemStack.setHoverName(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
+            itemStack.setHoverName(Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA));
             return itemStack;
         }
 
@@ -334,7 +333,7 @@ public final class WynnItemUtils {
         if (itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6) {
-            itemStack.setHoverName(new TextComponent("Unidentified Item")
+            itemStack.setHoverName(Component.literal("Unidentified Item")
                     .withStyle(
                             ItemTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
             return itemStack;

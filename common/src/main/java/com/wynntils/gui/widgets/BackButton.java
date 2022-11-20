@@ -11,13 +11,13 @@ import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class BackButton extends AbstractButton {
     private final Screen backTo;
 
     public BackButton(int x, int y, int width, int height, Screen backTo) {
-        super(x, y, width, height, new TextComponent("Back Button"));
+        super(x, y, width, height, Component.literal("Back Button"));
         this.backTo = backTo;
     }
 

@@ -11,11 +11,11 @@ import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class QuestsPageButton extends AbstractButton {
     public QuestsPageButton(int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("Quests Page Button"));
+        super(x, y, width, height, Component.literal("Quests Page Button"));
     }
 
     @Override

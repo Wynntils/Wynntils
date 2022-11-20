@@ -40,7 +40,7 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
@@ -62,7 +62,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     private int configScrollOffset = 0;
 
     public WynntilsBookSettingsScreen() {
-        super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
+        super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
@@ -87,12 +87,12 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 Texture.SETTING_BACKGROUND.height() - 30,
                 35,
                 14,
-                new TranslatableComponent("screens.wynntils.settingsScreen.apply"),
+                Component.translatable("screens.wynntils.settingsScreen.apply"),
                 () -> {
                     ConfigManager.saveConfig();
                     this.onClose();
                 },
-                List.of(new TranslatableComponent("screens.wynntils.settingsScreen.apply.description")
+                List.of(Component.translatable("screens.wynntils.settingsScreen.apply.description")
                         .withStyle(ChatFormatting.GREEN))));
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -100,9 +100,9 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 Texture.SETTING_BACKGROUND.height() - 30,
                 35,
                 14,
-                new TranslatableComponent("screens.wynntils.settingsScreen.close"),
+                Component.translatable("screens.wynntils.settingsScreen.close"),
                 this::onClose,
-                List.of(new TranslatableComponent("screens.wynntils.settingsScreen.close.description")
+                List.of(Component.translatable("screens.wynntils.settingsScreen.close.description")
                         .withStyle(ChatFormatting.DARK_RED))));
     }
 

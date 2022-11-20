@@ -16,7 +16,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class UpdatesFeature extends UserFeature {
@@ -65,20 +66,20 @@ public class UpdatesFeature extends UserFeature {
                         WynntilsMod.info("Attempting to auto-update.");
 
                         McUtils.sendMessageToClient(
-                                new TextComponent("Auto-updating...").withStyle(ChatFormatting.YELLOW));
+                                Component.literal("Auto-updating...").withStyle(ChatFormatting.YELLOW));
 
                         CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
 
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {
-                                case SUCCESSFUL -> McUtils.sendMessageToClient(new TextComponent(
+                                case SUCCESSFUL -> McUtils.sendMessageToClient(Component.literal(
                                                 "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
                                         .withStyle(ChatFormatting.DARK_GREEN));
                                 case ERROR -> McUtils.sendMessageToClient(
-                                        new TextComponent("Error applying Wynntils/Artemis update.")
+                                        Component.literal("Error applying Wynntils/Artemis update.")
                                                 .withStyle(ChatFormatting.DARK_RED));
                                 case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                        new TextComponent("Wynntils/Artemis is already on latest version.")
+                                        Component.literal("Wynntils/Artemis is already on latest version.")
                                                 .withStyle(ChatFormatting.YELLOW));
                             }
                         });
@@ -87,17 +88,17 @@ public class UpdatesFeature extends UserFeature {
     }
 
     private static void remindToUpdateIfExists(String newVersion) {
-        TextComponent clickable = new TextComponent("here.");
+        MutableComponent clickable = Component.literal("here.");
         clickable.setStyle(clickable
                 .getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                 .withUnderlined(true)
                 .withBold(true));
-        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: Version " + newVersion
+        McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis]: Version " + newVersion
                         + " is the latest version, but you are using build "
                         + WynntilsMod.getVersion() + ". Please consider updating by clicking ")
                 .append(clickable)
-                .append(new TextComponent(
+                .append(Component.literal(
                         "\nPlease note that Artemis is in alpha, and newer builds might introduce bugs."))
                 .withStyle(ChatFormatting.GREEN));
     }

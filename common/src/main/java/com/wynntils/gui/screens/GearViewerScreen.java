@@ -21,21 +21,19 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class GearViewerScreen extends Screen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
-            List.of(new TranslatableComponent("screens.wynntils.gearViewer.viewStats"));
+            List.of(Component.translatable("screens.wynntils.gearViewer.viewStats"));
 
     private final Player player;
     private final ItemStack heldItem;
     private final List<ItemStack> armorItems;
 
     public GearViewerScreen(Player player) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.player = player;
         this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
 

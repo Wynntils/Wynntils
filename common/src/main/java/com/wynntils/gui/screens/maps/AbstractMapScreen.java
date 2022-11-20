@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends Screen {
@@ -66,12 +66,12 @@ public abstract class AbstractMapScreen extends Screen {
     protected Poi hovered = null;
 
     public AbstractMapScreen() {
-        super(new TextComponent("Map"));
+        super(Component.literal("Map"));
         centerMapAroundPlayer();
     }
 
     public AbstractMapScreen(float mapCenterX, float mapCenterZ) {
-        super(new TextComponent("Map"));
+        super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
     }
 

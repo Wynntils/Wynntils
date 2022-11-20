@@ -20,7 +20,7 @@ import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuideEmeraldPouchItemStack extends AbstractButton {
@@ -34,7 +34,7 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
             int height,
             EmeraldPouchItemStack itemStack,
             WynntilsEmeraldPouchGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide EmeraldPouchItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }

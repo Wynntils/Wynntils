@@ -17,8 +17,6 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -41,7 +39,7 @@ public class ChatTimestampFeature extends UserFeature {
         } catch (Exception e) {
             formatter = null;
 
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.chatTimestamp.invalidFormatMsg")
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatTimestamp.invalidFormatMsg")
                     .withStyle(ChatFormatting.DARK_RED));
         }
     }
@@ -53,7 +51,7 @@ public class ChatTimestampFeature extends UserFeature {
         Component message = event.getMessage();
 
         LocalDateTime date = LocalDateTime.now();
-        MutableComponent timestamp = new TextComponent("§8[§7" + date.format(formatter) + "§8]§r ");
+        MutableComponent timestamp = Component.literal("§8[§7" + date.format(formatter) + "§8]§r ");
 
         timestamp.append(message);
 

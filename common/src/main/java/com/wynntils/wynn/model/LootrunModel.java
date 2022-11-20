@@ -102,7 +102,7 @@ public final class LootrunModel {
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.options().renderDistance;
+        int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 

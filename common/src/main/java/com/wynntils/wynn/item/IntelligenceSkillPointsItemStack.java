@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -44,7 +43,7 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
 
     private List<Component> getTooltipExtension() {
         List<Component> tooltipExtension = new ArrayList<>();
-        tooltipExtension.add(new TextComponent(""));
+        tooltipExtension.add(Component.literal(""));
         tooltipExtension.addAll(getManaTables());
         return tooltipExtension;
     }
@@ -76,12 +75,12 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
                     spellInfo += ChatFormatting.GRAY + " (-" + (manaCost - 1) + " ✺ in "
                             + remainingLevelsDescription(nextUpgrade - intelligencePoints) + ")";
                 }
-                newLore.add(new TextComponent(spellInfo));
+                newLore.add(Component.literal(spellInfo));
             }
         }
 
         if (closestUpgradeLevel < Integer.MAX_VALUE) {
-            newLore.addFirst(new TextComponent(ChatFormatting.GRAY + "Next upgrade: At " + ChatFormatting.WHITE
+            newLore.addFirst(Component.literal(ChatFormatting.GRAY + "Next upgrade: At " + ChatFormatting.WHITE
                     + closestUpgradeLevel + ChatFormatting.GRAY + " points (in "
                     + remainingLevelsDescription(closestUpgradeLevel - intelligencePoints) + ")"));
         }
