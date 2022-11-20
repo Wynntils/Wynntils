@@ -35,6 +35,6 @@ public enum UncappedUnitDouble implements OptionInstance.SliderableValueSet<Doub
     @Override
     public Codec<Double> codec() {
         return Codec.either(Codec.doubleRange(minValue, maxValue), Codec.BOOL)
-                .xmap((either) -> either.map((value) -> value, (value) -> value ? maxValue : minValue), Either::left);
+                .xmap(either -> either.map(value -> value, bool -> bool ? 1.0d : 0.0d), Either::left);
     }
 }
