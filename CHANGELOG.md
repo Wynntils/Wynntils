@@ -1,9 +1,38 @@
+## [0.0.1-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.61...v0.0.1-alpha.62) (2022-11-19)
+
+
+### Bug Fixes
+
+* Catch all exceptions with readJson ([#711](https://github.com/Wynntils/Artemis/issues/711)) ([ec3f4a7](https://github.com/Wynntils/Artemis/commit/ec3f4a7dc6e3f7199e6407608254e2eee38a58dc))
+
+## [0.0.1-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.60...v0.0.1-alpha.61) (2022-11-19)
+
+
+### Bug Fixes
+
+* Fix chat items resetting text colors after they appear ([#710](https://github.com/Wynntils/Artemis/issues/710)) ([072b0c9](https://github.com/Wynntils/Artemis/commit/072b0c964de131064a32dae1509ca0a6cc4cbacc))
+
+
+### New Features
+
+* Support overflowing health and mana in bars ([#707](https://github.com/Wynntils/Artemis/issues/707)) ([d4a1d19](https://github.com/Wynntils/Artemis/commit/d4a1d19d3a0033d07fc0da0223515a188ea053dd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.61 [skip ci] ([4333a20](https://github.com/Wynntils/Artemis/commit/4333a201b8598079d78520055381911f1fe59f71))
+
 ## [0.0.1-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.59...v0.0.1-alpha.60) (2022-11-19)
 
 
 ### Bug Fixes
 
 * Fix chat tabs resetting on config reload ([#705](https://github.com/Wynntils/Artemis/issues/705)) ([811bda2](https://github.com/Wynntils/Artemis/commit/811bda2acad77b356ed98b0c7fa37a5cb2b8ac18))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.60 [skip ci] ([7cff713](https://github.com/Wynntils/Artemis/commit/7cff71325a60b9fc731b1a46e3213e23b34f5ffd))
 
 ## [0.0.1-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.58...v0.0.1-alpha.59) (2022-11-19)
 
@@ -28,28 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.58 [skip ci] ([b11bd13](https://github.com/Wynntils/Artemis/commit/b11bd139efc8dc51b710d497bbaba2c94dccc371))
-
-## [0.0.1-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.56...v0.0.1-alpha.57) (2022-11-18)
-
-
-### Bug Fixes
-
-* Fix discovery screen api cache issues ([#703](https://github.com/Wynntils/Artemis/issues/703)) ([14d410f](https://github.com/Wynntils/Artemis/commit/14d410f517c91fd73a9445cea08a0fb3b15acc47))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.57 [skip ci] ([d338834](https://github.com/Wynntils/Artemis/commit/d33883423f0bd5264c41b497ae93758e02e68daa))
-
-## [0.0.1-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.55...v0.0.1-alpha.56) (2022-11-17)
-
-
-### Bug Fixes
-
-* Fix colors disappearing when a message has chat items ([#699](https://github.com/Wynntils/Artemis/issues/699)) ([96bdc33](https://github.com/Wynntils/Artemis/commit/96bdc33648bfbd3d43f0a4012e2959531b576063))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.56 [skip ci] ([6af1bf0](https://github.com/Wynntils/Artemis/commit/6af1bf0905f30b5d870d6e9905ead1eada92f3a9))
 
