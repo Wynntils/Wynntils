@@ -16,4 +16,12 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
                 TimeUnit.MILLISECONDS.toSeconds(millis)
                         - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BombInfo bombInfo)) return false;
+
+        // match user, bomb type, and server, ignoring time
+        return user.equals(bombInfo.user()) && bomb == bombInfo.bomb() && server.equals(bombInfo.server());
+    }
 }
