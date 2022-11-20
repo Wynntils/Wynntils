@@ -44,7 +44,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                 (button) -> {
                     McUtils.mc().setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
-                    McUtils.player().commandUnsigned("/class");
+                    McUtils.player().commandUnsigned("class");
                 });
 
         renderables.set(3, classSelection);
@@ -55,7 +55,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                 (button) -> {
                     McUtils.mc().setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
-                    McUtils.player().commandUnsigned("/hub");
+                    McUtils.player().commandUnsigned("hub");
                 });
 
         renderables.set(4, hub);

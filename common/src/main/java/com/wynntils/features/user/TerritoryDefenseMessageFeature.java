@@ -33,7 +33,7 @@ public class TerritoryDefenseMessageFeature extends UserFeature {
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {
                 McUtils.player()
-                        .commandUnsigned("/g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
+                        .commandUnsigned("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }
