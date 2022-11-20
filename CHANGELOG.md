@@ -1,9 +1,21 @@
+## [0.0.1-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.65...v0.0.1-alpha.66) (2022-11-20)
+
+
+### Bug Fixes
+
+* Fix crash loops in feature exception ([#709](https://github.com/Wynntils/Artemis/issues/709)) ([b4916f7](https://github.com/Wynntils/Artemis/commit/b4916f77fed24346ce24c891919b9165615346b8))
+
 ## [0.0.1-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.64...v0.0.1-alpha.65) (2022-11-20)
 
 
 ### New Features
 
 * Overwrite Territory Map button to open Guild Map ([#712](https://github.com/Wynntils/Artemis/issues/712)) ([2121607](https://github.com/Wynntils/Artemis/commit/212160757f77bfe077ff2af6b0a226c7caa06050))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.65 [skip ci] ([ab34d2b](https://github.com/Wynntils/Artemis/commit/ab34d2befed32d344598bb868fc4bd99d54caf39))
 
 ## [0.0.1-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.63...v0.0.1-alpha.64) (2022-11-20)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.62 [skip ci] ([ddaac0a](https://github.com/Wynntils/Artemis/commit/ddaac0a564610b63e09e1fdb173aebd789576703))
-
-## [0.0.1-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.60...v0.0.1-alpha.61) (2022-11-19)
-
-
-### Bug Fixes
-
-* Fix chat items resetting text colors after they appear ([#710](https://github.com/Wynntils/Artemis/issues/710)) ([072b0c9](https://github.com/Wynntils/Artemis/commit/072b0c964de131064a32dae1509ca0a6cc4cbacc))
-
-
-### New Features
-
-* Support overflowing health and mana in bars ([#707](https://github.com/Wynntils/Artemis/issues/707)) ([d4a1d19](https://github.com/Wynntils/Artemis/commit/d4a1d19d3a0033d07fc0da0223515a188ea053dd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.61 [skip ci] ([4333a20](https://github.com/Wynntils/Artemis/commit/4333a201b8598079d78520055381911f1fe59f71))
 
