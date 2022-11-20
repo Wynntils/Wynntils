@@ -52,15 +52,12 @@ public final class WynntilsMod {
         try {
             return eventBus.post(event);
         } catch (Throwable t) {
-            // TODO: This is a temporary fix for a crash that occurs when an error happens in a client-side message
-            //       event, and we send a new message about disabling X feature,
-            //       causing a new exception in client-side message event.
-            handleExceptionInEventListener(t, !(event instanceof ClientsideMessageEvent));
+            handleExceptionInEventListener(t, event);
             return false;
         }
     }
 
-    private static void handleExceptionInEventListener(Throwable t, boolean sendMessageToUser) {
+    private static void handleExceptionInEventListener(Throwable t, Event event) {
         StackTraceElement[] stackTrace = t.getStackTrace();
         String crashingFeatureName = null;
         for (StackTraceElement line : stackTrace) {
@@ -93,7 +90,11 @@ public final class WynntilsMod {
 
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");
-        if (sendMessageToUser) {
+
+        // TODO: This is a temporary fix for a crash that occurs when an error happens in a client-side message
+        //       event, and we send a new message about disabling X feature,
+        //       causing a new exception in client-side message event.
+        if (!(event instanceof ClientsideMessageEvent)) {
             McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
                             + "' has crashed and will be disabled")
                     .withStyle(ChatFormatting.RED));
