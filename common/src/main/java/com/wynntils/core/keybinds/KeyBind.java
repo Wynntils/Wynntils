@@ -12,10 +12,11 @@ import net.minecraft.world.inventory.Slot;
 /** Wraps a {@link KeyMapping} with relevant context */
 public class KeyBind {
     private static final String CATEGORY = "Wynntils";
-    private final KeyMapping keyMapping;
     private final Runnable onPress;
     private final Consumer<Slot> onInventoryPress;
     private final boolean firstPress;
+
+    private KeyMapping keyMapping;
 
     /**
      * @param name             Name of the keybind
@@ -28,6 +29,11 @@ public class KeyBind {
     public KeyBind(String name, int keyCode, boolean firstPress, Runnable onPress, Consumer<Slot> onInventoryPress) {
         this.firstPress = firstPress;
         this.keyMapping = new KeyMapping(name, InputConstants.Type.KEYSYM, keyCode, CATEGORY);
+
+        // Unbind keybind, bound after registration by options reload
+        keyMapping.setKey(InputConstants.UNKNOWN);
+        KeyMapping.resetMapping();
+
         this.onPress = onPress;
         this.onInventoryPress = onInventoryPress;
     }
