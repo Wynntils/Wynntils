@@ -8,6 +8,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.wynntils.mc.EventFactory;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.resources.ClientPackSource;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackResources;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPackSource.class)
 public abstract class ClientPackSourceMixin {
@@ -24,7 +25,7 @@ public abstract class ClientPackSourceMixin {
     private Pack serverPack;
 
     @Inject(method = "clearServerPack", at = @At("HEAD"), cancellable = true)
-    private void onClearServerPackPre(CallbackInfo ci) {
+    private void onClearServerPackPre(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         if (serverPack == null) {
             return;
         }
@@ -38,7 +39,7 @@ public abstract class ClientPackSourceMixin {
                         .hash(Hashing.sha1())
                         .toString();
                 if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
-                    ci.cancel();
+                    cir.setReturnValue(CompletableFuture.completedFuture(null));
                 }
             } catch (IOException e) {
                 // ignored

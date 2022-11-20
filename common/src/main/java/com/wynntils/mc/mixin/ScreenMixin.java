@@ -106,7 +106,7 @@ public abstract class ScreenMixin implements TextboxScreen {
 
     @Inject(
             method = "init(Lnet/minecraft/client/Minecraft;II)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;rebuildWidgets()V"))
     private void onScreenInit(CallbackInfo ci) {
         EventFactory.onScreenInit((Screen) (Object) this);
     }
