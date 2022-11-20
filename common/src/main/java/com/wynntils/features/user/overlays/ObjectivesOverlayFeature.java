@@ -75,7 +75,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
             super(
                     new OverlayPosition(
                             -5.5f,
-                            -5.0f,
+                            -5,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
@@ -165,8 +165,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
         protected DailyObjectiveOverlay() {
             super(
                     new OverlayPosition(
-                            -35.5f,
-                            -5.0f,
+                            -35,
+                            -5,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),

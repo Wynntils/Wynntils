@@ -33,7 +33,6 @@ public final class WynntilsMod {
     private static String version = "";
     private static boolean developmentBuild = false;
     private static boolean developmentEnvironment;
-    private static boolean featuresInited = false;
     private static IEventBus eventBus;
     private static File modJar;
 
@@ -147,15 +146,13 @@ public final class WynntilsMod {
 
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
-        if (featuresInited) return;
+        if (FeatureRegistry.isInitCompleted()) return;
 
         try {
             initFeatures();
         } catch (Throwable t) {
             LOGGER.error("Failed to initialize Wynntils features", t);
         }
-
-        featuresInited = true;
     }
 
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment, File modFile) {
