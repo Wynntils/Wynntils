@@ -10,6 +10,7 @@
     "ConnectionMixin",
     "ConnectScreenMixin",
     "CrashReportMixin",
+    "OptionInstanceMixin",
     "CustomHeadLayerMixin",
     "EntityLookupMixin",
     "GuiMixin",
