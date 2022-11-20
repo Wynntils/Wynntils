@@ -1,9 +1,21 @@
+## [0.0.1-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.63...v0.0.1-alpha.64) (2022-11-20)
+
+
+### Bug Fixes
+
+* Rework how overlays positions work internally (and fix up some overlay positions) ([#708](https://github.com/Wynntils/Artemis/issues/708)) ([a1cb53e](https://github.com/Wynntils/Artemis/commit/a1cb53e95b5b6408601a6be3eb61fa497fb4db44))
+
 ## [0.0.1-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.62...v0.0.1-alpha.63) (2022-11-20)
 
 
 ### Bug Fixes
 
 * ignore duplicated bomb bell messages ([#713](https://github.com/Wynntils/Artemis/issues/713)) ([d290bde](https://github.com/Wynntils/Artemis/commit/d290bded3af57a1dd8a8e2ad741a5713bd7a2dc0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.63 [skip ci] ([9fa1ada](https://github.com/Wynntils/Artemis/commit/9fa1ada6e15eee1a5216dce90b364794ccef9c8f))
 
 ## [0.0.1-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.61...v0.0.1-alpha.62) (2022-11-19)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.60 [skip ci] ([7cff713](https://github.com/Wynntils/Artemis/commit/7cff71325a60b9fc731b1a46e3213e23b34f5ffd))
-
-## [0.0.1-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.58...v0.0.1-alpha.59) (2022-11-19)
-
-
-### New Features
-
-* Add /bombbell command ([#704](https://github.com/Wynntils/Artemis/issues/704)) ([2e43dbd](https://github.com/Wynntils/Artemis/commit/2e43dbdb43b500d1d944bd67c7869d665798a4d9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.59 [skip ci] ([fc7d743](https://github.com/Wynntils/Artemis/commit/fc7d743b4456edc259240d133138ffc54f48c881))
 
