@@ -5,6 +5,7 @@
 package com.wynntils.core.keybinds;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -76,6 +77,8 @@ public final class KeyBindManager extends CoreManager {
     public static void unregisterKeybind(KeyBind toRemove) {
         if (!KEY_BINDS.remove(toRemove)) return;
 
+        KeyMapping keyMapping = toRemove.getKeyMapping();
+
         synchronized (McUtils.options()) {
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -85,6 +88,10 @@ public final class KeyBindManager extends CoreManager {
 
             ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
         }
+
+        // Unbind keybind
+        keyMapping.setKey(InputConstants.UNKNOWN);
+        KeyMapping.resetMapping();
     }
 
     private static void triggerKeybinds() {
