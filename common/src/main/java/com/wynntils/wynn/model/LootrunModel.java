@@ -45,6 +45,7 @@ import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -372,9 +373,12 @@ public final class LootrunModel {
         List<Path> result = new ArrayList<>();
         for (Path current : vec3s) {
             float distance = 0f;
-            CubicSpline.Builder<Float> builderX = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderY = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderZ = CubicSpline.builder((value) -> value);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX =
+                    CubicSpline.builder(LootrunFloatFunction.getInstance());
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY =
+                    CubicSpline.builder(LootrunFloatFunction.getInstance());
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ =
+                    CubicSpline.builder(LootrunFloatFunction.getInstance());
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
@@ -394,9 +398,9 @@ public final class LootrunModel {
                 builderY.addPoint(distance, (float) vec3.y, slopeY);
                 builderZ.addPoint(distance, (float) vec3.z, slopeZ);
             }
-            CubicSpline<Float> splineX = builderX.build();
-            CubicSpline<Float> splineY = builderY.build();
-            CubicSpline<Float> splineZ = builderZ.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineZ = builderZ.build();
 
             Path newResult = new Path(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {
@@ -886,4 +890,28 @@ public final class LootrunModel {
     public record ColoredPath(List<ColoredPoint> points) {}
 
     public record Path(List<Vec3> points) {}
+
+    private static class LootrunFloatFunction implements ToFloatFunction<Float> {
+        private static final LootrunFloatFunction INSTANCE = new LootrunFloatFunction();
+
+        @Override
+        public float apply(Float value) {
+            return value;
+        }
+
+        @Override
+        public float minValue() {
+            return Float.MIN_VALUE;
+        }
+
+        @Override
+        public float maxValue() {
+            return Float.MAX_VALUE;
+        }
+
+        public static LootrunFloatFunction getInstance() {
+            return INSTANCE;
+        }
+    }
+    ;
 }
