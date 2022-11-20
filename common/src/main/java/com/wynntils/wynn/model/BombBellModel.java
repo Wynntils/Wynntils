@@ -38,10 +38,10 @@ public class BombBellModel extends Model {
             String bomb = matcher.group("bomb");
             String server = matcher.group("server");
 
-            BOMB_BELLS.add(new BombInfo(user, BombType.fromString(bomb), server, System.currentTimeMillis()));
-
             // Better to do a bit of processing and clean up the set than leaking memory
             removeOldTimers();
+
+            BOMB_BELLS.add(new BombInfo(user, BombType.fromString(bomb), server, System.currentTimeMillis()));
         }
     }
 

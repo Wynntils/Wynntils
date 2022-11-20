@@ -1,9 +1,21 @@
+## [0.0.1-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.62...v0.0.1-alpha.63) (2022-11-20)
+
+
+### Bug Fixes
+
+* ignore duplicated bomb bell messages ([#713](https://github.com/Wynntils/Artemis/issues/713)) ([d290bde](https://github.com/Wynntils/Artemis/commit/d290bded3af57a1dd8a8e2ad741a5713bd7a2dc0))
+
 ## [0.0.1-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.61...v0.0.1-alpha.62) (2022-11-19)
 
 
 ### Bug Fixes
 
 * Catch all exceptions with readJson ([#711](https://github.com/Wynntils/Artemis/issues/711)) ([ec3f4a7](https://github.com/Wynntils/Artemis/commit/ec3f4a7dc6e3f7199e6407608254e2eee38a58dc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.62 [skip ci] ([ddaac0a](https://github.com/Wynntils/Artemis/commit/ddaac0a564610b63e09e1fdb173aebd789576703))
 
 ## [0.0.1-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.60...v0.0.1-alpha.61) (2022-11-19)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.59 [skip ci] ([fc7d743](https://github.com/Wynntils/Artemis/commit/fc7d743b4456edc259240d133138ffc54f48c881))
-
-## [0.0.1-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.57...v0.0.1-alpha.58) (2022-11-19)
-
-
-### Bug Fixes
-
-* Do not scan quest book on entering world ([#706](https://github.com/Wynntils/Artemis/issues/706)) ([7e8cd8c](https://github.com/Wynntils/Artemis/commit/7e8cd8c119a0ceaa62f382a9721422144c5e672b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.58 [skip ci] ([b11bd13](https://github.com/Wynntils/Artemis/commit/b11bd139efc8dc51b710d497bbaba2c94dccc371))
 
