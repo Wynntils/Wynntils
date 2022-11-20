@@ -5,6 +5,7 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.managers.Model;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.AmplifierTierProperty;
@@ -25,6 +26,7 @@ import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
@@ -84,6 +86,21 @@ public class ItemStackTransformModel extends Model {
     public static void onSetSlot(SetSlotEvent event) {
         ItemStack stack = event.getItem();
 
+        stack = tryTransformItem(stack);
+
+        event.setItem(stack);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        List<ItemStack> items = event.getItems();
+
+        items.replaceAll(ItemStackTransformModel::tryTransformItem);
+
+        event.setItems(items);
+    }
+
+    private static ItemStack tryTransformItem(ItemStack stack) {
         // itemstack transformers
         for (Map.Entry<Predicate<ItemStack>, ItemStackTransformer> e : TRANSFORMERS.entrySet()) {
             if (e.getKey().test(stack)) {
@@ -105,7 +122,7 @@ public class ItemStackTransformModel extends Model {
         if (stack instanceof WynnItemStack wynnItemStack) {
             wynnItemStack.init();
         }
-        event.setItem(stack);
+        return stack;
     }
 
     @FunctionalInterface

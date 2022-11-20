@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Optional;
 import java.util.UUID;
@@ -148,7 +149,22 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
+        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+
+        if (packet.getItems() != event.getItems()) {
+            if (packet.getContainerId() == 0) {
+                McUtils.player()
+                        .inventoryMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+                McUtils.player()
+                        .containerMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            }
+
             ci.cancel();
         }
     }
