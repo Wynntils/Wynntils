@@ -89,7 +89,7 @@ public class OverlayPosition {
         Vec2 referencePoint = new Vec2(
                 overlay.getRenderX() + overlay.getWidth() / 2f, overlay.getRenderY() + overlay.getHeight() / 2f);
 
-        // 1. Get the best section (section with the top left point of overlay)
+        // 1. Get the best section (section with the center point of overlay)
         AnchorSection section = Arrays.stream(AnchorSection.values())
                 .filter(anchorSection ->
                         OverlayManager.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
