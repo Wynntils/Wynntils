@@ -235,7 +235,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.DARK_RED))
                                 .append(new TextComponent(" unused ability points")
-                                        .withStyle(ChatFormatting.DARK_RED)));
+                                        .withStyle(ChatFormatting.DARK_AQUA)));
                     }
                 }
 
