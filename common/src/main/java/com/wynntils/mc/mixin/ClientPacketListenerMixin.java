@@ -249,7 +249,10 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onChatReceived(
                 com.wynntils.mc.objects.ChatType.CHAT, packet.message().serverContent());
-        if (result.isCanceled()) return;
+        if (result.isCanceled()) {
+            ci.cancel();
+            return;
+        }
 
         if (!result.getMessage().equals(packet.message().serverContent())) {
             PlayerChatMessage modified = packet.message().withUnsignedContent(result.getMessage());
@@ -274,7 +277,10 @@ public abstract class ClientPacketListenerMixin {
         ChatPacketReceivedEvent result = EventFactory.onChatReceived(
                 packet.overlay() ? com.wynntils.mc.objects.ChatType.GAME_INFO : com.wynntils.mc.objects.ChatType.SYSTEM,
                 packet.content());
-        if (result.isCanceled()) return;
+        if (result.isCanceled()) {
+            ci.cancel();
+            return;
+        }
 
         if (!result.getMessage().equals(packet.content())) {
 
