@@ -1,9 +1,21 @@
+## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
+
+
+### Bug Fixes
+
+* Make unused ability point messages dark aqua ([bdacde5](https://github.com/Wynntils/Artemis/commit/bdacde5cbabd620057dd46844bb4d0a954c630ff))
+
 ## [0.0.1-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.65...v0.0.1-alpha.66) (2022-11-20)
 
 
 ### Bug Fixes
 
 * Fix crash loops in feature exception ([#709](https://github.com/Wynntils/Artemis/issues/709)) ([b4916f7](https://github.com/Wynntils/Artemis/commit/b4916f77fed24346ce24c891919b9165615346b8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.66 [skip ci] ([629e6cd](https://github.com/Wynntils/Artemis/commit/629e6cd5ed3126d8f2e42aed5d7a3414391ad499))
 
 ## [0.0.1-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.64...v0.0.1-alpha.65) (2022-11-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.63 [skip ci] ([9fa1ada](https://github.com/Wynntils/Artemis/commit/9fa1ada6e15eee1a5216dce90b364794ccef9c8f))
-
-## [0.0.1-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.61...v0.0.1-alpha.62) (2022-11-19)
-
-
-### Bug Fixes
-
-* Catch all exceptions with readJson ([#711](https://github.com/Wynntils/Artemis/issues/711)) ([ec3f4a7](https://github.com/Wynntils/Artemis/commit/ec3f4a7dc6e3f7199e6407608254e2eee38a58dc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.62 [skip ci] ([ddaac0a](https://github.com/Wynntils/Artemis/commit/ddaac0a564610b63e09e1fdb173aebd789576703))
 
