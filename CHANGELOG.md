@@ -1,9 +1,21 @@
+## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
+
+
+### Bug Fixes
+
+* Fix ability point coloring ([cbf17d5](https://github.com/Wynntils/Artemis/commit/cbf17d5951e9f2dca049ee8c280e97f39428af49))
+
 ## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
 
 
 ### Bug Fixes
 
 * Make unused ability point messages dark aqua ([bdacde5](https://github.com/Wynntils/Artemis/commit/bdacde5cbabd620057dd46844bb4d0a954c630ff))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.67 [skip ci] ([922a140](https://github.com/Wynntils/Artemis/commit/922a1409c4f0950b36194cb53450d6ef54a0f12d))
 
 ## [0.0.1-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.65...v0.0.1-alpha.66) (2022-11-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.64 [skip ci] ([40a9486](https://github.com/Wynntils/Artemis/commit/40a94869036c80c404f8f596e363dde523f0874a))
-
-## [0.0.1-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.62...v0.0.1-alpha.63) (2022-11-20)
-
-
-### Bug Fixes
-
-* ignore duplicated bomb bell messages ([#713](https://github.com/Wynntils/Artemis/issues/713)) ([d290bde](https://github.com/Wynntils/Artemis/commit/d290bded3af57a1dd8a8e2ad741a5713bd7a2dc0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.63 [skip ci] ([9fa1ada](https://github.com/Wynntils/Artemis/commit/9fa1ada6e15eee1a5216dce90b364794ccef9c8f))
 
