@@ -230,10 +230,10 @@ public class InfoMessageFilterFeature extends UserFeature {
 
                     if (unusedAbilityPoints != 0) {
                         NotificationManager.queueMessage(new TextComponent("You have ")
-                                .withStyle(ChatFormatting.DARK_RED)
+                                .withStyle(ChatFormatting.DARK_AQUA)
                                 .append(new TextComponent(String.valueOf(unusedAbilityPoints))
                                         .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.DARK_RED))
+                                        .withStyle(ChatFormatting.DARK_AQUA))
                                 .append(new TextComponent(" unused ability points")
                                         .withStyle(ChatFormatting.DARK_AQUA)));
                     }
