@@ -151,6 +151,20 @@ public class CharacterFunctions {
         }
     }
 
+    public static class ManaPctFunction extends DependantFunction<Float> {
+        @Override
+        public Float getValue(String argument) {
+            int currentMana = ActionBarModel.getCurrentMana();
+            int maxMana = ActionBarModel.getMaxMana();
+            return ((float) currentMana / maxMana * 100.0f);
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(ActionBarModel.class);
+        }
+    }
+
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
