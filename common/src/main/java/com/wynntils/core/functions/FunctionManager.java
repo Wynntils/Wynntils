@@ -338,6 +338,5 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new MinecraftFunctions.ZFunction());
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
-
     }
 }
