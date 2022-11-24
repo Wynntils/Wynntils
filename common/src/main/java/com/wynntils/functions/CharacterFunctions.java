@@ -3,9 +3,7 @@
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
-
-import static com.wynntils.mc.utils.McUtils.player;
-
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.managers.Model;
@@ -40,10 +38,10 @@ public class CharacterFunctions {
         }
     }
 
-    public static class bpsFunction extends Function<Float> {
+    public static class BpsFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            LocalPlayer player = player();
+            LocalPlayer player = McUtils.player();
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             double dY = player.getY() - player.yOld;
@@ -51,10 +49,10 @@ public class CharacterFunctions {
         }
     }
 
-    public static class bpsXzFunction extends Function<Float> {
+    public static class BpsXzFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            LocalPlayer player = player();
+            LocalPlayer player = McUtils.player();
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             return (float) Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
