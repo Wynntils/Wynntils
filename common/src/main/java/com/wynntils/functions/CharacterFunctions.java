@@ -3,10 +3,11 @@
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
-import com.wynntils.mc.utils.McUtils;
+
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.managers.Model;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.CharacterManager;
