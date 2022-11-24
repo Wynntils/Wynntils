@@ -26,6 +26,7 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
@@ -255,11 +256,23 @@ public abstract class AbstractMapScreen extends Screen {
                         poseStack,
                         gameX + ", " + gameZ,
                         this.centerX,
-                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
                         FontRenderer.TextShadow.OUTLINE);
+    }
+
+    protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.MAP_BUTTONS_BACKGROUND,
+                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
+                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
+
+        for (Widget widget : this.renderables) {
+            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        }
     }
 
     protected void renderCursor(

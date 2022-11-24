@@ -62,6 +62,8 @@ public class GuildMapScreen extends AbstractMapScreen {
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
+        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
+
         renderHoveredTerritoryInfo(poseStack);
     }
 
