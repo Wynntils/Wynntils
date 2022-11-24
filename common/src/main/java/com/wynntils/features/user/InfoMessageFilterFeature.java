@@ -56,6 +56,8 @@ public class InfoMessageFilterFeature extends UserFeature {
             "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
     private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
             "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+    private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
+            Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
@@ -105,6 +107,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType craftedDurability = FilterType.REDIRECT;
+
+    @Config
+    private FilterType notEnoughMana = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -284,6 +289,21 @@ public class InfoMessageFilterFeature extends UserFeature {
 
                     NotificationManager.queueMessage(
                             new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
+
+                    return;
+                }
+            }
+
+            if (notEnoughMana != FilterType.KEEP) {
+                Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (notEnoughMana == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
 
                     return;
                 }

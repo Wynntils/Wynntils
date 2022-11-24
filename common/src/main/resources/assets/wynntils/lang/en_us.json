@@ -188,6 +188,8 @@
   "feature.wynntils.infoMessageFilter.loginAnnouncements.description": "How should login messages appear?",
   "feature.wynntils.infoMessageFilter.loginAnnouncements.name": "Login Message Filtering",
   "feature.wynntils.infoMessageFilter.name": "Info Message Filter",
+  "feature.wynntils.infoMessageFilter.notEnoughMana.description": "How should messages about not enough mana when casting appear?",
+  "feature.wynntils.infoMessageFilter.notEnoughMana.name": "Mana Message Filtering",
   "feature.wynntils.infoMessageFilter.soulPoint.description": "How should soul point messages appear?",
   "feature.wynntils.infoMessageFilter.soulPoint.name": "Soul Point Message Filtering",
   "feature.wynntils.infoMessageFilter.toolDurability.description": "How should gathering tool durability messages appear?",
