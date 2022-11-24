@@ -7,10 +7,15 @@ package com.wynntils.functions;
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.managers.Model;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.CharacterManager;
+import net.minecraft.client.player.LocalPlayer;
+
 import java.util.List;
+
+import static com.wynntils.mc.utils.McUtils.player;
 
 public class CharacterFunctions {
     public static class SoulpointFunction extends Function<Integer> {
@@ -36,6 +41,28 @@ public class CharacterFunctions {
             return List.of("sp_max");
         }
     }
+
+    public static class bpsFunction extends Function<Float> {
+        @Override
+        public Float getValue(String argument) {
+            LocalPlayer player = player();
+            double dX =  player.getX() - player.xOld;
+            double dZ =  player.getZ() - player.zOld;
+            double dY =  player.getY() - player.yOld;
+            return (float) Math.sqrt((dX*dX)+(dZ*dZ)+(dY*dY))*20;
+            }
+    }
+
+    public static class bpsXzFunction extends Function<Float> {
+        @Override
+        public Float getValue(String argument) {
+            LocalPlayer player = player();
+            double dX =  player.getX() - player.xOld;
+            double dZ =  player.getZ() - player.zOld;
+            return (float) Math.sqrt((dX*dX)+(dZ*dZ))*20;
+        }
+    }
+
 
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
