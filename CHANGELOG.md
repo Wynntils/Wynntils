@@ -1,9 +1,21 @@
+## [0.0.1-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.68...v0.0.1-alpha.69) (2022-11-24)
+
+
+### New Features
+
+* added mana_pct function ([#718](https://github.com/Wynntils/Artemis/issues/718)) ([78331fa](https://github.com/Wynntils/Artemis/commit/78331fa98d863305eea230ca236e7d6e132b4576))
+
 ## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
 
 
 ### Bug Fixes
 
 * Fix ability point coloring ([cbf17d5](https://github.com/Wynntils/Artemis/commit/cbf17d5951e9f2dca049ee8c280e97f39428af49))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.68 [skip ci] ([d5776cd](https://github.com/Wynntils/Artemis/commit/d5776cd838ee784566ceb5e877372428744fcafa))
 
 ## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.65 [skip ci] ([ab34d2b](https://github.com/Wynntils/Artemis/commit/ab34d2befed32d344598bb868fc4bd99d54caf39))
-
-## [0.0.1-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.63...v0.0.1-alpha.64) (2022-11-20)
-
-
-### Bug Fixes
-
-* Rework how overlays positions work internally (and fix up some overlay positions) ([#708](https://github.com/Wynntils/Artemis/issues/708)) ([a1cb53e](https://github.com/Wynntils/Artemis/commit/a1cb53e95b5b6408601a6be3eb61fa497fb4db44))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.64 [skip ci] ([40a9486](https://github.com/Wynntils/Artemis/commit/40a94869036c80c404f8f596e363dde523f0874a))
 
