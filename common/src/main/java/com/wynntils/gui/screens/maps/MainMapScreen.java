@@ -79,6 +79,8 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(MapModel.getServicePois());
         pois.addAll(MapModel.getLabelPois());
 
+        pois.addAll(MapFeature.INSTANCE.customPois);
+
         List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
                 .filter(
                         hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
