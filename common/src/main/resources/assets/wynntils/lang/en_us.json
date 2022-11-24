@@ -640,6 +640,8 @@
   "function.wynntils.mana.name": "Mana",
   "function.wynntils.manaMax.description": "Maximum possible mana",
   "function.wynntils.manaMax.name": "Mana[max]",
+  "function.wynntils.manaPct.description": "Your current mana as percentage of max",
+  "function.wynntils.manaPct.name": "Mana[%%]",
   "function.wynntils.mem_max.description": "Maximum amount of memory available to the JVM",
   "function.wynntils.mem_max.name": "Mem[max]",
   "function.wynntils.mem_pct.description": "Percentage of available memory that is currently being used",
