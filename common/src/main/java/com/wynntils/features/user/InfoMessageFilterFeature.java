@@ -353,7 +353,7 @@ public class InfoMessageFilterFeature extends UserFeature {
 
             if (notEnoughMana != FilterType.KEEP) {
                 Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
-                if (matcher.find()) {
+                if (matcher.matches()) {
                     e.setCanceled(true);
                     if (notEnoughMana == FilterType.HIDE) {
                         return;
@@ -456,7 +456,7 @@ public class InfoMessageFilterFeature extends UserFeature {
 
             if (heal != FilterType.KEEP) {
                 Matcher matcher = BACKGROUND_HEALED_PATTERN.matcher(msg);
-                if (matcher.find()) {
+                if (matcher.matches()) {
                     e.setCanceled(true);
                     if (heal == FilterType.HIDE) {
                         return;
