@@ -59,6 +59,10 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
             Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
+    private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
+
+    private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
             Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
@@ -80,6 +84,8 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
             "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
     private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
+
+    private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
     @Config
     private boolean hideWelcome = true;
@@ -110,6 +116,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType notEnoughMana = FilterType.REDIRECT;
+
+    @Config
+    private FilterType heal = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -163,6 +172,34 @@ public class InfoMessageFilterFeature extends UserFeature {
                     String playerClass = matcher.group("class");
 
                     sendFriendJoinMessage(playerName, server, playerClass);
+                    return;
+                }
+            }
+
+            if (heal != FilterType.KEEP) {
+                Matcher matcher = HEAL_PATTERN.matcher(msg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (heal == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String amount = matcher.group(1);
+
+                    sendHealMessage(amount);
+                    return;
+                }
+
+                matcher = HEALED_PATTERN.matcher(msg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (heal == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String amount = matcher.group(1);
+
+                    sendHealMessage(amount);
                     return;
                 }
             }
@@ -396,7 +433,27 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
+
+            if (heal != FilterType.KEEP) {
+                Matcher matcher = BACKGROUND_HEALED_PATTERN.matcher(msg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (heal == FilterType.HIDE) {
+                        return;
+                    }
+
+                    String amount = matcher.group(1);
+
+                    sendHealMessage(amount);
+                    return;
+                }
+            }
         }
+    }
+
+    private void sendHealMessage(String amount) {
+        NotificationManager.queueMessage(
+                new TextComponent("[+%s ❤]".formatted(amount)).withStyle(ChatFormatting.DARK_RED));
     }
 
     private void sendFriendLeaveMessage(String playerName) {
