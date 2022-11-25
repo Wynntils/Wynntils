@@ -659,7 +659,7 @@
   "function.wynntils.mem_used.description": "Current amount of memory used by the JVM",
   "function.wynntils.mem_used.name": "Mem[used]",
   "function.wynntils.money.description": "Amount of emeralds in inventory",
-  "function.wynntils.money.name": "Total emerald cunt",
+  "function.wynntils.money.name": "Total emerald count",
   "function.wynntils.soulpoint.description": "Your current soul points",
   "function.wynntils.soulpoint.name": "SP",
   "function.wynntils.soulpointMax.description": "Maximum possible soul points",
