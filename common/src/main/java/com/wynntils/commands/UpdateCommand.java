@@ -52,10 +52,10 @@ public class UpdateCommand extends CommandBase {
                     );
                 }
             });
-
-            context.getSource()
-                    .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
         });
+
+        context.getSource()
+                .sendSuccess(new TextComponent("Downloading update!").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }
