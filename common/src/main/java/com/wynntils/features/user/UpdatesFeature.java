@@ -81,6 +81,9 @@ public class UpdatesFeature extends UserFeature {
                                 case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
                                         Component.literal("Wynntils/Artemis is already on latest version.")
                                                 .withStyle(ChatFormatting.YELLOW));
+                                case UPDATE_PENDING -> McUtils.sendMessageToClient(
+                                        Component.literal("Update was already downloaded. It will apply on shutdown.")
+                                                .withStyle(ChatFormatting.YELLOW));
                             }
                         });
                     }

@@ -46,12 +46,15 @@ public class UpdateCommand extends CommandBase {
                     case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
                             Component.literal("Wynntils/Artemis is already on latest version.")
                                     .withStyle(ChatFormatting.YELLOW));
+                    case UPDATE_PENDING -> McUtils.sendMessageToClient(
+                            Component.literal("Update was already downloaded. It will apply on shutdown.")
+                                    .withStyle(ChatFormatting.YELLOW));
                 }
             });
-
-            context.getSource()
-                    .sendSuccess(Component.literal("Downloading update!").withStyle(ChatFormatting.GREEN), false);
         });
+
+        context.getSource()
+                .sendSuccess(Component.literal("Checking for updates...").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }
