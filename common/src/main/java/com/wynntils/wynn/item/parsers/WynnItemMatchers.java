@@ -108,7 +108,7 @@ public final class WynnItemMatchers {
         return itemStack instanceof EmeraldPouchItemStack
                 // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
                 || ((itemStack.getItem() == Items.DIAMOND_AXE || itemStack.getItem() == Items.GOLDEN_SHOVEL)
-                        && itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier"))
+                        && itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier"));
     }
 
     /**
