@@ -11,6 +11,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 
@@ -185,6 +186,38 @@ public class CharacterFunctions {
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
             return List.of(ActionBarModel.class);
+        }
+    }
+
+    public static class MoneyFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            return emeralds;
+        }
+    }
+
+    public static class LeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            return (emeralds - emeralds % 4096) / 4096;
+        }
+    }
+
+    public static class EbFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            return (emeralds % 4096 - (emeralds % 4096) % 64) / 64;
+        }
+    }
+
+    public static class EmFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            return emeralds % 4096 % 64;
         }
     }
 
