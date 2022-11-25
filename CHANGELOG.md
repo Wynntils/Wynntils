@@ -1,3 +1,10 @@
+## [0.0.1-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.70...v0.0.1-alpha.71) (2022-11-25)
+
+
+### Miscellaneous Chores
+
+* Rebuild for quilt ([980882e](https://github.com/Wynntils/Artemis/commit/980882efa03fe8010d36093e4df21ec6d323090f))
+
 ## [0.0.1-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.69...v0.0.1-alpha.70) (2022-11-25)
 
 
@@ -10,6 +17,11 @@
 ### New Features
 
 * added bps and bps_xz ([#721](https://github.com/Wynntils/Artemis/issues/721)) ([3bbccfd](https://github.com/Wynntils/Artemis/commit/3bbccfda887ba980aaba71d73b1b40985b380458))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.70 [skip ci] ([c0c240c](https://github.com/Wynntils/Artemis/commit/c0c240c0098be483d536c1f9dfd2dd626d18af3e))
 
 ## [0.0.1-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.68...v0.0.1-alpha.69) (2022-11-24)
 
@@ -46,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.67 [skip ci] ([922a140](https://github.com/Wynntils/Artemis/commit/922a1409c4f0950b36194cb53450d6ef54a0f12d))
-
-## [0.0.1-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.65...v0.0.1-alpha.66) (2022-11-20)
-
-
-### Bug Fixes
-
-* Fix crash loops in feature exception ([#709](https://github.com/Wynntils/Artemis/issues/709)) ([b4916f7](https://github.com/Wynntils/Artemis/commit/b4916f77fed24346ce24c891919b9165615346b8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.66 [skip ci] ([629e6cd](https://github.com/Wynntils/Artemis/commit/629e6cd5ed3126d8f2e42aed5d7a3414391ad499))
 
