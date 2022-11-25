@@ -35,6 +35,20 @@ public abstract class LocalPlayerMixin {
         }
     }
 
+    @Inject(method = "commandSigned", at = @At("HEAD"), cancellable = true)
+    private void onSignedCommandPre(String plain, Component decorated, CallbackInfo ci) {
+        if (EventFactory.onCommandSent(plain, true).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "commandUnsigned", at = @At("HEAD"), cancellable = true)
+    private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onCommandSent(command, false).isCanceled()) {
+            cir.cancel();
+        }
+    }
+
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onDropPre(fullStack).isCanceled()) {

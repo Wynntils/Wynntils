@@ -19,6 +19,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -396,6 +397,10 @@ public final class EventFactory {
     // region Chat Events
     public static ChatSentEvent onChatSent(String message) {
         return post(new ChatSentEvent(message));
+    }
+
+    public static CommandSentEvent onCommandSent(String command, boolean signed) {
+        return post(new CommandSentEvent(command, signed));
     }
 
     public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {

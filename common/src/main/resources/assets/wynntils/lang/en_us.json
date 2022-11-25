@@ -35,7 +35,7 @@
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
   "feature.wynntils.chatTimestamp.invalidFormatMsg": "Invalid timestamp format specified in config! Timestamps will be disabled until a valid format is set.",
   "feature.wynntils.chatTimestamp.name": "Chat Timestamps",
-  "feature.wynntils.commands.name": "Custom Wynntils Command",
+  "feature.wynntils.commands.name": "Wynntils Commands",
   "feature.wynntils.connectionProgress.name": "Connection Progress",
   "feature.wynntils.containerSearch.filterInBank.description": "Should there be a search widget in the bank?",
   "feature.wynntils.containerSearch.filterInBank.name": "Search Bar in Bank",
