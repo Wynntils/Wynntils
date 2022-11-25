@@ -63,6 +63,8 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
 
+    private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
+
     private static final Pattern BACKGROUND_WELCOME_1 = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
     private static final Pattern BACKGROUND_WELCOME_2 =
             Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$");
@@ -119,6 +121,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType heal = FilterType.REDIRECT;
+
+    @Config
+    private FilterType speed = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -200,6 +205,21 @@ public class InfoMessageFilterFeature extends UserFeature {
                     String amount = matcher.group(1);
 
                     sendHealMessage(amount);
+                    return;
+                }
+            }
+
+            if (speed != FilterType.KEEP) {
+                Matcher matcher = SPEED_PATTERN.matcher(uncoloredMsg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (speed == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(new TextComponent("+3 minutes")
+                            .withStyle(ChatFormatting.AQUA)
+                            .append(new TextComponent(" speed boost").withStyle(ChatFormatting.GRAY)));
                     return;
                 }
             }

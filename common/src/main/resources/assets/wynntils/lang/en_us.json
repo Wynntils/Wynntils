@@ -194,6 +194,8 @@
   "feature.wynntils.infoMessageFilter.notEnoughMana.name": "Mana Message Filtering",
   "feature.wynntils.infoMessageFilter.soulPoint.description": "How should soul point messages appear?",
   "feature.wynntils.infoMessageFilter.soulPoint.name": "Soul Point Message Filtering",
+  "feature.wynntils.infoMessageFilter.speed.description": "How should messages about speed effect appear?",
+  "feature.wynntils.infoMessageFilter.speed.name": "Speed Effect Message Filtering",
   "feature.wynntils.infoMessageFilter.toolDurability.description": "How should gathering tool durability messages appear?",
   "feature.wynntils.infoMessageFilter.toolDurability.name": "Gather Tool Durability Filtering",
   "feature.wynntils.infoMessageFilter.unusedPoints.description": "How should messages about unused ability or skill points appear?",
