@@ -1,9 +1,27 @@
+## [0.0.1-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.69...v0.0.1-alpha.70) (2022-11-25)
+
+
+### Bug Fixes
+
+* Check if update has already been downloaded before downloading again ([#724](https://github.com/Wynntils/Artemis/issues/724)) ([1cffa56](https://github.com/Wynntils/Artemis/commit/1cffa56b672058bad5f9a222df24db926a9c64e2))
+* emerald pouch parsing when picking emeralds up ([#723](https://github.com/Wynntils/Artemis/issues/723)) ([9d86494](https://github.com/Wynntils/Artemis/commit/9d864941db91d36313182d67c0ec2c4d7c9f8910))
+
+
+### New Features
+
+* added bps and bps_xz ([#721](https://github.com/Wynntils/Artemis/issues/721)) ([3bbccfd](https://github.com/Wynntils/Artemis/commit/3bbccfda887ba980aaba71d73b1b40985b380458))
+
 ## [0.0.1-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.68...v0.0.1-alpha.69) (2022-11-24)
 
 
 ### New Features
 
 * added mana_pct function ([#718](https://github.com/Wynntils/Artemis/issues/718)) ([78331fa](https://github.com/Wynntils/Artemis/commit/78331fa98d863305eea230ca236e7d6e132b4576))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.69 [skip ci] ([18bfb1c](https://github.com/Wynntils/Artemis/commit/18bfb1cf1309c65cce3d7df6e955323650d74b12))
 
 ## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
 
@@ -40,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.66 [skip ci] ([629e6cd](https://github.com/Wynntils/Artemis/commit/629e6cd5ed3126d8f2e42aed5d7a3414391ad499))
-
-## [0.0.1-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.64...v0.0.1-alpha.65) (2022-11-20)
-
-
-### New Features
-
-* Overwrite Territory Map button to open Guild Map ([#712](https://github.com/Wynntils/Artemis/issues/712)) ([2121607](https://github.com/Wynntils/Artemis/commit/212160757f77bfe077ff2af6b0a226c7caa06050))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.65 [skip ci] ([ab34d2b](https://github.com/Wynntils/Artemis/commit/ab34d2befed32d344598bb868fc4bd99d54caf39))
 
