@@ -48,8 +48,7 @@ public class UpdateCommand extends CommandBase {
                                     .withStyle(ChatFormatting.YELLOW));
                     case UPDATE_PENDING -> McUtils.sendMessageToClient(
                             new TextComponent("Update was already downloaded. It will apply on shutdown.")
-                                    .withStyle(ChatFormatting.YELLOW)
-                    );
+                                    .withStyle(ChatFormatting.YELLOW));
                 }
             });
         });

@@ -93,7 +93,8 @@ public class UpdateManager extends CoreManager {
     }
 
     private static File getUpdateFile() {
-        File updatesDir = new File(WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER).toURI());
+        File updatesDir =
+                new File(WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER).toURI());
         FileUtils.mkdir(updatesDir);
         return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
     }

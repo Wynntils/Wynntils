@@ -82,8 +82,7 @@ public class UpdatesFeature extends UserFeature {
                                                 .withStyle(ChatFormatting.YELLOW));
                                 case UPDATE_PENDING -> McUtils.sendMessageToClient(
                                         new TextComponent("Update was already downloaded. It will apply on shutdown.")
-                                                .withStyle(ChatFormatting.YELLOW)
-                                );
+                                                .withStyle(ChatFormatting.YELLOW));
                             }
                         });
                     }
