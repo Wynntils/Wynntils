@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.mc.utils.ComponentUtils;
 import java.util.List;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -25,7 +26,7 @@ public class BasicButton extends AbstractButton {
         super(x, y, width, height, new TextComponent("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.tooltip = tooltip;
+        this.tooltip = ComponentUtils.wrapTooltips(tooltip, 250);
     }
 
     @Override

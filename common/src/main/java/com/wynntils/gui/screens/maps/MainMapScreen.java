@@ -63,26 +63,26 @@ public class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.YELLOW)
                                 .append(new TranslatableComponent("screens.wynntils.map.help.name")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description1")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description1")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description2")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description2")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description3")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description3")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description4")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description4")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description5")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description5")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description6")
-                                        .withStyle(ChatFormatting.GRAY)),
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description6")),
                         new TextComponent("- ")
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description7")
-                                        .withStyle(ChatFormatting.GRAY)))));
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description7")))));
         this.addRenderableWidget(new BasicButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
