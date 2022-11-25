@@ -24,6 +24,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class UpdateManager extends CoreManager {
     private static final String LAST_BUILD_CHECK_PATH = "https://athena.wynntils.com/version/latest/ce";
+    private static final String WYNTILLS_UPDATE_FOLDER = "updates";
+    private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 
     public static void init() {}
 
@@ -50,6 +52,12 @@ public class UpdateManager extends CoreManager {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
         try {
+            File updateFile = getUpdateFile();
+            if (updateFile.exists()) {
+                future.complete(UpdateResult.UPDATE_PENDING);
+                return future;
+            }
+
             URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
@@ -84,17 +92,21 @@ public class UpdateManager extends CoreManager {
         return verification.getMd5();
     }
 
+    private static File getUpdateFile() {
+        File updatesDir =
+                new File(WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER).toURI());
+        FileUtils.mkdir(updatesDir);
+        return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
+    }
+
     private static void tryFetchNewUpdate(String latestUrl, CompletableFuture<UpdateResult> future) {
         File oldJar = WynntilsMod.getModJar();
+        File newJar = getUpdateFile();
 
         try {
             URL downloadUrl = new URL(latestUrl);
             InputStream in = downloadUrl.openStream();
 
-            File updatesDir = new File(WynntilsMod.getModStorageDir("updates").toURI());
-            FileUtils.mkdir(updatesDir);
-
-            File newJar = new File(updatesDir, "wynntils-update.jar");
             FileUtils.createNewFile(newJar);
 
             Files.copy(in, newJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -105,6 +117,7 @@ public class UpdateManager extends CoreManager {
 
             addShutdownHook(oldJar, newJar);
         } catch (IOException exception) {
+            newJar.delete();
             future.complete(UpdateResult.ERROR);
             WynntilsMod.error("Exception when trying to download update!", exception);
         }
@@ -131,6 +144,7 @@ public class UpdateManager extends CoreManager {
     public enum UpdateResult {
         SUCCESSFUL,
         ALREADY_ON_LATEST,
+        UPDATE_PENDING,
         ERROR
     }
 }
