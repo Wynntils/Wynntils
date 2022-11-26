@@ -34,9 +34,9 @@ public class DiscoveryProgressButton extends AbstractButton {
                     texture.width(),
                     texture.height() / 2f,
                     0,
-                    texture.height() / 2f,
+                    texture.height() / 2,
                     texture.width(),
-                    texture.height() / 2f,
+                    texture.height() / 2,
                     texture.width(),
                     texture.height());
         } else {
@@ -51,7 +51,7 @@ public class DiscoveryProgressButton extends AbstractButton {
                     0,
                     0,
                     texture.width(),
-                    texture.height() / 2f,
+                    texture.height() / 2,
                     texture.width(),
                     texture.height());
         }
