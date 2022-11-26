@@ -46,6 +46,7 @@ import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.PlayerArmorRenderEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
@@ -379,6 +380,10 @@ public final class EventFactory {
         PlayerInteractEvent.InteractAt event =
                 new PlayerInteractEvent.InteractAt(player, hand, target, entityHitResult);
         return post(event);
+    }
+
+    public static Event onAttack(Player player, Entity target) {
+        return post(new PlayerAttackEvent(player, target));
     }
 
     public static Event onUseItem(Player player, Level level, InteractionHand hand) {
