@@ -53,6 +53,9 @@ public class ItemLockFeature extends UserFeature {
     @Config
     public boolean blockAllActionsOnLockedItems = false;
 
+    @Config
+    public boolean allowClickOnEmeraldPouchInBlockingMode = true;
+
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
@@ -97,7 +100,8 @@ public class ItemLockFeature extends UserFeature {
         }
 
         // We want to allow interactions (except throwing) with emerald pouch even if locked
-        if (event.getClickType() != ClickType.THROW
+        if (allowClickOnEmeraldPouchInBlockingMode
+                && event.getClickType() != ClickType.THROW
                 && WynnItemMatchers.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
