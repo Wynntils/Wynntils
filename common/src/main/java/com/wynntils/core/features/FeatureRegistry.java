@@ -27,6 +27,7 @@ import com.wynntils.features.user.BombBellTrackingFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
+import com.wynntils.features.user.CommandAliasesFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.ContainerSearchFeature;
 import com.wynntils.features.user.CosmeticsPreviewFeature;
@@ -128,6 +129,7 @@ public final class FeatureRegistry {
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
+        registerFeature(new CommandAliasesFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
         registerFeature(new CosmeticsPreviewFeature());
