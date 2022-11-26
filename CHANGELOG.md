@@ -1,9 +1,21 @@
+## [0.0.1-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.79...v0.0.1-alpha.80) (2022-11-26)
+
+
+### Bug Fixes
+
+* Fix AbilityTreeScrollFeature bug ([055fa69](https://github.com/Wynntils/Artemis/commit/055fa69cb21c5872b6eb9d1d33e81e694acbf412))
+
 ## [0.0.1-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.78...v0.0.1-alpha.79) (2022-11-26)
 
 
 ### New Features
 
 * Add a GUI to create custom map icons, and add helper buttons to maps ([#720](https://github.com/Wynntils/Artemis/issues/720)) ([e307c7a](https://github.com/Wynntils/Artemis/commit/e307c7a4b088db39bc87e194f602191b92940a90))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.79 [skip ci] ([06416ee](https://github.com/Wynntils/Artemis/commit/06416eebdce73302782897ae32a5135821e048f5))
 
 ## [0.0.1-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.77...v0.0.1-alpha.78) (2022-11-26)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.76 [skip ci] ([4ba9e6f](https://github.com/Wynntils/Artemis/commit/4ba9e6fd0ad5c54d7827126a4bc87f8e61b14a20))
-
-## [0.0.1-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.74...v0.0.1-alpha.75) (2022-11-26)
-
-
-### New Features
-
-* Add command aliases feature ([#714](https://github.com/Wynntils/Artemis/issues/714)) ([c29bf08](https://github.com/Wynntils/Artemis/commit/c29bf080edb911e0b09933edbcf4f8cc8077ec41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.75 [skip ci] ([8c4c383](https://github.com/Wynntils/Artemis/commit/8c4c383f97c93706a6c7666169efb5eef1d95435))
 
