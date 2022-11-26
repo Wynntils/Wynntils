@@ -1,3 +1,10 @@
+## [0.0.1-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.78...v0.0.1-alpha.79) (2022-11-26)
+
+
+### New Features
+
+* Add a GUI to create custom map icons, and add helper buttons to maps ([#720](https://github.com/Wynntils/Artemis/issues/720)) ([e307c7a](https://github.com/Wynntils/Artemis/commit/e307c7a4b088db39bc87e194f602191b92940a90))
+
 ## [0.0.1-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.77...v0.0.1-alpha.78) (2022-11-26)
 
 
@@ -8,6 +15,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.1-alpha.78 [skip ci] ([837dbf7](https://github.com/Wynntils/Artemis/commit/837dbf7df73646ccf52b42ce270c9197b07aa523))
 * Update gradle [skip ci] ([#727](https://github.com/Wynntils/Artemis/issues/727)) ([41145d6](https://github.com/Wynntils/Artemis/commit/41145d6c0db2963a2619d71e6bc23e0a8669eea6))
 
 ## [0.0.1-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.76...v0.0.1-alpha.77) (2022-11-26)
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.75 [skip ci] ([8c4c383](https://github.com/Wynntils/Artemis/commit/8c4c383f97c93706a6c7666169efb5eef1d95435))
-
-## [0.0.1-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.73...v0.0.1-alpha.74) (2022-11-26)
-
-
-### New Features
-
-* prevent trades and duels in combat ([#728](https://github.com/Wynntils/Artemis/issues/728)) ([f063a58](https://github.com/Wynntils/Artemis/commit/f063a589c028bf45bcbf4cd397bb8e11bdc8e515))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.74 [skip ci] ([2cdf714](https://github.com/Wynntils/Artemis/commit/2cdf714e97a298fbe4743258e9bb14e77857a848))
 
