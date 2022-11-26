@@ -51,9 +51,9 @@ public class PlayButton extends AbstractButton {
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getSelected() == null ? Texture.PLAY_BUTTON.height() / 2f : 0,
+                characterSelectorScreen.getSelected() == null ? Texture.PLAY_BUTTON.height() / 2 : 0,
                 Texture.PLAY_BUTTON.width(),
-                Texture.PLAY_BUTTON.height() / 2f,
+                Texture.PLAY_BUTTON.height() / 2,
                 Texture.PLAY_BUTTON.width(),
                 Texture.PLAY_BUTTON.height());
 
