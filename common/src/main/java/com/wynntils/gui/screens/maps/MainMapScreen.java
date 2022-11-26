@@ -10,7 +10,7 @@ import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.widgets.BasicButton;
+import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.model.HadesUserModel;
@@ -19,6 +19,8 @@ import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
+import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.PlayerPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
@@ -47,7 +49,7 @@ public class MainMapScreen extends AbstractMapScreen {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new BasicButton(
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -81,8 +83,14 @@ public class MainMapScreen extends AbstractMapScreen {
                                 .append(new TranslatableComponent("screens.wynntils.map.help.description6")),
                         new TextComponent("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description7")))));
-        this.addRenderableWidget(new BasicButton(
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description7")),
+                        new TextComponent("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description8")),
+                        new TextComponent("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.help.description9")))));
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -91,7 +99,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                () -> {},
+                () -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -203,7 +211,22 @@ public class MainMapScreen extends AbstractMapScreen {
 
             super.mouseClicked(mouseX, mouseY, button);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY);
+            if (KeyboardUtils.isShiftDown()) {
+                if (hovered instanceof CustomPoi customPoi) {
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, customPoi));
+                } else {
+                    int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+                    int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, new MapLocation(gameX, 0, gameZ)));
+                }
+            } else if (KeyboardUtils.isControlDown()) {
+                if (hovered instanceof CustomPoi customPoi) {
+                    MapFeature.INSTANCE.customPois.remove(customPoi);
+                }
+            } else {
+                setCompassToMouseCoords(mouseX, mouseY);
+            }
         }
 
         return true;

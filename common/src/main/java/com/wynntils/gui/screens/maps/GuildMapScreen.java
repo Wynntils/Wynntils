@@ -14,7 +14,7 @@ import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.widgets.BasicButton;
+import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
@@ -39,7 +39,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new BasicButton(
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -57,7 +57,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(new TranslatableComponent("screens.wynntils.guildMap.help.description1")))));
 
-        this.addRenderableWidget(new BasicButton(
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset

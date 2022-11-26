@@ -15,13 +15,13 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
-public class BasicButton extends AbstractButton {
+public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
     private final Runnable onClick;
     private final List<Component> tooltip;
 
-    public BasicButton(
+    public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Runnable onClick, List<Component> tooltip) {
         super(x, y, width, height, new TextComponent("Basic Button"));
         this.texture = texture;

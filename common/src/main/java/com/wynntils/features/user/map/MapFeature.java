@@ -14,16 +14,14 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.objects.HealthTexture;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
@@ -32,8 +30,7 @@ public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 
     @Config(visible = false)
-    public List<CustomPoi> customPois =
-            List.of(new CustomPoi(new MapLocation(1000, 10, 1000), "Test", CommonColors.RED, Texture.CHEST_T4, 0));
+    public List<CustomPoi> customPois = new ArrayList<>();
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
