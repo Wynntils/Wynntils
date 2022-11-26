@@ -41,10 +41,10 @@ public class ClassInfoButton extends AbstractButton {
                 this.height,
                 0,
                 this.isHovered || characterSelectorScreen.getSelected() == this
-                        ? Texture.CHARACTER_BUTTON.height() / 2f
+                        ? Texture.CHARACTER_BUTTON.height() / 2
                         : 0,
                 Texture.CHARACTER_BUTTON.width(),
-                Texture.CHARACTER_BUTTON.height() / 2f,
+                Texture.CHARACTER_BUTTON.height() / 2,
                 Texture.CHARACTER_BUTTON.width(),
                 Texture.CHARACTER_BUTTON.height());
 

@@ -32,9 +32,9 @@ public class ReloadButton extends AbstractButton {
                     0,
                     this.width,
                     this.height,
-                    reloadButton.width() / 2f,
+                    reloadButton.width() / 2,
                     0,
-                    reloadButton.width() / 2f,
+                    reloadButton.width() / 2,
                     reloadButton.height(),
                     reloadButton.width(),
                     reloadButton.height());
@@ -49,7 +49,7 @@ public class ReloadButton extends AbstractButton {
                     this.height,
                     0,
                     0,
-                    reloadButton.width() / 2f,
+                    reloadButton.width() / 2,
                     reloadButton.height(),
                     reloadButton.width(),
                     reloadButton.height());

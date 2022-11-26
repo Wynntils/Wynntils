@@ -228,9 +228,9 @@ public final class RenderUtils {
                 texture.width(),
                 texture.height() / 2f,
                 0,
-                hovered ? texture.height() / 2f : 0,
+                hovered ? texture.height() / 2 : 0,
                 texture.width(),
-                texture.height() / 2f,
+                texture.height() / 2,
                 texture.width(),
                 texture.height());
     }
@@ -254,9 +254,10 @@ public final class RenderUtils {
             float y,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
-        drawTexturedRect(poseStack, tex, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack, tex, x, y, 0, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
@@ -267,9 +268,10 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
-        drawTexturedRect(poseStack, tex, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack, tex, x, y, z, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
@@ -280,12 +282,12 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float uOffset,
-            float vOffset,
-            float u,
-            float v,
-            float textureWidth,
-            float textureHeight) {
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -323,8 +325,8 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRect(
                 poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
@@ -337,10 +339,23 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(), tex, color, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
+                new PoseStack(),
+                tex,
+                color,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                (int) width,
+                (int) height,
+                textureWidth,
+                textureHeight);
     }
 
     public static void drawTexturedRectWithColor(
@@ -352,12 +367,12 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float uOffset,
-            float vOffset,
-            float u,
-            float v,
-            float textureWidth,
-            float textureHeight) {
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -1097,10 +1112,10 @@ public final class RenderUtils {
             float y1,
             float x2,
             float y2,
-            float tx1,
-            float ty1,
-            float tx2,
-            float ty2) {
+            int tx1,
+            int ty1,
+            int tx2,
+            int ty2) {
         // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
