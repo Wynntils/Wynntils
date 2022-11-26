@@ -82,4 +82,11 @@ public abstract class MultiPlayerGameModeMixin {
             cir.setReturnValue(InteractionResult.FAIL);
         }
     }
+
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    private void attack(Player player, Entity target, CallbackInfo ci) {
+        if (EventFactory.onAttack(player, target).isCanceled()) {
+            ci.cancel();
+        }
+    }
 }
