@@ -1,9 +1,17 @@
+## [0.0.1-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.71...v0.0.1-alpha.72) (2022-11-26)
+
+
+### New Features
+
+* Redirect "not enough mana", healing and speed effect messages ([#722](https://github.com/Wynntils/Artemis/issues/722)) ([444f19e](https://github.com/Wynntils/Artemis/commit/444f19e0b92954711b38657c81f82ac0af792428))
+
 ## [0.0.1-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.70...v0.0.1-alpha.71) (2022-11-25)
 
 
 ### Miscellaneous Chores
 
 * Rebuild for quilt ([980882e](https://github.com/Wynntils/Artemis/commit/980882efa03fe8010d36093e4df21ec6d323090f))
+* **release:** v0.0.1-alpha.71 [skip ci] ([b81f3b8](https://github.com/Wynntils/Artemis/commit/b81f3b8c80429042f2334ac4ef6f69a01eecb76c))
 
 ## [0.0.1-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.69...v0.0.1-alpha.70) (2022-11-25)
 
@@ -46,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.68 [skip ci] ([d5776cd](https://github.com/Wynntils/Artemis/commit/d5776cd838ee784566ceb5e877372428744fcafa))
-
-## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
-
-
-### Bug Fixes
-
-* Make unused ability point messages dark aqua ([bdacde5](https://github.com/Wynntils/Artemis/commit/bdacde5cbabd620057dd46844bb4d0a954c630ff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.67 [skip ci] ([922a140](https://github.com/Wynntils/Artemis/commit/922a1409c4f0950b36194cb53450d6ef54a0f12d))
 
