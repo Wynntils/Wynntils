@@ -528,6 +528,7 @@
   "feature.wynntils.powderAbilityBarOverlay.overlay.powderAbilityBar.onlyIfWeaponHeld.name": "Only Show When Weapon Held",
   "feature.wynntils.powderAbilityBarOverlay.overlay.powderAbilityBar.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.powderAbilityBarOverlay.overlay.powderAbilityBar.textShadow.name": "Text Shadow",
+  "feature.wynntils.preventTradesDuels.name": "Prevent Trades & Duels",
   "feature.wynntils.questBook.name": "Quest Book Analysis",
   "feature.wynntils.questInfoOverlay.autoTrackQuestCoordinates.description": "Should waypoints automatically be set for quest coordinates?",
   "feature.wynntils.questInfoOverlay.autoTrackQuestCoordinates.name": "Auto Track Quest Coordinates",

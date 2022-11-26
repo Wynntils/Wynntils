@@ -14,7 +14,7 @@ public abstract class PlayerEvent extends LivingEvent {
         this.entityPlayer = player;
     }
 
-    protected Player getPlayer() {
+    public Player getPlayer() {
         return this.entityPlayer;
     }
 }
