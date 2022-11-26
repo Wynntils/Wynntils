@@ -14,7 +14,7 @@ import com.wynntils.utils.MathUtils;
 public class LabelPoi implements Poi {
     MapLocation location;
 
-    private static final int LABEL_Y = 64;
+    private static final int LABEL_Y = 1024;
 
     private final Label label;
 

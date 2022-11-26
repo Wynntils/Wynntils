@@ -305,6 +305,7 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
+        registerFunction(new CharacterFunctions.ManaPctFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
@@ -314,6 +315,8 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.XpReqFunction());
         registerFunction(new CharacterFunctions.XpReqRawFunction());
         registerFunction(new CharacterFunctions.XpPctFunction());
+        registerFunction(new CharacterFunctions.BpsFunction());
+        registerFunction(new CharacterFunctions.BpsXzFunction());
 
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
