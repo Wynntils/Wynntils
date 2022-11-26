@@ -1,9 +1,21 @@
+## [0.0.1-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.72...v0.0.1-alpha.73) (2022-11-26)
+
+
+### Bug Fixes
+
+* include savior's sacrifice in status overlay ([#729](https://github.com/Wynntils/Artemis/issues/729)) ([ea5cbd9](https://github.com/Wynntils/Artemis/commit/ea5cbd92ba5b2b435a30d994859a7919371da6f5))
+
 ## [0.0.1-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.71...v0.0.1-alpha.72) (2022-11-26)
 
 
 ### New Features
 
 * Redirect "not enough mana", healing and speed effect messages ([#722](https://github.com/Wynntils/Artemis/issues/722)) ([444f19e](https://github.com/Wynntils/Artemis/commit/444f19e0b92954711b38657c81f82ac0af792428))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.72 [skip ci] ([81e4ce1](https://github.com/Wynntils/Artemis/commit/81e4ce108448444ccbc90db6b2b043240599bee2))
 
 ## [0.0.1-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.70...v0.0.1-alpha.71) (2022-11-25)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.69 [skip ci] ([18bfb1c](https://github.com/Wynntils/Artemis/commit/18bfb1cf1309c65cce3d7df6e955323650d74b12))
-
-## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
-
-
-### Bug Fixes
-
-* Fix ability point coloring ([cbf17d5](https://github.com/Wynntils/Artemis/commit/cbf17d5951e9f2dca049ee8c280e97f39428af49))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.68 [skip ci] ([d5776cd](https://github.com/Wynntils/Artemis/commit/d5776cd838ee784566ceb5e877372428744fcafa))
 
