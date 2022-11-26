@@ -1,61 +1,55 @@
-## [0.0.1-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.70...v0.0.1-alpha.71) (2022-11-25)
-
-
-### Miscellaneous Chores
-
-* Rebuild for quilt ([980882e](https://github.com/Wynntils/Artemis/commit/980882efa03fe8010d36093e4df21ec6d323090f))
-
-## [0.0.1-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.69...v0.0.1-alpha.70) (2022-11-25)
+## [0.0.1-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.76...v0.0.1-alpha.77) (2022-11-26)
 
 
 ### Bug Fixes
 
-* Check if update has already been downloaded before downloading again ([#724](https://github.com/Wynntils/Artemis/issues/724)) ([1cffa56](https://github.com/Wynntils/Artemis/commit/1cffa56b672058bad5f9a222df24db926a9c64e2))
-* emerald pouch parsing when picking emeralds up ([#723](https://github.com/Wynntils/Artemis/issues/723)) ([9d86494](https://github.com/Wynntils/Artemis/commit/9d864941db91d36313182d67c0ec2c4d7c9f8910))
+* Label pois should not be behind ServicePois ([#730](https://github.com/Wynntils/Artemis/issues/730)) ([da374f2](https://github.com/Wynntils/Artemis/commit/da374f25ec2f6813603c91559007ed97d22f0d37))
+
+## [0.0.1-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.75...v0.0.1-alpha.76) (2022-11-26)
+
+
+### Bug Fixes
+
+* Allow clicks on locked emerald pouch and ability tree slots ([#726](https://github.com/Wynntils/Artemis/issues/726)) ([88c0174](https://github.com/Wynntils/Artemis/commit/88c0174f01427386729777bf8001cee2371c6b39))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.76 [skip ci] ([4ba9e6f](https://github.com/Wynntils/Artemis/commit/4ba9e6fd0ad5c54d7827126a4bc87f8e61b14a20))
+
+## [0.0.1-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.74...v0.0.1-alpha.75) (2022-11-26)
 
 
 ### New Features
 
-* added bps and bps_xz ([#721](https://github.com/Wynntils/Artemis/issues/721)) ([3bbccfd](https://github.com/Wynntils/Artemis/commit/3bbccfda887ba980aaba71d73b1b40985b380458))
+* Add command aliases feature ([#714](https://github.com/Wynntils/Artemis/issues/714)) ([c29bf08](https://github.com/Wynntils/Artemis/commit/c29bf080edb911e0b09933edbcf4f8cc8077ec41))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.70 [skip ci] ([c0c240c](https://github.com/Wynntils/Artemis/commit/c0c240c0098be483d536c1f9dfd2dd626d18af3e))
+* **release:** v0.0.1-alpha.75 [skip ci] ([8c4c383](https://github.com/Wynntils/Artemis/commit/8c4c383f97c93706a6c7666169efb5eef1d95435))
 
-## [0.0.1-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.68...v0.0.1-alpha.69) (2022-11-24)
+## [0.0.1-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.73...v0.0.1-alpha.74) (2022-11-26)
 
 
 ### New Features
 
-* added mana_pct function ([#718](https://github.com/Wynntils/Artemis/issues/718)) ([78331fa](https://github.com/Wynntils/Artemis/commit/78331fa98d863305eea230ca236e7d6e132b4576))
+* prevent trades and duels in combat ([#728](https://github.com/Wynntils/Artemis/issues/728)) ([f063a58](https://github.com/Wynntils/Artemis/commit/f063a589c028bf45bcbf4cd397bb8e11bdc8e515))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.69 [skip ci] ([18bfb1c](https://github.com/Wynntils/Artemis/commit/18bfb1cf1309c65cce3d7df6e955323650d74b12))
+* **release:** v0.0.1-alpha.74 [skip ci] ([2cdf714](https://github.com/Wynntils/Artemis/commit/2cdf714e97a298fbe4743258e9bb14e77857a848))
 
-## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
+## [0.0.1-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.72...v0.0.1-alpha.73) (2022-11-26)
 
 
 ### Bug Fixes
 
-* Fix ability point coloring ([cbf17d5](https://github.com/Wynntils/Artemis/commit/cbf17d5951e9f2dca049ee8c280e97f39428af49))
+* include savior's sacrifice in status overlay ([#729](https://github.com/Wynntils/Artemis/issues/729)) ([ea5cbd9](https://github.com/Wynntils/Artemis/commit/ea5cbd92ba5b2b435a30d994859a7919371da6f5))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.68 [skip ci] ([d5776cd](https://github.com/Wynntils/Artemis/commit/d5776cd838ee784566ceb5e877372428744fcafa))
-
-## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
-
-
-### Bug Fixes
-
-* Make unused ability point messages dark aqua ([bdacde5](https://github.com/Wynntils/Artemis/commit/bdacde5cbabd620057dd46844bb4d0a954c630ff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.67 [skip ci] ([922a140](https://github.com/Wynntils/Artemis/commit/922a1409c4f0950b36194cb53450d6ef54a0f12d))
+* **release:** v0.0.1-alpha.73 [skip ci] ([821076d](https://github.com/Wynntils/Artemis/commit/821076d27be4f05a9cf81d6edb5a6c2d59990062))
 
