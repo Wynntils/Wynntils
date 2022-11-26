@@ -85,6 +85,7 @@ import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.user.players.PlayerArmorHidingFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.user.players.PreventTradesDuelsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.PouchRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
@@ -174,6 +175,7 @@ public final class FeatureRegistry {
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PouchRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
+        registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ShamanMasksOverlayFeature());
