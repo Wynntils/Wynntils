@@ -30,7 +30,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         Screen screen = McUtils.mc().screen;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
-        if (WynnScreenMatchers.isAbilityTreeScreen(gui)) return;
+        if (!WynnScreenMatchers.isAbilityTreeScreen(gui)) return;
 
         boolean up = event.isScrollingUp() ^ invertScroll;
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
