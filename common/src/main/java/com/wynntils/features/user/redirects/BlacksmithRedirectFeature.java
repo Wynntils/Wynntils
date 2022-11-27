@@ -25,6 +25,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
+    
+    // Tracks count of sold or scrapped items
+    private transient EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -37,9 +40,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
         int totalItemInteger = 0;
         if (matcher.matches()) {
             event.setCanceled(true);
-
-            // Tracks count of sold or scrapped items
-            EnumMap<ItemTier, Integer> totalItems = new EnumMap(ItemTier.class);
 
             String parseable_message = event.getOriginalCodedMessage();
 
