@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wynntils.mc.utils.McUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
@@ -54,20 +55,22 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
             // Tally up the items that we sold.
             while (itemMatcher.find()) {
+                totalItemInteger++; // We can sell crafting items that don't have a tier, but we still need to count them.
                 ChatFormatting itemColor = ChatFormatting.getByCode(itemMatcher
                         .group(1)
                         .charAt(0)); // find the color code to find ChatFormatting and ascertain the tier.
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
                 if (tierToIncrease == null) continue;
                 totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
-                totalItemInteger++;
             }
             String itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             // Build up the string that outlines how many items were sold in what tier (0/0/0/0/0/0/0/0).
             StringBuilder countByTier = new StringBuilder();
             for (ItemTier tier : ItemTier.values()) {
-                countByTier.append('/' + tier.getChatFormatting().toString() + totalItems.getOrDefault(tier, 0));
+                countByTier.append('/');
+                countByTier.append(tier.getChatFormatting().toString());
+                countByTier.append(totalItems.getOrDefault(tier, 0));
                 countByTier.append(ChatFormatting.LIGHT_PURPLE);
             }
             countByTier.append(")");
@@ -77,15 +80,12 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
             sendableMessage = String.format(
-                    "%sSold %d %s %s for %s%s%s%s.",
-                    ChatFormatting.LIGHT_PURPLE,
+                    "§r§dSold %d %s %s for §r§a%s%s§r§d.",
                     totalItemInteger,
                     itemPluralizer,
                     countByTierString,
-                    ChatFormatting.GREEN,
                     paymentString,
-                    EmeraldSymbols.EMERALDS,
-                    ChatFormatting.LIGHT_PURPLE);
+                    EmeraldSymbols.EMERALDS);
         }
         // Scrapping items for scrap.
         else {
@@ -94,16 +94,13 @@ public class BlacksmithRedirectFeature extends UserFeature {
             while (itemMatcher.find()) {
                 totalItemInteger++;
             }
-            String itemPluralizer = totalItemInteger == 1 ? "" : "s";
+            String itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             sendableMessage = String.format(
-                    "%sScrapped %d %s for %s%s scrap%s.",
-                    ChatFormatting.LIGHT_PURPLE,
+                    "§r§dScrapped %d %s for §r§a%s scrap%s§r§d.",
                     totalItemInteger,
                     itemPluralizer,
-                    ChatFormatting.YELLOW,
-                    paymentString,
-                    ChatFormatting.LIGHT_PURPLE);
+                    paymentString);
         }
 
         // Finally, we send the message.
