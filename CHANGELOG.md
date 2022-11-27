@@ -1,9 +1,21 @@
+## [0.0.1-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.80...v0.0.1-alpha.81) (2022-11-27)
+
+
+### Miscellaneous Chores
+
+* Rebuild broken quilt version ([d3a2490](https://github.com/Wynntils/Artemis/commit/d3a2490cec3f25b8905c88ff37d1c66f9f5ae7c5))
+
 ## [0.0.1-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.79...v0.0.1-alpha.80) (2022-11-26)
 
 
 ### Bug Fixes
 
 * Fix AbilityTreeScrollFeature bug ([055fa69](https://github.com/Wynntils/Artemis/commit/055fa69cb21c5872b6eb9d1d33e81e694acbf412))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.80 [skip ci] ([c7e5a51](https://github.com/Wynntils/Artemis/commit/c7e5a514c81266415ffe3dcb8d126c4162869a10))
 
 ## [0.0.1-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.78...v0.0.1-alpha.79) (2022-11-26)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.77 [skip ci] ([9c16aa9](https://github.com/Wynntils/Artemis/commit/9c16aa92b94414f35002ab467144b62794f7a911))
-
-## [0.0.1-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.75...v0.0.1-alpha.76) (2022-11-26)
-
-
-### Bug Fixes
-
-* Allow clicks on locked emerald pouch and ability tree slots ([#726](https://github.com/Wynntils/Artemis/issues/726)) ([88c0174](https://github.com/Wynntils/Artemis/commit/88c0174f01427386729777bf8001cee2371c6b39))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.76 [skip ci] ([4ba9e6f](https://github.com/Wynntils/Artemis/commit/4ba9e6fd0ad5c54d7827126a4bc87f8e61b14a20))
 
