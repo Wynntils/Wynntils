@@ -36,7 +36,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = BLACKSMITH_PATTERN.matcher(event.getOriginalCodedMessage());
+        Matcher matcher = BLACKSMITH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
         int totalItemInteger = 0;
         if (matcher.matches()) {
             event.setCanceled(true);
@@ -50,12 +50,13 @@ public class BlacksmithRedirectFeature extends UserFeature {
                         || fragment.equals("d, ")
                         || fragment.equals("d and ")
                         || fragment.equals("d for a total of ")
-                        || fragment.equals("5Blacksmith: ")) {
+                        || fragment.equals("5Blacksmith: ")
+                        || fragment.equals("d emeralds.")) {
                     continue;
                 }
 
                 // Increment the number of items sold or scrapped.
-                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
+                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(0));
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
                 if (tierToIncrease != null) {
                     totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
