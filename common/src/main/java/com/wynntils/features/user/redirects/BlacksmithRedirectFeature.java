@@ -53,6 +53,13 @@ public class BlacksmithRedirectFeature extends UserFeature {
                         || fragment.equals("5Blacksmith: ")) {
                     continue;
                 }
+
+                // Increment the number of items sold or scrapped.
+                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
+                ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
+                if (tierToIncrease == null) { return;}
+                totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
+
                 // The final part of the message.
                 if (fragment.matches("e\\d+")) {
                     for (ItemTier tier : ItemTier.values()) {
@@ -92,11 +99,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
                     // Finally, we send the message.
                     NotificationManager.queueMessage(sendableMessageString);
-                }
-                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
-                ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
-                if (tierToIncrease != null) {
-                    totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
                 }
             }
         }
