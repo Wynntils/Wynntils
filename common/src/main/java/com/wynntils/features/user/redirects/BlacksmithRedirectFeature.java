@@ -21,13 +21,12 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wynntils.mc.utils.McUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
-    private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile("§5Blacksmith: §r§dYou (.+): (.+). It was a pleasure doing business with you.");
+    private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile("§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
     private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])(.+?)§r§d");
-    private static final Pattern EMERALD_PATTERN = Pattern.compile("for a total of (.+) emeralds");
-    private static final Pattern SCRAP_PATTERN = Pattern.compile("(.+) scrap.");
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -36,9 +35,8 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        // Tracks count of sold or scrapped items
         EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
-
+        // Tracks count of sold or scrapped items
         int totalItemInteger = 0;
         // If we get emeralds, this will be the number of emeralds we get. If we get scrap, this will be the number of scrap we get.
         String paymentString = "";
@@ -56,16 +54,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 totalItemInteger++;
             }
 
-            Matcher emeraldMatcher = EMERALD_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
-            if (emeraldMatcher.find()) {
-                paymentString = emeraldMatcher.group(1);
-            }
-
-            Matcher scrapMatcher = SCRAP_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
-            if (scrapMatcher.find()) {
-                paymentString = scrapMatcher.group(1);
-            }
-
                 // The final part of the message.
                 {
                     // Let's tally up the total number of items sold.
@@ -78,6 +66,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
                     messageCounts.append(") item(s) for ");
                     messageCounts.setCharAt(0, '(');
+
+                    // How many emeralds/scrap we got from the blacksmith.
+                    paymentString = messageMatcher.group(3);
 
                     String messageCountsString = messageCounts.toString();
 
@@ -101,6 +92,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
                     // Finally, we send the message.
                     NotificationManager.queueMessage(sendableMessageString);
+
+                    //debug, remove this san7890
+                    McUtils.sendMessageToClient(event.getOriginalMessage());
                 }
             }
         }
