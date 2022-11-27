@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
-    private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: ");
+    private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
 
     // Tracks count of sold or scrapped items
     private transient Map<ItemTier, Integer> itemCounts = null;
