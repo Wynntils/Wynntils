@@ -34,15 +34,16 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
-        // Tracks count of sold or scrapped items
-        int totalItemInteger = 0;
-        // If we get emeralds, this will be the number of emeralds we get. If we get scrap, this will be the number of
-        // scrap we get.
-        String paymentString = "";
         Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getCodedMessage());
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
+
+        EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
+        // If we get emeralds, this will be the number of emeralds we get. If we get scrap, this will be the number of
+        // scrap we get.
+        String paymentString = "";
+        // Tracks count of sold or scrapped items
+        int totalItemInteger = 0;
 
         // Retrieve the color code of the item, and then match it to the item tier.
         Matcher itemMatcher = ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
@@ -55,9 +56,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
             totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
             totalItemInteger++;
         }
-
-        // The final part of the message.
-        {
             // Let's tally up the total number of items sold.
             StringBuilder messageCounts = new StringBuilder();
             for (ItemTier tier : ItemTier.values()) {
@@ -97,6 +95,5 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
             // Finally, we send the message.
             NotificationManager.queueMessage(sendableMessageString);
-        }
     }
 }
