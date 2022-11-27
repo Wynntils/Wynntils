@@ -63,10 +63,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
                         messageCounts.append(ChatFormatting.LIGHT_PURPLE);
                     }
 
-                    if(totalItemInteger > 1)
-                        messageCounts.append(") items for ");
-                    else
-                        messageCounts.append(") item for ");
+                    String pluralizer = totalItemInteger == 1 ? "" : "s";
+
+                    messageCounts.append(") item" + pluralizer + " for ");
 
                     messageCounts.setCharAt(0, '(');
 
@@ -86,8 +85,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     }
                     // Scrapping items for scrap
                     else {
-                        sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger + " items");
-                        sendableMessage.append(" for " + ChatFormatting.YELLOW + paymentString + " scrap"
+                        sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger);
+                        sendableMessage.append("item" + pluralizer + " for ");
+                        sendableMessage.append(ChatFormatting.YELLOW + paymentString + " scrap"
                                 + ChatFormatting.LIGHT_PURPLE + ".");
                     }
 
