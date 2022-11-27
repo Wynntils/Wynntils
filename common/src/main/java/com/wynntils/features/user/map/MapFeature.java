@@ -6,6 +6,7 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -134,6 +135,8 @@ public class MapFeature extends UserFeature {
             // TODO: Replace this notification with a popup
             NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
+
+            ConfigManager.saveConfig();
         }
     }
 
