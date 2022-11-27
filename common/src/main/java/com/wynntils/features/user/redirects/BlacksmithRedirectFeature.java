@@ -51,11 +51,17 @@ public class BlacksmithRedirectFeature extends UserFeature {
                         || fragment.equals("d and ")
                         || fragment.equals("d for a total of ")
                         || fragment.equals("5Blacksmith: ")
+                        || fragment.isBlank()
+                        || fragment.isEmpty()
                         || fragment.equals("d emeralds.")) {
                     continue;
                 }
 
                 // Increment the number of items sold or scrapped.
+                String formatCharacter = String.valueOf(fragment.charAt(0));
+                if (formatCharacter.isBlank()|| formatCharacter.isEmpty()) {
+                    continue;
+                }
                 ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(0));
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
                 if (tierToIncrease != null) {
