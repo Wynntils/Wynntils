@@ -24,8 +24,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
-    private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
-    
+    private static final Pattern BLACKSMITH_PATTERN =
+            Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
+
     // Tracks count of sold or scrapped items
     private transient EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
 
@@ -57,7 +58,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 // Increment the number of items sold or scrapped.
                 ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
-                if (tierToIncrease == null) { return;}
+                if (tierToIncrease == null) {
+                    return;
+                }
                 totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
 
                 // The final part of the message.
