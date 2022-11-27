@@ -24,10 +24,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
-    private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
-    
-    // Tracks count of sold or scrapped items
-    private transient EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
+    private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile("§5Blacksmith: §r§dYou (.+): (.+). It was a pleasure doing business with you.");
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])(.+?)§r§d");
+    private static final Pattern EMERALD_PATTERN = Pattern.compile("for a total of (.+) emeralds");
+    private static final Pattern SCRAP_PATTERN = Pattern.compile("(.+) scrap.");
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -36,44 +36,38 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = BLACKSMITH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
+        // Tracks count of sold or scrapped items
+        EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
+
         int totalItemInteger = 0;
-        if (matcher.matches()) {
+        // If we get emeralds, this will be the number of emeralds we get. If we get scrap, this will be the number of scrap we get.
+        String paymentString = "";
+        Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getCodedMessage());
+        if (!messageMatcher.matches()) return;
             event.setCanceled(true);
 
-            String parseableMessage = event.getOriginalCodedMessage();
-    
-            for (String fragment : parseableMessage.split("§")) {
-                // Fragments without any item data should be ignored.
-                if (fragment.equals("dYou sold me: ")
-                        || fragment.equals("dYou scrapped: ")
-                        || fragment.equals("d, ")
-                        || fragment.equals("d and ")
-                        || fragment.equals("d for a total of ")
-                        || fragment.equals("5Blacksmith: ")
-                        || fragment.isBlank()
-                        || fragment.isEmpty()
-                        || fragment.equals("d emeralds.")) {
-                    continue;
-                }
+            // Retrieve the color code of the item, and then match it to the item tier.
+            Matcher itemMatcher = ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
+            while (itemMatcher.find()) {
+                ChatFormatting itemColor = ChatFormatting.getByCode(itemMatcher.group(1).charAt(0)); // find the color code, then get the ChatFormatting of the tiem.
+                ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
+                if (tierToIncrease == null) continue;
+                totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
+                totalItemInteger++;
+            }
 
-                // Increment the number of items sold or scrapped.
-                String formatCharacter = String.valueOf(fragment.charAt(0));
-                if (formatCharacter.isBlank()|| formatCharacter.isEmpty()) {
-                    continue;
-                }
-                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(0));
-                ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
-                if (tierToIncrease != null) {
-                    totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
-                }
+            Matcher emeraldMatcher = EMERALD_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
+            if (emeraldMatcher.find()) {
+                paymentString = emeraldMatcher.group(1);
+            }
+
+            Matcher scrapMatcher = SCRAP_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
+            if (scrapMatcher.find()) {
+                paymentString = scrapMatcher.group(1);
+            }
 
                 // The final part of the message.
-                if (fragment.matches("e\\d+")) {
-                    for (ItemTier tier : ItemTier.values()) {
-                        totalItemInteger += totalItems.getOrDefault(tier, 0);
-                    }
-
+                {
                     // Let's tally up the total number of items sold.
                     StringBuilder messageCounts = new StringBuilder();
                     for (ItemTier tier : ItemTier.values()) {
@@ -90,16 +84,16 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Now, we create the full message.
                     StringBuilder sendableMessage = new StringBuilder();
                     // Normal sale of items for emeralds.
-                    if (parseableMessage.split(" ")[2].equals("sold")) {
+                    if (messageMatcher.group(1).equals("sold me")) {
                         sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Sold " + totalItemInteger + " ");
                         sendableMessage.append(messageCountsString);
-                        sendableMessage.append(ChatFormatting.GREEN + fragment.replace("e", "")
+                        sendableMessage.append(ChatFormatting.GREEN + paymentString
                                 + EmeraldSymbols.EMERALDS + ChatFormatting.LIGHT_PURPLE + ".");
                     }
                     // Scrapping items for scrap
                     else {
-                        sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger + " ");
-                        sendableMessage.append(ChatFormatting.YELLOW + fragment.replace("e", "") + " scrap"
+                        sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger + " items");
+                        sendableMessage.append(ChatFormatting.YELLOW + " for " + paymentString + " scrap"
                                 + ChatFormatting.LIGHT_PURPLE + ".");
                     }
 
@@ -110,5 +104,4 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 }
             }
         }
-    }
-}
+
