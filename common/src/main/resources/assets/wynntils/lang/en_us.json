@@ -6,7 +6,7 @@
   "core.wynntils.category.redirects": "Game Notification Redirects",
   "core.wynntils.category.tooltips": "Item Tooltips",
   "core.wynntils.category.uncategorized": "Uncategorized",
-  "feature.wynntils.BlacksmithRedirectFeature.name": "Blacksmith Message Redirect",
+  "feature.wynntils.blacksmithRedirect.name": "Blacksmith Message Redirect",
   "feature.wynntils.abbreviateMobHealth.name": "Abbreviate Mob Health",
   "feature.wynntils.abilityRefreshRedirect.name": "Ability Refresh Redirect",
   "feature.wynntils.abilityTreeScroll.invertScroll.description": "Should the scrolling direction be inverted?",
