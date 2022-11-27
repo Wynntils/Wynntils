@@ -152,7 +152,7 @@ public class CharacterFunctions {
     public static class EmeraldsFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return PlayerInventoryModel.getCurrentEmeraldCount() % 4096 % 64;
+            return PlayerInventoryModel.getCurrentEmeraldCount() % 64;
         }
 
         @Override
