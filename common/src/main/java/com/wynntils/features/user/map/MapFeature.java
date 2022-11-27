@@ -37,6 +37,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -109,7 +111,10 @@ public class MapFeature extends UserFeature {
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (!autoWaypointChests) return;
 
-        lastChestPos = event.getPos();
+        BlockEntity blockEntity = McUtils.mc().level.getBlockEntity(event.getPos());
+        if (blockEntity != null && blockEntity.getType() == BlockEntityType.CHEST) {
+            lastChestPos = event.getPos();
+        }
     }
 
     @SubscribeEvent
