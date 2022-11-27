@@ -90,6 +90,38 @@ public class MainMapScreen extends AbstractMapScreen {
                         new TextComponent("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(new TranslatableComponent("screens.wynntils.map.help.description9")))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_WAYPOINT_FOCUS_BUTTON,
+                () -> {
+                    if (KeyboardUtils.isShiftDown()) {
+                        centerMapAroundPlayer();
+                        return;
+                    }
+
+                    if (CompassModel.getCompassLocation().isPresent()) {
+                        Location location = CompassModel.getCompassLocation().get();
+                        updateMapCenter((float) location.x, (float) location.z);
+                    }
+                },
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(new TranslatableComponent("screens.wynntils.map.focus.name")),
+                        new TextComponent("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.focus.description1")),
+                        new TextComponent("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(new TranslatableComponent("screens.wynntils.map.focus.description2")))));
+
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
