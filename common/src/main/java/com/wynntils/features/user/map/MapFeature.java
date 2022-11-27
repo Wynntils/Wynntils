@@ -4,7 +4,9 @@
  */
 package com.wynntils.features.user.map;
 
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -16,13 +18,22 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.MapModel;
+import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.objects.HealthTexture;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
+
+    @Config(visible = false)
+    public List<CustomPoi> customPois = new ArrayList<>();
+
+    @TypeOverride
+    private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
 
     @Config
     public PointerType pointerType = PointerType.Arrow;

@@ -45,15 +45,30 @@ public class TextInputBoxWidget extends AbstractWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, boxTitle);
-        this.onUpdateConsumer = onUpdateConsumer;
+        this.onUpdateConsumer = onUpdateConsumer == null ? s -> {} : onUpdateConsumer;
         this.textboxScreen = textboxScreen;
     }
 
     public TextInputBoxWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<String> onUpdateConsumer,
+            TextboxScreen textboxScreen,
+            TextInputBoxWidget oldWidget) {
+        this(x, y, width, height, TextComponent.EMPTY, onUpdateConsumer, textboxScreen);
+
+        if (oldWidget != null) {
+            this.textBoxInput = oldWidget.textBoxInput;
+            this.cursorPosition = oldWidget.cursorPosition;
+            this.renderColor = oldWidget.renderColor;
+        }
+    }
+
+    public TextInputBoxWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(x, y, width, height, TextComponent.EMPTY);
-        this.onUpdateConsumer = onUpdateConsumer;
-        this.textboxScreen = textboxScreen;
+        this(x, y, width, height, onUpdateConsumer, textboxScreen, null);
     }
 
     @Override
@@ -134,11 +149,12 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (this.isHovered) {
             textboxScreen.setFocusedTextInput(this);
+            return true;
         } else {
             textboxScreen.setFocusedTextInput(null);
         }
 
-        return true;
+        return false;
     }
 
     @Override

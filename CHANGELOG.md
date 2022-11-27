@@ -1,61 +1,43 @@
-## [0.0.1-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.69...v0.0.1-alpha.70) (2022-11-25)
+## [0.0.1-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.83...v0.0.1-alpha.84) (2022-11-27)
 
 
 ### Bug Fixes
 
-* Check if update has already been downloaded before downloading again ([#724](https://github.com/Wynntils/Artemis/issues/724)) ([1cffa56](https://github.com/Wynntils/Artemis/commit/1cffa56b672058bad5f9a222df24db926a9c64e2))
-* emerald pouch parsing when picking emeralds up ([#723](https://github.com/Wynntils/Artemis/issues/723)) ([9d86494](https://github.com/Wynntils/Artemis/commit/9d864941db91d36313182d67c0ec2c4d7c9f8910))
+* Fix CI build tasks ([ddccef3](https://github.com/Wynntils/Artemis/commit/ddccef3b31d62801036ecfc29ecd495736154c0d))
 
-
-### New Features
-
-* added bps and bps_xz ([#721](https://github.com/Wynntils/Artemis/issues/721)) ([3bbccfd](https://github.com/Wynntils/Artemis/commit/3bbccfda887ba980aaba71d73b1b40985b380458))
-
-## [0.0.1-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.68...v0.0.1-alpha.69) (2022-11-24)
-
-
-### New Features
-
-* added mana_pct function ([#718](https://github.com/Wynntils/Artemis/issues/718)) ([78331fa](https://github.com/Wynntils/Artemis/commit/78331fa98d863305eea230ca236e7d6e132b4576))
+## [0.0.1-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.82...v0.0.1-alpha.83) (2022-11-27)
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.69 [skip ci] ([18bfb1c](https://github.com/Wynntils/Artemis/commit/18bfb1cf1309c65cce3d7df6e955323650d74b12))
+* Rebuild broken version [#3](https://github.com/Wynntils/Artemis/issues/3) ([9c626ae](https://github.com/Wynntils/Artemis/commit/9c626aef7c3399c1d21d73bf3715d8f88398c4bf))
+* **release:** v0.0.1-alpha.83 [skip ci] ([72217b5](https://github.com/Wynntils/Artemis/commit/72217b555626746393578371b6e80cc2199ef63a))
 
-## [0.0.1-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.67...v0.0.1-alpha.68) (2022-11-22)
+## [0.0.1-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.81...v0.0.1-alpha.82) (2022-11-27)
+
+
+### Miscellaneous Chores
+
+* Rebuild broken version [#2](https://github.com/Wynntils/Artemis/issues/2) ([4eb0afc](https://github.com/Wynntils/Artemis/commit/4eb0afc9d1b3c22bca5c743832a8552ed7a16f04))
+* **release:** v0.0.1-alpha.82 [skip ci] ([8fc02d0](https://github.com/Wynntils/Artemis/commit/8fc02d01bc8cd21ceb1150c6bf5fff598bd021c2))
+
+## [0.0.1-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.80...v0.0.1-alpha.81) (2022-11-27)
+
+
+### Miscellaneous Chores
+
+* Rebuild broken quilt version ([d3a2490](https://github.com/Wynntils/Artemis/commit/d3a2490cec3f25b8905c88ff37d1c66f9f5ae7c5))
+* **release:** v0.0.1-alpha.81 [skip ci] ([7618f98](https://github.com/Wynntils/Artemis/commit/7618f9852706025194d7b65ca46db5feeb2f55da))
+
+## [0.0.1-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.79...v0.0.1-alpha.80) (2022-11-26)
 
 
 ### Bug Fixes
 
-* Fix ability point coloring ([cbf17d5](https://github.com/Wynntils/Artemis/commit/cbf17d5951e9f2dca049ee8c280e97f39428af49))
+* Fix AbilityTreeScrollFeature bug ([055fa69](https://github.com/Wynntils/Artemis/commit/055fa69cb21c5872b6eb9d1d33e81e694acbf412))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.68 [skip ci] ([d5776cd](https://github.com/Wynntils/Artemis/commit/d5776cd838ee784566ceb5e877372428744fcafa))
-
-## [0.0.1-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.66...v0.0.1-alpha.67) (2022-11-21)
-
-
-### Bug Fixes
-
-* Make unused ability point messages dark aqua ([bdacde5](https://github.com/Wynntils/Artemis/commit/bdacde5cbabd620057dd46844bb4d0a954c630ff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.67 [skip ci] ([922a140](https://github.com/Wynntils/Artemis/commit/922a1409c4f0950b36194cb53450d6ef54a0f12d))
-
-## [0.0.1-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.65...v0.0.1-alpha.66) (2022-11-20)
-
-
-### Bug Fixes
-
-* Fix crash loops in feature exception ([#709](https://github.com/Wynntils/Artemis/issues/709)) ([b4916f7](https://github.com/Wynntils/Artemis/commit/b4916f77fed24346ce24c891919b9165615346b8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.66 [skip ci] ([629e6cd](https://github.com/Wynntils/Artemis/commit/629e6cd5ed3126d8f2e42aed5d7a3414391ad499))
+* **release:** v0.0.1-alpha.80 [skip ci] ([c7e5a51](https://github.com/Wynntils/Artemis/commit/c7e5a514c81266415ffe3dcb8d126c4162869a10))
 
