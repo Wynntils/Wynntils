@@ -11,7 +11,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.EnumMap;
@@ -64,7 +63,11 @@ public class BlacksmithRedirectFeature extends UserFeature {
                         messageCounts.append(ChatFormatting.LIGHT_PURPLE);
                     }
 
-                    messageCounts.append(") item(s) for ");
+                    if(totalItemInteger > 1)
+                        messageCounts.append(") items for ");
+                    else
+                        messageCounts.append(") item for ");
+
                     messageCounts.setCharAt(0, '(');
 
                     // How many emeralds/scrap we got from the blacksmith.
@@ -84,7 +87,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Scrapping items for scrap
                     else {
                         sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger + " items");
-                        sendableMessage.append(ChatFormatting.YELLOW + " for " + paymentString + " scrap"
+                        sendableMessage.append(" for " + ChatFormatting.YELLOW + paymentString + " scrap"
                                 + ChatFormatting.LIGHT_PURPLE + ".");
                     }
 
