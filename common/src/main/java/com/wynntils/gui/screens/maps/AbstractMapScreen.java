@@ -37,9 +37,9 @@ public abstract class AbstractMapScreen extends Screen {
     protected static final float BORDER_OFFSET = 6;
 
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    protected static final float MIN_ZOOM = 0.2f;
+    protected static final float MIN_ZOOM = 0.1f;
     protected static final float MAX_ZOOM = 3f;
-    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.04f;
+    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
 
