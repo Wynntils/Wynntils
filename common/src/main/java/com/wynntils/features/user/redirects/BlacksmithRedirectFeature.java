@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import com.wynntils.mc.utils.McUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
@@ -55,7 +54,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
             // Tally up the items that we sold.
             while (itemMatcher.find()) {
-                totalItemInteger++; // We can sell crafting items that don't have a tier, but we still need to count them.
+                totalItemInteger++; // We can sell non-tiered crafting items, but we still need to count them.
                 ChatFormatting itemColor = ChatFormatting.getByCode(itemMatcher
                         .group(1)
                         .charAt(0)); // find the color code to find ChatFormatting and ascertain the tier.
@@ -81,11 +80,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
             sendableMessage = String.format(
                     "§r§dSold %d %s %s for §r§a%s%s§r§d.",
-                    totalItemInteger,
-                    itemPluralizer,
-                    countByTierString,
-                    paymentString,
-                    EmeraldSymbols.EMERALDS);
+                    totalItemInteger, itemPluralizer, countByTierString, paymentString, EmeraldSymbols.EMERALDS);
         }
         // Scrapping items for scrap.
         else {
@@ -97,10 +92,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
             String itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             sendableMessage = String.format(
-                    "§r§dScrapped %d %s for §r§a%s scrap%s§r§d.",
-                    totalItemInteger,
-                    itemPluralizer,
-                    paymentString);
+                    "§r§dScrapped %d %s for §r§a%s scrap%s§r§d.", totalItemInteger, itemPluralizer, paymentString);
         }
 
         // Finally, we send the message.
