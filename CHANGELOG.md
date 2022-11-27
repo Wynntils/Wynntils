@@ -1,9 +1,17 @@
+## [0.0.1-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.83...v0.0.1-alpha.84) (2022-11-27)
+
+
+### Bug Fixes
+
+* Fix CI build tasks ([ddccef3](https://github.com/Wynntils/Artemis/commit/ddccef3b31d62801036ecfc29ecd495736154c0d))
+
 ## [0.0.1-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.82...v0.0.1-alpha.83) (2022-11-27)
 
 
 ### Miscellaneous Chores
 
 * Rebuild broken version [#3](https://github.com/Wynntils/Artemis/issues/3) ([9c626ae](https://github.com/Wynntils/Artemis/commit/9c626aef7c3399c1d21d73bf3715d8f88398c4bf))
+* **release:** v0.0.1-alpha.83 [skip ci] ([72217b5](https://github.com/Wynntils/Artemis/commit/72217b555626746393578371b6e80cc2199ef63a))
 
 ## [0.0.1-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.81...v0.0.1-alpha.82) (2022-11-27)
 
@@ -32,16 +40,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.80 [skip ci] ([c7e5a51](https://github.com/Wynntils/Artemis/commit/c7e5a514c81266415ffe3dcb8d126c4162869a10))
-
-## [0.0.1-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.78...v0.0.1-alpha.79) (2022-11-26)
-
-
-### New Features
-
-* Add a GUI to create custom map icons, and add helper buttons to maps ([#720](https://github.com/Wynntils/Artemis/issues/720)) ([e307c7a](https://github.com/Wynntils/Artemis/commit/e307c7a4b088db39bc87e194f602191b92940a90))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.79 [skip ci] ([06416ee](https://github.com/Wynntils/Artemis/commit/06416eebdce73302782897ae32a5135821e048f5))
 
