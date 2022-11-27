@@ -82,6 +82,7 @@ public enum Texture {
     MAP_BUTTONS_BACKGROUND("map/map_buttons_background.png", 144, 26),
     MAP_HELP_BUTTON("map/map_help_button.png", 10, 16),
     MAP_POINTERS("map/map_pointers.png", 256, 256),
+    MAP_WAYPOINT_FOCUS_BUTTON("map/map_waypoint_focus_button.png", 12, 16),
     PAPER_MAP_TEXTURES("map/map_border/paper_map_textures.png", 256, 512),
     WYNN_MAP_TEXTURES("map/map_border/wynn_map_textures.png", 126, 256),
 
