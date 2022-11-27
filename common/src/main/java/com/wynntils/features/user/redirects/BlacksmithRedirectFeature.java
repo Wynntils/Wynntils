@@ -16,7 +16,6 @@ import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -26,9 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
-
-    // Tracks count of sold or scrapped items
-    private transient Map<ItemTier, Integer> itemCounts = new EnumMap<>(ItemTier.class);
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -41,6 +37,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
         int totalItemInteger = 0;
         if (matcher.matches()) {
             event.setCanceled(true);
+
+            // Tracks count of sold or scrapped items
+            EnumMap<ItemTier, Integer> totalItems = new EnumMap(ItemTier.class);
 
             String parseable_message = event.getOriginalCodedMessage();
 
@@ -57,14 +56,14 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 // The final part of the message.
                 if (fragment.matches("e\\d+")) {
                     for (ItemTier tier : ItemTier.values()) {
-                        totalItemInteger += itemCounts.getOrDefault(tier, 0);
+                        totalItemInteger += totalItems.getOrDefault(tier, 0);
                     }
 
                     // Let's tally up the total number of items sold.
                     StringBuilder messageCounts = new StringBuilder();
                     for (ItemTier tier : ItemTier.values()) {
                         messageCounts.append(
-                                '/' + tier.getChatFormatting().toString() + itemCounts.getOrDefault(tier, 0));
+                                '/' + tier.getChatFormatting().toString() + totalItems.getOrDefault(tier, 0));
                         messageCounts.append(ChatFormatting.LIGHT_PURPLE);
                     }
 
@@ -85,7 +84,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Scrapping items for scrap
                     else {
                         sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger + " ");
-                        sendableMessage.append(messageCountsString);
                         sendableMessage.append(ChatFormatting.YELLOW + fragment.replace("e", "") + " scrap"
                                 + ChatFormatting.LIGHT_PURPLE + ".");
                     }
