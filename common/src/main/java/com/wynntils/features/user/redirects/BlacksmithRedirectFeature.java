@@ -18,14 +18,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wynntils.mc.utils.McUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])(.+?)§r§d");
+    // Crafting items will pass with the color section code 'd', which is the same as the message color code for the Blacksmith.
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53]|d)(.+?)§r§d");
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -54,10 +57,10 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
             // Tally up the items that we sold.
             while (itemMatcher.find()) {
-                totalItemInteger++; // We can sell non-tiered crafting items, but we still need to count them.
-                ChatFormatting itemColor = ChatFormatting.getByCode(itemMatcher
-                        .group(1)
-                        .charAt(0)); // find the color code to find ChatFormatting and ascertain the tier.
+                totalItemInteger++;
+                char itemColorCode = itemMatcher.group(1).charAt(0);
+                if(itemColorCode == 'd') continue; // This is for non-tiered crafting items.
+                ChatFormatting itemColor = ChatFormatting.getByCode(itemColorCode); // find the color code to find ChatFormatting and ascertain the tier.
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
                 if (tierToIncrease == null) continue;
                 totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
@@ -97,5 +100,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
         // Finally, we send the message.
         NotificationManager.queueMessage(sendableMessage);
+
+        //debug, remove this san7890
+        McUtils.sendMessageToClient(event.getOriginalMessage());
+        McUtils.sendMessageToClient(new TextComponent(event.getOriginalCodedMessage()));
     }
 }
