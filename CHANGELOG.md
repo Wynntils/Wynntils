@@ -1,9 +1,21 @@
+## [0.0.1-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.91...v0.0.1-alpha.92) (2022-11-27)
+
+
+### New Features
+
+* Auto create waypoints for chests ([#736](https://github.com/Wynntils/Artemis/issues/736)) ([20b6f5f](https://github.com/Wynntils/Artemis/commit/20b6f5fb15ce8e8f0481aae55197ff6f6a3801a9))
+
 ## [0.0.1-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.90...v0.0.1-alpha.91) (2022-11-27)
 
 
 ### Bug Fixes
 
 * Show custom pois on minimap ([#737](https://github.com/Wynntils/Artemis/issues/737)) ([37ded29](https://github.com/Wynntils/Artemis/commit/37ded294817d8023ec65cd081e4681d993e5ba08))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.91 [skip ci] ([926fd54](https://github.com/Wynntils/Artemis/commit/926fd540e41729c9aecaabb84e902550a9877ab5))
 
 ## [0.0.1-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.89...v0.0.1-alpha.90) (2022-11-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.88 [skip ci] ([1daffd6](https://github.com/Wynntils/Artemis/commit/1daffd6ae207e5442a9676f5a0bd4e43f42765b2))
-
-## [0.0.1-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.86...v0.0.1-alpha.87) (2022-11-27)
-
-
-### Bug Fixes
-
-* Give keybinds their default value on registration ([#740](https://github.com/Wynntils/Artemis/issues/740)) ([d7e2525](https://github.com/Wynntils/Artemis/commit/d7e25259ff47e0e36f259080224b1f5b0a7d7579))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.87 [skip ci] ([cf5cea2](https://github.com/Wynntils/Artemis/commit/cf5cea26f6454cb26b29a2760e881104176c282e))
 
