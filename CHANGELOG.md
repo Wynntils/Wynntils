@@ -1,9 +1,17 @@
+## [0.0.1-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.82...v0.0.1-alpha.83) (2022-11-27)
+
+
+### Miscellaneous Chores
+
+* Rebuild broken version [#3](https://github.com/Wynntils/Artemis/issues/3) ([9c626ae](https://github.com/Wynntils/Artemis/commit/9c626aef7c3399c1d21d73bf3715d8f88398c4bf))
+
 ## [0.0.1-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.81...v0.0.1-alpha.82) (2022-11-27)
 
 
 ### Miscellaneous Chores
 
 * Rebuild broken version [#2](https://github.com/Wynntils/Artemis/issues/2) ([4eb0afc](https://github.com/Wynntils/Artemis/commit/4eb0afc9d1b3c22bca5c743832a8552ed7a16f04))
+* **release:** v0.0.1-alpha.82 [skip ci] ([8fc02d0](https://github.com/Wynntils/Artemis/commit/8fc02d01bc8cd21ceb1150c6bf5fff598bd021c2))
 
 ## [0.0.1-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.80...v0.0.1-alpha.81) (2022-11-27)
 
@@ -36,17 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.79 [skip ci] ([06416ee](https://github.com/Wynntils/Artemis/commit/06416eebdce73302782897ae32a5135821e048f5))
-
-## [0.0.1-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.77...v0.0.1-alpha.78) (2022-11-26)
-
-
-### Bug Fixes
-
-* RenderUtils should not have floating-point texture coordinates ([#731](https://github.com/Wynntils/Artemis/issues/731)) ([fd64057](https://github.com/Wynntils/Artemis/commit/fd640577a719b9fd94a13da0b4b420842855daa9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.78 [skip ci] ([837dbf7](https://github.com/Wynntils/Artemis/commit/837dbf7df73646ccf52b42ce270c9197b07aa523))
-* Update gradle [skip ci] ([#727](https://github.com/Wynntils/Artemis/issues/727)) ([41145d6](https://github.com/Wynntils/Artemis/commit/41145d6c0db2963a2619d71e6bc23e0a8669eea6))
 
