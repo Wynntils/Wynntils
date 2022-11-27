@@ -1,9 +1,21 @@
+## [0.0.1-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.84...v0.0.1-alpha.85) (2022-11-27)
+
+
+### Bug Fixes
+
+* Respect autoTrackQuestCoordinates config ([#735](https://github.com/Wynntils/Artemis/issues/735)) ([17a5355](https://github.com/Wynntils/Artemis/commit/17a53558f68dd99fb288989382a3211c1979fadf))
+
 ## [0.0.1-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.83...v0.0.1-alpha.84) (2022-11-27)
 
 
 ### Bug Fixes
 
 * Fix CI build tasks ([ddccef3](https://github.com/Wynntils/Artemis/commit/ddccef3b31d62801036ecfc29ecd495736154c0d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.84 [skip ci] ([187d21a](https://github.com/Wynntils/Artemis/commit/187d21ab88f07b7fd8623ce60dc3965a48fcf847))
 
 ## [0.0.1-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.82...v0.0.1-alpha.83) (2022-11-27)
 
@@ -28,16 +40,4 @@
 
 * Rebuild broken quilt version ([d3a2490](https://github.com/Wynntils/Artemis/commit/d3a2490cec3f25b8905c88ff37d1c66f9f5ae7c5))
 * **release:** v0.0.1-alpha.81 [skip ci] ([7618f98](https://github.com/Wynntils/Artemis/commit/7618f9852706025194d7b65ca46db5feeb2f55da))
-
-## [0.0.1-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.79...v0.0.1-alpha.80) (2022-11-26)
-
-
-### Bug Fixes
-
-* Fix AbilityTreeScrollFeature bug ([055fa69](https://github.com/Wynntils/Artemis/commit/055fa69cb21c5872b6eb9d1d33e81e694acbf412))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.80 [skip ci] ([c7e5a51](https://github.com/Wynntils/Artemis/commit/c7e5a514c81266415ffe3dcb8d126c4162869a10))
 
