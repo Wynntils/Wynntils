@@ -13,16 +13,30 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.objects.HealthTexture;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -50,6 +64,12 @@ public class MapFeature extends UserFeature {
     @Config
     public float poiScale = 1f;
 
+    @Config
+    public boolean autoWaypointChests = true;
+
+    @Config
+    public ChestTier minTierForAutoWaypoint = ChestTier.TIER_3;
+
     @Config(subcategory = "Remote Players")
     public boolean renderRemoteFriendPlayers = true;
 
@@ -64,6 +84,8 @@ public class MapFeature extends UserFeature {
 
     @Config(subcategory = "Remote Players")
     public FontRenderer.TextShadow remotePlayerNameShadow = FontRenderer.TextShadow.OUTLINE;
+
+    private BlockPos lastChestPos;
 
     @RegisterKeyBind
     public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, () -> {
@@ -80,5 +102,65 @@ public class MapFeature extends UserFeature {
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
         return List.of(MapModel.class);
+    }
+
+    @SubscribeEvent
+    public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+        if (!autoWaypointChests) return;
+
+        lastChestPos = event.getPos();
+    }
+
+    @SubscribeEvent
+    public void onScreenOpened(ScreenOpenedEvent event) {
+        if (!autoWaypointChests) return;
+        if (lastChestPos == null) return;
+        if (!(event.getScreen() instanceof ContainerScreen)) return;
+
+        Matcher matcher = WynnScreenMatchers.lootChestMatcher(event.getScreen());
+        if (!matcher.matches()) return;
+
+        ChestTier tier = ChestTier.fromString(matcher.group(1));
+
+        if (tier.ordinal() < minTierForAutoWaypoint.ordinal()) return;
+
+        MapLocation location = new MapLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
+        CustomPoi newPoi = new CustomPoi(
+                location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
+
+        if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
+            MapFeature.INSTANCE.customPois.add(newPoi);
+
+            // TODO: Replace this notification with a popup
+            NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
+                    .withStyle(ChatFormatting.AQUA));
+        }
+    }
+
+    public enum ChestTier {
+        TIER_1(Texture.CHEST_T1, "Loot Chest 1"),
+        TIER_2(Texture.CHEST_T2, "Loot Chest 2"),
+        TIER_3(Texture.CHEST_T3, "Loot Chest 3"),
+        TIER_4(Texture.CHEST_T4, "Loot Chest 4");
+
+        private final Texture waypointTexture;
+        private final String waypointName;
+
+        ChestTier(Texture waypointTexture, String waypointName) {
+            this.waypointTexture = waypointTexture;
+            this.waypointName = waypointName;
+        }
+
+        public Texture getWaypointTexture() {
+            return waypointTexture;
+        }
+
+        public String getWaypointName() {
+            return waypointName;
+        }
+
+        public static ChestTier fromString(String s) {
+            return values()[MathUtils.integerFromRoman(s) - 1];
+        }
     }
 }
