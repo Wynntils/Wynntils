@@ -1,9 +1,21 @@
+## [0.0.1-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.90...v0.0.1-alpha.91) (2022-11-27)
+
+
+### Bug Fixes
+
+* Show custom pois on minimap ([#737](https://github.com/Wynntils/Artemis/issues/737)) ([37ded29](https://github.com/Wynntils/Artemis/commit/37ded294817d8023ec65cd081e4681d993e5ba08))
+
 ## [0.0.1-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.89...v0.0.1-alpha.90) (2022-11-27)
 
 
 ### New Features
 
 * Add center button to main map ([#734](https://github.com/Wynntils/Artemis/issues/734)) ([17814a1](https://github.com/Wynntils/Artemis/commit/17814a19e070db4e44a42b830c9cceb81880ad80))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.90 [skip ci] ([5e00562](https://github.com/Wynntils/Artemis/commit/5e00562c531af30f28e97d01c8d77388d4e9a7f3))
 
 ## [0.0.1-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.88...v0.0.1-alpha.89) (2022-11-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.87 [skip ci] ([cf5cea2](https://github.com/Wynntils/Artemis/commit/cf5cea26f6454cb26b29a2760e881104176c282e))
-
-## [0.0.1-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.85...v0.0.1-alpha.86) (2022-11-27)
-
-
-### New Features
-
-* Add gathering tool tier overlay ([#732](https://github.com/Wynntils/Artemis/issues/732)) ([3e40fca](https://github.com/Wynntils/Artemis/commit/3e40fca1f274ab2fc0586711375a09bcf7ee47db))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.86 [skip ci] ([652ee47](https://github.com/Wynntils/Artemis/commit/652ee4765521861e460e318a327b8a3cf6f0bfb6))
 
