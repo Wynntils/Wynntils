@@ -24,9 +24,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
-    private static final Pattern BLACKSMITH_PATTERN =
-            Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
-
+    private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
+    
     // Tracks count of sold or scrapped items
     private transient EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
 
@@ -37,14 +36,14 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = BLACKSMITH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
+        Matcher matcher = BLACKSMITH_PATTERN.matcher(event.getOriginalCodedMessage());
         int totalItemInteger = 0;
         if (matcher.matches()) {
             event.setCanceled(true);
 
-            String parseable_message = event.getOriginalCodedMessage();
-
-            for (String fragment : parseable_message.split("§")) {
+            String parseableMessage = event.getOriginalCodedMessage();
+    
+            for (String fragment : parseableMessage.split("§")) {
                 // Fragments without any item data should be ignored.
                 if (fragment.equals("dYou sold me: ")
                         || fragment.equals("dYou scrapped: ")
@@ -58,10 +57,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 // Increment the number of items sold or scrapped.
                 ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
-                if (tierToIncrease == null) {
-                    return;
+                if (tierToIncrease != null) {
+                    totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
                 }
-                totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
 
                 // The final part of the message.
                 if (fragment.matches("e\\d+")) {
@@ -85,7 +83,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Now, we create the full message.
                     StringBuilder sendableMessage = new StringBuilder();
                     // Normal sale of items for emeralds.
-                    if (parseable_message.split(" ")[2].equals("sold")) {
+                    if (parseableMessage.split(" ")[2].equals("sold")) {
                         sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Sold " + totalItemInteger + " ");
                         sendableMessage.append(messageCountsString);
                         sendableMessage.append(ChatFormatting.GREEN + fragment.replace("e", "")
