@@ -47,8 +47,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
         // Retrieve the color code of the item, and then match it to the item tier.
         Matcher itemMatcher = ITEM_PATTERN.matcher(messageMatcher.group(2)); // Second group contains all of the items.
         while (itemMatcher.find()) {
-            ChatFormatting itemColor = ChatFormatting.getByCode(
-                    itemMatcher.group(1).charAt(0)); // find the color code, then get the ChatFormatting of the tiem.
+            ChatFormatting itemColor = ChatFormatting.getByCode(itemMatcher
+                    .group(1)
+                    .charAt(0)); // find the color code, then get the ChatFormatting of the item to match it to a tier.
             ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
             if (tierToIncrease == null) continue;
             totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
