@@ -45,6 +45,15 @@ public class ItemTextOverlayFeature extends UserFeature {
     public FontRenderer.TextShadow emeraldPouchTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
+    public boolean gatheringToolTierEnabled = true;
+
+    @Config
+    public boolean gatheringToolTierRomanNumerals = true;
+
+    @Config
+    public FontRenderer.TextShadow gatheringToolTierShadow = FontRenderer.TextShadow.OUTLINE;
+
+    @Config
     public boolean teleportScrollEnabled = true;
 
     @Config
