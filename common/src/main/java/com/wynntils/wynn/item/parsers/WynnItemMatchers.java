@@ -44,6 +44,9 @@ public final class WynnItemMatchers {
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
     private static final Pattern INGREDIENT_OR_MATERIAL_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
+    private static final Pattern GATHERING_TOOL_PATTERN =
+            Pattern.compile("[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)");
+
     public static boolean isSoulPoint(ItemStack itemStack) {
         return !itemStack.isEmpty()
                 && (itemStack.getItem() == Items.NETHER_STAR || itemStack.getItem() == Items.SNOW)
@@ -255,6 +258,10 @@ public final class WynnItemMatchers {
         return false;
     }
 
+    public static boolean isGatheringTool(ItemStack itemStack) {
+        return gatheringToolMatcher(itemStack.getHoverName()).matches();
+    }
+
     public static Matcher serverItemMatcher(Component text) {
         return SERVER_ITEM_PATTERN.matcher(text.getString());
     }
@@ -306,5 +313,9 @@ public final class WynnItemMatchers {
     public static Matcher ingredientOrMaterialMatcher(Component text) {
         return INGREDIENT_OR_MATERIAL_PATTERN.matcher(
                 WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
+    }
+
+    public static Matcher gatheringToolMatcher(Component text) {
+        return GATHERING_TOOL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
     }
 }

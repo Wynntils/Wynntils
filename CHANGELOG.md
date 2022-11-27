@@ -1,9 +1,33 @@
+## [0.0.1-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.86...v0.0.1-alpha.87) (2022-11-27)
+
+
+### Bug Fixes
+
+* Give keybinds their default value on registration ([#740](https://github.com/Wynntils/Artemis/issues/740)) ([d7e2525](https://github.com/Wynntils/Artemis/commit/d7e25259ff47e0e36f259080224b1f5b0a7d7579))
+
+## [0.0.1-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.85...v0.0.1-alpha.86) (2022-11-27)
+
+
+### New Features
+
+* Add gathering tool tier overlay ([#732](https://github.com/Wynntils/Artemis/issues/732)) ([3e40fca](https://github.com/Wynntils/Artemis/commit/3e40fca1f274ab2fc0586711375a09bcf7ee47db))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.86 [skip ci] ([652ee47](https://github.com/Wynntils/Artemis/commit/652ee4765521861e460e318a327b8a3cf6f0bfb6))
+
 ## [0.0.1-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.84...v0.0.1-alpha.85) (2022-11-27)
 
 
 ### Bug Fixes
 
 * Respect autoTrackQuestCoordinates config ([#735](https://github.com/Wynntils/Artemis/issues/735)) ([17a5355](https://github.com/Wynntils/Artemis/commit/17a53558f68dd99fb288989382a3211c1979fadf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.85 [skip ci] ([143c480](https://github.com/Wynntils/Artemis/commit/143c4806eb2872047d4d32bef8e6516fec338a26))
 
 ## [0.0.1-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.83...v0.0.1-alpha.84) (2022-11-27)
 
@@ -24,20 +48,4 @@
 
 * Rebuild broken version [#3](https://github.com/Wynntils/Artemis/issues/3) ([9c626ae](https://github.com/Wynntils/Artemis/commit/9c626aef7c3399c1d21d73bf3715d8f88398c4bf))
 * **release:** v0.0.1-alpha.83 [skip ci] ([72217b5](https://github.com/Wynntils/Artemis/commit/72217b555626746393578371b6e80cc2199ef63a))
-
-## [0.0.1-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.81...v0.0.1-alpha.82) (2022-11-27)
-
-
-### Miscellaneous Chores
-
-* Rebuild broken version [#2](https://github.com/Wynntils/Artemis/issues/2) ([4eb0afc](https://github.com/Wynntils/Artemis/commit/4eb0afc9d1b3c22bca5c743832a8552ed7a16f04))
-* **release:** v0.0.1-alpha.82 [skip ci] ([8fc02d0](https://github.com/Wynntils/Artemis/commit/8fc02d01bc8cd21ceb1150c6bf5fff598bd021c2))
-
-## [0.0.1-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.80...v0.0.1-alpha.81) (2022-11-27)
-
-
-### Miscellaneous Chores
-
-* Rebuild broken quilt version ([d3a2490](https://github.com/Wynntils/Artemis/commit/d3a2490cec3f25b8905c88ff37d1c66f9f5ae7c5))
-* **release:** v0.0.1-alpha.81 [skip ci] ([7618f98](https://github.com/Wynntils/Artemis/commit/7618f9852706025194d7b65ca46db5feeb2f55da))
 
