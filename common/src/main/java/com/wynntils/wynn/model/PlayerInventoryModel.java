@@ -21,21 +21,21 @@ public class PlayerInventoryModel extends Model {
     public static void init() {}
 
     @SubscribeEvent
-    public static void worldChange(WorldStateEvent e) {
+    public static void onWorldChange(WorldStateEvent e) {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
     }
 
     @SubscribeEvent
-    public static void containerEvent(ContainerSetContentEvent e) {
+    public static void onContainerSetEvent(ContainerSetContentEvent e) {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
     }
 
     @SubscribeEvent
-    public static void slotEvent(SetSlotEvent e) {
+    public static void onSlotSetEvent(SetSlotEvent e) {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
