@@ -1,9 +1,17 @@
+## [0.0.1-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.81...v0.0.1-alpha.82) (2022-11-27)
+
+
+### Miscellaneous Chores
+
+* Rebuild broken version [#2](https://github.com/Wynntils/Artemis/issues/2) ([4eb0afc](https://github.com/Wynntils/Artemis/commit/4eb0afc9d1b3c22bca5c743832a8552ed7a16f04))
+
 ## [0.0.1-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.80...v0.0.1-alpha.81) (2022-11-27)
 
 
 ### Miscellaneous Chores
 
 * Rebuild broken quilt version ([d3a2490](https://github.com/Wynntils/Artemis/commit/d3a2490cec3f25b8905c88ff37d1c66f9f5ae7c5))
+* **release:** v0.0.1-alpha.81 [skip ci] ([7618f98](https://github.com/Wynntils/Artemis/commit/7618f9852706025194d7b65ca46db5feeb2f55da))
 
 ## [0.0.1-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.79...v0.0.1-alpha.80) (2022-11-26)
 
@@ -41,16 +49,4 @@
 
 * **release:** v0.0.1-alpha.78 [skip ci] ([837dbf7](https://github.com/Wynntils/Artemis/commit/837dbf7df73646ccf52b42ce270c9197b07aa523))
 * Update gradle [skip ci] ([#727](https://github.com/Wynntils/Artemis/issues/727)) ([41145d6](https://github.com/Wynntils/Artemis/commit/41145d6c0db2963a2619d71e6bc23e0a8669eea6))
-
-## [0.0.1-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.76...v0.0.1-alpha.77) (2022-11-26)
-
-
-### Bug Fixes
-
-* Label pois should not be behind ServicePois ([#730](https://github.com/Wynntils/Artemis/issues/730)) ([da374f2](https://github.com/Wynntils/Artemis/commit/da374f25ec2f6813603c91559007ed97d22f0d37))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.77 [skip ci] ([9c16aa9](https://github.com/Wynntils/Artemis/commit/9c16aa92b94414f35002ab467144b62794f7a911))
 
