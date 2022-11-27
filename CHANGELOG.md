@@ -1,3 +1,10 @@
+## [0.0.1-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.89...v0.0.1-alpha.90) (2022-11-27)
+
+
+### New Features
+
+* Add center button to main map ([#734](https://github.com/Wynntils/Artemis/issues/734)) ([17814a1](https://github.com/Wynntils/Artemis/commit/17814a19e070db4e44a42b830c9cceb81880ad80))
+
 ## [0.0.1-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.88...v0.0.1-alpha.89) (2022-11-27)
 
 
@@ -5,6 +12,11 @@
 
 * Save config on waypoint deletion ([#739](https://github.com/Wynntils/Artemis/issues/739)) ([8af907e](https://github.com/Wynntils/Artemis/commit/8af907ea6447103afd39d32c6dc6666b68394f17))
 * Show custom pois on minimap ([#737](https://github.com/Wynntils/Artemis/issues/737)) ([11de23b](https://github.com/Wynntils/Artemis/commit/11de23b12d821273629845d5547b83c0c0b41276))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.89 [skip ci] ([dbc16bf](https://github.com/Wynntils/Artemis/commit/dbc16bfbd98a0aa6d9df6dcebb0a72dade44a4c7))
 
 ## [0.0.1-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.87...v0.0.1-alpha.88) (2022-11-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.86 [skip ci] ([652ee47](https://github.com/Wynntils/Artemis/commit/652ee4765521861e460e318a327b8a3cf6f0bfb6))
-
-## [0.0.1-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.84...v0.0.1-alpha.85) (2022-11-27)
-
-
-### Bug Fixes
-
-* Respect autoTrackQuestCoordinates config ([#735](https://github.com/Wynntils/Artemis/issues/735)) ([17a5355](https://github.com/Wynntils/Artemis/commit/17a53558f68dd99fb288989382a3211c1979fadf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.85 [skip ci] ([143c480](https://github.com/Wynntils/Artemis/commit/143c4806eb2872047d4d32bef8e6516fec338a26))
 
