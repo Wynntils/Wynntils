@@ -28,7 +28,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_PATTERN = Pattern.compile("Blacksmith: (.+). It was a pleasure doing business with you.");
 
     // Tracks count of sold or scrapped items
-    private transient Map<ItemTier, Integer> itemCounts = null;
+    private transient Map<ItemTier, Integer> itemCounts = new EnumMap<>(ItemTier.class);
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -37,8 +37,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        itemCounts = new EnumMap<>(ItemTier.class);
-
         Matcher matcher = BLACKSMITH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedMessage()));
         int totalItemInteger = 0;
         if (matcher.matches()) {
