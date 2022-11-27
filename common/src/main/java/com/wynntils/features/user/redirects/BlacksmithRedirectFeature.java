@@ -93,6 +93,11 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Finally, we send the message.
                     NotificationManager.queueMessage(sendableMessageString);
                 }
+                ChatFormatting chatColor = ChatFormatting.getByCode(fragment.charAt(1));
+                ItemTier tierToIncrease = ItemTier.fromChatFormatting(chatColor);
+                if (tierToIncrease != null) {
+                    totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
+                }
             }
         }
     }
