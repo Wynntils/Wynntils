@@ -86,7 +86,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     // Scrapping items for scrap
                     else {
                         sendableMessage.append(ChatFormatting.LIGHT_PURPLE + "Scrapped " + totalItemInteger);
-                        sendableMessage.append("item" + pluralizer + " for ");
+                        sendableMessage.append(" item" + pluralizer + " for ");
                         sendableMessage.append(ChatFormatting.YELLOW + paymentString + " scrap"
                                 + ChatFormatting.LIGHT_PURPLE + ".");
                     }
@@ -95,9 +95,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
                     // Finally, we send the message.
                     NotificationManager.queueMessage(sendableMessageString);
-
-                    //debug, remove this san7890
-                    McUtils.sendMessageToClient(event.getOriginalMessage());
                 }
             }
         }
