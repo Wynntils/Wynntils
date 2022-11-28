@@ -41,16 +41,28 @@ public class BlacksmithRedirectFeature extends UserFeature {
         event.setCanceled(true);
 
         EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
+
         // How many emeralds/scrap we got from the transaction.
         String paymentString = messageMatcher.group(3);
-        // Tracks count of sold or scrapped items
-        int totalItemInteger = 0;
-        // Full message to send to the user.
-        String sendableMessage = "";
-        // Should we use item, or items?
-        String itemPluralizer = "";
 
-        // FIXME: This now counts items and tiers correctly, but does not match with ingredients.
+        // Full message to send to the user.
+        String sendableMessage;
+
+        // Should we use item, or items?
+        String itemPluralizer;
+
+        // Tracks count of sold or scrapped items
+        // Sold item count is 1 + the count of ',' and "and" in the message.
+        int totalItemInteger = 1;
+        String itemPart = messageMatcher.group(2);
+        for (char c : itemPart.toCharArray()) {
+            if (c == ',') {
+                totalItemInteger++;
+            }
+        }
+        if (itemPart.contains("and")) {
+            totalItemInteger++;
+        }
 
         // This is for selling items for emeralds.
         if (messageMatcher.group(1).equals("sold me")) {
@@ -64,7 +76,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
                     continue;
                 }
 
-                totalItemInteger++;
                 char itemColorCode = itemMatcher.group(1).charAt(0);
 
                 ChatFormatting itemColor = ChatFormatting.getByCode(
@@ -94,23 +105,15 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
             sendableMessage = String.format(
-                    "§r§dSold %d %s %s for §r§a%s%s§r§d.",
+                    "§dSold %d %s %s for §a%s%s§d.",
                     totalItemInteger, itemPluralizer, countByTierString, paymentString, EmeraldSymbols.EMERALDS);
         }
         // Scrapping items for scrap.
         else {
-            for (Component sibling : event.getOriginalMessage().getSiblings()) {
-                Matcher itemMatcher = ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling));
-
-                if (itemMatcher.matches()) {
-                    totalItemInteger++;
-                }
-            }
-
             itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             sendableMessage = String.format(
-                    "§r§dScrapped %d %s for §r§a%s scrap§r§d.", totalItemInteger, itemPluralizer, paymentString);
+                    "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString);
         }
 
         // Finally, we send the message.
