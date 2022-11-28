@@ -45,6 +45,8 @@ public class BlacksmithRedirectFeature extends UserFeature {
         int totalItemInteger = 0;
         // Full message to send to the user.
         String sendableMessage = "";
+        // Should we use item, or items?
+        String itemPluralizer = "";
 
         // This is for selling items for emeralds.
         if (messageMatcher.group(1).equals("sold me")) {
@@ -63,7 +65,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 if (tierToIncrease == null) continue;
                 totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
             }
-            String itemPluralizer = totalItemInteger == 1 ? "item" : "items";
+            itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             // Build up the string that outlines how many items were sold in what tier (0/0/0/0/0/0/0/0).
             StringBuilder countByTier = new StringBuilder();
@@ -90,7 +92,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
             while (itemMatcher.find()) {
                 totalItemInteger++;
             }
-            String itemPluralizer = totalItemInteger == 1 ? "item" : "items";
+            itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
             sendableMessage = String.format(
                     "§r§dScrapped %d %s for §r§a%s scrap%s§r§d.", totalItemInteger, itemPluralizer, paymentString);
