@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.mc.objects.Location;
+import java.util.Objects;
 
 public class MapLocation {
     private final int x;
@@ -46,5 +47,19 @@ public class MapLocation {
         if (location == null) return null;
 
         return new MapLocation((int) location.x, (int) location.y, (int) location.z);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        MapLocation that = (MapLocation) other;
+        return x == that.x && y == that.y && z == that.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.objects.CustomColor;
+import java.util.Objects;
 
 public class CustomPoi extends StaticIconPoi {
     private String name;
@@ -54,5 +55,22 @@ public class CustomPoi extends StaticIconPoi {
         super.renderAt(poseStack, renderX, renderZ, hovered, scale, mapZoom);
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        CustomPoi customPoi = (CustomPoi) other;
+        return Float.compare(customPoi.minZoom, minZoom) == 0
+                && name.equals(customPoi.name)
+                && color.equals(customPoi.color)
+                && icon == customPoi.icon;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, color, icon, minZoom);
     }
 }

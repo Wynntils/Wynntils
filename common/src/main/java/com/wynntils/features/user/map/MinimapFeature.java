@@ -40,6 +40,7 @@ import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -233,7 +234,8 @@ public class MinimapFeature extends UserFeature {
             }
 
             float currentZoom = 1f / scale;
-            for (Poi poi : MapModel.getServicePois()) {
+            for (Poi poi : Stream.concat(MapModel.getServicePois().stream(), MapFeature.INSTANCE.customPois.stream())
+                    .toList()) {
 
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
