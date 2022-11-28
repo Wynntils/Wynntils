@@ -27,7 +27,7 @@ import com.wynntils.mc.utils.McUtils;
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    // Crafting items will pass with the color section code 'd', which is the same as the message color code for the Blacksmith.
+    // Crafting items will pass with the color section code 'd', which is the same as Blacksmith's color code.
     private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53]|d)(.+?)§r§d");
 
     @Override
@@ -37,7 +37,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getCodedMessage());
+        Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage());
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
@@ -59,8 +59,9 @@ public class BlacksmithRedirectFeature extends UserFeature {
             while (itemMatcher.find()) {
                 totalItemInteger++;
                 char itemColorCode = itemMatcher.group(1).charAt(0);
-                if(itemColorCode == 'd') continue; // This is for non-tiered crafting items.
-                ChatFormatting itemColor = ChatFormatting.getByCode(itemColorCode); // find the color code to find ChatFormatting and ascertain the tier.
+                if (itemColorCode == 'd') continue; // This is for non-tiered crafting items.
+                ChatFormatting itemColor = ChatFormatting.getByCode(
+                        itemColorCode); // find the color code to find ChatFormatting and ascertain the tier.
                 ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
                 if (tierToIncrease == null) continue;
                 totalItems.put(tierToIncrease, totalItems.getOrDefault(tierToIncrease, 0) + 1);
@@ -101,7 +102,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
         // Finally, we send the message.
         NotificationManager.queueMessage(sendableMessage);
 
-        //debug, remove this san7890
+        // debug, remove this san7890
         McUtils.sendMessageToClient(event.getOriginalMessage());
         McUtils.sendMessageToClient(new TextComponent(event.getOriginalCodedMessage()));
     }
