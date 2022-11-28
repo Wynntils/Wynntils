@@ -1,9 +1,21 @@
+## [0.0.1-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.94...v0.0.1-alpha.95) (2022-11-28)
+
+
+### New Features
+
+* Redirect Blacksmith Sell/Scrap Messages to NotificationManager Overlay ([#743](https://github.com/Wynntils/Artemis/issues/743)) ([9c8ea57](https://github.com/Wynntils/Artemis/commit/9c8ea57baf2491c2d3f9daefc5e4ecad6e337740))
+
 ## [0.0.1-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.93...v0.0.1-alpha.94) (2022-11-28)
 
 
 ### New Features
 
 * Parse coordinates from chat and inject clickable component and add /compass share ([#742](https://github.com/Wynntils/Artemis/issues/742)) ([968259e](https://github.com/Wynntils/Artemis/commit/968259ec808ca9f6bb93e370c8f2707d98ac4c3c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.94 [skip ci] ([0a15d90](https://github.com/Wynntils/Artemis/commit/0a15d90d243b5f4aea1b19e82f8cdb7f51e14c25))
 
 ## [0.0.1-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.92...v0.0.1-alpha.93) (2022-11-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.91 [skip ci] ([926fd54](https://github.com/Wynntils/Artemis/commit/926fd540e41729c9aecaabb84e902550a9877ab5))
-
-## [0.0.1-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.89...v0.0.1-alpha.90) (2022-11-27)
-
-
-### New Features
-
-* Add center button to main map ([#734](https://github.com/Wynntils/Artemis/issues/734)) ([17814a1](https://github.com/Wynntils/Artemis/commit/17814a19e070db4e44a42b830c9cceb81880ad80))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.90 [skip ci] ([5e00562](https://github.com/Wynntils/Artemis/commit/5e00562c531af30f28e97d01c8d77388d4e9a7f3))
 
