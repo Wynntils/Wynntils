@@ -1,9 +1,21 @@
+## [0.0.1-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.97...v0.0.1-alpha.98) (2022-11-28)
+
+
+### Miscellaneous Chores
+
+* Add Quiltflower decompiler support and greatly improve workspace/development documentation ([#746](https://github.com/Wynntils/Artemis/issues/746)) ([c807733](https://github.com/Wynntils/Artemis/commit/c80773339465fa84a95db7123f9052964eed19ed))
+
 ## [0.0.1-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.96...v0.0.1-alpha.97) (2022-11-28)
 
 
 ### Bug Fixes
 
 * Fix auto chest not setting after there is an instance of a specific tier ([#747](https://github.com/Wynntils/Artemis/issues/747)) ([5d86f4d](https://github.com/Wynntils/Artemis/commit/5d86f4d4940d98167840e8886bc11d68570b6cb6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.97 [skip ci] ([2358cd7](https://github.com/Wynntils/Artemis/commit/2358cd7f658c2ce60509afc6cb659f1570ae815b))
 
 ## [0.0.1-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.95...v0.0.1-alpha.96) (2022-11-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.94 [skip ci] ([0a15d90](https://github.com/Wynntils/Artemis/commit/0a15d90d243b5f4aea1b19e82f8cdb7f51e14c25))
-
-## [0.0.1-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.92...v0.0.1-alpha.93) (2022-11-28)
-
-
-### Bug Fixes
-
-* Zoom further and faster ([#733](https://github.com/Wynntils/Artemis/issues/733)) ([2c989ee](https://github.com/Wynntils/Artemis/commit/2c989eefeac125e80dc0cbba2132ae5b949da8cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.93 [skip ci] ([b253aaf](https://github.com/Wynntils/Artemis/commit/b253aaf6916e84cc416a88fdf5136db0339a59f1))
 
