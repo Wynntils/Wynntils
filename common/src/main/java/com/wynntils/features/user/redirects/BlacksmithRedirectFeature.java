@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.EnumMap;
@@ -21,7 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import com.wynntils.mc.utils.McUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
