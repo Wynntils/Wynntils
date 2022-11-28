@@ -190,6 +190,8 @@
   "feature.wynntils.infoMessageFilter.hideSystemInfo.name": "Hide Info Messages",
   "feature.wynntils.infoMessageFilter.hideWelcome.description": "Should Wynncraft welcome messages be hidden?",
   "feature.wynntils.infoMessageFilter.hideWelcome.name": "Hide Welcome Messages",
+  "feature.wynntils.infoMessageFilter.horse.description": "How should messages relating to your horse appear?",
+  "feature.wynntils.infoMessageFilter.horse.name": "Hide Horse Messages",
   "feature.wynntils.infoMessageFilter.loginAnnouncements.description": "How should login messages appear?",
   "feature.wynntils.infoMessageFilter.loginAnnouncements.name": "Login Message Filtering",
   "feature.wynntils.infoMessageFilter.name": "Info Message Filter",
