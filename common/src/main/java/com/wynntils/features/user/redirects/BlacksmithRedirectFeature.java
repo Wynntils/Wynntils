@@ -11,7 +11,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.webapi.profiles.item.ItemTier;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.EnumMap;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -27,8 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    // Crafting items will pass with the color section code 'd', which is the same as Blacksmith's color code.
-    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53]|d)(.+?)§r§d");
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])(.+?)§r§d");
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
@@ -101,9 +98,5 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
         // Finally, we send the message.
         NotificationManager.queueMessage(sendableMessage);
-
-        // debug, remove this san7890
-        McUtils.sendMessageToClient(event.getOriginalMessage());
-        McUtils.sendMessageToClient(new TextComponent(event.getOriginalCodedMessage()));
     }
 }
