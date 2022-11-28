@@ -1,9 +1,21 @@
+## [0.0.1-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.92...v0.0.1-alpha.93) (2022-11-28)
+
+
+### Bug Fixes
+
+* Zoom further and faster ([#733](https://github.com/Wynntils/Artemis/issues/733)) ([2c989ee](https://github.com/Wynntils/Artemis/commit/2c989eefeac125e80dc0cbba2132ae5b949da8cc))
+
 ## [0.0.1-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.91...v0.0.1-alpha.92) (2022-11-27)
 
 
 ### New Features
 
 * Auto create waypoints for chests ([#736](https://github.com/Wynntils/Artemis/issues/736)) ([20b6f5f](https://github.com/Wynntils/Artemis/commit/20b6f5fb15ce8e8f0481aae55197ff6f6a3801a9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.92 [skip ci] ([ec82534](https://github.com/Wynntils/Artemis/commit/ec8253481a5fafa2b30d35b6f262933612ec8a17))
 
 ## [0.0.1-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.90...v0.0.1-alpha.91) (2022-11-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.89 [skip ci] ([dbc16bf](https://github.com/Wynntils/Artemis/commit/dbc16bfbd98a0aa6d9df6dcebb0a72dade44a4c7))
-
-## [0.0.1-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.87...v0.0.1-alpha.88) (2022-11-27)
-
-
-### Bug Fixes
-
-* Try to preserve invalid config file on invalid load ([#738](https://github.com/Wynntils/Artemis/issues/738)) ([338e3f2](https://github.com/Wynntils/Artemis/commit/338e3f24b5e8836e2b8863eea8ac7c7d58dafbeb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.88 [skip ci] ([1daffd6](https://github.com/Wynntils/Artemis/commit/1daffd6ae207e5442a9676f5a0bd4e43f42765b2))
 
