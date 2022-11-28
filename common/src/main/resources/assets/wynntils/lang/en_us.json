@@ -29,6 +29,7 @@
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "What color should the beacon beam have?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
   "feature.wynntils.bombBellTracking.name": "Bomb Bell Tracking",
+  "feature.wynntils.chatCoordinates.name": "Chat Coordinates",
   "feature.wynntils.chatItem.name": "Chat Item",
   "feature.wynntils.chatTabs.name": "Chat Tabs",
   "feature.wynntils.chatTimestamp.formatPattern.description": "How should the timestamp look like in chat?",
