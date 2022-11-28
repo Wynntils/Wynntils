@@ -1,9 +1,21 @@
+## [0.0.1-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.93...v0.0.1-alpha.94) (2022-11-28)
+
+
+### New Features
+
+* Parse coordinates from chat and inject clickable component and add /compass share ([#742](https://github.com/Wynntils/Artemis/issues/742)) ([968259e](https://github.com/Wynntils/Artemis/commit/968259ec808ca9f6bb93e370c8f2707d98ac4c3c))
+
 ## [0.0.1-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.92...v0.0.1-alpha.93) (2022-11-28)
 
 
 ### Bug Fixes
 
 * Zoom further and faster ([#733](https://github.com/Wynntils/Artemis/issues/733)) ([2c989ee](https://github.com/Wynntils/Artemis/commit/2c989eefeac125e80dc0cbba2132ae5b949da8cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.93 [skip ci] ([b253aaf](https://github.com/Wynntils/Artemis/commit/b253aaf6916e84cc416a88fdf5136db0339a59f1))
 
 ## [0.0.1-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.91...v0.0.1-alpha.92) (2022-11-27)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.90 [skip ci] ([5e00562](https://github.com/Wynntils/Artemis/commit/5e00562c531af30f28e97d01c8d77388d4e9a7f3))
-
-## [0.0.1-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.88...v0.0.1-alpha.89) (2022-11-27)
-
-
-### Bug Fixes
-
-* Save config on waypoint deletion ([#739](https://github.com/Wynntils/Artemis/issues/739)) ([8af907e](https://github.com/Wynntils/Artemis/commit/8af907ea6447103afd39d32c6dc6666b68394f17))
-* Show custom pois on minimap ([#737](https://github.com/Wynntils/Artemis/issues/737)) ([11de23b](https://github.com/Wynntils/Artemis/commit/11de23b12d821273629845d5547b83c0c0b41276))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.89 [skip ci] ([dbc16bf](https://github.com/Wynntils/Artemis/commit/dbc16bfbd98a0aa6d9df6dcebb0a72dade44a4c7))
 
