@@ -1,9 +1,21 @@
+## [0.0.1-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.95...v0.0.1-alpha.96) (2022-11-28)
+
+
+### New Features
+
+* Remove Quilted Fabric API dependency ([#744](https://github.com/Wynntils/Artemis/issues/744)) ([ae45489](https://github.com/Wynntils/Artemis/commit/ae45489f5b70532759e4431fae977a4634f78bbb))
+
 ## [0.0.1-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.94...v0.0.1-alpha.95) (2022-11-28)
 
 
 ### New Features
 
 * Redirect Blacksmith Sell/Scrap Messages to NotificationManager Overlay ([#743](https://github.com/Wynntils/Artemis/issues/743)) ([9c8ea57](https://github.com/Wynntils/Artemis/commit/9c8ea57baf2491c2d3f9daefc5e4ecad6e337740))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.95 [skip ci] ([7da969d](https://github.com/Wynntils/Artemis/commit/7da969d7173ca9216327813f1160cf9a2a8f0c9d))
 
 ## [0.0.1-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.93...v0.0.1-alpha.94) (2022-11-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.92 [skip ci] ([ec82534](https://github.com/Wynntils/Artemis/commit/ec8253481a5fafa2b30d35b6f262933612ec8a17))
-
-## [0.0.1-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.90...v0.0.1-alpha.91) (2022-11-27)
-
-
-### Bug Fixes
-
-* Show custom pois on minimap ([#737](https://github.com/Wynntils/Artemis/issues/737)) ([37ded29](https://github.com/Wynntils/Artemis/commit/37ded294817d8023ec65cd081e4681d993e5ba08))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.91 [skip ci] ([926fd54](https://github.com/Wynntils/Artemis/commit/926fd540e41729c9aecaabb84e902550a9877ab5))
 
