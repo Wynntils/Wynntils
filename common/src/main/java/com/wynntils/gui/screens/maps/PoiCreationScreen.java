@@ -453,7 +453,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
     public enum Visibility {
         DEFAULT("screens.wynntils.poiCreation.visibility.default", 1.5f),
-        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible", 0),
+        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible", Integer.MIN_VALUE),
         HIDDEN("screens.wynntils.poiCreation.visibility.hidden", Integer.MAX_VALUE);
 
         private final String translationKey;

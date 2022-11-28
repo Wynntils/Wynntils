@@ -27,10 +27,13 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class ConfigManager extends CoreManager {
@@ -84,11 +87,28 @@ public final class ConfigManager extends CoreManager {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfig), StandardCharsets.UTF_8);
             JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
             reader.close();
-            if (!fileElement.isJsonObject()) return; // invalid config file
+            if (!fileElement.isJsonObject()) {
+                // invalid config file
+
+                // Copy old config file to a backup, with a random part in the name to make sure we do not overwrite it
+                FileUtils.copyFile(
+                        userConfig,
+                        new File(
+                                CONFIGS,
+                                "invalid_" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
+                                        + RandomStringUtils.random(5) + "_" + userConfig.getName()));
+                FileUtils.deleteFile(userConfig);
+                FileUtils.createNewFile(userConfig);
+                configObject = new JsonObject();
+
+                return;
+            }
 
             configObject = fileElement.getAsJsonObject();
         } catch (IOException e) {
             WynntilsMod.error("Failed to load user config file!", e);
+
+            configObject = new JsonObject();
         }
     }
 

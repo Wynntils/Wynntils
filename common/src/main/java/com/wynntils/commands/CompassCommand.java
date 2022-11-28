@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
@@ -22,16 +23,34 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class CompassCommand extends CommandBase {
+
+    private final SuggestionProvider<CommandSourceStack> shareTargetSuggestionProvider =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        List<String> suggestions = new ArrayList<>();
+                        suggestions.add("party");
+                        suggestions.add("guild");
+
+                        suggestions.addAll(McUtils.mc().level.players().stream()
+                                .map(Player::getScoreboardName)
+                                .collect(Collectors.toSet()));
+
+                        return suggestions.iterator();
+                    },
+                    builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -39,6 +58,14 @@ public class CompassCommand extends CommandBase {
                 .then(Commands.literal("at")
                         .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAtVec3))
                         .build())
+                .then(Commands.literal("share")
+                        .then(Commands.literal("location")
+                                .then(Commands.argument("target", StringArgumentType.word())
+                                        .suggests(shareTargetSuggestionProvider)
+                                        .executes(this::shareLocation)))
+                        .then(Commands.argument("target", StringArgumentType.word())
+                                .suggests(shareTargetSuggestionProvider)
+                                .executes(this::shareCompass)))
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
@@ -61,6 +88,48 @@ public class CompassCommand extends CommandBase {
                 .then(Commands.argument("location", StringArgumentType.greedyString())
                         .executes(this::compassAtString))
                 .executes(this::syntaxError);
+    }
+
+    private int shareCompass(CommandContext<CommandSourceStack> context) {
+        Optional<Location> compassLocation = CompassModel.getCompassLocation();
+
+        if (compassLocation.isEmpty()) {
+            context.getSource()
+                    .sendFailure(new TextComponent("You don't have a compass set!").withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        String target = StringArgumentType.getString(context, "target");
+
+        Location compass = compassLocation.get();
+        String locationString =
+                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+
+        sendShareMessage(target, locationString);
+
+        return 1;
+    }
+
+    private int shareLocation(CommandContext<CommandSourceStack> context) {
+        String target = StringArgumentType.getString(context, "target");
+
+        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
+                + (int) McUtils.player().position().y + ", "
+                + (int) McUtils.player().position().z + "]";
+
+        sendShareMessage(target, locationString);
+
+        return 1;
+    }
+
+    private static void sendShareMessage(String target, String locationString) {
+        if (target.equals("guild")) {
+            McUtils.player().chat("/g " + locationString);
+        } else if (target.equals("party")) {
+            McUtils.player().chat("/p " + locationString);
+        } else {
+            McUtils.player().chat("/msg " + target + " " + locationString);
+        }
     }
 
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {

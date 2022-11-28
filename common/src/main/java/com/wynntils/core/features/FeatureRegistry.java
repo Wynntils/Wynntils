@@ -24,6 +24,7 @@ import com.wynntils.features.user.AuraTimerOverlayFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.BombBellTrackingFeature;
+import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
@@ -128,6 +129,7 @@ public final class FeatureRegistry {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
         registerFeature(new BombBellTrackingFeature());
+        registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
