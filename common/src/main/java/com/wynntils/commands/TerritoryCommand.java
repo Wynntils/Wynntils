@@ -82,6 +82,7 @@ public class TerritoryCommand extends CommandBase {
                     .append(": ")
                     .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
             context.getSource().sendSuccess(success, false);
+            return 1;
         }
 
         CompassModel.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
