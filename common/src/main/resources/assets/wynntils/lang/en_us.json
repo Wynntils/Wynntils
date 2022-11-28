@@ -28,6 +28,7 @@
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "What color should the beacon beam have?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
+  "feature.wynntils.blacksmithRedirect.name": "Blacksmith Message Redirect",
   "feature.wynntils.bombBellTracking.name": "Bomb Bell Tracking",
   "feature.wynntils.chatCoordinates.name": "Chat Coordinates",
   "feature.wynntils.chatItem.name": "Chat Item",
