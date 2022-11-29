@@ -330,25 +330,25 @@ public class InfoMessageFilterFeature extends UserFeature {
 
             if (horse != FilterType.KEEP) {
                 Matcher roomMatcher = NO_ROOM_PATTERN.matcher(msg);
-                Matcher despawnMatcher = HORSE_DESPAWNED_PATTERN.matcher(msg);
-                if (roomMatcher.matches() || despawnMatcher.matches()) {
+                if (roomMatcher.matches()) {
                     e.setCanceled(true);
                     if (horse == FilterType.HIDE) {
                         return;
                     }
-
-                    switch (msg) {
-                        case "§4There is no room for a horse.":
-                            NotificationManager.queueMessage(
+                    NotificationManager.queueMessage(
                                     new TextComponent("No room for a horse!").withStyle(ChatFormatting.DARK_RED));
-                            break;
-                        case "§dSince you interacted with your inventory, your horse has despawned.":
-                            NotificationManager.queueMessage(new TextComponent("Your horse has despawned.")
-                                    .withStyle(ChatFormatting.DARK_PURPLE));
-                            break;
+                    return;}
+                
+                Matcher despawnMatcher = HORSE_DESPAWNED_PATTERN.matcher(msg);
+                if (despawnMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (horse == FilterType.HIDE) {
+                        return;
                     }
-
+                    NotificationManager.queueMessage(new TextComponent("Your horse has despawned.")
+                            .withStyle(ChatFormatting.DARK_PURPLE));
                     return;
+                    }
                 }
             }
 
@@ -396,7 +396,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (messageType == MessageType.BACKGROUND) {
+         else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
