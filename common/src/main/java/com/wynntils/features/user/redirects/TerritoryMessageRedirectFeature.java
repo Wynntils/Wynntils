@@ -6,6 +6,8 @@ package com.wynntils.features.user.redirects;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class TerritoryMessageRedirectFeature extends UserFeature {
     private static final Pattern TERRITORY_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
 
@@ -29,13 +32,23 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         String codedString = ComponentUtils.getCoded(event.getComponent());
         Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
         if (matcher.matches()) event.setCanceled(true);
-        String direction = matcher.group(1);
+        String rawDirection = matcher.group(1);
         String rawTerritoryName = matcher.group(2);
+        String directionalArrow = "";
+        switch (rawDirection) {
+            case "entering":
+                directionalArrow = "→";
+                break;
+            case "leaving":
+                directionalArrow = "←";
+                break;
+        }
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery" for the sake of our brief
-        // message (looks odd otherwise).
+        // message (looks odd otherwise). Same for the direction as well (e.g. "leaving" -> "Leaving").
         String territoryName = rawTerritoryName.substring(0, 1).toUpperCase() + rawTerritoryName.substring(1);
+        String direction = rawDirection.substring(0, 1).toUpperCase() + rawDirection.substring(1);
 
-        String enteringMessage = String.format("§7Now §o%s§r %s", direction, territoryName);
+        String enteringMessage = String.format("§7%s §o%s§r %s", directionalArrow, direction, territoryName);
         NotificationManager.queueMessage(enteringMessage);
     }
 
