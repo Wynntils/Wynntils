@@ -26,6 +26,7 @@ public enum ServiceKind {
     POWDER_MASTER("Powder Master", Texture.POWDER_MASTER),
     SCRIBING_STATION("Scribing Station", Texture.SCRIBING_STATION),
     SCROLL_MERCHANT("Scroll Merchant", Texture.SCROLL_MERCHANT),
+    SEASKIPPER("Seaskipper", Texture.SEASKIPPER),
     TAILORING_STATION("Tailoring Station", Texture.TAILORING_STATION),
     TOOL_MERCHANT("Tool Merchant", Texture.TOOL_MERCHANT),
     TRADE_MARKET("Trade Market", Texture.TRADE_MARKET),

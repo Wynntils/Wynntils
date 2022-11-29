@@ -116,6 +116,7 @@ public enum Texture {
     POWDER_MASTER("map/map_icons/powder_master.png", 17, 17),
     SCRIBING_STATION("map/map_icons/scribing_station.png", 18, 17),
     SCROLL_MERCHANT("map/map_icons/scroll_merchant.png", 18, 17),
+    SEASKIPPER("map/map_icons/seaskipper.png", 18, 18),
     SIGN("map/map_icons/sign.png", 17, 18),
     STAR("map/map_icons/star.png", 18, 18),
     TAILORING_STATION("map/map_icons/tailoring_station.png", 18, 15),
