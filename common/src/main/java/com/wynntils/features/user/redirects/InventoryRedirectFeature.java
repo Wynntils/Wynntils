@@ -19,9 +19,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
-public class PouchRedirectFeature extends UserFeature {
+public class InventoryRedirectFeature extends UserFeature {
     private static final Pattern INGREDIENT_POUCH_PICKUP_PATTERN = Pattern.compile("^§a\\+\\d+ §7.+§a to pouch$");
     private static final Pattern EMERALD_POUCH_PICKUP_PATTERN = Pattern.compile("§a\\+(\\d+)§7 Emeralds? §ato pouch");
+    private static final Pattern POTION_STACK_PATTERN = Pattern.compile("§a\\+(\\d+)§7 potion §acharges?");
 
     private long lastEmeraldPouchPickup = 0;
     private MessageContainer emeraldPouchMessage = null;
@@ -32,6 +33,9 @@ public class PouchRedirectFeature extends UserFeature {
     @Config
     public boolean redirectEmeraldPouch = true;
 
+    @Config
+    public boolean redirectPotionStack = true;
+
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         lastEmeraldPouchPickup = 0;
@@ -40,7 +44,7 @@ public class PouchRedirectFeature extends UserFeature {
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        if (!redirectEmeraldPouch && !redirectIngredientPouch) {
+        if (!redirectEmeraldPouch && !redirectIngredientPouch && !redirectPotionStack) {
             return;
         }
 
@@ -71,6 +75,16 @@ public class PouchRedirectFeature extends UserFeature {
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
+            }
+        }
+
+        if (redirectPotionStack) {
+            Matcher matcher = POTION_STACK_PATTERN.matcher(codedString);
+            if (matcher.matches()) {
+                event.setCanceled(true);
+                String potionCount = matcher.group(1);
+                String potionMessage = String.format("§a+%s Potion Charges", potionCount);
+                NotificationManager.queueMessage(potionMessage);
             }
         }
     }
