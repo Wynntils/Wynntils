@@ -25,7 +25,7 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         String codedString = ComponentUtils.getCoded(event.getComponent());
         Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
         if (!matcher.matches()) return;
-        
+
         event.setCanceled(true);
 
         String rawDirection = matcher.group(1);
