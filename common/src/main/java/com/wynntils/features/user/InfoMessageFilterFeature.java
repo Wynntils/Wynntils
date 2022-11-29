@@ -351,50 +351,50 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        }
 
-        if (toolDurability != FilterType.KEEP) {
-            Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
-            if (matcher.find()) {
-                e.setCanceled(true);
-                if (toolDurability == FilterType.HIDE) {
+            if (toolDurability != FilterType.KEEP) {
+                Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (toolDurability == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
+
                     return;
                 }
-
-                NotificationManager.queueMessage(
-                        new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
-
-                return;
             }
-        }
 
-        if (craftedDurability != FilterType.KEEP) {
-            Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
-            if (matcher.find()) {
-                e.setCanceled(true);
-                if (craftedDurability == FilterType.HIDE) {
+            if (craftedDurability != FilterType.KEEP) {
+                Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
+                if (matcher.find()) {
+                    e.setCanceled(true);
+                    if (craftedDurability == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
+
                     return;
                 }
-
-                NotificationManager.queueMessage(
-                        new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
-
-                return;
             }
-        }
 
-        if (notEnoughMana != FilterType.KEEP) {
-            Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
-            if (matcher.matches()) {
-                e.setCanceled(true);
-                if (notEnoughMana == FilterType.HIDE) {
+            if (notEnoughMana != FilterType.KEEP) {
+                Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (notEnoughMana == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
+
                     return;
                 }
-
-                NotificationManager.queueMessage(
-                        new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
-
-                return;
             }
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
