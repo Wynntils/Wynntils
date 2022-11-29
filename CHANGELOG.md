@@ -1,9 +1,21 @@
+## [0.0.1-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.102...v0.0.1-alpha.103) (2022-11-29)
+
+
+### Bug Fixes
+
+* Fix chat coordinate parsing ([17d5138](https://github.com/Wynntils/Artemis/commit/17d5138313afdcf1d01e8069a6af09508731e030))
+
 ## [0.0.1-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.101...v0.0.1-alpha.102) (2022-11-29)
 
 
 ### New Features
 
 * Render player POI's on minimap ([#754](https://github.com/Wynntils/Artemis/issues/754)) ([4b905db](https://github.com/Wynntils/Artemis/commit/4b905db0c717f9b193ca2ba2a16412ac2b56bbde))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.102 [skip ci] ([21ed01d](https://github.com/Wynntils/Artemis/commit/21ed01da71f40eaa6bf71021cc6372748e32c618))
 
 ## [0.0.1-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.100...v0.0.1-alpha.101) (2022-11-29)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.99 [skip ci] ([5193747](https://github.com/Wynntils/Artemis/commit/51937471471a4ae2d10cf866f1a4444e6c9363cb))
-
-## [0.0.1-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.97...v0.0.1-alpha.98) (2022-11-28)
-
-
-### Miscellaneous Chores
-
-* Add Quiltflower decompiler support and greatly improve workspace/development documentation ([#746](https://github.com/Wynntils/Artemis/issues/746)) ([c807733](https://github.com/Wynntils/Artemis/commit/c80773339465fa84a95db7123f9052964eed19ed))
-* **release:** v0.0.1-alpha.98 [skip ci] ([44e9ce3](https://github.com/Wynntils/Artemis/commit/44e9ce36720d6ecd64ce50e2d0530a64cc737f77))
 
