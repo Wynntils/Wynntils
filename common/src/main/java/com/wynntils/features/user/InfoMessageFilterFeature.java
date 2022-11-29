@@ -336,67 +336,67 @@ public class InfoMessageFilterFeature extends UserFeature {
                         return;
                     }
                     NotificationManager.queueMessage(
-                                    new TextComponent("No room for a horse!").withStyle(ChatFormatting.DARK_RED));
-                    return;}
-                
+                            new TextComponent("No room for a horse!").withStyle(ChatFormatting.DARK_RED));
+                    return;
+                }
+
                 Matcher despawnMatcher = HORSE_DESPAWNED_PATTERN.matcher(msg);
                 if (despawnMatcher.matches()) {
                     e.setCanceled(true);
                     if (horse == FilterType.HIDE) {
                         return;
                     }
-                    NotificationManager.queueMessage(new TextComponent("Your horse has despawned.")
-                            .withStyle(ChatFormatting.DARK_PURPLE));
-                    return;
-                    }
-                }
-            }
-
-            if (toolDurability != FilterType.KEEP) {
-                Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (toolDurability == FilterType.HIDE) {
-                        return;
-                    }
-
                     NotificationManager.queueMessage(
-                            new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
-
+                            new TextComponent("Your horse has despawned.").withStyle(ChatFormatting.DARK_PURPLE));
                     return;
                 }
             }
+        }
 
-            if (craftedDurability != FilterType.KEEP) {
-                Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (craftedDurability == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
-
+        if (toolDurability != FilterType.KEEP) {
+            Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
+            if (matcher.find()) {
+                e.setCanceled(true);
+                if (toolDurability == FilterType.HIDE) {
                     return;
                 }
+
+                NotificationManager.queueMessage(
+                        new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
+
+                return;
             }
+        }
 
-            if (notEnoughMana != FilterType.KEEP) {
-                Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (notEnoughMana == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
-
+        if (craftedDurability != FilterType.KEEP) {
+            Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
+            if (matcher.find()) {
+                e.setCanceled(true);
+                if (craftedDurability == FilterType.HIDE) {
                     return;
                 }
+
+                NotificationManager.queueMessage(
+                        new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
+
+                return;
             }
-         else if (messageType == MessageType.BACKGROUND) {
+        }
+
+        if (notEnoughMana != FilterType.KEEP) {
+            Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
+            if (matcher.matches()) {
+                e.setCanceled(true);
+                if (notEnoughMana == FilterType.HIDE) {
+                    return;
+                }
+
+                NotificationManager.queueMessage(
+                        new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
+
+                return;
+            }
+        } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
