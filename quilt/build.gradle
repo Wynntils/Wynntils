@@ -58,7 +58,9 @@ configurations {
 
 dependencies {
     modImplementation "org.quiltmc:quilt-loader:${rootProject.quilt_loader_version}"
-    modApi "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${rootProject.quilt_fabric_api_version}"
+
+    include(modImplementation("org.quiltmc.qsl.core:qsl_base:${rootProject.qsl_version}"))
+    include(modImplementation("org.quiltmc.qsl.core:resource_loader:${rootProject.qsl_version}"))
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }
