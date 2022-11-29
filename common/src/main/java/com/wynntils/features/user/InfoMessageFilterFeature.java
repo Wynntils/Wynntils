@@ -89,6 +89,10 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
+    private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
+    private static final Pattern HORSE_DESPAWNED_PATTERN =
+            Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
+
     @Config
     private boolean hideWelcome = true;
 
@@ -124,6 +128,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType speed = FilterType.REDIRECT;
+
+    @Config
+    private FilterType horse = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -317,6 +324,30 @@ public class InfoMessageFilterFeature extends UserFeature {
                     String playerName = matcher.group("name");
 
                     sendFriendLeaveMessage(playerName);
+                    return;
+                }
+            }
+
+            if (horse != FilterType.KEEP) {
+                Matcher roomMatcher = NO_ROOM_PATTERN.matcher(msg);
+                if (roomMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (horse == FilterType.HIDE) {
+                        return;
+                    }
+                    NotificationManager.queueMessage(
+                            new TextComponent("No room for a horse!").withStyle(ChatFormatting.DARK_RED));
+                    return;
+                }
+
+                Matcher despawnMatcher = HORSE_DESPAWNED_PATTERN.matcher(msg);
+                if (despawnMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (horse == FilterType.HIDE) {
+                        return;
+                    }
+                    NotificationManager.queueMessage(
+                            new TextComponent("Your horse has despawned.").withStyle(ChatFormatting.DARK_PURPLE));
                     return;
                 }
             }
