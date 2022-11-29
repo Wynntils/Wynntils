@@ -179,7 +179,6 @@ public final class FeatureRegistry {
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new InventoryRedirectFeature());
-        registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
@@ -187,6 +186,7 @@ public final class FeatureRegistry {
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
