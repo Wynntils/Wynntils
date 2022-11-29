@@ -1,9 +1,21 @@
+## [0.0.1-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.99...v0.0.1-alpha.100) (2022-11-29)
+
+
+### New Features
+
+* Redirect Horse Despawning Messages to NotificationManager Overlay  ([#745](https://github.com/Wynntils/Artemis/issues/745)) ([cbbc958](https://github.com/Wynntils/Artemis/commit/cbbc958d819967ef8af8a9a451ccb0093bcbd9de))
+
 ## [0.0.1-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.98...v0.0.1-alpha.99) (2022-11-29)
 
 
 ### New Features
 
 * Redirect Potion Stack Messages to NotificationManager Overlay ([#750](https://github.com/Wynntils/Artemis/issues/750)) ([37ee0bb](https://github.com/Wynntils/Artemis/commit/37ee0bb0dae5a7c6dd4e1caa7f6b2f3c6c728e4b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.99 [skip ci] ([5193747](https://github.com/Wynntils/Artemis/commit/51937471471a4ae2d10cf866f1a4444e6c9363cb))
 
 ## [0.0.1-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.97...v0.0.1-alpha.98) (2022-11-28)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.96 [skip ci] ([0ec6f00](https://github.com/Wynntils/Artemis/commit/0ec6f00c2ea92e8c5bce25ce2bafc47d1c8e2263))
-
-## [0.0.1-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.94...v0.0.1-alpha.95) (2022-11-28)
-
-
-### New Features
-
-* Redirect Blacksmith Sell/Scrap Messages to NotificationManager Overlay ([#743](https://github.com/Wynntils/Artemis/issues/743)) ([9c8ea57](https://github.com/Wynntils/Artemis/commit/9c8ea57baf2491c2d3f9daefc5e4ecad6e337740))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.95 [skip ci] ([7da969d](https://github.com/Wynntils/Artemis/commit/7da969d7173ca9216327813f1160cf9a2a8f0c9d))
 
