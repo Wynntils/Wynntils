@@ -46,9 +46,8 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery" for the sake of our brief
         // message (looks odd otherwise). Same for the direction as well (e.g. "leaving" -> "Leaving").
         String territoryName = rawTerritoryName.substring(0, 1).toUpperCase() + rawTerritoryName.substring(1);
-        String direction = rawDirection.substring(0, 1).toUpperCase() + rawDirection.substring(1);
 
-        String enteringMessage = String.format("§7%s §o%s§r %s", directionalArrow, direction, territoryName);
+        String enteringMessage = String.format("§7%s %s", directionalArrow, territoryName);
         NotificationManager.queueMessage(enteringMessage);
     }
 
