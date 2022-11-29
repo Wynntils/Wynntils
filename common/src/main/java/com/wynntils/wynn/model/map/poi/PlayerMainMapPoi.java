@@ -32,35 +32,11 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
 
         // head
         RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                renderX,
-                renderZ,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+                poseStack, skin, renderX, renderZ, 0, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
         // hat
         RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                renderX,
-                renderZ,
-                1,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+                poseStack, skin, renderX, renderZ, 1, playerHeadRenderSize, playerHeadRenderSize, 40, 8, 8, 8, 64, 64);
 
         // health
         HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
