@@ -254,7 +254,8 @@ public class MinimapFeature extends UserFeature {
             List<PlayerMiniMapPoi> playerPois = HadesUserModel.getHadesUserMap().values().stream()
                     .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                             || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .sorted(Comparator.comparing(hadesUser -> hadesUser.getMapLocation().getY()))
+                    .sorted(Comparator.comparing(
+                            hadesUser -> hadesUser.getMapLocation().getY()))
                     .map(PlayerMiniMapPoi::new)
                     .toList();
             poisToRender.addAll(playerPois);
