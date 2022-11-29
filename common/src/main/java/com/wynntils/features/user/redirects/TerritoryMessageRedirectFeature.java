@@ -28,7 +28,7 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
 
         String rawDirection = matcher.group(1);
         String rawTerritoryName = matcher.group(2);
-        String directionalArrow = "";
+        String directionalArrow;
 
         switch (rawDirection) {
             case "entering":
