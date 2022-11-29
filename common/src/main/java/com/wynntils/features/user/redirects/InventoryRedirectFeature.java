@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
-public class PouchRedirectFeature extends UserFeature {
+public class InventoryRedirectFeature extends UserFeature {
     private static final Pattern INGREDIENT_POUCH_PICKUP_PATTERN = Pattern.compile("^§a\\+\\d+ §7.+§a to pouch$");
     private static final Pattern EMERALD_POUCH_PICKUP_PATTERN = Pattern.compile("§a\\+(\\d+)§7 Emeralds? §ato pouch");
     private static final Pattern POTION_STACK_PATTERN = Pattern.compile("§a\\+(\\d+)§7 potion §acharges?");
