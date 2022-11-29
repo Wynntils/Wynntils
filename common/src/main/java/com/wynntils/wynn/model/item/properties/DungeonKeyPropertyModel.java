@@ -11,14 +11,14 @@ import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class DungeonKeyPropertyModel extends Model {
-    private static final ItemPropertyWriter D_UNGEON_KEY_WRITER =
+    private static final ItemPropertyWriter DUNGEON_KEY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(D_UNGEON_KEY_WRITER);
+        ItemStackTransformManager.registerProperty(DUNGEON_KEY_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(D_UNGEON_KEY_WRITER);
+        ItemStackTransformManager.unregisterProperty(DUNGEON_KEY_WRITER);
     }
 }
