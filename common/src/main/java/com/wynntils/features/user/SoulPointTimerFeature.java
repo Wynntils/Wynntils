@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.model.item.ItemStackTransformModel;
 import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE)

@@ -2,10 +2,11 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item;
+package com.wynntils.wynn.model.item;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.AmplifierTierProperty;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
@@ -27,41 +28,35 @@ import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformModel extends Model {
-    private static final Map<Predicate<ItemStack>, ItemStackTransformer> TRANSFORMERS = new HashMap<>();
+public class ItemStackTransformManager extends CoreManager {
+    private static final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
     private static final Map<Predicate<ItemStack>, PropertyWriter> PROPERTIES = new HashMap<>();
 
-    public static void registerTransformer(Predicate<ItemStack> pred, ItemStackTransformer cons) {
-        TRANSFORMERS.put(pred, cons);
+    public static void registerTransformer(ItemStackTransformer transformer) {
+        TRANSFORMERS.add(transformer);
     }
 
-    public void unregisterTransformer(Predicate<ItemStack> pred, ItemStackTransformer cons) {
-        TRANSFORMERS.remove(pred, cons);
+    public static void unregisterTransformer(ItemStackTransformer transformer) {
+        TRANSFORMERS.remove(transformer);
     }
 
     public static void registerProperty(Predicate<ItemStack> pred, PropertyWriter cons) {
         PROPERTIES.put(pred, cons);
     }
 
-    public void unregisterProperty(Predicate<ItemStack> pred, PropertyWriter cons) {
+    public static void unregisterProperty(Predicate<ItemStack> pred, PropertyWriter cons) {
         PROPERTIES.remove(pred, cons);
     }
 
     public static void init() {
-        registerTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
-        registerTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
-        registerTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
-        registerTransformer(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
-        registerTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
-        registerTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
-        registerTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
-        registerTransformer(WynnItemMatchers::isPowder, PowderItemStack::new);
-
         registerProperty(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
         registerProperty(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         registerProperty(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
@@ -87,9 +82,9 @@ public class ItemStackTransformModel extends Model {
         ItemStack stack = event.getItem();
 
         // itemstack transformers
-        for (Map.Entry<Predicate<ItemStack>, ItemStackTransformer> e : TRANSFORMERS.entrySet()) {
-            if (e.getKey().test(stack)) {
-                stack = e.getValue().transform(stack);
+        for (ItemStackTransformer t : TRANSFORMERS) {
+            if (t.test(stack)) {
+                stack = t.transform(stack);
                 break;
             }
         }
@@ -110,13 +105,26 @@ public class ItemStackTransformModel extends Model {
         event.setItem(stack);
     }
 
-    @FunctionalInterface
-    private interface ItemStackTransformer {
-        WynnItemStack transform(ItemStack stack);
+    public static class ItemStackTransformer {
+        private final Predicate<ItemStack> predicate;
+        private final Function<ItemStack, WynnItemStack> transformer;
+
+        public ItemStackTransformer(Predicate<ItemStack> predicate, Function<ItemStack, WynnItemStack> transformer) {
+            this.predicate = predicate;
+            this.transformer = transformer;
+        }
+
+        public boolean test(ItemStack item) {
+            return predicate.test(item);
+        }
+
+        public WynnItemStack transform(ItemStack item) {
+            return transformer.apply(item);
+        }
     }
 
     @FunctionalInterface
-    private interface PropertyWriter {
+    protected interface PropertyWriter {
         void attach(WynnItemStack stack);
     }
 }

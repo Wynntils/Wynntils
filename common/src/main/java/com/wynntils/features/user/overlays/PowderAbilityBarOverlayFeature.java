@@ -26,8 +26,8 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.model.item.ItemStackTransformModel;
 import com.wynntils.wynn.objects.Powder;
 import java.util.List;
 

@@ -19,7 +19,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.model.item.ItemStackTransformModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
