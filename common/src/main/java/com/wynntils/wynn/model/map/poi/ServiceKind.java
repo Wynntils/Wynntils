@@ -16,6 +16,7 @@ public enum ServiceKind {
     COOKING_STATION("Cooking Station", Texture.COOKING_STATION),
     DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT),
     EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT),
+    FAST_TRAVEL("Fast Travel", Texture.FAST_TRAVEL),
     HOUSING_BALLOON("Housing Balloon", Texture.HOUSING_BALLOON),
     ITEM_IDENTIFIER("Item Identifier", Texture.ITEM_IDENTIFIER),
     JEWELING_STATION("Jeweling Station", Texture.JEWELING_STATION),

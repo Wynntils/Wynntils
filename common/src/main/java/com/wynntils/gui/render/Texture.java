@@ -101,6 +101,7 @@ public enum Texture {
     DUNGEON_SCROLL_MERCHANT("map/map_icons/dungeon_scroll_merchant.png", 18, 17),
     EMERALD_MERCHANT("map/map_icons/emerald_merchant.png", 17, 18),
     FARMING("map/map_icons/farming.png", 15, 19),
+    FAST_TRAVEL("map/map_icons/fast_travel.png", 18, 18),
     FIREBALL("map/map_icons/fireball.png", 14, 14),
     FISHING("map/map_icons/fishing.png", 16, 14),
     FLAG("map/map_icons/flag.png", 16, 16),
