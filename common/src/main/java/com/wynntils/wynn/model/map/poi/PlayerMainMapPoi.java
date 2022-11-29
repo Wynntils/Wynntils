@@ -17,108 +17,56 @@ import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;
 
-public class PlayerPoi implements Poi {
-    private static final float PLAYER_HEAD_RENDER_SIZE = 20;
-
-    private final HadesUser user;
-
-    public PlayerPoi(HadesUser user) {
-        this.user = user;
-    }
-
-    @Override
-    public MapLocation getLocation() {
-        return user.getMapLocation();
-    }
-
-    @Override
-    public boolean hasStaticLocation() {
-        return false;
+public class PlayerMainMapPoi extends PlayerPoiBase {
+    public PlayerMainMapPoi(HadesUser user) {
+        super(user, 1f);
     }
 
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
         poseStack.pushPose();
-        poseStack.translate(-PLAYER_HEAD_RENDER_SIZE / 2f, -PLAYER_HEAD_RENDER_SIZE / 2f, 0); // center the player icon
+        poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
         ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
 
         // head
         RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                renderX,
-                renderZ,
-                0,
-                PLAYER_HEAD_RENDER_SIZE,
-                PLAYER_HEAD_RENDER_SIZE,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+                poseStack, skin, renderX, renderZ, 0, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
         // hat
         RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                renderX,
-                renderZ,
-                1,
-                PLAYER_HEAD_RENDER_SIZE,
-                PLAYER_HEAD_RENDER_SIZE,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+                poseStack, skin, renderX, renderZ, 1, playerHeadRenderSize, playerHeadRenderSize, 40, 8, 8, 8, 64, 64);
 
+        // health
         HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
-
         RenderUtils.drawProgressBar(
                 poseStack,
                 Texture.HEALTH_BAR,
                 renderX - 10,
-                renderZ + PLAYER_HEAD_RENDER_SIZE + 1,
-                renderX + PLAYER_HEAD_RENDER_SIZE + 10,
-                renderZ + PLAYER_HEAD_RENDER_SIZE + 7,
+                renderZ + playerHeadRenderSize + 1,
+                renderX + playerHeadRenderSize + 10,
+                renderZ + playerHeadRenderSize + 7,
                 0,
                 healthTexture.getTextureY1(),
                 81,
                 healthTexture.getTextureY2(),
                 (float) user.getHealth() / user.getMaxHealth());
 
+        // name
         Font font = FontRenderer.getInstance().getFont();
         int width = font.width(user.getName());
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         user.getName(),
-                        renderX - (width - PLAYER_HEAD_RENDER_SIZE) / 2f,
-                        renderZ + PLAYER_HEAD_RENDER_SIZE + 8,
+                        renderX - (width - playerHeadRenderSize) / 2f,
+                        renderZ + playerHeadRenderSize + 8,
                         user.getRelationColor(),
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
                         MapFeature.INSTANCE.remotePlayerNameShadow);
 
         poseStack.popPose();
-    }
-
-    @Override
-    public int getWidth(float mapZoom, float scale) {
-        return (int) (PLAYER_HEAD_RENDER_SIZE + 20);
-    }
-
-    @Override
-    public int getHeight(float mapZoom, float scale) {
-        return (int) (PLAYER_HEAD_RENDER_SIZE + 17);
-    }
-
-    @Override
-    public String getName() {
-        return user.getName();
     }
 }

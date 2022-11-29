@@ -22,7 +22,7 @@ import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
-import com.wynntils.wynn.model.map.poi.PlayerPoi;
+import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
@@ -198,7 +198,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
-        pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
+        pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
