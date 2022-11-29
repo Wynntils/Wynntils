@@ -1,9 +1,21 @@
+## [0.0.1-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.101...v0.0.1-alpha.102) (2022-11-29)
+
+
+### New Features
+
+* Render player POI's on minimap ([#754](https://github.com/Wynntils/Artemis/issues/754)) ([4b905db](https://github.com/Wynntils/Artemis/commit/4b905db0c717f9b193ca2ba2a16412ac2b56bbde))
+
 ## [0.0.1-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.100...v0.0.1-alpha.101) (2022-11-29)
 
 
 ### New Features
 
 * Adds Fast Travel and Seaskipper Waypoints to Map ([#749](https://github.com/Wynntils/Artemis/issues/749)) ([895dedc](https://github.com/Wynntils/Artemis/commit/895dedc9ed0c627280e7588608fa4a7a417ba908))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.101 [skip ci] ([af9ba3a](https://github.com/Wynntils/Artemis/commit/af9ba3ae4c115c8e524574814f209bcee9800c2a))
 
 ## [0.0.1-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.99...v0.0.1-alpha.100) (2022-11-29)
 
@@ -36,16 +48,4 @@
 
 * Add Quiltflower decompiler support and greatly improve workspace/development documentation ([#746](https://github.com/Wynntils/Artemis/issues/746)) ([c807733](https://github.com/Wynntils/Artemis/commit/c80773339465fa84a95db7123f9052964eed19ed))
 * **release:** v0.0.1-alpha.98 [skip ci] ([44e9ce3](https://github.com/Wynntils/Artemis/commit/44e9ce36720d6ecd64ce50e2d0530a64cc737f77))
-
-## [0.0.1-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.96...v0.0.1-alpha.97) (2022-11-28)
-
-
-### Bug Fixes
-
-* Fix auto chest not setting after there is an instance of a specific tier ([#747](https://github.com/Wynntils/Artemis/issues/747)) ([5d86f4d](https://github.com/Wynntils/Artemis/commit/5d86f4d4940d98167840e8886bc11d68570b6cb6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.97 [skip ci] ([2358cd7](https://github.com/Wynntils/Artemis/commit/2358cd7f658c2ce60509afc6cb659f1570ae815b))
 
