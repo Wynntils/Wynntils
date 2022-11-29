@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +17,8 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
     }
 
     @Override
-    public void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+    public void renderAt(
+            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
@@ -26,26 +31,12 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
                 renderX + playerHeadRenderSize,
                 renderZ + playerHeadRenderSize,
                 0,
-                2
-        );
+                2);
 
         // head
         ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
         RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                renderX,
-                renderZ,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64
-        );
+                poseStack, skin, renderX, renderZ, 0, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
         poseStack.popPose();
     }
