@@ -1,9 +1,17 @@
+## [0.0.1-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.98...v0.0.1-alpha.99) (2022-11-29)
+
+
+### New Features
+
+* Redirect Potion Stack Messages to NotificationManager Overlay ([#750](https://github.com/Wynntils/Artemis/issues/750)) ([37ee0bb](https://github.com/Wynntils/Artemis/commit/37ee0bb0dae5a7c6dd4e1caa7f6b2f3c6c728e4b))
+
 ## [0.0.1-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.97...v0.0.1-alpha.98) (2022-11-28)
 
 
 ### Miscellaneous Chores
 
 * Add Quiltflower decompiler support and greatly improve workspace/development documentation ([#746](https://github.com/Wynntils/Artemis/issues/746)) ([c807733](https://github.com/Wynntils/Artemis/commit/c80773339465fa84a95db7123f9052964eed19ed))
+* **release:** v0.0.1-alpha.98 [skip ci] ([44e9ce3](https://github.com/Wynntils/Artemis/commit/44e9ce36720d6ecd64ce50e2d0530a64cc737f77))
 
 ## [0.0.1-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.96...v0.0.1-alpha.97) (2022-11-28)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.95 [skip ci] ([7da969d](https://github.com/Wynntils/Artemis/commit/7da969d7173ca9216327813f1160cf9a2a8f0c9d))
-
-## [0.0.1-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.93...v0.0.1-alpha.94) (2022-11-28)
-
-
-### New Features
-
-* Parse coordinates from chat and inject clickable component and add /compass share ([#742](https://github.com/Wynntils/Artemis/issues/742)) ([968259e](https://github.com/Wynntils/Artemis/commit/968259ec808ca9f6bb93e370c8f2707d98ac4c3c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.94 [skip ci] ([0a15d90](https://github.com/Wynntils/Artemis/commit/0a15d90d243b5f4aea1b19e82f8cdb7f51e14c25))
 
