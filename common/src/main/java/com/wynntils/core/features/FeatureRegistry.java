@@ -89,7 +89,7 @@ import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.players.PreventTradesDuelsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
-import com.wynntils.features.user.redirects.PouchRedirectFeature;
+import com.wynntils.features.user.redirects.InventoryRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
@@ -177,7 +177,7 @@ public final class FeatureRegistry {
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new PouchRedirectFeature());
+        registerFeature(new InventoryRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
