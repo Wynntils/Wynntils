@@ -15,39 +15,39 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TownMessageRedirectFeature extends UserFeature {
-    private static final Pattern TOWN_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
+public class TerritoryMessageRedirectFeature extends UserFeature {
+    private static final Pattern TERRITORY_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
 
     @Config
-    public boolean redirectTownMessages = true;
+    public boolean redirectTerritoryMessages = true;
 
     // Handles the subtitle text event.
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        if (!redirectTownMessages) {
+        if (!redirectTerritoryMessages) {
             return;
         }
         String codedString = ComponentUtils.getCoded(event.getComponent());
-        Matcher matcher = TOWN_MESSAGE_PATTERN.matcher(codedString);
+        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
         if (matcher.matches()) event.setCanceled(true);
         String direction = matcher.group(1);
-        String rawTownName = matcher.group(2);
+        String rawTerritoryName = matcher.group(2);
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery" for the sake of our brief
         // message (looks odd otherwise).
-        String townName = rawTownName.substring(0, 1).toUpperCase() + rawTownName.substring(1);
+        String territoryName = rawTerritoryName.substring(0, 1).toUpperCase() + rawTerritoryName.substring(1);
 
-        String enteringMessage = String.format("§7Now §o%s§r %s", direction, townName);
+        String enteringMessage = String.format("§7Now §o%s§r %s", direction, territoryName);
         NotificationManager.queueMessage(enteringMessage);
     }
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle
     // text event.
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onChat(ChatMessageReceivedEvent event) {
-        if (!redirectTownMessages) {
+        if (!redirectTerritoryMessages) {
             return;
         }
         String codedString = ComponentUtils.getCoded(event.getMessage());
-        Matcher matcher = TOWN_MESSAGE_PATTERN.matcher(codedString);
+        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
         if (matcher.matches()) event.setCanceled(true);
     }
 }
