@@ -1,9 +1,21 @@
+## [0.0.1-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.103...v0.0.1-alpha.104) (2022-11-29)
+
+
+### Bug Fixes
+
+* Support + in chat coordinate parsing ([3024576](https://github.com/Wynntils/Artemis/commit/30245767b54da7472611cd1cdb54c673399bd228))
+
 ## [0.0.1-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.102...v0.0.1-alpha.103) (2022-11-29)
 
 
 ### Bug Fixes
 
 * Fix chat coordinate parsing ([17d5138](https://github.com/Wynntils/Artemis/commit/17d5138313afdcf1d01e8069a6af09508731e030))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.103 [skip ci] ([b82efcb](https://github.com/Wynntils/Artemis/commit/b82efcb12de4803cbc253439fb820ab38a9d7849))
 
 ## [0.0.1-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.101...v0.0.1-alpha.102) (2022-11-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.100 [skip ci] ([1c09c84](https://github.com/Wynntils/Artemis/commit/1c09c8430e9d39903e182350c9ca1286c534a935))
-
-## [0.0.1-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.98...v0.0.1-alpha.99) (2022-11-29)
-
-
-### New Features
-
-* Redirect Potion Stack Messages to NotificationManager Overlay ([#750](https://github.com/Wynntils/Artemis/issues/750)) ([37ee0bb](https://github.com/Wynntils/Artemis/commit/37ee0bb0dae5a7c6dd4e1caa7f6b2f3c6c728e4b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.99 [skip ci] ([5193747](https://github.com/Wynntils/Artemis/commit/51937471471a4ae2d10cf866f1a4444e6c9363cb))
 
