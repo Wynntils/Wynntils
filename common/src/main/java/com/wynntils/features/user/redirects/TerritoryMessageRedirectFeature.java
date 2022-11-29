@@ -37,6 +37,8 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
             case "leaving":
                 directionalArrow = "←";
                 break;
+            default:
+                return;
         }
 
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery"
