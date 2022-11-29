@@ -24,7 +24,9 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
         String codedString = ComponentUtils.getCoded(event.getComponent());
         Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
-        if (matcher.matches()) event.setCanceled(true);
+        if (!matcher.matches()) return;
+        
+        event.setCanceled(true);
 
         String rawDirection = matcher.group(1);
         String rawTerritoryName = matcher.group(2);
