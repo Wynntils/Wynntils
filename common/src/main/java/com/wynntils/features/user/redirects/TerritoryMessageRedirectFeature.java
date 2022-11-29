@@ -24,9 +24,8 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
     // Handles the subtitle text event.
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        if (!redirectTerritoryMessages) {
-            return;
-        }
+        if (!redirectTerritoryMessages) return;
+        
         String codedString = ComponentUtils.getCoded(event.getComponent());
         Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
         if (matcher.matches()) event.setCanceled(true);
@@ -39,6 +38,7 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         String enteringMessage = String.format("§7Now §o%s§r %s", direction, territoryName);
         NotificationManager.queueMessage(enteringMessage);
     }
+    
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle
     // text event.
     @SubscribeEvent(priority = EventPriority.LOW)
