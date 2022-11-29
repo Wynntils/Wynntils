@@ -28,19 +28,14 @@ public class TownMessageRedirectFeature extends UserFeature {
         if (matcher.matches())
             event.setCanceled(true);
             String direction = matcher.group(1);
-            String townName = matcher.group(2);
+            String rawTownName = matcher.group(2);
+            // Want to account for weird stuff like "the Forgery" and make it "The Forgery" for the sake of our brief message (looks odd otherwise).
+            String townName = rawTownName.substring(0, 1).toUpperCase() + rawTownName.substring(1);
 
-            switch (direction) {
-                case "entering":
-                    String enteringMessage = String.format("\uFFEBNow Entering §l%s", townName);
-                    NotificationManager.queueMessage(enteringMessage);
-                    return;
-                case "leaving":
-                    String leavingMessage = String.format("Now Leaving §l%s§r\uFFEB", townName);
-                    NotificationManager.queueMessage(leavingMessage);
-                    return;}
-            }
+            String enteringMessage = String.format("§7Now §o%s§r %s", direction, townName);
+            NotificationManager.queueMessage(enteringMessage);
 
+    }
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle text event.
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onChat(ChatMessageReceivedEvent event)
