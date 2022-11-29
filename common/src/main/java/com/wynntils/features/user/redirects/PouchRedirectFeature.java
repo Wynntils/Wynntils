@@ -83,7 +83,7 @@ public class PouchRedirectFeature extends UserFeature {
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                String potionMessage = String.format("§a+%s§7 potion §acharges.", potionCount);
+                String potionMessage = String.format("§a+%s Potion Charges", potionCount);
                 NotificationManager.queueMessage(potionMessage);
             }
         }
