@@ -39,8 +39,8 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
                 break;
         }
 
-        // Want to account for weird stuff like "the Forgery" and make it "The Forgery" for the sake of our brief
-        // message (looks odd otherwise). Same for the direction as well (e.g. "leaving" -> "Leaving").
+        // Want to account for weird stuff like "the Forgery" and make it "The Forgery"
+        // for the sake of our brief message (looks odd otherwise).
         String territoryName = rawTerritoryName.substring(0, 1).toUpperCase() + rawTerritoryName.substring(1);
 
         String enteringMessage = String.format("§7%s %s", directionalArrow, territoryName);
@@ -51,8 +51,6 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        String codedString = event.getOriginalCodedMessage();
-        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
-        if (matcher.matches()) event.setCanceled(true);
+        if (TERRITORY_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage()).matches()) event.setCanceled(true);
     }
 }
