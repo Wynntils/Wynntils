@@ -29,22 +29,27 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
+    public static MinimapFeature INSTANCE;
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
@@ -88,6 +93,15 @@ public class MinimapFeature extends UserFeature {
 
         @Config
         public boolean showCoords = true;
+
+        @Config(subcategory = "Remote Players")
+        public boolean renderRemoteFriendPlayers = true;
+
+        @Config(subcategory = "Remote Players")
+        public boolean renderRemotePartyPlayers = true;
+
+        @Config(subcategory = "Remote Players")
+        public float remotePlayersHeadScale = 0.6f;
 
         protected MinimapOverlay() {
             super(
@@ -234,9 +248,19 @@ public class MinimapFeature extends UserFeature {
             }
 
             float currentZoom = 1f / scale;
-            for (Poi poi : Stream.concat(MapModel.getServicePois().stream(), MapFeature.INSTANCE.customPois.stream())
-                    .toList()) {
 
+            List<Poi> poisToRender = new ArrayList<>(MapModel.getServicePois());
+            poisToRender.addAll(MapFeature.INSTANCE.customPois);
+            List<PlayerMiniMapPoi> playerPois = HadesUserModel.getHadesUserMap().values().stream()
+                    .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
+                            || (user.isMutualFriend() && renderRemoteFriendPlayers))
+                    .sorted(Comparator.comparing(
+                            hadesUser -> hadesUser.getMapLocation().getY()))
+                    .map(PlayerMiniMapPoi::new)
+                    .toList();
+            poisToRender.addAll(playerPois);
+
+            for (Poi poi : poisToRender) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
 
