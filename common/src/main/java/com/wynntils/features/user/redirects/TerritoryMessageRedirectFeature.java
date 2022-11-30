@@ -14,6 +14,7 @@ import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.StringUtils;
 
 @FeatureInfo(category = FeatureCategory.REDIRECTS)
 public class TerritoryMessageRedirectFeature extends UserFeature {
@@ -45,7 +46,7 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
 
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery"
         // for the sake of our brief message (looks odd otherwise).
-        String territoryName = rawTerritoryName.substring(0, 1).toUpperCase() + rawTerritoryName.substring(1);
+        String territoryName = StringUtils.capitalize(rawTerritoryName);
 
         String enteringMessage = String.format("§7%s %s", directionalArrow, territoryName);
         NotificationManager.queueMessage(enteringMessage);
