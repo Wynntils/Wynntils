@@ -54,6 +54,7 @@ import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.QuickCastFeature;
+import com.wynntils.features.user.redirects.ChatRedirectFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
 import com.wynntils.features.user.TerritoryDefenseMessageFeature;
@@ -183,6 +184,7 @@ public final class FeatureRegistry {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
+        registerFeature(new ChatRedirectFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
