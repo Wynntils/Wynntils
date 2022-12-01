@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -31,10 +32,6 @@ public class ChatRedirectFeature extends UserFeature {
             "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
     private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
             "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
-
-    private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
-            "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
-    private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
 
     private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
             "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
@@ -56,10 +53,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern BACKGROUND_SOUL_POINT_1 =
             Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
     private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
-
-    private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
-            "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
-    private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
     private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
@@ -108,7 +101,11 @@ public class ChatRedirectFeature extends UserFeature {
     @Config
     private FilterType shaman = FilterType.REDIRECT;
 
-    private final List<Redirector> redirectors = List.of(new LoginRedirector());
+    private final List<Redirector> redirectors = List.of(
+            new LoginRedirector(),
+            new FriendJoinRedirector(),
+            new FriendLeaveRedirector()
+    );
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -137,23 +134,6 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         if (messageType == MessageType.NORMAL) {
-            if (friendJoin != FilterType.KEEP) {
-                Matcher matcher = FRIEND_JOIN_PATTERN.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (friendJoin == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String playerName = matcher.group("name");
-                    String server = matcher.group("server");
-                    String playerClass = matcher.group("class");
-
-                    sendFriendJoinMessage(playerName, server, playerClass);
-                    return;
-                }
-            }
-
             if (heal != FilterType.KEEP) {
                 Matcher matcher = HEAL_PATTERN.matcher(msg);
                 if (matcher.matches()) {
@@ -260,21 +240,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                 if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
                     e.setCanceled(true);
-                }
-            }
-
-            if (friendJoin != FilterType.KEEP) {
-                Matcher matcher = FRIEND_LEAVE_PATTERN.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (friendJoin == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String playerName = matcher.group("name");
-
-                    sendFriendLeaveMessage(playerName);
-                    return;
                 }
             }
 
@@ -408,36 +373,6 @@ public class ChatRedirectFeature extends UserFeature {
                 }
             }
 
-            if (friendJoin != FilterType.KEEP) {
-                Matcher matcher = BACKGROUND_FRIEND_JOIN_PATTERN.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (friendJoin == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String playerName = matcher.group("name");
-                    String server = matcher.group("server");
-                    String playerClass = matcher.group("class");
-
-                    sendFriendJoinMessage(playerName, server, playerClass);
-                    return;
-                }
-
-                matcher = BACKGROUND_FRIEND_LEAVE_PATTERN.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (friendJoin == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String playerName = matcher.group("name");
-
-                    sendFriendLeaveMessage(playerName);
-                    return;
-                }
-            }
-
             if (heal != FilterType.KEEP) {
                 Matcher matcher = BACKGROUND_HEALED_PATTERN.matcher(msg);
                 if (matcher.matches()) {
@@ -460,29 +395,13 @@ public class ChatRedirectFeature extends UserFeature {
                 new TextComponent("[+%s ❤]".formatted(amount)).withStyle(ChatFormatting.DARK_RED));
     }
 
-    private void sendFriendLeaveMessage(String playerName) {
-        NotificationManager.queueMessage(new TextComponent("← ")
-                .withStyle(ChatFormatting.RED)
-                .append(new TextComponent(playerName).withStyle(ChatFormatting.DARK_GREEN)));
-    }
-
-    private static void sendFriendJoinMessage(String playerName, String server, String playerClass) {
-        NotificationManager.queueMessage(new TextComponent("→ ")
-                .withStyle(ChatFormatting.GREEN)
-                .append(new TextComponent(playerName + " [")
-                        .withStyle(ChatFormatting.DARK_GREEN)
-                        .append(new TextComponent(server + "/" + playerClass)
-                                .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN)))));
-    }
-
     public enum FilterType {
         KEEP,
         HIDE,
         REDIRECT
     }
 
-    public static abstract class Redirector {
+    private abstract static class Redirector {
         Pattern getPattern(MessageType messageType) {
             return switch (messageType) {
                 case NORMAL -> getNormalPattern();
@@ -505,10 +424,10 @@ public class ChatRedirectFeature extends UserFeature {
 
         abstract FilterType getAction();
 
-        abstract String getNotification(Matcher m);
+        abstract String getNotification(Matcher matcher);
     }
 
-    public class LoginRedirector extends Redirector {
+    private class LoginRedirector extends Redirector {
         private static final Pattern LOGIN_ANNOUNCEMENT =
                 Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
         private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
@@ -535,6 +454,80 @@ public class ChatRedirectFeature extends UserFeature {
             String playerName = matcher.group(2);
 
             return ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName;
+        }
+    }
+
+    private class FriendJoinRedirector extends Redirector {
+        private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
+                "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
+        private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
+                "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
+
+        @Override
+        Pattern getNormalPattern() {
+            return FRIEND_JOIN_PATTERN;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_FRIEND_JOIN_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return friendJoin;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            String playerName = matcher.group("name");
+            String server = matcher.group("server");
+            String playerClass = matcher.group("class");
+
+            return ComponentUtils.getCoded(getFriendJoinMessage(playerName, server, playerClass));
+        }
+
+        private static MutableComponent getFriendJoinMessage(String playerName, String server, String playerClass) {
+            return new TextComponent("→ ")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(new TextComponent(playerName + " [")
+                            .withStyle(ChatFormatting.DARK_GREEN)
+                            .append(new TextComponent(server + "/" + playerClass)
+                                    .withStyle(ChatFormatting.GREEN)
+                                    .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN))));
+        }
+    }
+
+    private class FriendLeaveRedirector extends Redirector {
+        private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
+        private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
+
+        @Override
+        Pattern getSystemPattern() {
+            return FRIEND_LEAVE_PATTERN;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_FRIEND_LEAVE_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return friendJoin;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            String playerName = matcher.group("name");
+
+            return ComponentUtils.getCoded(getFriendLeaveMessage(playerName));
+        }
+
+        private static MutableComponent getFriendLeaveMessage(String playerName) {
+            return new TextComponent("← ")
+                    .withStyle(ChatFormatting.RED)
+                    .append(new TextComponent(playerName).withStyle(ChatFormatting.DARK_GREEN));
         }
     }
 }
