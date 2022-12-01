@@ -1,9 +1,21 @@
+## [0.0.1-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.105...v0.0.1-alpha.106) (2022-12-01)
+
+
+### New Features
+
+* Redirects Shaman "No Totems Nearby" message to OverlayManager ([#758](https://github.com/Wynntils/Artemis/issues/758)) ([ab16293](https://github.com/Wynntils/Artemis/commit/ab16293c97bbb229a9cd75fab18bd25ba4eb7e74))
+
 ## [0.0.1-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.104...v0.0.1-alpha.105) (2022-11-30)
 
 
 ### New Features
 
 * Redirects Territory (Town) Entering/Leaving Messages to NotificationManager Overlay ([#753](https://github.com/Wynntils/Artemis/issues/753)) ([03ebfe0](https://github.com/Wynntils/Artemis/commit/03ebfe029bdf0911ef13037dcd8e0d739ff2b3a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.105 [skip ci] ([1e20d93](https://github.com/Wynntils/Artemis/commit/1e20d93b372e98d3e6455c1d9485fa6ec2841b11))
 
 ## [0.0.1-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.103...v0.0.1-alpha.104) (2022-11-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.102 [skip ci] ([21ed01d](https://github.com/Wynntils/Artemis/commit/21ed01da71f40eaa6bf71021cc6372748e32c618))
-
-## [0.0.1-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.100...v0.0.1-alpha.101) (2022-11-29)
-
-
-### New Features
-
-* Adds Fast Travel and Seaskipper Waypoints to Map ([#749](https://github.com/Wynntils/Artemis/issues/749)) ([895dedc](https://github.com/Wynntils/Artemis/commit/895dedc9ed0c627280e7588608fa4a7a417ba908))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.101 [skip ci] ([af9ba3a](https://github.com/Wynntils/Artemis/commit/af9ba3ae4c115c8e524574814f209bcee9800c2a))
 
