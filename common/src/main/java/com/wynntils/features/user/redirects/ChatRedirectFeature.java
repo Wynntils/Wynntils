@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
@@ -544,20 +542,14 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         String getNotification(Matcher matcher) {
-            int unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+            String unusedAbilityPoints = matcher.group(1);
+
             return getUnusedAbilityPointsMessage(unusedAbilityPoints);
         }
 
-        public static String getUnusedAbilityPointsMessage(int unusedAbilityPoints) {
-            MutableComponent t = new TextComponent("You have ")
-                    .withStyle(ChatFormatting.DARK_AQUA)
-                    .append(new TextComponent(String.valueOf(unusedAbilityPoints))
-                            .withStyle(ChatFormatting.BOLD)
-                            .withStyle(ChatFormatting.DARK_AQUA))
-                    .append(new TextComponent(" unused ability points")
-                            .withStyle(ChatFormatting.DARK_AQUA));
-
-            return ComponentUtils.getCoded(t);
+        public static String getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
+            return ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD + unusedAbilityPoints +
+                    ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points";
         }
     }
 
@@ -577,12 +569,11 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         List<String> getNotifications(Matcher matcher) {
-            int unusedSkillPoints = Integer.parseInt(matcher.group(1));
-            int unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+            String unusedSkillPoints = matcher.group(1);
+            String unusedAbilityPoints = matcher.group(2);
 
             return List.of(UnusedSkillPointsRedirector.getUnusedSkillPointsMessage(unusedSkillPoints),
                     UnusedAbilityPointsRedirector.getUnusedAbilityPointsMessage(unusedAbilityPoints));
-
         }
 
         @Override
@@ -608,19 +599,14 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         String getNotification(Matcher matcher) {
-            int unusedSkillPoints = Integer.parseInt(matcher.group(1));
+            String unusedSkillPoints = matcher.group(1);
+
             return getUnusedSkillPointsMessage(unusedSkillPoints);
         }
 
-        public static String getUnusedSkillPointsMessage(int unusedSkillPoints) {
-            MutableComponent t = new TextComponent("You have ")
-                        .withStyle(ChatFormatting.DARK_RED)
-                        .append(new TextComponent(String.valueOf(unusedSkillPoints))
-                                .withStyle(ChatFormatting.BOLD)
-                                .withStyle(ChatFormatting.DARK_RED))
-                        .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED));
-
-            return ComponentUtils.getCoded(t);
+        public static String getUnusedSkillPointsMessage(String unusedSkillPoints) {
+            return ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints +
+                    ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points";
         }
     }
 }
