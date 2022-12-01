@@ -87,10 +87,10 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onInfoMessage(ChatMessageReceivedEvent e) {
+    public void onChatMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        String msg = e.getOriginalCodedMessage();
+        String message = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
@@ -102,10 +102,10 @@ public class ChatRedirectFeature extends UserFeature {
             // Ideally we will get rid of those "uncolored" patterns
             Pattern uncoloredPattern = redirector.getUncoloredSystemPattern();
             if (messageType == MessageType.SYSTEM && uncoloredPattern != null) {
-                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(msg));
+                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(message));
             } else {
                 if (pattern == null) continue;
-                matcher = pattern.matcher(msg);
+                matcher = pattern.matcher(message);
             }
 
             if (matcher.find()) {
@@ -138,15 +138,18 @@ public class ChatRedirectFeature extends UserFeature {
             return null;
         }
 
-        Pattern getUncoloredSystemPattern() {
-            return null;
-        }
-
         Pattern getNormalPattern() {
             return null;
         }
 
         Pattern getBackgroundPattern() {
+            return null;
+        }
+
+        @Deprecated
+        Pattern getUncoloredSystemPattern() {
+            // This is a bit of a hack to support patterns without
+            // color coding.
             return null;
         }
 
