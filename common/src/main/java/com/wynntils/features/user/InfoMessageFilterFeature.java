@@ -93,6 +93,11 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern HORSE_DESPAWNED_PATTERN =
             Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
 
+    private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
+            Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
+    private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
+            Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
+
     @Config
     private boolean hideWelcome = true;
 
@@ -131,6 +136,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType horse = FilterType.REDIRECT;
+
+    @Config
+    private FilterType potion = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -396,6 +404,35 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
+
+            if (potion != FilterType.KEEP) {
+                Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
+                if (maxPotionsMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (potion == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("At Potion Charge Limit!").withStyle(ChatFormatting.DARK_RED));
+
+                    return;
+                }
+
+                Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
+                if (lessPowerfulPotionMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (potion == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Lesser potion replaced.").withStyle(ChatFormatting.GRAY));
+
+                    return;
+                }
+            }
+
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {

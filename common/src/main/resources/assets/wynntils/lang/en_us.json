@@ -197,6 +197,8 @@
   "feature.wynntils.infoMessageFilter.name": "Info Message Filter",
   "feature.wynntils.infoMessageFilter.notEnoughMana.description": "How should messages about not enough mana when casting appear?",
   "feature.wynntils.infoMessageFilter.notEnoughMana.name": "Mana Message Filtering",
+  "feature.wynntils.infoMessageFilter.potion.description": "How should messages relating to your health potion stack appear?",
+  "feature.wynntils.infoMessageFilter.potion.name": "Potion Stack Message Filtering",
   "feature.wynntils.infoMessageFilter.soulPoint.description": "How should soul point messages appear?",
   "feature.wynntils.infoMessageFilter.soulPoint.name": "Soul Point Message Filtering",
   "feature.wynntils.infoMessageFilter.speed.description": "How should messages about speed effect appear?",
