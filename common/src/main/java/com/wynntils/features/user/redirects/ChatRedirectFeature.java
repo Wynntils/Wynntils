@@ -141,6 +141,7 @@ public class ChatRedirectFeature extends UserFeature {
         Pattern getUncoloredSystemPattern() {
             return null;
         }
+
         Pattern getNormalPattern() {
             return null;
         }
@@ -214,8 +215,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class FriendLeaveRedirector extends Redirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
-        private static final Pattern BACKGROUND_PATTERN =
-                Pattern.compile("§r§7(?<name>.+) left the game.");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
         @Override
         Pattern getSystemPattern() {
@@ -437,7 +437,8 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SoulPointDiscarder extends Redirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
         private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
 
@@ -557,8 +558,8 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         public static String getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
-            return ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD + unusedAbilityPoints +
-                    ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points";
+            return ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD + unusedAbilityPoints
+                    + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points";
         }
     }
 
@@ -581,7 +582,8 @@ public class ChatRedirectFeature extends UserFeature {
             String unusedSkillPoints = matcher.group(1);
             String unusedAbilityPoints = matcher.group(2);
 
-            return List.of(UnusedSkillPointsRedirector.getUnusedSkillPointsMessage(unusedSkillPoints),
+            return List.of(
+                    UnusedSkillPointsRedirector.getUnusedSkillPointsMessage(unusedSkillPoints),
                     UnusedAbilityPointsRedirector.getUnusedAbilityPointsMessage(unusedAbilityPoints));
         }
 
@@ -593,8 +595,8 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillPointsRedirector extends Redirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN =
-                Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
+                "You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
 
         @Override
         Pattern getUncoloredSystemPattern() {
@@ -614,8 +616,8 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         public static String getUnusedSkillPointsMessage(String unusedSkillPoints) {
-            return ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints +
-                    ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points";
+            return ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints
+                    + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points";
         }
     }
 }
