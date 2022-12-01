@@ -1,9 +1,21 @@
+## [0.0.1-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.107...v0.0.1-alpha.108) (2022-12-01)
+
+
+### Bug Fixes
+
+* Fix `allowClickOnEmeraldPouchInBlockingMode` config logic ([#755](https://github.com/Wynntils/Artemis/issues/755)) ([230eb7c](https://github.com/Wynntils/Artemis/commit/230eb7c7be7a67e1d91e62aae96cc1f1cb99cab0))
+
 ## [0.0.1-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.106...v0.0.1-alpha.107) (2022-12-01)
 
 
 ### New Features
 
 * Redirects Potion Replaced/At-Limit Messages as notifications ([#757](https://github.com/Wynntils/Artemis/issues/757)) ([e6a5079](https://github.com/Wynntils/Artemis/commit/e6a50794ca969163d8d0457db91bc24b5f7fa6bc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.107 [skip ci] ([f53cedc](https://github.com/Wynntils/Artemis/commit/f53cedc65a9f0b98a8fcfd3e79daaa5a485b884b))
 
 ## [0.0.1-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.105...v0.0.1-alpha.106) (2022-12-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.104 [skip ci] ([b9f3906](https://github.com/Wynntils/Artemis/commit/b9f3906adfd52e15c0d9dd9c59ff86273e8d6b2a))
-
-## [0.0.1-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.102...v0.0.1-alpha.103) (2022-11-29)
-
-
-### Bug Fixes
-
-* Fix chat coordinate parsing ([17d5138](https://github.com/Wynntils/Artemis/commit/17d5138313afdcf1d01e8069a6af09508731e030))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.103 [skip ci] ([b82efcb](https://github.com/Wynntils/Artemis/commit/b82efcb12de4803cbc253439fb820ab38a9d7849))
 
