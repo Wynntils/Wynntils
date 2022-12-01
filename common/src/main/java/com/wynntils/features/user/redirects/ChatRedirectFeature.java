@@ -12,6 +12,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.utils.WynnPlayerUtils;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -22,9 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ChatRedirectFeature extends UserFeature {
     private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
     private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
-
-    private static final Pattern LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
 
     private static final Pattern UNUSED_POINTS_1 =
             Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
@@ -57,9 +56,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern BACKGROUND_SOUL_POINT_1 =
             Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
     private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
-
-    private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
-            Pattern.compile("^(§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
     private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
             "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
@@ -112,6 +108,8 @@ public class ChatRedirectFeature extends UserFeature {
     @Config
     private FilterType shaman = FilterType.REDIRECT;
 
+    private final List<Redirector> redirectors = List.of(new LoginRedirector());
+
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
@@ -120,23 +118,25 @@ public class ChatRedirectFeature extends UserFeature {
         String uncoloredMsg = ComponentUtils.stripFormatting(msg);
         MessageType messageType = e.getMessageType();
 
-        if (messageType == MessageType.NORMAL) {
-            if (loginAnnouncements != FilterType.KEEP) {
-                Matcher matcher = LOGIN_ANNOUNCEMENT.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (loginAnnouncements == FilterType.HIDE) {
-                        return;
-                    }
+        for (Redirector redirector : redirectors) {
+            FilterType action = redirector.getAction();
+            if (action == FilterType.KEEP) continue;
 
-                    String playerName = matcher.group(2);
-                    String rank = matcher.group(1);
+            Pattern pattern = redirector.getPattern(messageType);
+            if (pattern == null) continue;
 
-                    sendLoginMessage(playerName, rank);
-                    return;
-                }
+            Matcher matcher = pattern.matcher(msg);
+            pattern.matcher(msg);
+            if (matcher.find()) {
+                e.setCanceled(true);
+                if (redirector.getAction() == FilterType.HIDE) continue;
+
+                String notification = redirector.getNotification(matcher);
+                NotificationManager.queueMessage(notification);
             }
+        }
 
+        if (messageType == MessageType.NORMAL) {
             if (friendJoin != FilterType.KEEP) {
                 Matcher matcher = FRIEND_JOIN_PATTERN.matcher(msg);
                 if (matcher.find()) {
@@ -389,22 +389,6 @@ public class ChatRedirectFeature extends UserFeature {
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
-            if (loginAnnouncements != FilterType.KEEP) {
-                Matcher matcher = BACKGROUND_LOGIN_ANNOUNCEMENT.matcher(msg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (loginAnnouncements == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String playerName = matcher.group(3);
-                    String rank = matcher.group(2);
-
-                    sendLoginMessage(playerName, rank);
-                    return;
-                }
-            }
-
             if (soulPoint != FilterType.KEEP) {
                 if (BACKGROUND_SOUL_POINT_1.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -492,38 +476,65 @@ public class ChatRedirectFeature extends UserFeature {
                                 .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN)))));
     }
 
-    private static void sendLoginMessage(String playerName, String rank) {
-        ChatFormatting primary;
-        ChatFormatting secondary;
-        switch (rank) {
-            case "VIP" -> {
-                primary = ChatFormatting.DARK_GREEN;
-                secondary = ChatFormatting.GREEN;
-            }
-            case "VIP+" -> {
-                primary = ChatFormatting.DARK_AQUA;
-                secondary = ChatFormatting.AQUA;
-            }
-            case "HERO" -> {
-                primary = ChatFormatting.DARK_PURPLE;
-                secondary = ChatFormatting.LIGHT_PURPLE;
-            }
-            case "CHAMPION" -> {
-                primary = ChatFormatting.YELLOW;
-                secondary = ChatFormatting.GOLD;
-            }
-            default -> {
-                return;
-            }
-        }
-
-        NotificationManager.queueMessage(ChatFormatting.GREEN + "→ " + primary + "[" + secondary + rank + primary + "] "
-                + secondary + playerName);
-    }
-
     public enum FilterType {
         KEEP,
         HIDE,
         REDIRECT
+    }
+
+    public static abstract class Redirector {
+        Pattern getPattern(MessageType messageType) {
+            return switch (messageType) {
+                case NORMAL -> getNormalPattern();
+                case BACKGROUND -> getBackgroundPattern();
+                case SYSTEM -> getSystemPattern();
+            };
+        }
+
+        Pattern getSystemPattern() {
+            return null;
+        }
+
+        Pattern getNormalPattern() {
+            return null;
+        }
+
+        Pattern getBackgroundPattern() {
+            return null;
+        }
+
+        abstract FilterType getAction();
+
+        abstract String getNotification(Matcher m);
+    }
+
+    public class LoginRedirector extends Redirector {
+        private static final Pattern LOGIN_ANNOUNCEMENT =
+                Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
+        private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
+                Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
+
+        @Override
+        Pattern getNormalPattern() {
+            return LOGIN_ANNOUNCEMENT;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_LOGIN_ANNOUNCEMENT;
+        }
+
+        @Override
+        FilterType getAction() {
+            return loginAnnouncements;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            String rank = matcher.group(1);
+            String playerName = matcher.group(2);
+
+            return ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName;
+        }
     }
 }
