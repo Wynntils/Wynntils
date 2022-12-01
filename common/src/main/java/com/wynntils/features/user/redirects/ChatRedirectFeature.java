@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -297,10 +296,6 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private MutableComponent getHealMessage(String amount) {
-        return new TextComponent("[+%s ❤]".formatted(amount)).withStyle(ChatFormatting.DARK_RED);
-    }
-
     public enum FilterType {
         KEEP,
         HIDE,
@@ -496,7 +491,7 @@ public class ChatRedirectFeature extends UserFeature {
         String getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return ComponentUtils.getCoded(getHealMessage(amount));
+            return ChatFormatting.DARK_RED + "[+" + amount + " ❤]";
         }
     }
 
@@ -523,7 +518,7 @@ public class ChatRedirectFeature extends UserFeature {
         String getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return ComponentUtils.getCoded(getHealMessage(amount));
+            return ChatFormatting.DARK_RED + "[+" + amount + " ❤]";
         }
     }
 }
