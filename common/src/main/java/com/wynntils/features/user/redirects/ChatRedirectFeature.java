@@ -36,40 +36,40 @@ public class ChatRedirectFeature extends UserFeature {
             Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
 
     @Config
-    private FilterType loginAnnouncements = FilterType.REDIRECT;
+    private RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType soulPoint = FilterType.REDIRECT;
+    private RedirectAction soulPoint = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType unusedPoints = FilterType.REDIRECT;
+    private RedirectAction unusedPoints = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType friendJoin = FilterType.REDIRECT;
+    private RedirectAction friendJoin = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType toolDurability = FilterType.REDIRECT;
+    private RedirectAction toolDurability = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType craftedDurability = FilterType.REDIRECT;
+    private RedirectAction craftedDurability = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType notEnoughMana = FilterType.REDIRECT;
+    private RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType heal = FilterType.REDIRECT;
+    private RedirectAction heal = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType speed = FilterType.REDIRECT;
+    private RedirectAction speed = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType horse = FilterType.REDIRECT;
+    private RedirectAction horse = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType potion = FilterType.REDIRECT;
+    private RedirectAction potion = RedirectAction.REDIRECT;
 
     @Config
-    private FilterType shaman = FilterType.REDIRECT;
+    private RedirectAction shaman = RedirectAction.REDIRECT;
 
     private final List<Redirector> redirectors = new ArrayList<>();
 
@@ -102,8 +102,8 @@ public class ChatRedirectFeature extends UserFeature {
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
-            FilterType action = redirector.getAction();
-            if (action == FilterType.KEEP) continue;
+            RedirectAction action = redirector.getAction();
+            if (action == RedirectAction.KEEP) continue;
 
             Matcher matcher;
             Pattern pattern = redirector.getPattern(messageType);
@@ -118,7 +118,7 @@ public class ChatRedirectFeature extends UserFeature {
 
             if (matcher.find()) {
                 e.setCanceled(true);
-                if (redirector.getAction() == FilterType.HIDE) continue;
+                if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 String notification = redirector.getNotification(matcher);
                 if (notification == null) continue;
@@ -127,11 +127,11 @@ public class ChatRedirectFeature extends UserFeature {
             }
         }
 
-        if (potion != FilterType.KEEP) {
+        if (potion != RedirectAction.KEEP) {
             Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
             if (maxPotionsMatcher.matches()) {
                 e.setCanceled(true);
-                if (potion == FilterType.HIDE) {
+                if (potion == RedirectAction.HIDE) {
                     return;
                 }
 
@@ -144,7 +144,7 @@ public class ChatRedirectFeature extends UserFeature {
             Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
             if (lessPowerfulPotionMatcher.matches()) {
                 e.setCanceled(true);
-                if (potion == FilterType.HIDE) {
+                if (potion == RedirectAction.HIDE) {
                     return;
                 }
 
@@ -155,7 +155,7 @@ public class ChatRedirectFeature extends UserFeature {
             }
         }
 
-        if (messageType == MessageType.SYSTEM && unusedPoints != FilterType.KEEP) {
+        if (messageType == MessageType.SYSTEM && unusedPoints != RedirectAction.KEEP) {
             handleUnusedPoints(e, ComponentUtils.stripFormatting(msg));
         }
     }
@@ -181,7 +181,7 @@ public class ChatRedirectFeature extends UserFeature {
             unusedAbilityPoints = Integer.parseInt(matcher.group(2));
         }
 
-        if (unusedPoints == FilterType.REDIRECT) {
+        if (unusedPoints == RedirectAction.REDIRECT) {
             if (unusedSkillPoints != 0) {
                 NotificationManager.queueMessage(new TextComponent("You have ")
                         .withStyle(ChatFormatting.DARK_RED)
@@ -202,12 +202,12 @@ public class ChatRedirectFeature extends UserFeature {
             }
         }
 
-        if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
+        if (unusedPoints != RedirectAction.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
             e.setCanceled(true);
         }
     }
 
-    public enum FilterType {
+    public enum RedirectAction {
         KEEP,
         HIDE,
         REDIRECT
@@ -237,7 +237,7 @@ public class ChatRedirectFeature extends UserFeature {
             return null;
         }
 
-        abstract FilterType getAction();
+        abstract RedirectAction getAction();
 
         abstract String getNotification(Matcher matcher);
     }
@@ -247,7 +247,7 @@ public class ChatRedirectFeature extends UserFeature {
                 "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return craftedDurability;
         }
 
@@ -279,7 +279,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return friendJoin;
         }
 
@@ -312,7 +312,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return friendJoin;
         }
 
@@ -333,7 +333,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return heal;
         }
 
@@ -360,7 +360,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return heal;
         }
 
@@ -382,7 +382,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return horse;
         }
 
@@ -396,7 +396,7 @@ public class ChatRedirectFeature extends UserFeature {
         private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return horse;
         }
 
@@ -428,7 +428,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return loginAnnouncements;
         }
 
@@ -451,7 +451,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return notEnoughMana;
         }
 
@@ -470,7 +470,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return shaman;
         }
 
@@ -496,7 +496,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return soulPoint;
         }
 
@@ -523,7 +523,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return soulPoint;
         }
 
@@ -543,7 +543,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return speed;
         }
 
@@ -558,7 +558,7 @@ public class ChatRedirectFeature extends UserFeature {
                 "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
-        FilterType getAction() {
+        RedirectAction getAction() {
             return toolDurability;
         }
 
