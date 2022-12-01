@@ -29,11 +29,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
             "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
-    private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
-            "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
-    private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
-            "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
-
     private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
             Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
     private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
@@ -79,7 +74,8 @@ public class ChatRedirectFeature extends UserFeature {
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
                     new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
                     new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector(),
-                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector(), new ManaDeficitRedirector());
+                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector(), new ManaDeficitRedirector(),
+                    new ToolDurabilityRedirector(), new CraftedDurabilityRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -93,11 +89,17 @@ public class ChatRedirectFeature extends UserFeature {
             FilterType action = redirector.getAction();
             if (action == FilterType.KEEP) continue;
 
+            Matcher matcher;
             Pattern pattern = redirector.getPattern(messageType);
-            if (pattern == null) continue;
+            // Ideally we will get rid of those "uncolored" patterns
+            Pattern uncoloredPattern = redirector.getUncoloredSystemPattern();
+            if (messageType == MessageType.SYSTEM && uncoloredPattern != null) {
+                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(msg));
+            } else {
+                if (pattern == null) continue;
+                matcher = pattern.matcher(msg);
+            }
 
-            Matcher matcher = pattern.matcher(msg);
-            pattern.matcher(msg);
             if (matcher.find()) {
                 e.setCanceled(true);
                 if (redirector.getAction() == FilterType.HIDE) continue;
@@ -111,7 +113,6 @@ public class ChatRedirectFeature extends UserFeature {
 
         if (messageType == MessageType.SYSTEM) {
             if (unusedPoints != FilterType.KEEP) {
-
                 Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
 
                 int unusedSkillPoints = 0;
@@ -154,36 +155,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                 if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
                     e.setCanceled(true);
-                }
-            }
-
-            if (toolDurability != FilterType.KEEP) {
-                Matcher matcher = NO_TOOL_DURABILITY_PATTERN.matcher(uncoloredMsg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (toolDurability == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("Your tool has 0 durability!").withStyle(ChatFormatting.DARK_RED));
-
-                    return;
-                }
-            }
-
-            if (craftedDurability != FilterType.KEEP) {
-                Matcher matcher = NO_CRAFTED_DURABILITY_PATTERN.matcher(uncoloredMsg);
-                if (matcher.find()) {
-                    e.setCanceled(true);
-                    if (craftedDurability == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
-
-                    return;
                 }
             }
 
@@ -236,6 +207,9 @@ public class ChatRedirectFeature extends UserFeature {
             return null;
         }
 
+        Pattern getUncoloredSystemPattern() {
+            return null;
+        }
         Pattern getNormalPattern() {
             return null;
         }
@@ -537,6 +511,46 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "Not enough mana to do that spell!";
+        }
+    }
+
+    private class ToolDurabilityRedirector extends Redirector {
+        private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
+                "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+
+        @Override
+        FilterType getAction() {
+            return toolDurability;
+        }
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return NO_TOOL_DURABILITY_PATTERN;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Your tool has 0 durability!";
+        }
+    }
+
+    private class CraftedDurabilityRedirector extends Redirector {
+        private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
+                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+
+        @Override
+        FilterType getAction() {
+            return craftedDurability;
+        }
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return NO_CRAFTED_DURABILITY_PATTERN;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Your items are damaged.";
         }
     }
 }
