@@ -59,6 +59,19 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
             Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
+    private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
+    private static final Pattern HORSE_DESPAWNED_PATTERN =
+            Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
+
+    private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
+            Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
+    private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
+            Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
+
+    // Wynncraft forgot the period at the end of this message, so be on the lookout for a potential break in the future
+    // if they fix it.
+    private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+
     private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
 
     private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
@@ -88,10 +101,6 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
     private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
-
-    private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
-    private static final Pattern HORSE_DESPAWNED_PATTERN =
-            Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
 
     @Config
     private boolean hideWelcome = true;
@@ -131,6 +140,12 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType horse = FilterType.REDIRECT;
+
+    @Config
+    private FilterType potion = FilterType.REDIRECT;
+
+    @Config
+    private FilterType shaman = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -328,6 +343,20 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
+            if (shaman != FilterType.KEEP) {
+                Matcher matcher = NO_ACTIVE_TOTEMS_PATTERN.matcher(msg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (shaman == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("No totems nearby!").withStyle(ChatFormatting.DARK_RED));
+                    return;
+                }
+            }
+
             if (horse != FilterType.KEEP) {
                 Matcher roomMatcher = NO_ROOM_PATTERN.matcher(msg);
                 if (roomMatcher.matches()) {
@@ -396,6 +425,35 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
+
+            if (potion != FilterType.KEEP) {
+                Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
+                if (maxPotionsMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (potion == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("At potion charge limit!").withStyle(ChatFormatting.DARK_RED));
+
+                    return;
+                }
+
+                Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
+                if (lessPowerfulPotionMatcher.matches()) {
+                    e.setCanceled(true);
+                    if (potion == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("Lesser potion replaced.").withStyle(ChatFormatting.GRAY));
+
+                    return;
+                }
+            }
+
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {

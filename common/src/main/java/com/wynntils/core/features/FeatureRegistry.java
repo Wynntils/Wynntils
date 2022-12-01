@@ -90,6 +90,7 @@ import com.wynntils.features.user.players.PreventTradesDuelsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.user.redirects.InventoryRedirectFeature;
+import com.wynntils.features.user.redirects.TerritoryMessageRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
@@ -158,6 +159,7 @@ public final class FeatureRegistry {
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
+        registerFeature(new InventoryRedirectFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemFavoriteFeature());
         registerFeature(new ItemGuessFeature());
@@ -177,7 +179,6 @@ public final class FeatureRegistry {
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new InventoryRedirectFeature());
         registerFeature(new PowderAbilityBarOverlayFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
@@ -185,6 +186,7 @@ public final class FeatureRegistry {
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());

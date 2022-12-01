@@ -1,51 +1,55 @@
-## [0.0.1-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.100...v0.0.1-alpha.101) (2022-11-29)
+## [0.0.1-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.106...v0.0.1-alpha.107) (2022-12-01)
 
 
 ### New Features
 
-* Adds Fast Travel and Seaskipper Waypoints to Map ([#749](https://github.com/Wynntils/Artemis/issues/749)) ([895dedc](https://github.com/Wynntils/Artemis/commit/895dedc9ed0c627280e7588608fa4a7a417ba908))
+* Redirects Potion Replaced/At-Limit Messages as notifications ([#757](https://github.com/Wynntils/Artemis/issues/757)) ([e6a5079](https://github.com/Wynntils/Artemis/commit/e6a50794ca969163d8d0457db91bc24b5f7fa6bc))
 
-## [0.0.1-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.99...v0.0.1-alpha.100) (2022-11-29)
-
-
-### New Features
-
-* Redirect Horse Despawning Messages to NotificationManager Overlay  ([#745](https://github.com/Wynntils/Artemis/issues/745)) ([cbbc958](https://github.com/Wynntils/Artemis/commit/cbbc958d819967ef8af8a9a451ccb0093bcbd9de))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.100 [skip ci] ([1c09c84](https://github.com/Wynntils/Artemis/commit/1c09c8430e9d39903e182350c9ca1286c534a935))
-
-## [0.0.1-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.98...v0.0.1-alpha.99) (2022-11-29)
+## [0.0.1-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.105...v0.0.1-alpha.106) (2022-12-01)
 
 
 ### New Features
 
-* Redirect Potion Stack Messages to NotificationManager Overlay ([#750](https://github.com/Wynntils/Artemis/issues/750)) ([37ee0bb](https://github.com/Wynntils/Artemis/commit/37ee0bb0dae5a7c6dd4e1caa7f6b2f3c6c728e4b))
+* Redirects Shaman "No Totems Nearby" message to OverlayManager ([#758](https://github.com/Wynntils/Artemis/issues/758)) ([ab16293](https://github.com/Wynntils/Artemis/commit/ab16293c97bbb229a9cd75fab18bd25ba4eb7e74))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.99 [skip ci] ([5193747](https://github.com/Wynntils/Artemis/commit/51937471471a4ae2d10cf866f1a4444e6c9363cb))
+* **release:** v0.0.1-alpha.106 [skip ci] ([78f6234](https://github.com/Wynntils/Artemis/commit/78f62344e500717cec942c85e55714670a97e9ad))
 
-## [0.0.1-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.97...v0.0.1-alpha.98) (2022-11-28)
+## [0.0.1-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.104...v0.0.1-alpha.105) (2022-11-30)
+
+
+### New Features
+
+* Redirects Territory (Town) Entering/Leaving Messages to NotificationManager Overlay ([#753](https://github.com/Wynntils/Artemis/issues/753)) ([03ebfe0](https://github.com/Wynntils/Artemis/commit/03ebfe029bdf0911ef13037dcd8e0d739ff2b3a3))
 
 
 ### Miscellaneous Chores
 
-* Add Quiltflower decompiler support and greatly improve workspace/development documentation ([#746](https://github.com/Wynntils/Artemis/issues/746)) ([c807733](https://github.com/Wynntils/Artemis/commit/c80773339465fa84a95db7123f9052964eed19ed))
-* **release:** v0.0.1-alpha.98 [skip ci] ([44e9ce3](https://github.com/Wynntils/Artemis/commit/44e9ce36720d6ecd64ce50e2d0530a64cc737f77))
+* **release:** v0.0.1-alpha.105 [skip ci] ([1e20d93](https://github.com/Wynntils/Artemis/commit/1e20d93b372e98d3e6455c1d9485fa6ec2841b11))
 
-## [0.0.1-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.96...v0.0.1-alpha.97) (2022-11-28)
+## [0.0.1-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.103...v0.0.1-alpha.104) (2022-11-29)
 
 
 ### Bug Fixes
 
-* Fix auto chest not setting after there is an instance of a specific tier ([#747](https://github.com/Wynntils/Artemis/issues/747)) ([5d86f4d](https://github.com/Wynntils/Artemis/commit/5d86f4d4940d98167840e8886bc11d68570b6cb6))
+* Support + in chat coordinate parsing ([3024576](https://github.com/Wynntils/Artemis/commit/30245767b54da7472611cd1cdb54c673399bd228))
 
 
 ### Miscellaneous Chores
 
-* **release:** v0.0.1-alpha.97 [skip ci] ([2358cd7](https://github.com/Wynntils/Artemis/commit/2358cd7f658c2ce60509afc6cb659f1570ae815b))
+* **release:** v0.0.1-alpha.104 [skip ci] ([b9f3906](https://github.com/Wynntils/Artemis/commit/b9f3906adfd52e15c0d9dd9c59ff86273e8d6b2a))
+
+## [0.0.1-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.102...v0.0.1-alpha.103) (2022-11-29)
+
+
+### Bug Fixes
+
+* Fix chat coordinate parsing ([17d5138](https://github.com/Wynntils/Artemis/commit/17d5138313afdcf1d01e8069a6af09508731e030))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.103 [skip ci] ([b82efcb](https://github.com/Wynntils/Artemis/commit/b82efcb12de4803cbc253439fb820ab38a9d7849))
 
