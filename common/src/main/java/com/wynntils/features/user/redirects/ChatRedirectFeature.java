@@ -520,9 +520,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         String getNotification(Matcher matcher) {
-            return ComponentUtils.getCoded(new TextComponent("+3 minutes")
-                    .withStyle(ChatFormatting.AQUA)
-                    .append(new TextComponent(" speed boost").withStyle(ChatFormatting.GRAY)));
+            return ChatFormatting.AQUA + "+3 minutes" + ChatFormatting.GRAY + " speed boost";
         }
     }
 }
