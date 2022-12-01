@@ -413,7 +413,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                     }
 
                     NotificationManager.queueMessage(
-                            new TextComponent("At Potion Charge Limit!").withStyle(ChatFormatting.DARK_RED));
+                            new TextComponent("At potion charge limit!").withStyle(ChatFormatting.DARK_RED));
 
                     return;
                 }
