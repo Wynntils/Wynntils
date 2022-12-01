@@ -33,8 +33,6 @@ public class ChatRedirectFeature extends UserFeature {
             "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
     private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
             "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
-    private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
-            Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
     private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
             Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
@@ -81,7 +79,7 @@ public class ChatRedirectFeature extends UserFeature {
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
                     new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
                     new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector(),
-                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector());
+                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector(), new ManaDeficitRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -184,21 +182,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                     NotificationManager.queueMessage(
                             new TextComponent("Your items are damaged.").withStyle(ChatFormatting.DARK_RED));
-
-                    return;
-                }
-            }
-
-            if (notEnoughMana != FilterType.KEEP) {
-                Matcher matcher = NO_MANA_LEFT_TO_CAST_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (notEnoughMana == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("Not enough mana to do that spell!").withStyle(ChatFormatting.DARK_RED));
 
                     return;
                 }
@@ -534,6 +517,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_PURPLE + "Your horse has despawned.";
+        }
+    }
+
+    private class ManaDeficitRedirector extends Redirector {
+        private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
+                Pattern.compile("^§4You don't have enough mana to cast that spell!$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return NO_MANA_LEFT_TO_CAST_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return notEnoughMana;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Not enough mana to do that spell!";
         }
     }
 }
