@@ -36,10 +36,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
             Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
-    // Wynncraft forgot the period at the end of this message, so be on the lookout for a potential break in the future
-    // if they fix it.
-    private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
-
     private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
     private static final Pattern HORSE_DESPAWNED_PATTERN =
             Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
@@ -88,7 +84,7 @@ public class ChatRedirectFeature extends UserFeature {
     private final List<Redirector> redirectors =
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
                     new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
-                    new HealedByOtherRedirector(), new SpeedBoostRedirector());
+                    new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -163,20 +159,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                 if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
                     e.setCanceled(true);
-                }
-            }
-
-            if (shaman != FilterType.KEEP) {
-                Matcher matcher = NO_ACTIVE_TOTEMS_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (shaman == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("No totems nearby!").withStyle(ChatFormatting.DARK_RED));
-                    return;
                 }
             }
 
@@ -521,6 +503,25 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.AQUA + "+3 minutes" + ChatFormatting.GRAY + " speed boost";
+        }
+    }
+
+    private class NoTotemRedirector extends Redirector {
+        private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return NO_ACTIVE_TOTEMS_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return shaman;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "No totems nearby!";
         }
     }
 }
