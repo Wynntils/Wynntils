@@ -13,6 +13,7 @@ import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,12 +71,28 @@ public class ChatRedirectFeature extends UserFeature {
     @Config
     private FilterType shaman = FilterType.REDIRECT;
 
-    private final List<Redirector> redirectors =
-            List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
-                    new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
-                    new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector(),
-                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector(), new ManaDeficitRedirector(),
-                    new ToolDurabilityRedirector(), new CraftedDurabilityRedirector());
+    private final List<Redirector> redirectors = new ArrayList<>();
+
+    public ChatRedirectFeature() {
+        register(new LoginRedirector());
+        register(new FriendJoinRedirector());
+        register(new FriendLeaveRedirector());
+        register(new SoulPointRedirector());
+        register(new SoulPointDiscarder());
+        register(new HealRedirector());
+        register(new HealedByOtherRedirector());
+        register(new SpeedBoostRedirector());
+        register(new NoTotemRedirector());
+        register(new HorseSpawnFailRedirector());
+        register(new HorseDespawnedRedirector());
+        register(new ManaDeficitRedirector());
+        register(new ToolDurabilityRedirector());
+        register(new CraftedDurabilityRedirector());
+    }
+
+    private void register(Redirector redirector) {
+        redirectors.add(redirector);
+    }
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -144,6 +161,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private void handleUnusedPoints(ChatMessageReceivedEvent e, String uncoloredMsg) {
+        // This is a bit special and does not readily fit the Redirector model
         Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
 
         int unusedSkillPoints = 0;
