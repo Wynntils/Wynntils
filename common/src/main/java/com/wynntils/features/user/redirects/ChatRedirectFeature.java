@@ -529,12 +529,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedAbilityPointsRedirector extends Redirector {
-        private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
                 "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return UNUSED_POINTS_2;
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
@@ -562,12 +562,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillAndAbilityPointsRedirector extends Redirector {
-        private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
                 "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return UNUSED_POINTS_3;
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
@@ -593,12 +593,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillPointsRedirector extends Redirector {
-        private static final Pattern UNUSED_POINTS_1 =
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN =
                 Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return UNUSED_POINTS_1;
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
