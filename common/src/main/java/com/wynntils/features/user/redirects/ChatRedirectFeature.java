@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -101,11 +100,8 @@ public class ChatRedirectFeature extends UserFeature {
     @Config
     private FilterType shaman = FilterType.REDIRECT;
 
-    private final List<Redirector> redirectors = List.of(
-            new LoginRedirector(),
-            new FriendJoinRedirector(),
-            new FriendLeaveRedirector()
-    );
+    private final List<Redirector> redirectors =
+            List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -484,23 +480,17 @@ public class ChatRedirectFeature extends UserFeature {
             String server = matcher.group("server");
             String playerClass = matcher.group("class");
 
-            return ComponentUtils.getCoded(getFriendJoinMessage(playerName, server, playerClass));
-        }
-
-        private static MutableComponent getFriendJoinMessage(String playerName, String server, String playerClass) {
-            return new TextComponent("→ ")
-                    .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent(playerName + " [")
-                            .withStyle(ChatFormatting.DARK_GREEN)
-                            .append(new TextComponent(server + "/" + playerClass)
-                                    .withStyle(ChatFormatting.GREEN)
-                                    .append(new TextComponent("]").withStyle(ChatFormatting.DARK_GREEN))));
+            return ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN
+                    + playerName + " [" + ChatFormatting.GREEN
+                    + server + "/" + playerClass + ChatFormatting.DARK_GREEN
+                    + "]";
         }
     }
 
     private class FriendLeaveRedirector extends Redirector {
         private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
-        private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
+        private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN =
+                Pattern.compile("§r§7(?<name>.+) left the game.");
 
         @Override
         Pattern getSystemPattern() {
@@ -521,13 +511,7 @@ public class ChatRedirectFeature extends UserFeature {
         String getNotification(Matcher matcher) {
             String playerName = matcher.group("name");
 
-            return ComponentUtils.getCoded(getFriendLeaveMessage(playerName));
-        }
-
-        private static MutableComponent getFriendLeaveMessage(String playerName) {
-            return new TextComponent("← ")
-                    .withStyle(ChatFormatting.RED)
-                    .append(new TextComponent(playerName).withStyle(ChatFormatting.DARK_GREEN));
+            return ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName;
         }
     }
 }
