@@ -74,20 +74,20 @@ public class ChatRedirectFeature extends UserFeature {
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
-        register(new LoginRedirector());
+        register(new CraftedDurabilityRedirector());
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
-        register(new SoulPointRedirector());
-        register(new SoulPointDiscarder());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
-        register(new SpeedBoostRedirector());
-        register(new NoTotemRedirector());
-        register(new HorseSpawnFailRedirector());
         register(new HorseDespawnedRedirector());
+        register(new HorseSpawnFailRedirector());
+        register(new LoginRedirector());
         register(new ManaDeficitRedirector());
+        register(new NoTotemRedirector());
+        register(new SoulPointDiscarder());
+        register(new SoulPointRedirector());
+        register(new SpeedBoostRedirector());
         register(new ToolDurabilityRedirector());
-        register(new CraftedDurabilityRedirector());
     }
 
     private void register(Redirector redirector) {
@@ -242,33 +242,23 @@ public class ChatRedirectFeature extends UserFeature {
         abstract String getNotification(Matcher matcher);
     }
 
-    private class LoginRedirector extends Redirector {
-        private static final Pattern LOGIN_ANNOUNCEMENT =
-                Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
-        private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
-                Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
-
-        @Override
-        Pattern getNormalPattern() {
-            return LOGIN_ANNOUNCEMENT;
-        }
-
-        @Override
-        Pattern getBackgroundPattern() {
-            return BACKGROUND_LOGIN_ANNOUNCEMENT;
-        }
+    private class CraftedDurabilityRedirector extends Redirector {
+        private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
+                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
         FilterType getAction() {
-            return loginAnnouncements;
+            return craftedDurability;
+        }
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return NO_CRAFTED_DURABILITY_PATTERN;
         }
 
         @Override
         String getNotification(Matcher matcher) {
-            String rank = matcher.group(1);
-            String playerName = matcher.group(2);
-
-            return ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName;
+            return ChatFormatting.DARK_RED + "Your items are damaged.";
         }
     }
 
@@ -334,60 +324,6 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class SoulPointRedirector extends Redirector {
-        private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
-        private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
-
-        @Override
-        Pattern getSystemPattern() {
-            return SOUL_POINT_2;
-        }
-
-        @Override
-        Pattern getBackgroundPattern() {
-            return BACKGROUND_SOUL_POINT_2;
-        }
-
-        @Override
-        FilterType getAction() {
-            return soulPoint;
-        }
-
-        @Override
-        String getNotification(Matcher matcher) {
-            // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-            return ChatFormatting.LIGHT_PURPLE + matcher.group(1);
-        }
-    }
-
-    private class SoulPointDiscarder extends Redirector {
-        private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
-        private static final Pattern BACKGROUND_SOUL_POINT_1 =
-                Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
-
-        @Override
-        Pattern getSystemPattern() {
-            return SOUL_POINT_1;
-        }
-
-        @Override
-        Pattern getBackgroundPattern() {
-            return BACKGROUND_SOUL_POINT_1;
-        }
-
-        @Override
-        FilterType getAction() {
-            return soulPoint;
-        }
-
-        @Override
-        String getNotification(Matcher matcher) {
-            // Soul point messages comes in two lines. We just throw away the chatty one
-            // if we have hide or redirect as action.
-            return null;
-        }
-    }
-
     private class HealRedirector extends Redirector {
         private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
 
@@ -436,41 +372,23 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class SpeedBoostRedirector extends Redirector {
-        private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
-
-        @Override
-        Pattern getNormalPattern() {
-            return SPEED_PATTERN;
-        }
-
-        @Override
-        FilterType getAction() {
-            return speed;
-        }
-
-        @Override
-        String getNotification(Matcher matcher) {
-            return ChatFormatting.AQUA + "+3 minutes" + ChatFormatting.GRAY + " speed boost";
-        }
-    }
-
-    private class NoTotemRedirector extends Redirector {
-        private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+    private class HorseDespawnedRedirector extends Redirector {
+        private static final Pattern HORSE_DESPAWNED_PATTERN =
+                Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
 
         @Override
         Pattern getSystemPattern() {
-            return NO_ACTIVE_TOTEMS_PATTERN;
+            return HORSE_DESPAWNED_PATTERN;
         }
 
         @Override
         FilterType getAction() {
-            return shaman;
+            return horse;
         }
 
         @Override
         String getNotification(Matcher matcher) {
-            return ChatFormatting.DARK_RED + "No totems nearby!";
+            return ChatFormatting.DARK_PURPLE + "Your horse has despawned.";
         }
     }
 
@@ -493,23 +411,33 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class HorseDespawnedRedirector extends Redirector {
-        private static final Pattern HORSE_DESPAWNED_PATTERN =
-                Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
+    private class LoginRedirector extends Redirector {
+        private static final Pattern LOGIN_ANNOUNCEMENT =
+                Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
+        private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
+                Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
         @Override
-        Pattern getSystemPattern() {
-            return HORSE_DESPAWNED_PATTERN;
+        Pattern getNormalPattern() {
+            return LOGIN_ANNOUNCEMENT;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_LOGIN_ANNOUNCEMENT;
         }
 
         @Override
         FilterType getAction() {
-            return horse;
+            return loginAnnouncements;
         }
 
         @Override
         String getNotification(Matcher matcher) {
-            return ChatFormatting.DARK_PURPLE + "Your horse has despawned.";
+            String rank = matcher.group(1);
+            String playerName = matcher.group(2);
+
+            return ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName;
         }
     }
 
@@ -533,6 +461,98 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class NoTotemRedirector extends Redirector {
+        private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return NO_ACTIVE_TOTEMS_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return shaman;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "No totems nearby!";
+        }
+    }
+
+    private class SoulPointDiscarder extends Redirector {
+        private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
+        private static final Pattern BACKGROUND_SOUL_POINT_1 =
+                Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SOUL_POINT_1;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_SOUL_POINT_1;
+        }
+
+        @Override
+        FilterType getAction() {
+            return soulPoint;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // Soul point messages comes in two lines. We just throw away the chatty one
+            // if we have hide or redirect as action.
+            return null;
+        }
+    }
+
+    private class SoulPointRedirector extends Redirector {
+        private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SOUL_POINT_2;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_SOUL_POINT_2;
+        }
+
+        @Override
+        FilterType getAction() {
+            return soulPoint;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+            return ChatFormatting.LIGHT_PURPLE + matcher.group(1);
+        }
+    }
+
+    private class SpeedBoostRedirector extends Redirector {
+        private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
+
+        @Override
+        Pattern getNormalPattern() {
+            return SPEED_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return speed;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.AQUA + "+3 minutes" + ChatFormatting.GRAY + " speed boost";
+        }
+    }
+
     private class ToolDurabilityRedirector extends Redirector {
         private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
                 "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
@@ -550,26 +570,6 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "Your tool has 0 durability!";
-        }
-    }
-
-    private class CraftedDurabilityRedirector extends Redirector {
-        private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
-                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
-
-        @Override
-        FilterType getAction() {
-            return craftedDurability;
-        }
-
-        @Override
-        Pattern getUncoloredSystemPattern() {
-            return NO_CRAFTED_DURABILITY_PATTERN;
-        }
-
-        @Override
-        String getNotification(Matcher matcher) {
-            return ChatFormatting.DARK_RED + "Your items are damaged.";
         }
     }
 }
