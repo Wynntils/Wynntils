@@ -1,9 +1,21 @@
+## [0.0.1-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.106...v0.0.1-alpha.107) (2022-12-01)
+
+
+### New Features
+
+* Redirects Potion Replaced/At-Limit Messages as notifications ([#757](https://github.com/Wynntils/Artemis/issues/757)) ([e6a5079](https://github.com/Wynntils/Artemis/commit/e6a50794ca969163d8d0457db91bc24b5f7fa6bc))
+
 ## [0.0.1-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.105...v0.0.1-alpha.106) (2022-12-01)
 
 
 ### New Features
 
 * Redirects Shaman "No Totems Nearby" message to OverlayManager ([#758](https://github.com/Wynntils/Artemis/issues/758)) ([ab16293](https://github.com/Wynntils/Artemis/commit/ab16293c97bbb229a9cd75fab18bd25ba4eb7e74))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.106 [skip ci] ([78f6234](https://github.com/Wynntils/Artemis/commit/78f62344e500717cec942c85e55714670a97e9ad))
 
 ## [0.0.1-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.104...v0.0.1-alpha.105) (2022-11-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.103 [skip ci] ([b82efcb](https://github.com/Wynntils/Artemis/commit/b82efcb12de4803cbc253439fb820ab38a9d7849))
-
-## [0.0.1-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.101...v0.0.1-alpha.102) (2022-11-29)
-
-
-### New Features
-
-* Render player POI's on minimap ([#754](https://github.com/Wynntils/Artemis/issues/754)) ([4b905db](https://github.com/Wynntils/Artemis/commit/4b905db0c717f9b193ca2ba2a16412ac2b56bbde))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.102 [skip ci] ([21ed01d](https://github.com/Wynntils/Artemis/commit/21ed01da71f40eaa6bf71021cc6372748e32c618))
 
