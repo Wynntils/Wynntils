@@ -22,11 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
-    private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
-            Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
-    private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
-            Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
-
     @Config
     private RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
@@ -76,6 +71,8 @@ public class ChatRedirectFeature extends UserFeature {
         register(new LoginRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
+        register(new PotionsMaxRedirector());
+        register(new PotionsReplacedRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
@@ -118,34 +115,6 @@ public class ChatRedirectFeature extends UserFeature {
                 for (String notification : redirector.getNotifications(matcher)) {
                     NotificationManager.queueMessage(notification);
                 }
-            }
-        }
-
-        if (potion != RedirectAction.KEEP) {
-            Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
-            if (maxPotionsMatcher.matches()) {
-                e.setCanceled(true);
-                if (potion == RedirectAction.HIDE) {
-                    return;
-                }
-
-                NotificationManager.queueMessage(
-                        new TextComponent("At potion charge limit!").withStyle(ChatFormatting.DARK_RED));
-
-                return;
-            }
-
-            Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
-            if (lessPowerfulPotionMatcher.matches()) {
-                e.setCanceled(true);
-                if (potion == RedirectAction.HIDE) {
-                    return;
-                }
-
-                NotificationManager.queueMessage(
-                        new TextComponent("Lesser potion replaced.").withStyle(ChatFormatting.GRAY));
-
-                return;
             }
         }
     }
@@ -424,6 +393,46 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "No totems nearby!";
+        }
+    }
+
+    private class PotionsMaxRedirector extends Redirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "At potion charge limit!";
+        }
+    }
+
+    private class PotionsReplacedRedirector extends Redirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "Lesser potion replaced.";
         }
     }
 
