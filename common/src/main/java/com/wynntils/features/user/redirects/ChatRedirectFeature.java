@@ -36,10 +36,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
             Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
-    private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
-    private static final Pattern HORSE_DESPAWNED_PATTERN =
-            Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
-
     private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
             Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
     private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
@@ -84,7 +80,8 @@ public class ChatRedirectFeature extends UserFeature {
     private final List<Redirector> redirectors =
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
                     new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
-                    new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector());
+                    new HealedByOtherRedirector(), new SpeedBoostRedirector(), new NoTotemRedirector(),
+                    new HorseSpawnFailRedirector(), new HorseDespawnedRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -159,30 +156,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                 if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
                     e.setCanceled(true);
-                }
-            }
-
-            if (horse != FilterType.KEEP) {
-                Matcher roomMatcher = NO_ROOM_PATTERN.matcher(msg);
-                if (roomMatcher.matches()) {
-                    e.setCanceled(true);
-                    if (horse == FilterType.HIDE) {
-                        return;
-                    }
-                    NotificationManager.queueMessage(
-                            new TextComponent("No room for a horse!").withStyle(ChatFormatting.DARK_RED));
-                    return;
-                }
-
-                Matcher despawnMatcher = HORSE_DESPAWNED_PATTERN.matcher(msg);
-                if (despawnMatcher.matches()) {
-                    e.setCanceled(true);
-                    if (horse == FilterType.HIDE) {
-                        return;
-                    }
-                    NotificationManager.queueMessage(
-                            new TextComponent("Your horse has despawned.").withStyle(ChatFormatting.DARK_PURPLE));
-                    return;
                 }
             }
 
@@ -522,6 +495,45 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "No totems nearby!";
+        }
+    }
+
+    private class HorseSpawnFailRedirector extends Redirector {
+        private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
+
+        @Override
+        FilterType getAction() {
+            return horse;
+        }
+
+        @Override
+        Pattern getSystemPattern() {
+            return NO_ROOM_PATTERN;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "No room for a horse!";
+        }
+    }
+
+    private class HorseDespawnedRedirector extends Redirector {
+        private static final Pattern HORSE_DESPAWNED_PATTERN =
+                Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
+
+        @Override
+        Pattern getSystemPattern() {
+            return HORSE_DESPAWNED_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return horse;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_PURPLE + "Your horse has despawned.";
         }
     }
 }
