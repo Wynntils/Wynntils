@@ -82,7 +82,6 @@ public class ChatRedirectFeature extends UserFeature {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
         String msg = e.getOriginalCodedMessage();
-        String uncoloredMsg = ComponentUtils.stripFormatting(msg);
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
@@ -111,80 +110,82 @@ public class ChatRedirectFeature extends UserFeature {
             }
         }
 
-        if (messageType == MessageType.SYSTEM) {
-            if (unusedPoints != FilterType.KEEP) {
-                Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
-
-                int unusedSkillPoints = 0;
-                int unusedAbilityPoints = 0;
-                if (matcher.matches()) {
-                    unusedSkillPoints = Integer.parseInt(matcher.group(1));
-                }
-
-                matcher = UNUSED_POINTS_2.matcher(uncoloredMsg);
-                if (matcher.matches()) {
-                    unusedAbilityPoints = Integer.parseInt(matcher.group(2));
-                }
-
-                matcher = UNUSED_POINTS_3.matcher(uncoloredMsg);
-                if (matcher.matches()) {
-                    unusedSkillPoints = Integer.parseInt(matcher.group(1));
-                    unusedAbilityPoints = Integer.parseInt(matcher.group(2));
-                }
-
-                if (unusedPoints == FilterType.REDIRECT) {
-                    if (unusedSkillPoints != 0) {
-                        NotificationManager.queueMessage(new TextComponent("You have ")
-                                .withStyle(ChatFormatting.DARK_RED)
-                                .append(new TextComponent(String.valueOf(unusedSkillPoints))
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.DARK_RED))
-                                .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED)));
-                    }
-
-                    if (unusedAbilityPoints != 0) {
-                        NotificationManager.queueMessage(new TextComponent("You have ")
-                                .withStyle(ChatFormatting.DARK_AQUA)
-                                .append(new TextComponent(String.valueOf(unusedAbilityPoints))
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.DARK_AQUA))
-                                .append(new TextComponent(" unused ability points")
-                                        .withStyle(ChatFormatting.DARK_AQUA)));
-                    }
-                }
-
-                if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
-                    e.setCanceled(true);
-                }
-            }
-
-            if (potion != FilterType.KEEP) {
-                Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
-                if (maxPotionsMatcher.matches()) {
-                    e.setCanceled(true);
-                    if (potion == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(
-                            new TextComponent("At potion charge limit!").withStyle(ChatFormatting.DARK_RED));
-
+        if (potion != FilterType.KEEP) {
+            Matcher maxPotionsMatcher = MAX_POTIONS_ALLOWED_PATTERN.matcher(msg);
+            if (maxPotionsMatcher.matches()) {
+                e.setCanceled(true);
+                if (potion == FilterType.HIDE) {
                     return;
                 }
 
-                Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
-                if (lessPowerfulPotionMatcher.matches()) {
-                    e.setCanceled(true);
-                    if (potion == FilterType.HIDE) {
-                        return;
-                    }
+                NotificationManager.queueMessage(
+                        new TextComponent("At potion charge limit!").withStyle(ChatFormatting.DARK_RED));
 
-                    NotificationManager.queueMessage(
-                            new TextComponent("Lesser potion replaced.").withStyle(ChatFormatting.GRAY));
+                return;
+            }
 
+            Matcher lessPowerfulPotionMatcher = LESS_POWERFUL_POTION_REMOVED_PATTERN.matcher(msg);
+            if (lessPowerfulPotionMatcher.matches()) {
+                e.setCanceled(true);
+                if (potion == FilterType.HIDE) {
                     return;
                 }
+
+                NotificationManager.queueMessage(
+                        new TextComponent("Lesser potion replaced.").withStyle(ChatFormatting.GRAY));
+
+                return;
             }
+        }
+
+        if (messageType == MessageType.SYSTEM && unusedPoints != FilterType.KEEP) {
+            handleUnusedPoints(e, ComponentUtils.stripFormatting(msg));
+        }
+    }
+
+    private void handleUnusedPoints(ChatMessageReceivedEvent e, String uncoloredMsg) {
+        Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
+
+        int unusedSkillPoints = 0;
+        int unusedAbilityPoints = 0;
+        if (matcher.matches()) {
+            unusedSkillPoints = Integer.parseInt(matcher.group(1));
+        }
+
+        matcher = UNUSED_POINTS_2.matcher(uncoloredMsg);
+        if (matcher.matches()) {
+            unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+        }
+
+        matcher = UNUSED_POINTS_3.matcher(uncoloredMsg);
+        if (matcher.matches()) {
+            unusedSkillPoints = Integer.parseInt(matcher.group(1));
+            unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+        }
+
+        if (unusedPoints == FilterType.REDIRECT) {
+            if (unusedSkillPoints != 0) {
+                NotificationManager.queueMessage(new TextComponent("You have ")
+                        .withStyle(ChatFormatting.DARK_RED)
+                        .append(new TextComponent(String.valueOf(unusedSkillPoints))
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.DARK_RED))
+                        .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED)));
+            }
+
+            if (unusedAbilityPoints != 0) {
+                NotificationManager.queueMessage(new TextComponent("You have ")
+                        .withStyle(ChatFormatting.DARK_AQUA)
+                        .append(new TextComponent(String.valueOf(unusedAbilityPoints))
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.DARK_AQUA))
+                        .append(new TextComponent(" unused ability points")
+                                .withStyle(ChatFormatting.DARK_AQUA)));
+            }
+        }
+
+        if (unusedPoints != FilterType.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
+            e.setCanceled(true);
         }
     }
 
