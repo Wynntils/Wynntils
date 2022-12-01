@@ -247,13 +247,13 @@ public class ChatRedirectFeature extends UserFeature {
                 "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        RedirectAction getAction() {
-            return craftedDurability;
+        Pattern getUncoloredSystemPattern() {
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
-        Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        RedirectAction getAction() {
+            return craftedDurability;
         }
 
         @Override
@@ -396,13 +396,13 @@ public class ChatRedirectFeature extends UserFeature {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4There is no room for a horse.");
 
         @Override
-        RedirectAction getAction() {
-            return horse;
+        Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
-        Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        RedirectAction getAction() {
+            return horse;
         }
 
         @Override
@@ -558,13 +558,13 @@ public class ChatRedirectFeature extends UserFeature {
                 "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
-        RedirectAction getAction() {
-            return toolDurability;
+        Pattern getUncoloredSystemPattern() {
+            return UNCOLORED_SYSTEM__PATTERN;
         }
 
         @Override
-        Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM__PATTERN;
+        RedirectAction getAction() {
+            return toolDurability;
         }
 
         @Override
