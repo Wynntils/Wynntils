@@ -99,9 +99,9 @@ public class ItemLockFeature extends UserFeature {
             return;
         }
 
-        // We want to allow interactions (except throwing) with emerald pouch even if locked
+        // We want to allow opening emerald pouch even if locked
         if (allowClickOnEmeraldPouchInBlockingMode
-                && event.getClickType() != ClickType.THROW
+                && event.getClickType() == ClickType.PICKUP
                 && WynnItemMatchers.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
