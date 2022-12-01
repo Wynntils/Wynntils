@@ -40,8 +40,6 @@ public class ChatRedirectFeature extends UserFeature {
     // if they fix it.
     private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
 
-    private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
-
     private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
     private static final Pattern HORSE_DESPAWNED_PATTERN =
             Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
@@ -90,7 +88,7 @@ public class ChatRedirectFeature extends UserFeature {
     private final List<Redirector> redirectors =
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
                     new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
-                    new HealedByOtherRedirector());
+                    new HealedByOtherRedirector(), new SpeedBoostRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -120,22 +118,7 @@ public class ChatRedirectFeature extends UserFeature {
             }
         }
 
-        if (messageType == MessageType.NORMAL) {
-            if (speed != FilterType.KEEP) {
-                Matcher matcher = SPEED_PATTERN.matcher(uncoloredMsg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (speed == FilterType.HIDE) {
-                        return;
-                    }
-
-                    NotificationManager.queueMessage(new TextComponent("+3 minutes")
-                            .withStyle(ChatFormatting.AQUA)
-                            .append(new TextComponent(" speed boost").withStyle(ChatFormatting.GRAY)));
-                    return;
-                }
-            }
-        } else if (messageType == MessageType.SYSTEM) {
+        if (messageType == MessageType.SYSTEM) {
             if (unusedPoints != FilterType.KEEP) {
 
                 Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
@@ -519,6 +502,27 @@ public class ChatRedirectFeature extends UserFeature {
             String amount = matcher.group(1);
 
             return ChatFormatting.DARK_RED + "[+" + amount + " ❤]";
+        }
+    }
+
+    private class SpeedBoostRedirector extends Redirector {
+        private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
+
+        @Override
+        Pattern getNormalPattern() {
+            return SPEED_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return speed;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            return ComponentUtils.getCoded(new TextComponent("+3 minutes")
+                    .withStyle(ChatFormatting.AQUA)
+                    .append(new TextComponent(" speed boost").withStyle(ChatFormatting.GRAY)));
         }
     }
 }
