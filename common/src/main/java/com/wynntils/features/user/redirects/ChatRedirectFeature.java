@@ -509,12 +509,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ToolDurabilityRedirector extends Redirector {
-        private static final Pattern UNCOLORED_SYSTEM__PATTERN = Pattern.compile(
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
                 "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM__PATTERN;
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
