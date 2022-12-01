@@ -243,7 +243,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class CraftedDurabilityRedirector extends Redirector {
-        private static final Pattern NO_CRAFTED_DURABILITY_PATTERN = Pattern.compile(
+        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
                 "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
@@ -253,7 +253,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return NO_CRAFTED_DURABILITY_PATTERN;
+            return UNCOLORED_SYSTEM_PATTERN;
         }
 
         @Override
@@ -263,19 +263,19 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class FriendJoinRedirector extends Redirector {
-        private static final Pattern FRIEND_JOIN_PATTERN = Pattern.compile(
+        private static final Pattern NORMAL_PATTERN = Pattern.compile(
                 "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
-        private static final Pattern BACKGROUND_FRIEND_JOIN_PATTERN = Pattern.compile(
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
                 "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
 
         @Override
         Pattern getNormalPattern() {
-            return FRIEND_JOIN_PATTERN;
+            return NORMAL_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_FRIEND_JOIN_PATTERN;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -297,18 +297,18 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class FriendLeaveRedirector extends Redirector {
-        private static final Pattern FRIEND_LEAVE_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
-        private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN =
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
+        private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("§r§7(?<name>.+) left the game.");
 
         @Override
         Pattern getSystemPattern() {
-            return FRIEND_LEAVE_PATTERN;
+            return SYSTEM_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_FRIEND_LEAVE_PATTERN;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -325,11 +325,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealRedirector extends Redirector {
-        private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
         Pattern getNormalPattern() {
-            return HEAL_PATTERN;
+            return NORMAL_PATTERN;
         }
 
         @Override
@@ -346,17 +346,17 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealedByOtherRedirector extends Redirector {
-        private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
-        private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
         @Override
         Pattern getNormalPattern() {
-            return HEALED_PATTERN;
+            return NORMAL_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_HEALED_PATTERN;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -373,12 +373,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HorseDespawnedRedirector extends Redirector {
-        private static final Pattern HORSE_DESPAWNED_PATTERN =
+        private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
 
         @Override
         Pattern getSystemPattern() {
-            return HORSE_DESPAWNED_PATTERN;
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -393,7 +393,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HorseSpawnFailRedirector extends Redirector {
-        private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4There is no room for a horse.");
 
         @Override
         RedirectAction getAction() {
@@ -402,7 +402,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         Pattern getSystemPattern() {
-            return NO_ROOM_PATTERN;
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -412,19 +412,19 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class LoginRedirector extends Redirector {
-        private static final Pattern LOGIN_ANNOUNCEMENT =
+        private static final Pattern NORMAL_PATTERN =
                 Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
-        private static final Pattern BACKGROUND_LOGIN_ANNOUNCEMENT =
+        private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
         @Override
         Pattern getNormalPattern() {
-            return LOGIN_ANNOUNCEMENT;
+            return NORMAL_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_LOGIN_ANNOUNCEMENT;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -442,12 +442,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ManaDeficitRedirector extends Redirector {
-        private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
+        private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
         @Override
         Pattern getSystemPattern() {
-            return NO_MANA_LEFT_TO_CAST_PATTERN;
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -462,11 +462,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class NoTotemRedirector extends Redirector {
-        private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4You have no active totems near you$");
 
         @Override
         Pattern getSystemPattern() {
-            return NO_ACTIVE_TOTEMS_PATTERN;
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -481,18 +481,18 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SoulPointDiscarder extends Redirector {
-        private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
-        private static final Pattern BACKGROUND_SOUL_POINT_1 =
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
+        private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
 
         @Override
         Pattern getSystemPattern() {
-            return SOUL_POINT_1;
+            return SYSTEM_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_SOUL_POINT_1;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -509,17 +509,17 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SoulPointRedirector extends Redirector {
-        private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
-        private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
 
         @Override
         Pattern getSystemPattern() {
-            return SOUL_POINT_2;
+            return SYSTEM_PATTERN;
         }
 
         @Override
         Pattern getBackgroundPattern() {
-            return BACKGROUND_SOUL_POINT_2;
+            return BACKGROUND_PATTERN;
         }
 
         @Override
@@ -535,11 +535,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SpeedBoostRedirector extends Redirector {
-        private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
 
         @Override
         Pattern getNormalPattern() {
-            return SPEED_PATTERN;
+            return NORMAL_PATTERN;
         }
 
         @Override
@@ -554,7 +554,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ToolDurabilityRedirector extends Redirector {
-        private static final Pattern NO_TOOL_DURABILITY_PATTERN = Pattern.compile(
+        private static final Pattern UNCOLORED_SYSTEM__PATTERN = Pattern.compile(
                 "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
@@ -564,7 +564,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         Pattern getUncoloredSystemPattern() {
-            return NO_TOOL_DURABILITY_PATTERN;
+            return UNCOLORED_SYSTEM__PATTERN;
         }
 
         @Override
