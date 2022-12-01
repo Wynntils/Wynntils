@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -40,13 +41,7 @@ public class ChatRedirectFeature extends UserFeature {
     // if they fix it.
     private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
 
-    private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
-
-    private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
-
     private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
-
-    private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
     private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
     private static final Pattern HORSE_DESPAWNED_PATTERN =
@@ -95,7 +90,8 @@ public class ChatRedirectFeature extends UserFeature {
 
     private final List<Redirector> redirectors =
             List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
-                    new SoulPointRedirector(), new SoulPointDiscarder());
+                    new SoulPointRedirector(), new SoulPointDiscarder(), new HealRedirector(),
+                    new HealedByOtherRedirector());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -126,34 +122,6 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         if (messageType == MessageType.NORMAL) {
-            if (heal != FilterType.KEEP) {
-                Matcher matcher = HEAL_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (heal == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String amount = matcher.group(1);
-
-                    sendHealMessage(amount);
-                    return;
-                }
-
-                matcher = HEALED_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (heal == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String amount = matcher.group(1);
-
-                    sendHealMessage(amount);
-                    return;
-                }
-            }
-
             if (speed != FilterType.KEEP) {
                 Matcher matcher = SPEED_PATTERN.matcher(uncoloredMsg);
                 if (matcher.matches()) {
@@ -326,27 +294,11 @@ public class ChatRedirectFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (messageType == MessageType.BACKGROUND) {
-            if (heal != FilterType.KEEP) {
-                Matcher matcher = BACKGROUND_HEALED_PATTERN.matcher(msg);
-                if (matcher.matches()) {
-                    e.setCanceled(true);
-                    if (heal == FilterType.HIDE) {
-                        return;
-                    }
-
-                    String amount = matcher.group(1);
-
-                    sendHealMessage(amount);
-                    return;
-                }
-            }
         }
     }
 
-    private void sendHealMessage(String amount) {
-        NotificationManager.queueMessage(
-                new TextComponent("[+%s ❤]".formatted(amount)).withStyle(ChatFormatting.DARK_RED));
+    private MutableComponent getHealMessage(String amount) {
+        return new TextComponent("[+%s ❤]".formatted(amount)).withStyle(ChatFormatting.DARK_RED);
     }
 
     public enum FilterType {
@@ -524,6 +476,54 @@ public class ChatRedirectFeature extends UserFeature {
             // Soul point messages comes in two lines. We just throw away the chatty one
             // if we have hide or redirect as action.
             return null;
+        }
+    }
+
+    private class HealRedirector extends Redirector {
+        private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+
+        @Override
+        Pattern getNormalPattern() {
+            return HEAL_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return heal;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            String amount = matcher.group(1);
+
+            return ComponentUtils.getCoded(getHealMessage(amount));
+        }
+    }
+
+    private class HealedByOtherRedirector extends Redirector {
+        private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
+
+        @Override
+        Pattern getNormalPattern() {
+            return HEALED_PATTERN;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_HEALED_PATTERN;
+        }
+
+        @Override
+        FilterType getAction() {
+            return heal;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            String amount = matcher.group(1);
+
+            return ComponentUtils.getCoded(getHealMessage(amount));
         }
     }
 }
