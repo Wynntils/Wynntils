@@ -22,9 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
-    private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
-    private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
-
     private static final Pattern UNUSED_POINTS_1 =
             Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
     private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
@@ -48,10 +45,6 @@ public class ChatRedirectFeature extends UserFeature {
     private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
 
     private static final Pattern SPEED_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
-
-    private static final Pattern BACKGROUND_SOUL_POINT_1 =
-            Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
-    private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
 
     private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
@@ -101,7 +94,8 @@ public class ChatRedirectFeature extends UserFeature {
     private FilterType shaman = FilterType.REDIRECT;
 
     private final List<Redirector> redirectors =
-            List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector());
+            List.of(new LoginRedirector(), new FriendJoinRedirector(), new FriendLeaveRedirector(),
+                    new SoulPointRedirector(), new SoulPointDiscarder());
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -125,6 +119,8 @@ public class ChatRedirectFeature extends UserFeature {
                 if (redirector.getAction() == FilterType.HIDE) continue;
 
                 String notification = redirector.getNotification(matcher);
+                if (notification == null) continue;
+
                 NotificationManager.queueMessage(notification);
             }
         }
@@ -173,25 +169,6 @@ public class ChatRedirectFeature extends UserFeature {
                 }
             }
         } else if (messageType == MessageType.SYSTEM) {
-            if (soulPoint != FilterType.KEEP) {
-                if (SOUL_POINT_1.matcher(msg).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-
-                Matcher m = SOUL_POINT_2.matcher(msg);
-                if (m.find()) {
-                    e.setCanceled(true);
-                    if (soulPoint == FilterType.HIDE) {
-                        return;
-                    }
-
-                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
-                    return;
-                }
-            }
-
             if (unusedPoints != FilterType.KEEP) {
 
                 Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
@@ -350,25 +327,6 @@ public class ChatRedirectFeature extends UserFeature {
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
-            if (soulPoint != FilterType.KEEP) {
-                if (BACKGROUND_SOUL_POINT_1.matcher(msg).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-
-                Matcher m = BACKGROUND_SOUL_POINT_2.matcher(msg);
-                if (m.find()) {
-                    e.setCanceled(true);
-                    if (soulPoint == FilterType.HIDE) {
-                        return;
-                    }
-
-                    // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-                    NotificationManager.queueMessage(ChatFormatting.LIGHT_PURPLE + m.group(1));
-                    return;
-                }
-            }
-
             if (heal != FilterType.KEEP) {
                 Matcher matcher = BACKGROUND_HEALED_PATTERN.matcher(msg);
                 if (matcher.matches()) {
@@ -512,6 +470,60 @@ public class ChatRedirectFeature extends UserFeature {
             String playerName = matcher.group("name");
 
             return ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName;
+        }
+    }
+
+    private class SoulPointRedirector extends Redirector {
+        private static final Pattern BACKGROUND_SOUL_POINT_2 = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern SOUL_POINT_2 = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SOUL_POINT_2;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_SOUL_POINT_2;
+        }
+
+        @Override
+        FilterType getAction() {
+            return soulPoint;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
+            return ChatFormatting.LIGHT_PURPLE + matcher.group(1);
+        }
+    }
+
+    private class SoulPointDiscarder extends Redirector {
+        private static final Pattern SOUL_POINT_1 = Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
+        private static final Pattern BACKGROUND_SOUL_POINT_1 =
+                Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
+
+        @Override
+        Pattern getSystemPattern() {
+            return SOUL_POINT_1;
+        }
+
+        @Override
+        Pattern getBackgroundPattern() {
+            return BACKGROUND_SOUL_POINT_1;
+        }
+
+        @Override
+        FilterType getAction() {
+            return soulPoint;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // Soul point messages comes in two lines. We just throw away the chatty one
+            // if we have hide or redirect as action.
+            return null;
         }
     }
 }
