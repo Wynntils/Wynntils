@@ -62,11 +62,11 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern NO_ROOM_PATTERN = Pattern.compile("§4There is no room for a horse.");
     private static final Pattern HORSE_DESPAWNED_PATTERN =
             Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
-    
+
     private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
             Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
     private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
-            Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");  
+            Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
 
     private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
 
@@ -97,6 +97,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_FRIEND_LEAVE_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
     private static final Pattern BACKGROUND_HEALED_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
+
     @Config
     private boolean hideWelcome = true;
 
