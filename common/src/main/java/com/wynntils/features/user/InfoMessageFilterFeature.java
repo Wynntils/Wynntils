@@ -59,6 +59,10 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern NO_MANA_LEFT_TO_CAST_PATTERN =
             Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
+    // Wynncraft forgot the period at the end of this message, so be on the lookout for a potential break in the future
+    // if they fix it.
+    private static final Pattern NO_ACTIVE_TOTEMS_PATTERN = Pattern.compile("§4You have no active totems near you$");
+
     private static final Pattern HEALED_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
 
     private static final Pattern HEAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
@@ -131,6 +135,9 @@ public class InfoMessageFilterFeature extends UserFeature {
 
     @Config
     private FilterType horse = FilterType.REDIRECT;
+
+    @Config
+    private FilterType shaman = FilterType.REDIRECT;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -324,6 +331,20 @@ public class InfoMessageFilterFeature extends UserFeature {
                     String playerName = matcher.group("name");
 
                     sendFriendLeaveMessage(playerName);
+                    return;
+                }
+            }
+
+            if (shaman != FilterType.KEEP) {
+                Matcher matcher = NO_ACTIVE_TOTEMS_PATTERN.matcher(msg);
+                if (matcher.matches()) {
+                    e.setCanceled(true);
+                    if (shaman == FilterType.HIDE) {
+                        return;
+                    }
+
+                    NotificationManager.queueMessage(
+                            new TextComponent("No totems nearby!").withStyle(ChatFormatting.DARK_RED));
                     return;
                 }
             }
