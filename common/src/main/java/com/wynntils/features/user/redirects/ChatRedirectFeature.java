@@ -23,40 +23,40 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
     @Config
-    private RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
+    public RedirectAction craftedDurability = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction soulPoint = RedirectAction.REDIRECT;
+    public RedirectAction friendJoin = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction unusedPoints = RedirectAction.REDIRECT;
+    public RedirectAction heal = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction friendJoin = RedirectAction.REDIRECT;
+    public RedirectAction horse = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction toolDurability = RedirectAction.REDIRECT;
+    public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction craftedDurability = RedirectAction.REDIRECT;
+    public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction notEnoughMana = RedirectAction.REDIRECT;
+    public RedirectAction potion = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction heal = RedirectAction.REDIRECT;
+    public RedirectAction shaman = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction speed = RedirectAction.REDIRECT;
+    public RedirectAction soulPoint = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction horse = RedirectAction.REDIRECT;
+    public RedirectAction speed = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction potion = RedirectAction.REDIRECT;
+    public RedirectAction toolDurability = RedirectAction.REDIRECT;
 
     @Config
-    private RedirectAction shaman = RedirectAction.REDIRECT;
+    public RedirectAction unusedPoints = RedirectAction.REDIRECT;
 
     private final List<Redirector> redirectors = new ArrayList<>();
 
