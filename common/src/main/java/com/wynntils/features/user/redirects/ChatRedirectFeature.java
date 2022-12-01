@@ -18,18 +18,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
-    private static final Pattern UNUSED_POINTS_1 =
-            Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
-    private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
-            "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
-    private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
-            "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
-
     private static final Pattern MAX_POTIONS_ALLOWED_PATTERN =
             Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
     private static final Pattern LESS_POWERFUL_POTION_REMOVED_PATTERN =
@@ -88,6 +82,9 @@ public class ChatRedirectFeature extends UserFeature {
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
         register(new ToolDurabilityRedirector());
+        register(new UnusedAbilityPointsRedirector());
+        register(new UnusedSkillAndAbilityPointsRedirector());
+        register(new UnusedSkillPointsRedirector());
     }
 
     private void register(Redirector redirector) {
@@ -120,10 +117,9 @@ public class ChatRedirectFeature extends UserFeature {
                 e.setCanceled(true);
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
-                String notification = redirector.getNotification(matcher);
-                if (notification == null) continue;
-
-                NotificationManager.queueMessage(notification);
+                for (String notification : redirector.getNotifications(matcher)) {
+                    NotificationManager.queueMessage(notification);
+                }
             }
         }
 
@@ -153,57 +149,6 @@ public class ChatRedirectFeature extends UserFeature {
 
                 return;
             }
-        }
-
-        if (messageType == MessageType.SYSTEM && unusedPoints != RedirectAction.KEEP) {
-            handleUnusedPoints(e, ComponentUtils.stripFormatting(msg));
-        }
-    }
-
-    private void handleUnusedPoints(ChatMessageReceivedEvent e, String uncoloredMsg) {
-        // This is a bit special and does not readily fit the Redirector model
-        Matcher matcher = UNUSED_POINTS_1.matcher(uncoloredMsg);
-
-        int unusedSkillPoints = 0;
-        int unusedAbilityPoints = 0;
-        if (matcher.matches()) {
-            unusedSkillPoints = Integer.parseInt(matcher.group(1));
-        }
-
-        matcher = UNUSED_POINTS_2.matcher(uncoloredMsg);
-        if (matcher.matches()) {
-            unusedAbilityPoints = Integer.parseInt(matcher.group(2));
-        }
-
-        matcher = UNUSED_POINTS_3.matcher(uncoloredMsg);
-        if (matcher.matches()) {
-            unusedSkillPoints = Integer.parseInt(matcher.group(1));
-            unusedAbilityPoints = Integer.parseInt(matcher.group(2));
-        }
-
-        if (unusedPoints == RedirectAction.REDIRECT) {
-            if (unusedSkillPoints != 0) {
-                NotificationManager.queueMessage(new TextComponent("You have ")
-                        .withStyle(ChatFormatting.DARK_RED)
-                        .append(new TextComponent(String.valueOf(unusedSkillPoints))
-                                .withStyle(ChatFormatting.BOLD)
-                                .withStyle(ChatFormatting.DARK_RED))
-                        .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED)));
-            }
-
-            if (unusedAbilityPoints != 0) {
-                NotificationManager.queueMessage(new TextComponent("You have ")
-                        .withStyle(ChatFormatting.DARK_AQUA)
-                        .append(new TextComponent(String.valueOf(unusedAbilityPoints))
-                                .withStyle(ChatFormatting.BOLD)
-                                .withStyle(ChatFormatting.DARK_AQUA))
-                        .append(new TextComponent(" unused ability points")
-                                .withStyle(ChatFormatting.DARK_AQUA)));
-            }
-        }
-
-        if (unusedPoints != RedirectAction.KEEP && (unusedAbilityPoints != 0 || unusedSkillPoints != 0)) {
-            e.setCanceled(true);
         }
     }
 
@@ -238,6 +183,10 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         abstract RedirectAction getAction();
+
+        List<String> getNotifications(Matcher matcher) {
+            return List.of(getNotification(matcher));
+        }
 
         abstract String getNotification(Matcher matcher);
     }
@@ -501,9 +450,15 @@ public class ChatRedirectFeature extends UserFeature {
         }
 
         @Override
-        String getNotification(Matcher matcher) {
+        List<String> getNotifications(Matcher matcher) {
             // Soul point messages comes in two lines. We just throw away the chatty one
             // if we have hide or redirect as action.
+            return List.of();
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // We still need to implement this
             return null;
         }
     }
@@ -570,6 +525,102 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "Your tool has 0 durability!";
+        }
+    }
+
+    private class UnusedAbilityPointsRedirector extends Redirector {
+        private static final Pattern UNUSED_POINTS_2 = Pattern.compile(
+                "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return UNUSED_POINTS_2;
+        }
+
+        @Override
+        RedirectAction getAction() {
+            return unusedPoints;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            int unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+            return getUnusedAbilityPointsMessage(unusedAbilityPoints);
+        }
+
+        public static String getUnusedAbilityPointsMessage(int unusedAbilityPoints) {
+            MutableComponent t = new TextComponent("You have ")
+                    .withStyle(ChatFormatting.DARK_AQUA)
+                    .append(new TextComponent(String.valueOf(unusedAbilityPoints))
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.DARK_AQUA))
+                    .append(new TextComponent(" unused ability points")
+                            .withStyle(ChatFormatting.DARK_AQUA));
+
+            return ComponentUtils.getCoded(t);
+        }
+    }
+
+    private class UnusedSkillAndAbilityPointsRedirector extends Redirector {
+        private static final Pattern UNUSED_POINTS_3 = Pattern.compile(
+                "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return UNUSED_POINTS_3;
+        }
+
+        @Override
+        RedirectAction getAction() {
+            return unusedPoints;
+        }
+
+        @Override
+        List<String> getNotifications(Matcher matcher) {
+            int unusedSkillPoints = Integer.parseInt(matcher.group(1));
+            int unusedAbilityPoints = Integer.parseInt(matcher.group(2));
+
+            return List.of(UnusedSkillPointsRedirector.getUnusedSkillPointsMessage(unusedSkillPoints),
+                    UnusedAbilityPointsRedirector.getUnusedAbilityPointsMessage(unusedAbilityPoints));
+
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            // We still need to implement this
+            return null;
+        }
+    }
+
+    private class UnusedSkillPointsRedirector extends Redirector {
+        private static final Pattern UNUSED_POINTS_1 =
+                Pattern.compile("You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
+
+        @Override
+        Pattern getUncoloredSystemPattern() {
+            return UNUSED_POINTS_1;
+        }
+
+        @Override
+        RedirectAction getAction() {
+            return unusedPoints;
+        }
+
+        @Override
+        String getNotification(Matcher matcher) {
+            int unusedSkillPoints = Integer.parseInt(matcher.group(1));
+            return getUnusedSkillPointsMessage(unusedSkillPoints);
+        }
+
+        public static String getUnusedSkillPointsMessage(int unusedSkillPoints) {
+            MutableComponent t = new TextComponent("You have ")
+                        .withStyle(ChatFormatting.DARK_RED)
+                        .append(new TextComponent(String.valueOf(unusedSkillPoints))
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.DARK_RED))
+                        .append(new TextComponent(" unused skill points").withStyle(ChatFormatting.DARK_RED));
+
+            return ComponentUtils.getCoded(t);
         }
     }
 }
