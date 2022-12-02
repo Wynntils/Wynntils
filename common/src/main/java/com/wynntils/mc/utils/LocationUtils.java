@@ -14,7 +14,7 @@ public class LocationUtils {
             Pattern.compile("(?<x>[-+]?\\d+)([^0-9+-]{1,5}(?<y>[-+]?\\d+))?[^0-9+-]{1,5}(?<z>[-+]?\\d+)");
 
     private static final Pattern STRICT_COORDINATE_PATTERN =
-            Pattern.compile("([-+]?\\d+)([,\\s]{1,5}([-+]?\\d+))?[,\\s]{1,5}([-+]?\\d+)");
+            Pattern.compile("([-+]?\\d{1,4})([,\\s]{1,2}([-+]?\\d{1,4}))?[,\\s]{1,2}([-+]?\\d{1,4})");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
