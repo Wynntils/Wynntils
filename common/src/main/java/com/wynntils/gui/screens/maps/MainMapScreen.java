@@ -234,7 +234,7 @@ public class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
-                    if (hovered instanceof IconPoi) {
+                    if (hovered instanceof IconPoi iconPoi) {
                         CompassModel.setCompassLocation(
                                 new Location(hovered.getLocation()), ((IconPoi) hovered).getIcon());
                     } else {
