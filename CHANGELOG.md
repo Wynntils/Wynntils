@@ -1,9 +1,21 @@
+## [0.0.1-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.108...v0.0.1-alpha.109) (2022-12-02)
+
+
+### New Features
+
+* Add off-screen indicator to WorldWaypointDistanceFeature ([#760](https://github.com/Wynntils/Artemis/issues/760)) ([3d50829](https://github.com/Wynntils/Artemis/commit/3d50829e662ca2ce387a6e72a14035daec02a85c))
+
 ## [0.0.1-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.107...v0.0.1-alpha.108) (2022-12-01)
 
 
 ### Bug Fixes
 
 * Fix `allowClickOnEmeraldPouchInBlockingMode` config logic ([#755](https://github.com/Wynntils/Artemis/issues/755)) ([230eb7c](https://github.com/Wynntils/Artemis/commit/230eb7c7be7a67e1d91e62aae96cc1f1cb99cab0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.108 [skip ci] ([4f2e654](https://github.com/Wynntils/Artemis/commit/4f2e654f1e0fd39ed2c2202a2112911802107566))
 
 ## [0.0.1-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.106...v0.0.1-alpha.107) (2022-12-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.105 [skip ci] ([1e20d93](https://github.com/Wynntils/Artemis/commit/1e20d93b372e98d3e6455c1d9485fa6ec2841b11))
-
-## [0.0.1-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.103...v0.0.1-alpha.104) (2022-11-29)
-
-
-### Bug Fixes
-
-* Support + in chat coordinate parsing ([3024576](https://github.com/Wynntils/Artemis/commit/30245767b54da7472611cd1cdb54c673399bd228))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.104 [skip ci] ([b9f3906](https://github.com/Wynntils/Artemis/commit/b9f3906adfd52e15c0d9dd9c59ff86273e8d6b2a))
 
