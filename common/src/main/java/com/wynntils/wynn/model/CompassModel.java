@@ -66,7 +66,7 @@ public final class CompassModel extends Model {
     public static void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
         setDynamicCompassLocation(compassSupplier, Texture.WAYPOINT);
     }
-    
+
     public static void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
         if (compassSupplier == null) {
             return;

@@ -113,7 +113,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
         Texture icon = CompassModel.getTargetIcon();
-        
+
         // The set waypoint is visible on the screen, so we render the icon + distance
         if (intersectPoint == null) {
             displayPositionX = (float) screenCoord.x;
@@ -245,7 +245,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         } else {
             centerRelativePosition = new Vec3(minX, minX * m, 0);
         }
-        
+
         if (centerRelativePosition.y > maxY) {
             centerRelativePosition = new Vec3(maxY / m, maxY, 0);
         } else if (centerRelativePosition.y < minY) {
