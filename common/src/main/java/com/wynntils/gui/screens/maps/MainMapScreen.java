@@ -21,6 +21,7 @@ import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
@@ -233,7 +234,12 @@ public class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
-                    CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    if (hovered instanceof IconPoi) {
+                        CompassModel.setCompassLocation(
+                                new Location(hovered.getLocation()), ((IconPoi) hovered).getIcon());
+                    } else {
+                        CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    }
                 } else {
                     final Poi finalHovered = hovered;
                     CompassModel.setDynamicCompassLocation(

@@ -200,7 +200,7 @@ public class CompassCommand extends CommandBase {
             return 0;
         }
         Poi closestService = closestServiceOptional.get();
-        CompassModel.setCompassLocation(closestService.getLocation().asLocation());
+        CompassModel.setCompassLocation(closestService.getLocation().asLocation(), closestServiceOptional.get().getIcon());
 
         MutableComponent response =
                 new TextComponent("Compass set to " + selectedKind.getName() + " at ").withStyle(ChatFormatting.AQUA);
