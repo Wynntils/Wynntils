@@ -1,9 +1,21 @@
+## [0.0.1-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.110...v0.0.1-alpha.111) (2022-12-02)
+
+
+### Bug Fixes
+
+* Make coordinate parsing stricter ([#761](https://github.com/Wynntils/Artemis/issues/761)) ([b5ece79](https://github.com/Wynntils/Artemis/commit/b5ece79962330699c8c22007ec8b640b230a86bc))
+
 ## [0.0.1-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.109...v0.0.1-alpha.110) (2022-12-02)
 
 
 ### New Features
 
 * Add I18n for UpdateCommand and UpdatesFeature ([#762](https://github.com/Wynntils/Artemis/issues/762)) ([3fb4c82](https://github.com/Wynntils/Artemis/commit/3fb4c828529f2ee63324afb6df175bd97105331d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.110 [skip ci] ([5f610a1](https://github.com/Wynntils/Artemis/commit/5f610a121763f1e5c706a5096257d8289d48617b))
 
 ## [0.0.1-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.108...v0.0.1-alpha.109) (2022-12-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.107 [skip ci] ([f53cedc](https://github.com/Wynntils/Artemis/commit/f53cedc65a9f0b98a8fcfd3e79daaa5a485b884b))
-
-## [0.0.1-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.105...v0.0.1-alpha.106) (2022-12-01)
-
-
-### New Features
-
-* Redirects Shaman "No Totems Nearby" message to OverlayManager ([#758](https://github.com/Wynntils/Artemis/issues/758)) ([ab16293](https://github.com/Wynntils/Artemis/commit/ab16293c97bbb229a9cd75fab18bd25ba4eb7e74))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.106 [skip ci] ([78f6234](https://github.com/Wynntils/Artemis/commit/78f62344e500717cec942c85e55714670a97e9ad))
 
