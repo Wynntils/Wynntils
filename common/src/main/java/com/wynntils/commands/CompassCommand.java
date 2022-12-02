@@ -101,11 +101,7 @@ public class CompassCommand extends CommandBase {
 
         String target = StringArgumentType.getString(context, "target");
 
-        Location compass = compassLocation.get();
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareCompass(target, compassLocation.get());
 
         return 1;
     }
@@ -113,23 +109,9 @@ public class CompassCommand extends CommandBase {
     private int shareLocation(CommandContext<CommandSourceStack> context) {
         String target = StringArgumentType.getString(context, "target");
 
-        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
-                + (int) McUtils.player().position().y + ", "
-                + (int) McUtils.player().position().z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareLocation(target);
 
         return 1;
-    }
-
-    private static void sendShareMessage(String target, String locationString) {
-        if (target.equals("guild")) {
-            McUtils.player().chat("/g " + locationString);
-        } else if (target.equals("party")) {
-            McUtils.player().chat("/p " + locationString);
-        } else {
-            McUtils.player().chat("/msg " + target + " " + locationString);
-        }
     }
 
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
