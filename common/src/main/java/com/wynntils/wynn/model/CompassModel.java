@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.Model;
+import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
@@ -19,6 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class CompassModel extends Model {
     private static Supplier<Location> locationSupplier = null;
     private static Location compassLocation = null; // this field acts as a cache for the supplier
+    private static Texture targetIcon = null;
 
     public static void init() {}
 
@@ -57,18 +59,32 @@ public final class CompassModel extends Model {
         return Optional.empty();
     }
 
+    public static Texture getTargetIcon() {
+        return targetIcon;
+    }
+
     public static void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
+        setDynamicCompassLocation(compassSupplier, Texture.WAYPOINT);
+    }
+
+    public static void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
         if (compassSupplier == null) {
             return;
         }
 
         locationSupplier = compassSupplier;
         compassLocation = compassSupplier.get();
+        targetIcon = icon;
     }
 
     public static void setCompassLocation(Location location) {
+        setCompassLocation(location, Texture.WAYPOINT);
+    }
+
+    public static void setCompassLocation(Location location, Texture icon) {
         locationSupplier = () -> location;
         compassLocation = location;
+        targetIcon = icon;
     }
 
     public static void reset() {
