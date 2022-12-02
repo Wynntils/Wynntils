@@ -64,13 +64,17 @@ public final class CompassModel extends Model {
     }
 
     public static void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
+        setDynamicCompassLocation(compassSupplier, Texture.WAYPOINT);
+    }
+    
+    public static void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
         if (compassSupplier == null) {
             return;
         }
 
         locationSupplier = compassSupplier;
         compassLocation = compassSupplier.get();
-        targetIcon = Texture.WAYPOINT;
+        targetIcon = icon;
     }
 
     public static void setCompassLocation(Location location) {

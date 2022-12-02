@@ -236,7 +236,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 if (hovered.hasStaticLocation()) {
                     if (hovered instanceof IconPoi iconPoi) {
                         CompassModel.setCompassLocation(
-                                new Location(hovered.getLocation()), ((IconPoi) hovered).getIcon());
+                                new Location(hovered.getLocation()), iconPoi.getIcon());
                     } else {
                         CompassModel.setCompassLocation(new Location(hovered.getLocation()));
                     }

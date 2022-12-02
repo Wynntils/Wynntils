@@ -113,7 +113,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
         Texture icon = CompassModel.getTargetIcon();
-
+        
+        // The set waypoint is visible on the screen, so we render the icon + distance
         if (intersectPoint == null) {
             displayPositionX = (float) screenCoord.x;
             displayPositionY = (float) screenCoord.y;
@@ -206,7 +207,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                 (float) ndc.z);
     }
 
-    // tldr: draw a line from screen center to the target's screenspace coordinate
+    // draw a line from screen center to the target's screenspace coordinate
     // and find the intersect point on one of the screen's bounding
     private Vec2 getBoundingIntersectPoint(Vec3 position, Window window) {
         if (isInBound(position, window)) return null;
@@ -244,6 +245,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         } else {
             centerRelativePosition = new Vec3(minX, minX * m, 0);
         }
+        
         if (centerRelativePosition.y > maxY) {
             centerRelativePosition = new Vec3(maxY / m, maxY, 0);
         } else if (centerRelativePosition.y < minY) {
@@ -256,9 +258,9 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     }
 
     private boolean isInBound(Vec3 position, Window window) {
-        return 0 < position.x
+        return position.x > 0
                 && position.x < window.getGuiScaledWidth()
-                && 0 < position.y
+                && position.y > 0
                 && position.y < window.getGuiScaledHeight()
                 && position.z < 1;
     }
