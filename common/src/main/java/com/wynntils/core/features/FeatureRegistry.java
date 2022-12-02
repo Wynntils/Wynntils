@@ -133,6 +133,7 @@ public final class FeatureRegistry {
         registerFeature(new BombBellTrackingFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
         registerFeature(new CommandAliasesFeature());
@@ -184,7 +185,6 @@ public final class FeatureRegistry {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
-        registerFeature(new ChatRedirectFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
