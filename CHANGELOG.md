@@ -1,9 +1,21 @@
+## [0.0.1-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.109...v0.0.1-alpha.110) (2022-12-02)
+
+
+### New Features
+
+* Add I18n for UpdateCommand and UpdatesFeature ([#762](https://github.com/Wynntils/Artemis/issues/762)) ([3fb4c82](https://github.com/Wynntils/Artemis/commit/3fb4c828529f2ee63324afb6df175bd97105331d))
+
 ## [0.0.1-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.108...v0.0.1-alpha.109) (2022-12-02)
 
 
 ### New Features
 
 * Add off-screen indicator to WorldWaypointDistanceFeature ([#760](https://github.com/Wynntils/Artemis/issues/760)) ([3d50829](https://github.com/Wynntils/Artemis/commit/3d50829e662ca2ce387a6e72a14035daec02a85c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.109 [skip ci] ([b0e911d](https://github.com/Wynntils/Artemis/commit/b0e911dc94e6af0f6c20dcdc32bfcd10873428ca))
 
 ## [0.0.1-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.107...v0.0.1-alpha.108) (2022-12-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.106 [skip ci] ([78f6234](https://github.com/Wynntils/Artemis/commit/78f62344e500717cec942c85e55714670a97e9ad))
-
-## [0.0.1-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.104...v0.0.1-alpha.105) (2022-11-30)
-
-
-### New Features
-
-* Redirects Territory (Town) Entering/Leaving Messages to NotificationManager Overlay ([#753](https://github.com/Wynntils/Artemis/issues/753)) ([03ebfe0](https://github.com/Wynntils/Artemis/commit/03ebfe029bdf0911ef13037dcd8e0d739ff2b3a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.105 [skip ci] ([1e20d93](https://github.com/Wynntils/Artemis/commit/1e20d93b372e98d3e6455c1d9485fa6ec2841b11))
 
