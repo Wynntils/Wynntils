@@ -105,8 +105,11 @@ public class ServerCommand extends CommandBase {
         } catch (IllegalArgumentException ignored) {
         }
 
+        Map<String, ServerProfile> availableServers = new HashMap<>();
+        WebManager.getServerList(availableServers::putAll);
+
         for (Map.Entry<String, ServerProfile> entry :
-                ServerListModel.getAvailableServers().entrySet()) {
+                availableServers.entrySet()) {
             int time = soulPointTime - ((entry.getValue().getUptimeMinutes() + offset) % soulPointTime);
             if (time > soulPointTime) {
                 time = time - soulPointTime;
