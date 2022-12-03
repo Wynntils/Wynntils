@@ -10,6 +10,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.ContainerUtils;
+import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -37,12 +38,18 @@ public class PlayerInventoryModel extends Model {
 
     @SubscribeEvent
     public static void onContainerSetEvent(ContainerSetContentEvent e) {
-        updateCache();
+        // Only update if the container is the player inventory
+        if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
+            updateCache();
+        }
     }
 
     @SubscribeEvent
     public static void onSlotSetEvent(SetSlotEvent e) {
-        updateCache();
+        // Only update if the container is the player inventory
+        if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
+            updateCache();
+        }
     }
 
     private static void updateCache() {
