@@ -7,16 +7,16 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.GuildRank;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class GuildStarsToRankFeature extends UserFeature {
 
-    private static final Pattern guildMessage = Pattern.compile("(?:§r)?§3\\[(?:§b)?(★{0,5})?(?:§3)?(.*)§3\\](?:§b)? .*");
+    private static final Pattern guildMessage =
+            Pattern.compile("(?:§r)?§3\\[(?:§b)?(★{0,5})?(?:§3)?(.*)§3\\](?:§b)? .*");
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
@@ -29,5 +29,4 @@ public class GuildStarsToRankFeature extends UserFeature {
         event.getMessage().getSiblings().forEach(newMessage::append);
         event.setMessage(newMessage);
     }
-
 }
