@@ -1,9 +1,21 @@
+## [0.0.1-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.115...v0.0.1-alpha.116) (2022-12-03)
+
+
+### New Features
+
+* add le, eb, em, money, inv_free, PlayerInv model, and getOpenSlotsInContainer ([#741](https://github.com/Wynntils/Artemis/issues/741)) ([f13802b](https://github.com/Wynntils/Artemis/commit/f13802b5fc56bab82ef2620a6344708d2b6a4940))
+
 ## [0.0.1-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.114...v0.0.1-alpha.115) (2022-12-03)
 
 
 ### New Features
 
 * Add share location button to main map ([#763](https://github.com/Wynntils/Artemis/issues/763)) ([9807559](https://github.com/Wynntils/Artemis/commit/9807559e8d79296eceaa505ee802b038f0b5c6ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.115 [skip ci] ([c7dde16](https://github.com/Wynntils/Artemis/commit/c7dde16d468bec36c513947101ccde73865edbf3))
 
 ## [0.0.1-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.113...v0.0.1-alpha.114) (2022-12-03)
 
@@ -172,16 +184,4 @@
 * restore main version ([911c92e](https://github.com/Wynntils/Artemis/commit/911c92e4257d1647e70bda79223cb540d1155a86))
 * test main -> alpha integration ([b947105](https://github.com/Wynntils/Artemis/commit/b947105015c63723ee7fe88239a8fc72bee472a3))
 * Update gradle [skip ci] ([#727](https://github.com/Wynntils/Artemis/issues/727)) ([3425ece](https://github.com/Wynntils/Artemis/commit/3425ececbf59a080d2f361df99c7afebebb14ba7))
-
-## [0.0.1-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.110...v0.0.1-alpha.111) (2022-12-02)
-
-
-### Bug Fixes
-
-* Make coordinate parsing stricter ([#761](https://github.com/Wynntils/Artemis/issues/761)) ([b5ece79](https://github.com/Wynntils/Artemis/commit/b5ece79962330699c8c22007ec8b640b230a86bc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.111 [skip ci] ([e124426](https://github.com/Wynntils/Artemis/commit/e124426fa61fe757481d57666176baa6eaf3851a))
 
