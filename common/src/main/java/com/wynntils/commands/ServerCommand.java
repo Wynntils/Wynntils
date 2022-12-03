@@ -11,7 +11,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.webapi.ServerListModel;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.utils.StringUtils;
@@ -108,8 +107,7 @@ public class ServerCommand extends CommandBase {
         Map<String, ServerProfile> availableServers = new HashMap<>();
         WebManager.getServerList(availableServers::putAll);
 
-        for (Map.Entry<String, ServerProfile> entry :
-                availableServers.entrySet()) {
+        for (Map.Entry<String, ServerProfile> entry : availableServers.entrySet()) {
             int time = soulPointTime - ((entry.getValue().getUptimeMinutes() + offset) % soulPointTime);
             if (time > soulPointTime) {
                 time = time - soulPointTime;
