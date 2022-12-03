@@ -97,18 +97,6 @@ jobs:
             **/build/libs/*-forge.jar
             **/build/libs/*-quilt.jar
 
-      - name: Upload files to release
-        uses: softprops/action-gh-release@v1
-        if: ${{ needs.changelog.outputs.skipped != 'true' }}
-        with:
-          tag_name: ${{ needs.changelog.outputs.tag }}
-          draft: true
-          prerelease: true
-          files: |
-            **/build/libs/*-fabric.jar
-            **/build/libs/*-forge.jar
-            **/build/libs/*-quilt.jar
-
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:

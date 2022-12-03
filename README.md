@@ -24,8 +24,6 @@ All pull requests are welcome. We'll analyse it and if we determine it should a 
 We welcome all forms of assistance. =)
 <br>
 
-<strong>We require you to name your pull request according to the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits</a> specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build. </strong>
-
 **Make sure you set the title of your pull request according to the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits</a> specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build.**
 
 
