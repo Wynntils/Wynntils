@@ -35,6 +35,8 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
     private static final String MAPS_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
+    private static final String COMBAT_LOCATIONS_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/combat.json";
     private static final String SPIRITS_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
 
