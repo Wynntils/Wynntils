@@ -1,8 +1,16 @@
+## [0.0.1-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.118...v0.0.1-alpha.119) (2022-12-03)
+
+
+### Bug Fixes
+
+* No config value should be saved to disk unless edited ([#774](https://github.com/Wynntils/Artemis/issues/774)) ([385e309](https://github.com/Wynntils/Artemis/commit/385e309a8bb5d06be9f0857f85fdaff6569de690))
+
 ## [0.0.1-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.117...v0.0.1-alpha.118) (2022-12-03)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.1-alpha.118 [skip ci] ([cd70c98](https://github.com/Wynntils/Artemis/commit/cd70c98f49c09613b8020e37939360f62f2ed4d2))
 * Remove unused link ([#775](https://github.com/Wynntils/Artemis/issues/775)) ([5c04605](https://github.com/Wynntils/Artemis/commit/5c046055878b84b59d04a1df525edf6ac3406af0))
 
 ## [0.0.1-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.116...v0.0.1-alpha.117) (2022-12-03)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.115 [skip ci] ([c7dde16](https://github.com/Wynntils/Artemis/commit/c7dde16d468bec36c513947101ccde73865edbf3))
-
-## [0.0.1-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.113...v0.0.1-alpha.114) (2022-12-03)
-
-
-### New Features
-
-* Improve abstraction of redirected messages ([#765](https://github.com/Wynntils/Artemis/issues/765)) ([c0936a7](https://github.com/Wynntils/Artemis/commit/c0936a70be835088bf4238a1468d3789b7c06c88))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.114 [skip ci] ([036d62f](https://github.com/Wynntils/Artemis/commit/036d62fec944a16b993d02b3d8b7becbe1714413))
 
