@@ -15,30 +15,45 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerInventoryModel extends Model {
 
-    private static int emeralds = -1;
-    private static int openSlots = -1;
+    private static int emeralds = 0;
+    private static int openSlots = 0;
 
-    public static void init() {}
+    public static void init() {
+        resetCache();
+    }
+
+    public static void disable() {
+        resetCache();
+    }
 
     @SubscribeEvent
     public static void onWorldChange(WorldStateEvent e) {
-        InventoryMenu inventory = McUtils.inventoryMenu();
-        emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
-        openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
+        if (e.getNewState() == WorldStateManager.State.WORLD) {
+            updateCache();
+        } else {
+            resetCache();
+        }
     }
 
     @SubscribeEvent
     public static void onContainerSetEvent(ContainerSetContentEvent e) {
+        updateCache();
+    }
+
+    @SubscribeEvent
+    public static void onSlotSetEvent(SetSlotEvent e) {
+        updateCache();
+    }
+
+    private static void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
     }
 
-    @SubscribeEvent
-    public static void onSlotSetEvent(SetSlotEvent e) {
-        InventoryMenu inventory = McUtils.inventoryMenu();
-        emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
-        openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
+    private static void resetCache() {
+        emeralds = 0;
+        openSlots = 0;
     }
 
     public static int getCurrentEmeraldCount() {

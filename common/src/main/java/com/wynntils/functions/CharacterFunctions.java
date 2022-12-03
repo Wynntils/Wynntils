@@ -117,7 +117,7 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(String argument) {
             int ems = PlayerInventoryModel.getCurrentEmeraldCount();
-            return (ems - (ems % 4096)) / 4096;
+            return ems / 4096;
         }
 
         @Override
@@ -135,7 +135,7 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(String argument) {
             int ems = PlayerInventoryModel.getCurrentEmeraldCount();
-            return (ems % 4096 - (ems % 4096 % 64)) / 64;
+            return (ems % 4096) / 64;
         }
 
         @Override
