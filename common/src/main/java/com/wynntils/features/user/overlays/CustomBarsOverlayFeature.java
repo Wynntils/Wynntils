@@ -62,7 +62,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;
-                    case MANABANK -> manaBarOverlay;
+                    case MANABANK -> manaBankBarOverlay;
                     case AWAKENED -> awakenedProgressBarOverlay;
                     case FOCUS -> focusBarOverlay;
                     case CORRUPTED -> corruptedBarOverlay;
@@ -226,6 +226,43 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+            if (progress > 1) { // overflowing health
+                float x1 = this.getRenderX();
+                float x2 = this.getRenderX() + this.getWidth();
+                int textureY1 = healthTexture.getTextureY1();
+                int textureY2 = healthTexture.getTextureY2();
+
+                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+                RenderUtils.drawProgressBarBackground(
+                        poseStack, Texture.HEALTH_BAR, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
+                RenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        Texture.HEALTH_BAR,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f / progress);
+                RenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        Texture.HEALTH_BAR_OVERFLOW,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f / progress - 1);
+
+                return;
+            }
+
             RenderUtils.drawProgressBar(
                     poseStack,
                     Texture.HEALTH_BAR,
@@ -313,6 +350,43 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+            if (progress > 1) { // overflowing mana
+                float x1 = this.getRenderX();
+                float x2 = this.getRenderX() + this.getWidth();
+                int textureY1 = manaTexture.getTextureY1();
+                int textureY2 = manaTexture.getTextureY2();
+
+                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+                RenderUtils.drawProgressBarBackground(
+                        poseStack, Texture.MANA_BAR, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
+                RenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        Texture.MANA_BAR,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f / progress);
+                RenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        Texture.MANA_BAR_OVERFLOW,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f / progress - 1);
+
+                return;
+            }
+
             RenderUtils.drawProgressBar(
                     poseStack,
                     Texture.MANA_BAR,

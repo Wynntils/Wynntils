@@ -42,8 +42,6 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
             new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    private final List<DiscoveryInfo> webDiscoveryInfoCache = new ArrayList<>();
-
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -63,15 +61,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @SubscribeEvent
     public void onDiscoveryUpdate(DiscoveriesUpdatedEvent event) {
-        if (McUtils.mc().screen != this) return;
-
-        if (event instanceof DiscoveriesUpdatedEvent.Api) {
-            webDiscoveryInfoCache.clear();
-            webDiscoveryInfoCache.addAll(
-                    WebManager.getDiscoveries().stream().map(DiscoveryInfo::new).toList());
+        if (McUtils.mc().screen == this) {
+            this.reloadElements();
         }
-
-        this.reloadElements();
     }
 
     @Override
@@ -352,7 +344,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        webDiscoveryInfoCache.stream()
+                        WebManager.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;

@@ -24,6 +24,8 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -89,8 +91,9 @@ public final class WynnItemUtils {
      */
     public static ItemIdentificationContainer identificationFromValue(
             Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
-        boolean isInverted = IdentificationOrderer.INSTANCE.isInverted(shortIdName);
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
+        boolean isInverted =
+                idProfile != null ? idProfile.isInverted() : IdentificationOrderer.INSTANCE.isInverted(shortIdName);
         IdentificationModifier type =
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
@@ -120,13 +123,9 @@ public final class WynnItemUtils {
             int min = idProfile.getMin();
             int max = idProfile.getMax();
 
-            if (isInverted) {
-                percentage = MathUtils.inverseLerp(max, min, value) * 100;
-            } else {
-                percentage = MathUtils.inverseLerp(min, max, value) * 100;
-            }
+            percentage = MathUtils.inverseLerp(min, max, value) * 100;
 
-            IdentificationProfile.ReidentificationChances chances = idProfile.getChances(value, isInverted, starCount);
+            IdentificationProfile.ReidentificationChances chances = idProfile.getChances(value, starCount);
 
             percentLine.append(WynnItemUtils.getPercentageTextComponent(percentage));
 
@@ -169,7 +168,7 @@ public final class WynnItemUtils {
             String idName = entry.getKey();
             MutableComponent line;
 
-            boolean inverted = IdentificationOrderer.INSTANCE.isInverted(idName);
+            boolean inverted = idProfile.isInverted();
             if (idProfile.hasConstantValue()) {
                 int value = idProfile.getBaseValue();
                 line = new TextComponent((value > 0 ? "+" : "") + value + type.getInGame(idName));
@@ -210,7 +209,10 @@ public final class WynnItemUtils {
                                 ? getPercentageColor(percentage)
                                 : getFlatPercentageColor(percentage))
                 .withItalic(false);
-        return new TextComponent(String.format(Utils.getGameLocale(), " [%.1f%%]", percentage)).withStyle(color);
+        String percentString = new BigDecimal(percentage)
+                .setScale(ItemStatInfoFeature.INSTANCE.decimalPlaces, RoundingMode.DOWN)
+                .toPlainString();
+        return new TextComponent(" [" + percentString + "%]").withStyle(color);
     }
 
     /**

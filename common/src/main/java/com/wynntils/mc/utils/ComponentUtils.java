@@ -149,6 +149,31 @@ public final class ComponentUtils {
         return text.replaceAll("(§[1-9a-f])+", "");
     }
 
+    public static String getLastPartCodes(String lastPart) {
+        if (!lastPart.contains("§")) return "";
+
+        String lastPartCodes = "";
+        int index;
+        while ((index = lastPart.lastIndexOf('§')) != -1) {
+            if (index >= lastPart.length() - 1) {
+                // trailing §, no format code, skip it
+                lastPart = lastPart.substring(0, index);
+                continue;
+            }
+            String thisCode = lastPart.substring(index, index + 2);
+            if (thisCode.charAt(1) == 'r') {
+                // it's a reset code, we can stop looking
+                break;
+            }
+            // prepend to codes since we're going backwards
+            lastPartCodes = thisCode + lastPartCodes;
+
+            lastPart = lastPart.substring(0, index);
+        }
+
+        return lastPartCodes;
+    }
+
     public static Component formattedTextToComponent(FormattedText formattedText) {
         MutableComponent component = new TextComponent("");
         formattedText.visit(

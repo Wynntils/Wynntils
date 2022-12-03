@@ -22,8 +22,12 @@ import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.Poi;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
@@ -33,9 +37,9 @@ public abstract class AbstractMapScreen extends Screen {
     protected static final float BORDER_OFFSET = 6;
 
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    protected static final float MIN_ZOOM = 0.2f;
+    protected static final float MIN_ZOOM = 0.1f;
     protected static final float MAX_ZOOM = 3f;
-    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.04f;
+    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
 
@@ -60,6 +64,8 @@ public abstract class AbstractMapScreen extends Screen {
     protected boolean dragging = false;
     protected double lastMouseX = 0;
     protected double lastMouseY = 0;
+
+    protected Poi hovered = null;
 
     public AbstractMapScreen() {
         super(new TextComponent("Map"));
@@ -133,9 +139,76 @@ public abstract class AbstractMapScreen extends Screen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
+    protected void renderPois(
+            List<Poi> pois,
+            PoseStack poseStack,
+            BoundingBox textureBoundingBox,
+            float poiScale,
+            int mouseX,
+            int mouseY) {
+        hovered = null;
+
+        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+
+        // Reverse and Render
+        for (int i = filteredPois.size() - 1; i >= 0; i--) {
+            Poi poi = filteredPois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
+        }
+    }
+
+    protected List<Poi> getRenderedPois(
+            List<Poi> pois, BoundingBox textureBoundingBox, float poiScale, int mouseX, int mouseY) {
+        List<Poi> filteredPois = new ArrayList<>();
+
+        // Filter and find hovered
+        for (int i = pois.size() - 1; i >= 0; i--) {
+            Poi poi = pois.get(i);
+
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+
+            float poiWidth = poi.getWidth(currentZoom, poiScale);
+            float poiHeight = poi.getHeight(currentZoom, poiScale);
+
+            BoundingBox filterBox = BoundingBox.centered(
+                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
+
+            if (filterBox.intersects(textureBoundingBox)) {
+                filteredPois.add(poi);
+                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
+                    hovered = poi;
+                }
+            }
+        }
+
+        // Add hovered poi as first
+        if (hovered != null) {
+            filteredPois.remove(hovered);
+            filteredPois.add(0, hovered);
+        }
+
+        return filteredPois;
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        dragging = true;
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            dragging = true;
+        }
+
         lastMouseX = mouseX;
         lastMouseY = mouseY;
 
@@ -191,11 +264,23 @@ public abstract class AbstractMapScreen extends Screen {
                         poseStack,
                         gameX + ", " + gameZ,
                         this.centerX,
-                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
                         FontRenderer.TextShadow.OUTLINE);
+    }
+
+    protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.MAP_BUTTONS_BACKGROUND,
+                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
+                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
+
+        for (Widget widget : this.renderables) {
+            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        }
     }
 
     protected void renderCursor(

@@ -86,15 +86,10 @@ public class DiscoveryContainerQueries {
                             DiscoveryManager.setSecretDiscoveriesTooltip(
                                     ItemUtils.getTooltipLines(secretDiscoveriesItem));
 
-                            int discoveryPages =
-                                    discoveryCount / DISCOVERIES_PER_PAGE + discoveryCount % DISCOVERIES_PER_PAGE == 0
-                                            ? 0
-                                            : 1;
+                            int discoveryPages = discoveryCount / DISCOVERIES_PER_PAGE
+                                    + (discoveryCount % DISCOVERIES_PER_PAGE == 0 ? 0 : 1);
                             int secretDiscoveryPages = secretDiscoveryCount / DISCOVERIES_PER_PAGE
-                                                    + secretDiscoveryCount % DISCOVERIES_PER_PAGE
-                                            == 0
-                                    ? 0
-                                    : 1;
+                                    + (secretDiscoveryCount % DISCOVERIES_PER_PAGE == 0 ? 0 : 1);
                             buildDiscoveryQuery(discoveryPages, secretDiscoveryPages);
                             break;
                         }

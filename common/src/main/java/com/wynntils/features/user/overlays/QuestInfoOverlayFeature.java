@@ -24,7 +24,6 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
@@ -61,6 +60,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
+        if (!autoTrackQuestCoordinates) return;
+
         // set if valid
         CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
     }
@@ -154,8 +155,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRender,
-                            this.getRenderedWidth() / (float) McUtils.guiScale(),
-                            this.getRenderedHeight() / (float) McUtils.guiScale(),
+                            this.getWidth(),
+                            this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
@@ -170,8 +171,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             toRenderPreview,
-                            this.getRenderedWidth() / (float) McUtils.guiScale(),
-                            this.getRenderedHeight() / (float) McUtils.guiScale(),
+                            this.getWidth(),
+                            this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }

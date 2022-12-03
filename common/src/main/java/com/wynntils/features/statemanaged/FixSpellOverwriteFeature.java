@@ -23,7 +23,7 @@ public class FixSpellOverwriteFeature extends StateManagedFeature {
     private ItemStack overwriteHighlightItem = ItemStack.EMPTY;
 
     @SubscribeEvent
-    public void onSetSlot(SetSlotEvent event) {
+    public void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack item = event.getItem();
         if (item == null || item.isEmpty()) return;
 

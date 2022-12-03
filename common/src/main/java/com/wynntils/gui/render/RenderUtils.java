@@ -228,9 +228,9 @@ public final class RenderUtils {
                 texture.width(),
                 texture.height() / 2f,
                 0,
-                hovered ? texture.height() / 2f : 0,
+                hovered ? texture.height() / 2 : 0,
                 texture.width(),
-                texture.height() / 2f,
+                texture.height() / 2,
                 texture.width(),
                 texture.height());
     }
@@ -254,9 +254,10 @@ public final class RenderUtils {
             float y,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
-        drawTexturedRect(poseStack, tex, x, y, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack, tex, x, y, 0, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
@@ -267,9 +268,10 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
-        drawTexturedRect(poseStack, tex, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack, tex, x, y, z, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
     }
 
     public static void drawTexturedRect(
@@ -280,12 +282,12 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float uOffset,
-            float vOffset,
-            float u,
-            float v,
-            float textureWidth,
-            float textureHeight) {
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -323,8 +325,8 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRect(
                 poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
@@ -337,10 +339,23 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float textureWidth,
-            float textureHeight) {
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(), tex, color, x, y, z, width, height, 0, 0, width, height, textureWidth, textureHeight);
+                new PoseStack(),
+                tex,
+                color,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                (int) width,
+                (int) height,
+                textureWidth,
+                textureHeight);
     }
 
     public static void drawTexturedRectWithColor(
@@ -352,12 +367,12 @@ public final class RenderUtils {
             float z,
             float width,
             float height,
-            float uOffset,
-            float vOffset,
-            float u,
-            float v,
-            float textureWidth,
-            float textureHeight) {
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
         float uScale = 1f / textureWidth;
         float vScale = 1f / textureHeight;
 
@@ -769,7 +784,7 @@ public final class RenderUtils {
                 progress);
     }
 
-    private static void drawProgressBarForeground(
+    public static void drawProgressBarForeground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -888,7 +903,7 @@ public final class RenderUtils {
         BufferUploader.end(bufferBuilder);
     }
 
-    private static void drawProgressBarBackground(
+    public static void drawProgressBarBackground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -1097,13 +1112,25 @@ public final class RenderUtils {
             float y1,
             float x2,
             float y2,
-            float tx1,
-            float ty1,
-            float tx2,
-            float ty2) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.colorMask(false, false, false, true);
+            int tx1,
+            int ty1,
+            int tx2,
+            int ty2) {
+        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
 
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        // Draw textured image
         int width = texture.width();
         int height = texture.height();
         drawTexturedRect(
@@ -1111,7 +1138,7 @@ public final class RenderUtils {
                 texture.resource(),
                 x1,
                 y1,
-                1000f,
+                0f,
                 x2 - x1,
                 y2 - y1,
                 tx1,
@@ -1120,20 +1147,30 @@ public final class RenderUtils {
                 ty2 - ty1,
                 width,
                 height);
+
+        // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.depthMask(false);
-        RenderSystem.depthFunc(GL11.GL_GREATER);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
     /**
      * Clears the active rendering mask from the screen.
+     * Based on Figura <a href="https://github.com/Kingdom-of-The-Moon/FiguraRewriteRewrite"> code</a>.
      */
     public static void clearMask() {
-        RenderSystem.depthMask(true);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+
+        // Turn off writing to stencil buffer.
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilMask(0x00);
+
+        // Always succeed in the stencil test, no matter what.
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
     private static final class ClipboardImage implements Transferable {

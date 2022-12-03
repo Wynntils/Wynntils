@@ -18,7 +18,9 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -51,9 +53,15 @@ public class ItemLockFeature extends UserFeature {
     @Config
     public boolean blockAllActionsOnLockedItems = false;
 
+    @Config
+    public boolean allowClickOnEmeraldPouchInBlockingMode = true;
+
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
+
+        // Don't render lock on ability tree slots
+        if (WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
 
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
 
@@ -74,7 +82,9 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(ContainerClickEvent event) {
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        // Don't lock ability tree slots
+        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                || WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
         CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
@@ -86,6 +96,13 @@ public class ItemLockFeature extends UserFeature {
                 .findFirst();
 
         if (slotOptional.isEmpty()) {
+            return;
+        }
+
+        // We want to allow opening emerald pouch even if locked
+        if (allowClickOnEmeraldPouchInBlockingMode
+                && event.getClickType() == ClickType.PICKUP
+                && WynnItemMatchers.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 

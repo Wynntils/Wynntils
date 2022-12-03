@@ -19,6 +19,7 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,9 @@ public abstract class Feature extends AbstractConfigurable
     /** Called on disabling of Feature */
     protected void onDisable() {}
 
+    /** Called after successfully enabling a feature, after everything is set up. */
+    protected void postEnable() {}
+
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED) return;
@@ -149,6 +153,15 @@ public abstract class Feature extends AbstractConfigurable
         for (KeyBind keyBind : keyBinds) {
             KeyBindManager.registerKeybind(keyBind);
         }
+
+        // Reload configs to load new keybinds
+        if (!keyBinds.isEmpty() && FeatureRegistry.isInitCompleted()) {
+            synchronized (McUtils.options()) {
+                McUtils.mc().options.load();
+            }
+        }
+
+        postEnable();
     }
 
     /** Called for a feature's deactivation */

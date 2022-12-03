@@ -92,8 +92,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
         protected GameNotificationOverlay() {
             super(
                     new OverlayPosition(
-                            0,
-                            0,
+                            -20,
+                            -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.BottomRight),
@@ -165,6 +165,20 @@ public class GameNotificationOverlayFeature extends UserFeature {
                                                     .customColor()
                                                     .withAlpha(messageContainer.getRemainingTime() / 1000f))))
                                     .toList(),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]", textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

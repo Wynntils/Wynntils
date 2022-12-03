@@ -17,19 +17,17 @@ import com.wynntils.core.webapi.profiles.DiscoveryProfile;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
 import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.item.IdentificationOrderer;
+import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,7 +42,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -75,8 +72,7 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
-
-    private static List<DiscoveryProfile> discoveries = new ArrayList<>();
+    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static String currentSplash = "";
 
@@ -194,7 +190,7 @@ public final class WebManager extends CoreManager {
 
                     HashMap<String, ItemProfile> citems = new HashMap<>();
                     for (ItemProfile prof : gItems) {
-                        prof.getStatuses().values().forEach(IdentificationProfile::calculateMinMax);
+                        prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
                         prof.addMajorIds(majorIds);
                         citems.put(prof.getDisplayName(), prof);
                     }
@@ -281,28 +277,26 @@ public final class WebManager extends CoreManager {
         }
     }
 
-    public static void getServerList(Consumer<HashMap<String, ServerProfile>> onReceive) {
-        if (apiUrls == null || !isAthenaOnline()) return;
+    public static HashMap<String, ServerProfile> getServerList() throws IOException {
+        if (apiUrls == null || !isAthenaOnline()) return new HashMap<>();
         String url = apiUrls.get("Athena") + "/cache/get/serverList";
 
-        Request request = new RequestBuilder(url, "serverList")
-                .handleJsonObject((con, json) -> {
-                    JsonObject servers = json.getAsJsonObject("servers");
-                    HashMap<String, ServerProfile> result = new HashMap<>();
+        URLConnection st = generateURLRequest(url);
+        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-                    long serverTime = Long.parseLong(con.getHeaderField("timestamp"));
-                    for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-                        ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
-                        profile.matchTime(serverTime);
+        JsonObject servers = json.getAsJsonObject("servers");
+        HashMap<String, ServerProfile> result = new HashMap<>();
 
-                        result.put(entry.getKey(), profile);
-                    }
+        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
+        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+            ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
+            profile.matchTime(serverTime);
 
-                    onReceive.accept(result);
-                    return true;
-                })
-                .build();
-        handler.addAndDispatch(request, true);
+            result.put(entry.getKey(), profile);
+        }
+
+        return result;
     }
 
     public static void updateDiscoveries() {
@@ -314,8 +308,9 @@ public final class WebManager extends CoreManager {
                 .handleJsonArray(discoveriesJson -> {
                     Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-                    discoveries = gson.fromJson(discoveriesJson, type);
-                    WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Api());
+                    List<DiscoveryProfile> discoveries = gson.fromJson(discoveriesJson, type);
+                    discoveryInfoList =
+                            discoveries.stream().map(DiscoveryInfo::new).toList();
                     return true;
                 })
                 .build());
@@ -388,8 +383,8 @@ public final class WebManager extends CoreManager {
         return ingredientHeadTextures;
     }
 
-    public static List<DiscoveryProfile> getDiscoveries() {
-        return discoveries;
+    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+        return discoveryInfoList;
     }
 
     public static String getUserAgent() {

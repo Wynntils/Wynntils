@@ -13,6 +13,10 @@ import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ChatMessageReceivedEvent extends Event {
+    // These are used to keep the original message so different features don't have to fight over it.
+    private final Component originalMessage;
+    private final String originalCodedMessage;
+
     private Component message;
     private String codedMessage;
     private final MessageType messageType;
@@ -20,6 +24,9 @@ public class ChatMessageReceivedEvent extends Event {
 
     public ChatMessageReceivedEvent(
             Component message, String codedMessage, MessageType messageType, RecipientType recipientType) {
+        this.originalMessage = message;
+        this.originalCodedMessage = codedMessage;
+
         this.message = message;
         this.codedMessage = codedMessage; // message, but as a format-coded string
         this.messageType = messageType;
@@ -45,5 +52,13 @@ public class ChatMessageReceivedEvent extends Event {
 
     public RecipientType getRecipientType() {
         return recipientType;
+    }
+
+    public Component getOriginalMessage() {
+        return originalMessage;
+    }
+
+    public String getOriginalCodedMessage() {
+        return originalCodedMessage;
     }
 }

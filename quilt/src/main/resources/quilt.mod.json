@@ -1,6 +1,7 @@
 {
   "mixin": [
-    "wynntils.mixins.json"
+    "wynntils.mixins.json",
+    "wynntils.mixins.quilt.json"
   ],
   "quilt_loader": {
     "authors": [
@@ -13,10 +14,6 @@
     "depends": [
       {
         "id": "quilt_loader",
-        "version": "*"
-      },
-      {
-        "id": "quilt_base",
         "version": "*"
       },
       {

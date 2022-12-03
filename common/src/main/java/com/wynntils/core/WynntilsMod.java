@@ -10,6 +10,7 @@ import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
 import java.util.Optional;
@@ -32,7 +33,6 @@ public final class WynntilsMod {
     private static String version = "";
     private static boolean developmentBuild = false;
     private static boolean developmentEnvironment;
-    private static boolean featuresInited = false;
     private static IEventBus eventBus;
     private static File modJar;
 
@@ -52,12 +52,12 @@ public final class WynntilsMod {
         try {
             return eventBus.post(event);
         } catch (Throwable t) {
-            handleExceptionInEventListener(t);
+            handleExceptionInEventListener(t, event);
             return false;
         }
     }
 
-    private static void handleExceptionInEventListener(Throwable t) {
+    private static void handleExceptionInEventListener(Throwable t, Event event) {
         StackTraceElement[] stackTrace = t.getStackTrace();
         String crashingFeatureName = null;
         for (StackTraceElement line : stackTrace) {
@@ -85,14 +85,20 @@ public final class WynntilsMod {
             return;
         }
 
-        WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
-        WynntilsMod.warn("This feature will be disabled");
-        McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
-                        + "' has crashed and will be disabled")
-                .withStyle(ChatFormatting.RED));
-
         feature.setUserEnabled(false);
         feature.tryUserToggle();
+
+        WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
+        WynntilsMod.warn("This feature will be disabled");
+
+        // TODO: This is a temporary fix for a crash that occurs when an error happens in a client-side message
+        //       event, and we send a new message about disabling X feature,
+        //       causing a new exception in client-side message event.
+        if (!(event instanceof ClientsideMessageEvent)) {
+            McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
+                            + "' has crashed and will be disabled")
+                    .withStyle(ChatFormatting.RED));
+        }
     }
 
     public static File getModJar() {
@@ -141,15 +147,13 @@ public final class WynntilsMod {
 
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
-        if (featuresInited) return;
+        if (FeatureRegistry.isInitCompleted()) return;
 
         try {
             initFeatures();
         } catch (Throwable t) {
             LOGGER.error("Failed to initialize Wynntils features", t);
         }
-
-        featuresInited = true;
     }
 
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment, File modFile) {

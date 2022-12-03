@@ -14,6 +14,7 @@ import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
+import com.wynntils.wynn.item.properties.GatheringToolProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
@@ -77,11 +78,12 @@ public class ItemStackTransformModel extends Model {
         registerProperty(WynnItemMatchers::isMaterial, MaterialProperty::new);
         registerProperty(WynnItemMatchers::isHorse, HorseProperty::new);
         registerProperty(WynnItemMatchers::isServerItem, ServerCountProperty::new);
+        registerProperty(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
         registerProperty(itemStack -> true, SearchOverlayProperty::new);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetSlot(SetSlotEvent event) {
+    public static void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack stack = event.getItem();
 
         // itemstack transformers

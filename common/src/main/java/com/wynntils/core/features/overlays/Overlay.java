@@ -141,14 +141,6 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return this.size.getHeight();
     }
 
-    public float getRenderedWidth() {
-        return this.size.getRenderedWidth();
-    }
-
-    public float getRenderedHeight() {
-        return this.size.getRenderedHeight();
-    }
-
     public OverlaySize getSize() {
         return size;
     }
@@ -176,7 +168,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return switch (position.getHorizontalAlignment()) {
             case Left -> section.x1() + position.getHorizontalOffset();
             case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
-            case Right -> (section.x2() + position.getHorizontalOffset() - this.getWidth());
+            case Right -> section.x2() + position.getHorizontalOffset() - this.getWidth();
         };
     }
 

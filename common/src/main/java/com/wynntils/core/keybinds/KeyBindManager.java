@@ -5,6 +5,7 @@
 package com.wynntils.core.keybinds;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -60,6 +61,8 @@ public final class KeyBindManager extends CoreManager {
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
         }
 
+        KeyMapping keyMapping = toAdd.getKeyMapping();
+
         synchronized (McUtils.options()) {
             KEY_BINDS.add(toAdd);
 
@@ -67,14 +70,20 @@ public final class KeyBindManager extends CoreManager {
             KeyMapping[] keyMappings = options.keyMappings;
 
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
-            newKeyMappings.add(toAdd.getKeyMapping());
+            newKeyMappings.add(keyMapping);
 
             ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
         }
+
+        // Bind keybind to its default key, however, this might get overwritten by options loading later
+        keyMapping.setKey(keyMapping.getDefaultKey());
+        KeyMapping.resetMapping();
     }
 
     public static void unregisterKeybind(KeyBind toRemove) {
         if (!KEY_BINDS.remove(toRemove)) return;
+
+        KeyMapping keyMapping = toRemove.getKeyMapping();
 
         synchronized (McUtils.options()) {
             Options options = McUtils.options();
@@ -85,6 +94,10 @@ public final class KeyBindManager extends CoreManager {
 
             ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
         }
+
+        // Unbind keybind
+        keyMapping.setKey(InputConstants.UNKNOWN);
+        KeyMapping.resetMapping();
     }
 
     private static void triggerKeybinds() {
