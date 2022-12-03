@@ -39,8 +39,6 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
     private static final String COMBAT_LOCATIONS_JSON_URL =
             "https://raw.githubusercontent.com/san7890/ArtemisReference/CombatLocations/locations/combat.json"; // FIXME: CHANGE THIS TO OFFICIAL REPO BEFORE RELEASE
-    private static final String SPIRITS_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
 
     private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();

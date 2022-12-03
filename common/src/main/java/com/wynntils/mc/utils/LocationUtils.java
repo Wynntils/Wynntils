@@ -34,4 +34,29 @@ public class LocationUtils {
     public static Matcher strictCoordinateMatcher(String string) {
         return STRICT_COORDINATE_PATTERN.matcher(string);
     }
+
+    public static void shareLocation(String target) {
+        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
+                + (int) McUtils.player().position().y + ", "
+                + (int) McUtils.player().position().z + "]";
+
+        LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    public static void shareCompass(String target, Location compass) {
+        String locationString =
+                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+
+        LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    private static void sendShareMessage(String target, String locationString) {
+        if (target.equals("guild")) {
+            McUtils.player().chat("/g " + locationString);
+        } else if (target.equals("party")) {
+            McUtils.player().chat("/p " + locationString);
+        } else {
+            McUtils.player().chat("/msg " + target + " " + locationString);
+        }
+    }
 }

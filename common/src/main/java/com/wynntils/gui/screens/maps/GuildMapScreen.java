@@ -48,7 +48,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_HELP_BUTTON,
-                () -> {},
+                (b) -> {},
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
@@ -66,7 +66,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                () -> resourceMode = !resourceMode,
+                (b) -> resourceMode = !resourceMode,
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
