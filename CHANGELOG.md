@@ -1,9 +1,21 @@
+## [0.0.1-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.114...v0.0.1-alpha.115) (2022-12-03)
+
+
+### New Features
+
+* Add share location button to main map ([#763](https://github.com/Wynntils/Artemis/issues/763)) ([9807559](https://github.com/Wynntils/Artemis/commit/9807559e8d79296eceaa505ee802b038f0b5c6ae))
+
 ## [0.0.1-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.113...v0.0.1-alpha.114) (2022-12-03)
 
 
 ### New Features
 
 * Improve abstraction of redirected messages ([#765](https://github.com/Wynntils/Artemis/issues/765)) ([c0936a7](https://github.com/Wynntils/Artemis/commit/c0936a70be835088bf4238a1468d3789b7c06c88))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.114 [skip ci] ([036d62f](https://github.com/Wynntils/Artemis/commit/036d62fec944a16b993d02b3d8b7becbe1714413))
 
 ## [0.0.1-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.112...v0.0.1-alpha.113) (2022-12-03)
 
@@ -172,16 +184,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.111 [skip ci] ([e124426](https://github.com/Wynntils/Artemis/commit/e124426fa61fe757481d57666176baa6eaf3851a))
-
-## [0.0.1-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.109...v0.0.1-alpha.110) (2022-12-02)
-
-
-### New Features
-
-* Add I18n for UpdateCommand and UpdatesFeature ([#762](https://github.com/Wynntils/Artemis/issues/762)) ([3fb4c82](https://github.com/Wynntils/Artemis/commit/3fb4c828529f2ee63324afb6df175bd97105331d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.110 [skip ci] ([5f610a1](https://github.com/Wynntils/Artemis/commit/5f610a121763f1e5c706a5096257d8289d48617b))
 
