@@ -89,6 +89,7 @@ import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.players.PreventTradesDuelsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
+import com.wynntils.features.user.redirects.ChatRedirectFeature;
 import com.wynntils.features.user.redirects.InventoryRedirectFeature;
 import com.wynntils.features.user.redirects.TerritoryMessageRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
@@ -132,6 +133,7 @@ public final class FeatureRegistry {
         registerFeature(new BombBellTrackingFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
         registerFeature(new CommandAliasesFeature());
