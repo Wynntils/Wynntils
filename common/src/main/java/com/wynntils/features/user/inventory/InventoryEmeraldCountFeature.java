@@ -9,6 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -19,10 +20,12 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.model.PlayerInventoryModel;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.EmeraldUnits;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -43,12 +46,17 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     @Config
     public boolean showContainerEmeraldCount = true;
 
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(PlayerInventoryModel.class);
+    }
+
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.containerMenu());
 
         if (!(event.getScreen() instanceof InventoryScreen)) {
-            emeralds -= ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            emeralds -= PlayerInventoryModel.getCurrentEmeraldCount();
         }
 
         if (emeralds == 0) return;
