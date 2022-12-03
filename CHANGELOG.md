@@ -1,9 +1,21 @@
+## [0.0.1-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.117...v0.0.1-alpha.118) (2022-12-03)
+
+
+### Miscellaneous Chores
+
+* Remove unused link ([#775](https://github.com/Wynntils/Artemis/issues/775)) ([5c04605](https://github.com/Wynntils/Artemis/commit/5c046055878b84b59d04a1df525edf6ac3406af0))
+
 ## [0.0.1-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.116...v0.0.1-alpha.117) (2022-12-03)
 
 
 ### Code Refactoring
 
 * Sort FunctionManager.init() ([#769](https://github.com/Wynntils/Artemis/issues/769)) ([0f22687](https://github.com/Wynntils/Artemis/commit/0f226875beaf4564d9522713debedc8791d8dbbf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.117 [skip ci] ([3b7ea91](https://github.com/Wynntils/Artemis/commit/3b7ea91995cd9b52c4266923143b88d37fe4dddf))
 
 ## [0.0.1-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.115...v0.0.1-alpha.116) (2022-12-03)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.114 [skip ci] ([036d62f](https://github.com/Wynntils/Artemis/commit/036d62fec944a16b993d02b3d8b7becbe1714413))
-
-## [0.0.1-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.112...v0.0.1-alpha.113) (2022-12-03)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.113 [skip ci] ([be44587](https://github.com/Wynntils/Artemis/commit/be4458791100c0a37bd801b4ab247444d62583bb))
-* Update README ([#764](https://github.com/Wynntils/Artemis/issues/764)) ([ad3e873](https://github.com/Wynntils/Artemis/commit/ad3e87397db11b7a2453f90bc547fd477a06dabf))
 
