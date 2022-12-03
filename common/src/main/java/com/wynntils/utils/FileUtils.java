@@ -42,6 +42,14 @@ public final class FileUtils {
         }
     }
 
+    public static void deleteFile(File file) {
+        if (!file.exists()) return;
+
+        if (!file.delete()) {
+            WynntilsMod.error("File " + file + " could not be deleted");
+        }
+    }
+
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (sourceFile == null || destFile == null) {
             throw new IllegalArgumentException("Argument files should not be null.");

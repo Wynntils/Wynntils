@@ -169,6 +169,22 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
 
+        buttons.add(new WynntilsMenuButton(
+                Texture.DISCOVERIES_ICON,
+                true,
+                new WynntilsDiscoveriesScreen(),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.name")
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(ChatFormatting.GOLD)),
+                        Component.translatable("screens.wynntils.wynntilsDiscoveries.description")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                .withStyle(ChatFormatting.GREEN))));
+
         assert buttons.size() <= 8;
     }
 
@@ -324,9 +340,9 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         texture.width(),
                         texture.height() / 2f,
                         0,
-                        texture.height() / 2f,
+                        texture.height() / 2,
                         texture.width(),
-                        texture.height() / 2f,
+                        texture.height() / 2,
                         texture.width(),
                         texture.height());
             } else {
@@ -341,7 +357,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         0,
                         0,
                         texture.width(),
-                        texture.height() / 2f,
+                        texture.height() / 2,
                         texture.width(),
                         texture.height());
             }

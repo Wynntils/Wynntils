@@ -17,10 +17,6 @@
         "version": "*"
       },
       {
-        "id": "quilt_base",
-        "version": "*"
-      },
-      {
         "id": "minecraft",
         "version": "1.19.2"
       }

@@ -26,6 +26,8 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -35,9 +37,9 @@ public abstract class AbstractMapScreen extends Screen {
     protected static final float BORDER_OFFSET = 6;
 
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    protected static final float MIN_ZOOM = 0.2f;
+    protected static final float MIN_ZOOM = 0.1f;
     protected static final float MAX_ZOOM = 3f;
-    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.04f;
+    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
 
@@ -196,6 +198,13 @@ public abstract class AbstractMapScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             dragging = true;
         }
@@ -255,11 +264,23 @@ public abstract class AbstractMapScreen extends Screen {
                         poseStack,
                         gameX + ", " + gameZ,
                         this.centerX,
-                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
                         FontRenderer.TextShadow.OUTLINE);
+    }
+
+    protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                Texture.MAP_BUTTONS_BACKGROUND,
+                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
+                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
+
+        for (Widget widget : this.renderables) {
+            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        }
     }
 
     protected void renderCursor(

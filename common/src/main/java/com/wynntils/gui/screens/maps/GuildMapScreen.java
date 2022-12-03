@@ -14,6 +14,7 @@ import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
@@ -27,10 +28,51 @@ import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
+
+    @Override
+    protected void init() {
+        super.init();
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_HELP_BUTTON,
+                () -> {},
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_ADD_BUTTON,
+                () -> resourceMode = !resourceMode,
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
+    }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -61,6 +103,8 @@ public class GuildMapScreen extends AbstractMapScreen {
         renderBackground(poseStack);
 
         renderCoordinates(poseStack, mouseX, mouseY);
+
+        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(poseStack);
     }
@@ -118,16 +162,6 @@ public class GuildMapScreen extends AbstractMapScreen {
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
-            resourceMode = !resourceMode;
-            return true;
-        }
-
-        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     private void renderHoveredTerritoryInfo(PoseStack poseStack) {

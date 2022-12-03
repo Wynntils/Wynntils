@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.0-SNAPSHOT" apply false
+    id 'io.github.juuxel.loom-quiltflower' version '1.8.0' apply false
     id "com.diffplug.spotless" version "6.3.0"
 }
 
@@ -14,13 +15,15 @@ architectury {
 def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
 
 // If we are running in a CI environment, we want to use the version else dev version
-version = "0.0.1-alpha.77"
+// On the release branches, this string will be automatically updated by the bots
+version = "0.0.1-main-dev"
 if (!System.getenv("CI")) {
     version = "0.0.1-DEV"
 }
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "io.github.juuxel.loom-quiltflower"
 
     repositories {
         maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }

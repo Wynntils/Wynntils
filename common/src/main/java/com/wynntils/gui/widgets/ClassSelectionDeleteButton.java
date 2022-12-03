@@ -49,9 +49,9 @@ public class ClassSelectionDeleteButton extends AbstractButton {
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_BUTTON.height() / 2f : 0,
+                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_BUTTON.height() / 2 : 0,
                 Texture.REMOVE_BUTTON.width(),
-                Texture.REMOVE_BUTTON.height() / 2f,
+                Texture.REMOVE_BUTTON.height() / 2,
                 Texture.REMOVE_BUTTON.width(),
                 Texture.REMOVE_BUTTON.height());
 

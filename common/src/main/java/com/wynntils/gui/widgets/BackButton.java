@@ -33,9 +33,9 @@ public class BackButton extends AbstractButton {
                     0,
                     this.width,
                     this.height,
-                    backArrow.width() / 2f,
+                    backArrow.width() / 2,
                     0,
-                    backArrow.width() / 2f,
+                    backArrow.width() / 2,
                     backArrow.height(),
                     backArrow.width(),
                     backArrow.height());
@@ -50,7 +50,7 @@ public class BackButton extends AbstractButton {
                     this.height,
                     0,
                     0,
-                    backArrow.width() / 2f,
+                    backArrow.width() / 2,
                     backArrow.height(),
                     backArrow.width(),
                     backArrow.height());

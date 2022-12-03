@@ -53,9 +53,9 @@ public class ClassSelectionAddButton extends AbstractButton {
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? Texture.ADD_BUTTON.height() / 2f : 0,
+                characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? Texture.ADD_BUTTON.height() / 2 : 0,
                 Texture.ADD_BUTTON.width(),
-                Texture.ADD_BUTTON.height() / 2f,
+                Texture.ADD_BUTTON.height() / 2,
                 Texture.ADD_BUTTON.width(),
                 Texture.ADD_BUTTON.height());
 

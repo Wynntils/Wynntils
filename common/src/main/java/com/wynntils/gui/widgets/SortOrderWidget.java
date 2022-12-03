@@ -54,9 +54,9 @@ public class SortOrderWidget extends AbstractButton {
                     this.width,
                     this.height,
                     0,
-                    sortTexture.height() / 2f,
+                    sortTexture.height() / 2,
                     sortTexture.width(),
-                    sortTexture.height() / 2f,
+                    sortTexture.height() / 2,
                     sortTexture.width(),
                     sortTexture.height());
         } else {
@@ -71,7 +71,7 @@ public class SortOrderWidget extends AbstractButton {
                     0,
                     0,
                     sortTexture.width(),
-                    sortTexture.height() / 2f,
+                    sortTexture.height() / 2,
                     sortTexture.width(),
                     sortTexture.height());
         }

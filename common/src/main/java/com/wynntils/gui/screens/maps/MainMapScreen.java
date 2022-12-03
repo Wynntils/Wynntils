@@ -6,9 +6,12 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.model.HadesUserModel;
@@ -17,13 +20,18 @@ import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.map.poi.PlayerPoi;
+import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.wynn.model.map.poi.IconPoi;
+import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
@@ -36,6 +44,101 @@ public class MainMapScreen extends AbstractMapScreen {
     public MainMapScreen(float mapCenterX, float mapCenterZ) {
         super(mapCenterX, mapCenterZ);
         updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_HELP_BUTTON,
+                () -> {},
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description3")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description4")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description5")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description6")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description7")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description8")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description9")))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_WAYPOINT_FOCUS_BUTTON,
+                () -> {
+                    if (KeyboardUtils.isShiftDown()) {
+                        centerMapAroundPlayer();
+                        return;
+                    }
+
+                    if (CompassModel.getCompassLocation().isPresent()) {
+                        Location location = CompassModel.getCompassLocation().get();
+                        updateMapCenter((float) location.x, (float) location.z);
+                    }
+                },
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.focus.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.focus.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.focus.description2")))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_ADD_BUTTON,
+                () -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.DARK_GREEN)
+                                .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
+                        Component.translatable("screens.wynntils.map.waypoints.add.description")
+                                .withStyle(ChatFormatting.GRAY))));
     }
 
     @Override
@@ -71,6 +174,8 @@ public class MainMapScreen extends AbstractMapScreen {
         renderBackground(poseStack);
 
         renderCoordinates(poseStack, mouseX, mouseY);
+
+        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
@@ -78,6 +183,8 @@ public class MainMapScreen extends AbstractMapScreen {
 
         pois.addAll(MapModel.getServicePois());
         pois.addAll(MapModel.getLabelPois());
+
+        pois.addAll(MapFeature.INSTANCE.customPois);
 
         List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
                 .filter(
@@ -91,7 +198,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
-        pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
+        pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
@@ -126,7 +233,11 @@ public class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
-                    CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    if (hovered instanceof IconPoi iconPoi) {
+                        CompassModel.setCompassLocation(new Location(hovered.getLocation()), iconPoi.getIcon());
+                    } else {
+                        CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    }
                 } else {
                     final Poi finalHovered = hovered;
                     CompassModel.setDynamicCompassLocation(
@@ -137,7 +248,23 @@ public class MainMapScreen extends AbstractMapScreen {
 
             super.mouseClicked(mouseX, mouseY, button);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY);
+            if (KeyboardUtils.isShiftDown()) {
+                if (hovered instanceof CustomPoi customPoi) {
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, customPoi));
+                } else {
+                    int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+                    int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, new MapLocation(gameX, 0, gameZ)));
+                }
+            } else if (KeyboardUtils.isControlDown()) {
+                if (hovered instanceof CustomPoi customPoi) {
+                    MapFeature.INSTANCE.customPois.remove(customPoi);
+                    ConfigManager.saveConfig();
+                }
+            } else {
+                setCompassToMouseCoords(mouseX, mouseY);
+            }
         }
 
         return true;

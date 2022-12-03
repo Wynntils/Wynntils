@@ -65,24 +65,24 @@ public class UpdatesFeature extends UserFeature {
 
                         WynntilsMod.info("Attempting to auto-update.");
 
-                        McUtils.sendMessageToClient(
-                                Component.literal("Auto-updating...").withStyle(ChatFormatting.YELLOW));
+                        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
+                                .withStyle(ChatFormatting.YELLOW));
 
                         CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
 
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {
-                                case SUCCESSFUL -> McUtils.sendMessageToClient(Component.literal(
-                                                "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
-                                        .withStyle(ChatFormatting.DARK_GREEN));
+                                case SUCCESSFUL -> McUtils.sendMessageToClient(
+                                        Component.translatable("feature.wynntils.updates.result.successful")
+                                                .withStyle(ChatFormatting.DARK_GREEN));
                                 case ERROR -> McUtils.sendMessageToClient(
-                                        Component.literal("Error applying Wynntils/Artemis update.")
+                                        Component.translatable("feature.wynntils.updates.result.error")
                                                 .withStyle(ChatFormatting.DARK_RED));
                                 case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                        Component.literal("Wynntils/Artemis is already on latest version.")
+                                        Component.translatable("feature.wynntils.updates.result.latest")
                                                 .withStyle(ChatFormatting.YELLOW));
                                 case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                                        Component.literal("Update was already downloaded. It will apply on shutdown.")
+                                        Component.translatable("feature.wynntils.updates.result.pending")
                                                 .withStyle(ChatFormatting.YELLOW));
                             }
                         });
@@ -91,18 +91,20 @@ public class UpdatesFeature extends UserFeature {
     }
 
     private static void remindToUpdateIfExists(String newVersion) {
-        MutableComponent clickable = Component.literal("here.");
+        MutableComponent clickable = Component.translatable("feature.wynntils.updates.reminder.clickable");
         clickable.setStyle(clickable
                 .getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                 .withUnderlined(true)
                 .withBold(true));
-        McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis]: Version " + newVersion
-                        + " is the latest version, but you are using build "
-                        + WynntilsMod.getVersion() + ". Please consider updating by clicking ")
-                .append(clickable)
-                .append(Component.literal(
-                        "\nPlease note that Artemis is in alpha, and newer builds might introduce bugs."))
-                .withStyle(ChatFormatting.GREEN));
+
+        McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis]: ")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.translatable(
+                                "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
+                        .append(clickable)
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("feature.wynntils.updates.reminder.alpha"))
+                        .withStyle(ChatFormatting.GREEN)));
     }
 }

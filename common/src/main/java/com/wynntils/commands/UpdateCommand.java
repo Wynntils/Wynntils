@@ -25,7 +25,7 @@ public class UpdateCommand extends CommandBase {
     private int update(CommandContext<CommandSourceStack> context) {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             context.getSource()
-                    .sendFailure(Component.literal("Development environment detected, cannot update!")
+                    .sendFailure(Component.translatable("feature.wynntils.updates.error.development")
                             .withStyle(ChatFormatting.DARK_RED));
             WynntilsMod.error("Development environment detected, cannot update!");
             return 0;
@@ -37,24 +37,27 @@ public class UpdateCommand extends CommandBase {
 
             completableFuture.whenComplete((result, throwable) -> {
                 switch (result) {
-                    case SUCCESSFUL -> McUtils.sendMessageToClient(Component.literal(
-                                    "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.")
-                            .withStyle(ChatFormatting.DARK_GREEN));
+                    case SUCCESSFUL -> McUtils.sendMessageToClient(
+                            Component.translatable("feature.wynntils.updates.result.successful")
+                                    .withStyle(ChatFormatting.DARK_GREEN));
                     case ERROR -> McUtils.sendMessageToClient(
-                            Component.literal("Error applying Wynntils/Artemis update.")
+                            Component.translatable("feature.wynntils.updates.result.error")
                                     .withStyle(ChatFormatting.DARK_RED));
                     case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                            Component.literal("Wynntils/Artemis is already on latest version.")
+                            Component.translatable("feature.wynntils.updates.result.latest")
                                     .withStyle(ChatFormatting.YELLOW));
                     case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                            Component.literal("Update was already downloaded. It will apply on shutdown.")
+                            Component.translatable("feature.wynntils.updates.result.pending")
                                     .withStyle(ChatFormatting.YELLOW));
                 }
             });
         });
 
         context.getSource()
-                .sendSuccess(Component.literal("Checking for updates...").withStyle(ChatFormatting.GREEN), false);
+                .sendSuccess(
+                        Component.translatable("feature.wynntils.updates.checking")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
         return 1;
     }

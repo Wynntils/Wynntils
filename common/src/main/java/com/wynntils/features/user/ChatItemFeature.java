@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -67,12 +68,11 @@ public class ChatItemFeature extends UserFeature {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
-        if (!ChatItemModel.chatItemMatcher(e.getCodedMessage()).find()) return; // no chat items to replace
 
         e.setMessage(ChatItemModel.insertItemComponents(message));
     }
