@@ -1,8 +1,16 @@
+## [0.0.1-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.113...v0.0.1-alpha.114) (2022-12-03)
+
+
+### New Features
+
+* Improve abstraction of redirected messages ([#765](https://github.com/Wynntils/Artemis/issues/765)) ([c0936a7](https://github.com/Wynntils/Artemis/commit/c0936a70be835088bf4238a1468d3789b7c06c88))
+
 ## [0.0.1-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.112...v0.0.1-alpha.113) (2022-12-03)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.1-alpha.113 [skip ci] ([be44587](https://github.com/Wynntils/Artemis/commit/be4458791100c0a37bd801b4ab247444d62583bb))
 * Update README ([#764](https://github.com/Wynntils/Artemis/issues/764)) ([ad3e873](https://github.com/Wynntils/Artemis/commit/ad3e87397db11b7a2453f90bc547fd477a06dabf))
 
 ## [0.0.1-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.111...v0.0.1-alpha.112) (2022-12-03)
@@ -176,16 +184,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.110 [skip ci] ([5f610a1](https://github.com/Wynntils/Artemis/commit/5f610a121763f1e5c706a5096257d8289d48617b))
-
-## [0.0.1-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.108...v0.0.1-alpha.109) (2022-12-02)
-
-
-### New Features
-
-* Add off-screen indicator to WorldWaypointDistanceFeature ([#760](https://github.com/Wynntils/Artemis/issues/760)) ([3d50829](https://github.com/Wynntils/Artemis/commit/3d50829e662ca2ce387a6e72a14035daec02a85c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.109 [skip ci] ([b0e911d](https://github.com/Wynntils/Artemis/commit/b0e911dc94e6af0f6c20dcdc32bfcd10873428ca))
 
