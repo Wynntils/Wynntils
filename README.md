@@ -7,7 +7,7 @@ Artemis
 [![License](https://img.shields.io/badge/license-AGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
 
 <div align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=30%>
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=20%>
 
 *(Image in public domain)*
 </div>
