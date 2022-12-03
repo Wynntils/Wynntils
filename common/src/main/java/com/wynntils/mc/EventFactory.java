@@ -327,8 +327,12 @@ public final class EventFactory {
         post(new ContainerCloseEvent.Post());
     }
 
-    public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
-        return post(new SetSlotEvent(container, slot, item));
+    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack item) {
+        return post(new SetSlotEvent.Pre(container, slot, item));
+    }
+
+    public static void onSetSlotPost(Container container, int slot, ItemStack item) {
+        post(new SetSlotEvent.Post(container, slot, item));
     }
 
     public static InventoryKeyPressEvent onInventoryKeyPress(
