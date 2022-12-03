@@ -81,5 +81,19 @@ public class CommandAliasesFeature extends UserFeature {
         public String getOriginalCommand() {
             return originalCommand;
         }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            if (other == null || getClass() != other.getClass()) return false;
+
+            CommandAlias that = (CommandAlias) other;
+            return originalCommand.equals(that.originalCommand) && aliases.equals(that.aliases);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(originalCommand, aliases);
+        }
     }
 }
