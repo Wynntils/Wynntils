@@ -10,7 +10,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -19,11 +18,11 @@ import net.minecraft.network.chat.TextComponent;
 public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
-    private final Consumer<Integer> onClick;
+    private final Runnable onClick;
     private final List<Component> tooltip;
 
     public BasicTexturedButton(
-            int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
+            int x, int y, int width, int height, Texture texture, Runnable onClick, List<Component> tooltip) {
         super(x, y, width, height, new TextComponent("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
