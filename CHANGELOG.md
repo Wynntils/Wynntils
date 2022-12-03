@@ -1,3 +1,10 @@
+## [0.0.1-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.112...v0.0.1-alpha.113) (2022-12-03)
+
+
+### Miscellaneous Chores
+
+* Update README ([#764](https://github.com/Wynntils/Artemis/issues/764)) ([ad3e873](https://github.com/Wynntils/Artemis/commit/ad3e87397db11b7a2453f90bc547fd477a06dabf))
+
 ## [0.0.1-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.111...v0.0.1-alpha.112) (2022-12-03)
 
 
@@ -141,6 +148,7 @@
 * Rebuild broken version [#3](https://github.com/Wynntils/Artemis/issues/3) ([109a8ba](https://github.com/Wynntils/Artemis/commit/109a8bab24d7461401ba2d5b685c202d1f927484))
 * Rebuild for quilt ([7d558b0](https://github.com/Wynntils/Artemis/commit/7d558b01059360352d2cba48bb29b232f8825d48))
 * Rebuild for quilt ([6aef47a](https://github.com/Wynntils/Artemis/commit/6aef47a0fd8f07a8a4b92f270fc352ab63416841))
+* **release:** v0.0.1-alpha.112 [skip ci] ([41c9fa2](https://github.com/Wynntils/Artemis/commit/41c9fa282c2f508fb8f92f07187d3539fa0ad6d5))
 * restore main version ([911c92e](https://github.com/Wynntils/Artemis/commit/911c92e4257d1647e70bda79223cb540d1155a86))
 * test main -> alpha integration ([b947105](https://github.com/Wynntils/Artemis/commit/b947105015c63723ee7fe88239a8fc72bee472a3))
 * Update gradle [skip ci] ([#727](https://github.com/Wynntils/Artemis/issues/727)) ([3425ece](https://github.com/Wynntils/Artemis/commit/3425ececbf59a080d2f361df99c7afebebb14ba7))
@@ -180,16 +188,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.109 [skip ci] ([b0e911d](https://github.com/Wynntils/Artemis/commit/b0e911dc94e6af0f6c20dcdc32bfcd10873428ca))
-
-## [0.0.1-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.107...v0.0.1-alpha.108) (2022-12-01)
-
-
-### Bug Fixes
-
-* Fix `allowClickOnEmeraldPouchInBlockingMode` config logic ([#755](https://github.com/Wynntils/Artemis/issues/755)) ([230eb7c](https://github.com/Wynntils/Artemis/commit/230eb7c7be7a67e1d91e62aae96cc1f1cb99cab0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.108 [skip ci] ([4f2e654](https://github.com/Wynntils/Artemis/commit/4f2e654f1e0fd39ed2c2202a2112911802107566))
 
