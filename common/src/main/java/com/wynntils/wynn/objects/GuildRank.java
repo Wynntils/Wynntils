@@ -5,13 +5,13 @@
 package com.wynntils.wynn.objects;
 
 public enum GuildRank {
-    Owner("Owner", "★★★★★"),
-    Chief("Chief", "★★★★"),
-    Strategist("Strategist", "★★★"),
-    Captain("Captain", "★★"),
-    Recruiter("Recruiter", "★"),
-    Recruit("Recruit", " "),
-    None("None", "");
+    Owner("Owner", 5),
+    Chief("Chief", 4),
+    Strategist("Strategist", 3),
+    Captain("Captain", 2),
+    Recruiter("Recruiter", 1),
+    Recruit("Recruit", 0),
+    None("None", 0);
 
     private final String rank;
     private final int stars;
@@ -43,7 +43,7 @@ public enum GuildRank {
         return rank;
     }
 
-    public String getStars() {
+    public int getStars() {
         return stars;
     }
 }
