@@ -13,6 +13,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
@@ -60,7 +61,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_HELP_BUTTON,
-                () -> {},
+                (b) -> {},
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
@@ -94,6 +95,24 @@ public class MainMapScreen extends AbstractMapScreen {
                                 .append(new TranslatableComponent("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_SHARE_BUTTON,
+                this::shareLocationOrCompass,
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                                .append(new TranslatableComponent("screens.wynntils.map.share.name")),
+                        new TranslatableComponent("screens.wynntils.map.share.description1"),
+                        new TranslatableComponent("screens.wynntils.map.share.description2"),
+                        new TranslatableComponent("screens.wynntils.map.share.description3"))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -102,7 +121,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_WAYPOINT_FOCUS_BUTTON,
-                () -> {
+                (b) -> {
                     if (KeyboardUtils.isShiftDown()) {
                         centerMapAroundPlayer();
                         return;
@@ -133,7 +152,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                () -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
+                (b) -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -278,6 +297,27 @@ public class MainMapScreen extends AbstractMapScreen {
         CompassModel.setCompassLocation(compassLocation);
 
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+    }
+
+    private void shareLocationOrCompass(int button) {
+        boolean shareCompass =
+                KeyboardUtils.isShiftDown() && CompassModel.getCompassLocation().isPresent();
+
+        String target = null;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            target = "guild";
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            target = "party";
+        }
+
+        if (target == null) return;
+
+        if (shareCompass) {
+            LocationUtils.shareCompass(target, CompassModel.getCompassLocation().get());
+        } else {
+            LocationUtils.shareLocation(target);
+        }
     }
 
     public void setHovered(Poi hovered) {
