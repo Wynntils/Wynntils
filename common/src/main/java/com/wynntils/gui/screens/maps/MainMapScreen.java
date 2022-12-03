@@ -21,8 +21,9 @@ import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.MapLocation;
-import com.wynntils.wynn.model.map.poi.PlayerPoi;
+import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
@@ -198,7 +199,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
-        pois.addAll(renderedPlayers.stream().map(PlayerPoi::new).toList());
+        pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
@@ -233,7 +234,11 @@ public class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
-                    CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    if (hovered instanceof IconPoi iconPoi) {
+                        CompassModel.setCompassLocation(new Location(hovered.getLocation()), iconPoi.getIcon());
+                    } else {
+                        CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                    }
                 } else {
                     final Poi finalHovered = hovered;
                     CompassModel.setDynamicCompassLocation(

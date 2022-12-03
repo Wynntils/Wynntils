@@ -63,7 +63,8 @@ public class CustomPoi extends StaticIconPoi {
         if (other == null || getClass() != other.getClass()) return false;
 
         CustomPoi customPoi = (CustomPoi) other;
-        return Float.compare(customPoi.minZoom, minZoom) == 0
+        return location.equals(customPoi.location)
+                && Float.compare(customPoi.minZoom, minZoom) == 0
                 && name.equals(customPoi.name)
                 && color.equals(customPoi.color)
                 && icon == customPoi.icon;
@@ -71,6 +72,6 @@ public class CustomPoi extends StaticIconPoi {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, color, icon, minZoom);
+        return Objects.hash(location, name, color, icon, minZoom);
     }
 }
