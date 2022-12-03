@@ -37,7 +37,7 @@ public class PlayerInventoryModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onContainerSetEvent(ContainerSetContentEvent e) {
+    public static void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         // Only update if the container is the player inventory
         if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
             updateCache();
@@ -45,7 +45,7 @@ public class PlayerInventoryModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onSlotSetEvent(SetSlotEvent e) {
+    public static void onSlotSetEvent(SetSlotEvent.Post e) {
         // Only update if the container is the player inventory
         if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
             updateCache();
