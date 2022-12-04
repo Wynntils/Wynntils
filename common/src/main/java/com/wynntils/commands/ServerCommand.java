@@ -10,6 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.webapi.ServerListModel;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import com.wynntils.utils.StringUtils;
@@ -84,7 +85,7 @@ public class ServerCommand extends CommandBase {
     private int serverInfo(CommandContext<CommandSourceStack> context) {
         HashMap<String, ServerProfile> servers;
         try {
-            servers = WebManager.getServerList();
+            servers = ServerListModel.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
@@ -170,7 +171,7 @@ public class ServerCommand extends CommandBase {
     private int serverUptimeList(CommandContext<CommandSourceStack> context) {
         HashMap<String, ServerProfile> servers;
         try {
-            servers = WebManager.getServerList();
+            servers = ServerListModel.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(

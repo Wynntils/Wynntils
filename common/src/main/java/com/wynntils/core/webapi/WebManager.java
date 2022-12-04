@@ -7,7 +7,6 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
@@ -17,7 +16,6 @@ import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
-import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemType;
@@ -56,9 +54,9 @@ public final class WebManager extends CoreManager {
 
     private static boolean setup = false;
 
-    private static WebReader apiUrls = null;
+    public static WebReader apiUrls = null;
 
-    private static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     private static HashMap<String, ItemProfile> items = new HashMap<>();
     private static Collection<ItemProfile> directItems = new ArrayList<>();
@@ -266,28 +264,6 @@ public final class WebManager extends CoreManager {
         } else {
             return new HashMap<>();
         }
-    }
-
-    public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (apiUrls == null || !isAthenaOnline()) return new HashMap<>();
-        String url = apiUrls.get("Athena") + "/cache/get/serverList";
-
-        URLConnection st = generateURLRequest(url);
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        JsonObject servers = json.getAsJsonObject("servers");
-        HashMap<String, ServerProfile> result = new HashMap<>();
-
-        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
-        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-            ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
-            profile.matchTime(serverTime);
-
-            result.put(entry.getKey(), profile);
-        }
-
-        return result;
     }
 
     public static void updateDiscoveries() {

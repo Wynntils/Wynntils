@@ -4,12 +4,18 @@
  */
 package com.wynntils.core.webapi;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,7 +27,7 @@ public class ServerListModel extends Model {
 
     public static synchronized void updateServers() {
         try {
-            availableServers = WebManager.getServerList();
+            availableServers = getServerList();
         } catch (IOException e) {
             WynntilsMod.error("Failed to update server list", e);
         }
@@ -38,5 +44,27 @@ public class ServerListModel extends Model {
 
         // Run async to avoid blocking the render thread
         new Thread(ServerListModel::updateServers).start();
+    }
+
+    public static HashMap<String, ServerProfile> getServerList() throws IOException {
+        if (WebManager.apiUrls == null || !WebManager.isAthenaOnline()) return new HashMap<>();
+        String url = WebManager.apiUrls.get("Athena") + "/cache/get/serverList";
+
+        URLConnection st = WebManager.generateURLRequest(url);
+        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
+
+        JsonObject servers = json.getAsJsonObject("servers");
+        HashMap<String, ServerProfile> result = new HashMap<>();
+
+        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
+        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+            ServerProfile profile = WebManager.gson.fromJson(entry.getValue(), ServerProfile.class);
+            profile.matchTime(serverTime);
+
+            result.put(entry.getKey(), profile);
+        }
+
+        return result;
     }
 }
