@@ -23,6 +23,7 @@ import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -146,6 +147,7 @@ public class ChatTabsFeature extends UserFeature {
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
         if (event.getKeyCode() != switchTabsKeybind.getKeyMapping().key.getValue()) return;
         if (!(McUtils.mc().screen instanceof ChatScreen)) return;
+        if (!KeyboardUtils.isShiftDown()) return;
 
         event.setCanceled(true);
         ChatTabModel.setFocusedTab(
