@@ -11,7 +11,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.webapi.ServerListModel;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -131,7 +130,7 @@ public class ServerCommand extends CommandBase {
     private int serverList(CommandContext<CommandSourceStack> context) {
         Map<String, List<String>> onlinePlayers;
         try {
-            onlinePlayers = WebManager.getOnlinePlayers();
+            onlinePlayers = ServerListModel.getOnlinePlayers();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
