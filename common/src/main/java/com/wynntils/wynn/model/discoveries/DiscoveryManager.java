@@ -4,11 +4,15 @@
  */
 package com.wynntils.wynn.model.discoveries;
 
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.ApiUrls;
+import com.wynntils.core.webapi.WebManager;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
@@ -20,7 +24,11 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
+import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
+import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -34,6 +42,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static List<DiscoveryInfo> discoveries = List.of();
     private static List<DiscoveryInfo> secretDiscoveries = List.of();
+    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static List<Component> discoveriesTooltip = List.of();
     private static List<Component> secretDiscoveriesTooltip = List.of();
@@ -117,6 +126,10 @@ public class DiscoveryManager extends CoreManager {
         return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
     }
 
+    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+        return discoveryInfoList;
+    }
+
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
         String queryUrl = ApiUrls.getApiUrl("WikiDiscoveryQuery");
 
@@ -180,6 +193,26 @@ public class DiscoveryManager extends CoreManager {
 
             return true;
         });
+    }
+
+    private static void updateDiscoveriesResource() {
+        if (ApiUrls.getApiUrls() == null) return;
+
+        String url = ApiUrls.getApiUrls().get("Discoveries");
+        DownloadableResource dl =
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "discoveries.json"), "discoveries");
+        dl.handleJsonObject(json -> {
+            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+
+            List<DiscoveryProfile> discoveries = WebManager.gson.fromJson(json, type);
+            discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
+            return true;
+        });
+    }
+
+    public static void reloadDiscoveries() {
+        updateDiscoveriesResource();
+        queryDiscoveries();
     }
 
     public enum DiscoveryOpenAction {

@@ -10,14 +10,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.account.WynntilsAccount;
-import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.SplashManager;
-import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -36,8 +31,6 @@ public final class WebManager extends CoreManager {
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
     public static final Gson gson = new Gson();
-
-    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
@@ -85,21 +78,6 @@ public final class WebManager extends CoreManager {
         }
     }
 
-    public static void updateDiscoveries() {
-        if (ApiUrls.getApiUrls() == null) return;
-
-        String url = ApiUrls.getApiUrls().get("Discoveries");
-        DownloadableResource dl =
-                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "discoveries.json"), "discoveries");
-        dl.handleJsonObject(json -> {
-            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
-
-            List<DiscoveryProfile> discoveries = gson.fromJson(json, type);
-            discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
-            return true;
-        });
-    }
-
     public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", getUserAgent());
@@ -109,10 +87,6 @@ public final class WebManager extends CoreManager {
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
         return st;
-    }
-
-    public static List<DiscoveryInfo> getDiscoveryInfoList() {
-        return discoveryInfoList;
     }
 
     public static String getUserAgent() {
