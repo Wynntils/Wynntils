@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.core.webapi.ApiUrls;
+import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;

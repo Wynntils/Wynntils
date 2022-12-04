@@ -6,7 +6,7 @@ package com.wynntils.core.net.api;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.net.Reference;
-import com.wynntils.core.webapi.ApiUrls;
+import com.wynntils.core.net.athena.ApiUrls;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;

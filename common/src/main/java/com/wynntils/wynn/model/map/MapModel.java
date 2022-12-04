@@ -12,7 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.core.webapi.ApiUrls;
+import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;

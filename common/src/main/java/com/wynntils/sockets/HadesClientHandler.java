@@ -5,7 +5,7 @@
 package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.account.WynntilsAccountManager;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
