@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.ApiUrls;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;
@@ -24,6 +23,8 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class ItemProfilesManager {
+    private static final Gson GSON = new Gson();
+
     private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     //    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
@@ -70,20 +71,20 @@ public class ItemProfilesManager {
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "item_list.json"), "item_list");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-            translatedReferences = WebManager.gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
+            translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
             internalIdentifications =
-                    WebManager.gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
+                    GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-            majorIds = WebManager.gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+            majorIds = GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             //            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
             IdentificationOrderer.INSTANCE =
-                    WebManager.gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
+                    GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-            ItemProfile[] gItems = WebManager.gson.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            ItemProfile[] gItems = GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
 
             HashMap<String, ItemProfile> citems = new HashMap<>();
             for (ItemProfile prof : gItems) {
@@ -111,10 +112,10 @@ public class ItemProfilesManager {
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "ingredient_list.json"), "ingredientList");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-            ingredientHeadTextures = WebManager.gson.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
+            ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
             IngredientProfile[] gItems =
-                    WebManager.gson.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
+                    GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
             HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
             for (IngredientProfile prof : gItems) {

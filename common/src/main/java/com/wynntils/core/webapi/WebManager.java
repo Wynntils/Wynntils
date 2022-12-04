@@ -12,9 +12,6 @@ import com.wynntils.wynn.netresources.SplashManager;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
-
-    public static final Gson gson = new Gson();
-
     public static void init() {
         ApiUrls.tryReloadApiUrls();
         WynntilsAccount.setupUserAccount();

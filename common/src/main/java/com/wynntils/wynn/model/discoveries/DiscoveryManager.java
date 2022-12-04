@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.discoveries;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.api.ApiRequester;
@@ -12,7 +13,6 @@ import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.ApiUrls;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
@@ -39,6 +39,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscoveryManager extends CoreManager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
+    private static final Gson GSON = new Gson();
 
     private static List<DiscoveryInfo> discoveries = List.of();
     private static List<DiscoveryInfo> secretDiscoveries = List.of();
@@ -204,7 +205,7 @@ public class DiscoveryManager extends CoreManager {
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-            List<DiscoveryProfile> discoveries = WebManager.gson.fromJson(json, type);
+            List<DiscoveryProfile> discoveries = GSON.fromJson(json, type);
             discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
             return true;
         });

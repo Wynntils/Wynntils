@@ -5,6 +5,7 @@
 package com.wynntils.core.webapi;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -28,6 +29,7 @@ import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ServerListModel extends Model {
+    private static final Gson GSON = new Gson();
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public static void init() {}
@@ -66,7 +68,7 @@ public class ServerListModel extends Model {
 
         long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
         for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-            ServerProfile profile = WebManager.gson.fromJson(entry.getValue(), ServerProfile.class);
+            ServerProfile profile = GSON.fromJson(entry.getValue(), ServerProfile.class);
             profile.matchTime(serverTime);
 
             result.put(entry.getKey(), profile);
@@ -95,7 +97,7 @@ public class ServerListModel extends Model {
 
             Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
 
-            return WebManager.gson.fromJson(main, type);
+            return GSON.fromJson(main, type);
         } else {
             return new HashMap<>();
         }
