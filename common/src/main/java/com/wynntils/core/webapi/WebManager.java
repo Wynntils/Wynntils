@@ -13,7 +13,6 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.account.WynntilsAccount;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
@@ -35,12 +34,7 @@ import java.util.Optional;
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
 
-    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
-
-    private static boolean setup = false;
-
-    public static WebReader apiUrls = null;
 
     public static final Gson gson = new Gson();
 
@@ -55,7 +49,7 @@ public final class WebManager extends CoreManager {
             WynntilsMod.getModLoader());
 
     public static void init() {
-        tryReloadApiUrls(false);
+        ApiUrls.tryReloadApiUrls();
         WynntilsAccount.setupUserAccount();
 
         WebManager.updateCurrentSplash();
@@ -64,26 +58,9 @@ public final class WebManager extends CoreManager {
     }
 
     public static void reset() {
-        // tryReloadApiUrls
-        apiUrls = null;
+        ApiUrls.reset();
 
         ItemProfilesManager.reset();
-    }
-
-    private static void tryReloadApiUrls(boolean async) {
-        String url = "https://api.wynntils.com/webapi";
-        DownloadableResource dl = Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "webapi.txt"), "webapi");
-        dl.handleBytes(bytes -> {
-            String string = new String(bytes, StandardCharsets.UTF_8);
-            WebReader apiUrls = WebReader.fromString(string);
-            if (apiUrls == null) return false;
-            if (!setup) {
-                setup = true;
-            }
-
-            WynntilsMod.postEvent(new WebSetupEvent());
-            return true;
-        });
     }
 
     /**
@@ -94,9 +71,9 @@ public final class WebManager extends CoreManager {
      * @throws IOException thrown by URLConnection
      */
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
+        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("OnlinePlayers")) return new HashMap<>();
 
-        URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
+        URLConnection st = generateURLRequest(ApiUrls.getApiUrls().get("OnlinePlayers"));
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -112,11 +89,11 @@ public final class WebManager extends CoreManager {
     }
 
     public static void updateDiscoveries() {
-        if (apiUrls == null) return;
+        if (ApiUrls.getApiUrls() == null) return;
 
-        String url = apiUrls.get("Discoveries");
+        String url = ApiUrls.getApiUrls().get("Discoveries");
         DownloadableResource dl =
-                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "discoveries.json"), "discoveries");
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "discoveries.json"), "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
@@ -127,26 +104,21 @@ public final class WebManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
+        if (ApiUrls.getApiUrls() == null || ApiUrls.getApiUrls().getList("Splashes") == null) return;
 
-        List<String> splashes = apiUrls.getList("Splashes");
+        List<String> splashes = ApiUrls.getApiUrls().getList("Splashes");
         currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
     }
 
     public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty("User-Agent", USER_AGENT);
-        if (apiUrls != null && apiUrls.hasKey("WynnApiKey")) st.setRequestProperty("apikey", apiUrls.get("WynnApiKey"));
+        st.setRequestProperty("User-Agent", getUserAgent());
+        if (ApiUrls.getApiUrls() != null && ApiUrls.getApiUrls().hasKey("WynnApiKey"))
+            st.setRequestProperty("apikey", ApiUrls.getApiUrls().get("WynnApiKey"));
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
         return st;
-    }
-
-    public static String getApiUrl(String key) {
-        if (apiUrls == null) return null;
-
-        return apiUrls.get(key);
     }
 
     public static List<DiscoveryInfo> getDiscoveryInfoList() {
@@ -158,15 +130,11 @@ public final class WebManager extends CoreManager {
     }
 
     public static boolean isSetup() {
-        return setup;
+        return ApiUrls.setup;
     }
 
     public static String getCurrentSplash() {
         return currentSplash;
-    }
-
-    public static Optional<WebReader> getApiUrls() {
-        return Optional.ofNullable(apiUrls);
     }
 
     public static Optional<WynntilsAccount> getAccount() {

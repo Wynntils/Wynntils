@@ -39,11 +39,11 @@ public class TerritoryManager extends CoreManager {
     }
 
     public static boolean tryLoadTerritories() {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
+        if (ApiUrls.getOptionalApiUrls().isEmpty() || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
 
-        String url = WebManager.getApiUrls().get().get("Athena") + "/cache/get/territoryList";
+        String url = ApiUrls.getOptionalApiUrls().get().get("Athena") + "/cache/get/territoryList";
         DownloadableResource dl =
-                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "territories.json"), "territory");
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "territories.json"), "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 

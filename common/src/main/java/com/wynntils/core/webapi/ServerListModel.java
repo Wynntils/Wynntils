@@ -48,8 +48,8 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (WebManager.apiUrls == null || !WynntilsAccount.isAthenaOnline()) return new HashMap<>();
-        String url = WebManager.apiUrls.get("Athena") + "/cache/get/serverList";
+        if (ApiUrls.getApiUrls() == null || !WynntilsAccount.isAthenaOnline()) return new HashMap<>();
+        String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/serverList";
 
         URLConnection st = WebManager.generateURLRequest(url);
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);

@@ -12,7 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
@@ -60,7 +60,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadMaps() {
-        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
 
         MAPS.clear();
 
@@ -93,7 +93,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
         DownloadableResource dl =
                 Downloader.download(PLACES_JSON_URL, new File(mapDirectory, "places.json"), "maps-places");
         dl.handleJsonObject(json -> {
@@ -106,7 +106,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
         DownloadableResource dl =
                 Downloader.download(SERVICES_JSON_URL, new File(mapDirectory, "services.json"), "maps-services");
         dl.handleJsonObject(json -> {

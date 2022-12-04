@@ -5,11 +5,17 @@
 package com.wynntils.core.webapi;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
+import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.utils.StringUtils;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,21 +24,57 @@ import java.util.regex.Pattern;
  *
  * <p>Ex: https://api.wynntils.com/webapi provides such a format
  */
-public class WebReader {
+public class ApiUrls {
+    public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final Pattern LINE_MATCHER = Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");
+
+    public static ApiUrls getApiUrls() {
+        return apiUrls;
+    }
+
+    private static ApiUrls apiUrls = null;
+    static boolean setup = false;
 
     private Map<String, String> values;
     private Map<String, List<String>> lists;
 
-    private WebReader() {}
-
-    public static WebReader fromString(String data) {
-        WebReader result = new WebReader();
+    private static ApiUrls fromString(String data) {
+        ApiUrls result = new ApiUrls();
         if (!result.parseData(data)) {
             return null;
         }
 
         return result;
+    }
+
+    public static void tryReloadApiUrls() {
+        String url = "https://api.wynntils.com/webapi";
+        DownloadableResource dl = Downloader.download(url, new File(API_CACHE_ROOT, "webapi.txt"), "webapi");
+        dl.handleBytes(bytes -> {
+            String string = new String(bytes, StandardCharsets.UTF_8);
+            apiUrls = fromString(string);
+            if (apiUrls == null) return false;
+            if (!setup) {
+                setup = true;
+            }
+
+            WynntilsMod.postEvent(new WebSetupEvent());
+            return true;
+        });
+    }
+
+    public static void reset() {
+        apiUrls = null;
+    }
+
+    public static String getApiUrl(String key) {
+        if (getApiUrls() == null) return null;
+
+        return getApiUrls().get(key);
+    }
+
+    public static Optional<ApiUrls> getOptionalApiUrls() {
+        return Optional.ofNullable(apiUrls);
     }
 
     public Map<String, String> getValues() {

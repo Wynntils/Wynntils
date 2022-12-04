@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
+import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
@@ -42,10 +43,10 @@ public class ItemProfilesManager {
     }
 
     private static void tryLoadItemGuesses() {
-        if (WebManager.apiUrls == null || !WebManager.apiUrls.hasKey("ItemGuesses")) return;
-        String url = WebManager.apiUrls.get("ItemGuesses");
+        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("ItemGuesses")) return;
+        String url = ApiUrls.getApiUrls().get("ItemGuesses");
         DownloadableResource dl =
-                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "item_guesses.json"), "item_guesses");
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "item_guesses.json"), "item_guesses");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -63,10 +64,10 @@ public class ItemProfilesManager {
     }
 
     private static void tryLoadItemList() {
-        if (WebManager.apiUrls == null || !WebManager.apiUrls.hasKey("Athena")) return;
-        String url = WebManager.apiUrls.get("Athena") + "/cache/get/itemList";
+        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("Athena")) return;
+        String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/itemList";
         DownloadableResource dl =
-                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "item_list.json"), "item_list");
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "item_list.json"), "item_list");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WebManager.gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -103,11 +104,11 @@ public class ItemProfilesManager {
     }
 
     private static void tryLoadIngredientList() {
-        if (WebManager.apiUrls == null || !WebManager.apiUrls.hasKey("Athena")) return;
-        String url = WebManager.apiUrls.get("Athena") + "/cache/get/ingredientList";
+        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("Athena")) return;
+        String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/ingredientList";
 
         DownloadableResource dl =
-                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "ingredient_list.json"), "ingredientList");
+                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "ingredient_list.json"), "ingredientList");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WebManager.gson.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

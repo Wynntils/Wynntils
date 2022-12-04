@@ -12,6 +12,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.List;
@@ -147,9 +148,9 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = WebManager.getApiUrls().isEmpty()
+        String discordInvite = ApiUrls.getOptionalApiUrls().isEmpty()
                 ? null
-                : WebManager.getApiUrls().get().get("DiscordInvite");
+                : ApiUrls.getOptionalApiUrls().get().get("DiscordInvite");
         MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         if (discordInvite != null) {

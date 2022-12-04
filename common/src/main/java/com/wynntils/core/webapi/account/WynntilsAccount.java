@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import java.math.BigInteger;
@@ -74,9 +74,9 @@ public class WynntilsAccount {
     }
 
     private boolean login() {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
+        if (ApiUrls.getOptionalApiUrls().isEmpty() || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
 
-        String baseUrl = WebManager.getApiUrls().get().get("Athena");
+        String baseUrl = ApiUrls.getOptionalApiUrls().get().get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
