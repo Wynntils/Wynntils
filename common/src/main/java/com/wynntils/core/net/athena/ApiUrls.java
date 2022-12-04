@@ -12,11 +12,9 @@ import com.wynntils.core.managers.CoreManager;
  * <p>Ex: https://api.wynntils.com/webapi provides such a format
  */
 public class ApiUrls extends CoreManager {
-    public static void init() {
-    }
+    public static void init() {}
 
     public static boolean isSetup() {
         return true;
     }
-
 }

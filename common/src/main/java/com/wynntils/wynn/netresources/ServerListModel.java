@@ -13,7 +13,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;

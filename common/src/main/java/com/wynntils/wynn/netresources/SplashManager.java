@@ -5,7 +5,6 @@
 package com.wynntils.wynn.netresources;
 
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.utils.Utils;
 import java.util.List;
 

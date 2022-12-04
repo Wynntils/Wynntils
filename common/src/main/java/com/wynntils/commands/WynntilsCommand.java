@@ -158,8 +158,8 @@ public class WynntilsCommand extends CommandBase {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
         String discordInvite = Reference.URLs.getDiscordInvite();
-        MutableComponent link = new TextComponent(discordInvite)
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+        MutableComponent link =
+                new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
                 .withHoverEvent(new HoverEvent(

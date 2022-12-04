@@ -26,7 +26,6 @@ import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,8 +190,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static void updateDiscoveriesResource() {
         String url = Reference.URLs.getDiscoveries();
-        DownloadableResource dl =
-                Downloader.download(url, Downloader.dlFile("discoveries.json"), "discoveries");
+        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("discoveries.json"), "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

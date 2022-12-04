@@ -17,7 +17,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
@@ -105,8 +104,7 @@ public class GuildTerritoryModel extends Model {
 
     public static boolean tryLoadTerritories() {
         String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
-        DownloadableResource dl =
-                Downloader.download(url, Downloader.dlFile("territories.json"), "territory");
+        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("territories.json"), "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 

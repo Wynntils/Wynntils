@@ -17,7 +17,6 @@ import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemType;
 import com.wynntils.wynn.netresources.profiles.item.MajorIdentification;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,8 +49,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemGuesses() {
         String url = Reference.URLs.getItemGuesses();
-        DownloadableResource dl =
-                Downloader.download(url, Downloader.dlFile("item_guesses.json"), "item_guesses");
+        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("item_guesses.json"), "item_guesses");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -70,8 +68,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemList() {
         String url = Reference.URLs.getAthena() + "/cache/get/itemList";
-        DownloadableResource dl =
-                Downloader.download(url, Downloader.dlFile("item_list.json"), "item_list");
+        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("item_list.json"), "item_list");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -109,8 +106,7 @@ public class ItemProfilesManager extends CoreManager {
     private static void tryLoadIngredientList() {
         String url = Reference.URLs.getAthena() + "/cache/get/ingredientList";
 
-        DownloadableResource dl =
-                Downloader.download(url, Downloader.dlFile("ingredient_list.json"), "ingredientList");
+        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("ingredient_list.json"), "ingredientList");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

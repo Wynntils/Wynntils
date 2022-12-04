@@ -9,7 +9,6 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
