@@ -1,9 +1,21 @@
+## [0.0.1-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.119...v0.0.1-alpha.120) (2022-12-04)
+
+
+### Bug Fixes
+
+* Fix miss-use of CallbackInfoReturnable cancelling ([#778](https://github.com/Wynntils/Artemis/issues/778)) ([506b356](https://github.com/Wynntils/Artemis/commit/506b3564af505047b4a83809ebfdad7c39271c6c))
+
 ## [0.0.1-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.118...v0.0.1-alpha.119) (2022-12-03)
 
 
 ### Bug Fixes
 
 * No config value should be saved to disk unless edited ([#774](https://github.com/Wynntils/Artemis/issues/774)) ([385e309](https://github.com/Wynntils/Artemis/commit/385e309a8bb5d06be9f0857f85fdaff6569de690))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.119 [skip ci] ([7addf98](https://github.com/Wynntils/Artemis/commit/7addf98feb58149f929ed2855bf61a4843b83e28))
 
 ## [0.0.1-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.117...v0.0.1-alpha.118) (2022-12-03)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.116 [skip ci] ([9b346d7](https://github.com/Wynntils/Artemis/commit/9b346d76bafb5bd481ace9436547cb014c0ee5f7))
-
-## [0.0.1-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.114...v0.0.1-alpha.115) (2022-12-03)
-
-
-### New Features
-
-* Add share location button to main map ([#763](https://github.com/Wynntils/Artemis/issues/763)) ([9807559](https://github.com/Wynntils/Artemis/commit/9807559e8d79296eceaa505ee802b038f0b5c6ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.115 [skip ci] ([c7dde16](https://github.com/Wynntils/Artemis/commit/c7dde16d468bec36c513947101ccde73865edbf3))
 
