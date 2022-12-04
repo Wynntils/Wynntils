@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item.parsers;
 
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
@@ -150,8 +150,8 @@ public final class WynnItemMatchers {
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
-        ItemProfile profile = WebManager.getItemsMap().get(strippedName);
+        if (ItemProfilesManager.getItemsMap() == null || !ItemProfilesManager.getItemsMap().containsKey(strippedName)) return false;
+        ItemProfile profile = ItemProfilesManager.getItemsMap().get(strippedName);
         return (profile != null
                 && name.startsWith(profile.getTier().getChatFormatting().toString()));
     }

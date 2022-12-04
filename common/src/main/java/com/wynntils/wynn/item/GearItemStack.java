@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.item.DamageType;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.MajorIdentification;
@@ -69,8 +69,8 @@ public class GearItemStack extends WynnItemStack {
         super(stack);
 
         // get item profile
-        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(itemName)) return;
-        itemProfile = WebManager.getItemsMap().get(itemName);
+        if (ItemProfilesManager.getItemsMap() == null || !ItemProfilesManager.getItemsMap().containsKey(itemName)) return;
+        itemProfile = ItemProfilesManager.getItemsMap().get(itemName);
 
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();

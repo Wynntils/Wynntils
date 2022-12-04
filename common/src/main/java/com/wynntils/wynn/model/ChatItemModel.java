@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
@@ -145,7 +145,7 @@ public final class ChatItemModel {
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
         ItemProfile item =
-                WebManager.getItemsMap() != null ? WebManager.getItemsMap().get(name) : null;
+                ItemProfilesManager.getItemsMap() != null ? ItemProfilesManager.getItemsMap().get(name) : null;
         if (item == null) return null;
 
         // ids

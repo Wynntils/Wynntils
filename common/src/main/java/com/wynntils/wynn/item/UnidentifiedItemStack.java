@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemTier;
@@ -64,9 +64,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
         }
 
         if (levelRange == null) return;
-        if (WebManager.getItemGuesses() == null || WebManager.getItemsMap() == null) return;
+        if (ItemProfilesManager.getItemGuesses() == null || ItemProfilesManager.getItemsMap() == null) return;
 
-        ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = ItemProfilesManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
@@ -80,7 +80,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = WebManager.getItemsMap().get(item);
+            ItemProfile profile = ItemProfilesManager.getItemsMap().get(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

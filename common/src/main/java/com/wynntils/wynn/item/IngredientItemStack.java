@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientItemModifiers;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientModifiers;
@@ -39,7 +39,7 @@ public class IngredientItemStack extends WynnItemStack {
             throw new IllegalStateException("Matcher did not match for IngredientItemStack");
         }
 
-        ingredientProfile = WebManager.getIngredients().get(matcher.group(1));
+        ingredientProfile = ItemProfilesManager.getIngredients().get(matcher.group(1));
 
         isGuideStack = false;
         guideTooltip = List.of();
