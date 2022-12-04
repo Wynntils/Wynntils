@@ -13,8 +13,10 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.ApiUrls;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.account.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.netresources.ItemProfilesManager;
+import com.wynntils.wynn.netresources.SplashManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -79,8 +81,14 @@ public class WynntilsCommand extends CommandBase {
             feature.disable();
         }
 
-        WebManager.reset();
-        WebManager.init(); // reloads api urls as well as web manager
+        // reset
+        ApiUrls.reset();
+        ItemProfilesManager.reset();
+        // reloads api urls as well as web manager
+        ApiUrls.init();
+        ItemProfilesManager.init();
+        SplashManager.init();
+        WynntilsAccountManager.init();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {

@@ -5,6 +5,7 @@
 package com.wynntils.core.webapi;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.mc.event.WebSetupEvent;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
  *
  * <p>Ex: https://api.wynntils.com/webapi provides such a format
  */
-public class ApiUrls {
+public class ApiUrls extends CoreManager {
     public static final File API_CACHE_ROOT = WynntilsMod.getModStorageDir("apicache");
     private static final Pattern LINE_MATCHER = Pattern.compile("\\[(?<Key>[^\\[\\]]+)\\]\\s*=\\s*(?<Value>.+)");
 
@@ -37,6 +38,10 @@ public class ApiUrls {
 
     private Map<String, String> values;
     private Map<String, List<String>> lists;
+
+    public static void init() {
+        tryReloadApiUrls();
+    }
 
     private static ApiUrls fromString(String data) {
         ApiUrls result = new ApiUrls();

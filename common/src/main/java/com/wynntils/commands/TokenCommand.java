@@ -7,7 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.webapi.account.WynntilsAccount;
+import com.wynntils.core.webapi.account.WynntilsAccountManager;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -25,7 +25,7 @@ public class TokenCommand extends CommandBase {
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
-        Optional<WynntilsAccount> account = WynntilsAccount.getOptionalAccount();
+        Optional<WynntilsAccountManager> account = WynntilsAccountManager.getOptionalAccount();
         account.ifPresentOrElse(
                 wynntilsAccount -> {
                     MutableComponent text = new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);

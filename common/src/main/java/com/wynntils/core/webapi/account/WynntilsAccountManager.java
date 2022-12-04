@@ -6,6 +6,7 @@ package com.wynntils.core.webapi.account;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.ApiUrls;
@@ -25,13 +26,17 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
-public class WynntilsAccount {
-    private static WynntilsAccount account = null;
+public class WynntilsAccountManager extends CoreManager {
+    private static WynntilsAccountManager account = null;
     private String token;
     private boolean ready = false;
 
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
+
+    public static void init() {
+        setupUserAccount();
+    }
 
     public static boolean isLoggedIn() {
         return (account != null && account.isConnected());
@@ -40,7 +45,7 @@ public class WynntilsAccount {
     public static void setupUserAccount() {
         if (isLoggedIn()) return;
 
-        account = new WynntilsAccount();
+        account = new WynntilsAccountManager();
         boolean accountSetup = account.login();
 
         if (!accountSetup) {
@@ -66,7 +71,7 @@ public class WynntilsAccount {
         return (account != null && account.isConnected());
     }
 
-    public static Optional<WynntilsAccount> getOptionalAccount() {
+    public static Optional<WynntilsAccountManager> getOptionalAccount() {
         return Optional.ofNullable(account);
     }
 

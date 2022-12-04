@@ -12,7 +12,7 @@ import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.api.ApiRequester;
-import com.wynntils.core.webapi.account.WynntilsAccount;
+import com.wynntils.core.webapi.account.WynntilsAccountManager;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.netresources.profiles.ServerProfile;
@@ -56,7 +56,7 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (ApiUrls.getApiUrls() == null || !WynntilsAccount.isAthenaOnline()) return new HashMap<>();
+        if (ApiUrls.getApiUrls() == null || !WynntilsAccountManager.isAthenaOnline()) return new HashMap<>();
         String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/serverList";
 
         URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);

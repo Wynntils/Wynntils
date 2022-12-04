@@ -4,11 +4,12 @@
  */
 package com.wynntils.wynn.netresources;
 
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.utils.Utils;
 import java.util.List;
 
-public class SplashManager {
+public class SplashManager extends CoreManager {
     private static String currentSplash = "";
 
     public static void init() {

@@ -7,6 +7,7 @@ package com.wynntils.wynn.netresources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.ApiUrls;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class ItemProfilesManager {
+public class ItemProfilesManager extends CoreManager {
     private static final Gson GSON = new Gson();
 
     private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
@@ -37,7 +38,11 @@ public class ItemProfilesManager {
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
 
-    public static void loadCommonObjects() {
+    public static void init() {
+        loadCommonObjects();
+    }
+
+    private static void loadCommonObjects() {
         tryLoadItemList();
         tryLoadItemGuesses();
         tryLoadIngredientList();
