@@ -22,7 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-/** Tests if an item is a certain wynncraft item */
+/**
+ * Tests if an item is a certain wynncraft item
+ */
 public final class WynnItemMatchers {
     private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
@@ -40,7 +42,8 @@ public final class WynnItemMatchers {
             Pattern.compile(".*?§([2ebcf])([✤✦❉✹❋]) (Strength|Dexterity|Intelligence|Defence|Agility).*?");
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile(".*§b(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
-    private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
+    private static final Pattern DUNGEON_KEY_PATTERN =
+            Pattern.compile("(?:§.)*(?:\\d*x )*(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
     private static final Pattern INGREDIENT_OR_MATERIAL_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
