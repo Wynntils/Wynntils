@@ -40,3 +40,4 @@ accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions 
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
 mutable field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
 accessible method net/minecraft/client/gui/screens/ChatScreen insertText (Ljava/lang/String;Z)V
+accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
