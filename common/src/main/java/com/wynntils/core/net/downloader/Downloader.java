@@ -62,7 +62,8 @@ public class Downloader {
         // FIXME: implement
     }
 
-    public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout) throws IOException {
+    public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout)
+            throws IOException {
         HttpURLConnection st = (HttpURLConnection) new URL(url).openConnection();
         st.setRequestProperty("User-Agent", WebManager.getUserAgent());
         if (!headers.isEmpty()) headers.forEach(st::addRequestProperty);
@@ -72,8 +73,12 @@ public class Downloader {
         return st;
     }
 
-    public HttpURLConnection establishPostConnection(ThrowingConsumer<HttpURLConnection, IOException> writer,
-                                                     String url, Map<String, String> headers, int timeout) throws IOException {
+    public HttpURLConnection establishPostConnection(
+            ThrowingConsumer<HttpURLConnection, IOException> writer,
+            String url,
+            Map<String, String> headers,
+            int timeout)
+            throws IOException {
         HttpURLConnection st = establishConnection(url, headers, timeout);
         st.setDoOutput(true);
         st.setRequestMethod("POST");
@@ -118,26 +123,23 @@ public class Downloader {
     }
 
     private void handleCache(String id, File cacheFile) {
-            try {
-                FileUtils.readFileToByteArray(cacheFile);
-                boolean checkFailure = false;
-                if (checkFailure) {
-                    WynntilsMod.warn("Error occurred whilst trying to use cache for " + id + " at "
-                            + cacheFile.getPath() + ": Cache file is invalid");
-                    FileUtils.deleteQuietly(cacheFile);
-                    // req.onError();
-                }
-            } catch (FileNotFoundException ignore) {
-                WynntilsMod.warn("Could not find file while trying to use cache as backup");
-                // req.onError();
-            } catch (Exception e) {
-                WynntilsMod.warn(
-                        "Error occurred whilst trying to use cache for " + id + " at "
-                                + cacheFile.getPath(),
-                        e);
+        try {
+            FileUtils.readFileToByteArray(cacheFile);
+            boolean checkFailure = false;
+            if (checkFailure) {
+                WynntilsMod.warn("Error occurred whilst trying to use cache for " + id + " at " + cacheFile.getPath()
+                        + ": Cache file is invalid");
                 FileUtils.deleteQuietly(cacheFile);
                 // req.onError();
             }
+        } catch (FileNotFoundException ignore) {
+            WynntilsMod.warn("Could not find file while trying to use cache as backup");
+            // req.onError();
+        } catch (Exception e) {
+            WynntilsMod.warn("Error occurred whilst trying to use cache for " + id + " at " + cacheFile.getPath(), e);
+            FileUtils.deleteQuietly(cacheFile);
+            // req.onError();
+        }
     }
 
     private boolean handleHttpConnection(String id, String url, File cacheFile) {

@@ -20,6 +20,5 @@ public class DownloadableResource {
 
     public void handleBytes(Predicate<byte[]> handler) {}
 
-    public void handleJsonArray(Predicate<JsonArray> handler) {
-    }
+    public void handleJsonArray(Predicate<JsonArray> handler) {}
 }
