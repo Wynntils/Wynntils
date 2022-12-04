@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
@@ -104,10 +105,7 @@ public class GuildTerritoryModel extends Model {
     }
 
     public static boolean tryLoadTerritories() {
-        if (ApiUrls.getOptionalApiUrls().isEmpty()
-                || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
-
-        String url = ApiUrls.getOptionalApiUrls().get().get("Athena") + "/cache/get/territoryList";
+        String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
         DownloadableResource dl =
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "territories.json"), "territory");
         dl.handleJsonObject(json -> {

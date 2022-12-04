@@ -7,6 +7,7 @@ package com.wynntils.core.net.athena;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -83,14 +84,10 @@ public class WynntilsAccountManager extends CoreManager {
     }
 
     private boolean login() {
-        if (ApiUrls.getOptionalApiUrls().isEmpty()
-                || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
-
-        String baseUrl = ApiUrls.getOptionalApiUrls().get().get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
-        String url = baseUrl + "/auth/getPublicKey";
+        String url = Reference.URLs.getAthena() + "/auth/getPublicKey";
         RequestResponse response = ApiRequester.get(url, "getPublicKey");
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
@@ -106,7 +103,7 @@ public class WynntilsAccountManager extends CoreManager {
         authParams.addProperty(
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        String url2 = baseUrl + "/auth/responseEncryption";
+        String url2 = Reference.URLs.getAthena() + "/auth/responseEncryption";
 
         RequestResponse response2 = ApiRequester.post(url2, authParams, "responseEncryption");
         response2.handleJsonObject(json -> {

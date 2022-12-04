@@ -6,6 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.net.athena.ApiUrls;
@@ -28,8 +29,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
     private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
     public static void loadUser(UUID uuid) {
-        if (!WynntilsAccountManager.isAthenaOnline()
-                || ApiUrls.getOptionalApiUrls().isEmpty()) return;
+        if (!WynntilsAccountManager.isAthenaOnline()) return;
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads
@@ -37,7 +37,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
         JsonObject body = new JsonObject();
         body.addProperty("uuid", uuid.toString());
 
-        String url = ApiUrls.getOptionalApiUrls().get().get("Athena") + "/user/getInfo";
+        String url = Reference.URLs.getAthena() + "/user/getInfo";
         RequestResponse response = ApiRequester.post(url, body, "getInfo(" + uuid + ")");
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;

@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
@@ -70,8 +71,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemList() {
-        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("Athena")) return;
-        String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/itemList";
+        String url = Reference.URLs.getAthena() + "/cache/get/itemList";
         DownloadableResource dl =
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "item_list.json"), "item_list");
         dl.handleJsonObject(json -> {
@@ -109,8 +109,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadIngredientList() {
-        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("Athena")) return;
-        String url = ApiUrls.getApiUrls().get("Athena") + "/cache/get/ingredientList";
+        String url = Reference.URLs.getAthena() + "/cache/get/ingredientList";
 
         DownloadableResource dl =
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "ingredient_list.json"), "ingredientList");
