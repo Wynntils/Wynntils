@@ -14,8 +14,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.widgets.ChatTabButton;
+import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
@@ -29,9 +32,15 @@ import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
+
+    // We miss-use this keybind, we do not set a runnable onPress, we just use it in an event.
+    // This is because onPress isn't called when a screen is opened, and we don't want to use inventory keypress either.
+    @RegisterKeyBind
+    private KeyBind switchTabsKeybind = new KeyBind("Switch Tabs", GLFW.GLFW_KEY_TAB, true, () -> {});
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
@@ -131,6 +140,16 @@ public class ChatTabsFeature extends UserFeature {
         // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
         // rendering command suggestions on top of chat tab buttons.
         chatScreen.commandSuggestions.render(event.getPoseStack(), event.getMouseX(), event.getMouseY());
+    }
+
+    @SubscribeEvent
+    public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
+        if (event.getKeyCode() != switchTabsKeybind.getKeyMapping().key.getValue()) return;
+        if (!(McUtils.mc().screen instanceof ChatScreen)) return;
+
+        event.setCanceled(true);
+        ChatTabModel.setFocusedTab(
+                chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) + 1) % chatTabs.size()));
     }
 
     @Override
