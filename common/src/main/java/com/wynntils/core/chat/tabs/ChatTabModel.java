@@ -84,13 +84,12 @@ public class ChatTabModel extends Model {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
             unreadMessages.put(focusedTab, false);
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
-        }
 
-        // If chat screen is open, set our auto command
-        if (McUtils.mc().screen instanceof ChatScreen chatScreen
-                && focusedTab != null
-                && focusedTab.getAutoCommand() != null) {
-            chatScreen.insertText(focusedTab.getAutoCommand(), true);
+            // If chat screen is open, set our auto command
+            if (McUtils.mc().screen instanceof ChatScreen chatScreen) {
+                String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
+                chatScreen.insertText(autoCommand, true);
+            }
         }
     }
 
