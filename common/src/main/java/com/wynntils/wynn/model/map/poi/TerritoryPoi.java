@@ -5,7 +5,6 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -17,6 +16,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;

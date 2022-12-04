@@ -5,11 +5,11 @@
 package com.wynntils.wynn.model.discoveries.objects;
 
 import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;

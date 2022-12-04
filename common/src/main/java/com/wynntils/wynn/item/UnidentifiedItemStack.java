@@ -5,13 +5,13 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.features.user.ItemFavoriteFeature;
+import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemTier;
 import com.wynntils.wynn.netresources.profiles.item.ItemType;
-import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;

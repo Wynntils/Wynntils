@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.wynn.netresources;
 
 import com.google.common.reflect.TypeToken;
@@ -21,7 +25,7 @@ import java.util.HashMap;
 public class ItemProfilesManager {
     private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-//    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+    //    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
 
     private static HashMap<String, ItemProfile> items = new HashMap<>();
     private static Collection<ItemProfile> directItems = new ArrayList<>();
@@ -66,12 +70,13 @@ public class ItemProfilesManager {
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WebManager.gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
-            internalIdentifications = WebManager.gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
+            internalIdentifications =
+                    WebManager.gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIds = WebManager.gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
-//            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
+            //            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
             IdentificationOrderer.INSTANCE =
@@ -107,7 +112,8 @@ public class ItemProfilesManager {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WebManager.gson.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-            IngredientProfile[] gItems = WebManager.gson.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
+            IngredientProfile[] gItems =
+                    WebManager.gson.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
             HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
             for (IngredientProfile prof : gItems) {
@@ -164,5 +170,4 @@ public class ItemProfilesManager {
         internalIdentifications = null;
         majorIds = null;
     }
-
 }

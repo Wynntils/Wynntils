@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientItemModifiers;
@@ -11,7 +12,6 @@ import com.wynntils.wynn.netresources.profiles.ingredient.IngredientModifiers;
 import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.netresources.profiles.ingredient.ProfessionType;
 import com.wynntils.wynn.netresources.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
