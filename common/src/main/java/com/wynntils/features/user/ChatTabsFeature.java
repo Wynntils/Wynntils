@@ -14,8 +14,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
@@ -37,11 +35,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
-
-    // We miss-use this keybind, we do not set a runnable onPress, we just use it in an event.
-    // This is because onPress isn't called when a screen is opened, and we don't want to use inventory keypress either.
-    @RegisterKeyBind
-    private KeyBind switchTabsKeybind = new KeyBind("Switch Tabs", GLFW.GLFW_KEY_TAB, true, () -> {});
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
@@ -145,7 +138,8 @@ public class ChatTabsFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        if (event.getKeyCode() != switchTabsKeybind.getKeyMapping().key.getValue()) return;
+        // We can't use keybinds here to not conflict with TAB key's other behaviours.
+        if (event.getKeyCode() != GLFW.GLFW_KEY_TAB) return;
         if (!(McUtils.mc().screen instanceof ChatScreen)) return;
         if (!KeyboardUtils.isShiftDown()) return;
 
