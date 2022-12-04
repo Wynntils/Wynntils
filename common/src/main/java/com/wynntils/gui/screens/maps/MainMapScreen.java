@@ -7,7 +7,6 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -28,6 +27,7 @@ import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -221,7 +221,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(TerritoryManager.getTerritoryPois());
+            pois.addAll(GuildTerritoryModel.getTerritoryPois());
         }
 
         renderPois(

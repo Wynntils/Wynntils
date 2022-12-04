@@ -13,7 +13,6 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.webapi.ApiUrls;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.account.WynntilsAccountManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
@@ -53,7 +52,6 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
-        registerPersistentDependency(TerritoryManager.class);
         registerPersistentDependency(ApiUrls.class);
         registerPersistentDependency(ItemProfilesManager.class);
         registerPersistentDependency(SplashManager.class);

@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -34,7 +34,7 @@ public class DiscoveryInfo {
         this.type = DiscoveryType.valueOf(discoveryProfile.getType().toUpperCase(Locale.ROOT));
         this.description = "";
         this.minLevel = discoveryProfile.getLevel();
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
+        this.guildTerritory = GuildTerritoryModel.getTerritories().get(name);
         this.discovered = false;
         this.requirements = discoveryProfile.getRequirements();
     }
@@ -44,7 +44,7 @@ public class DiscoveryInfo {
         this.type = type;
         this.description = description;
         this.minLevel = minLevel;
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
+        this.guildTerritory = GuildTerritoryModel.getTerritories().get(name);
         this.discovered = true;
         this.requirements = List.of();
     }

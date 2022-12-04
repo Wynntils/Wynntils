@@ -10,9 +10,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -29,11 +29,11 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) -> {
-                            if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
+                            if (!GuildTerritoryModel.isTerritoryListLoaded() && !GuildTerritoryModel.tryLoadTerritories()) {
                                 return Suggestions.empty();
                             }
 
-                            Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
+                            Map<String, TerritoryProfile> territories = GuildTerritoryModel.getTerritories();
 
                             return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
                         })
@@ -51,7 +51,7 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
+        if (!GuildTerritoryModel.isTerritoryListLoaded() && !GuildTerritoryModel.tryLoadTerritories()) {
             context.getSource()
                     .sendFailure(new TextComponent("Can't access territory data").withStyle(ChatFormatting.RED));
             return 1;
@@ -59,7 +59,7 @@ public class TerritoryCommand extends CommandBase {
 
         String territoryArg = context.getArgument("territory", String.class);
 
-        Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
+        Map<String, TerritoryProfile> territories = GuildTerritoryModel.getTerritories();
 
         if (!territories.containsKey(territoryArg)) {
             context.getSource()
