@@ -35,13 +35,13 @@ public class ChatTabsFeature extends UserFeature {
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
-            new ChatTab("All", false, null, null),
-            new ChatTab("Global", false, Sets.newHashSet(RecipientType.GLOBAL), null),
-            new ChatTab("Local", false, Sets.newHashSet(RecipientType.LOCAL), null),
-            new ChatTab("Guild", false, Sets.newHashSet(RecipientType.GUILD), null),
-            new ChatTab("Party", false, Sets.newHashSet(RecipientType.PARTY), null),
-            new ChatTab("Private", false, Sets.newHashSet(RecipientType.PRIVATE), null),
-            new ChatTab("Shout", false, Sets.newHashSet(RecipientType.SHOUT), null));
+            new ChatTab("All", false, null, null, null),
+            new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
+            new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
+            new ChatTab("Guild", false, "/g ", Sets.newHashSet(RecipientType.GUILD), null),
+            new ChatTab("Party", false, "/p ", Sets.newHashSet(RecipientType.PARTY), null),
+            new ChatTab("Private", false, "/msg ", Sets.newHashSet(RecipientType.PRIVATE), null),
+            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null));
 
     @TypeOverride
     private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
