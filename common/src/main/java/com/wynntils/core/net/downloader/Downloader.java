@@ -7,7 +7,7 @@ package com.wynntils.core.net.downloader;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.Reference;
 import com.wynntils.utils.MD5Verification;
 import com.wynntils.utils.ThrowingConsumer;
 import java.io.File;
@@ -65,7 +65,7 @@ public class Downloader {
     public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout)
             throws IOException {
         HttpURLConnection st = (HttpURLConnection) new URL(url).openConnection();
-        st.setRequestProperty("User-Agent", WebManager.getUserAgent());
+        st.setRequestProperty("User-Agent", Reference.getUserAgent());
         if (!headers.isEmpty()) headers.forEach(st::addRequestProperty);
 
         st.setConnectTimeout(timeout);

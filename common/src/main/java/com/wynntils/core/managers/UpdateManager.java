@@ -7,7 +7,7 @@ package com.wynntils.core.managers;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
 import java.io.File;
@@ -33,7 +33,7 @@ public class UpdateManager extends CoreManager {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         try {
-            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
+            URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(LAST_BUILD_CHECK_PATH);
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -58,7 +58,7 @@ public class UpdateManager extends CoreManager {
                 return future;
             }
 
-            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
+            URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(LAST_BUILD_CHECK_PATH);
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 

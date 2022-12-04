@@ -17,7 +17,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.ApiUrls;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
@@ -224,7 +224,7 @@ public abstract class Feature extends AbstractConfigurable
     public static class WebLoadedCondition extends Condition {
         @Override
         public void init() {
-            if (WebManager.isSetup()) {
+            if (ApiUrls.isSetup()) {
                 setSatisfied(true);
                 return;
             }
@@ -240,7 +240,7 @@ public abstract class Feature extends AbstractConfigurable
 
         @Override
         public boolean isSatisfied() {
-            return super.isSatisfied() || WebManager.isSetup();
+            return super.isSatisfied() || ApiUrls.isSetup();
         }
     }
 

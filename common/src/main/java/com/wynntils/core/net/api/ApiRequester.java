@@ -5,9 +5,16 @@
 package com.wynntils.core.net.api;
 
 import com.google.gson.JsonObject;
+import com.wynntils.core.net.Reference;
+import com.wynntils.core.webapi.ApiUrls;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class ApiRequester {
+    private static final int REQUEST_TIMEOUT_MILLIS = 10000;
+
     public static RequestResponse get(URI uri, String id) {
         byte[] blob = getToMemory(uri);
         return new RequestResponse(blob);
@@ -34,5 +41,16 @@ public class ApiRequester {
     private static byte[] getToMemory(URI uri) {
         // FIXME: implement
         return null;
+    }
+
+    public static URLConnection generateURLRequestWithWynnApiKey(String url) throws IOException {
+        URLConnection st = new URL(url).openConnection();
+        st.setRequestProperty("User-Agent", Reference.getUserAgent());
+        if (ApiUrls.getApiUrls() != null && ApiUrls.getApiUrls().hasKey("WynnApiKey"))
+            st.setRequestProperty("apikey", ApiUrls.getApiUrls().get("WynnApiKey"));
+        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+
+        return st;
     }
 }

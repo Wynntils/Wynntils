@@ -33,7 +33,7 @@ public class ApiUrls {
     }
 
     private static ApiUrls apiUrls = null;
-    static boolean setup = false;
+    private static boolean setup = false;
 
     private Map<String, String> values;
     private Map<String, List<String>> lists;
@@ -75,6 +75,10 @@ public class ApiUrls {
 
     public static Optional<ApiUrls> getOptionalApiUrls() {
         return Optional.ofNullable(apiUrls);
+    }
+
+    public static boolean isSetup() {
+        return setup;
     }
 
     public Map<String, String> getValues() {
