@@ -7,11 +7,12 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -21,7 +22,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TerritoryManager extends CoreManager {
-    private static TerritoryUpdateThread territoryUpdateThread;
+    private static final int TERRITORY_UPDATE_MS = 15000;
+
+    private static Thread territoryUpdateThread;
     private static Map<String, TerritoryProfile> territories = new HashMap<>();
     private static Set<TerritoryPoi> territoryPois = new HashSet<>();
 
@@ -61,7 +64,22 @@ public class TerritoryManager extends CoreManager {
     private static void updateTerritoryThreadStatus(boolean start) {
         if (start) {
             if (territoryUpdateThread == null) {
-                territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
+                territoryUpdateThread = new Thread(
+                        () -> {
+                            try {
+                                Thread.sleep(TERRITORY_UPDATE_MS);
+                                while (!Thread.interrupted()) {
+                                    tryLoadTerritories();
+
+                                    // TODO: Add events
+                                    Thread.sleep(TERRITORY_UPDATE_MS);
+                                }
+                            } catch (InterruptedException ignored) {
+                            }
+
+                            WynntilsMod.info("Terminating territory update thread.");
+                        },
+                        "Territory Update Thread");
                 territoryUpdateThread.start();
                 return;
             }
