@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.net.athena.ApiUrls;
@@ -132,14 +133,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String queryUrl = ApiUrls.getApiUrl("WikiDiscoveryQuery");
-
-        if (queryUrl == null) {
-            McUtils.sendMessageToClient(new TextComponent(
-                    ChatFormatting.RED + "Unable to find discovery coordinates. ApiUrls are not loaded."));
-            return;
-        }
-
+        String queryUrl = Reference.URLs.getWikiDiscoveryQuery();
         String url = queryUrl + WebUtils.encodeForWikiTitle(name);
         RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
         response.handleJsonObject(json -> {
@@ -197,9 +191,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        if (ApiUrls.getApiUrls() == null) return;
-
-        String url = ApiUrls.getApiUrls().get("Discoveries");
+        String url = Reference.URLs.getDiscoveries();
         DownloadableResource dl =
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "discoveries.json"), "discoveries");
         dl.handleJsonObject(json -> {

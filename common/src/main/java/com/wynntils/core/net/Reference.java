@@ -35,8 +35,6 @@ public class Reference {
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
-        private static final String WIKI_QUEST_QUERY =
-                "https://wynncraft.gamepedia.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
 
         public static String getAthena() {
             return ATHENA;
@@ -60,10 +58,6 @@ public class Reference {
 
         public static String getWikiDiscoveryQuery() {
             return WIKI_DISCOVERY_QUERY;
-        }
-
-        public static String getWikiQuestQuery() {
-            return WIKI_QUEST_QUERY;
         }
     }
 }

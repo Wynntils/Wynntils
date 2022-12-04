@@ -87,10 +87,8 @@ public class ServerListModel extends Model {
      * @throws IOException thrown by URLConnection
      */
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("OnlinePlayers")) return new HashMap<>();
-
-        URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(
-                ApiUrls.getApiUrls().get("OnlinePlayers"));
+        String url = Reference.URLs.getOnlinePlayers();
+        URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
 

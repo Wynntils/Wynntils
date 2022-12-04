@@ -50,8 +50,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("ItemGuesses")) return;
-        String url = ApiUrls.getApiUrls().get("ItemGuesses");
+        String url = Reference.URLs.getItemGuesses();
         DownloadableResource dl =
                 Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "item_guesses.json"), "item_guesses");
         dl.handleJsonObject(json -> {
