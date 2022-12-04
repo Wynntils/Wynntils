@@ -6,11 +6,10 @@ package com.wynntils.wynn.model.discoveries;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
@@ -127,66 +126,60 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        Request query = new RequestBuilder(queryUrl + WebUtils.encodeForWikiTitle(name), "SecretWikiQuery")
-                .handleJsonObject(jsonOutput -> {
-                    if (jsonOutput.has("error")) { // Returns error if page does not exist
-                        McUtils.sendMessageToClient(new TextComponent(
-                                ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
-                        return true;
-                    }
+        String url = queryUrl + WebUtils.encodeForWikiTitle(name);
+        RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
+        response.handleJsonObject(json -> {
+            if (json.has("error")) { // Returns error if page does not exist
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
+                return true;
+            }
 
-                    String wikiText = jsonOutput
-                            .get("parse")
-                            .getAsJsonObject()
-                            .get("wikitext")
-                            .getAsJsonObject()
-                            .get("*")
-                            .getAsString()
-                            .replace(" ", "")
-                            .replace("\n", "");
+            String wikiText = json.get("parse")
+                    .getAsJsonObject()
+                    .get("wikitext")
+                    .getAsJsonObject()
+                    .get("*")
+                    .getAsString()
+                    .replace(" ", "")
+                    .replace("\n", "");
 
-                    String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
-                    String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
+            String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
+            String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
 
-                    int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
-                    int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
+            int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
+            int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
 
-                    int x;
-                    int z;
+            int x;
+            int z;
 
-                    try {
-                        x = Integer.parseInt(xLocation.substring(12, xEnd));
-                        z = Integer.parseInt(zLocation.substring(12, zEnd));
-                    } catch (NumberFormatException e) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
-                                + "Unable to find discovery coordinates. (Wiki template not located)"));
-                        return true;
-                    }
+            try {
+                x = Integer.parseInt(xLocation.substring(12, xEnd));
+                z = Integer.parseInt(zLocation.substring(12, zEnd));
+            } catch (NumberFormatException e) {
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
+                return true;
+            }
 
-                    if (x == 0 && z == 0) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
-                                + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
-                        return true;
-                    }
+            if (x == 0 && z == 0) {
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
+                return true;
+            }
 
-                    switch (action) {
-                        case MAP -> {
-                            // We can't run this is on request thread
-                            MinecraftSchedulerManager.queueRunnable(
-                                    () -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
-                        }
-                        case COMPASS -> {
-                            CompassModel.setCompassLocation(new Location(x, 0, z));
-                        }
-                    }
+            switch (action) {
+                case MAP -> {
+                    // We can't run this is on request thread
+                    MinecraftSchedulerManager.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                }
+                case COMPASS -> {
+                    CompassModel.setCompassLocation(new Location(x, 0, z));
+                }
+            }
 
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(query, true);
+            return true;
+        });
     }
 
     public enum DiscoveryOpenAction {

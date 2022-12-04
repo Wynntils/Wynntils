@@ -6,8 +6,8 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.utils.StringUtils;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -31,27 +31,24 @@ public class GoogleApiTranslationService extends CachingTranslationService {
         String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=" + toLanguage
                 + "&dt=t&q=" + encodedMessage;
 
-        RequestHandler handler = new RequestHandler();
-        handler.addAndDispatch(
-                new RequestBuilder(url, "translate-" + requestNumber.getAndIncrement())
-                        .handleJsonArray(json -> {
-                            StringBuilder builder = new StringBuilder();
-                            JsonArray array = json.get(0).getAsJsonArray();
-                            for (JsonElement elem : array) {
-                                String part = elem.getAsJsonArray().get(0).getAsString();
-                                builder.append(part);
-                            }
-                            String translatedMessage = builder.toString();
-                            saveTranslation(toLanguage, message, translatedMessage);
-                            handleTranslation.accept(translatedMessage);
+        RequestResponse response = ApiRequester.get(url, "translate-" + requestNumber.getAndIncrement());
+        response.handleJsonArray(
+                json -> {
+                    StringBuilder builder = new StringBuilder();
+                    JsonArray array = json.get(0).getAsJsonArray();
+                    for (JsonElement elem : array) {
+                        String part = elem.getAsJsonArray().get(0).getAsString();
+                        builder.append(part);
+                    }
+                    String translatedMessage = builder.toString();
+                    saveTranslation(toLanguage, message, translatedMessage);
+                    handleTranslation.accept(translatedMessage);
 
-                            return true;
-                        })
-                        .onError(() -> {
-                            // If Google translate return no data ( 500 error ), display default lang
-                            handleTranslation.accept(null);
-                        })
-                        .build(),
-                true);
+                    return true;
+                },
+                onError -> {
+                    // If Google translate return no data ( 500 error ), display default lang
+                    handleTranslation.accept(null);
+                });
     }
 }

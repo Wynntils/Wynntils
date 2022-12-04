@@ -12,6 +12,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.core.webapi.profiles.DiscoveryProfile;
 import com.wynntils.core.webapi.profiles.ItemGuessProfile;
@@ -20,7 +22,6 @@ import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -146,108 +147,102 @@ public final class WebManager extends CoreManager {
 
     private static void tryLoadItemGuesses() {
         if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return;
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
-                .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
-                .handleJsonObject(json -> {
-                    Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
+        String url = apiUrls.get("ItemGuesses");
+        DownloadableResource dl =
+                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "item_guesses.json"), "item_guesses");
+        dl.handleJsonObject(json -> {
+            Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeHierarchyAdapter(
-                            HashMap.class, new ItemGuessProfile.ItemGuessDeserializer());
-                    Gson gson = gsonBuilder.create();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer());
+            Gson gson = gsonBuilder.create();
 
-                    itemGuesses = new HashMap<>();
-                    itemGuesses.putAll(gson.fromJson(json, type));
+            itemGuesses = new HashMap<>();
+            itemGuesses.putAll(gson.fromJson(json, type));
 
-                    return true;
-                })
-                .useCacheAsBackup()
-                .build());
+            return true;
+        });
 
         // Check for success
     }
 
     private static void tryLoadItemList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
-                .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
-                .handleJsonObject(json -> {
-                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
-                    internalIdentifications =
-                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
+        String url = apiUrls.get("Athena") + "/cache/get/itemList";
+        DownloadableResource dl =
+                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "item_list.json"), "item_list");
+        dl.handleJsonObject(json -> {
+            Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+            translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
+            internalIdentifications = gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
-                    Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-                    majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
-                    Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
-                    materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
+            Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
+            majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+            Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
+            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
-                    // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
-                    IdentificationOrderer.INSTANCE =
-                            gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
+            // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
+            IdentificationOrderer.INSTANCE =
+                    gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-                    ItemProfile[] gItems = gson.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            ItemProfile[] gItems = gson.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
 
-                    HashMap<String, ItemProfile> citems = new HashMap<>();
-                    for (ItemProfile prof : gItems) {
-                        prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
-                        prof.addMajorIds(majorIds);
-                        citems.put(prof.getDisplayName(), prof);
-                    }
+            HashMap<String, ItemProfile> citems = new HashMap<>();
+            for (ItemProfile prof : gItems) {
+                prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
+                prof.addMajorIds(majorIds);
+                citems.put(prof.getDisplayName(), prof);
+            }
 
-                    citems.values().forEach(ItemProfile::registerIdTypes);
+            citems.values().forEach(ItemProfile::registerIdTypes);
 
-                    directItems = citems.values();
-                    items = citems;
+            directItems = citems.values();
+            items = citems;
 
-                    return true;
-                })
-                .useCacheAsBackup()
-                .build());
+            return true;
+        });
 
         // Check for success
     }
 
     public static void tryLoadIngredientList() {
         if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
+        String url = apiUrls.get("Athena") + "/cache/get/ingredientList";
 
-        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/ingredientList", "ingredientList")
-                .cacheTo(new File(API_CACHE_ROOT, "ingredient_list.json"))
-                .useCacheAsBackup()
-                .handleJsonObject(j -> {
-                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-                    ingredientHeadTextures = gson.fromJson(j.getAsJsonObject("headTextures"), hashmapType);
+        DownloadableResource dl =
+                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "ingredient_list.json"), "ingredientList");
+        dl.handleJsonObject(json -> {
+            Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
+            ingredientHeadTextures = gson.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-                    IngredientProfile[] gItems =
-                            gson.fromJson(j.getAsJsonArray("ingredients"), IngredientProfile[].class);
-                    HashMap<String, IngredientProfile> cingredients = new HashMap<>();
+            IngredientProfile[] gItems = gson.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
+            HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
-                    for (IngredientProfile prof : gItems) {
-                        cingredients.put(prof.getDisplayName(), prof);
-                    }
+            for (IngredientProfile prof : gItems) {
+                cingredients.put(prof.getDisplayName(), prof);
+            }
 
-                    ingredients = cingredients;
-                    directIngredients = cingredients.values();
+            ingredients = cingredients;
+            directIngredients = cingredients.values();
 
-                    return true;
-                })
-                .build());
+            return true;
+        });
     }
 
     private static void tryReloadApiUrls(boolean async) {
-        handler.addRequest(new RequestBuilder("https://api.wynntils.com/webapi", "webapi")
-                .cacheTo(new File(API_CACHE_ROOT, "webapi.txt"))
-                .useCacheAsBackup()
-                .handleWebReader(reader -> {
-                    apiUrls = reader;
-                    if (!setup) {
-                        setup = true;
-                    }
+        String url = "https://api.wynntils.com/webapi";
+        DownloadableResource dl = Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "webapi.txt"), "webapi");
+        dl.handleBytes(bytes -> {
+            String string = new String(bytes, StandardCharsets.UTF_8);
+            WebReader apiUrls = WebReader.fromString(string);
+            if (apiUrls == null) return false;
+            if (!setup) {
+                setup = true;
+            }
 
-                    WynntilsMod.postEvent(new WebSetupEvent());
-                    return true;
-                })
-                .build());
+            WynntilsMod.postEvent(new WebSetupEvent());
+            return true;
+        });
 
         handler.dispatch(async);
     }
@@ -303,17 +298,15 @@ public final class WebManager extends CoreManager {
         if (apiUrls == null) return;
 
         String url = apiUrls.get("Discoveries");
-        handler.addRequest(new RequestBuilder(url, "discoveries")
-                .cacheTo(new File(API_CACHE_ROOT, "discoveries.json"))
-                .handleJsonArray(discoveriesJson -> {
-                    Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+        DownloadableResource dl =
+                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "discoveries.json"), "discoveries");
+        dl.handleJsonObject(json -> {
+            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-                    List<DiscoveryProfile> discoveries = gson.fromJson(discoveriesJson, type);
-                    discoveryInfoList =
-                            discoveries.stream().map(DiscoveryInfo::new).toList();
-                    return true;
-                })
-                .build());
+            List<DiscoveryProfile> discoveries = gson.fromJson(json, type);
+            discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
+            return true;
+        });
     }
 
     private static void updateCurrentSplash() {

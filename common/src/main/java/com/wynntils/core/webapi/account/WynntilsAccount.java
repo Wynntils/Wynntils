@@ -7,11 +7,9 @@ package com.wynntils.core.webapi.account;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.WebReader;
-import com.wynntils.core.webapi.request.PostRequestBuilder;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MD5Verification;
@@ -54,23 +52,19 @@ public class WynntilsAccount {
     public boolean login() {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
-        WebReader webReader = WebManager.getApiUrls().get();
         RequestHandler handler = WebManager.getHandler();
 
-        String baseUrl = webReader.get("Athena");
+        String baseUrl = WebManager.getApiUrls().get().get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
-
-        Request getPublicKey = new RequestBuilder(baseUrl + "/auth/getPublicKey", "getPublicKey")
-                .handleJsonObject(json -> {
-                    if (!json.has("publicKeyIn")) return false;
-                    secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
-                    return true;
-                })
-                .build();
-
-        handler.addAndDispatch(getPublicKey);
+        String url = baseUrl + "/auth/getPublicKey";
+        RequestResponse response = ApiRequester.get(url, "getPublicKey");
+        response.handleJsonObject(json -> {
+            if (!json.has("publicKeyIn")) return false;
+            secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
+            return true;
+        });
 
         // response
 
@@ -80,27 +74,24 @@ public class WynntilsAccount {
         authParams.addProperty(
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
-                .postJsonElement(authParams)
-                .handleJsonObject(json -> {
-                    if (!json.has("authToken")) return false;
-                    token = json.get("authToken").getAsString(); /* md5 hashes*/
-                    JsonObject hashes = json.getAsJsonObject("hashes");
-                    hashes.entrySet()
-                            .forEach((k) -> md5Verifications.put(
-                                    k.getKey(), k.getValue().getAsString())); /* configurations*/
-                    JsonObject configFiles = json.getAsJsonObject("configFiles");
-                    configFiles
-                            .entrySet()
-                            .forEach((k) ->
-                                    encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
-                    ready = true;
-                    WynntilsMod.info("Successfully connected to Athena!");
-                    return true;
-                })
-                .build();
+        String url2 = baseUrl + "/auth/responseEncryption";
 
-        handler.addAndDispatch(responseEncryption);
+        RequestResponse response2 = ApiRequester.post(url2, authParams, "responseEncryption");
+        response2.handleJsonObject(json -> {
+            if (!json.has("authToken")) return false;
+            token = json.get("authToken").getAsString(); /* md5 hashes*/
+            JsonObject hashes = json.getAsJsonObject("hashes");
+            hashes.entrySet()
+                    .forEach(
+                            (k) -> md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
+            JsonObject configFiles = json.getAsJsonObject("configFiles");
+            configFiles
+                    .entrySet()
+                    .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
+            ready = true;
+            WynntilsMod.info("Successfully connected to Athena!");
+            return true;
+        });
 
         return true;
     }

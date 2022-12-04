@@ -10,9 +10,9 @@ import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
@@ -61,87 +61,71 @@ public final class MapModel extends Model {
 
     private static void loadMaps() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-        RequestHandler handler = WebManager.getHandler();
 
         MAPS.clear();
 
-        handler.addAndDispatch(new RequestBuilder(MAPS_JSON_URL, "map-parts")
-                .cacheTo(new File(mapDirectory, "maps.json"))
-                .useCacheAsBackup()
-                .handleJsonArray(json -> {
-                    Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
+        DownloadableResource dl = Downloader.download(MAPS_JSON_URL, new File(mapDirectory, "maps.json"), "map-parts");
+        dl.handleJsonArray(json -> {
+            Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
-                    List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
-                    for (MapPartProfile mapPart : mapPartList) {
-                        String fileName = mapPart.md5 + ".png";
+            List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
+            for (MapPartProfile mapPart : mapPartList) {
+                String fileName = mapPart.md5 + ".png";
 
-                        handler.addRequest(new RequestBuilder(mapPart.url, "map-part-" + mapPart.name)
-                                .cacheTo(new File(mapDirectory, fileName))
-                                .cacheMD5Validator(mapPart.md5)
-                                .useCacheAsBackup()
-                                .handle(bytes -> {
-                                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-                                        NativeImage nativeImage = NativeImage.read(in);
-                                        MapTexture mapPartImage = new MapTexture(
-                                                fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                                        MAPS.add(mapPartImage);
-                                    } catch (IOException e) {
-                                        WynntilsMod.info(
-                                                "IOException occurred while loading map image of " + mapPart.name);
-                                        return false; // don't cache
-                                    }
-
-                                    return true;
-                                })
-                                .build());
+                DownloadableResource dlPart = Downloader.downloadMd5(
+                        mapPart.url, new File(mapDirectory, fileName), mapPart.md5, "map-part-" + mapPart.name);
+                dlPart.handleBytes(bytes -> {
+                    try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+                        NativeImage nativeImage = NativeImage.read(in);
+                        MapTexture mapPartImage =
+                                new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                        MAPS.add(mapPartImage);
+                    } catch (IOException e) {
+                        WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                        return false; // don't cache
                     }
 
-                    handler.dispatchAsync();
                     return true;
-                })
-                .build());
+                });
+            }
+            return true;
+        });
     }
 
     private static void loadPlaces() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-        RequestHandler handler = WebManager.getHandler();
-        handler.addAndDispatch(new RequestBuilder(PLACES_JSON_URL, "maps-places")
-                .cacheTo(new File(mapDirectory, "places.json"))
-                .useCacheAsBackup()
-                .handleJsonObject(json -> {
-                    PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
-                    for (Label label : places.labels) {
-                        LABEL_POIS.add(new LabelPoi(label));
-                    }
-                    return true;
-                })
-                .build());
+        DownloadableResource dl =
+                Downloader.download(PLACES_JSON_URL, new File(mapDirectory, "places.json"), "maps-places");
+        dl.handleJsonObject(json -> {
+            PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
+            for (Label label : places.labels) {
+                LABEL_POIS.add(new LabelPoi(label));
+            }
+            return true;
+        });
     }
 
     private static void loadServices() {
         File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-        RequestHandler handler = WebManager.getHandler();
-        handler.addAndDispatch(new RequestBuilder(SERVICES_JSON_URL, "maps-services")
-                .cacheTo(new File(mapDirectory, "services.json"))
-                .useCacheAsBackup()
-                .handleJsonArray(json -> {
-                    Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
+        DownloadableResource dl =
+                Downloader.download(SERVICES_JSON_URL, new File(mapDirectory, "services.json"), "maps-services");
+        dl.handleJsonObject(json -> {
+            Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
-                    List<ServiceProfile> serviceList = GSON.fromJson(json, type);
-                    for (var service : serviceList) {
-                        ServiceKind kind = ServiceKind.fromString(service.type);
-                        if (kind != null) {
-                            for (MapLocation location : service.locations) {
-                                SERVICE_POIS.add(new ServicePoi(location, kind));
-                            }
-                        } else {
-                            WynntilsMod.warn("Unknown service type in services.json: " + service.type);
-                        }
+            List<ServiceProfile> serviceList = GSON.fromJson(json, type);
+            for (var service : serviceList) {
+                ServiceKind kind = ServiceKind.fromString(service.type);
+                if (kind != null) {
+                    for (MapLocation location : service.locations) {
+                        SERVICE_POIS.add(new ServicePoi(location, kind));
                     }
+                } else {
+                    WynntilsMod.warn("Unknown service type in services.json: " + service.type);
+                }
+            }
 
-                    return true;
-                })
-                .build());
+            return true;
+        });
     }
 
     private static class PlacesProfile {

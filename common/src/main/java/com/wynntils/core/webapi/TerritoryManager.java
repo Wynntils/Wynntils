@@ -8,8 +8,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import java.io.File;
@@ -43,25 +44,21 @@ public class TerritoryManager extends CoreManager {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
         String url = WebManager.getApiUrls().get().get("Athena") + "/cache/get/territoryList";
+        DownloadableResource dl =
+                Downloader.download(url, new File(WebManager.API_CACHE_ROOT, "territories.json"), "territory");
+        dl.handleJsonObject(json -> {
+            if (!json.has("territories")) return false;
 
-        handler.addAndDispatch(new RequestBuilder(url, "territory")
-                .cacheTo(new File(WebManager.API_CACHE_ROOT, "territories.json"))
-                .handleJsonObject(json -> {
-                    if (!json.has("territories")) return false;
+            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
 
-                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
+            Gson gson = builder.create();
 
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.registerTypeHierarchyAdapter(
-                            TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
-                    Gson gson = builder.create();
-
-                    territories = gson.fromJson(json.get("territories"), type);
-                    territoryPois =
-                            territories.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
-                    return true;
-                })
-                .build());
+            territories = gson.fromJson(json.get("territories"), type);
+            territoryPois = territories.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            return true;
+        });
 
         return isTerritoryListLoaded();
     }

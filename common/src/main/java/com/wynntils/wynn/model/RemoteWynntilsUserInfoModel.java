@@ -6,9 +6,9 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.PostRequestBuilder;
-import com.wynntils.core.webapi.request.Request;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
@@ -35,25 +35,19 @@ public class RemoteWynntilsUserInfoModel extends Model {
         JsonObject body = new JsonObject();
         body.addProperty("uuid", uuid.toString());
 
-        Request req = new PostRequestBuilder(
-                        WebManager.getApiUrls().get().get("Athena") + "/user/getInfo", "getInfo(" + uuid + ")")
-                .postJsonElement(body)
-                .handleJsonObject(json -> {
-                    if (!json.has("user")) return false;
+        String url = WebManager.getApiUrls().get().get("Athena") + "/user/getInfo";
+        RequestResponse response = ApiRequester.post(url, body, "getInfo(" + uuid + ")");
+        response.handleJsonObject(json -> {
+            if (!json.has("user")) return false;
 
-                    JsonObject user = json.getAsJsonObject("user");
-                    users.put(
-                            uuid,
-                            new WynntilsUser(
-                                    AccountType.valueOf(user.get("accountType").getAsString())));
-                    fetching.remove(uuid);
+            JsonObject user = json.getAsJsonObject("user");
+            users.put(
+                    uuid,
+                    new WynntilsUser(AccountType.valueOf(user.get("accountType").getAsString())));
+            fetching.remove(uuid);
 
-                    return true;
-                })
-                .onError(() -> {})
-                .build();
-
-        WebManager.getHandler().addAndDispatch(req, true);
+            return true;
+        });
     }
 
     public static WynntilsUser getUser(UUID uuid) {
