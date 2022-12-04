@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -25,7 +26,7 @@ import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
-    public static WynntilsAccount account = null;
+    private static WynntilsAccount account = null;
     private String token;
     private boolean ready = false;
 
@@ -63,6 +64,10 @@ public class WynntilsAccount {
 
     public static boolean isAthenaOnline() {
         return (account != null && account.isConnected());
+    }
+
+    public static Optional<WynntilsAccount> getOptionalAccount() {
+        return Optional.ofNullable(account);
     }
 
     public String getToken() {

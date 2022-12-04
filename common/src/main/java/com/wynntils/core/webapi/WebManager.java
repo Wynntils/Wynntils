@@ -13,9 +13,9 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.account.WynntilsAccount;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
+import com.wynntils.wynn.netresources.SplashManager;
 import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
@@ -39,8 +38,6 @@ public final class WebManager extends CoreManager {
     public static final Gson gson = new Gson();
 
     private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
-
-    private static String currentSplash = "";
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
@@ -52,7 +49,7 @@ public final class WebManager extends CoreManager {
         ApiUrls.tryReloadApiUrls();
         WynntilsAccount.setupUserAccount();
 
-        WebManager.updateCurrentSplash();
+        SplashManager.init();
 
         ItemProfilesManager.loadCommonObjects();
     }
@@ -103,13 +100,6 @@ public final class WebManager extends CoreManager {
         });
     }
 
-    private static void updateCurrentSplash() {
-        if (ApiUrls.getApiUrls() == null || ApiUrls.getApiUrls().getList("Splashes") == null) return;
-
-        List<String> splashes = ApiUrls.getApiUrls().getList("Splashes");
-        currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
-    }
-
     public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", getUserAgent());
@@ -133,11 +123,4 @@ public final class WebManager extends CoreManager {
         return ApiUrls.setup;
     }
 
-    public static String getCurrentSplash() {
-        return currentSplash;
-    }
-
-    public static Optional<WynntilsAccount> getAccount() {
-        return Optional.ofNullable(WynntilsAccount.account);
-    }
 }

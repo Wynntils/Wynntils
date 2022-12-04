@@ -5,7 +5,7 @@
 package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.webapi.account.WynntilsAccount;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -35,7 +35,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onConnect() {
-        if (WebManager.getAccount().isEmpty()) {
+        if (WynntilsAccount.getOptionalAccount().isEmpty()) {
             hadesConnection.disconnect();
 
             if (WorldStateManager.onServer()) {
@@ -48,7 +48,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         hadesConnection.sendPacketAndFlush(
-                new HCPacketAuthenticate(WebManager.getAccount().get().getToken()));
+                new HCPacketAuthenticate(WynntilsAccount.getOptionalAccount().get().getToken()));
     }
 
     @Override
