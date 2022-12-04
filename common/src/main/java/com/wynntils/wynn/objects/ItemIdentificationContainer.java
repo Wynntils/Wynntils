@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.wynn.netresources.profiles.item.IdentificationModifier;
+import com.wynntils.wynn.netresources.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import net.minecraft.network.chat.Component;
 
 public record ItemIdentificationContainer(

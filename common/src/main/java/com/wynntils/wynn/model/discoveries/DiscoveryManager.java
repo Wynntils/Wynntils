@@ -9,7 +9,7 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;

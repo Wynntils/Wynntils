@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi.profiles.item;
+package com.wynntils.wynn.netresources.profiles.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;

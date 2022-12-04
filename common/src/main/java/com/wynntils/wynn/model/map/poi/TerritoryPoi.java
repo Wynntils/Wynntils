@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;

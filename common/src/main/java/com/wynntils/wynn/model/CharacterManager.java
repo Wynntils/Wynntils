@@ -6,7 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
+import com.wynntils.wynn.netresources.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.utils.ItemUtils;

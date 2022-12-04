@@ -6,7 +6,7 @@ package com.wynntils.core.webapi;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.profiles.ServerProfile;
+import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.io.IOException;

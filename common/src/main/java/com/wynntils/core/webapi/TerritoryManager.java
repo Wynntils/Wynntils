@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import java.io.File;
 import java.lang.reflect.Type;

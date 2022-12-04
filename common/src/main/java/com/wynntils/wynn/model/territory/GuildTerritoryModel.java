@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.territory;
 
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;

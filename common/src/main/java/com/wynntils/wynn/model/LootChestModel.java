@@ -6,7 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.wynn.netresources.profiles.item.ItemTier;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;

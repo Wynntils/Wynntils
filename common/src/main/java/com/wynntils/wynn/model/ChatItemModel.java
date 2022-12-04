@@ -5,8 +5,8 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.wynn.netresources.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;

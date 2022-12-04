@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item.properties;
 
-import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.wynn.netresources.profiles.item.ItemTier;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item.properties;
 
-import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.wynn.netresources.profiles.item.ItemTier;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.WynnItemStack;

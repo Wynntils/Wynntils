@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
 import java.util.Map;
