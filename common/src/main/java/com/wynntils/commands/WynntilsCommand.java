@@ -12,6 +12,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
@@ -156,18 +157,14 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = ApiUrls.getOptionalApiUrls().isEmpty()
-                ? null
-                : ApiUrls.getOptionalApiUrls().get().get("DiscordInvite");
-        MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
+        String discordInvite = Reference.URLs.getDiscordInvite();
+        MutableComponent link = new TextComponent(discordInvite)
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
-        if (discordInvite != null) {
-            link.setStyle(link.getStyle()
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
-                    .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new TextComponent("Click here to join our Discord" + " server."))));
-        }
+        link.setStyle(link.getStyle()
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
+                .withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        new TextComponent("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }
