@@ -29,7 +29,8 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) -> {
-                            if (!GuildTerritoryModel.isTerritoryListLoaded() && !GuildTerritoryModel.tryLoadTerritories()) {
+                            if (!GuildTerritoryModel.isTerritoryListLoaded()
+                                    && !GuildTerritoryModel.tryLoadTerritories()) {
                                 return Suggestions.empty();
                             }
 

@@ -9,9 +9,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
@@ -87,8 +87,7 @@ public class GuildTerritoryModel extends Model {
         }
 
         for (Map.Entry<String, GuildTerritoryInfo> entry : tempMap.entrySet()) {
-            TerritoryProfile territoryProfile =
-                    getTerritories().get(entry.getKey());
+            TerritoryProfile territoryProfile = getTerritories().get(entry.getKey());
 
             if (territoryProfile == null) continue;
 
