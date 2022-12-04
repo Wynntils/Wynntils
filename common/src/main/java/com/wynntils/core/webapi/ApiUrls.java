@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -63,7 +62,7 @@ public class ApiUrls extends CoreManager {
                 setup = true;
             }
 
-            WynntilsMod.postEvent(new WebSetupEvent());
+            WynntilsMod.postEvent(new ApiUrlsSetupEvent());
             return true;
         });
     }

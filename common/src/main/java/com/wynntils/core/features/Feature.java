@@ -18,7 +18,7 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.ApiUrls;
-import com.wynntils.mc.event.WebSetupEvent;
+import com.wynntils.core.webapi.ApiUrlsSetupEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -221,7 +221,7 @@ public abstract class Feature extends AbstractConfigurable
                 .result();
     }
 
-    public static class WebLoadedCondition extends Condition {
+    public static class ApiUrlsLoadedCondition extends Condition {
         @Override
         public void init() {
             if (ApiUrls.isSetup()) {
@@ -233,7 +233,7 @@ public abstract class Feature extends AbstractConfigurable
         }
 
         @SubscribeEvent
-        public void onWebSetup(WebSetupEvent e) {
+        public void onApiUrlsSetup(ApiUrlsSetupEvent e) {
             setSatisfied(true);
             WynntilsMod.unregisterEventListener(this);
         }

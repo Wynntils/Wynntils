@@ -23,7 +23,7 @@ public class ItemGuessFeature extends UserFeature {
 
     @Override
     public void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new WebLoadedCondition());
+        conditions.add(new ApiUrlsLoadedCondition());
     }
 
     @Override

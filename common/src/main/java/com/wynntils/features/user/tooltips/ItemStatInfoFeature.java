@@ -47,7 +47,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new WebLoadedCondition());
+        conditions.add(new ApiUrlsLoadedCondition());
     }
 
     @Override
