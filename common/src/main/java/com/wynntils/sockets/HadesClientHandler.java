@@ -47,8 +47,8 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer when WebManager#getAccount is empty.");
         }
 
-        hadesConnection.sendPacketAndFlush(
-                new HCPacketAuthenticate(WynntilsAccount.getOptionalAccount().get().getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(
+                WynntilsAccount.getOptionalAccount().get().getToken()));
     }
 
     @Override

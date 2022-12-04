@@ -54,7 +54,8 @@ public final class WebManager extends CoreManager {
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
         if (ApiUrls.getApiUrls() == null || !ApiUrls.getApiUrls().hasKey("OnlinePlayers")) return new HashMap<>();
 
-        URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(ApiUrls.getApiUrls().get("OnlinePlayers"));
+        URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(
+                ApiUrls.getApiUrls().get("OnlinePlayers"));
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -68,5 +69,4 @@ public final class WebManager extends CoreManager {
             return new HashMap<>();
         }
     }
-
 }

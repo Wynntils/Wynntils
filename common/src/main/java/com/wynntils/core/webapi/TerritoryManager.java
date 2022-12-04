@@ -39,7 +39,8 @@ public class TerritoryManager extends CoreManager {
     }
 
     public static boolean tryLoadTerritories() {
-        if (ApiUrls.getOptionalApiUrls().isEmpty() || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
+        if (ApiUrls.getOptionalApiUrls().isEmpty()
+                || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
 
         String url = ApiUrls.getOptionalApiUrls().get().get("Athena") + "/cache/get/territoryList";
         DownloadableResource dl =

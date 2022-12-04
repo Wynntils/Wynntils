@@ -79,7 +79,8 @@ public class WynntilsAccount {
     }
 
     private boolean login() {
-        if (ApiUrls.getOptionalApiUrls().isEmpty() || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
+        if (ApiUrls.getOptionalApiUrls().isEmpty()
+                || !ApiUrls.getOptionalApiUrls().get().hasKey("Athena")) return false;
 
         String baseUrl = ApiUrls.getOptionalApiUrls().get().get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
