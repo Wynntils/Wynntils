@@ -76,6 +76,8 @@ public class ChatTabModel extends Model {
             return;
         }
 
+        ChatTab oldFocused = focusedTab;
+
         focusedTab = focused;
 
         if (focusedTab == null) {
@@ -87,7 +89,8 @@ public class ChatTabModel extends Model {
 
             // If chat screen is open, and current message is empty, set our auto command
             if (McUtils.mc().screen instanceof ChatScreen chatScreen
-                    && chatScreen.input.getValue().isEmpty()) {
+                    && (chatScreen.input.getValue().isEmpty()
+                            || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
                 String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
                 chatScreen.insertText(autoCommand, true);
             }
