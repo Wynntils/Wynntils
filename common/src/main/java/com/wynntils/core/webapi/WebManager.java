@@ -22,7 +22,6 @@ import com.wynntils.core.webapi.profiles.ingredient.IngredientProfile;
 import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -56,7 +55,6 @@ public final class WebManager extends CoreManager {
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
     private static boolean setup = false;
-    private static final RequestHandler handler = new RequestHandler();
 
     private static WebReader apiUrls = null;
 
@@ -243,8 +241,6 @@ public final class WebManager extends CoreManager {
             WynntilsMod.postEvent(new WebSetupEvent());
             return true;
         });
-
-        handler.dispatch(async);
     }
 
     /**
@@ -348,14 +344,6 @@ public final class WebManager extends CoreManager {
         return items;
     }
 
-    public static HashMap<ItemType, String[]> getMaterialTypes() {
-        return materialTypes;
-    }
-
-    public static HashMap<String, MajorIdentification> getMajorIds() {
-        return majorIds;
-    }
-
     public static HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
@@ -398,9 +386,5 @@ public final class WebManager extends CoreManager {
 
     public static Optional<WynntilsAccount> getAccount() {
         return Optional.ofNullable(account);
-    }
-
-    public static RequestHandler getHandler() {
-        return handler;
     }
 }

@@ -11,7 +11,6 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.core.webapi.profiles.TerritoryProfile;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import java.io.File;
 import java.lang.reflect.Type;
@@ -37,10 +36,6 @@ public class TerritoryManager extends CoreManager {
     }
 
     public static boolean tryLoadTerritories() {
-        return tryLoadTerritories(WebManager.getHandler());
-    }
-
-    public static boolean tryLoadTerritories(RequestHandler handler) {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
         String url = WebManager.getApiUrls().get().get("Athena") + "/cache/get/territoryList";

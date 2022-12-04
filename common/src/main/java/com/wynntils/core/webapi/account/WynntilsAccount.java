@@ -4,29 +4,21 @@
  */
 package com.wynntils.core.webapi.account;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import javax.crypto.SecretKey;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
-    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
-            new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
-
     private String token;
     private boolean ready = false;
 
@@ -41,18 +33,8 @@ public class WynntilsAccount {
         return ready;
     }
 
-    public HashMap<String, String> getEncodedConfigs() {
-        return encodedConfigs;
-    }
-
-    public void dumpEncodedConfig(String name) {
-        encodedConfigs.remove(name);
-    }
-
     public boolean login() {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
-
-        RequestHandler handler = WebManager.getHandler();
 
         String baseUrl = WebManager.getApiUrls().get().get("Athena");
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
@@ -120,10 +102,5 @@ public class WynntilsAccount {
             WynntilsMod.error("Failed to parse public key.", ex);
             return "";
         }
-    }
-
-    public String getMD5Verification(String key) {
-        String digest = md5Verifications.getOrDefault(key, null);
-        return MD5Verification.isMd5Digest(digest) ? digest : null;
     }
 }

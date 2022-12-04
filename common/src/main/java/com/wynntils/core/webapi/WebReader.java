@@ -30,14 +30,6 @@ public class WebReader {
     private Map<String, String> values;
     private Map<String, List<String>> lists;
 
-    public WebReader(String url) throws Exception {
-        parseWebsite(url);
-    }
-
-    public WebReader(File file) throws Exception {
-        parseFile(file);
-    }
-
     private WebReader() {}
 
     public static WebReader fromString(String data) {
@@ -51,21 +43,6 @@ public class WebReader {
 
     public Map<String, String> getValues() {
         return values;
-    }
-
-    private void parseFile(File file) throws Exception {
-        if (!parseData(FileUtils.readFileToString(file, StandardCharsets.UTF_8))) {
-            throw new Exception("Invalid WebReader result");
-        }
-    }
-
-    private void parseWebsite(String url) throws Exception {
-        URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty("User-Agent", WebManager.getUserAgent());
-
-        if (!parseData(IOUtils.toString(st.getInputStream(), StandardCharsets.UTF_8))) {
-            throw new Exception("Invalid WebReader result");
-        }
     }
 
     private boolean parseData(String data) {

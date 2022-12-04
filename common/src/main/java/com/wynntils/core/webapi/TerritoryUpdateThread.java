@@ -5,7 +5,6 @@
 package com.wynntils.core.webapi;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.request.RequestHandler;
 
 public class TerritoryUpdateThread extends Thread {
     private static final int TERRITORY_UPDATE_MS = 15000;
@@ -16,13 +15,10 @@ public class TerritoryUpdateThread extends Thread {
 
     @Override
     public void run() {
-        RequestHandler handler = new RequestHandler();
-
         try {
             Thread.sleep(TERRITORY_UPDATE_MS);
             while (!isInterrupted()) {
-                TerritoryManager.tryLoadTerritories(handler);
-                handler.dispatch();
+                TerritoryManager.tryLoadTerritories();
 
                 // TODO: Add events
                 Thread.sleep(TERRITORY_UPDATE_MS);
