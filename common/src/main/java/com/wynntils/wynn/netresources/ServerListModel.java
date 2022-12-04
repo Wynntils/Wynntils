@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi;
+package com.wynntils.wynn.netresources;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -35,7 +35,7 @@ public class ServerListModel extends Model {
 
     public static void init() {}
 
-    public static synchronized void updateServers() {
+    private static synchronized void updateServers() {
         try {
             availableServers = getServerList();
         } catch (IOException e) {

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.webapi.ServerListModel;
+import com.wynntils.wynn.netresources.ServerListModel;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.netresources.profiles.ServerProfile;
 import java.util.ArrayList;
