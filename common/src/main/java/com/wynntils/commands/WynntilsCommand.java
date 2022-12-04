@@ -13,7 +13,6 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.net.Reference;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.netresources.ItemProfilesManager;
@@ -83,10 +82,9 @@ public class WynntilsCommand extends CommandBase {
         }
 
         // reset
-        Reference.URLs.reloadUrls();
         ItemProfilesManager.reset();
         // reloads api urls as well as web manager
-        ApiUrls.init();
+        Reference.URLs.reloadUrls();
         ItemProfilesManager.init();
         SplashManager.init();
         WynntilsAccountManager.init();
