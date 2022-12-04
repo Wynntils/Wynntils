@@ -11,7 +11,6 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -193,7 +192,7 @@ public class DiscoveryManager extends CoreManager {
     private static void updateDiscoveriesResource() {
         String url = Reference.URLs.getDiscoveries();
         DownloadableResource dl =
-                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "discoveries.json"), "discoveries");
+                Downloader.download(url, Downloader.dlFile("discoveries.json"), "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

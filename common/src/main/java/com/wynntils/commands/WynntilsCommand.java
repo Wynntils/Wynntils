@@ -83,7 +83,7 @@ public class WynntilsCommand extends CommandBase {
         }
 
         // reset
-        ApiUrls.reset();
+        Reference.URLs.reloadUrls();
         ItemProfilesManager.reset();
         // reloads api urls as well as web manager
         ApiUrls.init();

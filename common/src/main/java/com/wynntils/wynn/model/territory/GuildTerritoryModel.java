@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Reference;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
@@ -107,7 +106,7 @@ public class GuildTerritoryModel extends Model {
     public static boolean tryLoadTerritories() {
         String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
         DownloadableResource dl =
-                Downloader.download(url, new File(ApiUrls.API_CACHE_ROOT, "territories.json"), "territory");
+                Downloader.download(url, Downloader.dlFile("territories.json"), "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 

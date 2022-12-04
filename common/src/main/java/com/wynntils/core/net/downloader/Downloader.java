@@ -27,6 +27,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 public class Downloader {
+    private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("net-resources");
+
+    public static File dlFile(String name) {
+        return new File(RESOURCE_ROOT, name);
+    }
+
     private final ExecutorService pool = Executors.newFixedThreadPool(
             4,
             new ThreadFactoryBuilder()

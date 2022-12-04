@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.athena.ApiUrls;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.BoundingBox;
@@ -60,7 +59,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadMaps() {
-        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
+        File mapDirectory = Downloader.dlFile("maps");
 
         MAPS.clear();
 
@@ -93,7 +92,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
+        File mapDirectory = Downloader.dlFile("maps");
         DownloadableResource dl =
                 Downloader.download(PLACES_JSON_URL, new File(mapDirectory, "places.json"), "maps-places");
         dl.handleJsonObject(json -> {
@@ -106,7 +105,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        File mapDirectory = new File(ApiUrls.API_CACHE_ROOT, "maps");
+        File mapDirectory = Downloader.dlFile("maps");
         DownloadableResource dl =
                 Downloader.download(SERVICES_JSON_URL, new File(mapDirectory, "services.json"), "maps-services");
         dl.handleJsonObject(json -> {

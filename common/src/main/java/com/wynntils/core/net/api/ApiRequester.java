@@ -46,8 +46,8 @@ public class ApiRequester {
     public static URLConnection generateURLRequestWithWynnApiKey(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", Reference.getUserAgent());
-        if (ApiUrls.getApiUrls() != null && ApiUrls.getApiUrls().hasKey("WynnApiKey"))
-            st.setRequestProperty("apikey", ApiUrls.getApiUrls().get("WynnApiKey"));
+        String apiKey = Reference.getWynnApiKey();
+        st.setRequestProperty("apikey", apiKey);
         st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
         st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 

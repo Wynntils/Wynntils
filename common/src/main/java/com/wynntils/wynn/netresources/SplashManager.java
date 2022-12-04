@@ -11,15 +11,20 @@ import java.util.List;
 
 public class SplashManager extends CoreManager {
     private static String currentSplash = "";
+    private static final List<String> SPLASHES = List.of("Move splashes to separate file!", "json FTW!");
+
+    public static List<String> getSplashes() {
+        return SPLASHES;
+    }
 
     public static void init() {
         updateCurrentSplash();
     }
 
     private static void updateCurrentSplash() {
-        if (ApiUrls.getApiUrls() == null || ApiUrls.getApiUrls().getList("Splashes") == null) return;
+        // FIXME: load splashes from new json
 
-        List<String> splashes = ApiUrls.getApiUrls().getList("Splashes");
+        List<String> splashes = getSplashes();
         currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
     }
 

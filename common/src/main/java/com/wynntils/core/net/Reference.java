@@ -7,13 +7,12 @@ package com.wynntils.core.net;
 import com.wynntils.core.WynntilsMod;
 
 public class Reference {
+    private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
             WynntilsMod.getVersion(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
-    private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
-    private static final String SPLASHES = "Move splashes to separate file!, json FTW!";
 
     public static String getUserAgent() {
         return USER_AGENT;
@@ -21,10 +20,6 @@ public class Reference {
 
     public static String getWynnApiKey() {
         return WYNN_API_KEY;
-    }
-
-    public static String getSplashes() {
-        return SPLASHES;
     }
 
     public static class URLs {
@@ -58,6 +53,10 @@ public class Reference {
 
         public static String getWikiDiscoveryQuery() {
             return WIKI_DISCOVERY_QUERY;
+        }
+
+        public static void reloadUrls() {
+            // FIXME: Not implemented yet
         }
     }
 }
