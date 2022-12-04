@@ -77,8 +77,7 @@ public class ItemProfilesManager extends CoreManager {
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
-            internalIdentifications =
-                    GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
+            internalIdentifications = GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIds = GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
@@ -119,8 +118,7 @@ public class ItemProfilesManager extends CoreManager {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-            IngredientProfile[] gItems =
-                    GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
+            IngredientProfile[] gItems = GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
             HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
             for (IngredientProfile prof : gItems) {
