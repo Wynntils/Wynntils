@@ -21,8 +21,6 @@ import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
 import com.wynntils.wynn.netresources.profiles.item.ItemType;
 import com.wynntils.wynn.netresources.profiles.item.MajorIdentification;
 import com.wynntils.mc.event.WebSetupEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
@@ -40,11 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 /** Provides and loads web content on demand */
 public final class WebManager extends CoreManager {
@@ -64,7 +57,7 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, String> translatedReferences = new HashMap<>();
     private static HashMap<String, String> internalIdentifications = new HashMap<>();
     private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+//    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
 
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
@@ -72,8 +65,6 @@ public final class WebManager extends CoreManager {
     private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static String currentSplash = "";
-
-    private static WynntilsAccount account = null;
 
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
@@ -83,7 +74,7 @@ public final class WebManager extends CoreManager {
 
     public static void init() {
         tryReloadApiUrls(false);
-        setupUserAccount();
+        WynntilsAccount.setupUserAccount();
 
         WebManager.updateCurrentSplash();
 
@@ -94,10 +85,6 @@ public final class WebManager extends CoreManager {
         WebManager.tryLoadItemList();
         WebManager.tryLoadItemGuesses();
         WebManager.tryLoadIngredientList();
-    }
-
-    public static boolean isLoggedIn() {
-        return (account != null && account.isConnected());
     }
 
     public static void reset() {
@@ -113,32 +100,6 @@ public final class WebManager extends CoreManager {
         translatedReferences = null;
         internalIdentifications = null;
         majorIds = null;
-        materialTypes = null;
-    }
-
-    private static void setupUserAccount() {
-        if (isLoggedIn()) return;
-
-        account = new WynntilsAccount();
-        boolean accountSetup = account.login();
-
-        if (!accountSetup) {
-            MutableComponent failed = new TextComponent(
-                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
-                    .withStyle(ChatFormatting.GREEN);
-            failed.append(new TextComponent("/wynntils reload")
-                    .withStyle(Style.EMPTY
-                            .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
-
-            if (McUtils.player() == null) {
-                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
-                return;
-            }
-
-            McUtils.sendMessageToClient(failed);
-        }
     }
 
     private static void tryLoadItemGuesses() {
@@ -175,7 +136,7 @@ public final class WebManager extends CoreManager {
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
-            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
+//            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
             IdentificationOrderer.INSTANCE =
@@ -304,10 +265,6 @@ public final class WebManager extends CoreManager {
         return apiUrls.get(key);
     }
 
-    public static boolean isAthenaOnline() {
-        return (account != null && account.isConnected());
-    }
-
     public static HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
@@ -361,6 +318,6 @@ public final class WebManager extends CoreManager {
     }
 
     public static Optional<WynntilsAccount> getAccount() {
-        return Optional.ofNullable(account);
+        return Optional.ofNullable(WynntilsAccount.account);
     }
 }

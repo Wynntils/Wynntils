@@ -9,21 +9,61 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.webapi.WebManager;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
 import javax.crypto.SecretKey;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccount {
+    public static WynntilsAccount account = null;
     private String token;
     private boolean ready = false;
 
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
+
+    public static boolean isLoggedIn() {
+        return (account != null && account.isConnected());
+    }
+
+    public static void setupUserAccount() {
+        if (isLoggedIn()) return;
+
+        account = new WynntilsAccount();
+        boolean accountSetup = account.login();
+
+        if (!accountSetup) {
+            MutableComponent failed = new TextComponent(
+                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
+                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(new TextComponent("/wynntils reload")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+
+            if (McUtils.player() == null) {
+                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
+                return;
+            }
+
+            McUtils.sendMessageToClient(failed);
+        }
+    }
+
+    public static boolean isAthenaOnline() {
+        return (account != null && account.isConnected());
+    }
 
     public String getToken() {
         return token;
@@ -33,7 +73,7 @@ public class WynntilsAccount {
         return ready;
     }
 
-    public boolean login() {
+    private boolean login() {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
         String baseUrl = WebManager.getApiUrls().get().get("Athena");
