@@ -43,7 +43,7 @@ public class TokenCommand extends CommandBase {
                 .withStyle(Style.EMPTY
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
-                                new TextComponent("Click me to register an" + " account.")))
+                                new TextComponent("Click me to register an account.")))
                         .withClickEvent((new ClickEvent(
                                 ClickEvent.Action.OPEN_URL,
                                 "https://account.wynntils.com/register.php?token=" + token)))
