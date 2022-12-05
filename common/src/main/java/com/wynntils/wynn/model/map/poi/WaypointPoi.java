@@ -31,8 +31,8 @@ public class WaypointPoi extends DynamicIconPoi {
     }
 
     @Override
-    public RenderPriority getRenderPriority() {
-        return RenderPriority.NORMAL;
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.NORMAL;
     }
 
     public static class PointerPoi extends DynamicIconPoi {
@@ -52,8 +52,8 @@ public class WaypointPoi extends DynamicIconPoi {
         }
 
         @Override
-        public RenderPriority getRenderPriority() {
-            return RenderPriority.NORMAL;
+        public DisplayPriority getDisplayPriority() {
+            return DisplayPriority.NORMAL;
         }
     }
 }

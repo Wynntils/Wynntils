@@ -29,7 +29,7 @@ public class ServicePoi extends StaticIconPoi {
     }
 
     @Override
-    public RenderPriority getRenderPriority() {
-        return RenderPriority.LOWEST;
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOWEST;
     }
 }

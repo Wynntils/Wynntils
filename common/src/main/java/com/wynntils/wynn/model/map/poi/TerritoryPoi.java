@@ -158,8 +158,8 @@ public class TerritoryPoi implements Poi {
     }
 
     @Override
-    public RenderPriority getRenderPriority() {
-        return RenderPriority.HIGHEST;
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.HIGHEST;
     }
 
     public GuildTerritoryInfo getTerritoryInfo() {

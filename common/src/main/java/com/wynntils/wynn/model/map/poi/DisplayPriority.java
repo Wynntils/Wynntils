@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
-public enum RenderPriority {
+public enum DisplayPriority {
     HIGHEST,
     HIGH,
     NORMAL,

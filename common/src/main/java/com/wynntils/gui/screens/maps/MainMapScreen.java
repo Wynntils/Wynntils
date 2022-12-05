@@ -213,14 +213,15 @@ public class MainMapScreen extends AbstractMapScreen {
                         /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
                 .toList();
 
-        pois.sort(Comparator.comparing(Poi::getRenderPriority).reversed());
-
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
         }
+
+        // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+        pois.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
 
         renderPois(
                 pois,
