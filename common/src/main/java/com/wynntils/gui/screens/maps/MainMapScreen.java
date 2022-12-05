@@ -275,7 +275,7 @@ public class MainMapScreen extends AbstractMapScreen {
 
                     McUtils.mc().setScreen(new PoiCreationScreen(this, new PoiLocation(gameX, null, gameZ)));
                 }
-            } else if (KeyboardUtils.isControlDown()) {
+            } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
                     ConfigManager.saveConfig();
