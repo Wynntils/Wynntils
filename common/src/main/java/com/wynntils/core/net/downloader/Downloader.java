@@ -35,16 +35,18 @@ public class Downloader {
                     .setNameFormat("wynntils-web-request-pool-%d")
                     .build());
 
-    public static DownloadableResource download(URI uri, File localFile, String id) {
+    public static DownloadableResource download(URI uri, String localFileName, String id) {
+        File localFile = new File(RESOURCE_ROOT, localFileName);
         downloadToLocal(uri, localFile);
         return new DownloadableResource(localFile);
     }
 
-    public static DownloadableResource download(String uri, File localFile, String id) {
-        return download(URI.create(uri), localFile, id);
+    public static DownloadableResource download(String uri, String localFileName, String id) {
+        return download(URI.create(uri), localFileName, id);
     }
 
-    public static DownloadableResource downloadMd5(URI uri, File localFile, String expectedHash, String id) {
+    public static DownloadableResource downloadMd5(URI uri, String localFileName, String expectedHash, String id) {
+        File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
             downloadToLocal(uri, localFile);
         }
@@ -52,7 +54,7 @@ public class Downloader {
     }
 
     public static DownloadableResource downloadMd5(String uri, String localFileName, String expectedHash, String id) {
-        return downloadMd5(URI.create(uri), new File(RESOURCE_ROOT, localFileName), expectedHash, id);
+        return downloadMd5(URI.create(uri), localFileName, expectedHash, id);
     }
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {
@@ -62,10 +64,6 @@ public class Downloader {
 
     private static void downloadToLocal(URI uri, File localFile) {
         // FIXME: implement
-    }
-
-    public static DownloadableResource download(String url, String localFileName, String id) {
-        return download(url, new File(RESOURCE_ROOT, localFileName), id);
     }
 
     public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout)
