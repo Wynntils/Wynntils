@@ -234,8 +234,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         }
 
         // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the
-        // line's
-        // slope
+        // line's slope
         double angle = StrictMath.atan2(centerRelativePosition.y, centerRelativePosition.x);
         double m = StrictMath.tan(angle);
 
