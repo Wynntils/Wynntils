@@ -133,22 +133,27 @@ public class ChatRedirectFeature extends UserFeature {
                                 cachedNotifications.get(message);
                         Map.Entry<Integer, Long> associatedIntegerEntry = associatedContainerEntry.getValue();
                         Long oldTime = associatedIntegerEntry.getValue();
+                        
                         if (oldTime < System.currentTimeMillis() - 3000) {
                             cachedNotifications.remove(message);
                             continue;
                         }
+
                         Integer oldCount = associatedIntegerEntry.getKey();
                         Long newTime = System.currentTimeMillis();
                         Integer newCount = oldCount + 1;
                         SimpleEntry<Integer, Long> newIntegerEntry = new SimpleEntry<>(newCount, newTime);
+
                         String updatedMessage = notification + " [x" + newIntegerEntry.getKey() + "]";
                         NotificationManager.editMessage(associatedContainerEntry.getKey(), updatedMessage);
+
                         SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> newContainerEntry =
                                 new SimpleEntry<>(associatedContainerEntry.getKey(), newIntegerEntry);
                         cachedNotifications.put(message, newContainerEntry);
                     } else {
                         Long cachedTime = System.currentTimeMillis();
                         SimpleEntry<Integer, Long> associatedIntegerEntry = new SimpleEntry<>(1, cachedTime);
+
                         SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> containerEntry = new SimpleEntry<>(
                                 NotificationManager.queueMessage(notification), associatedIntegerEntry);
                         cachedNotifications.put(message, containerEntry);
