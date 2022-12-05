@@ -47,8 +47,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(
-                WynntilsAccountManager.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(WynntilsAccountManager.getToken()));
     }
 
     @Override

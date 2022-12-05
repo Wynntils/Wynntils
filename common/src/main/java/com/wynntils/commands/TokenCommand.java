@@ -8,7 +8,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -27,13 +26,12 @@ public class TokenCommand extends CommandBase {
     private int token(CommandContext<CommandSourceStack> context) {
         if (!WynntilsAccountManager.isLoggedIn()) {
             MutableComponent failed = new TextComponent(
-                    "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
+                            "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
             failed.append(new TextComponent("/wynntils reload")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
             context.getSource().sendFailure(failed);
             return 1;
         }

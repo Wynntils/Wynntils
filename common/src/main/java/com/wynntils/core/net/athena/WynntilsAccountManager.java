@@ -106,7 +106,6 @@ public class WynntilsAccountManager extends CoreManager {
             WynntilsMod.info("Successfully connected to Athena!");
             return true;
         });
-
     }
 
     private static String parseAndJoinPublicKey(String key) {
