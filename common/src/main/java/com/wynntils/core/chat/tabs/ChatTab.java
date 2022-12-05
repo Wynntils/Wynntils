@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class ChatTab {
     private String name;
     private boolean consuming;
+    private String autoCommand;
 
     // Filters
     private Set<RecipientType> filteredTypes;
@@ -21,9 +22,15 @@ public class ChatTab {
 
     private transient Pattern customRegex;
 
-    public ChatTab(String name, boolean consuming, Set<RecipientType> filteredTypes, String customRegexString) {
+    public ChatTab(
+            String name,
+            boolean consuming,
+            String autoCommand,
+            Set<RecipientType> filteredTypes,
+            String customRegexString) {
         this.name = name;
         this.consuming = consuming;
+        this.autoCommand = autoCommand;
         this.filteredTypes = filteredTypes;
         this.customRegexString = customRegexString;
     }
@@ -59,6 +66,10 @@ public class ChatTab {
 
     public boolean isConsuming() {
         return consuming;
+    }
+
+    public String getAutoCommand() {
+        return autoCommand;
     }
 
     public Pattern getCustomRegex() {

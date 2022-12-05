@@ -39,7 +39,8 @@
     "accessors.GuiAccessor",
     "accessors.ItemStackInfoAccessor",
     "accessors.MinecraftAccessor",
-    "accessors.OptionsAccessor"
+    "accessors.OptionsAccessor",
+    "ChatScreenMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {
