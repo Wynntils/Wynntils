@@ -87,7 +87,7 @@ public class ChatTabModel extends Model {
             unreadMessages.put(focusedTab, false);
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
 
-            // If chat screen is open, and current message is empty, set our auto command
+            // If chat screen is open, and current message is empty or the previous auto command, set our auto command
             if (McUtils.mc().screen instanceof ChatScreen chatScreen
                     && (chatScreen.input.getValue().isEmpty()
                             || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
