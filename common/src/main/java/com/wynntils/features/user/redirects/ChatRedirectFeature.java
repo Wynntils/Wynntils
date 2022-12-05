@@ -11,16 +11,15 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.wynn.event.WorldStateEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Iterator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -92,7 +91,8 @@ public class ChatRedirectFeature extends UserFeature {
         redirectors.add(redirector);
     }
 
-    // Data structure is String Message stores Entry of MessageContainer which stores Integers for the amount of times the message has been sent and the associated time in milliseconds
+    // Data structure is String Message stores Entry of MessageContainer which stores Integers for the amount of times
+    // the message has been sent and the associated time (Long) in milliseconds
     private Map<String, Map.Entry<MessageContainer, Map.Entry<Integer, Long>>> cachedNotifications = new HashMap<>();
 
     // Clear cached messages on world change
@@ -128,24 +128,29 @@ public class ChatRedirectFeature extends UserFeature {
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (String notification : redirector.getNotifications(matcher)) {
-                    if(cachedNotifications.containsKey(message)){ 
-                        Map.Entry<MessageContainer, Map.Entry<Integer, Long>> associatedContainerEntry = cachedNotifications.get(message);
+                    if (cachedNotifications.containsKey(message)) {
+                        Map.Entry<MessageContainer, Map.Entry<Integer, Long>> associatedContainerEntry =
+                                cachedNotifications.get(message);
                         Map.Entry<Integer, Long> associatedIntegerEntry = associatedContainerEntry.getValue();
                         Long oldTime = associatedIntegerEntry.getValue();
-                        if (oldTime < System.currentTimeMillis() - 3000) {cachedNotifications.remove(message); continue;}
+                        if (oldTime < System.currentTimeMillis() - 3000) {
+                            cachedNotifications.remove(message);
+                            continue;
+                        }
                         Integer oldCount = associatedIntegerEntry.getKey();
                         Long newTime = System.currentTimeMillis();
                         Integer newCount = oldCount + 1;
-                        SimpleEntry<Integer, Long> newIntegerEntry = new SimpleEntry<>(newCount, newTime); 
+                        SimpleEntry<Integer, Long> newIntegerEntry = new SimpleEntry<>(newCount, newTime);
                         String updatedMessage = notification + " [x" + newIntegerEntry.getKey() + "]";
                         NotificationManager.editMessage(associatedContainerEntry.getKey(), updatedMessage);
-                        SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> newContainerEntry = new SimpleEntry<>(associatedContainerEntry.getKey(), newIntegerEntry);
+                        SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> newContainerEntry =
+                                new SimpleEntry<>(associatedContainerEntry.getKey(), newIntegerEntry);
                         cachedNotifications.put(message, newContainerEntry);
-                    }
-                    else{
+                    } else {
                         Long cachedTime = System.currentTimeMillis();
                         SimpleEntry<Integer, Long> associatedIntegerEntry = new SimpleEntry<>(1, cachedTime);
-                        SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> containerEntry = new SimpleEntry<>(NotificationManager.queueMessage(notification), associatedIntegerEntry);
+                        SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> containerEntry = new SimpleEntry<>(
+                                NotificationManager.queueMessage(notification), associatedIntegerEntry);
                         cachedNotifications.put(message, containerEntry);
                     }
                 }
