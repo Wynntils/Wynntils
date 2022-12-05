@@ -20,10 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.wynntils.utils.objects.TimedSet;
+import com.wynntils.utils.Pair;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import java.util.concurrent.TimeUnit;
 
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
@@ -95,6 +98,8 @@ public class ChatRedirectFeature extends UserFeature {
     // the message has been sent and the associated time (Long) in milliseconds
     private Map<String, Map.Entry<MessageContainer, Map.Entry<Integer, Long>>> cachedNotifications = new HashMap<>();
 
+    
+
     // Clear cached messages on world change
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -145,7 +150,7 @@ public class ChatRedirectFeature extends UserFeature {
                         SimpleEntry<Integer, Long> newIntegerEntry = new SimpleEntry<>(newCount, newTime);
 
                         String updatedMessage = notification + " [x" + newIntegerEntry.getKey() + "]";
-                        NotificationManager.editMessage(associatedContainerEntry.getKey(), updatedMessage);
+                        NotificationManager.editMessage(associatedContainerEntry.getKey(), updatedMessage, true);
 
                         SimpleEntry<MessageContainer, Map.Entry<Integer, Long>> newContainerEntry =
                                 new SimpleEntry<>(associatedContainerEntry.getKey(), newIntegerEntry);

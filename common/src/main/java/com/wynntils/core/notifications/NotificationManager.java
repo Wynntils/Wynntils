@@ -14,8 +14,13 @@ import com.wynntils.wynn.event.NotificationEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import java.util.concurrent.TimeUnit;
+import com.wynntils.utils.objects.TimedSet;
+import com.wynntils.utils.Pair;
 
 public final class NotificationManager {
+    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
@@ -26,6 +31,8 @@ public final class NotificationManager {
 
     public static MessageContainer queueMessage(TextRenderTask message) {
         if (!WynnUtils.onWorld()) return null;
+
+        if (cachedMessageSet.contains(Pair<message.getText(), null>)) return null;
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
@@ -40,8 +47,8 @@ public final class NotificationManager {
         return msgContainer;
     }
 
-    public static void editMessage(MessageContainer msgContainer, String newMessage) {
-        msgContainer.editMessage(newMessage);
+    public static void editMessage(MessageContainer msgContainer, String newMessage, Boolean incrementIterations) {
+        msgContainer.editMessage(newMessage, incrementIterations);
 
         WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
 

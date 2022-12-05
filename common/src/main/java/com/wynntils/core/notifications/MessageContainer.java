@@ -9,21 +9,37 @@ import com.wynntils.gui.render.TextRenderTask;
 
 public class MessageContainer {
     protected TextRenderTask message;
+    private Integer iterations;
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
+        this.iterations = 1;
     }
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
+        this.iterations = 1;
     }
 
     public TextRenderTask getRenderTask() {
         return message;
     }
 
-    public void editMessage(String newMessage) {
-        this.message.setText(newMessage);
+    public Integer getIterations() {
+        return iterations;
+    }
+
+    public void editMessage(String newMessage, Boolean incrementIterations) {
+        String sendableMessage;
+        if(incrementIterations) {
+            this.iterations++;
+            sendableMessage = newMessage + " [x" + this.iterations + "]";
+        }
+        else {
+            sendableMessage = newMessage;
+        }
+
+        this.message.setText(sendableMessage);
     }
 
     public void update(MessageContainer other) {
