@@ -104,7 +104,7 @@ public class GuildTerritoryModel extends Model {
 
     public static boolean tryLoadTerritories() {
         String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
-        DownloadableResource dl = Downloader.download(url, Downloader.dlFile("territories.json"), "territory");
+        DownloadableResource dl = Downloader.download(url, "territories.json", "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 

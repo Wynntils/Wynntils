@@ -29,10 +29,6 @@ import org.apache.commons.io.IOUtils;
 public class Downloader {
     private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("net-resources");
 
-    public static File dlFile(String name) {
-        return new File(RESOURCE_ROOT, name);
-    }
-
     private final ExecutorService pool = Executors.newFixedThreadPool(
             4,
             new ThreadFactoryBuilder()
@@ -55,8 +51,8 @@ public class Downloader {
         return new DownloadableResource(localFile);
     }
 
-    public static DownloadableResource downloadMd5(String uri, File localFile, String expectedHash, String id) {
-        return downloadMd5(URI.create(uri), localFile, expectedHash, id);
+    public static DownloadableResource downloadMd5(String uri, String localFileName, String expectedHash, String id) {
+        return downloadMd5(URI.create(uri), new File(RESOURCE_ROOT, localFileName), expectedHash, id);
     }
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {
@@ -66,6 +62,10 @@ public class Downloader {
 
     private static void downloadToLocal(URI uri, File localFile) {
         // FIXME: implement
+    }
+
+    public static DownloadableResource download(String url, String localFileName, String id) {
+        return download(url, new File(RESOURCE_ROOT, localFileName), id);
     }
 
     public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout)

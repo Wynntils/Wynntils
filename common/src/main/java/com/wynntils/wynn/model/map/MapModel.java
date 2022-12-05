@@ -19,7 +19,6 @@ import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
@@ -59,11 +58,9 @@ public final class MapModel extends Model {
     }
 
     private static void loadMaps() {
-        File mapDirectory = Downloader.dlFile("maps");
-
         MAPS.clear();
 
-        DownloadableResource dl = Downloader.download(MAPS_JSON_URL, new File(mapDirectory, "maps.json"), "map-parts");
+        DownloadableResource dl = Downloader.download(MAPS_JSON_URL, "maps/maps.json", "map-parts");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -72,7 +69,7 @@ public final class MapModel extends Model {
                 String fileName = mapPart.md5 + ".png";
 
                 DownloadableResource dlPart = Downloader.downloadMd5(
-                        mapPart.url, new File(mapDirectory, fileName), mapPart.md5, "map-part-" + mapPart.name);
+                        mapPart.url, "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
                 dlPart.handleBytes(bytes -> {
                     try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
                         NativeImage nativeImage = NativeImage.read(in);
@@ -92,9 +89,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        File mapDirectory = Downloader.dlFile("maps");
-        DownloadableResource dl =
-                Downloader.download(PLACES_JSON_URL, new File(mapDirectory, "places.json"), "maps-places");
+        DownloadableResource dl = Downloader.download(PLACES_JSON_URL, "maps/places.json", "maps-places");
         dl.handleJsonObject(json -> {
             PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -105,9 +100,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        File mapDirectory = Downloader.dlFile("maps");
-        DownloadableResource dl =
-                Downloader.download(SERVICES_JSON_URL, new File(mapDirectory, "services.json"), "maps-services");
+        DownloadableResource dl = Downloader.download(SERVICES_JSON_URL, "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
