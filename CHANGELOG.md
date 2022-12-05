@@ -1,9 +1,21 @@
+## [0.0.1-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.122...v0.0.1-alpha.123) (2022-12-05)
+
+
+### Reverts
+
+* Revert "fix: Change keybinds for tab switching (#782)" ([b486d12](https://github.com/Wynntils/Artemis/commit/b486d120fe3c9c34bd233bc13797a1c6b6c3bfca)), closes [#782](https://github.com/Wynntils/Artemis/issues/782)
+
 ## [0.0.1-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.121...v0.0.1-alpha.122) (2022-12-05)
 
 
 ### Bug Fixes
 
 * Change keybinds for tab switching ([#782](https://github.com/Wynntils/Artemis/issues/782)) ([5feb183](https://github.com/Wynntils/Artemis/commit/5feb183fb4c9607b3ac01d16c523b9442bb416f8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.122 [skip ci] ([c876b2e](https://github.com/Wynntils/Artemis/commit/c876b2ed2c5e81cb04cccf95f556fc6c96578e9e))
 
 ## [0.0.1-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.120...v0.0.1-alpha.121) (2022-12-05)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.119 [skip ci] ([7addf98](https://github.com/Wynntils/Artemis/commit/7addf98feb58149f929ed2855bf61a4843b83e28))
-
-## [0.0.1-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.117...v0.0.1-alpha.118) (2022-12-03)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.118 [skip ci] ([cd70c98](https://github.com/Wynntils/Artemis/commit/cd70c98f49c09613b8020e37939360f62f2ed4d2))
-* Remove unused link ([#775](https://github.com/Wynntils/Artemis/issues/775)) ([5c04605](https://github.com/Wynntils/Artemis/commit/5c046055878b84b59d04a1df525edf6ac3406af0))
 
