@@ -141,11 +141,17 @@ public class ChatTabsFeature extends UserFeature {
         // We can't use keybinds here to not conflict with TAB key's other behaviours.
         if (event.getKeyCode() != GLFW.GLFW_KEY_TAB) return;
         if (!(McUtils.mc().screen instanceof ChatScreen)) return;
-        if (!KeyboardUtils.isShiftDown()) return;
+        if (!KeyboardUtils.isControlDown()) return;
 
         event.setCanceled(true);
-        ChatTabModel.setFocusedTab(
-                chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) + 1) % chatTabs.size()));
+
+        if (KeyboardUtils.isShiftDown()) {
+            ChatTabModel.setFocusedTab(
+                    chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) - 1) % chatTabs.size()));
+        } else {
+            ChatTabModel.setFocusedTab(
+                    chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) + 1) % chatTabs.size()));
+        }
     }
 
     @Override
