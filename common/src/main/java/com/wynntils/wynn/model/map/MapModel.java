@@ -16,7 +16,7 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.ByteArrayInputStream;
@@ -131,7 +131,7 @@ public final class MapModel extends Model {
                     for (var service : serviceList) {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
-                            for (MapLocation location : service.locations) {
+                            for (PoiLocation location : service.locations) {
                                 SERVICE_POIS.add(new ServicePoi(location, kind));
                             }
                         } else {
@@ -150,7 +150,7 @@ public final class MapModel extends Model {
 
     private static class ServiceProfile {
         String type;
-        List<MapLocation> locations;
+        List<PoiLocation> locations;
     }
 
     private static class MapPartProfile {

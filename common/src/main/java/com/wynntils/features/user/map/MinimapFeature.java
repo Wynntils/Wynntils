@@ -254,13 +254,13 @@ public class MinimapFeature extends UserFeature {
             List<PlayerMiniMapPoi> playerPois = HadesUserModel.getHadesUserMap().values().stream()
                     .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                             || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .sorted(Comparator.comparing(
-                            hadesUser -> hadesUser.getMapLocation().getY()))
                     .map(PlayerMiniMapPoi::new)
                     .toList();
             poisToRender.addAll(playerPois);
 
-            for (Poi poi : poisToRender) {
+            for (Poi poi : poisToRender.stream()
+                    .sorted(Comparator.comparing(Poi::getRenderPriority))
+                    .toList()) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
 

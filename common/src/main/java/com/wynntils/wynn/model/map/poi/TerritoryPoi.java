@@ -20,28 +20,22 @@ import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
-    private final MapLocation territoryCenter;
+    private final PoiLocation territoryCenter;
     private final int width;
     private final int height;
 
     private final GuildTerritoryInfo territoryInfo;
 
     public TerritoryPoi(TerritoryProfile territoryProfile) {
-        this.territoryProfile = territoryProfile;
-        this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
-        this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
-        this.territoryCenter =
-                new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
-
-        this.territoryInfo = null;
+        this(territoryProfile, null);
     }
 
     public TerritoryPoi(TerritoryProfile territoryProfile, GuildTerritoryInfo territoryInfo) {
         this.territoryProfile = territoryProfile;
         this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
         this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
-        this.territoryCenter =
-                new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
+        this.territoryCenter = new PoiLocation(
+                territoryProfile.getStartX() + width / 2, null, territoryProfile.getStartZ() + height / 2);
 
         this.territoryInfo = territoryInfo;
     }
@@ -139,7 +133,7 @@ public class TerritoryPoi implements Poi {
     }
 
     @Override
-    public MapLocation getLocation() {
+    public PoiLocation getLocation() {
         return territoryCenter;
     }
 
@@ -161,6 +155,11 @@ public class TerritoryPoi implements Poi {
     @Override
     public String getName() {
         return territoryProfile.getName();
+    }
+
+    @Override
+    public RenderPriority getRenderPriority() {
+        return RenderPriority.LOWEST;
     }
 
     public GuildTerritoryInfo getTerritoryInfo() {
