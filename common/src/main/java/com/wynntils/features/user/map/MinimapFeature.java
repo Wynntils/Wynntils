@@ -259,7 +259,7 @@ public class MinimapFeature extends UserFeature {
             poisToRender.addAll(playerPois);
 
             for (Poi poi : poisToRender.stream()
-                    .sorted(Comparator.comparing(Poi::getRenderPriority))
+                    .sorted(Comparator.comparing(Poi::getRenderPriority).reversed())
                     .toList()) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;

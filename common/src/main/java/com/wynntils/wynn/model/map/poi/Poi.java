@@ -12,7 +12,7 @@ public interface Poi {
 
     /**
      * Render priority is used to determine the order in which POIs are rendered.
-     * A lower render priority means, that the POI is rendered later, so it will be on top of other POIs.
+     * A higher render priority means, that the POI is rendered later, so it will be on top of other POIs.
      */
     RenderPriority getRenderPriority();
 

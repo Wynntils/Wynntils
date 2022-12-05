@@ -45,7 +45,7 @@ public class CustomPoi extends StaticIconPoi {
 
     @Override
     public RenderPriority getRenderPriority() {
-        return RenderPriority.NORMAL;
+        return RenderPriority.LOW;
     }
 
     @Override

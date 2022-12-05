@@ -43,7 +43,7 @@ public class LabelPoi implements Poi {
 
     @Override
     public RenderPriority getRenderPriority() {
-        return RenderPriority.LOW;
+        return RenderPriority.HIGH;
     }
 
     private float getAlphaFromScale(float zoom) {

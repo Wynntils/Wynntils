@@ -46,6 +46,6 @@ public abstract class PlayerPoiBase implements Poi {
 
     @Override
     public RenderPriority getRenderPriority() {
-        return RenderPriority.NORMAL;
+        return RenderPriority.LOW;
     }
 }

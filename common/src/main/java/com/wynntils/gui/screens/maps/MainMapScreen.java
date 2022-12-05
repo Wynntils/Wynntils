@@ -213,7 +213,7 @@ public class MainMapScreen extends AbstractMapScreen {
                         /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
                 .toList();
 
-        pois.sort(Comparator.comparing(Poi::getRenderPriority));
+        pois.sort(Comparator.comparing(Poi::getRenderPriority).reversed());
 
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
