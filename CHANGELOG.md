@@ -1,9 +1,21 @@
+## [0.0.1-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.124...v0.0.1-alpha.125) (2022-12-05)
+
+
+### Bug Fixes
+
+* Fix unusable keybind ([#784](https://github.com/Wynntils/Artemis/issues/784)) ([196bd14](https://github.com/Wynntils/Artemis/commit/196bd148846499b11249036e77dda9b3d19f0e79))
+
 ## [0.0.1-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.123...v0.0.1-alpha.124) (2022-12-05)
 
 
 ### Bug Fixes
 
 * Place a limit on bounding distance, use camera y level for inconvenient waypoint location ([#780](https://github.com/Wynntils/Artemis/issues/780)) ([5931c3b](https://github.com/Wynntils/Artemis/commit/5931c3b21e14e3da085ba6c6a80d912a06ce6ad3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.124 [skip ci] ([03011c7](https://github.com/Wynntils/Artemis/commit/03011c72c9d0f4bf1d61f089c67d0bcc64c40bdf))
 
 ## [0.0.1-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.122...v0.0.1-alpha.123) (2022-12-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.121 [skip ci] ([ce4c01c](https://github.com/Wynntils/Artemis/commit/ce4c01c0c5cef08f00f6e4e42eda83f43fc77f7a))
-
-## [0.0.1-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.119...v0.0.1-alpha.120) (2022-12-04)
-
-
-### Bug Fixes
-
-* Fix miss-use of CallbackInfoReturnable cancelling ([#778](https://github.com/Wynntils/Artemis/issues/778)) ([506b356](https://github.com/Wynntils/Artemis/commit/506b3564af505047b4a83809ebfdad7c39271c6c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.120 [skip ci] ([051bdbb](https://github.com/Wynntils/Artemis/commit/051bdbb68fd5ece81f90bb06439dffa01f771600))
 
