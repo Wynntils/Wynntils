@@ -85,7 +85,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         float dz = (float) (location.z + 0.5 - cameraPos.z);
 
         if (location.y <= 0 || location.y > 255) {
-            dy = (float) (cameraPos.y + 0.5 - cameraPos.y);
+            dy = 0;
         }
 
         double squaredDistance = dx * dx + dy * dy + dz * dz;
