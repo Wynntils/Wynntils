@@ -19,23 +19,33 @@ public abstract class PlayerPoiBase implements Poi {
         this.playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE * playerHeadScale;
     }
 
-    public MapLocation getLocation() {
+    @Override
+    public PoiLocation getLocation() {
         return user.getMapLocation();
     }
 
+    @Override
     public boolean hasStaticLocation() {
         return false;
     }
 
+    @Override
     public int getWidth(float mapZoom, float scale) {
         return (int) (playerHeadRenderSize + ADDITIONAL_WIDTH);
     }
 
+    @Override
     public int getHeight(float mapZoom, float scale) {
         return (int) (playerHeadRenderSize + ADDITIONAL_HEIGHT);
     }
 
+    @Override
     public String getName() {
         return user.getName();
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOW;
     }
 }

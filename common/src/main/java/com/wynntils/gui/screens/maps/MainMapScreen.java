@@ -23,9 +23,9 @@ import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.IconPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.ArrayList;
@@ -211,11 +211,7 @@ public class MainMapScreen extends AbstractMapScreen {
                         hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
                                 || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
                         /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
-                .sorted(Comparator.comparing(
-                        hadesUser -> hadesUser.getMapLocation().getY()))
                 .toList();
-
-        pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
@@ -223,6 +219,9 @@ public class MainMapScreen extends AbstractMapScreen {
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
         }
+
+        // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+        pois.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
 
         renderPois(
                 pois,
@@ -275,7 +274,7 @@ public class MainMapScreen extends AbstractMapScreen {
                     int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
 
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, new MapLocation(gameX, 0, gameZ)));
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, new PoiLocation(gameX, null, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
