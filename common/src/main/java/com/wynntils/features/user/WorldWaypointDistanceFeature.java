@@ -11,7 +11,9 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
@@ -167,8 +169,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
             // pointer position is determined by finding the point on circle centered around displayPosition
             double angle = Math.toDegrees(StrictMath.atan2(
-                            displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
-                            displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
+                    displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
+                    displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
                     + 90f;
             float radius = icon.width() / 2 + 8f;
             float pointerDisplayPositionX =
@@ -228,7 +230,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             centerRelativePosition = centerRelativePosition.multiply(-1, -1, 1);
         }
 
-        // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the
+        // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the line's
         // slope
         double angle = StrictMath.atan2(centerRelativePosition.y, centerRelativePosition.x);
         double m = StrictMath.tan(angle);
@@ -263,5 +265,25 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                 && position.y > 0
                 && position.y < window.getGuiScaledHeight()
                 && position.z < 1;
+    }
+
+    // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (!configHolder.getFieldName().endsWith("BoundingDistance")) return;
+
+        Window window = McUtils.window();
+        switch (configHolder.getFieldName()){
+            case "topBoundingDistance", "bottomBoundingDistance" -> {
+                if ((float) configHolder.getValue() > window.getGuiScaledHeight() * 0.4f) {
+                    configHolder.setValue(window.getGuiScaledHeight() * 0.4f);
+                }
+            }
+            case "horizontalBoundingDistance" -> {
+                if ((float) configHolder.getValue() > window.getGuiScaledWidth() * 0.4f) {
+                    configHolder.setValue(window.getGuiScaledWidth() * 0.4f);
+                }
+            }
+        }
     }
 }
