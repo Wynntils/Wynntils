@@ -7,14 +7,12 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,7 +26,8 @@ public class TerritoryCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
-                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(GuildTerritoryModel.getTerritoryNames(), builder))
+                        .suggests((context, builder) ->
+                                SharedSuggestionProvider.suggest(GuildTerritoryModel.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }

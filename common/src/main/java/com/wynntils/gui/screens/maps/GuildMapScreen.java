@@ -25,7 +25,6 @@ import com.wynntils.wynn.model.territory.objects.GuildResource;
 import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
@@ -132,8 +131,7 @@ public class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi =
-                        GuildTerritoryModel.getGuildTerritoryPoi(tradingRoute);
+                TerritoryPoi routePoi = GuildTerritoryModel.getGuildTerritoryPoi(tradingRoute);
                 if (routePoi != null) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);

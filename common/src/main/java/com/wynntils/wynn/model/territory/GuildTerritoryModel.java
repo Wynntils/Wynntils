@@ -131,7 +131,8 @@ public class GuildTerritoryModel extends CoreManager {
             Gson gson = builder.create();
 
             territoryProfileMap = gson.fromJson(json.get("territories"), type);
-            allTerritoryPois = territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            allTerritoryPois =
+                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
             return true;
         });
 
@@ -167,5 +168,4 @@ public class GuildTerritoryModel extends CoreManager {
         }
         territoryUpdateThread = null;
     }
-
 }
