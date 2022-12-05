@@ -28,16 +28,7 @@ public class TerritoryCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
-                        .suggests((context, builder) -> {
-                            if (!GuildTerritoryModel.isTerritoryListLoaded()
-                                    && !GuildTerritoryModel.tryLoadTerritories()) {
-                                return Suggestions.empty();
-                            }
-
-                            Map<String, TerritoryProfile> territories = GuildTerritoryModel.getTerritories();
-
-                            return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
-                        })
+                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(GuildTerritoryModel.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -52,25 +43,17 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!GuildTerritoryModel.isTerritoryListLoaded() && !GuildTerritoryModel.tryLoadTerritories()) {
-            context.getSource()
-                    .sendFailure(new TextComponent("Can't access territory data").withStyle(ChatFormatting.RED));
-            return 1;
-        }
-
         String territoryArg = context.getArgument("territory", String.class);
 
-        Map<String, TerritoryProfile> territories = GuildTerritoryModel.getTerritories();
+        TerritoryProfile territoryProfile = GuildTerritoryModel.getTerritoryProfile(territoryArg);
 
-        if (!territories.containsKey(territoryArg)) {
+        if (territoryProfile == null) {
             context.getSource()
                     .sendFailure(new TextComponent(
                                     "Can't access territory " + "\"" + territoryArg + "\". There likely is a typo.")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
-
-        TerritoryProfile territoryProfile = territories.get(territoryArg);
 
         int xMiddle = (territoryProfile.getStartX() + territoryProfile.getEndX()) / 2;
         int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;

@@ -62,9 +62,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        TerritoryProfile guildTerritory = GuildTerritoryModel.getTerritories().get(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = GuildTerritoryModel.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
-
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
@@ -78,9 +77,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        TerritoryProfile guildTerritory = GuildTerritoryModel.getTerritories().get(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = GuildTerritoryModel.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
-
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 

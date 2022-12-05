@@ -124,7 +124,7 @@ public class DiscoveryButton extends AbstractButton {
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
-                || GuildTerritoryModel.getTerritories().get(discoveryInfo.getName()) != null) {
+                || GuildTerritoryModel.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(TextComponent.EMPTY);
             lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)
