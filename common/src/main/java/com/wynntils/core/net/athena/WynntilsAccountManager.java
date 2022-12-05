@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Optional;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -27,28 +26,22 @@ import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccountManager extends CoreManager {
-    private static WynntilsAccountManager account = null;
-    private String token;
-    private boolean ready = false;
+    private static String token;
+    private static boolean loggedIn = false;
 
-    private final HashMap<String, String> encodedConfigs = new HashMap<>();
-    private final HashMap<String, String> md5Verifications = new HashMap<>();
+    private static final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private static final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public static void init() {
-        setupUserAccount();
+        login();
     }
 
-    public static boolean isLoggedIn() {
-        return (account != null && account.isConnected());
-    }
+    private static void login() {
+        if (loggedIn) return;
 
-    public static void setupUserAccount() {
-        if (isLoggedIn()) return;
+        doLogin();
 
-        account = new WynntilsAccountManager();
-        boolean accountSetup = account.login();
-
-        if (!accountSetup) {
+        if (!loggedIn) {
             MutableComponent failed = new TextComponent(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
@@ -67,23 +60,15 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
-    public static boolean isAthenaOnline() {
-        return (account != null && account.isConnected());
+    public static boolean isLoggedIn() {
+        return loggedIn;
     }
 
-    public static Optional<WynntilsAccountManager> getOptionalAccount() {
-        return Optional.ofNullable(account);
-    }
-
-    public String getToken() {
+    public static String getToken() {
         return token;
     }
 
-    public boolean isConnected() {
-        return ready;
-    }
-
-    private boolean login() {
+    private static void doLogin() {
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
@@ -117,15 +102,14 @@ public class WynntilsAccountManager extends CoreManager {
             configFiles
                     .entrySet()
                     .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
-            ready = true;
+            loggedIn = true;
             WynntilsMod.info("Successfully connected to Athena!");
             return true;
         });
 
-        return true;
     }
 
-    private String parseAndJoinPublicKey(String key) {
+    private static String parseAndJoinPublicKey(String key) {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());
 

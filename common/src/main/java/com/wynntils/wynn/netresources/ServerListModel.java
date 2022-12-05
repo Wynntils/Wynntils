@@ -57,7 +57,6 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (!WynntilsAccountManager.isAthenaOnline()) return new HashMap<>();
         String url = Reference.URLs.getAthena() + "/cache/get/serverList";
 
         URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);

@@ -56,8 +56,8 @@ public class HadesModel extends Model {
     }
 
     private static void tryCreateConnection() {
-        if (WynntilsAccountManager.getOptionalAccount().isEmpty()) {
-            WynntilsMod.error("Cannot connect to HadesServer when WebManager does not have account.");
+        if (!WynntilsAccountManager.isLoggedIn()) {
+            WynntilsMod.error("Cannot connect to HadesServer when not logged in on Athena.");
             return;
         }
 

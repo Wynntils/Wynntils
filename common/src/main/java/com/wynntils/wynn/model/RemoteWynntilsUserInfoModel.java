@@ -28,7 +28,6 @@ public class RemoteWynntilsUserInfoModel extends Model {
     private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
     public static void loadUser(UUID uuid) {
-        if (!WynntilsAccountManager.isAthenaOnline()) return;
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads
