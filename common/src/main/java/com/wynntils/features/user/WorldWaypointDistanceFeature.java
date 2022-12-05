@@ -11,7 +11,6 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -80,10 +79,20 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         projection.multiply(Vector3f.XP.rotationDegrees(camera.getXRot()));
         projection.multiply(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
+        float dx;
+        float dy;
+        float dz;
         // offset to put text to the center of the block
-        float dx = (float) (location.x + 0.5 - cameraPos.x);
-        float dy = (float) (location.y + 0.5 - cameraPos.y);
-        float dz = (float) (location.z + 0.5 - cameraPos.z);
+        if (location.y <= 0 || location.y > 255) {
+            dx = (float) (location.x + 0.5 - cameraPos.x);
+            dy = (float) (cameraPos.y + 0.5 - cameraPos.y);
+            dz = (float) (location.z + 0.5 - cameraPos.z);
+        } else {
+            dx = (float) (location.x + 0.5 - cameraPos.x);
+            dy = (float) (location.y + 0.5 - cameraPos.y);
+            dz = (float) (location.z + 0.5 - cameraPos.z);
+        }
+
 
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
