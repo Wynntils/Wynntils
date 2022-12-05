@@ -49,7 +49,8 @@ public class GuildTerritoryModel extends CoreManager {
     private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public static void init() {
-        timerExecutor.scheduleWithFixedDelay(GuildTerritoryModel::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+        timerExecutor.scheduleWithFixedDelay(
+                GuildTerritoryModel::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public static TerritoryProfile getTerritoryProfile(String name) {
@@ -129,7 +130,8 @@ public class GuildTerritoryModel extends CoreManager {
             Gson gson = builder.create();
 
             territoryProfileMap = gson.fromJson(json.get("territories"), type);
-            allTerritoryPois = territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            allTerritoryPois =
+                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
             // TODO: Add events
             return true;
         });
