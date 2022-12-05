@@ -1,9 +1,21 @@
+## [0.0.1-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.120...v0.0.1-alpha.121) (2022-12-05)
+
+
+### New Features
+
+* Add auto commands to chat tabs + switch with "shift+tab" key ([#777](https://github.com/Wynntils/Artemis/issues/777)) ([110065d](https://github.com/Wynntils/Artemis/commit/110065da6b75b7f7d067a7daf7287edc6b45011c))
+
 ## [0.0.1-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.119...v0.0.1-alpha.120) (2022-12-04)
 
 
 ### Bug Fixes
 
 * Fix miss-use of CallbackInfoReturnable cancelling ([#778](https://github.com/Wynntils/Artemis/issues/778)) ([506b356](https://github.com/Wynntils/Artemis/commit/506b3564af505047b4a83809ebfdad7c39271c6c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.120 [skip ci] ([051bdbb](https://github.com/Wynntils/Artemis/commit/051bdbb68fd5ece81f90bb06439dffa01f771600))
 
 ## [0.0.1-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.118...v0.0.1-alpha.119) (2022-12-03)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.117 [skip ci] ([3b7ea91](https://github.com/Wynntils/Artemis/commit/3b7ea91995cd9b52c4266923143b88d37fe4dddf))
-
-## [0.0.1-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.115...v0.0.1-alpha.116) (2022-12-03)
-
-
-### New Features
-
-* add le, eb, em, money, inv_free, PlayerInv model, and getOpenSlotsInContainer ([#741](https://github.com/Wynntils/Artemis/issues/741)) ([f13802b](https://github.com/Wynntils/Artemis/commit/f13802b5fc56bab82ef2620a6344708d2b6a4940))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.116 [skip ci] ([9b346d7](https://github.com/Wynntils/Artemis/commit/9b346d76bafb5bd481ace9436547cb014c0ee5f7))
 
