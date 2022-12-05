@@ -13,7 +13,9 @@ public enum CombatKind {
     DUNGEONS("Dungeons", Texture.DUNGEON_ENTRANCE),
     GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT),
     RAIDS("Raids", Texture.RAID_ENTRANCE),
-    RUNE_SHRINES("Rune Shrines", Texture.RAID_ENTRANCE);
+    // TODO: We only have sprites for Uth Shrines, so those are the only ones that we have
+    // location markers for. Split up the category when more textures are available.
+    RUNE_SHRINES("Rune Shrines", Texture.UTH_SHRINE);
 
     private final String name;
     private final Texture texture;
