@@ -1,9 +1,33 @@
+## [0.0.1-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.122...v0.0.1-alpha.123) (2022-12-05)
+
+
+### Reverts
+
+* Revert "fix: Change keybinds for tab switching (#782)" ([b486d12](https://github.com/Wynntils/Artemis/commit/b486d120fe3c9c34bd233bc13797a1c6b6c3bfca)), closes [#782](https://github.com/Wynntils/Artemis/issues/782)
+
+## [0.0.1-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.121...v0.0.1-alpha.122) (2022-12-05)
+
+
+### Bug Fixes
+
+* Change keybinds for tab switching ([#782](https://github.com/Wynntils/Artemis/issues/782)) ([5feb183](https://github.com/Wynntils/Artemis/commit/5feb183fb4c9607b3ac01d16c523b9442bb416f8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.122 [skip ci] ([c876b2e](https://github.com/Wynntils/Artemis/commit/c876b2ed2c5e81cb04cccf95f556fc6c96578e9e))
+
 ## [0.0.1-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.120...v0.0.1-alpha.121) (2022-12-05)
 
 
 ### New Features
 
 * Add auto commands to chat tabs + switch with "shift+tab" key ([#777](https://github.com/Wynntils/Artemis/issues/777)) ([110065d](https://github.com/Wynntils/Artemis/commit/110065da6b75b7f7d067a7daf7287edc6b45011c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.121 [skip ci] ([ce4c01c](https://github.com/Wynntils/Artemis/commit/ce4c01c0c5cef08f00f6e4e42eda83f43fc77f7a))
 
 ## [0.0.1-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.119...v0.0.1-alpha.120) (2022-12-04)
 
@@ -28,24 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.119 [skip ci] ([7addf98](https://github.com/Wynntils/Artemis/commit/7addf98feb58149f929ed2855bf61a4843b83e28))
-
-## [0.0.1-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.117...v0.0.1-alpha.118) (2022-12-03)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.118 [skip ci] ([cd70c98](https://github.com/Wynntils/Artemis/commit/cd70c98f49c09613b8020e37939360f62f2ed4d2))
-* Remove unused link ([#775](https://github.com/Wynntils/Artemis/issues/775)) ([5c04605](https://github.com/Wynntils/Artemis/commit/5c046055878b84b59d04a1df525edf6ac3406af0))
-
-## [0.0.1-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.116...v0.0.1-alpha.117) (2022-12-03)
-
-
-### Code Refactoring
-
-* Sort FunctionManager.init() ([#769](https://github.com/Wynntils/Artemis/issues/769)) ([0f22687](https://github.com/Wynntils/Artemis/commit/0f226875beaf4564d9522713debedc8791d8dbbf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.117 [skip ci] ([3b7ea91](https://github.com/Wynntils/Artemis/commit/3b7ea91995cd9b52c4266923143b88d37fe4dddf))
 
