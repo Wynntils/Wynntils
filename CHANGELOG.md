@@ -1,9 +1,21 @@
+## [0.0.1-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.123...v0.0.1-alpha.124) (2022-12-05)
+
+
+### Bug Fixes
+
+* Place a limit on bounding distance, use camera y level for inconvenient waypoint location ([#780](https://github.com/Wynntils/Artemis/issues/780)) ([5931c3b](https://github.com/Wynntils/Artemis/commit/5931c3b21e14e3da085ba6c6a80d912a06ce6ad3))
+
 ## [0.0.1-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.122...v0.0.1-alpha.123) (2022-12-05)
 
 
 ### Reverts
 
 * Revert "fix: Change keybinds for tab switching (#782)" ([b486d12](https://github.com/Wynntils/Artemis/commit/b486d120fe3c9c34bd233bc13797a1c6b6c3bfca)), closes [#782](https://github.com/Wynntils/Artemis/issues/782)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.123 [skip ci] ([ed7931f](https://github.com/Wynntils/Artemis/commit/ed7931f1a5265ee8c98cff478fcecf9411a9ff58))
 
 ## [0.0.1-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.121...v0.0.1-alpha.122) (2022-12-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.120 [skip ci] ([051bdbb](https://github.com/Wynntils/Artemis/commit/051bdbb68fd5ece81f90bb06439dffa01f771600))
-
-## [0.0.1-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.118...v0.0.1-alpha.119) (2022-12-03)
-
-
-### Bug Fixes
-
-* No config value should be saved to disk unless edited ([#774](https://github.com/Wynntils/Artemis/issues/774)) ([385e309](https://github.com/Wynntils/Artemis/commit/385e309a8bb5d06be9f0857f85fdaff6569de690))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.119 [skip ci] ([7addf98](https://github.com/Wynntils/Artemis/commit/7addf98feb58149f929ed2855bf61a4843b83e28))
 
