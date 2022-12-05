@@ -88,7 +88,6 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             dy = (float) (cameraPos.y + 0.5 - cameraPos.y);
         }
 
-
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
         distance = Math.sqrt(squaredDistance);
