@@ -79,18 +79,13 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         projection.multiply(Vector3f.XP.rotationDegrees(camera.getXRot()));
         projection.multiply(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
-        float dx;
-        float dy;
-        float dz;
         // offset to put text to the center of the block
+        float dx = (float) (location.x + 0.5 - cameraPos.x);
+        float dy = (float) (location.y + 0.5 - cameraPos.y);
+        float dz = (float) (location.z + 0.5 - cameraPos.z);
+
         if (location.y <= 0 || location.y > 255) {
-            dx = (float) (location.x + 0.5 - cameraPos.x);
             dy = (float) (cameraPos.y + 0.5 - cameraPos.y);
-            dz = (float) (location.z + 0.5 - cameraPos.z);
-        } else {
-            dx = (float) (location.x + 0.5 - cameraPos.x);
-            dy = (float) (location.y + 0.5 - cameraPos.y);
-            dz = (float) (location.z + 0.5 - cameraPos.z);
         }
 
 
@@ -279,9 +274,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        if (!configHolder.getFieldName().endsWith("BoundingDistance")) return;
-
         Window window = McUtils.window();
+
         switch (configHolder.getFieldName()){
             case "topBoundingDistance", "bottomBoundingDistance" -> {
                 if ((float) configHolder.getValue() > window.getGuiScaledHeight() * 0.4f) {
