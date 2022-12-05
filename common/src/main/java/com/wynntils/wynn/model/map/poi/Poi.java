@@ -12,7 +12,7 @@ public interface Poi {
 
     /**
      * Display priority is used to determine the order in which POIs are rendered.
-     * A higher render priority means, that the POI is rendered later, so it will be on top of other POIs.
+     * A higher display priority means, that the POI is rendered later, so it will be on top of other POIs.
      */
     DisplayPriority getDisplayPriority();
 
