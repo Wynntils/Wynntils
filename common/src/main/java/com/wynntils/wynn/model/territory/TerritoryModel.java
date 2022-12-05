@@ -119,6 +119,8 @@ public class TerritoryModel extends CoreManager {
     }
 
     private static void updateTerritoryProfileMap() {
+        // This will get us a version of https://api.wynncraft.com/public_api.php?action=territoryList
+        // as cached on Athena
         String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
         DownloadableResource dl = Downloader.download(url, "territories.json", "territory");
         dl.handleJsonObject(json -> {
