@@ -7,7 +7,6 @@ package com.wynntils.wynn.model.territory;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.downloader.DownloadableResource;
@@ -26,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
@@ -36,22 +37,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class GuildTerritoryModel extends CoreManager {
     private static final int TERRITORY_UPDATE_MS = 15000;
 
+    // This is territory POIs as returned by the advancement from Wynncraft
     private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
+
+    // This is the profiles as downloaded from Athena
     private static Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
+
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private static Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
-    private static Thread territoryUpdateThread;
+
+    private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public static void init() {
-        territoryPoiMap = new ConcurrentHashMap<>();
-
-        resetLoadedTerritories();
-        startUpdateThread();
-    }
-
-    public static void disable() {
-        territoryPoiMap = Map.of();
-        resetLoadedTerritories();
+        timerExecutor.scheduleWithFixedDelay(GuildTerritoryModel::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public static TerritoryProfile getTerritoryProfile(String name) {
@@ -118,7 +116,7 @@ public class GuildTerritoryModel extends CoreManager {
         }
     }
 
-    public static boolean tryLoadTerritories() {
+    private static void updateTerritoryProfileMap() {
         String url = Reference.URLs.getAthena() + "/cache/get/territoryList";
         DownloadableResource dl = Downloader.download(url, "territories.json", "territory");
         dl.handleJsonObject(json -> {
@@ -131,41 +129,9 @@ public class GuildTerritoryModel extends CoreManager {
             Gson gson = builder.create();
 
             territoryProfileMap = gson.fromJson(json.get("territories"), type);
-            allTerritoryPois =
-                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            allTerritoryPois = territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            // TODO: Add events
             return true;
         });
-
-        // TODO: Add events
-        return !territoryProfileMap.isEmpty();
-    }
-
-    private static void startUpdateThread() {
-        territoryUpdateThread = new Thread(
-                () -> {
-                    try {
-                        Thread.sleep(TERRITORY_UPDATE_MS);
-                        while (!Thread.interrupted()) {
-                            tryLoadTerritories();
-
-                            Thread.sleep(TERRITORY_UPDATE_MS);
-                        }
-                    } catch (InterruptedException ignored) {
-                    }
-
-                    WynntilsMod.info("Terminating territory update thread.");
-                },
-                "Territory Update Thread");
-        territoryUpdateThread.start();
-    }
-
-    private static void resetLoadedTerritories() {
-        territoryProfileMap.clear();
-        allTerritoryPois.clear();
-
-        if (territoryUpdateThread != null) {
-            territoryUpdateThread.interrupt();
-        }
-        territoryUpdateThread = null;
     }
 }
