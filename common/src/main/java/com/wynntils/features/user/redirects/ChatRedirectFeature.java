@@ -133,7 +133,7 @@ public class ChatRedirectFeature extends UserFeature {
                                 cachedNotifications.get(message);
                         Map.Entry<Integer, Long> associatedIntegerEntry = associatedContainerEntry.getValue();
                         Long oldTime = associatedIntegerEntry.getValue();
-                        
+
                         if (oldTime < System.currentTimeMillis() - 3000) {
                             cachedNotifications.remove(message);
                             continue;
