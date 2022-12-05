@@ -1,9 +1,21 @@
+## [0.0.1-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.125...v0.0.1-alpha.126) (2022-12-05)
+
+
+### New Features
+
+* Poi location and rendering refactors ([#783](https://github.com/Wynntils/Artemis/issues/783)) ([9d2dbb7](https://github.com/Wynntils/Artemis/commit/9d2dbb7c216fc8690562b2db1109ab4299f330d9))
+
 ## [0.0.1-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.124...v0.0.1-alpha.125) (2022-12-05)
 
 
 ### Bug Fixes
 
 * Fix unusable keybind ([#784](https://github.com/Wynntils/Artemis/issues/784)) ([196bd14](https://github.com/Wynntils/Artemis/commit/196bd148846499b11249036e77dda9b3d19f0e79))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.125 [skip ci] ([361aa4b](https://github.com/Wynntils/Artemis/commit/361aa4b40785a116c01a9e91412934596c9bc52d))
 
 ## [0.0.1-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.123...v0.0.1-alpha.124) (2022-12-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.122 [skip ci] ([c876b2e](https://github.com/Wynntils/Artemis/commit/c876b2ed2c5e81cb04cccf95f556fc6c96578e9e))
-
-## [0.0.1-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.120...v0.0.1-alpha.121) (2022-12-05)
-
-
-### New Features
-
-* Add auto commands to chat tabs + switch with "shift+tab" key ([#777](https://github.com/Wynntils/Artemis/issues/777)) ([110065d](https://github.com/Wynntils/Artemis/commit/110065da6b75b7f7d067a7daf7287edc6b45011c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.121 [skip ci] ([ce4c01c](https://github.com/Wynntils/Artemis/commit/ce4c01c0c5cef08f00f6e4e42eda83f43fc77f7a))
 
