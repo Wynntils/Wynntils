@@ -11,7 +11,7 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.territory.GuildTerritoryModel;
+import com.wynntils.wynn.model.territory.TerritoryModel;
 import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,7 +27,7 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) ->
-                                SharedSuggestionProvider.suggest(GuildTerritoryModel.getTerritoryNames(), builder))
+                                SharedSuggestionProvider.suggest(TerritoryModel.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -44,7 +44,7 @@ public class TerritoryCommand extends CommandBase {
     private int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
 
-        TerritoryProfile territoryProfile = GuildTerritoryModel.getTerritoryProfile(territoryArg);
+        TerritoryProfile territoryProfile = TerritoryModel.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {
             context.getSource()
