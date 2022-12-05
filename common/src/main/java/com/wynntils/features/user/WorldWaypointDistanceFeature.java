@@ -88,7 +88,6 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             dy = (float) (cameraPos.y + 0.5 - cameraPos.y);
         }
 
-
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
         distance = Math.sqrt(squaredDistance);
@@ -173,8 +172,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
             // pointer position is determined by finding the point on circle centered around displayPosition
             double angle = Math.toDegrees(StrictMath.atan2(
-                    displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
-                    displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
+                            displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
+                            displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
                     + 90f;
             float radius = icon.width() / 2 + 8f;
             float pointerDisplayPositionX =
@@ -234,7 +233,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             centerRelativePosition = centerRelativePosition.multiply(-1, -1, 1);
         }
 
-        // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the line's
+        // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the
+        // line's
         // slope
         double angle = StrictMath.atan2(centerRelativePosition.y, centerRelativePosition.x);
         double m = StrictMath.tan(angle);
@@ -276,7 +276,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     protected void onConfigUpdate(ConfigHolder configHolder) {
         Window window = McUtils.window();
 
-        switch (configHolder.getFieldName()){
+        switch (configHolder.getFieldName()) {
             case "topBoundingDistance", "bottomBoundingDistance" -> {
                 if ((float) configHolder.getValue() > window.getGuiScaledHeight() * 0.4f) {
                     configHolder.setValue(window.getGuiScaledHeight() * 0.4f);
