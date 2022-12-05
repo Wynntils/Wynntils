@@ -20,8 +20,9 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,7 +66,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
     private final MainMapScreen oldMapScreen;
     private CustomPoi oldPoi;
-    private MapLocation setupLocation;
+    private PoiLocation setupLocation;
     private boolean firstSetup = false;
 
     public PoiCreationScreen(MainMapScreen oldMapScreen) {
@@ -73,7 +74,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         this.oldMapScreen = oldMapScreen;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, MapLocation setupLocation) {
+    public PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
@@ -150,11 +151,13 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         if (firstSetup) {
             if (oldPoi != null) {
                 xInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getX()));
-                yInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getY()));
+                Optional<Integer> y = oldPoi.getLocation().getY();
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
                 zInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getZ()));
             } else if (setupLocation != null) {
                 xInput.setTextBoxInput(String.valueOf(setupLocation.getX()));
-                yInput.setTextBoxInput(String.valueOf(setupLocation.getY()));
+                Optional<Integer> y = setupLocation.getY();
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
                 zInput.setTextBoxInput(String.valueOf(setupLocation.getZ()));
             }
         }
@@ -427,15 +430,16 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         saveButton.active = !nameInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(colorInput.getTextBoxInput()) != CustomColor.NONE
                 && COORDINATE_PATTERN.matcher(xInput.getTextBoxInput()).matches()
-                && COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
+                && (COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
+                        || yInput.getTextBoxInput().isEmpty())
                 && COORDINATE_PATTERN.matcher(zInput.getTextBoxInput()).matches();
     }
 
     private void savePoi() {
         CustomPoi poi = new CustomPoi(
-                new MapLocation(
+                new PoiLocation(
                         Integer.parseInt(xInput.getTextBoxInput()),
-                        Integer.parseInt(yInput.getTextBoxInput()),
+                        yInput.getTextBoxInput().isEmpty() ? null : Integer.parseInt(yInput.getTextBoxInput()),
                         Integer.parseInt(zInput.getTextBoxInput())),
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
