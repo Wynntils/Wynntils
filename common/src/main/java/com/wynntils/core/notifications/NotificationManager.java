@@ -21,7 +21,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
-    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet =
+    private static final TimedSet<MessageContainer> cachedMessageSet =
             new TimedSet<>(10, TimeUnit.SECONDS, true);
 
     // Clear cached messages on world change
@@ -45,23 +45,22 @@ public final class NotificationManager {
         MessageContainer msgContainer = new MessageContainer(message);
         String messageText = message.getText();
 
-        for (Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
-            String checkableMessage = cachedMessagePair.a();
+        for (MessageContainer cachedContainer : cachedMessageSet) {
+            String checkableMessage = cachedContainer.getOriginalMessage();
             if (messageText.equals(checkableMessage)) {
-                MessageContainer matchedContainer = cachedMessagePair.b();
-                matchedContainer.incrementMessageCount();
+                cachedContainer.incrementMessageCount();
 
                 // Overlay is not enabled, send in chat
                 if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
                     sendOrEditNotification(msgContainer);
                 }
 
-                WynntilsMod.postEvent(new NotificationEvent.Edit(matchedContainer));
-                return matchedContainer;
+                WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
+                return cachedContainer;
             }
         }
 
-        cachedMessageSet.put(new Pair<>(messageText, msgContainer));
+        cachedMessageSet.put(msgContainer);
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
