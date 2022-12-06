@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.notifications;
 
+import com.ibm.icu.text.Edits.Iterator;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -19,7 +20,7 @@ import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.utils.Pair;
 
 public final class NotificationManager {
-    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+    private static final TimedSet<Pair<TextRenderTask, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
@@ -32,10 +33,20 @@ public final class NotificationManager {
     public static MessageContainer queueMessage(TextRenderTask message) {
         if (!WynnUtils.onWorld()) return null;
 
-        if (cachedMessageSet.contains(Pair<message.getText(), null>)) return null;
-
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
+        Integer messageHash = message.getText().hashCode();
+
+        for(Pair<TextRenderTask, MessageContainer> cachedMessagePair : cachedMessageSet) {
+            Integer checkableHash = cachedMessagePair.a().hashCode();
+            if (messageHash.equals(checkableHash)) {
+                cachedMessagePair.b().editMessage(message.toString(), true);
+                return cachedMessagePair.b();
+            }
+            else {
+            cachedMessageSet.put(new Pair<>(message, msgContainer));
+            continue; }
+        }
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
