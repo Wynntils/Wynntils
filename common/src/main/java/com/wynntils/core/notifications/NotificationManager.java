@@ -45,8 +45,9 @@ public final class NotificationManager {
         String messageText = message.getText();
 
         for(Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
-            String checkableMessage = cachedMessagePair.a();
-            if (messageText.equals(checkableMessage)) {
+            Integer messageTextHash = messageText.hashCode();
+            Integer iteratedMessageHash = cachedMessagePair.a().hashCode();
+            if (messageTextHash.equals(iteratedMessageHash)) {
                 WynntilsMod.info("Matched Message: " + message + " to existing message. Updating existing message.");
                 editMessage(cachedMessagePair.b(), messageText, true);
                 return cachedMessagePair.b();
