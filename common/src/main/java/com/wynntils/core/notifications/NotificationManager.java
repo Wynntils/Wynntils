@@ -45,7 +45,7 @@ public final class NotificationManager {
         MessageContainer msgContainer = new MessageContainer(message);
         String messageText = message.getText();
 
-        for(Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
+        for (Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
             String checkableMessage = cachedMessagePair.a();
             if (messageText.equals(checkableMessage)) {
                 MessageContainer matchedContainer = cachedMessagePair.b();
@@ -55,7 +55,7 @@ public final class NotificationManager {
                 if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
                     sendOrEditNotification(msgContainer);
                 }
-                
+
                 WynntilsMod.postEvent(new NotificationEvent.Edit(matchedContainer));
                 return matchedContainer;
             }

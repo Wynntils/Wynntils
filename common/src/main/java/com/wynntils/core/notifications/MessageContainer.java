@@ -43,8 +43,7 @@ public class MessageContainer {
     }
 
     private String duplicateMessageBuilder(MessageContainer container) {
-        if(this.iterations == 1 || this.iterations == 0) 
-            return "";
+        if (this.iterations == 1 || this.iterations == 0) return "";
         return " §7[x" + this.iterations + "]";
     }
 }
