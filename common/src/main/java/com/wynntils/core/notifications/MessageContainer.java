@@ -30,7 +30,7 @@ public class MessageContainer {
         return iterations;
     }
 
-    public void editMessage(String newMessage, boolean incrementIterations) {
+    public void editMessage(String newMessage) {
         this.message.setText(newMessage);
     }
 

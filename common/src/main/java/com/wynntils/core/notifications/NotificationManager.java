@@ -73,8 +73,8 @@ public final class NotificationManager {
         return msgContainer;
     }
 
-    public static void editMessage(MessageContainer msgContainer, String newMessage, Boolean incrementIterations) {
-        msgContainer.editMessage(newMessage, incrementIterations);
+    public static void editMessage(MessageContainer msgContainer, String newMessage) {
+        msgContainer.editMessage(newMessage);
 
         WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
 
