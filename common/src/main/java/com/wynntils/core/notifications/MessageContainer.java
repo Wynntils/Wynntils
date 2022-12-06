@@ -9,7 +9,7 @@ import com.wynntils.gui.render.TextRenderTask;
 
 public class MessageContainer {
     protected TextRenderTask message;
-    private Integer iterations;
+    private int iterations;
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
