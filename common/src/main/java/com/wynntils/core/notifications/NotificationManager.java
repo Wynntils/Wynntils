@@ -47,15 +47,18 @@ public final class NotificationManager {
             String checkableMessage = cachedContainer.getOriginalMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.incrementMessageCount();
+                
+                WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
+                sendToChatIfNeeded(cachedContainer);
 
-                doSendMessage(cachedContainer, true);
                 return cachedContainer;
             }
         }
 
         cachedMessageSet.put(msgContainer);
 
-        doSendMessage(msgContainer, false);
+        WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
+        sendToChatIfNeeded(msgContainer);
 
         return msgContainer;
     }
@@ -63,16 +66,11 @@ public final class NotificationManager {
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
 
-        doSendMessage(msgContainer, true);
+        WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
+        sendToChatIfNeeded(msgContainer);
     }
 
-    private static void doSendMessage(MessageContainer container, boolean isEdit) {
-        if (isEdit) {
-            WynntilsMod.postEvent(new NotificationEvent.Edit(container));
-        } else { // We aren't editing, so queue.
-            WynntilsMod.postEvent(new NotificationEvent.Queue(container));
-        }
-
+    private static void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
             sendOrEditNotification(container);
