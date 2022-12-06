@@ -10,7 +10,6 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Pair;
 import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.wynn.event.NotificationEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -50,24 +49,14 @@ public final class NotificationManager {
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.incrementMessageCount();
 
-                // Overlay is not enabled, send in chat
-                if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-                    sendOrEditNotification(msgContainer);
-                }
-
-                WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
+                doSendMessage(cachedContainer, true);
                 return cachedContainer;
             }
         }
 
         cachedMessageSet.put(msgContainer);
 
-        WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
-
-        // Overlay is not enabled, send in chat
-        if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-            sendOrEditNotification(msgContainer);
-        }
+        doSendMessage(msgContainer, false);
 
         return msgContainer;
     }
@@ -75,11 +64,19 @@ public final class NotificationManager {
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
         msgContainer.editMessage(newMessage);
 
-        WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
+        doSendMessage(msgContainer, true);
+    }
+
+    private static void doSendMessage(MessageContainer container, boolean isEdit) {
+        if (isEdit) {
+            WynntilsMod.postEvent(new NotificationEvent.Edit(container));
+        } else { // We aren't editing, so queue.
+            WynntilsMod.postEvent(new NotificationEvent.Queue(container));
+        }
 
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-            sendOrEditNotification(msgContainer);
+            sendOrEditNotification(container);
         }
     }
 
