@@ -44,7 +44,8 @@ public class MessageContainer {
 
     public void incrementMessageCount() {
         this.messageCount++;
-        this.renderedMessage = new TextRenderTask(this.message.getText() + duplicateMessageBuilder(this), this.message.getSetting());
+        this.renderedMessage =
+                new TextRenderTask(this.message.getText() + duplicateMessageBuilder(this), this.message.getSetting());
     }
 
     private String duplicateMessageBuilder(MessageContainer container) {

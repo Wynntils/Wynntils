@@ -20,8 +20,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
-    private static final TimedSet<MessageContainer> cachedMessageSet =
-            new TimedSet<>(10, TimeUnit.SECONDS, true);
+    private static final TimedSet<MessageContainer> cachedMessageSet = new TimedSet<>(10, TimeUnit.SECONDS, true);
 
     // Clear cached messages on world change
     @SubscribeEvent
