@@ -44,13 +44,8 @@ public class MessageContainer {
 
     public void incrementMessageCount() {
         this.messageCount++;
+        String messageMultiplier = " §7[x" + this.messageCount + "]";
         this.renderedMessage =
-                new TextRenderTask(this.message.getText() + duplicateMessageBuilder(this), this.message.getSetting());
-    }
-
-    private String duplicateMessageBuilder(MessageContainer container) {
-        // We don't want to append the duplicate count to the message if it's not actually a dupe.
-        if (this.messageCount <= 1) return "";
-        return " §7[x" + this.messageCount + "]";
+                new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 }
