@@ -195,7 +195,7 @@ public final class MapModel extends Model {
 
         private static class CombatProfile {
             String name;
-            MapLocation coordinates;
+            PoiLocation coordinates;
         }
     }
 

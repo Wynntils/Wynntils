@@ -10,7 +10,7 @@ public class CombatPoi extends StaticIconPoi {
     private final String name;
     private final CombatKind kind;
 
-    public CombatPoi(MapLocation location, String name, CombatKind kind) {
+    public CombatPoi(PoiLocation location, String name, CombatKind kind) {
         super(location);
         this.name = name;
         this.kind = kind;
@@ -28,5 +28,10 @@ public class CombatPoi extends StaticIconPoi {
 
     public CombatKind getKind() {
         return kind;
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.NORMAL;
     }
 }
