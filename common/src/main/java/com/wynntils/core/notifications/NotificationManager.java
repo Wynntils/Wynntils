@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.notifications;
 
-import com.ibm.icu.text.Edits.Iterator;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -18,6 +17,8 @@ import net.minecraft.network.chat.TextComponent;
 import java.util.concurrent.TimeUnit;
 import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.utils.Pair;
+import com.wynntils.wynn.event.WorldStateEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
     private static final TimedSet<Pair<TextRenderTask, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
@@ -28,6 +29,12 @@ public final class NotificationManager {
 
     public static void queueMessage(Component message) {
         queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
+    }
+
+    // Clear cached messages on world change
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        cachedMessageSet.clear();
     }
 
     public static MessageContainer queueMessage(TextRenderTask message) {

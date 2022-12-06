@@ -20,13 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.utils.Pair;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import java.util.concurrent.TimeUnit;
 
 @FeatureInfo
 public class ChatRedirectFeature extends UserFeature {
@@ -92,18 +89,6 @@ public class ChatRedirectFeature extends UserFeature {
 
     private void register(Redirector redirector) {
         redirectors.add(redirector);
-    }
-
-    // Data structure is String Message stores Entry of MessageContainer which stores Integers for the amount of times
-    // the message has been sent and the associated time (Long) in milliseconds
-    private Map<String, Map.Entry<MessageContainer, Map.Entry<Integer, Long>>> cachedNotifications = new HashMap<>();
-
-    
-
-    // Clear cached messages on world change
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        cachedNotifications.clear();
     }
 
     @SubscribeEvent
