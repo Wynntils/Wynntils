@@ -29,7 +29,7 @@ public class MessageContainer {
         return iterations;
     }
 
-    public void editMessage(String newMessage, Boolean incrementIterations) {
+    public void editMessage(String newMessage, boolean incrementIterations) {
         String sendableMessage;
         if (incrementIterations) {
             this.iterations++;
