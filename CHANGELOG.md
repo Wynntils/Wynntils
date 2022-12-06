@@ -1,9 +1,21 @@
+## [0.0.1-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.127...v0.0.1-alpha.128) (2022-12-06)
+
+
+### Bug Fixes
+
+* Do not use RIGHT_ALL for isShiftDown() ([#786](https://github.com/Wynntils/Artemis/issues/786)) ([3e1c210](https://github.com/Wynntils/Artemis/commit/3e1c210f3c0f802fe178e23d78527013f9bef560)), closes [/github.com/Wynntils/Artemis/pull/784/files#diff-327a8d0017951c176589c00578cedf3eee1e1401dc0b3042435670519011b2](https://github.com/Wynntils//github.com/Wynntils/Artemis/pull/784/files/issues/diff-327a8d0017951c176589c00578cedf3eee1e1401dc0b3042435670519011b2)
+
 ## [0.0.1-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.126...v0.0.1-alpha.127) (2022-12-06)
 
 
 ### Bug Fixes
 
 * Recognize alternative type of party join messages in PlayerRelationsModel ([#785](https://github.com/Wynntils/Artemis/issues/785)) ([d697d1e](https://github.com/Wynntils/Artemis/commit/d697d1e060d5b17968c4f72f4370b3619f8d3fe0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.127 [skip ci] ([79cad50](https://github.com/Wynntils/Artemis/commit/79cad507afb60ed5eab9d16ca0286a3b17021ff3))
 
 ## [0.0.1-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.125...v0.0.1-alpha.126) (2022-12-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.124 [skip ci] ([03011c7](https://github.com/Wynntils/Artemis/commit/03011c72c9d0f4bf1d61f089c67d0bcc64c40bdf))
-
-## [0.0.1-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.122...v0.0.1-alpha.123) (2022-12-05)
-
-
-### Reverts
-
-* Revert "fix: Change keybinds for tab switching (#782)" ([b486d12](https://github.com/Wynntils/Artemis/commit/b486d120fe3c9c34bd233bc13797a1c6b6c3bfca)), closes [#782](https://github.com/Wynntils/Artemis/issues/782)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.123 [skip ci] ([ed7931f](https://github.com/Wynntils/Artemis/commit/ed7931f1a5265ee8c98cff478fcecf9411a9ff58))
 
