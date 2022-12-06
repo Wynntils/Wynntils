@@ -1,9 +1,21 @@
+## [0.0.1-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.126...v0.0.1-alpha.127) (2022-12-06)
+
+
+### Bug Fixes
+
+* Recognize alternative type of party join messages in PlayerRelationsModel ([#785](https://github.com/Wynntils/Artemis/issues/785)) ([d697d1e](https://github.com/Wynntils/Artemis/commit/d697d1e060d5b17968c4f72f4370b3619f8d3fe0))
+
 ## [0.0.1-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.125...v0.0.1-alpha.126) (2022-12-05)
 
 
 ### New Features
 
 * Poi location and rendering refactors ([#783](https://github.com/Wynntils/Artemis/issues/783)) ([9d2dbb7](https://github.com/Wynntils/Artemis/commit/9d2dbb7c216fc8690562b2db1109ab4299f330d9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.126 [skip ci] ([82b56f8](https://github.com/Wynntils/Artemis/commit/82b56f8001de1f7e7da528beb9711ddbe0243fa1))
 
 ## [0.0.1-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.124...v0.0.1-alpha.125) (2022-12-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.123 [skip ci] ([ed7931f](https://github.com/Wynntils/Artemis/commit/ed7931f1a5265ee8c98cff478fcecf9411a9ff58))
-
-## [0.0.1-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.121...v0.0.1-alpha.122) (2022-12-05)
-
-
-### Bug Fixes
-
-* Change keybinds for tab switching ([#782](https://github.com/Wynntils/Artemis/issues/782)) ([5feb183](https://github.com/Wynntils/Artemis/commit/5feb183fb4c9607b3ac01d16c523b9442bb416f8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.122 [skip ci] ([c876b2e](https://github.com/Wynntils/Artemis/commit/c876b2ed2c5e81cb04cccf95f556fc6c96578e9e))
 
