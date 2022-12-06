@@ -18,7 +18,6 @@ public class MessageContainer {
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
-        this.renderedMessage = message;
         this.messageCount = 1;
     }
 
@@ -27,6 +26,8 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
+        if(renderedMessage == null)
+            return message;
         return renderedMessage;
     }
 
