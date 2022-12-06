@@ -26,8 +26,7 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
-        if(renderedMessage == null)
-            return message;
+        if (renderedMessage == null) return message;
         return renderedMessage;
     }
 

@@ -47,7 +47,7 @@ public final class NotificationManager {
             String checkableMessage = cachedContainer.getOriginalMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.incrementMessageCount();
-                
+
                 WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
                 sendToChatIfNeeded(cachedContainer);
 
