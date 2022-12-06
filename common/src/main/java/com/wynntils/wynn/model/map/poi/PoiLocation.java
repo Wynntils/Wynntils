@@ -6,13 +6,14 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.mc.objects.Location;
 import java.util.Objects;
+import java.util.Optional;
 
-public class MapLocation {
+public class PoiLocation {
     private final int x;
-    private final int y;
+    private final Integer y;
     private final int z;
 
-    public MapLocation(int x, int y, int z) {
+    public PoiLocation(int x, Integer y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -22,8 +23,8 @@ public class MapLocation {
         return x;
     }
 
-    public int getY() {
-        return y;
+    public Optional<Integer> getY() {
+        return Optional.ofNullable(y);
     }
 
     public int getZ() {
@@ -43,10 +44,10 @@ public class MapLocation {
         return x + " " + y + " " + z;
     }
 
-    public static MapLocation fromLocation(Location location) {
+    public static PoiLocation fromLocation(Location location) {
         if (location == null) return null;
 
-        return new MapLocation((int) location.x, (int) location.y, (int) location.z);
+        return new PoiLocation((int) location.x, (int) location.y, (int) location.z);
     }
 
     @Override
@@ -54,8 +55,8 @@ public class MapLocation {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
 
-        MapLocation that = (MapLocation) other;
-        return x == that.x && y == that.y && z == that.z;
+        PoiLocation that = (PoiLocation) other;
+        return x == that.x && Objects.equals(y, that.y) && z == that.z;
     }
 
     @Override
