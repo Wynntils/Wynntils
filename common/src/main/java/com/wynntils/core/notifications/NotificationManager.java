@@ -49,10 +49,13 @@ public final class NotificationManager {
             String checkableMessage = cachedMessagePair.a();
             if (messageText.equals(checkableMessage)) {
                 MessageContainer matchedContainer = cachedMessagePair.b();
+                matchedContainer.incrementIterations();
+
+                // Overlay is not enabled, send in chat
                 if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-                    matchedContainer.incrementIterations();
-                    sendOrEditNotification(matchedContainer);
+                    sendOrEditNotification(msgContainer);
                 }
+                
                 WynntilsMod.postEvent(new NotificationEvent.Edit(matchedContainer));
                 return matchedContainer;
             }

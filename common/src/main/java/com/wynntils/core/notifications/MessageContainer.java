@@ -22,7 +22,7 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
-        String sendableMessage = this.message.getText() + duplicateMessageBuilder(this);
+        String sendableMessage = message.getText() + duplicateMessageBuilder(this);
         return new TextRenderTask(sendableMessage, this.message.getSetting());
     }
 
