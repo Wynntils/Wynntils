@@ -13,12 +13,12 @@ public class MessageContainer {
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.messageCount = 0;
+        this.messageCount = 1;
     }
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
-        this.messageCount = 0;
+        this.messageCount = 1;
     }
 
     public TextRenderTask getRenderTask() {

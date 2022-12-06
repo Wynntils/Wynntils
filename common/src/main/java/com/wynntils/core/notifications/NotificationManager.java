@@ -62,7 +62,6 @@ public final class NotificationManager {
         }
 
         cachedMessageSet.put(new Pair<>(messageText, msgContainer));
-        msgContainer.incrementMessageCount();
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
