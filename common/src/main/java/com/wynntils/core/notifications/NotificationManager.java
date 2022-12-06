@@ -10,18 +10,19 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
+import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import java.util.concurrent.TimeUnit;
-import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.utils.Pair;
-import com.wynntils.wynn.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
-    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet =
+            new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     // Clear cached messages on world change
     @SubscribeEvent
@@ -44,15 +45,16 @@ public final class NotificationManager {
         MessageContainer msgContainer = new MessageContainer(message);
         String messageText = message.getText();
 
-        for(Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
+        for (Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
             Integer messageTextHash = messageText.hashCode();
             Integer iteratedMessageHash = cachedMessagePair.a().hashCode();
             if (messageTextHash.equals(iteratedMessageHash)) {
                 WynntilsMod.info("Matched Message: " + message + " to existing message. Updating existing message.");
                 editMessage(cachedMessagePair.b(), messageText, true);
                 return cachedMessagePair.b();
+            } else {
+                continue;
             }
-            else { continue; }
         }
 
         cachedMessageSet.put(new Pair<>(messageText, msgContainer));

@@ -31,11 +31,10 @@ public class MessageContainer {
 
     public void editMessage(String newMessage, Boolean incrementIterations) {
         String sendableMessage;
-        if(incrementIterations) {
+        if (incrementIterations) {
             this.iterations++;
             sendableMessage = newMessage + " §7[x" + this.iterations + "]";
-        }
-        else {
+        } else {
             sendableMessage = newMessage;
         }
 
