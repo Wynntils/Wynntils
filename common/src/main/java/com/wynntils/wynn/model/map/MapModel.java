@@ -165,13 +165,13 @@ public final class MapModel extends Model {
 
                     List<CombatProfileList> combatProfileLists = GSON.fromJson(json, type);
                     for (var combatList : combatProfileLists) {
-                        CombatKind kind = CombatKind.fromString(combatList.category);
+                        CombatKind kind = CombatKind.fromString(combatList.type);
                         if (kind != null) {
                             for (CombatProfileList.CombatProfile profile : combatList.locations) {
                                 COMBAT_POIS.add(new CombatPoi(profile.coordinates, profile.name, kind));
                             }
                         } else {
-                            WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.category);
+                            WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);
                         }
                     }
 
@@ -190,7 +190,7 @@ public final class MapModel extends Model {
     }
 
     private static class CombatProfileList {
-        String category;
+        String type;
         List<CombatProfile> locations;
 
         private static class CombatProfile {
