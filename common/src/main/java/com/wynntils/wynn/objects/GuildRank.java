@@ -22,17 +22,8 @@ public enum GuildRank {
     }
 
     public static GuildRank fromStars(int stars) {
-        for (GuildRank type : values()) {
+        for (GuildRank type : GuildRank.values()) {
             if (stars == type.getStars()) {
-                return type;
-            }
-        }
-        return GuildRank.None;
-    }
-
-    public static GuildRank fromString(String rank) {
-        for (GuildRank type : values()) {
-            if (rank.equalsIgnoreCase(type.getRank())) {
                 return type;
             }
         }
