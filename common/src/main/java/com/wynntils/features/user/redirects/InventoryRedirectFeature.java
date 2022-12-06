@@ -69,7 +69,7 @@ public class InventoryRedirectFeature extends UserFeature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    NotificationManager.editMessage(emeraldPouchMessage, codedString, false);
+                    NotificationManager.editMessage(emeraldPouchMessage, codedString);
                 } else {
                     emeraldPouchMessage = NotificationManager.queueMessage(codedString);
                 }
