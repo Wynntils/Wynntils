@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
     private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet =
-            new TimedSet<>(5, TimeUnit.SECONDS, true);
+            new TimedSet<>(10, TimeUnit.SECONDS, true);
 
     // Clear cached messages on world change
     @SubscribeEvent
