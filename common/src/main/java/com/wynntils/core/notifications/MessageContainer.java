@@ -9,21 +9,25 @@ import com.wynntils.gui.render.TextRenderTask;
 
 public class MessageContainer {
     protected TextRenderTask message;
+    private TextRenderTask renderedMessage;
     private int messageCount;
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.messageCount = 1;
     }
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
+        this.renderedMessage = message;
         this.messageCount = 1;
     }
 
+    public String getOriginalMessage() {
+        return message.getText();
+    }
+
     public TextRenderTask getRenderTask() {
-        String sendableMessage = message.getText() + duplicateMessageBuilder(this);
-        return new TextRenderTask(sendableMessage, this.message.getSetting());
+        return renderedMessage;
     }
 
     public int getMessageCount() {
@@ -40,10 +44,11 @@ public class MessageContainer {
 
     public void incrementMessageCount() {
         this.messageCount++;
+        this.renderedMessage = new TextRenderTask(message.getText() + duplicateMessageBuilder(this), message.getSetting());
     }
 
     private String duplicateMessageBuilder(MessageContainer container) {
-        // We don't want to send append the duplicate count to the message if it's not actually a dupe.
+        // We don't want to append the duplicate count to the message if it's not actually a dupe.
         if (this.messageCount <= 1) return "";
         return " §7[x" + this.messageCount + "]";
     }
