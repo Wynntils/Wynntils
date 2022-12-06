@@ -26,7 +26,7 @@ public class MessageContainer {
         return new TextRenderTask(sendableMessage, this.message.getSetting());
     }
 
-    public Integer getMessageCount() {
+    public int getMessageCount() {
         return messageCount;
     }
 
