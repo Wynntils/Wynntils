@@ -45,7 +45,6 @@ public class MessageContainer {
     public void incrementMessageCount() {
         this.messageCount++;
         String messageMultiplier = " §7[x" + this.messageCount + "]";
-        this.currentMessage =
-                new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
+        this.currentMessage = new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 }
