@@ -1,9 +1,21 @@
+## [0.0.1-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.128...v0.0.1-alpha.129) (2022-12-06)
+
+
+### Miscellaneous Chores
+
+* Remove special DEV version case from build.gradle ([#787](https://github.com/Wynntils/Artemis/issues/787)) ([2d56252](https://github.com/Wynntils/Artemis/commit/2d562529f55d4f05edf3fe31f6a91d5b7d82a2d7))
+
 ## [0.0.1-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.127...v0.0.1-alpha.128) (2022-12-06)
 
 
 ### Bug Fixes
 
 * Do not use RIGHT_ALL for isShiftDown() ([#786](https://github.com/Wynntils/Artemis/issues/786)) ([3e1c210](https://github.com/Wynntils/Artemis/commit/3e1c210f3c0f802fe178e23d78527013f9bef560)), closes [/github.com/Wynntils/Artemis/pull/784/files#diff-327a8d0017951c176589c00578cedf3eee1e1401dc0b3042435670519011b2](https://github.com/Wynntils//github.com/Wynntils/Artemis/pull/784/files/issues/diff-327a8d0017951c176589c00578cedf3eee1e1401dc0b3042435670519011b2)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.128 [skip ci] ([a3b56de](https://github.com/Wynntils/Artemis/commit/a3b56de2d1fb1f059449744b486a9c124458ec09))
 
 ## [0.0.1-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.126...v0.0.1-alpha.127) (2022-12-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.125 [skip ci] ([361aa4b](https://github.com/Wynntils/Artemis/commit/361aa4b40785a116c01a9e91412934596c9bc52d))
-
-## [0.0.1-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.123...v0.0.1-alpha.124) (2022-12-05)
-
-
-### Bug Fixes
-
-* Place a limit on bounding distance, use camera y level for inconvenient waypoint location ([#780](https://github.com/Wynntils/Artemis/issues/780)) ([5931c3b](https://github.com/Wynntils/Artemis/commit/5931c3b21e14e3da085ba6c6a80d912a06ce6ad3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.124 [skip ci] ([03011c7](https://github.com/Wynntils/Artemis/commit/03011c72c9d0f4bf1d61f089c67d0bcc64c40bdf))
 
