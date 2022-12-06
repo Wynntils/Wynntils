@@ -7,6 +7,7 @@ package com.wynntils.core.chat.tabs;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -48,7 +49,7 @@ public class ChatTabModel extends Model {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
         if (focusedTab == null || focusedTab.getAutoCommand() == null) return;
 
-        chatScreen.insertText(focusedTab.getAutoCommand(), true);
+        ((ChatScreenInvoker) chatScreen).invokeInsertText(focusedTab.getAutoCommand(), true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -92,7 +93,7 @@ public class ChatTabModel extends Model {
                     && (chatScreen.input.getValue().isEmpty()
                             || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
                 String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
-                chatScreen.insertText(autoCommand, true);
+                ((ChatScreenInvoker) chatScreen).invokeInsertText(autoCommand, true);
             }
         }
     }
