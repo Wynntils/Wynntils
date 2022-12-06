@@ -33,7 +33,7 @@ public class MessageContainer {
         String sendableMessage;
         if(incrementIterations) {
             this.iterations++;
-            sendableMessage = newMessage + " [x" + this.iterations + "]";
+            sendableMessage = newMessage + " §7[x" + this.iterations + "]";
         }
         else {
             sendableMessage = newMessage;

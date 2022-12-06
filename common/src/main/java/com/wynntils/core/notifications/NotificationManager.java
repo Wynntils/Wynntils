@@ -21,7 +21,13 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
-    private static final TimedSet<Pair<TextRenderTask, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+    private static final TimedSet<Pair<String, MessageContainer>> cachedMessageSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+
+    // Clear cached messages on world change
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        cachedMessageSet.clear();
+    }
 
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
@@ -31,29 +37,24 @@ public final class NotificationManager {
         queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
     }
 
-    // Clear cached messages on world change
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        cachedMessageSet.clear();
-    }
-
     public static MessageContainer queueMessage(TextRenderTask message) {
         if (!WynnUtils.onWorld()) return null;
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
-        Integer messageHash = message.getText().hashCode();
+        String messageText = message.getText();
 
-        for(Pair<TextRenderTask, MessageContainer> cachedMessagePair : cachedMessageSet) {
-            Integer checkableHash = cachedMessagePair.a().hashCode();
-            if (messageHash.equals(checkableHash)) {
-                cachedMessagePair.b().editMessage(message.toString(), true);
+        for(Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
+            String checkableMessage = cachedMessagePair.a();
+            if (messageText.equals(checkableMessage)) {
+                WynntilsMod.info("Matched Message: " + message + " to existing message. Updating existing message.");
+                editMessage(cachedMessagePair.b(), messageText, true);
                 return cachedMessagePair.b();
             }
-            else {
-            cachedMessageSet.put(new Pair<>(message, msgContainer));
-            continue; }
+            else { continue; }
         }
+
+        cachedMessageSet.put(new Pair<>(messageText, msgContainer));
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
 
