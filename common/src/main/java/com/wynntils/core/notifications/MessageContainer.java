@@ -13,16 +13,17 @@ public class MessageContainer {
 
     public MessageContainer(String message) {
         this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
-        this.iterations = 1;
+        this.iterations = 0;
     }
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
-        this.iterations = 1;
+        this.iterations = 0;
     }
 
     public TextRenderTask getRenderTask() {
-        return message;
+        String sendableMessage = this.message.getText() + duplicateMessageBuilder(this);
+        return new TextRenderTask(sendableMessage, this.message.getSetting());
     }
 
     public Integer getIterations() {
@@ -30,18 +31,20 @@ public class MessageContainer {
     }
 
     public void editMessage(String newMessage, boolean incrementIterations) {
-        String sendableMessage;
-        if (incrementIterations) {
-            this.iterations++;
-            sendableMessage = newMessage + " §7[x" + this.iterations + "]";
-        } else {
-            sendableMessage = newMessage;
-        }
-
-        this.message.setText(sendableMessage);
+        this.message.setText(newMessage);
     }
 
     public void update(MessageContainer other) {
         this.message = other.message;
+    }
+
+    public void incrementIterations() {
+        this.iterations++;
+    }
+
+    private String duplicateMessageBuilder(MessageContainer container) {
+        if(this.iterations == 1 || this.iterations == 0) 
+            return "";
+        return " §7[x" + this.iterations + "]";
     }
 }
