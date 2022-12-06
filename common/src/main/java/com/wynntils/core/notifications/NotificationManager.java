@@ -44,16 +44,14 @@ public final class NotificationManager {
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
         String messageText = message.getText();
+        Integer messageTextHash = messageText.hashCode();
 
         for (Pair<String, MessageContainer> cachedMessagePair : cachedMessageSet) {
-            Integer messageTextHash = messageText.hashCode();
             Integer iteratedMessageHash = cachedMessagePair.a().hashCode();
             if (messageTextHash.equals(iteratedMessageHash)) {
                 WynntilsMod.info("Matched Message: " + message + " to existing message. Updating existing message.");
                 editMessage(cachedMessagePair.b(), messageText, true);
                 return cachedMessagePair.b();
-            } else {
-                continue;
             }
         }
 
