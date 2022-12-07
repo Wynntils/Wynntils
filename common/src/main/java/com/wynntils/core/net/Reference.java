@@ -27,7 +27,13 @@ public class Reference {
         private static final String DISCORD_INVITE = "https://discord.gg/SZuNem8";
         private static final String DISCOVERIES = "https://api.wynntils.com/discoveries.json";
         private static final String ITEM_GUESSES = "https://wynndata.tk/api/unid/data.json";
+        private static final String MAPS =
+                "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
+        private static final String PLACES =
+                "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+        private static final String SERVICES =
+                "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
 
@@ -47,8 +53,20 @@ public class Reference {
             return ITEM_GUESSES;
         }
 
+        public static String getMaps() {
+            return MAPS;
+        }
+
         public static String getOnlinePlayers() {
             return ONLINE_PLAYERS;
+        }
+
+        public static String getPlaces() {
+            return PLACES;
+        }
+
+        public static String getServices() {
+            return SERVICES;
         }
 
         public static String getWikiDiscoveryQuery() {

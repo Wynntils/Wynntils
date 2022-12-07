@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.BoundingBox;
@@ -27,13 +28,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapModel extends Model {
-    private static final String PLACES_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
-    private static final String SERVICES_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
-    private static final String MAPS_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
-
     private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
     private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
@@ -60,7 +54,7 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        DownloadableResource dl = Downloader.download(MAPS_JSON_URL, "maps/maps.json", "map-parts");
+        DownloadableResource dl = Downloader.download(Reference.URLs.getMaps(), "maps/maps.json", "map-parts");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -89,7 +83,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        DownloadableResource dl = Downloader.download(PLACES_JSON_URL, "maps/places.json", "maps-places");
+        DownloadableResource dl = Downloader.download(Reference.URLs.getPlaces(), "maps/places.json", "maps-places");
         dl.handleJsonObject(json -> {
             PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -100,7 +94,8 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        DownloadableResource dl = Downloader.download(SERVICES_JSON_URL, "maps/services.json", "maps-services");
+        DownloadableResource dl =
+                Downloader.download(Reference.URLs.getServices(), "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
