@@ -9,7 +9,6 @@ import com.wynntils.gui.render.TextRenderTask;
 
 public class MessageContainer {
     protected TextRenderTask message;
-    private TextRenderTask currentMessage;
     private int messageCount;
 
     public MessageContainer(String message) {
@@ -18,7 +17,6 @@ public class MessageContainer {
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
-        this.currentMessage = message;
         this.messageCount = 1;
     }
 
@@ -27,7 +25,8 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
-        return currentMessage;
+        String messageMultiplier = " §7[x" + this.messageCount + "]";
+        return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 
     public void editMessage(String newMessage) {
@@ -40,7 +39,5 @@ public class MessageContainer {
 
     public void incrementMessageCount() {
         this.messageCount++;
-        String messageMultiplier = " §7[x" + this.messageCount + "]";
-        this.currentMessage = new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 }
