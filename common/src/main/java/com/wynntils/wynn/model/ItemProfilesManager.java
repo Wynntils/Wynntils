@@ -25,14 +25,13 @@ import java.util.HashMap;
 public class ItemProfilesManager extends CoreManager {
     private static final Gson GSON = new Gson();
 
-    private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    //    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
-
     private static HashMap<String, ItemProfile> items = new HashMap<>();
     private static Collection<ItemProfile> directItems = new ArrayList<>();
+    private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
     private static HashMap<String, String> translatedReferences = new HashMap<>();
     private static HashMap<String, String> internalIdentifications = new HashMap<>();
+    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
+    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
@@ -45,6 +44,18 @@ public class ItemProfilesManager extends CoreManager {
         tryLoadItemList();
         tryLoadItemGuesses();
         tryLoadIngredientList();
+    }
+
+    public static void reset() {
+        // tryLoadItemGuesses
+        itemGuesses = null;
+
+        // tryLoadItemList
+        items = null;
+        directItems = null;
+        translatedReferences = null;
+        internalIdentifications = null;
+        majorIds = null;
     }
 
     private static void tryLoadItemGuesses() {
@@ -137,6 +148,14 @@ public class ItemProfilesManager extends CoreManager {
         return items;
     }
 
+    public static HashMap<ItemType, String[]> getMaterialTypes() {
+        return materialTypes;
+    }
+
+    public static HashMap<String, MajorIdentification> getMajorIds() {
+        return majorIds;
+    }
+
     public static HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
@@ -155,17 +174,5 @@ public class ItemProfilesManager extends CoreManager {
 
     public static HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
-    }
-
-    public static void reset() {
-        // tryLoadItemGuesses
-        itemGuesses = null;
-
-        // tryLoadItemList
-        items = null;
-        directItems = null;
-        translatedReferences = null;
-        internalIdentifications = null;
-        majorIds = null;
     }
 }
