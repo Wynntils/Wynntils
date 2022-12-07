@@ -1,9 +1,21 @@
+## [0.0.1-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.131...v0.0.1-alpha.132) (2022-12-07)
+
+
+### Code Refactoring
+
+* In preparation of the webapi refactoring, fixup TerritoryManager ([#792](https://github.com/Wynntils/Artemis/issues/792)) ([c61e1fe](https://github.com/Wynntils/Artemis/commit/c61e1fefba63698eb9489bfc1f449a8b2d19c065))
+
 ## [0.0.1-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.130...v0.0.1-alpha.131) (2022-12-07)
 
 
 ### Bug Fixes
 
 * Use invoker for ChatScreen#insertText to fix Forge ChatTab crash ([#788](https://github.com/Wynntils/Artemis/issues/788)) ([af3d5b4](https://github.com/Wynntils/Artemis/commit/af3d5b4b4b0d78b8898d8c0fdc26763a6ffe890c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.131 [skip ci] ([c931a94](https://github.com/Wynntils/Artemis/commit/c931a94a354ed362c18b764adebd8571a9c06e15))
 
 ## [0.0.1-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.129...v0.0.1-alpha.130) (2022-12-07)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.128 [skip ci] ([a3b56de](https://github.com/Wynntils/Artemis/commit/a3b56de2d1fb1f059449744b486a9c124458ec09))
-
-## [0.0.1-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.126...v0.0.1-alpha.127) (2022-12-06)
-
-
-### Bug Fixes
-
-* Recognize alternative type of party join messages in PlayerRelationsModel ([#785](https://github.com/Wynntils/Artemis/issues/785)) ([d697d1e](https://github.com/Wynntils/Artemis/commit/d697d1e060d5b17968c4f72f4370b3619f8d3fe0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.127 [skip ci] ([79cad50](https://github.com/Wynntils/Artemis/commit/79cad507afb60ed5eab9d16ca0286a3b17021ff3))
 
