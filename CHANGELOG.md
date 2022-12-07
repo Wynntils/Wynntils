@@ -1,8 +1,16 @@
+## [0.0.1-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.129...v0.0.1-alpha.130) (2022-12-07)
+
+
+### Code Refactoring
+
+* In preparation of the webapi refactoring, extract managers/model out of WebManager ([#791](https://github.com/Wynntils/Artemis/issues/791)) ([c060406](https://github.com/Wynntils/Artemis/commit/c0604066b99a7b5e4ddf36622ba49fe17c1f6fed))
+
 ## [0.0.1-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.128...v0.0.1-alpha.129) (2022-12-06)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.1-alpha.129 [skip ci] ([04088ae](https://github.com/Wynntils/Artemis/commit/04088ae3b9c6eec8fe2fdd2068137c04abcf9ffc))
 * Remove special DEV version case from build.gradle ([#787](https://github.com/Wynntils/Artemis/issues/787)) ([2d56252](https://github.com/Wynntils/Artemis/commit/2d562529f55d4f05edf3fe31f6a91d5b7d82a2d7))
 
 ## [0.0.1-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.127...v0.0.1-alpha.128) (2022-12-06)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.126 [skip ci] ([82b56f8](https://github.com/Wynntils/Artemis/commit/82b56f8001de1f7e7da528beb9711ddbe0243fa1))
-
-## [0.0.1-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.124...v0.0.1-alpha.125) (2022-12-05)
-
-
-### Bug Fixes
-
-* Fix unusable keybind ([#784](https://github.com/Wynntils/Artemis/issues/784)) ([196bd14](https://github.com/Wynntils/Artemis/commit/196bd148846499b11249036e77dda9b3d19f0e79))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.125 [skip ci] ([361aa4b](https://github.com/Wynntils/Artemis/commit/361aa4b40785a116c01a9e91412934596c9bc52d))
 
