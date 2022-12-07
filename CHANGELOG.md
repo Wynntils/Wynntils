@@ -1,9 +1,21 @@
+## [0.0.1-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.130...v0.0.1-alpha.131) (2022-12-07)
+
+
+### Bug Fixes
+
+* Use invoker for ChatScreen#insertText to fix Forge ChatTab crash ([#788](https://github.com/Wynntils/Artemis/issues/788)) ([af3d5b4](https://github.com/Wynntils/Artemis/commit/af3d5b4b4b0d78b8898d8c0fdc26763a6ffe890c))
+
 ## [0.0.1-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.129...v0.0.1-alpha.130) (2022-12-07)
 
 
 ### Code Refactoring
 
 * In preparation of the webapi refactoring, extract managers/model out of WebManager ([#791](https://github.com/Wynntils/Artemis/issues/791)) ([c060406](https://github.com/Wynntils/Artemis/commit/c0604066b99a7b5e4ddf36622ba49fe17c1f6fed))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.130 [skip ci] ([2ea140f](https://github.com/Wynntils/Artemis/commit/2ea140f8aef1b98ab305cbc7f9b97dfebe1bbf2d))
 
 ## [0.0.1-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.128...v0.0.1-alpha.129) (2022-12-06)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.127 [skip ci] ([79cad50](https://github.com/Wynntils/Artemis/commit/79cad507afb60ed5eab9d16ca0286a3b17021ff3))
-
-## [0.0.1-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.125...v0.0.1-alpha.126) (2022-12-05)
-
-
-### New Features
-
-* Poi location and rendering refactors ([#783](https://github.com/Wynntils/Artemis/issues/783)) ([9d2dbb7](https://github.com/Wynntils/Artemis/commit/9d2dbb7c216fc8690562b2db1109ab4299f330d9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.126 [skip ci] ([82b56f8](https://github.com/Wynntils/Artemis/commit/82b56f8001de1f7e7da528beb9711ddbe0243fa1))
 
