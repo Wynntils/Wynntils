@@ -17,6 +17,7 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
+import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
@@ -52,6 +53,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(UpdateManager.class);
         registerPersistentDependency(TerritoryManager.class);
         registerPersistentDependency(WebManager.class);
+        registerPersistentDependency(SplashManager.class);
         registerPersistentDependency(WorldStateManager.class);
 
         addCrashCallbacks();

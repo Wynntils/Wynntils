@@ -18,7 +18,6 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
@@ -57,7 +56,7 @@ public final class WebManager extends CoreManager {
     private static boolean setup = false;
     private static final RequestHandler handler = new RequestHandler();
 
-    private static WebReader apiUrls = null;
+    public static WebReader apiUrls = null;
 
     private static final Gson gson = new Gson();
 
@@ -74,8 +73,6 @@ public final class WebManager extends CoreManager {
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
     private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
-    private static String currentSplash = "";
-
     private static WynntilsAccount account = null;
 
     private static final String USER_AGENT = String.format(
@@ -87,8 +84,6 @@ public final class WebManager extends CoreManager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
-
-        WebManager.updateCurrentSplash();
 
         loadCommonObjects();
     }
@@ -316,13 +311,6 @@ public final class WebManager extends CoreManager {
                 .build());
     }
 
-    private static void updateCurrentSplash() {
-        if (apiUrls == null || apiUrls.getList("Splashes") == null) return;
-
-        List<String> splashes = apiUrls.getList("Splashes");
-        currentSplash = splashes.get(Utils.getRandom().nextInt(splashes.size()));
-    }
-
     public static URLConnection generateURLRequest(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", USER_AGENT);
@@ -393,10 +381,6 @@ public final class WebManager extends CoreManager {
 
     public static boolean isSetup() {
         return setup;
-    }
-
-    public static String getCurrentSplash() {
-        return currentSplash;
     }
 
     public static Optional<WebReader> getApiUrls() {
