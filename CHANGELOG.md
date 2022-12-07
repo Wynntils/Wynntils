@@ -1,9 +1,21 @@
+## [0.0.1-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.133...v0.0.1-alpha.134) (2022-12-07)
+
+
+### Code Refactoring
+
+* Decouple TerritoryManager and DiscoveryInfo ([#795](https://github.com/Wynntils/Artemis/issues/795)) ([3a28761](https://github.com/Wynntils/Artemis/commit/3a28761def9ff52d7b6fc4ed02d7f5f08c5fab10))
+
 ## [0.0.1-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.132...v0.0.1-alpha.133) (2022-12-07)
 
 
 ### New Features
 
 * Multiple Duplicate Messages in ChatRedirectFeature now get Squashed ([#781](https://github.com/Wynntils/Artemis/issues/781)) ([e470d9b](https://github.com/Wynntils/Artemis/commit/e470d9b0accb2dd8b248e6288c77e95c4071e2a8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.133 [skip ci] ([dba8162](https://github.com/Wynntils/Artemis/commit/dba8162e73310f560505fcf9caa84157688326e5))
 
 ## [0.0.1-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.131...v0.0.1-alpha.132) (2022-12-07)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.130 [skip ci] ([2ea140f](https://github.com/Wynntils/Artemis/commit/2ea140f8aef1b98ab305cbc7f9b97dfebe1bbf2d))
-
-## [0.0.1-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.128...v0.0.1-alpha.129) (2022-12-06)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.129 [skip ci] ([04088ae](https://github.com/Wynntils/Artemis/commit/04088ae3b9c6eec8fe2fdd2068137c04abcf9ffc))
-* Remove special DEV version case from build.gradle ([#787](https://github.com/Wynntils/Artemis/issues/787)) ([2d56252](https://github.com/Wynntils/Artemis/commit/2d562529f55d4f05edf3fe31f6a91d5b7d82a2d7))
 
