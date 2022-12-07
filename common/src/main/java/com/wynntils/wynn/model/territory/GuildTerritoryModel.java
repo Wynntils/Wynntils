@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.territory;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -22,7 +22,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class GuildTerritoryModel extends Model {
+public class GuildTerritoryModel extends CoreManager {
     // This is territory POIs as returned by the advancement from Wynncraft
     private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
