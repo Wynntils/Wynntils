@@ -13,7 +13,6 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
@@ -24,6 +23,7 @@ import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,12 +53,12 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
-        registerPersistentDependency(TerritoryManager.class);
         registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(ItemProfilesManager.class);
         registerPersistentDependency(SplashManager.class);
         registerPersistentDependency(WorldStateManager.class);
+        registerPersistentDependency(TerritoryManager.class);
 
         addCrashCallbacks();
     }
