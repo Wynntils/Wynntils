@@ -5,14 +5,14 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

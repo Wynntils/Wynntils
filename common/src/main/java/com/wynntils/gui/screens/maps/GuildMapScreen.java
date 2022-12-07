@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -25,6 +24,7 @@ import com.wynntils.wynn.model.territory.GuildTerritoryModel;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
 import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;

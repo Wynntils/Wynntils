@@ -6,11 +6,11 @@ package com.wynntils.wynn.model.territory;
 
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

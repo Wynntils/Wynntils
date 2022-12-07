@@ -6,9 +6,9 @@ package com.wynntils.core.webapi;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wynn.objects.profiles.ServerProfile;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

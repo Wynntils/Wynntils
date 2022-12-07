@@ -5,13 +5,13 @@
 package com.wynntils.wynn.item.parsers;
 
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
