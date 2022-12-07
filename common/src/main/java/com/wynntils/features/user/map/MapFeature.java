@@ -26,7 +26,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
@@ -130,7 +130,7 @@ public class MapFeature extends UserFeature {
 
         if (tier.ordinal() < minTierForAutoWaypoint.ordinal()) return;
 
-        MapLocation location = new MapLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
+        PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
                 location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
 

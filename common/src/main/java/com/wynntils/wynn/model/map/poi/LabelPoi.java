@@ -12,14 +12,12 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 
 public class LabelPoi implements Poi {
-    MapLocation location;
-
-    private static final int LABEL_Y = 1024;
+    PoiLocation location;
 
     private final Label label;
 
     public LabelPoi(Label label) {
-        location = new MapLocation(label.getX(), LABEL_Y, label.getZ());
+        location = new PoiLocation(label.getX(), null, label.getZ());
         this.label = label;
     }
 
@@ -29,7 +27,7 @@ public class LabelPoi implements Poi {
     }
 
     @Override
-    public MapLocation getLocation() {
+    public PoiLocation getLocation() {
         return location;
     }
 
@@ -41,6 +39,11 @@ public class LabelPoi implements Poi {
     @Override
     public int getHeight(float mapZoom, float scale) {
         return (int) (FontRenderer.getInstance().getFont().lineHeight * scale);
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.HIGH;
     }
 
     private float getAlphaFromScale(float zoom) {

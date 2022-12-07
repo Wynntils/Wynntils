@@ -794,7 +794,7 @@
   "screens.wynntils.map.help.description3": "Middle click to place the compass marker on the map.",
   "screens.wynntils.map.help.description4": "Shift-Middle click on the map to create a waypoint.",
   "screens.wynntils.map.help.description5": "Shift-Middle click on a waypoint to edit it.",
-  "screens.wynntils.map.help.description6": "Ctrl-Middle click on a waypoint to remove it.",
+  "screens.wynntils.map.help.description6": "Alt-Middle click on a waypoint to remove it.",
   "screens.wynntils.map.help.description7": "Left click on the compass marker to remove it.",
   "screens.wynntils.map.help.description8": "Right click to center on player.",
   "screens.wynntils.map.help.description9": "Shift-Right click to center on the compass marker.",
