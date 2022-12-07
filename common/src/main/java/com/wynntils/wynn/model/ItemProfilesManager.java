@@ -56,6 +56,7 @@ public class ItemProfilesManager extends CoreManager {
         translatedReferences = null;
         internalIdentifications = null;
         majorIds = null;
+        materialTypes = null;
     }
 
     private static void tryLoadItemGuesses() {
