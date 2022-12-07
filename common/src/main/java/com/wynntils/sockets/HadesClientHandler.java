@@ -40,11 +40,11 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
             if (WorldStateManager.onServer()) {
                 McUtils.sendMessageToClient(
-                        new TextComponent("Could not connect to HadesServer because you are not connected to Athena.")
+                        new TextComponent("Could not connect to HadesServer because you are not logged in on Athena.")
                                 .withStyle(ChatFormatting.RED));
             }
 
-            throw new IllegalStateException("Tried to auth to HadesServer when WebManager#getAccount is empty.");
+            throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
         hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(WynntilsAccountManager.getToken()));
