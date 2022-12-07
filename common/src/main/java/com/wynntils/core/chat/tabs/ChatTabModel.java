@@ -49,7 +49,11 @@ public class ChatTabModel extends Model {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
         if (focusedTab == null || focusedTab.getAutoCommand() == null) return;
 
-        ((ChatScreenInvoker) chatScreen).invokeInsertText(focusedTab.getAutoCommand(), true);
+        replaceChatText(chatScreen, focusedTab.getAutoCommand());
+    }
+
+    private static void replaceChatText(ChatScreen chatScreen, String autoCommand) {
+        ((ChatScreenInvoker) chatScreen).invokeInsertText(autoCommand, true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -93,7 +97,7 @@ public class ChatTabModel extends Model {
                     && (chatScreen.input.getValue().isEmpty()
                             || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
                 String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
-                ((ChatScreenInvoker) chatScreen).invokeInsertText(autoCommand, true);
+                replaceChatText(chatScreen, autoCommand);
             }
         }
     }
