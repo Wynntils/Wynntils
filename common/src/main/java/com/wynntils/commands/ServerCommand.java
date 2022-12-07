@@ -10,9 +10,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.model.ServerListModel;
+import com.wynntils.wynn.objects.profiles.ServerProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.io.IOException;
 import java.util.Comparator;
@@ -84,7 +84,7 @@ public class ServerCommand extends CommandBase {
     private int serverInfo(CommandContext<CommandSourceStack> context) {
         HashMap<String, ServerProfile> servers;
         try {
-            servers = WebManager.getServerList();
+            servers = ServerListModel.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
@@ -130,7 +130,7 @@ public class ServerCommand extends CommandBase {
     private int serverList(CommandContext<CommandSourceStack> context) {
         Map<String, List<String>> onlinePlayers;
         try {
-            onlinePlayers = WebManager.getOnlinePlayers();
+            onlinePlayers = ServerListModel.getOnlinePlayers();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
@@ -170,7 +170,7 @@ public class ServerCommand extends CommandBase {
     private int serverUptimeList(CommandContext<CommandSourceStack> context) {
         HashMap<String, ServerProfile> servers;
         try {
-            servers = WebManager.getServerList();
+            servers = ServerListModel.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
