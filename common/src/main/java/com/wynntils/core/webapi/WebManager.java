@@ -7,9 +7,6 @@ package com.wynntils.core.webapi;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
@@ -22,24 +19,19 @@ import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
-import com.wynntils.wynn.objects.profiles.ServerProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -245,53 +237,6 @@ public final class WebManager extends CoreManager {
                 .build());
 
         handler.dispatch(async);
-    }
-
-    /**
-     * Request all online players to WynnAPI
-     *
-     * @return a {@link HashMap} who the key is the server and the value is an array containing all
-     *     players on it
-     * @throws IOException thrown by URLConnection
-     */
-    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        if (apiUrls == null || !apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
-
-        URLConnection st = generateURLRequest(apiUrls.get("OnlinePlayers"));
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        if (!main.has("message")) {
-            main.remove("request");
-
-            Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
-
-            return gson.fromJson(main, type);
-        } else {
-            return new HashMap<>();
-        }
-    }
-
-    public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (apiUrls == null || !isAthenaOnline()) return new HashMap<>();
-        String url = apiUrls.get("Athena") + "/cache/get/serverList";
-
-        URLConnection st = generateURLRequest(url);
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        JsonObject servers = json.getAsJsonObject("servers");
-        HashMap<String, ServerProfile> result = new HashMap<>();
-
-        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
-        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-            ServerProfile profile = gson.fromJson(entry.getValue(), ServerProfile.class);
-            profile.matchTime(serverTime);
-
-            result.put(entry.getKey(), profile);
-        }
-
-        return result;
     }
 
     public static void updateDiscoveries() {
