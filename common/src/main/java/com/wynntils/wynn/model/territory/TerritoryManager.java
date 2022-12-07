@@ -49,22 +49,13 @@ public class TerritoryManager extends CoreManager {
 
     public static void init() {
         territoryPoiMap = new ConcurrentHashMap<>();
-        reset();
-
-        updateTerritoryThreadStatus(true);
-    }
-
-    public static void disable() {
-        territoryPoiMap = Map.of();
-        reset();
-    }
-
-    private static void reset() {
         // tryLoadTerritories
         territoryProfileMap.clear();
         allTerritoryPois.clear();
 
         updateTerritoryThreadStatus(false);
+
+        updateTerritoryThreadStatus(true);
     }
 
     public static boolean isTerritoryListLoaded() {
