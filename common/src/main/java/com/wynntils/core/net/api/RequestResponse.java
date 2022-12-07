@@ -17,8 +17,8 @@ public class RequestResponse {
     }
 
     public void handleJsonObject(Predicate<JsonObject> handler) {
-//        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-//        JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
+        //        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+        //        JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
     }
 
@@ -28,6 +28,5 @@ public class RequestResponse {
 
     public void handleJsonArray(Predicate<JsonArray> handler, Consumer<Void> errorHandler) {}
 
-    public void onError(Runnable handler) {
-    }
+    public void onError(Runnable handler) {}
 }
