@@ -11,7 +11,6 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
