@@ -66,7 +66,6 @@ public class TerritoryManager extends CoreManager {
     }
 
     public static List<Poi> getTerritoryPoisFromAdvancement() {
-        // FIXME: Clarify how this differs from getTerritoryPois()...
         return new ArrayList<>(territoryPoiMap.values());
     }
 
