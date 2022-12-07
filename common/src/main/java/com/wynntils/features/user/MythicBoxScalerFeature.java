@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -6,7 +10,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.GroundItemEntityRenderEvent;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 
 public class MythicBoxScalerFeature extends UserFeature {
 
