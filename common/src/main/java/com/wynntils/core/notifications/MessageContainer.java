@@ -13,11 +13,12 @@ public class MessageContainer {
     private int messageCount;
 
     public MessageContainer(String message) {
-        this.message = new TextRenderTask(message, TextRenderSetting.DEFAULT);
+        this(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer(TextRenderTask message) {
         this.message = message;
+        this.currentMessage = message;
         this.messageCount = 1;
     }
 
@@ -26,12 +27,7 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
-        if (currentMessage == null) return message; // fallback measure.
         return currentMessage;
-    }
-
-    public int getMessageCount() {
-        return messageCount;
     }
 
     public void editMessage(String newMessage) {
