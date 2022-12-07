@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GuildTerritoryInfo {
+public class TerritoryInfo {
     private static final Pattern GENERATOR_PATTERN =
             Pattern.compile("(.\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
     private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\s)?([0-9]+)\\/([0-9]+) stored");
@@ -54,7 +54,7 @@ public class GuildTerritoryInfo {
      * @param raw the input achievement description without colors
      * @param colored the input achievement description with colors
      */
-    public GuildTerritoryInfo(String[] raw, String[] colored, boolean headquarters) {
+    public TerritoryInfo(String[] raw, String[] colored, boolean headquarters) {
         this.headquarters = headquarters;
 
         for (int i = 0; i < raw.length; i++) {
