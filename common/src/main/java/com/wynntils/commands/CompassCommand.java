@@ -172,7 +172,7 @@ public class CompassCommand extends CommandBase {
                 .filter(poi -> poi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
-                        poi.getLocation().getY(),
+                        poi.getLocation().getY().orElse((int) currentLocation.y),
                         poi.getLocation().getZ())));
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...
