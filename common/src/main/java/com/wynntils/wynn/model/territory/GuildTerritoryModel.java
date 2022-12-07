@@ -8,11 +8,13 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
-import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.advancements.Advancement;
@@ -21,19 +23,29 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildTerritoryModel extends Model {
-    private static Map<String, TerritoryPoi> guildTerritoryHashMap = new ConcurrentHashMap<>();
+    // This is territory POIs as returned by the advancement from Wynncraft
+    private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
     public static void init() {
-        guildTerritoryHashMap = new ConcurrentHashMap<>();
+        territoryPoiMap = new ConcurrentHashMap<>();
     }
 
     public static void disable() {
-        guildTerritoryHashMap = Map.of();
+        territoryPoiMap = Map.of();
+    }
+
+    public static List<Poi> getTerritoryPoisFromAdvancement() {
+        // FIXME: Clarify how this differs from getTerritoryPois()...
+        return new ArrayList<>(territoryPoiMap.values());
+    }
+
+    public static TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
+        return territoryPoiMap.get(name);
     }
 
     @SubscribeEvent
     public static void onAdvancementUpdate(AdvancementUpdateEvent event) {
-        Map<String, GuildTerritoryInfo> tempMap = new HashMap<>();
+        Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Advancement.Builder> added :
                 event.getAdded().entrySet()) {
@@ -62,25 +74,17 @@ public class GuildTerritoryModel extends Model {
             String[] colored = description.split("\n");
             String[] raw = ComponentUtils.stripFormatting(description).split("\n");
 
-            GuildTerritoryInfo container = new GuildTerritoryInfo(raw, colored, headquarters);
+            TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);
             tempMap.put(territoryName, container);
         }
 
-        for (Map.Entry<String, GuildTerritoryInfo> entry : tempMap.entrySet()) {
+        for (Map.Entry<String, TerritoryInfo> entry : tempMap.entrySet()) {
             TerritoryProfile territoryProfile =
                     TerritoryManager.getTerritories().get(entry.getKey());
 
             if (territoryProfile == null) continue;
 
-            guildTerritoryHashMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+            territoryPoiMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
         }
-    }
-
-    public static Collection<TerritoryPoi> getGuildTerritoryPois() {
-        return guildTerritoryHashMap.values();
-    }
-
-    public static Map<String, TerritoryPoi> getGuildTerritoryMap() {
-        return guildTerritoryHashMap;
     }
 }
