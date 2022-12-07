@@ -202,6 +202,7 @@ public class MainMapScreen extends AbstractMapScreen {
         List<Poi> pois = new ArrayList<>();
 
         pois.addAll(MapModel.getServicePois());
+        pois.addAll(MapModel.getCombatPois());
         pois.addAll(MapModel.getLabelPois());
 
         pois.addAll(MapFeature.INSTANCE.customPois);
