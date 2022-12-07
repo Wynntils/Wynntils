@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item.parsers;
 
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;

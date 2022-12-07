@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.quests;
 
-import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
+import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;

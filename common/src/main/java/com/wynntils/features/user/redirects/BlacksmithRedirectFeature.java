@@ -10,7 +10,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;

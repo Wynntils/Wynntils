@@ -5,10 +5,10 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.DamageType;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
-import com.wynntils.core.webapi.profiles.item.MajorIdentification;
-import com.wynntils.core.webapi.profiles.item.RequirementType;
+import com.wynntils.wynn.objects.profiles.item.DamageType;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
+import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;

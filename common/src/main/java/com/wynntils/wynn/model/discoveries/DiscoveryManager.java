@@ -7,7 +7,7 @@ package com.wynntils.wynn.model.discoveries;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;

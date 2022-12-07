@@ -8,7 +8,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;

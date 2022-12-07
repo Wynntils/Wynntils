@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;

@@ -2,15 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi.profiles;
+package com.wynntils.wynn.objects.profiles;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
-import com.wynntils.core.webapi.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.EnumMap;
