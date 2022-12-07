@@ -23,6 +23,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.io.File;
@@ -61,8 +62,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        if (discoveryInfo.getGuildTerritory() != null) {
-            TerritoryProfile guildTerritory = discoveryInfo.getGuildTerritory();
+        if (TerritoryManager.getTerritoryProfile(discoveryInfo.getName()) != null) {
+            TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
 
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -77,8 +78,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        if (discoveryInfo.getGuildTerritory() != null) {
-            TerritoryProfile guildTerritory = discoveryInfo.getGuildTerritory();
+        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        if (guildTerritory != null) {
 
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
