@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplashManager extends CoreManager {
-    private final static String SPLASHES_URL = "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json";
+    private static final String SPLASHES_URL =
+            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json";
     // Fallback splash in case loading of splashes fails
-    private final static String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
+    private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
     private static final Gson GSON = new GsonBuilder().create();
 
     private static List<String> allSplashes = new ArrayList<>();
