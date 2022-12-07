@@ -12,6 +12,7 @@ import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
@@ -54,6 +55,7 @@ public final class ManagerRegistry {
         registerPersistentDependency(UpdateManager.class);
         registerPersistentDependency(TerritoryManager.class);
         registerPersistentDependency(WebManager.class);
+        registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(ItemProfilesManager.class);
         registerPersistentDependency(SplashManager.class);
         registerPersistentDependency(WorldStateManager.class);

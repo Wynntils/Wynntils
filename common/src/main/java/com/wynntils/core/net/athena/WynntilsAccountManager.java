@@ -2,32 +2,41 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi.account;
+package com.wynntils.core.net.athena;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.WebReader;
 import com.wynntils.core.webapi.request.PostRequestBuilder;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.crypto.SecretKey;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
-public class WynntilsAccount {
+public class WynntilsAccountManager extends CoreManager {
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
+    public static WynntilsAccountManager account = null;
 
     private String token;
     private boolean ready = false;
@@ -35,11 +44,52 @@ public class WynntilsAccount {
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
 
+    public static void init() {
+        setupUserAccount();
+    }
+
+    private static boolean isLoggedIn() {
+        return (account != null && account.isConnected());
+    }
+
+    private static void setupUserAccount() {
+        if (isLoggedIn()) return;
+
+        account = new WynntilsAccountManager();
+        boolean accountSetup = account.login();
+
+        if (!accountSetup) {
+            MutableComponent failed = new TextComponent(
+                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
+                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(new TextComponent("/wynntils reload")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+
+            if (McUtils.player() == null) {
+                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
+                return;
+            }
+
+            McUtils.sendMessageToClient(failed);
+        }
+    }
+
+    public static Optional<WynntilsAccountManager> getAccount() {
+        return Optional.ofNullable(account);
+    }
+
+    public static boolean isAthenaOnline() {
+        return (account != null && account.isConnected());
+    }
+
     public String getToken() {
         return token;
     }
 
-    public boolean isConnected() {
+    private boolean isConnected() {
         return ready;
     }
 
@@ -51,7 +101,7 @@ public class WynntilsAccount {
         encodedConfigs.remove(name);
     }
 
-    public boolean login() {
+    private boolean login() {
         if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
 
         WebReader webReader = WebManager.getApiUrls().get();
