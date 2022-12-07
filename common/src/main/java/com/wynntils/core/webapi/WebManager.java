@@ -6,7 +6,6 @@ package com.wynntils.core.webapi;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.account.WynntilsAccount;
@@ -15,22 +14,14 @@ import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
-import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
-import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemType;
-import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -52,17 +43,6 @@ public final class WebManager extends CoreManager {
 
     private static final Gson gson = new Gson();
 
-    private static HashMap<String, ItemProfile> items = new HashMap<>();
-    private static Collection<ItemProfile> directItems = new ArrayList<>();
-    private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private static HashMap<String, String> translatedReferences = new HashMap<>();
-    private static HashMap<String, String> internalIdentifications = new HashMap<>();
-    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
-
-    private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
-    private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
-    private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
     private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static WynntilsAccount account = null;
@@ -76,14 +56,6 @@ public final class WebManager extends CoreManager {
     public static void init() {
         tryReloadApiUrls(false);
         setupUserAccount();
-
-        loadCommonObjects();
-    }
-
-    private static void loadCommonObjects() {
-        WebManager.tryLoadItemList();
-        WebManager.tryLoadItemGuesses();
-        WebManager.tryLoadIngredientList();
     }
 
     public static boolean isLoggedIn() {
@@ -93,17 +65,6 @@ public final class WebManager extends CoreManager {
     public static void reset() {
         // tryReloadApiUrls
         apiUrls = null;
-
-        // tryLoadItemGuesses
-        itemGuesses = null;
-
-        // tryLoadItemList
-        items = null;
-        directItems = null;
-        translatedReferences = null;
-        internalIdentifications = null;
-        majorIds = null;
-        materialTypes = null;
     }
 
     private static void setupUserAccount() {
@@ -129,96 +90,6 @@ public final class WebManager extends CoreManager {
 
             McUtils.sendMessageToClient(failed);
         }
-    }
-
-    private static void tryLoadItemGuesses() {
-        if (apiUrls == null || !apiUrls.hasKey("ItemGuesses")) return;
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("ItemGuesses"), "item_guesses")
-                .cacheTo(new File(API_CACHE_ROOT, "item_guesses.json"))
-                .handleJsonObject(json -> {
-                    Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
-
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeHierarchyAdapter(
-                            HashMap.class, new ItemGuessProfile.ItemGuessDeserializer());
-                    Gson gson = gsonBuilder.create();
-
-                    itemGuesses = new HashMap<>();
-                    itemGuesses.putAll(gson.fromJson(json, type));
-
-                    return true;
-                })
-                .useCacheAsBackup()
-                .build());
-
-        // Check for success
-    }
-
-    private static void tryLoadItemList() {
-        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
-        handler.addAndDispatch(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/itemList", "item_list")
-                .cacheTo(new File(API_CACHE_ROOT, "item_list.json"))
-                .handleJsonObject(json -> {
-                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-                    translatedReferences = gson.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
-                    internalIdentifications =
-                            gson.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
-
-                    Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-                    majorIds = gson.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
-                    Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
-                    materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
-
-                    // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
-                    IdentificationOrderer.INSTANCE =
-                            gson.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
-
-                    ItemProfile[] gItems = gson.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
-
-                    HashMap<String, ItemProfile> citems = new HashMap<>();
-                    for (ItemProfile prof : gItems) {
-                        prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
-                        prof.addMajorIds(majorIds);
-                        citems.put(prof.getDisplayName(), prof);
-                    }
-
-                    citems.values().forEach(ItemProfile::registerIdTypes);
-
-                    directItems = citems.values();
-                    items = citems;
-
-                    return true;
-                })
-                .useCacheAsBackup()
-                .build());
-
-        // Check for success
-    }
-
-    public static void tryLoadIngredientList() {
-        if (apiUrls == null || !apiUrls.hasKey("Athena")) return;
-
-        handler.addRequest(new RequestBuilder(apiUrls.get("Athena") + "/cache/get/ingredientList", "ingredientList")
-                .cacheTo(new File(API_CACHE_ROOT, "ingredient_list.json"))
-                .useCacheAsBackup()
-                .handleJsonObject(j -> {
-                    Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-                    ingredientHeadTextures = gson.fromJson(j.getAsJsonObject("headTextures"), hashmapType);
-
-                    IngredientProfile[] gItems =
-                            gson.fromJson(j.getAsJsonArray("ingredients"), IngredientProfile[].class);
-                    HashMap<String, IngredientProfile> cingredients = new HashMap<>();
-
-                    for (IngredientProfile prof : gItems) {
-                        cingredients.put(prof.getDisplayName(), prof);
-                    }
-
-                    ingredients = cingredients;
-                    directIngredients = cingredients.values();
-
-                    return true;
-                })
-                .build());
     }
 
     private static void tryReloadApiUrls(boolean async) {
@@ -274,46 +145,6 @@ public final class WebManager extends CoreManager {
 
     public static boolean isAthenaOnline() {
         return (account != null && account.isConnected());
-    }
-
-    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
-        return itemGuesses;
-    }
-
-    public static Collection<ItemProfile> getItemsCollection() {
-        return directItems;
-    }
-
-    public static HashMap<String, ItemProfile> getItemsMap() {
-        return items;
-    }
-
-    public static HashMap<ItemType, String[]> getMaterialTypes() {
-        return materialTypes;
-    }
-
-    public static HashMap<String, MajorIdentification> getMajorIds() {
-        return majorIds;
-    }
-
-    public static HashMap<String, String> getInternalIdentifications() {
-        return internalIdentifications;
-    }
-
-    public static HashMap<String, String> getTranslatedReferences() {
-        return translatedReferences;
-    }
-
-    public static Collection<IngredientProfile> getIngredientsCollection() {
-        return directIngredients;
-    }
-
-    public static HashMap<String, IngredientProfile> getIngredients() {
-        return ingredients;
-    }
-
-    public static HashMap<String, String> getIngredientHeadTextures() {
-        return ingredientHeadTextures;
     }
 
     public static List<DiscoveryInfo> getDiscoveryInfoList() {
