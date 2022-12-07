@@ -2,7 +2,6 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
-    "BlockEntityWithoutLevelRendererMixin",
     "ChestMenuMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
@@ -15,6 +14,7 @@
     "EntityLookupMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
+    "ItemRendererMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
     "KeyMappingMixin",
