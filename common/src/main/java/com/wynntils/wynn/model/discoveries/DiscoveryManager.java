@@ -205,17 +205,18 @@ public class DiscoveryManager extends CoreManager {
         if (WebManager.apiUrls == null) return;
 
         String url = WebManager.apiUrls.get("Discoveries");
-        WebManager.getHandler().addRequest(new RequestBuilder(url, "discoveries")
-                .cacheTo(new File(WebManager.API_CACHE_ROOT, "discoveries.json"))
-                .handleJsonArray(discoveriesJson -> {
-                    Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+        WebManager.getHandler()
+                .addRequest(new RequestBuilder(url, "discoveries")
+                        .cacheTo(new File(WebManager.API_CACHE_ROOT, "discoveries.json"))
+                        .handleJsonArray(discoveriesJson -> {
+                            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-                    List<DiscoveryProfile> discoveries = GSON.fromJson(discoveriesJson, type);
-                    discoveryInfoList =
-                            discoveries.stream().map(DiscoveryInfo::new).toList();
-                    return true;
-                })
-                .build());
+                            List<DiscoveryProfile> discoveries = GSON.fromJson(discoveriesJson, type);
+                            discoveryInfoList =
+                                    discoveries.stream().map(DiscoveryInfo::new).toList();
+                            return true;
+                        })
+                        .build());
     }
 
     public static void reloadDiscoveries() {

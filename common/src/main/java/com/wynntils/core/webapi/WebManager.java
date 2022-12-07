@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.webapi;
 
-import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
