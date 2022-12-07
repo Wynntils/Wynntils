@@ -25,6 +25,10 @@ public class MessageContainer {
     }
 
     public TextRenderTask getRenderTask() {
+        if (this.messageCount == 1) {
+            return message;
+        }
+
         String messageMultiplier = " §7[x" + this.messageCount + "]";
         return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
