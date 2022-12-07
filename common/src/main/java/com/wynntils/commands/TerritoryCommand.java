@@ -10,9 +10,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -29,7 +29,8 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) -> {
-                            if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
+                            if (!TerritoryManager.isTerritoryListLoaded()
+                                    && !TerritoryManager.updateTerritoryProfileMap()) {
                                 return Suggestions.empty();
                             }
 
@@ -51,7 +52,7 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.tryLoadTerritories()) {
+        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.updateTerritoryProfileMap()) {
             context.getSource()
                     .sendFailure(new TextComponent("Can't access territory data").withStyle(ChatFormatting.RED));
             return 1;

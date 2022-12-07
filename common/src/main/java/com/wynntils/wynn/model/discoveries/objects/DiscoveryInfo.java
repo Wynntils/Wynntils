@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
