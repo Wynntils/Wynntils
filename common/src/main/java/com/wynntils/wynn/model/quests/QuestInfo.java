@@ -9,7 +9,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.netresources.profiles.ingredient.ProfessionType;
+import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

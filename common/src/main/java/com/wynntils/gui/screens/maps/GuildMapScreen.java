@@ -24,7 +24,7 @@ import com.wynntils.wynn.model.territory.TerritoryModel;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;

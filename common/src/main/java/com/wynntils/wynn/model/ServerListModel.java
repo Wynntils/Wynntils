@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.netresources;
+package com.wynntils.wynn.model;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -14,8 +14,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.wynn.netresources.profiles.ServerProfile;
+import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;

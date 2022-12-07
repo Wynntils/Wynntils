@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.netresources;
+package com.wynntils.wynn.model;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -12,11 +12,11 @@ import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.wynn.item.IdentificationOrderer;
-import com.wynntils.wynn.netresources.profiles.ItemGuessProfile;
-import com.wynntils.wynn.netresources.profiles.ingredient.IngredientProfile;
-import com.wynntils.wynn.netresources.profiles.item.ItemProfile;
-import com.wynntils.wynn.netresources.profiles.item.ItemType;
-import com.wynntils.wynn.netresources.profiles.item.MajorIdentification;
+import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
+import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;

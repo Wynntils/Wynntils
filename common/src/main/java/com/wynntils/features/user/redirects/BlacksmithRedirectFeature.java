@@ -12,7 +12,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.netresources.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.EnumMap;
 import java.util.List;

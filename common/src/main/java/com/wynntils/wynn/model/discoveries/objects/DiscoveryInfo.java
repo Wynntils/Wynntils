@@ -7,7 +7,7 @@ package com.wynntils.wynn.model.discoveries.objects;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.netresources.profiles.DiscoveryProfile;
+import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;

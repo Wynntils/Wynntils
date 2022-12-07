@@ -16,7 +16,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;

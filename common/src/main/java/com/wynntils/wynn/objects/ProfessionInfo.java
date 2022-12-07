@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.wynn.netresources.profiles.ingredient.ProfessionType;
+import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;

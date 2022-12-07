@@ -19,7 +19,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.netresources.SplashManager;
+import com.wynntils.wynn.model.SplashManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

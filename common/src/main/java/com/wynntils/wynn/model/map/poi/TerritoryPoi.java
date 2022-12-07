@@ -16,7 +16,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
-import com.wynntils.wynn.netresources.profiles.TerritoryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;

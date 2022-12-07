@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.netresources.profiles.ingredient;
+package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
-import com.wynntils.wynn.netresources.ItemProfilesManager;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

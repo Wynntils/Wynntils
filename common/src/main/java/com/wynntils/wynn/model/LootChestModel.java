@@ -12,7 +12,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.netresources.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.utils.ContainerUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

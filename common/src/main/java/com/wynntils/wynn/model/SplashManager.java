@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.netresources;
+package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.utils.Utils;

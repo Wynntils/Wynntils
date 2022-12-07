@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.netresources.profiles.ingredient;
+package com.wynntils.wynn.objects.profiles.ingredient;
 
-import com.wynntils.wynn.netresources.profiles.item.IdentificationModifier;
+import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 
 public class IngredientIdentificationContainer {
     private final int minimum;
