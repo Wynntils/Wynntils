@@ -91,7 +91,7 @@ public class DiscoveryManager extends CoreManager {
         Utils.openUrl(wikiUrl);
     }
 
-    public static void queryDiscoveries() {
+    private static void queryDiscoveries() {
         CONTAINER_QUERIES.queryDiscoveries();
     }
 
