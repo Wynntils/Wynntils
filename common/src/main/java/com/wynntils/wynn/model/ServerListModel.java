@@ -55,9 +55,7 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        String url = Reference.URLs.getAthena() + "/cache/get/serverList";
-
-        URLConnection st = ApiRequester.generateURLRequest(url);
+        URLConnection st = ApiRequester.generateURLRequest(Reference.URLs.getAthenaServerList());
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 

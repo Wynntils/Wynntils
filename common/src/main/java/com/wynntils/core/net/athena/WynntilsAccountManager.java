@@ -72,8 +72,7 @@ public class WynntilsAccountManager extends CoreManager {
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
-        String url = Reference.URLs.getAthena() + "/auth/getPublicKey";
-        RequestResponse response = ApiRequester.get(url, "getPublicKey");
+        RequestResponse response = ApiRequester.get(Reference.URLs.getAthenaAuthGetPublicKey(), "getPublicKey");
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
@@ -88,9 +87,8 @@ public class WynntilsAccountManager extends CoreManager {
         authParams.addProperty(
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        String url2 = Reference.URLs.getAthena() + "/auth/responseEncryption";
-
-        RequestResponse response2 = ApiRequester.post(url2, authParams, "responseEncryption");
+        RequestResponse response2 =
+                ApiRequester.post(Reference.URLs.getAthenaAuthResponse(), authParams, "responseEncryption");
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

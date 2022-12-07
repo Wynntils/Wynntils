@@ -37,8 +37,36 @@ public class Reference {
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
 
-        public static String getAthena() {
+        private static String getAthena() {
             return ATHENA;
+        }
+
+        public static String getAthenaAuthGetPublicKey() {
+            return getAthena() + "/auth/getPublicKey";
+        }
+
+        public static String getAthenaAuthResponse() {
+            return getAthena() + "/auth/responseEncryption";
+        }
+
+        public static String getAthenaIngredientList() {
+            return getAthena() + "/cache/get/ingredientList";
+        }
+
+        public static String getAthenaItemList() {
+            return getAthena() + "/cache/get/itemList";
+        }
+
+        public static String getAthenaServerList() {
+            return getAthena() + "/cache/get/serverList";
+        }
+
+        public static String getAthenaTerritoryList() {
+            return getAthena() + "/cache/get/territoryList";
+        }
+
+        public static String getAthenaUserInfo() {
+            return getAthena() + "/user/getInfo";
         }
 
         public static String getDiscordInvite() {

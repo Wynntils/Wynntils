@@ -188,8 +188,8 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        String url = Reference.URLs.getDiscoveries();
-        DownloadableResource dl = Downloader.download(url, "discoveries.json", "discoveries");
+        DownloadableResource dl =
+                Downloader.download(Reference.URLs.getDiscoveries(), "discoveries.json", "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

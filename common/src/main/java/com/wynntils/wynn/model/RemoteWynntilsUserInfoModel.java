@@ -34,8 +34,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
         JsonObject body = new JsonObject();
         body.addProperty("uuid", uuid.toString());
 
-        String url = Reference.URLs.getAthena() + "/user/getInfo";
-        RequestResponse response = ApiRequester.post(url, body, "getInfo(" + uuid + ")");
+        RequestResponse response = ApiRequester.post(Reference.URLs.getAthenaUserInfo(), body, "getInfo(" + uuid + ")");
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;
 
