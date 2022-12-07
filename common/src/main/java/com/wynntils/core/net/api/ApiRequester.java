@@ -42,6 +42,15 @@ public class ApiRequester {
         return null;
     }
 
+    public static URLConnection generateURLRequest(String url) throws IOException {
+        URLConnection st = new URL(url).openConnection();
+        st.setRequestProperty("User-Agent", Reference.getUserAgent());
+        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
+
+        return st;
+    }
+
     public static URLConnection generateURLRequestWithWynnApiKey(String url) throws IOException {
         URLConnection st = new URL(url).openConnection();
         st.setRequestProperty("User-Agent", Reference.getUserAgent());

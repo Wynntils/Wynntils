@@ -81,6 +81,7 @@ public class WynntilsCommand extends CommandBase {
             feature.disable();
         }
 
+        // FIXME: This probably does not do what it was intended to do.
         // reset
         ItemProfilesManager.reset();
         // reloads api urls as well as web manager

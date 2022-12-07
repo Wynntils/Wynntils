@@ -33,7 +33,7 @@ public class UpdateManager extends CoreManager {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         try {
-            URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(LAST_BUILD_CHECK_PATH);
+            URLConnection st = ApiRequester.generateURLRequest(LAST_BUILD_CHECK_PATH);
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -58,7 +58,7 @@ public class UpdateManager extends CoreManager {
                 return future;
             }
 
-            URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(LAST_BUILD_CHECK_PATH);
+            URLConnection st = ApiRequester.generateURLRequest(LAST_BUILD_CHECK_PATH);
             InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
             JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
