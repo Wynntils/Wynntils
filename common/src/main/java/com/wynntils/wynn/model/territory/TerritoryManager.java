@@ -48,10 +48,6 @@ public class TerritoryManager extends CoreManager {
     private static TerritoryUpdateThread territoryUpdateThread;
 
     public static void init() {
-        territoryPoiMap = new ConcurrentHashMap<>();
-        // tryLoadTerritories
-        territoryProfileMap.clear();
-        allTerritoryPois.clear();
         territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
         territoryUpdateThread.start();
     }
