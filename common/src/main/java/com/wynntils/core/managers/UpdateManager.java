@@ -4,19 +4,15 @@
  */
 package com.wynntils.core.managers;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
@@ -32,59 +28,54 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        try {
-            URLConnection st = ApiRequester.generateURLRequest(LAST_BUILD_CHECK_PATH);
-            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-            String version = jsonObject.getAsJsonPrimitive("version").getAsString();
+        RequestResponse response = ApiRequester.get(LAST_BUILD_CHECK_PATH, "update-check");
+        response.handleJsonObject(json -> {
+            String version = json.getAsJsonPrimitive("version").getAsString();
             future.complete(version);
-
-            return future;
-        } catch (IOException e) {
-            WynntilsMod.error("Exception while trying to fetch update.", e);
+            return true;
+        });
+        response.onError(() -> {
+            WynntilsMod.error("Exception while trying to fetch update.");
             future.complete(null);
-            return future;
-        }
+        });
+        return future;
     }
 
     public static CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
-        try {
-            File updateFile = getUpdateFile();
-            if (updateFile.exists()) {
-                future.complete(UpdateResult.UPDATE_PENDING);
-                return future;
-            }
+        File updateFile = getUpdateFile();
+        if (updateFile.exists()) {
+            future.complete(UpdateResult.UPDATE_PENDING);
+            return future;
+        }
 
-            URLConnection st = ApiRequester.generateURLRequest(LAST_BUILD_CHECK_PATH);
-            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-            String latestMd5 = jsonObject.getAsJsonPrimitive("md5").getAsString();
+        RequestResponse response = ApiRequester.get(LAST_BUILD_CHECK_PATH, "update-check-2");
+        response.handleJsonObject(json -> {
+            String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 
             String currentMd5 = getCurrentMd5();
             if (Objects.equals(currentMd5, latestMd5)) {
                 future.complete(UpdateResult.ALREADY_ON_LATEST);
-                return future;
+                return true;
             }
 
             if (latestMd5 == null) {
                 future.complete(UpdateResult.ERROR);
-                return future;
+                return true;
             }
 
-            String latestDownload = jsonObject.getAsJsonPrimitive("url").getAsString();
+            String latestDownload = json.getAsJsonPrimitive("url").getAsString();
 
             tryFetchNewUpdate(latestDownload, future);
-
-            return future;
-        } catch (IOException e) {
-            WynntilsMod.error("Exception while trying to load new update.", e);
+            return true;
+        });
+        response.onError(() -> {
+            WynntilsMod.error("Exception while trying to load new update.");
             future.complete(UpdateResult.ERROR);
-            return future;
-        }
+        });
+
+        return future;
     }
 
     private static String getCurrentMd5() {

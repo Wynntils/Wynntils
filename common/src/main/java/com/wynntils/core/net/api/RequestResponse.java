@@ -16,11 +16,18 @@ public class RequestResponse {
         this.blob = blob;
     }
 
-    public void handleJsonObject(Predicate<JsonObject> handler) {}
+    public void handleJsonObject(Predicate<JsonObject> handler) {
+//        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+//        JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
+
+    }
 
     public void handleJsonArray(Predicate<JsonArray> handler) {}
 
     public void handleBytes(Predicate<byte[]> handler) {}
 
     public void handleJsonArray(Predicate<JsonArray> handler, Consumer<Void> errorHandler) {}
+
+    public void onError(Runnable handler) {
+    }
 }
