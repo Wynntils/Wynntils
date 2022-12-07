@@ -20,7 +20,7 @@ import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
-import com.wynntils.wynn.model.territory.TerritoryModel;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
@@ -131,7 +131,7 @@ public class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = TerritoryModel.getTerritoryPoiFromAdvancement(tradingRoute);
+                TerritoryPoi routePoi = TerritoryManager.getTerritoryPoiFromAdvancement(tradingRoute);
                 if (routePoi != null) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
@@ -307,7 +307,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = TerritoryModel.getTerritoryPoisFromAdvancement();
+        List<Poi> pois = TerritoryManager.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,

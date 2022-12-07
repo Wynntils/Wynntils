@@ -22,7 +22,7 @@ import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.quests.QuestManager;
-import com.wynntils.wynn.model.territory.TerritoryModel;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,11 +52,11 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
+        registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(ItemProfilesManager.class);
         registerPersistentDependency(SplashManager.class);
-        registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(WorldStateManager.class);
-        registerPersistentDependency(TerritoryModel.class);
+        registerPersistentDependency(TerritoryManager.class);
 
         addCrashCallbacks();
     }

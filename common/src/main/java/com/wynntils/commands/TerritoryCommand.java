@@ -11,7 +11,7 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.territory.TerritoryModel;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -43,9 +43,7 @@ public class TerritoryCommand extends CommandBase {
 
     private int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
-
         TerritoryProfile territoryProfile = TerritoryModel.getTerritoryProfile(territoryArg);
-
         if (territoryProfile == null) {
             context.getSource()
                     .sendFailure(new TextComponent(
