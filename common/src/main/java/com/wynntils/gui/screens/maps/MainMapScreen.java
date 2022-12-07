@@ -216,7 +216,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(TerritoryModel.getTerritoryPois());
+            pois.addAll(TerritoryManager.getTerritoryPois());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them

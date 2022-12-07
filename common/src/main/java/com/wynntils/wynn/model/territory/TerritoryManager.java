@@ -34,7 +34,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TerritoryModel extends CoreManager {
+public class TerritoryManager extends CoreManager {
     private static final int TERRITORY_UPDATE_MS = 15000;
 
     // This is territory POIs as returned by the advancement from Wynncraft
@@ -50,7 +50,7 @@ public class TerritoryModel extends CoreManager {
 
     public static void init() {
         timerExecutor.scheduleWithFixedDelay(
-                TerritoryModel::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+                TerritoryManager::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public static TerritoryProfile getTerritoryProfile(String name) {
@@ -66,7 +66,6 @@ public class TerritoryModel extends CoreManager {
     }
 
     public static List<Poi> getTerritoryPoisFromAdvancement() {
-        // FIXME: Clarify how this differs from getTerritoryPois()...
         return new ArrayList<>(territoryPoiMap.values());
     }
 
