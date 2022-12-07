@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.regex.Pattern;
 
 public enum SpellType {

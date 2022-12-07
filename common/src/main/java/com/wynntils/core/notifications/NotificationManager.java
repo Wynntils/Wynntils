@@ -10,12 +10,24 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
+    private static final TimedSet<MessageContainer> cachedMessageSet = new TimedSet<>(10, TimeUnit.SECONDS, true);
+
+    // Clear cached messages on world change
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        cachedMessageSet.clear();
+    }
+
     public static MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
@@ -29,13 +41,24 @@ public final class NotificationManager {
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
+        String messageText = message.getText();
+
+        for (MessageContainer cachedContainer : cachedMessageSet) {
+            String checkableMessage = cachedContainer.getOriginalMessage();
+            if (messageText.equals(checkableMessage)) {
+                cachedContainer.incrementMessageCount();
+
+                WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
+                sendToChatIfNeeded(cachedContainer);
+
+                return cachedContainer;
+            }
+        }
+
+        cachedMessageSet.put(msgContainer);
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
-
-        // Overlay is not enabled, send in chat
-        if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-            sendOrEditNotification(msgContainer);
-        }
+        sendToChatIfNeeded(msgContainer);
 
         return msgContainer;
     }
@@ -44,10 +67,13 @@ public final class NotificationManager {
         msgContainer.editMessage(newMessage);
 
         WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
+        sendToChatIfNeeded(msgContainer);
+    }
 
+    private static void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
-            sendOrEditNotification(msgContainer);
+            sendOrEditNotification(container);
         }
     }
 
