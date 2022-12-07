@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
@@ -52,12 +53,12 @@ public class TerritoryManager extends CoreManager {
         territoryUpdateThread.start();
     }
 
-    public static boolean isTerritoryListLoaded() {
-        return !territoryProfileMap.isEmpty();
+    public static TerritoryProfile getTerritoryProfile(String name) {
+        return territoryProfileMap.get(name);
     }
 
-    public static Map<String, TerritoryProfile> getTerritories() {
-        return territoryProfileMap;
+    public static Stream<String> getTerritoryNames() {
+        return territoryProfileMap.keySet().stream();
     }
 
     public static Set<TerritoryPoi> getTerritoryPois() {
@@ -109,12 +110,16 @@ public class TerritoryManager extends CoreManager {
         }
 
         for (Map.Entry<String, TerritoryInfo> entry : tempMap.entrySet()) {
-            TerritoryProfile territoryProfile = getTerritories().get(entry.getKey());
+            TerritoryProfile territoryProfile = getTerritoryProfile(entry.getKey());
 
             if (territoryProfile == null) continue;
 
             territoryPoiMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
         }
+    }
+
+    public static boolean isTerritoryListLoaded() {
+        return !territoryProfileMap.isEmpty();
     }
 
     public static boolean updateTerritoryProfileMap() {

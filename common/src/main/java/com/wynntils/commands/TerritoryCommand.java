@@ -14,7 +14,6 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -34,9 +33,7 @@ public class TerritoryCommand extends CommandBase {
                                 return Suggestions.empty();
                             }
 
-                            Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
-
-                            return SharedSuggestionProvider.suggest(territories.keySet().stream(), builder);
+                            return SharedSuggestionProvider.suggest(TerritoryManager.getTerritoryNames(), builder);
                         })
                         .executes(this::territory))
                 .executes(this::help);
@@ -59,18 +56,15 @@ public class TerritoryCommand extends CommandBase {
         }
 
         String territoryArg = context.getArgument("territory", String.class);
+        TerritoryProfile territoryProfile = TerritoryManager.getTerritoryProfile(territoryArg);
 
-        Map<String, TerritoryProfile> territories = TerritoryManager.getTerritories();
-
-        if (!territories.containsKey(territoryArg)) {
+        if (territoryProfile == null) {
             context.getSource()
                     .sendFailure(new TextComponent(
                                     "Can't access territory " + "\"" + territoryArg + "\". There likely is a typo.")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
-
-        TerritoryProfile territoryProfile = territories.get(territoryArg);
 
         int xMiddle = (territoryProfile.getStartX() + territoryProfile.getEndX()) / 2;
         int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;

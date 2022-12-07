@@ -34,7 +34,7 @@ public class DiscoveryInfo {
         this.type = DiscoveryType.valueOf(discoveryProfile.getType().toUpperCase(Locale.ROOT));
         this.description = "";
         this.minLevel = discoveryProfile.getLevel();
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
+        this.guildTerritory = TerritoryManager.getTerritoryProfile(name);
         this.discovered = false;
         this.requirements = discoveryProfile.getRequirements();
     }
@@ -44,7 +44,7 @@ public class DiscoveryInfo {
         this.type = type;
         this.description = description;
         this.minLevel = minLevel;
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
+        this.guildTerritory = TerritoryManager.getTerritoryProfile(name);
         this.discovered = true;
         this.requirements = List.of();
     }
