@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -144,8 +143,9 @@ public final class ChatItemModel {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item =
-                WebManager.getItemsMap() != null ? WebManager.getItemsMap().get(name) : null;
+        ItemProfile item = ItemProfilesManager.getItemsMap() != null
+                ? ItemProfilesManager.getItemsMap().get(name)
+                : null;
         if (item == null) return null;
 
         // ids
