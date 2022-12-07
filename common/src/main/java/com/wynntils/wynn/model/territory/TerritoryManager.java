@@ -52,10 +52,8 @@ public class TerritoryManager extends CoreManager {
         // tryLoadTerritories
         territoryProfileMap.clear();
         allTerritoryPois.clear();
-
-        updateTerritoryThreadStatus(false);
-
-        updateTerritoryThreadStatus(true);
+        territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
+        territoryUpdateThread.start();
     }
 
     public static boolean isTerritoryListLoaded() {
@@ -124,11 +122,12 @@ public class TerritoryManager extends CoreManager {
     }
 
     public static boolean updateTerritoryProfileMap() {
-        return tryLoadTerritories(WebManager.getHandler());
+        tryLoadTerritories(WebManager.getHandler());
+        return isTerritoryListLoaded();
     }
 
-    private static boolean tryLoadTerritories(RequestHandler handler) {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
+    private static void tryLoadTerritories(RequestHandler handler) {
+        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return;
 
         String url = WebManager.getApiUrls().get().get("Athena") + "/cache/get/territoryList";
 
@@ -151,24 +150,6 @@ public class TerritoryManager extends CoreManager {
                     return true;
                 })
                 .build());
-
-        return isTerritoryListLoaded();
-    }
-
-    private static void updateTerritoryThreadStatus(boolean start) {
-        if (start) {
-            if (territoryUpdateThread == null) {
-                territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
-                territoryUpdateThread.start();
-                return;
-            }
-            return;
-        }
-
-        if (territoryUpdateThread != null) {
-            territoryUpdateThread.interrupt();
-        }
-        territoryUpdateThread = null;
     }
 
     private static class TerritoryUpdateThread extends Thread {
