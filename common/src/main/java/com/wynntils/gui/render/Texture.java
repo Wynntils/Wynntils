@@ -128,7 +128,7 @@ public enum Texture {
     TAILORING_STATION("map/map_icons/tailoring_station.png", 18, 15),
     TOOL_MERCHANT("map/map_icons/tool_merchant.png", 17, 15),
     TRADE_MARKET("map/map_icons/trade_market.png", 18, 18),
-    UTH_SHRINE("map/map_icons/uth_shrine.png", 18, 18),
+    SHRINE("map/map_icons/shrine.png", 18, 18),
     WALL("map/map_icons/wall.png", 12, 16),
     WAYPOINT("map/map_icons/waypoint.png", 14, 18),
     WEAPON_MERCHANT("map/map_icons/weapon_merchant.png", 18, 15),
