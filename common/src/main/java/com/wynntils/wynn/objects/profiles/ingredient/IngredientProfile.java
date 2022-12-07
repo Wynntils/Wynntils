@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.webapi.profiles.ingredient;
+package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +89,7 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            HashMap<String, String> ingredientHeadTextures = WebManager.getIngredientHeadTextures();
+            HashMap<String, String> ingredientHeadTextures = ItemProfilesManager.getIngredientHeadTextures();
 
             if (ingredientHeadTextures.containsKey(name)) {
                 CompoundTag skullData = new CompoundTag();
