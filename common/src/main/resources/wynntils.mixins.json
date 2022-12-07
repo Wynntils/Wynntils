@@ -2,6 +2,7 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
+    "BlockEntityWithoutLevelRendererMixin",
     "ChestMenuMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",

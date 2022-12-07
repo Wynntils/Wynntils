@@ -69,6 +69,7 @@ import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.GroundItemEntityRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -152,6 +153,10 @@ public final class EventFactory {
     // region Render Events
     public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
         return post(new PlayerArmorRenderEvent(player, slot));
+    }
+
+    public static GroundItemEntityRenderEvent onGroundItemRender(PoseStack poseStack, ItemStack stack) {
+        return post(new GroundItemEntityRenderEvent(poseStack, stack));
     }
 
     public static NametagRenderEvent onNameTagRender(
