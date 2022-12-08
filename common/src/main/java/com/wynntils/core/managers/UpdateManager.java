@@ -5,6 +5,7 @@
 package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.utils.FileUtils;
@@ -19,7 +20,6 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class UpdateManager extends CoreManager {
-    private static final String LAST_BUILD_CHECK_PATH = "https://athena.wynntils.com/version/latest/ce";
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 
@@ -28,7 +28,7 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        RequestResponse response = ApiRequester.get(LAST_BUILD_CHECK_PATH, "update-check");
+        RequestResponse response = ApiRequester.get(Reference.URLs.getUpdateCheck(), "update-check");
         response.handleJsonObject(json -> {
             String version = json.getAsJsonPrimitive("version").getAsString();
             future.complete(version);
@@ -50,7 +50,7 @@ public class UpdateManager extends CoreManager {
             return future;
         }
 
-        RequestResponse response = ApiRequester.get(LAST_BUILD_CHECK_PATH, "update-check-2");
+        RequestResponse response = ApiRequester.get(Reference.URLs.getUpdateCheck(), "update-check-2");
         response.handleJsonObject(json -> {
             String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 

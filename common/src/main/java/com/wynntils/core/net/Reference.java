@@ -27,6 +27,7 @@ public class Reference {
         private static final String DISCORD_INVITE = "https://discord.gg/SZuNem8";
         private static final String DISCOVERIES = "https://api.wynntils.com/discoveries.json";
         private static final String ITEM_GUESSES = "https://wynndata.tk/api/unid/data.json";
+        private static final String UPDATE_CHECK = "https://athena.wynntils.com/version/latest/ce";
         private static final String MAPS =
                 "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
@@ -34,8 +35,11 @@ public class Reference {
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
         private static final String SERVICES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+        private static final String WIKI_BASE = "https://wynncraft.fandom.com/wiki/";
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
+        private static final String WIKI_QUEST_PAGE_QUERY =
+                "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
 
         private static String getAthena() {
             return ATHENA;
@@ -97,8 +101,20 @@ public class Reference {
             return SERVICES;
         }
 
+        public static String getUpdateCheck() {
+            return UPDATE_CHECK;
+        }
+
+        public static String getWikiBase() {
+            return WIKI_BASE;
+        }
+
         public static String getWikiDiscoveryQuery() {
             return WIKI_DISCOVERY_QUERY;
+        }
+
+        public static String getWikiQuestPageQuery() {
+            return WIKI_QUEST_PAGE_QUERY;
         }
 
         public static void reloadUrls() {

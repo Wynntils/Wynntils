@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.mc.objects.Location;
@@ -23,10 +24,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestManager extends CoreManager {
-    private static final String WIKI_BASE_URL = "https://wynncraft.fandom.com/wiki/";
-    private static final String WIKI_QUEST_PAGE_QUERY =
-            "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
-
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
@@ -106,15 +103,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
 
-            Utils.openUrl(WIKI_BASE_URL + wikiName);
+            Utils.openUrl(Reference.URLs.getWikiBase() + wikiName);
             return;
         }
 
-        String url = WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(questInfo.getName());
+        String url = Reference.URLs.getWikiQuestPageQuery() + WebUtils.encodeForCargoQuery(questInfo.getName());
         RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(WIKI_BASE_URL + WebUtils.encodeForWikiTitle(pageTitle));
+            Utils.openUrl(Reference.URLs.getWikiBase() + WebUtils.encodeForWikiTitle(pageTitle));
             return true;
         });
     }
