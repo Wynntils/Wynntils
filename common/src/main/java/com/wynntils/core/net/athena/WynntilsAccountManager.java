@@ -60,12 +60,20 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
+    public static String getToken() {
+        return token;
+    }
+
     public static boolean isLoggedIn() {
         return loggedIn;
     }
 
-    public static String getToken() {
-        return token;
+    public HashMap<String, String> getEncodedConfigs() {
+        return encodedConfigs;
+    }
+
+    public void dumpEncodedConfig(String name) {
+        encodedConfigs.remove(name);
     }
 
     private static void doLogin() {
