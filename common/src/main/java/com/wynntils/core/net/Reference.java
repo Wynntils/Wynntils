@@ -29,7 +29,6 @@ public class Reference {
         private static final String GOOGLE_TRANSLATION =
                 "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s";
         private static final String ITEM_GUESSES = "https://wynndata.tk/api/unid/data.json";
-        private static final String UPDATE_CHECK = "https://athena.wynntils.com/version/latest/ce";
         private static final String MAPS =
                 "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
@@ -38,6 +37,7 @@ public class Reference {
         private static final String PLAYER_STATS_BASE = "https://wynncraft.com/stats/player/";
         private static final String SERVICES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
+        private static final String UPDATE_CHECK = "https://athena.wynntils.com/version/latest/ce";
         private static final String WIKI_BASE = "https://wynncraft.fandom.com/wiki/";
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
