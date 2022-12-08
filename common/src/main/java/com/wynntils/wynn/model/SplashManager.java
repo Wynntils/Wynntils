@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.Utils;
@@ -16,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplashManager extends CoreManager {
-    private static final String SPLASHES_URL =
-            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json";
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
     private static final Gson GSON = new GsonBuilder().create();
@@ -34,7 +33,7 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        DownloadableResource dl = Downloader.download(SPLASHES_URL, "splashes.json", "splashes");
+        DownloadableResource dl = Downloader.download(UrlManager.getUrl(UrlManager.SPLASHES), "splashes.json", "splashes");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = GSON.fromJson(json, type);

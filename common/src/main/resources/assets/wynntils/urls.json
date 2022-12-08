@@ -70,6 +70,11 @@
     "md5": "09ffa3b1a40f74c815c8c430c528575f"
   },
   {
+    "id": "splashes",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json",
+    "md5": "53341c283d2cc3c0e721844064a24603"
+  },
+  {
     "id": "updateCheck",
     "url": "https://athena.wynntils.com/version/latest/ce"
   },

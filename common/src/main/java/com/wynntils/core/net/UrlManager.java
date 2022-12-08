@@ -41,6 +41,7 @@ public final class UrlManager extends CoreManager {
     public static final String PLACES = "places";
     public static final String PLAYER_STATS = "playerStats";
     public static final String SERVICES = "services";
+    public static final String SPLASHES = "splashes";
     public static final String URLS = "urls";
     public static final String UPDATE_CHECK = "updateCheck";
     public static final String WIKI_DISCOVERY_QUERY = "wikiDiscoveryQuery";
