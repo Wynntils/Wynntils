@@ -53,99 +53,103 @@ public final class Reference {
             init();
         }
 
+        public static String getUrl(String urlKey) {
+            return getUrl(urlKey);
+        }
+
         public static String getAthenaAuthGetPublicKey() {
-            return urlMap.get("athenaAuthGetPublicKey").getUrl();
+            return getUrl("athenaAuthGetPublicKey");
         }
 
         public static String getAthenaAuthResponse() {
-            return urlMap.get("athenaAuthResponse").getUrl();
+            return getUrl("athenaAuthResponse");
         }
 
         public static String getAthenaIngredientList() {
-            return urlMap.get("athenaIngredientList").getUrl();
+            return getUrl("athenaIngredientList");
         }
 
         public static String getAthenaItemList() {
-            return urlMap.get("athenaItemList").getUrl();
+            return getUrl("athenaItemList");
         }
 
         public static String getAthenaServerList() {
-            return urlMap.get("athenaServerList").getUrl();
+            return getUrl("athenaServerList");
         }
 
         public static String getAthenaTerritoryList() {
-            return urlMap.get("athenaTerritoryList").getUrl();
+            return getUrl("athenaTerritoryList");
         }
 
         public static String getAthenaUserInfo() {
-            return urlMap.get("athenaUserInfo").getUrl();
+            return getUrl("athenaUserInfo");
         }
 
         public static String getDiscordInvite() {
-            return urlMap.get("discordInvite").getUrl();
+            return getUrl("discordInvite");
         }
 
         public static String getDiscoveries() {
-            return urlMap.get("discoveries").getUrl();
+            return getUrl("discoveries");
         }
 
         public static String getItemGuesses() {
-            return urlMap.get("itemGuesses").getUrl();
+            return getUrl("itemGuesses");
         }
 
         public static String getMaps() {
-            return urlMap.get("maps").getUrl();
+            return getUrl("maps");
         }
 
         public static String getOnlinePlayers() {
-            return urlMap.get("onlinePlayers").getUrl();
+            return getUrl("onlinePlayers");
         }
 
         public static String getPlaces() {
-            return urlMap.get("places").getUrl();
+            return getUrl("places");
         }
 
         public static String getServices() {
-            return urlMap.get("services").getUrl();
+            return getUrl("services");
         }
 
         public static String getUpdateCheck() {
-            return urlMap.get("updateCheck").getUrl();
+            return getUrl("updateCheck");
         }
 
         public static String getWynntilsPatreon() {
-            return urlMap.get("wynntilsPatreon").getUrl();
+            return getUrl("wynntilsPatreon");
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
             return String.format(
-                    urlMap.get("googleTranslation").getUrl(),
+                    getUrl("googleTranslation"),
                     StringUtils.encodeUrl(toLanguage),
                     StringUtils.encodeUrl(message));
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(urlMap.get("playerStats").getUrl(), StringUtils.encodeUrl(playerName));
+            return String.format(getUrl("playerStats"), StringUtils.encodeUrl(playerName));
         }
 
         public static String createWikiTitleLookup(String pageTitle) {
-            return String.format(urlMap.get("wikiTitleLookup").getUrl(), StringUtils.encodeUrl(pageTitle));
+            return String.format(getUrl("wikiTitleLookup"), StringUtils.encodeUrl(pageTitle));
         }
 
         public static String createWikiDiscoveryQuery(String name) {
-            return String.format(urlMap.get("wikiDiscoveryQuery").getUrl(), StringUtils.encodeUrl(name));
+            return String.format(getUrl("wikiDiscoveryQuery"), StringUtils.encodeUrl(name));
         }
 
         public static String createWikiQuestPageQuery(String name) {
-            return String.format(urlMap.get("wikiQuestPageQuery").getUrl(), StringUtils.encodeUrl(name));
+            return String.format(getUrl("wikiQuestPageQuery"), StringUtils.encodeUrl(name));
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(urlMap.get("wynndataItemLookup").getUrl(), StringUtils.encodeUrl(unformattedName));
+            return String.format(getUrl("wynndataItemLookup"), StringUtils.encodeUrl(unformattedName));
         }
 
         public static String createWynntilsRegisterToken(String token) {
-            return String.format(urlMap.get("wynntilsRegisterToken").getUrl(), StringUtils.encodeUrl(token));
+            return String.format(getUrl("wynntilsRegisterToken"), StringUtils.encodeUrl(token));
         }
 
         public static void reloadUrls() {
