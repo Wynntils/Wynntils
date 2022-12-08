@@ -96,8 +96,8 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.SERVICES), "maps/services.json", "maps-services");
+        DownloadableResource dl =
+                Downloader.download(UrlManager.getUrl(UrlManager.SERVICES), "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 

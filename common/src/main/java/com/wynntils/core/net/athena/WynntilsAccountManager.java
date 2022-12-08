@@ -96,8 +96,8 @@ public class WynntilsAccountManager extends CoreManager {
         authParams.addProperty(
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        RequestResponse response2 = ApiRequester.post(
-                UrlManager.getUrl(UrlManager.ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
+        RequestResponse response2 =
+                ApiRequester.post(UrlManager.getUrl(UrlManager.ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

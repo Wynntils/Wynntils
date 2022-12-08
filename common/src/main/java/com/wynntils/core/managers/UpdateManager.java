@@ -50,8 +50,7 @@ public class UpdateManager extends CoreManager {
             return future;
         }
 
-        RequestResponse response =
-                ApiRequester.get(UrlManager.getUrl(UrlManager.UPDATE_CHECK), "update-check-2");
+        RequestResponse response = ApiRequester.get(UrlManager.getUrl(UrlManager.UPDATE_CHECK), "update-check-2");
         response.handleJsonObject(json -> {
             String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 

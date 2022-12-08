@@ -186,8 +186,8 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.DISCOVERIES), "discoveries.json", "discoveries");
+        DownloadableResource dl =
+                Downloader.download(UrlManager.getUrl(UrlManager.DISCOVERIES), "discoveries.json", "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
