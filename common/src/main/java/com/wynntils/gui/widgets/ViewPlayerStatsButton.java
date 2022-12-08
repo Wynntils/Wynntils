@@ -23,7 +23,7 @@ public class ViewPlayerStatsButton extends AbstractButton {
     @Override
     public void onPress() {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-        Utils.openUrl(Reference.URLs.getPlayerStatsBase() + playerName);
+        Utils.openUrl(Reference.URLs.createPlayerStats(playerName));
     }
 
     @Override

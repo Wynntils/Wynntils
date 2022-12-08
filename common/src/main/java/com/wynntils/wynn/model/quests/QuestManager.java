@@ -12,7 +12,6 @@ import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -103,15 +102,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
 
-            Utils.openUrl(Reference.URLs.getWikiBase() + wikiName);
+            Utils.openUrl(Reference.URLs.createWikiTitleUnencoded(wikiName));
             return;
         }
 
-        String url = Reference.URLs.getWikiQuestPageQuery() + WebUtils.encodeForCargoQuery(questInfo.getName());
+        String url = Reference.URLs.createWikiQuestPageQuery(questInfo.getName());
         RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(Reference.URLs.getWikiBase() + WebUtils.encodeForWikiTitle(pageTitle));
+            Utils.openUrl(Reference.URLs.createWikiTitle(pageTitle));
             return true;
         });
     }

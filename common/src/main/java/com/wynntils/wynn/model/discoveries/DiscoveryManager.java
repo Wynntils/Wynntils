@@ -18,7 +18,6 @@ import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
@@ -87,7 +86,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = Reference.URLs.getWikiBase() + WebUtils.encodeForWikiTitle(discoveryInfo.getName());
+        String wikiUrl = Reference.URLs.createWikiTitle(discoveryInfo.getName());
         Utils.openUrl(wikiUrl);
     }
 
@@ -130,8 +129,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String queryUrl = Reference.URLs.getWikiDiscoveryQuery();
-        String url = queryUrl + WebUtils.encodeForWikiTitle(name);
+        String url = Reference.URLs.createWikiDiscoveryQuery(name);
         RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist

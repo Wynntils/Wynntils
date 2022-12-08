@@ -5,6 +5,8 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.utils.Utils;
+import com.wynntils.utils.WebUtils;
 
 public class Reference {
     private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
@@ -87,10 +89,6 @@ public class Reference {
             return DISCOVERIES;
         }
 
-        public static String getGoogleTranslation() {
-            return GOOGLE_TRANSLATION;
-        }
-
         public static String getItemGuesses() {
             return ITEM_GUESSES;
         }
@@ -107,10 +105,6 @@ public class Reference {
             return PLACES;
         }
 
-        public static String getPlayerStatsBase() {
-            return PLAYER_STATS_BASE;
-        }
-
         public static String getServices() {
             return SERVICES;
         }
@@ -119,28 +113,40 @@ public class Reference {
             return UPDATE_CHECK;
         }
 
-        public static String getWikiBase() {
-            return WIKI_BASE;
-        }
-
-        public static String getWikiDiscoveryQuery() {
-            return WIKI_DISCOVERY_QUERY;
-        }
-
-        public static String getWikiQuestPageQuery() {
-            return WIKI_QUEST_PAGE_QUERY;
-        }
-
-        public static String getWynndataItemBase() {
-            return WYNNDATA_ITEM_BASE;
-        }
-
         public static String getWynntilsPatreon() {
             return WYNNTILS_PATREON;
         }
 
-        public static String getWynntilsRegisterToken() {
-            return WYNNTILS_REGISTER_TOKEN;
+        public static String createGoogleTranslation(String toLanguage, String encodedMessage) {
+            return String.format(GOOGLE_TRANSLATION, toLanguage, encodedMessage);
+        }
+
+        public static String createPlayerStats(String playerName) {
+            return PLAYER_STATS_BASE + playerName;
+        }
+
+        public static String createWikiTitleUnencoded(String wikiName) {
+            return WIKI_BASE + wikiName;
+        }
+
+        public static String createWikiTitle(String pageTitle) {
+            return WIKI_BASE + WebUtils.encodeForWikiTitle(pageTitle);
+        }
+
+        public static String createWikiDiscoveryQuery(String name) {
+            return WIKI_DISCOVERY_QUERY + WebUtils.encodeForWikiTitle(name);
+        }
+
+        public static String createWikiQuestPageQuery(String name) {
+            return WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(name);
+        }
+
+        public static String createWynndataItemLookup(String unformattedName) {
+            return WYNNDATA_ITEM_BASE + Utils.encodeUrl(unformattedName);
+        }
+
+        public static String createWynntilsRegisterToken(String token) {
+            return WYNNTILS_REGISTER_TOKEN + token;
         }
 
         public static void reloadUrls() {
