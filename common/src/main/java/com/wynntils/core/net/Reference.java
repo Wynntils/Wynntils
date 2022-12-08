@@ -4,11 +4,17 @@
  */
 package com.wynntils.core.net;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class Reference {
     private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
@@ -31,42 +37,20 @@ public final class Reference {
             return url;
         }
 
+        String id;
         String url;
-        Optional<String> md5;
-        Optional<String> encoding;
-        Optional<Integer> numArguments;
-
-        public UrlInfo(String url) {
-            this.url = url;
-        }
+        String md5;
+        String encoding;
+        Integer numArguments;
     }
 
     public static final class URLs {
-        private static final Map<String, UrlInfo> urlMap = new HashMap<>();
+        private static final Gson GSON = new Gson();
+
+        private static Map<String, UrlInfo> urlMap;
+
         static {
-            urlMap.put("athenaAuthGetPublicKey", new UrlInfo("https://athena.wynntils.com/auth/getPublicKey"));
-            urlMap.put("athenaAuthResponse", new UrlInfo("https://athena.wynntils.com/auth/responseEncryption"));
-            urlMap.put("athenaIngredientList", new UrlInfo("https://athena.wynntils.com/cache/get/ingredientList"));
-            urlMap.put("athenaItemList", new UrlInfo("https://athena.wynntils.com/cache/get/itemList"));
-            urlMap.put("athenaServerList", new UrlInfo("https://athena.wynntils.com/cache/get/serverList"));
-            urlMap.put("athenaTerritoryList", new UrlInfo("https://athena.wynntils.com/cache/get/territoryList"));
-            urlMap.put("athenaUserInfo", new UrlInfo("https://athena.wynntils.com/user/getInfo"));
-            urlMap.put("discordInvite", new UrlInfo("https://discord.gg/SZuNem8"));
-            urlMap.put("discoveries", new UrlInfo("https://api.wynntils.com/discoveries.json"));
-            urlMap.put("googleTranslation", new UrlInfo("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s"));
-            urlMap.put("itemGuesses", new UrlInfo("https://wynndata.tk/api/unid/data.json"));
-            urlMap.put("maps", new UrlInfo("https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"));
-            urlMap.put("onlinePlayers", new UrlInfo("https://api.wynncraft.com/public_api.php?action=onlinePlayers"));
-            urlMap.put("places", new UrlInfo("https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"));
-            urlMap.put("playerStats", new UrlInfo("https://wynncraft.com/stats/player/%s"));
-            urlMap.put("services", new UrlInfo("https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json"));
-            urlMap.put("updateCheck", new UrlInfo("https://athena.wynntils.com/version/latest/ce"));
-            urlMap.put("wikiDiscoveryQuery", new UrlInfo("https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s"));
-            urlMap.put("wikiQuestPageQuery", new UrlInfo("https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s"));
-            urlMap.put("wikiTitleLookup", new UrlInfo("https://wynncraft.fandom.com/wiki/%s"));
-            urlMap.put("wynndataItemLookup", new UrlInfo("https://www.wynndata.tk/i/%s"));
-            urlMap.put("wynntilsPatreon", new UrlInfo("https://www.patreon.com/Wynntils"));
-            urlMap.put("wynntilsRegisterToken", new UrlInfo("https://account.wynntils.com/register.php?token=%s"));
+            init();
         }
 
         public static String getAthenaAuthGetPublicKey() {
@@ -134,7 +118,10 @@ public final class Reference {
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
-            return String.format(urlMap.get("googleTranslation").getUrl(), StringUtils.encodeUrl(toLanguage), StringUtils.encodeUrl(message));
+            return String.format(
+                    urlMap.get("googleTranslation").getUrl(),
+                    StringUtils.encodeUrl(toLanguage),
+                    StringUtils.encodeUrl(message));
         }
 
         public static String createPlayerStats(String playerName) {
@@ -171,6 +158,22 @@ public final class Reference {
 
         public static String encodeForWikiTitle(String pageTitle) {
             return pageTitle.replace(" ", "_");
+        }
+
+        public static void init() {
+            urlMap = new HashMap<>();
+            try {
+                InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json");
+                byte[] data = inputStream.readAllBytes();
+                String json = new String(data, StandardCharsets.UTF_8);
+                Type type = new TypeToken<List<UrlInfo>>() {}.getType();
+                List<UrlInfo> urlInfos = GSON.fromJson(json, type);
+                for (UrlInfo urlInfo : urlInfos) {
+                    urlMap.put(urlInfo.id, urlInfo);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

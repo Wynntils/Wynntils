@@ -1,0 +1,94 @@
+[
+  {
+    "id": "athenaAuthGetPublicKey",
+    "url": "https://athena.wynntils.com/auth/getPublicKey"
+  },
+  {
+    "id": "athenaAuthResponse",
+    "url": "https://athena.wynntils.com/auth/responseEncryption"
+  },
+  {
+    "id": "athenaIngredientList",
+    "url": "https://athena.wynntils.com/cache/get/ingredientList"
+  },
+  {
+    "id": "athenaItemList",
+    "url": "https://athena.wynntils.com/cache/get/itemList"
+  },
+  {
+    "id": "athenaServerList",
+    "url": "https://athena.wynntils.com/cache/get/serverList"
+  },
+  {
+    "id": "athenaTerritoryList",
+    "url": "https://athena.wynntils.com/cache/get/territoryList"
+  },
+  {
+    "id": "athenaUserInfo",
+    "url": "https://athena.wynntils.com/user/getInfo"
+  },
+  {
+    "id": "discordInvite",
+    "url": "https://discord.gg/SZuNem8"
+  },
+  {
+    "id": "discoveries",
+    "url": "https://api.wynntils.com/discoveries.json"
+  },
+  {
+    "id": "googleTranslation",
+    "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s"
+  },
+  {
+    "id": "itemGuesses",
+    "url": "https://wynndata.tk/api/unid/data.json"
+  },
+  {
+    "id": "maps",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"
+  },
+  {
+    "id": "onlinePlayers",
+    "url": "https://api.wynncraft.com/public_api.php?action=onlinePlayers"
+  },
+  {
+    "id": "places",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"
+  },
+  {
+    "id": "playerStats",
+    "url": "https://wynncraft.com/stats/player/%s"
+  },
+  {
+    "id": "services",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json"
+  },
+  {
+    "id": "updateCheck",
+    "url": "https://athena.wynntils.com/version/latest/ce"
+  },
+  {
+    "id": "wikiDiscoveryQuery",
+    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s"
+  },
+  {
+    "id": "wikiQuestPageQuery",
+    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s"
+  },
+  {
+    "id": "wikiTitleLookup",
+    "url": "https://wynncraft.fandom.com/wiki/%s"
+  },
+  {
+    "id": "wynndataItemLookup",
+    "url": "https://www.wynndata.tk/i/%s"
+  },
+  {
+    "id": "wynntilsPatreon",
+    "url": "https://www.patreon.com/Wynntils"
+  },
+  {
+    "id": "wynntilsRegisterToken",
+    "url": "https://account.wynntils.com/register.php?token=%s"
+  }
+]
