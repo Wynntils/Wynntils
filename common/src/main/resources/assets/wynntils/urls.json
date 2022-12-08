@@ -74,6 +74,10 @@
     "url": "https://athena.wynntils.com/version/latest/ce"
   },
   {
+    "id": "urls",
+    "url": "https://api.wynntils.com/urls.json"
+  },
+  {
     "id": "wikiDiscoveryQuery",
     "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s",
     "numArguments": 1,

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.utils.StringUtils;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public final class UrlManager extends CoreManager {
+    private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final Gson GSON = new Gson();
 
     public static final String ATHENA_AUTH_GET_PUBLIC_KEY = "athenaAuthGetPublicKey";
@@ -39,6 +41,7 @@ public final class UrlManager extends CoreManager {
     public static final String PLACES = "places";
     public static final String PLAYER_STATS = "playerStats";
     public static final String SERVICES = "services";
+    public static final String URLS = "urls";
     public static final String UPDATE_CHECK = "updateCheck";
     public static final String WIKI_DISCOVERY_QUERY = "wikiDiscoveryQuery";
     public static final String WIKI_QUEST_PAGE_QUERY = "wikiQuestPageQuery";
@@ -88,6 +91,11 @@ public final class UrlManager extends CoreManager {
 
     public static void init() {
         try {
+            // FIXME: First check if there is a local cache in CACHE_DIR; if so, use it
+            // If not, use the one included in the mod resources
+            // In both cases, trigger a re-download from the net to the cache
+
+            // But right now, we just use the one from the resources
             InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json");
             readUrls(inputStream);
         } catch (IOException e) {
