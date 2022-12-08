@@ -33,7 +33,8 @@
   },
   {
     "id": "discoveries",
-    "url": "https://api.wynntils.com/discoveries.json"
+    "url": "https://api.wynntils.com/discoveries.json",
+    "md5": "f85efa2a19d9b84e1a8c3761ba50866a"
   },
   {
     "id": "googleTranslation",
@@ -46,7 +47,8 @@
   },
   {
     "id": "maps",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
+    "md5": "89af9a38646d4d369abfacf7fa3a9614"
   },
   {
     "id": "onlinePlayers",
@@ -54,7 +56,8 @@
   },
   {
     "id": "places",
-    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json",
+    "md5": "e324d05e62aaea82aaf89705bf403efe"
   },
   {
     "id": "playerStats",
@@ -63,7 +66,8 @@
   },
   {
     "id": "services",
-    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json",
+    "md5": "09ffa3b1a40f74c815c8c430c528575f"
   },
   {
     "id": "updateCheck",

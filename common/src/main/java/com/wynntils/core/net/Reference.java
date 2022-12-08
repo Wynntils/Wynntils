@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public final class Reference {
@@ -79,6 +80,10 @@ public final class Reference {
             assert (urlMap.get(urlId).numArguments == null || urlMap.get(urlId).numArguments == 0);
 
             return urlMap.get(urlId).url;
+        }
+
+        public static Optional<String> getMd5(String urlId) {
+            return Optional.ofNullable(urlMap.get(urlId).md5);
         }
 
         public static String buildUrl(String urlId, String... arguments) {
