@@ -34,10 +34,6 @@ public final class Reference {
     }
 
     public static final class UrlInfo {
-        public String getUrl() {
-            return url;
-        }
-
         String id;
         String url;
         String md5;
@@ -81,7 +77,7 @@ public final class Reference {
             // Verify that argument count is correct
             assert (urlMap.get(urlId).numArguments == null || urlMap.get(urlId).numArguments == 0);
 
-            return urlMap.get(urlId).getUrl();
+            return urlMap.get(urlId).url;
         }
 
         public static String buildUrl(String urlId, String... arguments) {
@@ -90,7 +86,7 @@ public final class Reference {
 
             String[] encodedArguments =
                     Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
-            return String.format(getUrl(urlId), encodedArguments);
+            return String.format(urlMap.get(urlId).url, encodedArguments);
         }
 
         public static void reloadUrls() {
