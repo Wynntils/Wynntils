@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.core.net.downloader.DownloadableResource;
@@ -86,7 +86,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, discoveryInfo.getName());
+        String wikiUrl = UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, discoveryInfo.getName());
         Utils.openUrl(wikiUrl);
     }
 
@@ -129,7 +129,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String url = Reference.URLs.buildUrl(Reference.URLs.WIKI_DISCOVERY_QUERY, name);
+        String url = UrlManager.buildUrl(UrlManager.WIKI_DISCOVERY_QUERY, name);
         RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
@@ -187,7 +187,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static void updateDiscoveriesResource() {
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.DISCOVERIES), "discoveries.json", "discoveries");
+                UrlManager.getUrl(UrlManager.DISCOVERIES), "discoveries.json", "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

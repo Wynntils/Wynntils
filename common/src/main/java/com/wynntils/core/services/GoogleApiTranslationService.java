@@ -6,7 +6,7 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +27,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
             return;
         }
 
-        String url = Reference.URLs.buildUrl(Reference.URLs.GOOGLE_TRANSLATION, toLanguage, message);
+        String url = UrlManager.buildUrl(UrlManager.GOOGLE_TRANSLATION, toLanguage, message);
 
         RequestResponse response = ApiRequester.get(url, "translate-" + requestNumber.getAndIncrement());
         response.handleJsonArray(

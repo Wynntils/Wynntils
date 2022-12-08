@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
@@ -55,7 +55,7 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        URLConnection st = ApiRequester.generateURLRequest(Reference.URLs.getUrl(Reference.URLs.ATHENA_SERVER_LIST));
+        URLConnection st = ApiRequester.generateURLRequest(UrlManager.getUrl(UrlManager.ATHENA_SERVER_LIST));
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -81,7 +81,7 @@ public class ServerListModel extends Model {
      * @throws IOException thrown by URLConnection
      */
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        String url = Reference.URLs.getUrl(Reference.URLs.ONLINE_PLAYERS);
+        String url = UrlManager.getUrl(UrlManager.ONLINE_PLAYERS);
         URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();

@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.BoundingBox;
@@ -55,7 +55,7 @@ public final class MapModel extends Model {
         MAPS.clear();
 
         DownloadableResource dl =
-                Downloader.download(Reference.URLs.getUrl(Reference.URLs.MAPS), "maps/maps.json", "map-parts");
+                Downloader.download(UrlManager.getUrl(UrlManager.MAPS), "maps/maps.json", "map-parts");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -85,7 +85,7 @@ public final class MapModel extends Model {
 
     private static void loadPlaces() {
         DownloadableResource dl =
-                Downloader.download(Reference.URLs.getUrl(Reference.URLs.PLACES), "maps/places.json", "maps-places");
+                Downloader.download(UrlManager.getUrl(UrlManager.PLACES), "maps/places.json", "maps-places");
         dl.handleJsonObject(json -> {
             PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -97,7 +97,7 @@ public final class MapModel extends Model {
 
     private static void loadServices() {
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.SERVICES), "maps/services.json", "maps-services");
+                UrlManager.getUrl(UrlManager.SERVICES), "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 

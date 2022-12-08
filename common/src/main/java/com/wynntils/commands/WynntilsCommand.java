@@ -12,7 +12,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.ItemProfilesManager;
@@ -85,7 +85,7 @@ public class WynntilsCommand extends CommandBase {
         // reset
         ItemProfilesManager.reset();
         // reloads api urls as well as web manager
-        Reference.URLs.reloadUrls();
+        UrlManager.reloadUrls();
         ItemProfilesManager.init();
         SplashManager.init();
         WynntilsAccountManager.init();
@@ -116,12 +116,12 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent(Reference.URLs.getUrl(Reference.URLs.WYNNTILS_PATREON))
+        MutableComponent url = new TextComponent(UrlManager.getUrl(UrlManager.WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
                         .withClickEvent(new ClickEvent(
-                                ClickEvent.Action.OPEN_URL, Reference.URLs.getUrl(Reference.URLs.WYNNTILS_PATREON)))
+                                ClickEvent.Action.OPEN_URL, UrlManager.getUrl(UrlManager.WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -157,7 +157,7 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = Reference.URLs.getUrl(Reference.URLs.DISCORD_INVITE);
+        String discordInvite = UrlManager.getUrl(UrlManager.DISCORD_INVITE);
         MutableComponent link =
                 new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()

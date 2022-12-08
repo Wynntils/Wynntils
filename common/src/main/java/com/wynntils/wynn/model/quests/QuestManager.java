@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.mc.objects.Location;
@@ -102,15 +102,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, wikiName));
+            Utils.openUrl(UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, wikiName));
             return;
         }
 
-        String url = Reference.URLs.buildUrl(Reference.URLs.WIKI_QUEST_PAGE_QUERY, questInfo.getName());
+        String url = UrlManager.buildUrl(UrlManager.WIKI_QUEST_PAGE_QUERY, questInfo.getName());
         RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, pageTitle));
+            Utils.openUrl(UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, pageTitle));
             return true;
         });
     }

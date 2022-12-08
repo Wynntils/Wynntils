@@ -7,7 +7,7 @@ package com.wynntils.core.net.athena;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -81,7 +81,7 @@ public class WynntilsAccountManager extends CoreManager {
 
         // generating secret key
         RequestResponse response =
-                ApiRequester.get(Reference.URLs.getUrl(Reference.URLs.ATHENA_AUTH_GET_PUBLIC_KEY), "getPublicKey");
+                ApiRequester.get(UrlManager.getUrl(UrlManager.ATHENA_AUTH_GET_PUBLIC_KEY), "getPublicKey");
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
@@ -97,7 +97,7 @@ public class WynntilsAccountManager extends CoreManager {
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
         RequestResponse response2 = ApiRequester.post(
-                Reference.URLs.getUrl(Reference.URLs.ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
+                UrlManager.getUrl(UrlManager.ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

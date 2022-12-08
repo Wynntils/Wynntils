@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.wynn.item.IdentificationOrderer;
@@ -61,7 +61,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemGuesses() {
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.ITEM_GUESSES), "item_guesses.json", "item_guesses");
+                UrlManager.getUrl(UrlManager.ITEM_GUESSES), "item_guesses.json", "item_guesses");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -80,7 +80,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemList() {
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.ATHENA_ITEM_LIST), "item_list.json", "item_list");
+                UrlManager.getUrl(UrlManager.ATHENA_ITEM_LIST), "item_list.json", "item_list");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -117,7 +117,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadIngredientList() {
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.ATHENA_INGREDIENT_LIST), "ingredient_list.json", "ingredientList");
+                UrlManager.getUrl(UrlManager.ATHENA_INGREDIENT_LIST), "ingredient_list.json", "ingredientList");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

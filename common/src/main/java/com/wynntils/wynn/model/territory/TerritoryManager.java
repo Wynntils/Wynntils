@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
@@ -121,7 +121,7 @@ public class TerritoryManager extends CoreManager {
         // This will get us a version of https://api.wynncraft.com/public_api.php?action=territoryList
         // as cached on Athena
         DownloadableResource dl = Downloader.download(
-                Reference.URLs.getUrl(Reference.URLs.ATHENA_TERRITORY_LIST), "territories.json", "territory");
+                UrlManager.getUrl(UrlManager.ATHENA_TERRITORY_LIST), "territories.json", "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 
