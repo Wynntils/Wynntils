@@ -1,9 +1,21 @@
+## [0.0.1-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.135...v0.0.1-alpha.136) (2022-12-08)
+
+
+### Bug Fixes
+
+* NotificationManager / MessageContainer refactors + handle editing repeated messages  ([#799](https://github.com/Wynntils/Artemis/issues/799)) ([b8ef699](https://github.com/Wynntils/Artemis/commit/b8ef699cbef4b6f35ae069e92e0b0c9c4770310b))
+
 ## [0.0.1-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.134...v0.0.1-alpha.135) (2022-12-08)
 
 
 ### Code Refactoring
 
 * Shape up WynntilsAccountManager ([#798](https://github.com/Wynntils/Artemis/issues/798)) ([65cd61b](https://github.com/Wynntils/Artemis/commit/65cd61b39b165545175681b51230f521e32d77f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.135 [skip ci] ([286fb31](https://github.com/Wynntils/Artemis/commit/286fb315f45310e209c4aa25b43f070839f78435))
 
 ## [0.0.1-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.133...v0.0.1-alpha.134) (2022-12-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.132 [skip ci] ([601e29b](https://github.com/Wynntils/Artemis/commit/601e29b3aa9dda37690a00ffd4b5d92039df024e))
-
-## [0.0.1-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.130...v0.0.1-alpha.131) (2022-12-07)
-
-
-### Bug Fixes
-
-* Use invoker for ChatScreen#insertText to fix Forge ChatTab crash ([#788](https://github.com/Wynntils/Artemis/issues/788)) ([af3d5b4](https://github.com/Wynntils/Artemis/commit/af3d5b4b4b0d78b8898d8c0fdc26763a6ffe890c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.131 [skip ci] ([c931a94](https://github.com/Wynntils/Artemis/commit/c931a94a354ed362c18b764adebd8571a9c06e15))
 
