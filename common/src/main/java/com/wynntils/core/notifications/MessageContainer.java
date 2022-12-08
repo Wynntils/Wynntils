@@ -34,18 +34,17 @@ public class MessageContainer {
         return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 
-    public void incrementMessageCount() {
-        this.messageCount++;
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(int newCount) {
+        this.messageCount = newCount;
     }
 
     // Do NOT call this to edit the container. Use NotificationManager methods instead.
     void editMessage(String newMessage) {
         this.message.setText(newMessage);
-    }
-
-    // Do NOT call this to edit the container. Use NotificationManager methods instead.
-    void editSettings(TextRenderSetting newSetting) {
-        this.message.setSetting(newSetting);
     }
 
     @Override

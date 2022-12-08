@@ -46,7 +46,7 @@ public final class NotificationManager {
         for (MessageContainer cachedContainer : cachedMessageSet) {
             String checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
-                cachedContainer.incrementMessageCount();
+                cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
                 WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
                 sendToChatIfNeeded(cachedContainer);
@@ -63,16 +63,37 @@ public final class NotificationManager {
         return msgContainer;
     }
 
-    public static void editMessage(MessageContainer msgContainer, String newMessage) {
-        editMessage(msgContainer, newMessage, msgContainer.getRenderTask().getSetting());
-    }
+    /**
+     * Edits a message in the queue.
+     * If the edited MessageContainer has repeated messages,
+     * the old message container's message count is decreased by one,
+     * and a new message container is created with the new message.
+     * @param msgContainer The message container to edit
+     * @param newMessage The new message
+     * @return The message container that was edited. This may be the new message container.
+     */
+    public static MessageContainer editMessage(MessageContainer msgContainer, String newMessage) {
+        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage);
 
-    public static void editMessage(MessageContainer msgContainer, String newMessage, TextRenderSetting newSetting) {
-        msgContainer.editMessage(newMessage);
-        msgContainer.editSettings(newSetting);
+        // If we have multiple repeated messages, we want to only edit the last one.
+        if (msgContainer.getMessageCount() > 1) {
+            // Decrease the message count of the old message
+            msgContainer.setMessageCount(msgContainer.getMessageCount() - 1);
 
-        WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
-        sendToChatIfNeeded(msgContainer);
+            // Let the mod know that the message was edited
+            WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
+            sendToChatIfNeeded(msgContainer);
+
+            // Then, queue the new message
+            return queueMessage(newMessage);
+        } else {
+            msgContainer.editMessage(newMessage);
+
+            WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
+            sendToChatIfNeeded(msgContainer);
+
+            return msgContainer;
+        }
     }
 
     private static void sendToChatIfNeeded(MessageContainer container) {
