@@ -87,7 +87,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = "https://wynncraft.fandom.com/wiki/" + WebUtils.encodeForWikiTitle(discoveryInfo.getName());
+        String wikiUrl = Reference.URLs.getWikiBase() + WebUtils.encodeForWikiTitle(discoveryInfo.getName());
         Utils.openUrl(wikiUrl);
     }
 

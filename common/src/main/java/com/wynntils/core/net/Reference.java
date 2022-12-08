@@ -23,7 +23,7 @@ public class Reference {
     }
 
     public static class URLs {
-        private static final String ATHENA = "https://athena.wynntils.com";
+        private static final String ATHENA_BASE = "https://athena.wynntils.com";
         private static final String DISCORD_INVITE = "https://discord.gg/SZuNem8";
         private static final String DISCOVERIES = "https://api.wynntils.com/discoveries.json";
         private static final String ITEM_GUESSES = "https://wynndata.tk/api/unid/data.json";
@@ -33,6 +33,7 @@ public class Reference {
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
         private static final String PLACES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
+        private static final String PLAYER_STATS_BASE = "https://wynncraft.com/stats/player/";
         private static final String SERVICES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
         private static final String WIKI_BASE = "https://wynncraft.fandom.com/wiki/";
@@ -40,37 +41,38 @@ public class Reference {
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=";
         private static final String WIKI_QUEST_PAGE_QUERY =
                 "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
+        private static final String WYNNDATA_ITEM_BASE = "https://www.wynndata.tk/i/";
 
-        private static String getAthena() {
-            return ATHENA;
+        private static String getAthenaBase() {
+            return ATHENA_BASE;
         }
 
         public static String getAthenaAuthGetPublicKey() {
-            return getAthena() + "/auth/getPublicKey";
+            return getAthenaBase() + "/auth/getPublicKey";
         }
 
         public static String getAthenaAuthResponse() {
-            return getAthena() + "/auth/responseEncryption";
+            return getAthenaBase() + "/auth/responseEncryption";
         }
 
         public static String getAthenaIngredientList() {
-            return getAthena() + "/cache/get/ingredientList";
+            return getAthenaBase() + "/cache/get/ingredientList";
         }
 
         public static String getAthenaItemList() {
-            return getAthena() + "/cache/get/itemList";
+            return getAthenaBase() + "/cache/get/itemList";
         }
 
         public static String getAthenaServerList() {
-            return getAthena() + "/cache/get/serverList";
+            return getAthenaBase() + "/cache/get/serverList";
         }
 
         public static String getAthenaTerritoryList() {
-            return getAthena() + "/cache/get/territoryList";
+            return getAthenaBase() + "/cache/get/territoryList";
         }
 
         public static String getAthenaUserInfo() {
-            return getAthena() + "/user/getInfo";
+            return getAthenaBase() + "/user/getInfo";
         }
 
         public static String getDiscordInvite() {
@@ -97,6 +99,10 @@ public class Reference {
             return PLACES;
         }
 
+        public static String getPlayerStatsBase() {
+            return PLAYER_STATS_BASE;
+        }
+
         public static String getServices() {
             return SERVICES;
         }
@@ -115,6 +121,10 @@ public class Reference {
 
         public static String getWikiQuestPageQuery() {
             return WIKI_QUEST_PAGE_QUERY;
+        }
+
+        public static String getWynndataItemBase() {
+            return WYNNDATA_ITEM_BASE;
         }
 
         public static void reloadUrls() {

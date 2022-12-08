@@ -4,6 +4,7 @@
  */
 package com.wynntils.gui.widgets;
 
+import com.wynntils.core.net.Reference;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -12,8 +13,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 
 public class ViewPlayerStatsButton extends AbstractButton {
-    private static final String STATS_URL_BASE = "https://wynncraft.com/stats/player/";
-
     private final String playerName;
 
     public ViewPlayerStatsButton(int x, int y, int width, int height, String playerName) {
@@ -24,8 +23,7 @@ public class ViewPlayerStatsButton extends AbstractButton {
     @Override
     public void onPress() {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-
-        Utils.openUrl(STATS_URL_BASE + playerName);
+        Utils.openUrl(Reference.URLs.getPlayerStatsBase() + playerName);
     }
 
     @Override
