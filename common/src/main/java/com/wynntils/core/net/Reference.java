@@ -86,8 +86,10 @@ public final class Reference {
             assert (urlMap.get(urlId).numArguments != null && urlMap.get(urlId).numArguments == arguments.length);
             Function<String, String> encoding = getEncoding(urlMap.get(urlId).encoding);
 
-            String[] encodedArguments =
-                    Arrays.stream(arguments).map(encoding).map(StringUtils::encodeUrl).toArray(String[]::new);
+            String[] encodedArguments = Arrays.stream(arguments)
+                    .map(encoding)
+                    .map(StringUtils::encodeUrl)
+                    .toArray(String[]::new);
             return String.format(urlMap.get(urlId).url, encodedArguments);
         }
 

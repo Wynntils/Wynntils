@@ -86,8 +86,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl =
-                Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, discoveryInfo.getName());
+        String wikiUrl = Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, discoveryInfo.getName());
         Utils.openUrl(wikiUrl);
     }
 
