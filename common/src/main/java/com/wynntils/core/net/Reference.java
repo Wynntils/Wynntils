@@ -28,6 +28,13 @@ public final class Reference {
     public static final class URLs {
         private static final Map<String, String> urlMap = new HashMap<>();
         static {
+            urlMap.put("athenaAuthGetPublicKey", "https://athena.wynntils.com/auth/getPublicKey");
+            urlMap.put("athenaAuthResponse", "https://athena.wynntils.com/auth/responseEncryption");
+            urlMap.put("athenaIngredientList", "https://athena.wynntils.com/cache/get/ingredientList");
+            urlMap.put("athenaItemList", "https://athena.wynntils.com/cache/get/itemList");
+            urlMap.put("athenaServerList", "https://athena.wynntils.com/cache/get/serverList");
+            urlMap.put("athenaTerritoryList", "https://athena.wynntils.com/cache/get/territoryList");
+            urlMap.put("athenaUserInfo", "https://athena.wynntils.com/user/getInfo");
             urlMap.put("discordInvite", "https://discord.gg/SZuNem8");
             urlMap.put("discoveries", "https://api.wynntils.com/discoveries.json");
             urlMap.put("googleTranslation", "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s");
@@ -38,40 +45,40 @@ public final class Reference {
             urlMap.put("playerStats", "https://wynncraft.com/stats/player/%s");
             urlMap.put("services", "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json");
             urlMap.put("updateCheck", "https://athena.wynntils.com/version/latest/ce");
-            urlMap.put("wikiTitleLookup", "https://wynncraft.fandom.com/wiki/%s");
             urlMap.put("wikiDiscoveryQuery", "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s");
             urlMap.put("wikiQuestPageQuery", "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s");
+            urlMap.put("wikiTitleLookup", "https://wynncraft.fandom.com/wiki/%s");
             urlMap.put("wynndataItemLookup", "https://www.wynndata.tk/i/%s");
             urlMap.put("wynntilsPatreon", "https://www.patreon.com/Wynntils");
             urlMap.put("wynntilsRegisterToken", "https://account.wynntils.com/register.php?token=%s");
         }
 
         public static String getAthenaAuthGetPublicKey() {
-            return "https://athena.wynntils.com/auth/getPublicKey";
+            return urlMap.get("athenaAuthGetPublicKey");
         }
 
         public static String getAthenaAuthResponse() {
-            return "https://athena.wynntils.com/auth/responseEncryption";
+            return urlMap.get("athenaAuthResponse");
         }
 
         public static String getAthenaIngredientList() {
-            return "https://athena.wynntils.com/cache/get/ingredientList";
+            return urlMap.get("athenaIngredientList");
         }
 
         public static String getAthenaItemList() {
-            return "https://athena.wynntils.com/cache/get/itemList";
+            return urlMap.get("athenaItemList");
         }
 
         public static String getAthenaServerList() {
-            return "https://athena.wynntils.com/cache/get/serverList";
+            return urlMap.get("athenaServerList");
         }
 
         public static String getAthenaTerritoryList() {
-            return "https://athena.wynntils.com/cache/get/territoryList";
+            return urlMap.get("athenaTerritoryList");
         }
 
         public static String getAthenaUserInfo() {
-            return "https://athena.wynntils.com/user/getInfo";
+            return urlMap.get("athenaUserInfo");
         }
 
         public static String getDiscordInvite() {
