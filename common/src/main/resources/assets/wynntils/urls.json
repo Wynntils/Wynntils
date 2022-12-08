@@ -37,7 +37,8 @@
   },
   {
     "id": "googleTranslation",
-    "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s"
+    "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s",
+    "numArguments": 2
   },
   {
     "id": "itemGuesses",
@@ -57,7 +58,8 @@
   },
   {
     "id": "playerStats",
-    "url": "https://wynncraft.com/stats/player/%s"
+    "url": "https://wynncraft.com/stats/player/%s",
+    "numArguments": 1
   },
   {
     "id": "services",
@@ -69,19 +71,23 @@
   },
   {
     "id": "wikiDiscoveryQuery",
-    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s"
+    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s",
+    "numArguments": 1
   },
   {
     "id": "wikiQuestPageQuery",
-    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s"
+    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s",
+    "numArguments": 1
   },
   {
     "id": "wikiTitleLookup",
-    "url": "https://wynncraft.fandom.com/wiki/%s"
+    "url": "https://wynncraft.fandom.com/wiki/%s",
+    "numArguments": 1
   },
   {
     "id": "wynndataItemLookup",
-    "url": "https://www.wynndata.tk/i/%s"
+    "url": "https://www.wynndata.tk/i/%s",
+    "numArguments": 1
   },
   {
     "id": "wynntilsPatreon",
@@ -89,6 +95,7 @@
   },
   {
     "id": "wynntilsRegisterToken",
-    "url": "https://account.wynntils.com/register.php?token=%s"
+    "url": "https://account.wynntils.com/register.php?token=%s",
+    "numArguments": 1
   }
 ]

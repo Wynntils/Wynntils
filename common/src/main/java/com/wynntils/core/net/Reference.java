@@ -78,10 +78,16 @@ public final class Reference {
         }
 
         public static String getUrl(String urlId) {
+            // Verify that argument count is correct
+            assert (urlMap.get(urlId).numArguments == null || urlMap.get(urlId).numArguments == 0);
+
             return urlMap.get(urlId).getUrl();
         }
 
         public static String buildUrl(String urlId, String... arguments) {
+            // Verify that argument count is correct
+            assert (urlMap.get(urlId).numArguments != null && urlMap.get(urlId).numArguments == arguments.length);
+
             String[] encodedArguments =
                     Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
             return String.format(getUrl(urlId), encodedArguments);
