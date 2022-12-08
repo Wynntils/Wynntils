@@ -6,6 +6,7 @@ package com.wynntils.core.notifications;
 
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import java.util.Objects;
 
 public class MessageContainer {
     protected TextRenderTask message;
@@ -45,5 +46,19 @@ public class MessageContainer {
     // Do NOT call this to edit the container. Use NotificationManager methods instead.
     void editSettings(TextRenderSetting newSetting) {
         this.message.setSetting(newSetting);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        MessageContainer that = (MessageContainer) other;
+        return messageCount == that.messageCount && message.equals(that.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, messageCount);
     }
 }
