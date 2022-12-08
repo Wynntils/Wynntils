@@ -72,17 +72,20 @@
   {
     "id": "wikiDiscoveryQuery",
     "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s",
-    "numArguments": 1
+    "numArguments": 1,
+    "encoding": "wiki"
   },
   {
     "id": "wikiQuestPageQuery",
     "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s",
-    "numArguments": 1
+    "numArguments": 1,
+    "encoding": "cargo"
   },
   {
     "id": "wikiTitleLookup",
     "url": "https://wynncraft.fandom.com/wiki/%s",
-    "numArguments": 1
+    "numArguments": 1,
+    "encoding": "wiki"
   },
   {
     "id": "wynndataItemLookup",

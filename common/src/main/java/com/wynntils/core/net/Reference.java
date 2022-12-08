@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class Reference {
     private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
@@ -83,10 +84,21 @@ public final class Reference {
         public static String buildUrl(String urlId, String... arguments) {
             // Verify that argument count is correct
             assert (urlMap.get(urlId).numArguments != null && urlMap.get(urlId).numArguments == arguments.length);
+            Function<String, String> encoding = getEncoding(urlMap.get(urlId).encoding);
 
             String[] encodedArguments =
-                    Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
+                    Arrays.stream(arguments).map(encoding).map(StringUtils::encodeUrl).toArray(String[]::new);
             return String.format(urlMap.get(urlId).url, encodedArguments);
+        }
+
+        private static Function<String, String> getEncoding(String encoding) {
+            if (encoding == null || encoding.isEmpty()) return Function.identity();
+
+            return switch (encoding) {
+                case "cargo" -> URLs::encodeForCargoQuery;
+                case "wiki" -> URLs::encodeForWikiTitle;
+                default -> throw new RuntimeException("Unknown URL encoding: " + encoding);
+            };
         }
 
         public static void reloadUrls() {
