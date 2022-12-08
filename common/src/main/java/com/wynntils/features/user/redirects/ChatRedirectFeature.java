@@ -336,7 +336,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            return ChatFormatting.DARK_RED + "Too many mobs nearby for horse to spawn!";
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!";
         }
     }
 
