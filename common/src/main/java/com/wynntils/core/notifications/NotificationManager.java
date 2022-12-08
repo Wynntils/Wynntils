@@ -32,8 +32,8 @@ public final class NotificationManager {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
 
-    public static void queueMessage(Component message) {
-        queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
+    public static MessageContainer queueMessage(Component message) {
+        return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
     }
 
     public static MessageContainer queueMessage(TextRenderTask message) {
@@ -44,7 +44,7 @@ public final class NotificationManager {
         String messageText = message.getText();
 
         for (MessageContainer cachedContainer : cachedMessageSet) {
-            String checkableMessage = cachedContainer.getOriginalMessage();
+            String checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.incrementMessageCount();
 
@@ -64,7 +64,12 @@ public final class NotificationManager {
     }
 
     public static void editMessage(MessageContainer msgContainer, String newMessage) {
+        editMessage(msgContainer, newMessage, msgContainer.getRenderTask().getSetting());
+    }
+
+    public static void editMessage(MessageContainer msgContainer, String newMessage, TextRenderSetting newSetting) {
         msgContainer.editMessage(newMessage);
+        msgContainer.editSettings(newSetting);
 
         WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
         sendToChatIfNeeded(msgContainer);

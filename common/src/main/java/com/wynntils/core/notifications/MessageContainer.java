@@ -20,7 +20,7 @@ public class MessageContainer {
         this.messageCount = 1;
     }
 
-    public String getOriginalMessage() {
+    public String getMessage() {
         return message.getText();
     }
 
@@ -33,15 +33,17 @@ public class MessageContainer {
         return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 
-    public void editMessage(String newMessage) {
+    public void incrementMessageCount() {
+        this.messageCount++;
+    }
+
+    // Do NOT call this to edit the container. Use NotificationManager methods instead.
+    void editMessage(String newMessage) {
         this.message.setText(newMessage);
     }
 
-    public void update(MessageContainer other) {
-        this.message = other.message;
-    }
-
-    public void incrementMessageCount() {
-        this.messageCount++;
+    // Do NOT call this to edit the container. Use NotificationManager methods instead.
+    void editSettings(TextRenderSetting newSetting) {
+        this.message.setSetting(newSetting);
     }
 }
