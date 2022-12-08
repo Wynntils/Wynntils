@@ -6,9 +6,11 @@ package com.wynntils.core.notifications;
 
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import java.util.Objects;
 
 public class MessageContainer {
-    protected TextRenderTask message;
+    protected String message;
+    protected TextRenderTask renderTask;
     private int messageCount;
 
     public MessageContainer(String message) {
@@ -16,32 +18,56 @@ public class MessageContainer {
     }
 
     public MessageContainer(TextRenderTask message) {
-        this.message = message;
+        this.message = message.getText();
+        this.renderTask = message;
         this.messageCount = 1;
     }
 
-    public String getOriginalMessage() {
-        return message.getText();
+    public String getMessage() {
+        return message;
     }
 
     public TextRenderTask getRenderTask() {
+        return renderTask;
+    }
+
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(int newCount) {
+        this.messageCount = newCount;
+
+        updateRenderTask();
+    }
+
+    // Do NOT call this to edit the container. Use NotificationManager methods instead.
+    void editMessage(String newMessage) {
+        this.message = newMessage;
+
+        updateRenderTask();
+    }
+
+    private void updateRenderTask() {
         if (this.messageCount == 1) {
-            return message;
+            this.renderTask = new TextRenderTask(this.message, TextRenderSetting.DEFAULT);
+        } else {
+            String messageMultiplier = " §7[x" + this.messageCount + "]";
+            this.renderTask = new TextRenderTask(this.message + messageMultiplier, this.renderTask.getSetting());
         }
-
-        String messageMultiplier = " §7[x" + this.messageCount + "]";
-        return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
     }
 
-    public void editMessage(String newMessage) {
-        this.message.setText(newMessage);
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        MessageContainer that = (MessageContainer) other;
+        return messageCount == that.messageCount && message.equals(that.message);
     }
 
-    public void update(MessageContainer other) {
-        this.message = other.message;
-    }
-
-    public void incrementMessageCount() {
-        this.messageCount++;
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, messageCount);
     }
 }
