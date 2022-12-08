@@ -54,7 +54,8 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        DownloadableResource dl = Downloader.download(Reference.URLs.getUrl(Reference.URLs.MAPS), "maps/maps.json", "map-parts");
+        DownloadableResource dl =
+                Downloader.download(Reference.URLs.getUrl(Reference.URLs.MAPS), "maps/maps.json", "map-parts");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -83,7 +84,8 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        DownloadableResource dl = Downloader.download(Reference.URLs.getUrl(Reference.URLs.PLACES), "maps/places.json", "maps-places");
+        DownloadableResource dl =
+                Downloader.download(Reference.URLs.getUrl(Reference.URLs.PLACES), "maps/places.json", "maps-places");
         dl.handleJsonObject(json -> {
             PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -94,8 +96,8 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        DownloadableResource dl =
-                Downloader.download(Reference.URLs.getUrl(Reference.URLs.SERVICES), "maps/services.json", "maps-services");
+        DownloadableResource dl = Downloader.download(
+                Reference.URLs.getUrl(Reference.URLs.SERVICES), "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 

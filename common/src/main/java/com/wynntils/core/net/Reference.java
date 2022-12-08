@@ -82,7 +82,8 @@ public final class Reference {
         }
 
         public static String buildUrl(String urlId, String... arguments) {
-            String[] encodedArguments = Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
+            String[] encodedArguments =
+                    Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
             return String.format(getUrl(urlId), encodedArguments);
         }
 

@@ -86,7 +86,8 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = Reference.URLs.createWikiTitleLookup(Reference.URLs.encodeForWikiTitle(discoveryInfo.getName()));
+        String wikiUrl =
+                Reference.URLs.createWikiTitleLookup(Reference.URLs.encodeForWikiTitle(discoveryInfo.getName()));
         Utils.openUrl(wikiUrl);
     }
 
@@ -186,8 +187,8 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl =
-                Downloader.download(Reference.URLs.getUrl(Reference.URLs.DISCOVERIES), "discoveries.json", "discoveries");
+        DownloadableResource dl = Downloader.download(
+                Reference.URLs.getUrl(Reference.URLs.DISCOVERIES), "discoveries.json", "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
-import com.wynntils.utils.StringUtils;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
