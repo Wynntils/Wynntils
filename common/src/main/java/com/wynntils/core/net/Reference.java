@@ -28,22 +28,22 @@ public final class Reference {
     public static final class URLs {
         private static final Map<String, String> urlMap = new HashMap<>();
         static {
-            urlMap.put("DISCORD_INVITE", "https://discord.gg/SZuNem8");
-            urlMap.put("DISCOVERIES", "https://api.wynntils.com/discoveries.json");
-            urlMap.put("GOOGLE_TRANSLATION", "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s");
-            urlMap.put("ITEM_GUESSES", "https://wynndata.tk/api/unid/data.json");
-            urlMap.put("MAPS", "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json");
-            urlMap.put("ONLINE_PLAYERS", "https://api.wynncraft.com/public_api.php?action=onlinePlayers");
-            urlMap.put("PLACES", "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json");
-            urlMap.put("PLAYER_STATS", "https://wynncraft.com/stats/player/%s");
-            urlMap.put("SERVICES", "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json");
-            urlMap.put("UPDATE_CHECK", "https://athena.wynntils.com/version/latest/ce");
-            urlMap.put("WIKI_TITLE_LOOKUP", "https://wynncraft.fandom.com/wiki/%s");
-            urlMap.put("WIKI_DISCOVERY_QUERY", "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s");
-            urlMap.put("WIKI_QUEST_PAGE_QUERY", "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s");
-            urlMap.put("WYNNDATA_ITEM_LOOKUP", "https://www.wynndata.tk/i/%s");
-            urlMap.put("WYNNTILS_PATREON", "https://www.patreon.com/Wynntils");
-            urlMap.put("WYNNTILS_REGISTER_TOKEN", "https://account.wynntils.com/register.php?token=%s");
+            urlMap.put("discordInvite", "https://discord.gg/SZuNem8");
+            urlMap.put("discoveries", "https://api.wynntils.com/discoveries.json");
+            urlMap.put("googleTranslation", "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s");
+            urlMap.put("itemGuesses", "https://wynndata.tk/api/unid/data.json");
+            urlMap.put("maps", "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json");
+            urlMap.put("onlinePlayers", "https://api.wynncraft.com/public_api.php?action=onlinePlayers");
+            urlMap.put("places", "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json");
+            urlMap.put("playerStats", "https://wynncraft.com/stats/player/%s");
+            urlMap.put("services", "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json");
+            urlMap.put("updateCheck", "https://athena.wynntils.com/version/latest/ce");
+            urlMap.put("wikiTitleLookup", "https://wynncraft.fandom.com/wiki/%s");
+            urlMap.put("wikiDiscoveryQuery", "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s");
+            urlMap.put("wikiQuestPageQuery", "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s");
+            urlMap.put("wynndataItemLookup", "https://www.wynndata.tk/i/%s");
+            urlMap.put("wynntilsPatreon", "https://www.patreon.com/Wynntils");
+            urlMap.put("wynntilsRegisterToken", "https://account.wynntils.com/register.php?token=%s");
         }
 
         public static String getAthenaAuthGetPublicKey() {
@@ -75,67 +75,67 @@ public final class Reference {
         }
 
         public static String getDiscordInvite() {
-            return urlMap.get("DISCORD_INVITE");
+            return urlMap.get("discordInvite");
         }
 
         public static String getDiscoveries() {
-            return urlMap.get("DISCOVERIES");
+            return urlMap.get("discoveries");
         }
 
         public static String getItemGuesses() {
-            return urlMap.get("ITEM_GUESSES");
+            return urlMap.get("itemGuesses");
         }
 
         public static String getMaps() {
-            return urlMap.get("MAPS");
+            return urlMap.get("maps");
         }
 
         public static String getOnlinePlayers() {
-            return urlMap.get("ONLINE_PLAYERS");
+            return urlMap.get("onlinePlayers");
         }
 
         public static String getPlaces() {
-            return urlMap.get("PLACES");
+            return urlMap.get("places");
         }
 
         public static String getServices() {
-            return urlMap.get("SERVICES");
+            return urlMap.get("services");
         }
 
         public static String getUpdateCheck() {
-            return urlMap.get("UPDATE_CHECK");
+            return urlMap.get("updateCheck");
         }
 
         public static String getWynntilsPatreon() {
-            return urlMap.get("WYNNTILS_PATREON");
+            return urlMap.get("wynntilsPatreon");
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
-            return String.format(urlMap.get("GOOGLE_TRANSLATION"), StringUtils.encodeUrl(toLanguage), StringUtils.encodeUrl(message));
+            return String.format(urlMap.get("googleTranslation"), StringUtils.encodeUrl(toLanguage), StringUtils.encodeUrl(message));
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(urlMap.get("PLAYER_STATS"), StringUtils.encodeUrl(playerName));
+            return String.format(urlMap.get("playerStats"), StringUtils.encodeUrl(playerName));
         }
 
         public static String createWikiTitleLookup(String pageTitle) {
-            return String.format(urlMap.get("WIKI_TITLE_LOOKUP"), StringUtils.encodeUrl(pageTitle));
+            return String.format(urlMap.get("wikiTitleLookup"), StringUtils.encodeUrl(pageTitle));
         }
 
         public static String createWikiDiscoveryQuery(String name) {
-            return String.format(urlMap.get("WIKI_DISCOVERY_QUERY"), StringUtils.encodeUrl(name));
+            return String.format(urlMap.get("wikiDiscoveryQuery"), StringUtils.encodeUrl(name));
         }
 
         public static String createWikiQuestPageQuery(String name) {
-            return String.format(urlMap.get("WIKI_QUEST_PAGE_QUERY"), StringUtils.encodeUrl(name));
+            return String.format(urlMap.get("wikiQuestPageQuery"), StringUtils.encodeUrl(name));
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(urlMap.get("WYNNDATA_ITEM_LOOKUP"), StringUtils.encodeUrl(unformattedName));
+            return String.format(urlMap.get("wynndataItemLookup"), StringUtils.encodeUrl(unformattedName));
         }
 
         public static String createWynntilsRegisterToken(String token) {
-            return String.format(urlMap.get("WYNNTILS_REGISTER_TOKEN"), StringUtils.encodeUrl(token));
+            return String.format(urlMap.get("wynntilsRegisterToken"), StringUtils.encodeUrl(token));
         }
 
         public static void reloadUrls() {
