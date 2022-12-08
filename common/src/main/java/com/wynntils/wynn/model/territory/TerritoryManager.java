@@ -121,7 +121,7 @@ public class TerritoryManager extends CoreManager {
         // This will get us a version of https://api.wynncraft.com/public_api.php?action=territoryList
         // as cached on Athena
         DownloadableResource dl =
-                Downloader.download(Reference.URLs.getAthenaTerritoryList(), "territories.json", "territory");
+                Downloader.download(Reference.URLs.getUrl(Reference.URLs.ATHENA_TERRITORY_LIST), "territories.json", "territory");
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return false;
 

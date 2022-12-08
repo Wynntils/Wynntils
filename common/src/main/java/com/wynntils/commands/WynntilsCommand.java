@@ -116,11 +116,11 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent(Reference.URLs.getWynntilsPatreon())
+        MutableComponent url = new TextComponent(Reference.URLs.getUrl(Reference.URLs.WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.URLs.getWynntilsPatreon()))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.URLs.getUrl(Reference.URLs.WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -156,7 +156,7 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = Reference.URLs.getDiscordInvite();
+        String discordInvite = Reference.URLs.getUrl(Reference.URLs.DISCORD_INVITE);
         MutableComponent link =
                 new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()

@@ -76,72 +76,8 @@ public final class Reference {
             init();
         }
 
-        public static String getUrl(String urlKey) {
-            return getUrl(urlKey);
-        }
-
-        public static String getAthenaAuthGetPublicKey() {
-            return getUrl(ATHENA_AUTH_GET_PUBLIC_KEY);
-        }
-
-        public static String getAthenaAuthResponse() {
-            return getUrl(ATHENA_AUTH_RESPONSE);
-        }
-
-        public static String getAthenaIngredientList() {
-            return getUrl(ATHENA_INGREDIENT_LIST);
-        }
-
-        public static String getAthenaItemList() {
-            return getUrl(ATHENA_ITEM_LIST);
-        }
-
-        public static String getAthenaServerList() {
-            return getUrl(ATHENA_SERVER_LIST);
-        }
-
-        public static String getAthenaTerritoryList() {
-            return getUrl(ATHENA_TERRITORY_LIST);
-        }
-
-        public static String getAthenaUserInfo() {
-            return getUrl(ATHENA_USER_INFO);
-        }
-
-        public static String getDiscordInvite() {
-            return getUrl(DISCORD_INVITE);
-        }
-
-        public static String getDiscoveries() {
-            return getUrl(DISCOVERIES);
-        }
-
-        public static String getItemGuesses() {
-            return getUrl(ITEM_GUESSES);
-        }
-
-        public static String getMaps() {
-            return getUrl(MAPS);
-        }
-
-        public static String getOnlinePlayers() {
-            return getUrl(ONLINE_PLAYERS);
-        }
-
-        public static String getPlaces() {
-            return getUrl(PLACES);
-        }
-
-        public static String getServices() {
-            return getUrl(SERVICES);
-        }
-
-        public static String getUpdateCheck() {
-            return getUrl(UPDATE_CHECK);
-        }
-
-        public static String getWynntilsPatreon() {
-            return getUrl(WYNNTILS_PATREON);
+        public static String getUrl(String urlId) {
+            return getUrl(urlId);
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
