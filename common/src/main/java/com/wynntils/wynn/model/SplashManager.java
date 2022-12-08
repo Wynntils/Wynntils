@@ -8,9 +8,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.utils.Utils;
 import java.io.File;
 import java.lang.reflect.Type;
@@ -18,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplashManager extends CoreManager {
-    private static String currentSplash = "";
-    private static final List<String> SPLASHES = List.of("Move splashes to separate file!", "json FTW!");
     private static final String SPLASHES_URL =
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json";
     // Fallback splash in case loading of splashes fails
@@ -28,10 +23,6 @@ public class SplashManager extends CoreManager {
 
     private static List<String> allSplashes = new ArrayList<>();
     private static String currentSplash = DEFAULT_SPLASH;
-
-    public static List<String> getSplashes() {
-        return SPLASHES;
-    }
 
     public static void init() {
         updateCurrentSplash();
