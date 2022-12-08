@@ -9,7 +9,8 @@ import com.wynntils.gui.render.TextRenderTask;
 import java.util.Objects;
 
 public class MessageContainer {
-    protected TextRenderTask message;
+    protected String message;
+    protected TextRenderTask renderTask;
     private int messageCount;
 
     public MessageContainer(String message) {
@@ -17,21 +18,17 @@ public class MessageContainer {
     }
 
     public MessageContainer(TextRenderTask message) {
-        this.message = message;
+        this.message = message.getText();
+        this.renderTask = message;
         this.messageCount = 1;
     }
 
     public String getMessage() {
-        return message.getText();
+        return message;
     }
 
     public TextRenderTask getRenderTask() {
-        if (this.messageCount == 1) {
-            return message;
-        }
-
-        String messageMultiplier = " §7[x" + this.messageCount + "]";
-        return new TextRenderTask(this.message.getText() + messageMultiplier, this.message.getSetting());
+        return renderTask;
     }
 
     public int getMessageCount() {
@@ -40,11 +37,24 @@ public class MessageContainer {
 
     public void setMessageCount(int newCount) {
         this.messageCount = newCount;
+
+        updateRenderTask();
     }
 
     // Do NOT call this to edit the container. Use NotificationManager methods instead.
     void editMessage(String newMessage) {
-        this.message.setText(newMessage);
+        this.message = newMessage;
+
+        updateRenderTask();
+    }
+
+    private void updateRenderTask() {
+        if (this.messageCount == 1) {
+            this.renderTask = new TextRenderTask(this.message, TextRenderSetting.DEFAULT);
+        } else {
+            String messageMultiplier = " §7[x" + this.messageCount + "]";
+            this.renderTask = new TextRenderTask(this.message + messageMultiplier, this.renderTask.getSetting());
+        }
     }
 
     @Override
