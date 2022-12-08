@@ -35,14 +35,6 @@ public final class Reference {
         return WYNN_API_KEY;
     }
 
-    public static final class UrlInfo {
-        String id;
-        String url;
-        String md5;
-        String encoding;
-        Integer numArguments;
-    }
-
     public static final class URLs {
         private static final Gson GSON = new Gson();
         public static final String ATHENA_AUTH_GET_PUBLIC_KEY = "athenaAuthGetPublicKey";
@@ -113,19 +105,31 @@ public final class Reference {
         }
 
         private static void init() {
-            urlMap = new HashMap<>();
             try {
                 InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json");
-                byte[] data = inputStream.readAllBytes();
-                String json = new String(data, StandardCharsets.UTF_8);
-                Type type = new TypeToken<List<UrlInfo>>() {}.getType();
-                List<UrlInfo> urlInfos = GSON.fromJson(json, type);
-                for (UrlInfo urlInfo : urlInfos) {
-                    urlMap.put(urlInfo.id, urlInfo);
-                }
+                readUrls(inputStream);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+
+        private static void readUrls(InputStream inputStream) throws IOException {
+            byte[] data = inputStream.readAllBytes();
+            String json = new String(data, StandardCharsets.UTF_8);
+            Type type = new TypeToken<List<UrlInfo>>() {}.getType();
+            List<UrlInfo> urlInfos = GSON.fromJson(json, type);
+            urlMap = new HashMap<>();
+            for (UrlInfo urlInfo : urlInfos) {
+                urlMap.put(urlInfo.id, urlInfo);
+            }
+        }
+    }
+
+    private static final class UrlInfo {
+        String id;
+        String url;
+        String md5;
+        String encoding;
+        Integer numArguments;
     }
 }
