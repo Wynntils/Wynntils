@@ -36,16 +36,16 @@ public class Reference {
         private static final String ONLINE_PLAYERS = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
         private static final String PLACES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json";
-        private static final String PLAYER_STATS_BASE = "https://wynncraft.com/stats/player/%s";
+        private static final String PLAYER_STATS = "https://wynncraft.com/stats/player/%s";
         private static final String SERVICES =
                 "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
         private static final String UPDATE_CHECK = "https://athena.wynntils.com/version/latest/ce";
-        private static final String WIKI_BASE = "https://wynncraft.fandom.com/wiki/%s";
+        private static final String WIKI_TITLE_LOOKUP = "https://wynncraft.fandom.com/wiki/%s";
         private static final String WIKI_DISCOVERY_QUERY =
                 "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%s";
         private static final String WIKI_QUEST_PAGE_QUERY =
                 "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%s";
-        private static final String WYNNDATA_ITEM_BASE = "https://www.wynndata.tk/i/%s";
+        private static final String WYNNDATA_ITEM_LOOKUP = "https://www.wynndata.tk/i/%s";
         private static final String WYNNTILS_PATREON = "https://www.patreon.com/Wynntils";
         private static final String WYNNTILS_REGISTER_TOKEN = "https://account.wynntils.com/register.php?token=%s";
 
@@ -122,15 +122,15 @@ public class Reference {
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(PLAYER_STATS_BASE, playerName);
+            return String.format(PLAYER_STATS, playerName);
         }
 
         public static String createWikiTitleUnencoded(String wikiName) {
-            return String.format(WIKI_BASE, wikiName);
+            return String.format(WIKI_TITLE_LOOKUP, wikiName);
         }
 
         public static String createWikiTitle(String pageTitle) {
-            return String.format(WIKI_BASE, WebUtils.encodeForWikiTitle(pageTitle));
+            return String.format(WIKI_TITLE_LOOKUP, WebUtils.encodeForWikiTitle(pageTitle));
         }
 
         public static String createWikiDiscoveryQuery(String name) {
@@ -142,7 +142,7 @@ public class Reference {
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(WYNNDATA_ITEM_BASE, Utils.encodeUrl(unformattedName));
+            return String.format(WYNNDATA_ITEM_LOOKUP, Utils.encodeUrl(unformattedName));
         }
 
         public static String createWynntilsRegisterToken(String token) {
