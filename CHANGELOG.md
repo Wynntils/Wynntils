@@ -1,9 +1,21 @@
+## [0.0.1-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.136...v0.0.1-alpha.137) (2022-12-08)
+
+
+### New Features
+
+* Read splashes from splashes.json instead of webapi ([#796](https://github.com/Wynntils/Artemis/issues/796)) ([234ff35](https://github.com/Wynntils/Artemis/commit/234ff35da3a49b8d9feb26f9a5e11c5bf1bc7ce6))
+
 ## [0.0.1-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.135...v0.0.1-alpha.136) (2022-12-08)
 
 
 ### Bug Fixes
 
 * NotificationManager / MessageContainer refactors + handle editing repeated messages  ([#799](https://github.com/Wynntils/Artemis/issues/799)) ([b8ef699](https://github.com/Wynntils/Artemis/commit/b8ef699cbef4b6f35ae069e92e0b0c9c4770310b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.136 [skip ci] ([8cd2996](https://github.com/Wynntils/Artemis/commit/8cd2996c5fffc6266aac72ba8c943651bd6254a5))
 
 ## [0.0.1-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.134...v0.0.1-alpha.135) (2022-12-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.133 [skip ci] ([dba8162](https://github.com/Wynntils/Artemis/commit/dba8162e73310f560505fcf9caa84157688326e5))
-
-## [0.0.1-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.131...v0.0.1-alpha.132) (2022-12-07)
-
-
-### Code Refactoring
-
-* In preparation of the webapi refactoring, fixup TerritoryManager ([#792](https://github.com/Wynntils/Artemis/issues/792)) ([c61e1fe](https://github.com/Wynntils/Artemis/commit/c61e1fefba63698eb9489bfc1f449a8b2d19c065))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.132 [skip ci] ([601e29b](https://github.com/Wynntils/Artemis/commit/601e29b3aa9dda37690a00ffd4b5d92039df024e))
 
