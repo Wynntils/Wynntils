@@ -5,7 +5,7 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.WebUtils;
 
 public class Reference {
@@ -142,7 +142,7 @@ public class Reference {
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(WYNNDATA_ITEM_LOOKUP, Utils.encodeUrl(unformattedName));
+            return String.format(WYNNDATA_ITEM_LOOKUP, StringUtils.encodeUrl(unformattedName));
         }
 
         public static String createWynntilsRegisterToken(String token) {
