@@ -100,17 +100,17 @@ public class QuestManager extends CoreManager {
         if (questInfo.isMiniQuest()) {
             String type = questInfo.getName().split(" ")[0];
 
-            String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
+            String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(Reference.URLs.createWikiTitleUnencoded(wikiName));
+            Utils.openUrl(Reference.URLs.createWikiTitleLookup(Reference.URLs.encodeForWikiTitle(wikiName)));
             return;
         }
 
-        String url = Reference.URLs.createWikiQuestPageQuery(questInfo.getName());
+        String url = Reference.URLs.createWikiQuestPageQuery(Reference.URLs.encodeForCargoQuery(questInfo.getName()));
         RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(Reference.URLs.createWikiTitle(pageTitle));
+            Utils.openUrl(Reference.URLs.createWikiTitleLookup(Reference.URLs.encodeForWikiTitle(pageTitle)));
             return true;
         });
     }

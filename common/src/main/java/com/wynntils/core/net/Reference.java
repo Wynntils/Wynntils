@@ -6,9 +6,8 @@ package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.WebUtils;
 
-public class Reference {
+public final class Reference {
     private static final String WYNN_API_KEY = "XRSxAkA6OXKek9Zvds5sRqZ4ZK0YcE6wRyHx5IE6wSfr";
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
@@ -24,7 +23,7 @@ public class Reference {
         return WYNN_API_KEY;
     }
 
-    public static class URLs {
+    public static final class URLs {
         private static final String ATHENA_BASE = "https://athena.wynntils.com";
         private static final String DISCORD_INVITE = "https://discord.gg/SZuNem8";
         private static final String DISCOVERIES = "https://api.wynntils.com/discoveries.json";
@@ -117,28 +116,24 @@ public class Reference {
             return WYNNTILS_PATREON;
         }
 
-        public static String createGoogleTranslation(String toLanguage, String encodedMessage) {
-            return String.format(GOOGLE_TRANSLATION, toLanguage, encodedMessage);
+        public static String createGoogleTranslation(String toLanguage, String message) {
+            return String.format(GOOGLE_TRANSLATION, StringUtils.encodeUrl(toLanguage), StringUtils.encodeUrl(message));
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(PLAYER_STATS, playerName);
+            return String.format(PLAYER_STATS, StringUtils.encodeUrl(playerName));
         }
 
-        public static String createWikiTitleUnencoded(String wikiName) {
-            return String.format(WIKI_TITLE_LOOKUP, wikiName);
-        }
-
-        public static String createWikiTitle(String pageTitle) {
-            return String.format(WIKI_TITLE_LOOKUP, WebUtils.encodeForWikiTitle(pageTitle));
+        public static String createWikiTitleLookup(String pageTitle) {
+            return String.format(WIKI_TITLE_LOOKUP, StringUtils.encodeUrl(pageTitle));
         }
 
         public static String createWikiDiscoveryQuery(String name) {
-            return String.format(WIKI_DISCOVERY_QUERY, WebUtils.encodeForWikiTitle(name));
+            return String.format(WIKI_DISCOVERY_QUERY, StringUtils.encodeUrl(name));
         }
 
         public static String createWikiQuestPageQuery(String name) {
-            return String.format(WIKI_QUEST_PAGE_QUERY, WebUtils.encodeForCargoQuery(name));
+            return String.format(WIKI_QUEST_PAGE_QUERY, StringUtils.encodeUrl(name));
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
@@ -146,11 +141,19 @@ public class Reference {
         }
 
         public static String createWynntilsRegisterToken(String token) {
-            return String.format(WYNNTILS_REGISTER_TOKEN, token);
+            return String.format(WYNNTILS_REGISTER_TOKEN, StringUtils.encodeUrl(token));
         }
 
         public static void reloadUrls() {
             // FIXME: Not implemented yet
+        }
+
+        public static String encodeForCargoQuery(String name) {
+            return "'" + name.replace("'", "\\'") + "'";
+        }
+
+        public static String encodeForWikiTitle(String pageTitle) {
+            return pageTitle.replace(" ", "_");
         }
     }
 }
