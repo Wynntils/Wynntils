@@ -75,7 +75,7 @@ public class GuideGearItemStack extends AbstractButton {
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Utils.openUrl(Reference.URLs.createWynndataItemLookup(unformattedName));
+            Utils.openUrl(Reference.URLs.buildUrl(Reference.URLs.WYNNDATA_ITEM_LOOKUP, unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {

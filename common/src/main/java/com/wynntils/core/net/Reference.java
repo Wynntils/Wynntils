@@ -93,34 +93,6 @@ public final class Reference {
             return String.format(getUrl(urlId), encodedArguments);
         }
 
-        public static String createGoogleTranslation(String toLanguage, String message) {
-            return buildUrl(GOOGLE_TRANSLATION, toLanguage, message);
-        }
-
-        public static String createPlayerStats(String playerName) {
-            return buildUrl(PLAYER_STATS, playerName);
-        }
-
-        public static String createWikiTitleLookup(String pageTitle) {
-            return buildUrl(WIKI_TITLE_LOOKUP, pageTitle);
-        }
-
-        public static String createWikiDiscoveryQuery(String name) {
-            return buildUrl(WIKI_DISCOVERY_QUERY, name);
-        }
-
-        public static String createWikiQuestPageQuery(String name) {
-            return buildUrl(WIKI_QUEST_PAGE_QUERY, name);
-        }
-
-        public static String createWynndataItemLookup(String unformattedName) {
-            return buildUrl(WYNNDATA_ITEM_LOOKUP, unformattedName);
-        }
-
-        public static String createWynntilsRegisterToken(String token) {
-            return buildUrl(WYNNTILS_REGISTER_TOKEN, token);
-        }
-
         public static void reloadUrls() {
             // FIXME: Not implemented yet
         }
@@ -133,7 +105,7 @@ public final class Reference {
             return pageTitle.replace(" ", "_");
         }
 
-        public static void init() {
+        private static void init() {
             urlMap = new HashMap<>();
             try {
                 InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json");
@@ -144,9 +116,6 @@ public final class Reference {
                 for (UrlInfo urlInfo : urlInfos) {
                     urlMap.put(urlInfo.id, urlInfo);
                 }
-
-                String test = buildUrl(GOOGLE_TRANSLATION, "apa", "banan");
-                System.out.println(test);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

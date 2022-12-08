@@ -45,7 +45,7 @@ public class TokenCommand extends CommandBase {
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT, new TextComponent("Click me to register an account.")))
                         .withClickEvent((new ClickEvent(
-                                ClickEvent.Action.OPEN_URL, Reference.URLs.createWynntilsRegisterToken(token))))
+                                ClickEvent.Action.OPEN_URL, Reference.URLs.buildUrl(Reference.URLs.WYNNTILS_REGISTER_TOKEN, token))))
                         .withColor(ChatFormatting.DARK_AQUA)
                         .withUnderlined(true));
         text.append(response);

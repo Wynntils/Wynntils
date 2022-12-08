@@ -87,7 +87,7 @@ public class DiscoveryManager extends CoreManager {
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
         String wikiUrl =
-                Reference.URLs.createWikiTitleLookup(Reference.URLs.encodeForWikiTitle(discoveryInfo.getName()));
+                Reference.URLs.buildUrl(Reference.URLs.WIKI_TITLE_LOOKUP, Reference.URLs.encodeForWikiTitle(discoveryInfo.getName()));
         Utils.openUrl(wikiUrl);
     }
 
@@ -130,7 +130,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String url = Reference.URLs.createWikiDiscoveryQuery(Reference.URLs.encodeForWikiTitle(name));
+        String url = Reference.URLs.buildUrl(Reference.URLs.WIKI_DISCOVERY_QUERY, Reference.URLs.encodeForWikiTitle(name));
         RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
