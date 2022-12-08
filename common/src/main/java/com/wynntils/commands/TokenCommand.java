@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -44,8 +45,7 @@ public class TokenCommand extends CommandBase {
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT, new TextComponent("Click me to register an account.")))
                         .withClickEvent((new ClickEvent(
-                                ClickEvent.Action.OPEN_URL,
-                                "https://account.wynntils.com/register.php?token=" + token)))
+                                ClickEvent.Action.OPEN_URL, Reference.URLs.getWynntilsRegisterToken() + token)))
                         .withColor(ChatFormatting.DARK_AQUA)
                         .withUnderlined(true));
         text.append(response);

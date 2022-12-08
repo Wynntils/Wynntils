@@ -116,11 +116,11 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent("https://www.patreon.com/Wynntils")
+        MutableComponent url = new TextComponent(Reference.URLs.getWynntilsPatreon())
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.patreon.com/Wynntils"))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Reference.URLs.getWynntilsPatreon()))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));

@@ -42,6 +42,8 @@ public class Reference {
         private static final String WIKI_QUEST_PAGE_QUERY =
                 "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
         private static final String WYNNDATA_ITEM_BASE = "https://www.wynndata.tk/i/";
+        private static final String WYNNTILS_PATREON = "https://www.patreon.com/Wynntils";
+        private static final String WYNNTILS_REGISTER_TOKEN = "https://account.wynntils.com/register.php?token=";
 
         private static String getAthenaBase() {
             return ATHENA_BASE;
@@ -125,6 +127,14 @@ public class Reference {
 
         public static String getWynndataItemBase() {
             return WYNNDATA_ITEM_BASE;
+        }
+
+        public static String getWynntilsPatreon() {
+            return WYNNTILS_PATREON;
+        }
+
+        public static String getWynntilsRegisterToken() {
+            return WYNNTILS_REGISTER_TOKEN;
         }
 
         public static void reloadUrls() {
