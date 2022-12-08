@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,38 +78,40 @@ public final class Reference {
         }
 
         public static String getUrl(String urlId) {
-            return getUrl(urlId);
+            return urlMap.get(urlId).getUrl();
+        }
+
+        public static String buildUrl(String urlId, String... arguments) {
+            String[] encodedArguments = Arrays.stream(arguments).map(StringUtils::encodeUrl).toArray(String[]::new);
+            return String.format(getUrl(urlId), encodedArguments);
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
-            return String.format(
-                    getUrl(GOOGLE_TRANSLATION),
-                    StringUtils.encodeUrl(toLanguage),
-                    StringUtils.encodeUrl(message));
+            return buildUrl(GOOGLE_TRANSLATION, toLanguage, message);
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(getUrl(PLAYER_STATS), StringUtils.encodeUrl(playerName));
+            return buildUrl(PLAYER_STATS, playerName);
         }
 
         public static String createWikiTitleLookup(String pageTitle) {
-            return String.format(getUrl(WIKI_TITLE_LOOKUP), StringUtils.encodeUrl(pageTitle));
+            return buildUrl(WIKI_TITLE_LOOKUP, pageTitle);
         }
 
         public static String createWikiDiscoveryQuery(String name) {
-            return String.format(getUrl(WIKI_DISCOVERY_QUERY), StringUtils.encodeUrl(name));
+            return buildUrl(WIKI_DISCOVERY_QUERY, name);
         }
 
         public static String createWikiQuestPageQuery(String name) {
-            return String.format(getUrl(WIKI_QUEST_PAGE_QUERY), StringUtils.encodeUrl(name));
+            return buildUrl(WIKI_QUEST_PAGE_QUERY, name);
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(getUrl(WYNNDATA_ITEM_LOOKUP), StringUtils.encodeUrl(unformattedName));
+            return buildUrl(WYNNDATA_ITEM_LOOKUP, unformattedName);
         }
 
         public static String createWynntilsRegisterToken(String token) {
-            return String.format(getUrl(WYNNTILS_REGISTER_TOKEN), StringUtils.encodeUrl(token));
+            return buildUrl(WYNNTILS_REGISTER_TOKEN, token);
         }
 
         public static void reloadUrls() {
@@ -134,6 +137,9 @@ public final class Reference {
                 for (UrlInfo urlInfo : urlInfos) {
                     urlMap.put(urlInfo.id, urlInfo);
                 }
+
+                String test = buildUrl(GOOGLE_TRANSLATION, "apa", "banan");
+                System.out.println(test);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
