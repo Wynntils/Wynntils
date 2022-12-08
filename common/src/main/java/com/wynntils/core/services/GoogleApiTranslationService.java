@@ -6,6 +6,7 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.wynntils.core.net.Reference;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
 import com.wynntils.utils.StringUtils;
@@ -28,8 +29,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
         }
 
         String encodedMessage = StringUtils.encodeUrl(message);
-        String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=" + toLanguage
-                + "&dt=t&q=" + encodedMessage;
+        String url = String.format(Reference.URLs.getGoogleTranslation(), toLanguage, encodedMessage);
 
         RequestResponse response = ApiRequester.get(url, "translate-" + requestNumber.getAndIncrement());
         response.handleJsonArray(

@@ -26,6 +26,8 @@ public class Reference {
         private static final String ATHENA_BASE = "https://athena.wynntils.com";
         private static final String DISCORD_INVITE = "https://discord.gg/SZuNem8";
         private static final String DISCOVERIES = "https://api.wynntils.com/discoveries.json";
+        private static final String GOOGLE_TRANSLATION =
+                "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%s&dt=t&q=%s";
         private static final String ITEM_GUESSES = "https://wynndata.tk/api/unid/data.json";
         private static final String UPDATE_CHECK = "https://athena.wynntils.com/version/latest/ce";
         private static final String MAPS =
@@ -83,6 +85,10 @@ public class Reference {
 
         public static String getDiscoveries() {
             return DISCOVERIES;
+        }
+
+        public static String getGoogleTranslation() {
+            return GOOGLE_TRANSLATION;
         }
 
         public static String getItemGuesses() {
