@@ -1,9 +1,21 @@
+## [0.0.1-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.134...v0.0.1-alpha.135) (2022-12-08)
+
+
+### Code Refactoring
+
+* Shape up WynntilsAccountManager ([#798](https://github.com/Wynntils/Artemis/issues/798)) ([65cd61b](https://github.com/Wynntils/Artemis/commit/65cd61b39b165545175681b51230f521e32d77f1))
+
 ## [0.0.1-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.133...v0.0.1-alpha.134) (2022-12-07)
 
 
 ### Code Refactoring
 
 * Decouple TerritoryManager and DiscoveryInfo ([#795](https://github.com/Wynntils/Artemis/issues/795)) ([3a28761](https://github.com/Wynntils/Artemis/commit/3a28761def9ff52d7b6fc4ed02d7f5f08c5fab10))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.134 [skip ci] ([62afb2d](https://github.com/Wynntils/Artemis/commit/62afb2d138f786fc1d80a32026e198598aead6f7))
 
 ## [0.0.1-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.132...v0.0.1-alpha.133) (2022-12-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.131 [skip ci] ([c931a94](https://github.com/Wynntils/Artemis/commit/c931a94a354ed362c18b764adebd8571a9c06e15))
-
-## [0.0.1-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.129...v0.0.1-alpha.130) (2022-12-07)
-
-
-### Code Refactoring
-
-* In preparation of the webapi refactoring, extract managers/model out of WebManager ([#791](https://github.com/Wynntils/Artemis/issues/791)) ([c060406](https://github.com/Wynntils/Artemis/commit/c0604066b99a7b5e4ddf36622ba49fe17c1f6fed))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.130 [skip ci] ([2ea140f](https://github.com/Wynntils/Artemis/commit/2ea140f8aef1b98ab305cbc7f9b97dfebe1bbf2d))
 
