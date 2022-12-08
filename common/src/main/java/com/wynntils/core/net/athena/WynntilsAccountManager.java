@@ -16,12 +16,10 @@ import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.MD5Verification;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.crypto.SecretKey;
@@ -36,29 +34,23 @@ import org.apache.commons.codec.binary.Hex;
 public class WynntilsAccountManager extends CoreManager {
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
-    public static WynntilsAccountManager account = null;
 
-    private String token;
-    private boolean ready = false;
+    private static String token;
+    private static boolean loggedIn = false;
 
-    private final HashMap<String, String> encodedConfigs = new HashMap<>();
-    private final HashMap<String, String> md5Verifications = new HashMap<>();
+    private static final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private static final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public static void init() {
-        setupUserAccount();
+        login();
     }
 
-    private static boolean isLoggedIn() {
-        return (account != null && account.isConnected());
-    }
+    private static void login() {
+        if (loggedIn) return;
 
-    private static void setupUserAccount() {
-        if (isLoggedIn()) return;
+        doLogin();
 
-        account = new WynntilsAccountManager();
-        boolean accountSetup = account.login();
-
-        if (!accountSetup) {
+        if (!loggedIn) {
             MutableComponent failed = new TextComponent(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
@@ -77,20 +69,12 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
-    public static Optional<WynntilsAccountManager> getAccount() {
-        return Optional.ofNullable(account);
-    }
-
-    public static boolean isAthenaOnline() {
-        return (account != null && account.isConnected());
-    }
-
-    public String getToken() {
+    public static String getToken() {
         return token;
     }
 
-    private boolean isConnected() {
-        return ready;
+    public static boolean isLoggedIn() {
+        return loggedIn;
     }
 
     public HashMap<String, String> getEncodedConfigs() {
@@ -101,8 +85,8 @@ public class WynntilsAccountManager extends CoreManager {
         encodedConfigs.remove(name);
     }
 
-    private boolean login() {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return false;
+    private static void doLogin() {
+        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return;
 
         WebReader webReader = WebManager.getApiUrls().get();
         RequestHandler handler = WebManager.getHandler();
@@ -144,18 +128,16 @@ public class WynntilsAccountManager extends CoreManager {
                             .entrySet()
                             .forEach((k) ->
                                     encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
-                    ready = true;
+                    loggedIn = true;
                     WynntilsMod.info("Successfully connected to Athena!");
                     return true;
                 })
                 .build();
 
         handler.addAndDispatch(responseEncryption);
-
-        return true;
     }
 
-    private String parseAndJoinPublicKey(String key) {
+    private static String parseAndJoinPublicKey(String key) {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());
 
@@ -179,10 +161,5 @@ public class WynntilsAccountManager extends CoreManager {
             WynntilsMod.error("Failed to parse public key.", ex);
             return "";
         }
-    }
-
-    public String getMD5Verification(String key) {
-        String digest = md5Verifications.getOrDefault(key, null);
-        return MD5Verification.isMd5Digest(digest) ? digest : null;
     }
 }
