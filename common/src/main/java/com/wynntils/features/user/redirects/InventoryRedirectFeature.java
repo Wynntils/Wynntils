@@ -75,6 +75,8 @@ public class InventoryRedirectFeature extends UserFeature {
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
+
+                return;
             }
         }
 
@@ -85,6 +87,8 @@ public class InventoryRedirectFeature extends UserFeature {
                 String potionCount = matcher.group(1);
                 String potionMessage = String.format("§a+%s Potion Charges", potionCount);
                 NotificationManager.queueMessage(potionMessage);
+
+                return;
             }
         }
     }
