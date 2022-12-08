@@ -35,6 +35,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction horse = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
@@ -68,6 +71,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
         register(new HorseSpawnFailRedirector());
+        register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
@@ -335,6 +339,30 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "No room for a horse!";
+        }
+    }
+
+    private class IngredientPouchSellRedirector extends SimpleRedirector {
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("§4You have sold (.+) ingredients for a total of §r§e(.+)§r§4.");
+
+        @Override
+        protected Pattern getNormalPattern() {
+            return NORMAL_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return ingredientPouch;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            Integer ingredientCount = Integer.parseInt(matcher.group(1));
+            String ingredientSting = ingredientCount.toString() + " ingredient" + (ingredientCount == 1 ? "" : "s");
+            
+            String emeraldString = matcher.group(2);
+
+            return ChatFormatting.DARK_PURPLE + "Sold " + ingredientSting + " for " + ChatFormatting.GREEN + emeraldString + ChatFormatting.DARK_PURPLE + ".";
         }
     }
 
