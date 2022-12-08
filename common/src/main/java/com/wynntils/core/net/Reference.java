@@ -46,6 +46,29 @@ public final class Reference {
 
     public static final class URLs {
         private static final Gson GSON = new Gson();
+        public static final String ATHENA_AUTH_GET_PUBLIC_KEY = "athenaAuthGetPublicKey";
+        public static final String ATHENA_AUTH_RESPONSE = "athenaAuthResponse";
+        public static final String ATHENA_INGREDIENT_LIST = "athenaIngredientList";
+        public static final String ATHENA_ITEM_LIST = "athenaItemList";
+        public static final String ATHENA_SERVER_LIST = "athenaServerList";
+        public static final String ATHENA_TERRITORY_LIST = "athenaTerritoryList";
+        public static final String ATHENA_USER_INFO = "athenaUserInfo";
+        public static final String DISCORD_INVITE = "discordInvite";
+        public static final String DISCOVERIES = "discoveries";
+        public static final String GOOGLE_TRANSLATION = "googleTranslation";
+        public static final String ITEM_GUESSES = "itemGuesses";
+        public static final String MAPS = "maps";
+        public static final String ONLINE_PLAYERS = "onlinePlayers";
+        public static final String PLACES = "places";
+        public static final String PLAYER_STATS = "playerStats";
+        public static final String SERVICES = "services";
+        public static final String UPDATE_CHECK = "updateCheck";
+        public static final String WIKI_DISCOVERY_QUERY = "wikiDiscoveryQuery";
+        public static final String WIKI_QUEST_PAGE_QUERY = "wikiQuestPageQuery";
+        public static final String WIKI_TITLE_LOOKUP = "wikiTitleLookup";
+        public static final String WYNNDATA_ITEM_LOOKUP = "wynndataItemLookup";
+        public static final String WYNNTILS_PATREON = "wynntilsPatreon";
+        public static final String WYNNTILS_REGISTER_TOKEN = "wynntilsRegisterToken";
 
         private static Map<String, UrlInfo> urlMap;
 
@@ -58,98 +81,98 @@ public final class Reference {
         }
 
         public static String getAthenaAuthGetPublicKey() {
-            return getUrl("athenaAuthGetPublicKey");
+            return getUrl(ATHENA_AUTH_GET_PUBLIC_KEY);
         }
 
         public static String getAthenaAuthResponse() {
-            return getUrl("athenaAuthResponse");
+            return getUrl(ATHENA_AUTH_RESPONSE);
         }
 
         public static String getAthenaIngredientList() {
-            return getUrl("athenaIngredientList");
+            return getUrl(ATHENA_INGREDIENT_LIST);
         }
 
         public static String getAthenaItemList() {
-            return getUrl("athenaItemList");
+            return getUrl(ATHENA_ITEM_LIST);
         }
 
         public static String getAthenaServerList() {
-            return getUrl("athenaServerList");
+            return getUrl(ATHENA_SERVER_LIST);
         }
 
         public static String getAthenaTerritoryList() {
-            return getUrl("athenaTerritoryList");
+            return getUrl(ATHENA_TERRITORY_LIST);
         }
 
         public static String getAthenaUserInfo() {
-            return getUrl("athenaUserInfo");
+            return getUrl(ATHENA_USER_INFO);
         }
 
         public static String getDiscordInvite() {
-            return getUrl("discordInvite");
+            return getUrl(DISCORD_INVITE);
         }
 
         public static String getDiscoveries() {
-            return getUrl("discoveries");
+            return getUrl(DISCOVERIES);
         }
 
         public static String getItemGuesses() {
-            return getUrl("itemGuesses");
+            return getUrl(ITEM_GUESSES);
         }
 
         public static String getMaps() {
-            return getUrl("maps");
+            return getUrl(MAPS);
         }
 
         public static String getOnlinePlayers() {
-            return getUrl("onlinePlayers");
+            return getUrl(ONLINE_PLAYERS);
         }
 
         public static String getPlaces() {
-            return getUrl("places");
+            return getUrl(PLACES);
         }
 
         public static String getServices() {
-            return getUrl("services");
+            return getUrl(SERVICES);
         }
 
         public static String getUpdateCheck() {
-            return getUrl("updateCheck");
+            return getUrl(UPDATE_CHECK);
         }
 
         public static String getWynntilsPatreon() {
-            return getUrl("wynntilsPatreon");
+            return getUrl(WYNNTILS_PATREON);
         }
 
         public static String createGoogleTranslation(String toLanguage, String message) {
             return String.format(
-                    getUrl("googleTranslation"),
+                    getUrl(GOOGLE_TRANSLATION),
                     StringUtils.encodeUrl(toLanguage),
                     StringUtils.encodeUrl(message));
         }
 
         public static String createPlayerStats(String playerName) {
-            return String.format(getUrl("playerStats"), StringUtils.encodeUrl(playerName));
+            return String.format(getUrl(PLAYER_STATS), StringUtils.encodeUrl(playerName));
         }
 
         public static String createWikiTitleLookup(String pageTitle) {
-            return String.format(getUrl("wikiTitleLookup"), StringUtils.encodeUrl(pageTitle));
+            return String.format(getUrl(WIKI_TITLE_LOOKUP), StringUtils.encodeUrl(pageTitle));
         }
 
         public static String createWikiDiscoveryQuery(String name) {
-            return String.format(getUrl("wikiDiscoveryQuery"), StringUtils.encodeUrl(name));
+            return String.format(getUrl(WIKI_DISCOVERY_QUERY), StringUtils.encodeUrl(name));
         }
 
         public static String createWikiQuestPageQuery(String name) {
-            return String.format(getUrl("wikiQuestPageQuery"), StringUtils.encodeUrl(name));
+            return String.format(getUrl(WIKI_QUEST_PAGE_QUERY), StringUtils.encodeUrl(name));
         }
 
         public static String createWynndataItemLookup(String unformattedName) {
-            return String.format(getUrl("wynndataItemLookup"), StringUtils.encodeUrl(unformattedName));
+            return String.format(getUrl(WYNNDATA_ITEM_LOOKUP), StringUtils.encodeUrl(unformattedName));
         }
 
         public static String createWynntilsRegisterToken(String token) {
-            return String.format(getUrl("wynntilsRegisterToken"), StringUtils.encodeUrl(token));
+            return String.format(getUrl(WYNNTILS_REGISTER_TOKEN), StringUtils.encodeUrl(token));
         }
 
         public static void reloadUrls() {
