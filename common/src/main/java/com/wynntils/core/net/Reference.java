@@ -95,22 +95,14 @@ public final class Reference {
             if (encoding == null || encoding.isEmpty()) return Function.identity();
 
             return switch (encoding) {
-                case "cargo" -> URLs::encodeForCargoQuery;
-                case "wiki" -> URLs::encodeForWikiTitle;
+                case "cargo" -> (s -> "'" + s.replace("'", "\\'") + "'");
+                case "wiki" -> (s -> s.replace(" ", "_"));
                 default -> throw new RuntimeException("Unknown URL encoding: " + encoding);
             };
         }
 
         public static void reloadUrls() {
             // FIXME: Not implemented yet
-        }
-
-        public static String encodeForCargoQuery(String name) {
-            return "'" + name.replace("'", "\\'") + "'";
-        }
-
-        public static String encodeForWikiTitle(String pageTitle) {
-            return pageTitle.replace(" ", "_");
         }
 
         private static void init() {
