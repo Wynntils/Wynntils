@@ -487,7 +487,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            return ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleporation!";
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!";
         }
     }
 
