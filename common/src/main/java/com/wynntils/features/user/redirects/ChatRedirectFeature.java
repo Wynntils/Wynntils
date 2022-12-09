@@ -343,12 +343,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class IngredientPouchSellRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN =
+        private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
