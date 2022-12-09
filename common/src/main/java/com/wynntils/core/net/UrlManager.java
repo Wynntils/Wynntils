@@ -43,10 +43,32 @@ public final class UrlManager extends CoreManager {
     public static final String API_WIKI_DISCOVERY_QUERY = "apiWikiDiscoveryQuery";
     public static final String API_WIKI_QUEST_PAGE_QUERY = "apiWikiQuestPageQuery";
     public static final String API_WYNNCRAFT_ONLINE_PLAYERS = "apiWynncraftOnlinePlayers";
+
+    // dataAthenaIngredientList is based on
+    // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing
+    // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
+    // in Athena
     public static final String DATA_ATHENA_INGREDIENT_LIST = "dataAthenaIngredientList";
+
+    // dataAthenaItemList is based on
+    // https://api.wynncraft.com/public_api.php?action=itemDB&category=all
+    // but the data is massaged into another form, and wynnBuilderID is injected from
+    // https://wynnbuilder.github.io/compress.json
     public static final String DATA_ATHENA_ITEM_LIST = "dataAthenaItemList";
+
+    // dataAthenaServerList is based on
+    // https://api.wynncraft.com/public_api.php?action=onlinePlayers
+    // but injects a firstSeen timestamp when the server was first noticed by Athena
     public static final String DATA_ATHENA_SERVER_LIST = "dataAthenaServerList";
+
+    // dataAthenaTerritoryList is based on
+    // https://api.wynncraft.com/public_api.php?action=territoryList
+    // but guild prefix is injected based on
+    // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
+    // and guild color is injected based on values maintained on Athena, and a constant
+    // level = 1 is also injected.
     public static final String DATA_ATHENA_TERRITORY_LIST = "dataAthenaTerritoryList";
+
     public static final String DATA_STATIC_COMBAT_LOCATIONS = "dataStaticCombatLocations";
     public static final String DATA_STATIC_DISCOVERIES = "dataStaticDiscoveries";
     public static final String DATA_STATIC_ITEM_GUESSES = "dataStaticItemGuesses";
