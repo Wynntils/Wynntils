@@ -258,6 +258,8 @@ public class MinimapFeature extends UserFeature {
                     .toList();
             poisToRender.addAll(playerPois);
 
+            poisToRender.addAll(MapModel.getCombatPois());
+
             // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
             poisToRender.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
             for (Poi poi : poisToRender) {
