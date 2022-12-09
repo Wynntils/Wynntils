@@ -1,9 +1,21 @@
+## [0.0.1-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.139...v0.0.1-alpha.140) (2022-12-09)
+
+
+### New Features
+
+* Redirects "Selling Ingredients" Ingredient Pouch Message to Overlay ([#801](https://github.com/Wynntils/Artemis/issues/801)) ([5dd84b1](https://github.com/Wynntils/Artemis/commit/5dd84b10476fe152b1db9650fab2577c925b5237))
+
 ## [0.0.1-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.138...v0.0.1-alpha.139) (2022-12-09)
 
 
 ### New Features
 
 * Redirect "Aggressive Mobs Nearby" Scroll Teleport Message ([#802](https://github.com/Wynntils/Artemis/issues/802)) ([b084b76](https://github.com/Wynntils/Artemis/commit/b084b76ee5661b9d888ded414ee65d9604a989d4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.139 [skip ci] ([69a7d9c](https://github.com/Wynntils/Artemis/commit/69a7d9c92c6ba348a019348699846b9761fdbf0c))
 
 ## [0.0.1-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.137...v0.0.1-alpha.138) (2022-12-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.136 [skip ci] ([8cd2996](https://github.com/Wynntils/Artemis/commit/8cd2996c5fffc6266aac72ba8c943651bd6254a5))
-
-## [0.0.1-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.134...v0.0.1-alpha.135) (2022-12-08)
-
-
-### Code Refactoring
-
-* Shape up WynntilsAccountManager ([#798](https://github.com/Wynntils/Artemis/issues/798)) ([65cd61b](https://github.com/Wynntils/Artemis/commit/65cd61b39b165545175681b51230f521e32d77f1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.135 [skip ci] ([286fb31](https://github.com/Wynntils/Artemis/commit/286fb315f45310e209c4aa25b43f070839f78435))
 
