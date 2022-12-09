@@ -70,6 +70,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
+        register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
@@ -320,6 +321,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_PURPLE + "Your horse has despawned.";
+        }
+    }
+
+    private class HorseScaredRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§dYour horse is scared to come out right now, too many mobs are nearby.");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return horse;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!";
         }
     }
 
