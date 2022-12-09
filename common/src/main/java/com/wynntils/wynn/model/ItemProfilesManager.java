@@ -60,8 +60,8 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_ITEM_GUESSES), "item_guesses.json", "item_guesses");
+        DownloadableResource dl = Downloader.download(
+                UrlManager.getUrl(UrlManager.DATA_STATIC_ITEM_GUESSES), "item_guesses.json", "item_guesses");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
