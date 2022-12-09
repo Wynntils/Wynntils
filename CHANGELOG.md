@@ -1,9 +1,21 @@
+## [0.0.1-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.140...v0.0.1-alpha.141) (2022-12-09)
+
+
+### New Features
+
+* Adds "Combat Locations" (Raids/Dungeons/Caves/Grind Spots/Shrines) to the Map ([#768](https://github.com/Wynntils/Artemis/issues/768)) ([3418b50](https://github.com/Wynntils/Artemis/commit/3418b50797a77af86c673bc7af0bb452d61460ae))
+
 ## [0.0.1-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.139...v0.0.1-alpha.140) (2022-12-09)
 
 
 ### New Features
 
 * Redirects "Selling Ingredients" Ingredient Pouch Message to Overlay ([#801](https://github.com/Wynntils/Artemis/issues/801)) ([5dd84b1](https://github.com/Wynntils/Artemis/commit/5dd84b10476fe152b1db9650fab2577c925b5237))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.140 [skip ci] ([cd3745f](https://github.com/Wynntils/Artemis/commit/cd3745fff76149671208957b8fce2b9a49b3ce9b))
 
 ## [0.0.1-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.138...v0.0.1-alpha.139) (2022-12-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.137 [skip ci] ([9301eb7](https://github.com/Wynntils/Artemis/commit/9301eb70932891b45312ea33159b6c1f19989c6c))
-
-## [0.0.1-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.135...v0.0.1-alpha.136) (2022-12-08)
-
-
-### Bug Fixes
-
-* NotificationManager / MessageContainer refactors + handle editing repeated messages  ([#799](https://github.com/Wynntils/Artemis/issues/799)) ([b8ef699](https://github.com/Wynntils/Artemis/commit/b8ef699cbef4b6f35ae069e92e0b0c9c4770310b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.136 [skip ci] ([8cd2996](https://github.com/Wynntils/Artemis/commit/8cd2996c5fffc6266aac72ba8c943651bd6254a5))
 
