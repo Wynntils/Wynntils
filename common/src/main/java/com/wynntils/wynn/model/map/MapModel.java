@@ -160,7 +160,7 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
-                    List<CombatProfileList> combatProfileLists = GSON.fromJson(json, type);
+                    List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(json, type);
                     for (var combatList : combatProfileLists) {
                         CombatKind kind = CombatKind.fromString(combatList.type);
                         if (kind != null) {
