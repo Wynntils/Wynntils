@@ -53,6 +53,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction speed = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction teleport = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
 
     @Config
@@ -77,6 +80,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
+        register(new TeleportationFailRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
         register(new UnusedSkillAndAbilityPointsRedirector());
@@ -465,6 +469,25 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.GRAY + "Lesser potion replaced.";
+        }
+    }
+
+    private class TeleportationFailRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return teleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!";
         }
     }
 
