@@ -30,9 +30,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapModel extends Model {
-    private static final String COMBAT_LOCATIONS_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json";
-
     private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
     private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
@@ -130,7 +127,7 @@ public final class MapModel extends Model {
 
     private static void loadCombat() {
         DownloadableResource dl =
-                Downloader.download(COMBAT_LOCATIONS_JSON_URL, "maps/combat.json", "maps-combat");
+                Downloader.download(UrlManager.getUrl(UrlManager.COMBAT_LOCATIONS), "maps/combat.json", "maps-combat");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 

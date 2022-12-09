@@ -32,6 +32,7 @@ public final class UrlManager extends CoreManager {
     public static final String ATHENA_SERVER_LIST = "athenaServerList";
     public static final String ATHENA_TERRITORY_LIST = "athenaTerritoryList";
     public static final String ATHENA_USER_INFO = "athenaUserInfo";
+    public static final String COMBAT_LOCATIONS = "combatLocations";
     public static final String DISCORD_INVITE = "discordInvite";
     public static final String DISCOVERIES = "discoveries";
     public static final String GOOGLE_TRANSLATION = "googleTranslation";

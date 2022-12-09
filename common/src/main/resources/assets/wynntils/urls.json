@@ -28,6 +28,11 @@
     "url": "https://athena.wynntils.com/user/getInfo"
   },
   {
+    "id": "combatLocations",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json",
+    "md5": "029a6e54066b3348830049f5c1162523"
+  },
+  {
     "id": "discordInvite",
     "url": "https://discord.gg/SZuNem8"
   },
