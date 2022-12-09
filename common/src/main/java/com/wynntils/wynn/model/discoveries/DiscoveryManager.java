@@ -86,8 +86,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, discoveryInfo.getName());
-        Utils.openUrl(wikiUrl);
+        Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {
@@ -129,7 +128,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String url = UrlManager.buildUrl(UrlManager.WIKI_DISCOVERY_QUERY, name);
+        String url = UrlManager.buildUrl(UrlManager.API_WIKI_DISCOVERY_QUERY, name);
         RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
@@ -187,7 +186,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static void updateDiscoveriesResource() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.DISCOVERIES), "discoveries.json", "discoveries");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_DISCOVERIES), "discoveries.json", "discoveries");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 

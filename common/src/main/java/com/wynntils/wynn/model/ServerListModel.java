@@ -55,7 +55,7 @@ public class ServerListModel extends Model {
     }
 
     public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        URLConnection st = ApiRequester.generateURLRequest(UrlManager.getUrl(UrlManager.ATHENA_SERVER_LIST));
+        URLConnection st = ApiRequester.generateURLRequest(UrlManager.getUrl(UrlManager.DATA_ATHENA_SERVER_LIST));
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
@@ -81,7 +81,7 @@ public class ServerListModel extends Model {
      * @throws IOException thrown by URLConnection
      */
     public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        String url = UrlManager.getUrl(UrlManager.ONLINE_PLAYERS);
+        String url = UrlManager.getUrl(UrlManager.API_WYNNCRAFT_ONLINE_PLAYERS);
         URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);
         InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
         JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();

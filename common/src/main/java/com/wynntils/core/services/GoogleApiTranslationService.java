@@ -27,8 +27,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
             return;
         }
 
-        String url = UrlManager.buildUrl(UrlManager.GOOGLE_TRANSLATION, toLanguage, message);
-
+        String url = UrlManager.buildUrl(UrlManager.API_GOOGLE_TRANSLATION, toLanguage, message);
         RequestResponse response = ApiRequester.get(url, "translate-" + requestNumber.getAndIncrement());
         response.handleJsonArray(
                 json -> {

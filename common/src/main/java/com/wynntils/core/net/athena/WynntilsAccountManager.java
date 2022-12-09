@@ -81,7 +81,7 @@ public class WynntilsAccountManager extends CoreManager {
 
         // generating secret key
         RequestResponse response =
-                ApiRequester.get(UrlManager.getUrl(UrlManager.ATHENA_AUTH_GET_PUBLIC_KEY), "getPublicKey");
+                ApiRequester.get(UrlManager.getUrl(UrlManager.API_ATHENA_AUTH_PUBLIC_KEY), "getPublicKey");
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
@@ -97,7 +97,7 @@ public class WynntilsAccountManager extends CoreManager {
                 "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
         RequestResponse response2 =
-                ApiRequester.post(UrlManager.getUrl(UrlManager.ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
+                ApiRequester.post(UrlManager.getUrl(UrlManager.API_ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

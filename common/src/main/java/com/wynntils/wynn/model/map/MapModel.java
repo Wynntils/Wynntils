@@ -63,7 +63,7 @@ public final class MapModel extends Model {
         MAPS.clear();
 
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.MAPS), "maps/maps.json", "map-parts");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_MAPS), "maps/maps.json", "map-parts");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -93,7 +93,7 @@ public final class MapModel extends Model {
 
     private static void loadPlaces() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.PLACES), "maps/places.json", "maps-places");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_PLACES), "maps/places.json", "maps-places");
         dl.handleJsonObject(json -> {
             PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -105,7 +105,7 @@ public final class MapModel extends Model {
 
     private static void loadServices() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.SERVICES), "maps/services.json", "maps-services");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_SERVICES), "maps/services.json", "maps-services");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
@@ -127,7 +127,7 @@ public final class MapModel extends Model {
 
     private static void loadCombat() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.COMBAT_LOCATIONS), "maps/combat.json", "maps-combat");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_COMBAT_LOCATIONS), "maps/combat.json", "maps-combat");
         dl.handleJsonArray(json -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 

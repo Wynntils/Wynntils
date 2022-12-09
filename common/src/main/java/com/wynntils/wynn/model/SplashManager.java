@@ -34,7 +34,7 @@ public class SplashManager extends CoreManager {
 
     private static void updateCurrentSplash() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.SPLASHES), "splashes.json", "splashes");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_SPLASHES), "splashes.json", "splashes");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = GSON.fromJson(json, type);

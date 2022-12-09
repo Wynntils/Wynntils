@@ -25,32 +25,42 @@ public final class UrlManager extends CoreManager {
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final Gson GSON = new Gson();
 
-    public static final String ATHENA_AUTH_GET_PUBLIC_KEY = "athenaAuthGetPublicKey";
-    public static final String ATHENA_AUTH_RESPONSE = "athenaAuthResponse";
-    public static final String ATHENA_INGREDIENT_LIST = "athenaIngredientList";
-    public static final String ATHENA_ITEM_LIST = "athenaItemList";
-    public static final String ATHENA_SERVER_LIST = "athenaServerList";
-    public static final String ATHENA_TERRITORY_LIST = "athenaTerritoryList";
-    public static final String ATHENA_USER_INFO = "athenaUserInfo";
-    public static final String COMBAT_LOCATIONS = "combatLocations";
-    public static final String DISCORD_INVITE = "discordInvite";
-    public static final String DISCOVERIES = "discoveries";
-    public static final String GOOGLE_TRANSLATION = "googleTranslation";
-    public static final String ITEM_GUESSES = "itemGuesses";
-    public static final String MAPS = "maps";
-    public static final String ONLINE_PLAYERS = "onlinePlayers";
-    public static final String PLACES = "places";
-    public static final String PLAYER_STATS = "playerStats";
-    public static final String SERVICES = "services";
-    public static final String SPLASHES = "splashes";
-    public static final String URLS = "urls";
-    public static final String UPDATE_CHECK = "updateCheck";
-    public static final String WIKI_DISCOVERY_QUERY = "wikiDiscoveryQuery";
-    public static final String WIKI_QUEST_PAGE_QUERY = "wikiQuestPageQuery";
-    public static final String WIKI_TITLE_LOOKUP = "wikiTitleLookup";
-    public static final String WYNNDATA_ITEM_LOOKUP = "wynndataItemLookup";
-    public static final String WYNNTILS_PATREON = "wynntilsPatreon";
-    public static final String WYNNTILS_REGISTER_TOKEN = "wynntilsRegisterToken";
+    /*
+    URL ids are build up like <TYPE>_<PROVIDER>_<NAME>, where <TYPE> is one of:
+
+    1) API -- this is a REST API call entry point, which will need to be done dynamically
+    2) DATA -- this will download a json file which can be cached locally
+    3) LINK -- this is a link that will be opened in the user's browser
+
+    <PROVIDER> is a moniker for the provider, and <NAME> is a descriptive but short name
+    of the kind of service, data or link this URL is dealing with.
+     */
+    public static final String API_ATHENA_AUTH_PUBLIC_KEY = "apiAthenaAuthPublicKey";
+    public static final String API_ATHENA_AUTH_RESPONSE = "apiAthenaAuthResponse";
+    public static final String API_ATHENA_UPDATE_CHECK = "apiAthenaUpdateCheck";
+    public static final String API_ATHENA_USER_INFO = "apiAthenaUserInfo";
+    public static final String API_GOOGLE_TRANSLATION = "apiGoogleTranslation";
+    public static final String API_WIKI_DISCOVERY_QUERY = "apiWikiDiscoveryQuery";
+    public static final String API_WIKI_QUEST_PAGE_QUERY = "apiWikiQuestPageQuery";
+    public static final String API_WYNNCRAFT_ONLINE_PLAYERS = "apiWynncraftOnlinePlayers";
+    public static final String DATA_ATHENA_INGREDIENT_LIST = "dataAthenaIngredientList";
+    public static final String DATA_ATHENA_ITEM_LIST = "dataAthenaItemList";
+    public static final String DATA_ATHENA_SERVER_LIST = "dataAthenaServerList";
+    public static final String DATA_ATHENA_TERRITORY_LIST = "dataAthenaTerritoryList";
+    public static final String DATA_STATIC_COMBAT_LOCATIONS = "dataStaticCombatLocations";
+    public static final String DATA_STATIC_DISCOVERIES = "dataStaticDiscoveries";
+    public static final String DATA_STATIC_ITEM_GUESSES = "dataStaticItemGuesses";
+    public static final String DATA_STATIC_MAPS = "dataStaticMaps";
+    public static final String DATA_STATIC_PLACES = "dataStaticPlaces";
+    public static final String DATA_STATIC_SERVICES = "dataStaticServices";
+    public static final String DATA_STATIC_SPLASHES = "dataStaticSplashes";
+    public static final String DATA_STATIC_URLS = "dataStaticUrls";
+    public static final String LINK_WIKI_LOOKUP = "linkWikiLookup";
+    public static final String LINK_WYNNCRAFT_PLAYER_STATS = "linkWynncraftPlayerStats";
+    public static final String LINK_WYNNDATA_ITEM_LOOKUP = "linkWynndataItemLookup";
+    public static final String LINK_WYNNTILS_DISCORD_INVITE = "linkWynntilsDiscordInvite";
+    public static final String LINK_WYNNTILS_PATREON = "linkWynntilsPatreon";
+    public static final String LINK_WYNNTILS_REGISTER_ACCOUNT = "linkWynntilsRegisterAccount";
 
     private static Map<String, UrlInfo> urlMap;
 

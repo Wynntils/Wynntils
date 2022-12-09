@@ -102,15 +102,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, wikiName));
+            Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, wikiName));
             return;
         }
 
-        String url = UrlManager.buildUrl(UrlManager.WIKI_QUEST_PAGE_QUERY, questInfo.getName());
+        String url = UrlManager.buildUrl(UrlManager.API_WIKI_QUEST_PAGE_QUERY, questInfo.getName());
         RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(UrlManager.buildUrl(UrlManager.WIKI_TITLE_LOOKUP, pageTitle));
+            Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, pageTitle));
             return true;
         });
     }

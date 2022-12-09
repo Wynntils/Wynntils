@@ -61,7 +61,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemGuesses() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.ITEM_GUESSES), "item_guesses.json", "item_guesses");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_ITEM_GUESSES), "item_guesses.json", "item_guesses");
         dl.handleJsonObject(json -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -80,7 +80,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadItemList() {
         DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.ATHENA_ITEM_LIST), "item_list.json", "item_list");
+                Downloader.download(UrlManager.getUrl(UrlManager.DATA_ATHENA_ITEM_LIST), "item_list.json", "item_list");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -117,7 +117,7 @@ public class ItemProfilesManager extends CoreManager {
 
     private static void tryLoadIngredientList() {
         DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.ATHENA_INGREDIENT_LIST), "ingredient_list.json", "ingredientList");
+                UrlManager.getUrl(UrlManager.DATA_ATHENA_INGREDIENT_LIST), "ingredient_list.json", "ingredientList");
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

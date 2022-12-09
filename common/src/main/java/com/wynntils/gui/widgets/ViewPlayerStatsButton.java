@@ -23,7 +23,7 @@ public class ViewPlayerStatsButton extends AbstractButton {
     @Override
     public void onPress() {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-        Utils.openUrl(UrlManager.buildUrl(UrlManager.PLAYER_STATS, playerName));
+        Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WYNNCRAFT_PLAYER_STATS, playerName));
     }
 
     @Override

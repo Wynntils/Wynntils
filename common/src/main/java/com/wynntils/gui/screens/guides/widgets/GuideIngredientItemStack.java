@@ -74,7 +74,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Utils.openUrl(UrlManager.buildUrl(UrlManager.WYNNDATA_ITEM_LOOKUP, unformattedName));
+            Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WYNNDATA_ITEM_LOOKUP, unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
