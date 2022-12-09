@@ -129,29 +129,25 @@ public final class MapModel extends Model {
     }
 
     private static void loadCombat() {
-        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
-        RequestHandler handler = WebManager.getHandler();
-        handler.addAndDispatch(new RequestBuilder(COMBAT_LOCATIONS_JSON_URL, "maps-combat")
-                .cacheTo(new File(mapDirectory, "combat.json"))
-                .useCacheAsBackup()
-                .handleJsonArray(json -> {
-                    Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
+        DownloadableResource dl =
+                Downloader.download(COMBAT_LOCATIONS_JSON_URL, "maps/combat.json", "maps-combat");
+        dl.handleJsonArray(json -> {
+            Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
-                    List<CombatProfileList> combatProfileLists = GSON.fromJson(json, type);
-                    for (var combatList : combatProfileLists) {
-                        CombatKind kind = CombatKind.fromString(combatList.type);
-                        if (kind != null) {
-                            for (CombatProfileList.CombatProfile profile : combatList.locations) {
-                                COMBAT_POIS.add(new CombatPoi(profile.coordinates, profile.name, kind));
-                            }
-                        } else {
-                            WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);
-                        }
+            List<CombatProfileList> combatProfileLists = GSON.fromJson(json, type);
+            for (var combatList : combatProfileLists) {
+                CombatKind kind = CombatKind.fromString(combatList.type);
+                if (kind != null) {
+                    for (CombatProfileList.CombatProfile profile : combatList.locations) {
+                        COMBAT_POIS.add(new CombatPoi(profile.coordinates, profile.name, kind));
                     }
+                } else {
+                    WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);
+                }
+            }
 
-                    return true;
-                })
-                .build());
+            return true;
+        });
     }
 
     private static class PlacesProfile {
