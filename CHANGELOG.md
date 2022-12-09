@@ -1,9 +1,21 @@
+## [0.0.1-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.138...v0.0.1-alpha.139) (2022-12-09)
+
+
+### New Features
+
+* Redirect "Aggressive Mobs Nearby" Scroll Teleport Message ([#802](https://github.com/Wynntils/Artemis/issues/802)) ([b084b76](https://github.com/Wynntils/Artemis/commit/b084b76ee5661b9d888ded414ee65d9604a989d4))
+
 ## [0.0.1-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.137...v0.0.1-alpha.138) (2022-12-09)
 
 
 ### New Features
 
 * Redirects "Scared Horse" messages to Overlay ([#800](https://github.com/Wynntils/Artemis/issues/800)) ([18d2da2](https://github.com/Wynntils/Artemis/commit/18d2da2f16f409bd6e2dd592f926a345fac492a7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.138 [skip ci] ([de05b2b](https://github.com/Wynntils/Artemis/commit/de05b2bda3ec2f1c4fd1c8f2a12539196f7c5c36))
 
 ## [0.0.1-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.136...v0.0.1-alpha.137) (2022-12-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.135 [skip ci] ([286fb31](https://github.com/Wynntils/Artemis/commit/286fb315f45310e209c4aa25b43f070839f78435))
-
-## [0.0.1-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.133...v0.0.1-alpha.134) (2022-12-07)
-
-
-### Code Refactoring
-
-* Decouple TerritoryManager and DiscoveryInfo ([#795](https://github.com/Wynntils/Artemis/issues/795)) ([3a28761](https://github.com/Wynntils/Artemis/commit/3a28761def9ff52d7b6fc4ed02d7f5f08c5fab10))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.134 [skip ci] ([62afb2d](https://github.com/Wynntils/Artemis/commit/62afb2d138f786fc1d80a32026e198598aead6f7))
 
