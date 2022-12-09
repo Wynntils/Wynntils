@@ -53,6 +53,8 @@
   "feature.wynntils.chatRedirect.soulPoint.name": "Soul Point Message Filtering",
   "feature.wynntils.chatRedirect.speed.description": "How should messages about speed effect appear?",
   "feature.wynntils.chatRedirect.speed.name": "Speed Effect Message Filtering",
+  "feature.wynntils.chatRedirect.teleport.description": "How should messages about failing to teleport appear?",
+  "feature.wynntils.chatRedirect.teleport.name": "Teleport Message Filtering",
   "feature.wynntils.chatRedirect.toolDurability.description": "How should gathering tool durability messages appear?",
   "feature.wynntils.chatRedirect.toolDurability.name": "Gather Tool Durability Filtering",
   "feature.wynntils.chatRedirect.unusedPoints.description": "How should messages about unused ability or skill points appear?",
