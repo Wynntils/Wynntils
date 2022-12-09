@@ -473,8 +473,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class TeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("§cThere are aggressive mobs nearby...$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
 
         @Override
         protected Pattern getSystemPattern() {
