@@ -5,7 +5,9 @@
   },
   {
     "id": "apiAthenaAuthResponse",
-    "url": "https://athena.wynntils.com/auth/responseEncryption"
+    "url": "https://athena.wynntils.com/auth/responseEncryption",
+    "method": "post",
+    "arguments": [ "username", "key", "version" ]
   },
   {
     "id": "apiAthenaUpdateCheck",
@@ -13,7 +15,9 @@
   },
   {
     "id": "apiAthenaUserInfo",
-    "url": "https://athena.wynntils.com/user/getInfo"
+    "url": "https://athena.wynntils.com/user/getInfo",
+    "method": "post",
+    "arguments": [ "uuid" ]
   },
   {
     "id": "apiGoogleTranslation",
