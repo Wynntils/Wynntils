@@ -359,11 +359,11 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             Integer ingredientCount = Integer.parseInt(matcher.group(1));
-            String ingredientString = ingredientCount.toString() + " ingredient" + (ingredientCount == 1 ? "" : "s");
+            String ingredientString = ingredientCount.toString() + " §dingredient" + (ingredientCount == 1 ? "" : "s");
 
             String emeraldString = matcher.group(2);
 
-            String formattedOverlayString = String.format("§dSold §7%s for §a%s§d.", ingredientString, emeraldString);
+            String formattedOverlayString = String.format("§dSold §7%s §dfor §a%s§d.", ingredientString, emeraldString);
 
             return formattedOverlayString;
         }
