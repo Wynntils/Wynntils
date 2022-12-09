@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.redirects;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
@@ -343,7 +344,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class IngredientPouchSellRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("§4You have sold (.+) ingredients for a total of §r§e(.+)§r§4.");
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
 
         @Override
         protected Pattern getNormalPattern() {
