@@ -1,9 +1,21 @@
+## [0.0.1-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.137...v0.0.1-alpha.138) (2022-12-09)
+
+
+### New Features
+
+* Redirects "Scared Horse" messages to Overlay ([#800](https://github.com/Wynntils/Artemis/issues/800)) ([18d2da2](https://github.com/Wynntils/Artemis/commit/18d2da2f16f409bd6e2dd592f926a345fac492a7))
+
 ## [0.0.1-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.136...v0.0.1-alpha.137) (2022-12-08)
 
 
 ### New Features
 
 * Read splashes from splashes.json instead of webapi ([#796](https://github.com/Wynntils/Artemis/issues/796)) ([234ff35](https://github.com/Wynntils/Artemis/commit/234ff35da3a49b8d9feb26f9a5e11c5bf1bc7ce6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.137 [skip ci] ([9301eb7](https://github.com/Wynntils/Artemis/commit/9301eb70932891b45312ea33159b6c1f19989c6c))
 
 ## [0.0.1-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.135...v0.0.1-alpha.136) (2022-12-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.134 [skip ci] ([62afb2d](https://github.com/Wynntils/Artemis/commit/62afb2d138f786fc1d80a32026e198598aead6f7))
-
-## [0.0.1-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.132...v0.0.1-alpha.133) (2022-12-07)
-
-
-### New Features
-
-* Multiple Duplicate Messages in ChatRedirectFeature now get Squashed ([#781](https://github.com/Wynntils/Artemis/issues/781)) ([e470d9b](https://github.com/Wynntils/Artemis/commit/e470d9b0accb2dd8b248e6288c77e95c4071e2a8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.133 [skip ci] ([dba8162](https://github.com/Wynntils/Artemis/commit/dba8162e73310f560505fcf9caa84157688326e5))
 
