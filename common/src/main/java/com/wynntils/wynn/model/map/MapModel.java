@@ -22,6 +22,7 @@ import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        Download dl = NetManager.download(UrlManager.DATA_STATIC_MAPS);
+        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_MAPS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -67,8 +68,8 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                Download dlPart =
-                        NetManager.download(mapPart.url, "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
+                Download dlPart = NetManager.download(
+                        URI.create(mapPart.url), "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
                 try (InputStream inputStream = dlPart.waitAndGetInputStream()) {
                     NativeImage nativeImage = NativeImage.read(inputStream);
                     MapTexture mapPartImage =
@@ -82,7 +83,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        Download dl = NetManager.download(UrlManager.DATA_STATIC_PLACES);
+        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_PLACES);
         dl.onCompletion(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -92,7 +93,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        Download dl = NetManager.download(UrlManager.DATA_STATIC_SERVICES);
+        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_SERVICES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
@@ -111,7 +112,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadCombat() {
-        Download dl = NetManager.download(UrlManager.DATA_STATIC_COMBAT_LOCATIONS);
+        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_COMBAT_LOCATIONS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 

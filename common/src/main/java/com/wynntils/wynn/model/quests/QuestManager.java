@@ -15,7 +15,6 @@ import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,14 +102,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts";
 
-            NetManager.openLink(UrlManager.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
+            NetManager.openLink(UrlManager.NetUrls.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
             return;
         }
 
-        Response response = NetManager.callApi(UrlManager.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
+        Response response =
+                NetManager.callApi(UrlManager.NetUrls.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            NetManager.openLink(UrlManager.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+            NetManager.openLink(UrlManager.NetUrls.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
             return true;
         });
     }

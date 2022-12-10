@@ -75,7 +75,7 @@ public class ServerListModel extends Model {
     }
 
     private static Download updateServerList(int timeOutMs) {
-        Download dl = NetManager.download(UrlManager.DATA_ATHENA_SERVER_LIST);
+        Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);
         }
