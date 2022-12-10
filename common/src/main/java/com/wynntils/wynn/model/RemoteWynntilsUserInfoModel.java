@@ -6,9 +6,9 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;

@@ -9,9 +9,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.Comparator;
@@ -75,7 +75,7 @@ public class ServerListModel extends Model {
     }
 
     private static DownloadableResource updateServerList(int timeOutMs) {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_SERVER_LIST);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);
         }

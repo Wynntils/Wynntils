@@ -8,11 +8,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.ApiRequestResponse;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
+import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
@@ -189,7 +188,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_DISCOVERIES);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_DISCOVERIES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = GSON.fromJson(reader, type);

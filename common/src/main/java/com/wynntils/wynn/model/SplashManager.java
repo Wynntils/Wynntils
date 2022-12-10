@@ -8,9 +8,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_SPLASHES);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_SPLASHES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = GSON.fromJson(reader, type);

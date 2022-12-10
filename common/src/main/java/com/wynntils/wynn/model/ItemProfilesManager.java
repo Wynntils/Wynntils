@@ -10,9 +10,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
@@ -62,7 +62,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_ITEM_GUESSES);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_ITEM_GUESSES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -78,7 +78,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemList() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_ITEM_LIST);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_ITEM_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -113,7 +113,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadIngredientList() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();

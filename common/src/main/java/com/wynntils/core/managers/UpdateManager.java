@@ -5,9 +5,9 @@
 package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
 import java.io.File;

@@ -10,9 +10,9 @@ import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.downloader.DownloadableResource;
-import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.CombatKind;
 import com.wynntils.wynn.model.map.poi.CombatPoi;
@@ -62,7 +62,7 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_MAPS);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_MAPS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -70,7 +70,7 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                DownloadableResource dlPart = Downloader.toCacheMd5Async(
+                DownloadableResource dlPart = NetManager.toCacheMd5Async(
                         mapPart.url, "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
                 try (InputStream inputStream = dlPart.waitAndGetInputStream()) {
                     NativeImage nativeImage = NativeImage.read(inputStream);
@@ -85,7 +85,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_PLACES);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_PLACES);
         dl.onCompletion(reader -> {
             PlacesProfile places = GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -95,7 +95,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_SERVICES);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_SERVICES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
@@ -114,7 +114,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadCombat() {
-        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_COMBAT_LOCATIONS);
+        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_COMBAT_LOCATIONS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 

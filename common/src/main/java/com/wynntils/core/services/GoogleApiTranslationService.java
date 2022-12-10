@@ -6,9 +6,9 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
