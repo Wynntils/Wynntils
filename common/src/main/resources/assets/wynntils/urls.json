@@ -28,18 +28,25 @@
   {
     "id": "apiGoogleTranslation",
     "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%{lang}&dt=t&q=%{text}",
-    "arguments": [ "lang", "text" ]
+    "arguments": [
+      "lang",
+      "text"
+    ]
   },
   {
     "id": "apiWikiDiscoveryQuery",
     "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}",
-    "arguments": [ "name" ],
+    "arguments": [
+      "name"
+    ],
     "encoding": "wiki"
   },
   {
     "id": "apiWikiQuestPageQuery",
     "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}",
-    "arguments": [ "name" ],
+    "arguments": [
+      "name"
+    ],
     "encoding": "cargo"
   },
   {
@@ -104,18 +111,24 @@
   {
     "id": "linkWikiLookup",
     "url": "https://wynncraft.fandom.com/wiki/%{title}",
-    "arguments": [ "title" ],
+    "arguments": [
+      "title"
+    ],
     "encoding": "wiki"
   },
   {
     "id": "linkWynncraftPlayerStats",
     "url": "https://wynncraft.com/stats/player/%{username}",
-    "arguments": [ "username" ],
+    "arguments": [
+      "username"
+    ]
   },
   {
     "id": "linkWynndataItemLookup",
     "url": "https://www.wynndata.tk/i/%{itemname}",
-    "arguments": [ "itemname" ],
+    "arguments": [
+      "itemname"
+    ]
   },
   {
     "id": "linkWynntilsDiscordInvite",
@@ -128,6 +141,8 @@
   {
     "id": "linkWynntilsRegisterAccount",
     "url": "https://account.wynntils.com/register.php?token=%{token}",
-    "arguments": [ "token" ],
+    "arguments": [
+      "token"
+    ]
   }
 ]
