@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class UrlManager extends CoreManager {
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
@@ -111,6 +112,28 @@ public final class UrlManager extends CoreManager {
                 .map(StringUtils::encodeUrl)
                 .toArray(String[]::new);
         return String.format(urlMap.get(urlId).url, encodedArguments);
+    }
+
+    // FIXME: Not done. Also, replace all old buildUrl calls.
+    public static String buildUrl(String urlId, Map<String, String> arguments) {
+        // Verify that argument count is correct
+        assert (urlMap.get(urlId).arguments != null
+                && urlMap.get(urlId).arguments.size() == arguments.size());
+        // FIXME: Verify that argument keys are exactly matching argument list in urlMap
+
+        Map<String, String> encodedArguments = arguments.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry ->
+                                // FIXME: Also call proper specific encoding!
+                                StringUtils.encodeUrl(entry.getValue())));
+
+        String str = urlMap.get(urlId).url;
+        // Replace %{argKey} with arg value in URL string
+        String result = encodedArguments.keySet().stream()
+                .reduce(str, (s, argKey) -> s.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
+
+        return result;
     }
 
     private static Function<String, String> getEncoding(String encoding) {
