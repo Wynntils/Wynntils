@@ -1,9 +1,21 @@
+## [0.0.1-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.141...v0.0.1-alpha.142) (2022-12-10)
+
+
+### Code Refactoring
+
+* Gson cleanups ([#804](https://github.com/Wynntils/Artemis/issues/804)) ([42007de](https://github.com/Wynntils/Artemis/commit/42007de2ff4d34d96e95df1f23fcd819a074f7cb))
+
 ## [0.0.1-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.140...v0.0.1-alpha.141) (2022-12-09)
 
 
 ### New Features
 
 * Adds "Combat Locations" (Raids/Dungeons/Caves/Grind Spots/Shrines) to the Map ([#768](https://github.com/Wynntils/Artemis/issues/768)) ([3418b50](https://github.com/Wynntils/Artemis/commit/3418b50797a77af86c673bc7af0bb452d61460ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.141 [skip ci] ([7f18fff](https://github.com/Wynntils/Artemis/commit/7f18fff148235e98888998a2e765806d71e1652f))
 
 ## [0.0.1-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.139...v0.0.1-alpha.140) (2022-12-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.138 [skip ci] ([de05b2b](https://github.com/Wynntils/Artemis/commit/de05b2bda3ec2f1c4fd1c8f2a12539196f7c5c36))
-
-## [0.0.1-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.136...v0.0.1-alpha.137) (2022-12-08)
-
-
-### New Features
-
-* Read splashes from splashes.json instead of webapi ([#796](https://github.com/Wynntils/Artemis/issues/796)) ([234ff35](https://github.com/Wynntils/Artemis/commit/234ff35da3a49b8d9feb26f9a5e11c5bf1bc7ce6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.137 [skip ci] ([9301eb7](https://github.com/Wynntils/Artemis/commit/9301eb70932891b45312ea33159b6c1f19989c6c))
 
