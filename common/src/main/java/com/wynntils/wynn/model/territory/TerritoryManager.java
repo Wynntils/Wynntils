@@ -39,6 +39,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TerritoryManager extends CoreManager {
     private static final int TERRITORY_UPDATE_MS = 15000;
+    private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
+            .create();
 
     // This is territory POIs as returned by the advancement from Wynncraft
     private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
@@ -126,12 +129,7 @@ public class TerritoryManager extends CoreManager {
         JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 
         Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
-        Gson gson = builder.create();
-
-        territoryProfileMap = gson.fromJson(json.get("territories"), type);
+        territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
         allTerritoryPois =
                 territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
         // TODO: Add events

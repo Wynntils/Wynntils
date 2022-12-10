@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.DownloadableResource;
 import com.wynntils.core.net.NetManager;
@@ -22,8 +22,8 @@ import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ServerListModel extends Model {
-    private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB");
-    private static final Gson GSON = new Gson();
+    private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
+
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public static void init() {
@@ -87,7 +87,7 @@ public class ServerListModel extends Model {
 
             long serverTime = dl.getTimestamp();
             for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-                ServerProfile profile = GSON.fromJson(entry.getValue(), ServerProfile.class);
+                ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
                 profile.matchTime(serverTime);
 
                 newMap.put(entry.getKey(), profile);

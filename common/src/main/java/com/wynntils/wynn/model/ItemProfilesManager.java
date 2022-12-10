@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.DownloadableResource;
 import com.wynntils.core.net.NetManager;
@@ -25,7 +26,9 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class ItemProfilesManager extends CoreManager {
-    private static final Gson GSON = new Gson();
+    private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
+            .create();
 
     private static HashMap<String, ItemProfile> items = new HashMap<>();
     private static Collection<ItemProfile> directItems = new ArrayList<>();
@@ -65,13 +68,8 @@ public class ItemProfilesManager extends CoreManager {
         DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_ITEM_GUESSES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
-
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer());
-            Gson gson = gsonBuilder.create();
-
             itemGuesses = new HashMap<>();
-            itemGuesses.putAll(gson.fromJson(reader, type));
+            itemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
         });
 
         // Check for success
@@ -82,19 +80,20 @@ public class ItemProfilesManager extends CoreManager {
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-            translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
-            internalIdentifications = GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
+            translatedReferences = WynntilsMod.GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
+            internalIdentifications =
+                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-            majorIds = GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+            majorIds = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             //            materialTypes = gson.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
             IdentificationOrderer.INSTANCE =
-                    GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
+                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-            ItemProfile[] gItems = GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            ItemProfile[] gItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
 
             HashMap<String, ItemProfile> citems = new HashMap<>();
             for (ItemProfile prof : gItems) {
@@ -117,9 +116,10 @@ public class ItemProfilesManager extends CoreManager {
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-            ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
+            ingredientHeadTextures = WynntilsMod.GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-            IngredientProfile[] gItems = GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
+            IngredientProfile[] gItems =
+                    WynntilsMod.GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
             HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
             for (IngredientProfile prof : gItems) {
