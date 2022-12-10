@@ -2,17 +2,17 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.net.api;
+package com.wynntils.core.net;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class RequestResponse {
+public class ApiRequestResponse {
     private final byte[] blob;
 
-    public RequestResponse(byte[] blob) {
+    public ApiRequestResponse(byte[] blob) {
         this.blob = blob;
     }
 

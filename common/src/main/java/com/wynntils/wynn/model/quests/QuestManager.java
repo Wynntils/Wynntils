@@ -7,8 +7,8 @@ package com.wynntils.wynn.model.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.api.ApiRequester;
-import com.wynntils.core.net.api.RequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.ApiRequestResponse;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
@@ -111,7 +111,7 @@ public class QuestManager extends CoreManager {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("name", questInfo.getName());
 
-        RequestResponse response = ApiRequester.call(UrlManager.API_WIKI_QUEST_PAGE_QUERY, arguments);
+        ApiRequestResponse response = NetManager.callApi(UrlManager.API_WIKI_QUEST_PAGE_QUERY, arguments);
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
             Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, pageTitle));

@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.api.ApiRequester;
-import com.wynntils.core.net.api.RequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.ApiRequestResponse;
 import com.wynntils.core.net.downloader.DownloadableResource;
 import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -133,7 +133,7 @@ public class DiscoveryManager extends CoreManager {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("name", name);
 
-        RequestResponse response = ApiRequester.call(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
+        ApiRequestResponse response = NetManager.callApi(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(

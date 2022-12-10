@@ -7,8 +7,8 @@ package com.wynntils.wynn.model;
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.api.ApiRequester;
-import com.wynntils.core.net.api.RequestResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.ApiRequestResponse;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
@@ -35,7 +35,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("uuid", uuid.toString());
 
-        RequestResponse response = ApiRequester.call(UrlManager.API_ATHENA_USER_INFO, arguments);
+        ApiRequestResponse response = NetManager.callApi(UrlManager.API_ATHENA_USER_INFO, arguments);
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;
 
