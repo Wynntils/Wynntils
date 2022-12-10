@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,31 +15,60 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ServerListModel extends Model {
+    private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
+    private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
 
-    public static void init() {}
+    public static void init() {
+        updateServerList(0);
+    }
 
-    public static synchronized void updateServers() {
-        try {
-            availableServers = getServerList();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to update server list", e);
-        }
+    public static List<String> getWynnServerTypes() {
+        return SERVER_TYPES;
+    }
+
+    public static Set<String> getServers() {
+        return availableServers.keySet();
+    }
+
+    public static List<String> getServersSortedOnUptime() {
+        return getServers().stream()
+                .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
+                .toList();
+    }
+
+    public static List<String> getServersSortedOnNameOfType(String serverType) {
+        return getServers().stream()
+                .filter(server -> server.startsWith(serverType))
+                .sorted((o1, o2) -> {
+                    int number1 = Integer.parseInt(o1.substring(serverType.length()));
+                    int number2 = Integer.parseInt(o2.substring(serverType.length()));
+
+                    return number1 - number2;
+                })
+                .toList();
     }
 
     public static ServerProfile getServer(String worldId) {
         return availableServers.get(worldId);
+    }
+
+    public static boolean forceUpdate(int timeOutMs) {
+        // timeOutMs is currently ignored; will be fixed soon
+        return updateNow();
     }
 
     @SubscribeEvent
@@ -48,54 +76,39 @@ public class ServerListModel extends Model {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
-        // Run async to avoid blocking the render thread
-        new Thread(ServerListModel::updateServers).start();
+        updateServerList(0);
     }
 
-    public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        if (WebManager.apiUrls == null || !WynntilsAccountManager.isLoggedIn()) return new HashMap<>();
+    private static boolean updateNow() {
+        if (WebManager.apiUrls == null || !WynntilsAccountManager.isLoggedIn()) return false;
         String url = WebManager.apiUrls.get("Athena") + "/cache/get/serverList";
 
-        URLConnection st = WebManager.generateURLRequest(url);
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
+        try {
+            URLConnection st = WebManager.generateURLRequest(url);
+            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
+            JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
 
-        JsonObject servers = json.getAsJsonObject("servers");
-        HashMap<String, ServerProfile> result = new HashMap<>();
+            JsonObject servers = json.getAsJsonObject("servers");
+            Map<String, ServerProfile> newMap = new HashMap<>();
 
-        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
-        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-            ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
-            profile.matchTime(serverTime);
+            long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
+            for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
+                profile.matchTime(serverTime);
 
-            result.put(entry.getKey(), profile);
+                newMap.put(entry.getKey(), profile);
+            }
+
+            availableServers = newMap;
+        } catch (IOException e) {
+            return false;
         }
-
-        return result;
+        return true;
     }
 
-    /**
-     * Request all online players to WynnAPI
-     *
-     * @return a {@link HashMap} who the key is the server and the value is an array containing all
-     *     players on it
-     * @throws IOException thrown by URLConnection
-     */
-    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        if (WebManager.apiUrls == null || !WebManager.apiUrls.hasKey("OnlinePlayers")) return new HashMap<>();
-
-        URLConnection st = WebManager.generateURLRequest(WebManager.apiUrls.get("OnlinePlayers"));
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        if (!main.has("message")) {
-            main.remove("request");
-
-            Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
-
-            return WynntilsMod.GSON.fromJson(main, type);
-        } else {
-            return new HashMap<>();
-        }
+    private static void updateServerList(int timeOutMs) {
+        // Will update in background
+        // timeOutMs is currently ignored; will be fixed soon
+        EXECUTOR.submit(ServerListModel::updateNow);
     }
 }

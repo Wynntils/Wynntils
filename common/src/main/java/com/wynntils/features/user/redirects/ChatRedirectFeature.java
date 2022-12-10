@@ -616,12 +616,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -643,17 +643,16 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
-            return null;
-        }
-
-        @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+            if (messageType == MessageType.SYSTEM) {
+                return SYSTEM_PATTERN;
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -673,12 +672,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillPointsRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§c§l(\\d+) unused Skill Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
