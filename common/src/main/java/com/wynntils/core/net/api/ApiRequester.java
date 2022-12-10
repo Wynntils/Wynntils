@@ -5,31 +5,31 @@
 package com.wynntils.core.net.api;
 
 import com.google.gson.JsonObject;
-import com.wynntils.core.net.Reference;
-import java.io.IOException;
+import com.wynntils.core.net.UrlManager;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
 
 public class ApiRequester {
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
 
-    public static RequestResponse get(URI uri, String id) {
-        byte[] blob = getToMemory(uri);
-        return new RequestResponse(blob);
+    public static RequestResponse call(String urlId, Map<String, String> arguments) {
+        if (UrlManager.getMethod(urlId).equals("post")) {
+            JsonObject jsonArgs = new JsonObject();
+            arguments.entrySet().stream().forEach(entry -> {
+                jsonArgs.addProperty(entry.getKey(), entry.getValue());
+            });
+            URI uri = URI.create(UrlManager.getUrl(urlId));
+            byte[] blob = postToMemory(uri, jsonArgs);
+            return new RequestResponse(blob);
+        } else {
+            URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+            byte[] blob = getToMemory(uri);
+            return new RequestResponse(blob);
+        }
     }
 
-    public static RequestResponse get(String uri, String id) {
-        return get(URI.create(uri), id);
-    }
-
-    public static RequestResponse post(URI uri, JsonObject arguments, String id) {
-        byte[] blob = postToMemory(uri, arguments);
-        return new RequestResponse(blob);
-    }
-
-    public static RequestResponse post(String uri, JsonObject arguments, String id) {
-        return post(URI.create(uri), arguments, id);
+    public static RequestResponse call(String urlId) {
+        return call(urlId, Map.of());
     }
 
     private static byte[] postToMemory(URI uri, JsonObject arguments) {
@@ -40,14 +40,5 @@ public class ApiRequester {
     private static byte[] getToMemory(URI uri) {
         // FIXME: implement
         return null;
-    }
-
-    public static URLConnection generateURLRequest(String url) throws IOException {
-        URLConnection st = new URL(url).openConnection();
-        st.setRequestProperty("User-Agent", Reference.getUserAgent());
-        st.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
-        st.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
-
-        return st;
     }
 }

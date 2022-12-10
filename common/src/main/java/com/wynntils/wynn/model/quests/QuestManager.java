@@ -16,7 +16,9 @@ import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -106,8 +108,10 @@ public class QuestManager extends CoreManager {
             return;
         }
 
-        String url = UrlManager.buildUrl(UrlManager.API_WIKI_QUEST_PAGE_QUERY, questInfo.getName());
-        RequestResponse response = ApiRequester.get(url, "WikiQuestQuery");
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("name", questInfo.getName());
+
+        RequestResponse response = ApiRequester.call(UrlManager.API_WIKI_QUEST_PAGE_QUERY, arguments);
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
             Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, pageTitle));

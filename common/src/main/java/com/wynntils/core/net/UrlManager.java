@@ -101,6 +101,10 @@ public final class UrlManager extends CoreManager {
         return urlMap.get(urlId).arguments;
     }
 
+    public static String getMethod(String urlId) {
+        return urlMap.get(urlId).method;
+    }
+
     public static String buildUrl(String urlId, String... arguments) {
         // Verify that argument count is correct
         assert (urlMap.get(urlId).numArguments != null && urlMap.get(urlId).numArguments == arguments.length);

@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -80,8 +81,7 @@ public class WynntilsAccountManager extends CoreManager {
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
-        RequestResponse response =
-                ApiRequester.get(UrlManager.getUrl(UrlManager.API_ATHENA_AUTH_PUBLIC_KEY), "getPublicKey");
+        RequestResponse response = ApiRequester.call(UrlManager.API_ATHENA_AUTH_PUBLIC_KEY);
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
@@ -90,14 +90,12 @@ public class WynntilsAccountManager extends CoreManager {
 
         // response
 
-        JsonObject authParams = new JsonObject();
-        authParams.addProperty("username", McUtils.mc().getUser().getName());
-        authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty(
-                "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("key", secretKey[0]);
+        arguments.put("username", McUtils.mc().getUser().getName());
+        arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        RequestResponse response2 = ApiRequester.post(
-                UrlManager.getUrl(UrlManager.API_ATHENA_AUTH_RESPONSE), authParams, "responseEncryption");
+        RequestResponse response2 = ApiRequester.call(UrlManager.API_ATHENA_AUTH_RESPONSE, arguments);
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

@@ -28,7 +28,9 @@ import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -128,8 +130,10 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String url = UrlManager.buildUrl(UrlManager.API_WIKI_DISCOVERY_QUERY, name);
-        RequestResponse response = ApiRequester.get(url, "SecretWikiQuery");
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("name", name);
+
+        RequestResponse response = ApiRequester.call(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(

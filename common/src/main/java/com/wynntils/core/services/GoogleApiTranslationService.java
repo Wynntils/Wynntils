@@ -9,7 +9,8 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.api.ApiRequester;
 import com.wynntils.core.net.api.RequestResponse;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -18,8 +19,6 @@ import java.util.function.Consumer;
  * sufficient for NPCs translation, but not for general chat messages, at least not in chatty areas like Detlas.
  */
 public class GoogleApiTranslationService extends CachingTranslationService {
-    private static final AtomicInteger requestNumber = new AtomicInteger();
-
     @Override
     protected void translateNew(String message, String toLanguage, Consumer<String> handleTranslation) {
         if (toLanguage == null || toLanguage.isEmpty()) {
@@ -27,8 +26,11 @@ public class GoogleApiTranslationService extends CachingTranslationService {
             return;
         }
 
-        String url = UrlManager.buildUrl(UrlManager.API_GOOGLE_TRANSLATION, toLanguage, message);
-        RequestResponse response = ApiRequester.get(url, "translate-" + requestNumber.getAndIncrement());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("lang", toLanguage);
+        arguments.put("text", message);
+
+        RequestResponse response = ApiRequester.call(UrlManager.API_GOOGLE_TRANSLATION, arguments);
         response.handleJsonArray(
                 json -> {
                     StringBuilder builder = new StringBuilder();

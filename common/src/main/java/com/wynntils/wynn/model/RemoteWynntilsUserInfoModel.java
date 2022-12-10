@@ -14,6 +14,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -31,11 +32,10 @@ public class RemoteWynntilsUserInfoModel extends Model {
 
         fetching.add(uuid); // temporary, avoid extra loads
 
-        JsonObject body = new JsonObject();
-        body.addProperty("uuid", uuid.toString());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("uuid", uuid.toString());
 
-        RequestResponse response =
-                ApiRequester.post(UrlManager.getUrl(UrlManager.API_ATHENA_USER_INFO), body, "getInfo(" + uuid + ")");
+        RequestResponse response = ApiRequester.call(UrlManager.API_ATHENA_USER_INFO, arguments);
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;
 
