@@ -5,8 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
@@ -22,7 +21,6 @@ public class SplashManager extends CoreManager {
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json";
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
-    private static final Gson GSON = new GsonBuilder().create();
 
     private static List<String> allSplashes = new ArrayList<>();
     private static String currentSplash = DEFAULT_SPLASH;
@@ -42,7 +40,7 @@ public class SplashManager extends CoreManager {
                 .useCacheAsBackup()
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<String>>() {}.getType();
-                    allSplashes = GSON.fromJson(json, type);
+                    allSplashes = WynntilsMod.GSON.fromJson(json, type);
                     if (allSplashes.isEmpty()) {
                         // Use fallback in case of failure
                         currentSplash = DEFAULT_SPLASH;

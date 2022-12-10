@@ -4,6 +4,8 @@
  */
 package com.wynntils.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 /** The common implementation of Wynntils */
 public final class WynntilsMod {
     public static final String MOD_ID = "wynntils";
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
