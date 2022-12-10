@@ -70,8 +70,8 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                DownloadableResource dlPart = NetManager.download(
-                        mapPart.url, "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
+                DownloadableResource dlPart =
+                        NetManager.download(mapPart.url, "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
                 try (InputStream inputStream = dlPart.waitAndGetInputStream()) {
                     NativeImage nativeImage = NativeImage.read(inputStream);
                     MapTexture mapPartImage =

@@ -60,8 +60,7 @@ public class NetManager {
         return callApi(urlId, Map.of());
     }
 
-    public static DownloadableResource download(
-            String uri, String localFileName, String expectedHash, String id) {
+    public static DownloadableResource download(String uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
             downloadToLocal(URI.create(uri), localFile);
