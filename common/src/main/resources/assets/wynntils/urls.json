@@ -7,7 +7,11 @@
     "id": "apiAthenaAuthResponse",
     "url": "https://athena.wynntils.com/auth/responseEncryption",
     "method": "post",
-    "arguments": [ "username", "key", "version" ]
+    "arguments": [
+      "username",
+      "key",
+      "version"
+    ]
   },
   {
     "id": "apiAthenaUpdateCheck",
@@ -17,7 +21,9 @@
     "id": "apiAthenaUserInfo",
     "url": "https://athena.wynntils.com/user/getInfo",
     "method": "post",
-    "arguments": [ "uuid" ]
+    "arguments": [
+      "uuid"
+    ]
   },
   {
     "id": "apiGoogleTranslation",
