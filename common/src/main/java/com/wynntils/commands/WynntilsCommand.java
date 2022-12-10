@@ -122,8 +122,7 @@ public class WynntilsCommand extends CommandBase {
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
                         .withClickEvent(new ClickEvent(
-                                ClickEvent.Action.OPEN_URL,
-                                UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
+                                ClickEvent.Action.OPEN_URL, UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
