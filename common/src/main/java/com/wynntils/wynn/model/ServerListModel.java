@@ -75,6 +75,9 @@ public class ServerListModel extends Model {
     }
 
     private static Download updateServerList(int timeOutMs) {
+        // dataAthenaServerList is based on
+        // https://api.wynncraft.com/public_api.php?action=onlinePlayers
+        // but injects a firstSeen timestamp when the server was first noticed by Athena
         Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);

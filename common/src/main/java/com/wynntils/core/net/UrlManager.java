@@ -43,32 +43,10 @@ public final class UrlManager extends CoreManager {
         API_GOOGLE_TRANSLATION("apiGoogleTranslation"),
         API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
         API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
-
-        // dataAthenaIngredientList is based on
-        // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing
-        // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
-        // in Athena
         DATA_ATHENA_INGREDIENT_LIST("dataAthenaIngredientList"),
-
-        // dataAthenaItemList is based on
-        // https://api.wynncraft.com/public_api.php?action=itemDB&category=all
-        // but the data is massaged into another form, and wynnBuilderID is injected from
-        // https://wynnbuilder.github.io/compress.json
         DATA_ATHENA_ITEM_LIST("dataAthenaItemList"),
-
-        // dataAthenaServerList is based on
-        // https://api.wynncraft.com/public_api.php?action=onlinePlayers
-        // but injects a firstSeen timestamp when the server was first noticed by Athena
         DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
-
-        // dataAthenaTerritoryList is based on
-        // https://api.wynncraft.com/public_api.php?action=territoryList
-        // but guild prefix is injected based on
-        // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
-        // and guild color is injected based on values maintained on Athena, and a constant
-        // level = 1 is also injected.
         DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
-
         DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
         DATA_STATIC_DISCOVERIES("dataStaticDiscoveries"),
         DATA_STATIC_ITEM_GUESSES("dataStaticItemGuesses"),

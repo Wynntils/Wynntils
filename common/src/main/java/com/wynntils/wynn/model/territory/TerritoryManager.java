@@ -124,6 +124,12 @@ public class TerritoryManager extends CoreManager {
     }
 
     private static void updateTerritoryProfileMap() {
+        // dataAthenaTerritoryList is based on
+        // https://api.wynncraft.com/public_api.php?action=territoryList
+        // but guild prefix is injected based on
+        // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
+        // and guild color is injected based on values maintained on Athena, and a constant
+        // level = 1 is also injected.
         Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_TERRITORY_LIST);
         Reader reader = dl.waitAndGetReader();
         JsonObject json = (JsonObject) JsonParser.parseReader(reader);

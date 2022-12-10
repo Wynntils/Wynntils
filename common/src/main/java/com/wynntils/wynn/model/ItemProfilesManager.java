@@ -76,6 +76,10 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemList() {
+        // dataAthenaItemList is based on
+        // https://api.wynncraft.com/public_api.php?action=itemDB&category=all
+        // but the data is massaged into another form, and wynnBuilderID is injected from
+        // https://wynnbuilder.github.io/compress.json
         Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_ITEM_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
@@ -112,6 +116,10 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadIngredientList() {
+        // dataAthenaIngredientList is based on
+        // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing
+        // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
+        // in Athena
         Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_INGREDIENT_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
