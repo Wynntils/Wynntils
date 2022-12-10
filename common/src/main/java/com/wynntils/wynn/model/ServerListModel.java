@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,13 +16,9 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -71,29 +66,5 @@ public class ServerListModel extends Model {
         }
 
         return result;
-    }
-
-    /**
-     * Request all online players to WynnAPI
-     *
-     * @return a {@link HashMap} who the key is the server and the value is an array containing all
-     *     players on it
-     * @throws IOException thrown by URLConnection
-     */
-    public static Map<String, List<String>> getOnlinePlayers() throws IOException {
-        String url = UrlManager.getUrl(UrlManager.API_WYNNCRAFT_ONLINE_PLAYERS);
-        URLConnection st = ApiRequester.generateURLRequestWithWynnApiKey(url);
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject main = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        if (!main.has("message")) {
-            main.remove("request");
-
-            Type type = new TypeToken<LinkedHashMap<String, ArrayList<String>>>() {}.getType();
-
-            return GSON.fromJson(main, type);
-        } else {
-            return new HashMap<>();
-        }
     }
 }

@@ -50,10 +50,6 @@
     "encoding": "cargo"
   },
   {
-    "id": "apiWynncraftOnlinePlayers",
-    "url": "https://api.wynncraft.com/public_api.php?action=onlinePlayers"
-  },
-  {
     "id": "dataAthenaIngredientList",
     "url": "https://athena.wynntils.com/cache/get/ingredientList"
   },

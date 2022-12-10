@@ -43,7 +43,6 @@ public final class UrlManager extends CoreManager {
     public static final String API_GOOGLE_TRANSLATION = "apiGoogleTranslation";
     public static final String API_WIKI_DISCOVERY_QUERY = "apiWikiDiscoveryQuery";
     public static final String API_WIKI_QUEST_PAGE_QUERY = "apiWikiQuestPageQuery";
-    public static final String API_WYNNCRAFT_ONLINE_PLAYERS = "apiWynncraftOnlinePlayers";
 
     // dataAthenaIngredientList is based on
     // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing

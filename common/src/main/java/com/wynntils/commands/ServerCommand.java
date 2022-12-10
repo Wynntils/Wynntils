@@ -128,9 +128,9 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        Map<String, List<String>> onlinePlayers;
+        Map<String, ServerProfile> serverList;
         try {
-            onlinePlayers = ServerListModel.getOnlinePlayers();
+            serverList = ServerListModel.getServerList();
         } catch (IOException e) {
             context.getSource()
                     .sendFailure(
@@ -141,7 +141,7 @@ public class ServerCommand extends CommandBase {
         MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
         for (String serverType : WynnUtils.getWynnServerTypes()) {
-            List<String> currentTypeServers = onlinePlayers.keySet().stream()
+            List<String> currentTypeServers = serverList.keySet().stream()
                     .filter(server -> server.startsWith(serverType))
                     .sorted((o1, o2) -> {
                         int number1 = Integer.parseInt(o1.substring(serverType.length()));
