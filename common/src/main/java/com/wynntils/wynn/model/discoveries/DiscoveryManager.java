@@ -15,7 +15,6 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
@@ -85,7 +84,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, discoveryInfo.getName()));
+        NetManager.openLink(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {

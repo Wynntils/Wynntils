@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
+import net.minecraft.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -73,6 +74,14 @@ public class NetManager {
         File localFile = new File(RESOURCE_ROOT, urlId);
         downloadToLocal(uri, localFile);
         return new Download(localFile);
+    }
+
+    /**
+     * Open the specified URL in the user's browser.
+     * @param url The url to open
+     */
+    public static void openLink(String url) {
+        Util.getPlatform().openUri(url);
     }
 
     private static byte[] postToMemory(URI uri, JsonObject arguments) {

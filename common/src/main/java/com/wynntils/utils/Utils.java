@@ -6,7 +6,6 @@ package com.wynntils.utils;
 
 import java.util.Locale;
 import java.util.Random;
-import net.minecraft.Util;
 
 /**
  * This is a "high-quality misc" class. Helper methods that are commonly used throughout the project
@@ -22,14 +21,5 @@ public final class Utils {
 
     public static Random getRandom() {
         return random;
-    }
-
-    /**
-     * Open the specified URL in the user's browser if possible, otherwise copy it to the clipboard
-     * and send it to chat.
-     * @param url The url to open
-     */
-    public static void openUrl(String url) {
-        Util.getPlatform().openUri(url);
     }
 }

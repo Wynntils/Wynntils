@@ -11,7 +11,6 @@ import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -104,7 +103,7 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, wikiName));
+            NetManager.openLink(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, wikiName));
             return;
         }
 
@@ -114,7 +113,7 @@ public class QuestManager extends CoreManager {
         Response response = NetManager.callApi(UrlManager.API_WIKI_QUEST_PAGE_QUERY, arguments);
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Utils.openUrl(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, pageTitle));
+            NetManager.openLink(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, pageTitle));
             return true;
         });
     }
