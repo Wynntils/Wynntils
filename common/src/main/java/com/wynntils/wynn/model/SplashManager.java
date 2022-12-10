@@ -33,18 +33,16 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.DATA_STATIC_SPLASHES), "splashes.json", "splashes");
-        dl.handleJsonObject(json -> {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_SPLASHES);
+        dl.onCompletion(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();
-            allSplashes = GSON.fromJson(json, type);
+            allSplashes = GSON.fromJson(reader, type);
             if (allSplashes.isEmpty()) {
                 // Use fallback in case of failure
                 currentSplash = DEFAULT_SPLASH;
             } else {
                 currentSplash = allSplashes.get(Utils.getRandom().nextInt(allSplashes.size()));
             }
-            return true;
         });
     }
 }

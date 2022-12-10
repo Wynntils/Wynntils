@@ -7,6 +7,8 @@ package com.wynntils.wynn.model;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
@@ -60,9 +62,8 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.DATA_STATIC_ITEM_GUESSES), "item_guesses.json", "item_guesses");
-        dl.handleJsonObject(json -> {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_ITEM_GUESSES);
+        dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
             GsonBuilder gsonBuilder = new GsonBuilder();
@@ -70,18 +71,16 @@ public class ItemProfilesManager extends CoreManager {
             Gson gson = gsonBuilder.create();
 
             itemGuesses = new HashMap<>();
-            itemGuesses.putAll(gson.fromJson(json, type));
-
-            return true;
+            itemGuesses.putAll(gson.fromJson(reader, type));
         });
 
         // Check for success
     }
 
     private static void tryLoadItemList() {
-        DownloadableResource dl =
-                Downloader.download(UrlManager.getUrl(UrlManager.DATA_ATHENA_ITEM_LIST), "item_list.json", "item_list");
-        dl.handleJsonObject(json -> {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_ITEM_LIST);
+        dl.onCompletion(reader -> {
+            JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
             internalIdentifications = GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
@@ -108,17 +107,15 @@ public class ItemProfilesManager extends CoreManager {
 
             directItems = citems.values();
             items = citems;
-
-            return true;
         });
 
         // Check for success
     }
 
     private static void tryLoadIngredientList() {
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.DATA_ATHENA_INGREDIENT_LIST), "ingredient_list.json", "ingredientList");
-        dl.handleJsonObject(json -> {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
+        dl.onCompletion(reader -> {
+            JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
@@ -131,8 +128,6 @@ public class ItemProfilesManager extends CoreManager {
 
             ingredients = cingredients;
             directIngredients = cingredients.values();
-
-            return true;
         });
     }
 

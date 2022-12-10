@@ -185,14 +185,11 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.DATA_STATIC_DISCOVERIES), "discoveries.json", "discoveries");
-        dl.handleJsonObject(json -> {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_STATIC_DISCOVERIES);
+        dl.onCompletion(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
-
-            List<DiscoveryProfile> discoveries = GSON.fromJson(json, type);
+            List<DiscoveryProfile> discoveries = GSON.fromJson(reader, type);
             discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
-            return true;
         });
     }
 

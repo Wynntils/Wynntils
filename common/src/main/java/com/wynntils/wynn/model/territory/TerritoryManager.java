@@ -7,6 +7,8 @@ package com.wynntils.wynn.model.territory;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.downloader.DownloadableResource;
@@ -17,6 +19,7 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,24 +121,19 @@ public class TerritoryManager extends CoreManager {
     }
 
     private static void updateTerritoryProfileMap() {
-        // This will get us a version of https://api.wynncraft.com/public_api.php?action=territoryList
-        // as cached on Athena
-        DownloadableResource dl = Downloader.download(
-                UrlManager.getUrl(UrlManager.DATA_ATHENA_TERRITORY_LIST), "territories.json", "territory");
-        dl.handleJsonObject(json -> {
-            if (!json.has("territories")) return false;
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_TERRITORY_LIST);
+        Reader reader = dl.waitAndGetReader();
+        JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 
-            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+        Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
 
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
-            Gson gson = builder.create();
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer());
+        Gson gson = builder.create();
 
-            territoryProfileMap = gson.fromJson(json.get("territories"), type);
-            allTerritoryPois =
-                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
-            // TODO: Add events
-            return true;
-        });
+        territoryProfileMap = gson.fromJson(json.get("territories"), type);
+        allTerritoryPois =
+                territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+        // TODO: Add events
     }
 }

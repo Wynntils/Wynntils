@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.Reference;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.utils.MD5Verification;
 import com.wynntils.utils.ThrowingConsumer;
 import java.io.File;
@@ -35,26 +36,13 @@ public class Downloader {
                     .setNameFormat("wynntils-web-request-pool-%d")
                     .build());
 
-    public static DownloadableResource download(URI uri, String localFileName, String id) {
-        File localFile = new File(RESOURCE_ROOT, localFileName);
-        downloadToLocal(uri, localFile);
-        return new DownloadableResource(localFile);
-    }
-
-    public static DownloadableResource download(String uri, String localFileName, String id) {
-        return download(URI.create(uri), localFileName, id);
-    }
-
-    public static DownloadableResource downloadMd5(URI uri, String localFileName, String expectedHash, String id) {
+    public static DownloadableResource toCacheMd5Async(
+            String uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
-            downloadToLocal(uri, localFile);
+            downloadToLocal(URI.create(uri), localFile);
         }
         return new DownloadableResource(localFile);
-    }
-
-    public static DownloadableResource downloadMd5(String uri, String localFileName, String expectedHash, String id) {
-        return downloadMd5(URI.create(uri), localFileName, expectedHash, id);
     }
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {
@@ -64,6 +52,13 @@ public class Downloader {
 
     private static void downloadToLocal(URI uri, File localFile) {
         // FIXME: implement
+    }
+
+    public static DownloadableResource toCacheAsync(String urlId) {
+        URI uri = URI.create(UrlManager.getUrl(urlId));
+        File localFile = new File(RESOURCE_ROOT, urlId);
+        downloadToLocal(uri, localFile);
+        return new DownloadableResource(localFile);
     }
 
     public HttpURLConnection establishConnection(String url, Map<String, String> headers, int timeout)

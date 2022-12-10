@@ -4,10 +4,11 @@
  */
 package com.wynntils.core.net.downloader;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.wynntils.core.WynntilsMod;
 import java.io.File;
-import java.util.function.Predicate;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.function.Consumer;
 
 public class DownloadableResource {
     private final File localFile;
@@ -16,9 +17,19 @@ public class DownloadableResource {
         this.localFile = localFile;
     }
 
-    public void handleJsonObject(Predicate<JsonObject> handler) {}
+    public Reader waitAndGetReader() {
+        return null;
+    }
 
-    public void handleBytes(Predicate<byte[]> handler) {}
+    public void onCompletion(Consumer<Reader> onCompletion, Consumer<Throwable> onError) {}
 
-    public void handleJsonArray(Predicate<JsonArray> handler) {}
+    public void onCompletion(Consumer<Reader> onCompletion) {
+        onCompletion(onCompletion, onError -> {
+            WynntilsMod.warn("Error while reading resource");
+        });
+    }
+
+    public InputStream waitAndGetInputStream() {
+        return null;
+    }
 }
