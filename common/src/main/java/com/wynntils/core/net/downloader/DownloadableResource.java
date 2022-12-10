@@ -39,11 +39,9 @@ public class DownloadableResource {
         return Long.parseLong(st.getHeaderField("timestamp"));
     }
 
-    public void waitForCompletion() {
-    }
+    public void waitForCompletion() {}
 
-    public void setTimeoutMs(int timeOutMs) {
-    }
+    public void setTimeoutMs(int timeOutMs) {}
 
     public boolean isSuccessful() {
         return true;
