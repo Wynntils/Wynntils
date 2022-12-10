@@ -12,7 +12,7 @@ import com.google.gson.JsonParser;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.Poi;
@@ -130,7 +130,7 @@ public class TerritoryManager extends CoreManager {
         // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
         Reader reader = dl.waitAndGetReader();
         JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 

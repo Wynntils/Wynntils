@@ -12,6 +12,7 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
@@ -116,13 +117,13 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent(UrlManager.getUrl(UrlManager.NetUrls.LINK_WYNNTILS_PATREON))
+        MutableComponent url = new TextComponent(UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
                         .withClickEvent(new ClickEvent(
                                 ClickEvent.Action.OPEN_URL,
-                                UrlManager.getUrl(UrlManager.NetUrls.LINK_WYNNTILS_PATREON)))
+                                UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -158,7 +159,7 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = UrlManager.getUrl(UrlManager.NetUrls.LINK_WYNNTILS_DISCORD_INVITE);
+        String discordInvite = UrlManager.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
         MutableComponent link =
                 new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()

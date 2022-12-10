@@ -11,7 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.Comparator;
@@ -78,7 +78,7 @@ public class ServerListModel extends Model {
         // dataAthenaServerList is based on
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_SERVER_LIST);
+        Download dl = NetManager.download(UrlId.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);
         }

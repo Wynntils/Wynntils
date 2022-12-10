@@ -7,8 +7,8 @@ package com.wynntils.core.services;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.Response;
-import com.wynntils.core.net.UrlManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -30,7 +30,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
         arguments.put("lang", toLanguage);
         arguments.put("text", message);
 
-        Response response = NetManager.callApi(UrlManager.NetUrls.API_GOOGLE_TRANSLATION, arguments);
+        Response response = NetManager.callApi(UrlId.API_GOOGLE_TRANSLATION, arguments);
         response.handleJsonArray(
                 json -> {
                     StringBuilder builder = new StringBuilder();

@@ -41,7 +41,7 @@ public class NetManager {
                     .setNameFormat("wynntils-web-request-pool-%d")
                     .build());
 
-    public static Response callApi(UrlManager.NetUrls urlId, Map<String, String> arguments) {
+    public static Response callApi(UrlId urlId, Map<String, String> arguments) {
         if (UrlManager.getMethod(urlId).equals("post")) {
             JsonObject jsonArgs = new JsonObject();
             arguments.entrySet().stream().forEach(entry -> {
@@ -57,7 +57,7 @@ public class NetManager {
         }
     }
 
-    public static Response callApi(UrlManager.NetUrls urlId) {
+    public static Response callApi(UrlId urlId) {
         return callApi(urlId, Map.of());
     }
 
@@ -69,14 +69,14 @@ public class NetManager {
         return new Download(localFile);
     }
 
-    public static Download download(UrlManager.NetUrls urlId) {
+    public static Download download(UrlId urlId) {
         URI uri = URI.create(UrlManager.getUrl(urlId));
         File localFile = new File(RESOURCE_ROOT, urlId.getId());
         downloadToLocal(uri, localFile);
         return new Download(localFile);
     }
 
-    public static void openLink(UrlManager.NetUrls urlId, Map<String, String> arguments) {
+    public static void openLink(UrlId urlId, Map<String, String> arguments) {
         URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
         openLink(uri);
     }

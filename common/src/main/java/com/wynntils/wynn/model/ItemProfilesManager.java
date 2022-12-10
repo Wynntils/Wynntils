@@ -13,7 +13,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
@@ -65,7 +65,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_ITEM_GUESSES);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
             itemGuesses = new HashMap<>();
@@ -80,7 +80,7 @@ public class ItemProfilesManager extends CoreManager {
         // https://api.wynncraft.com/public_api.php?action=itemDB&category=all
         // but the data is massaged into another form, and wynnBuilderID is injected from
         // https://wynnbuilder.github.io/compress.json
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_ITEM_LIST);
+        Download dl = NetManager.download(UrlId.DATA_ATHENA_ITEM_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -120,7 +120,7 @@ public class ItemProfilesManager extends CoreManager {
         // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing
         // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
         // in Athena
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_ATHENA_INGREDIENT_LIST);
+        Download dl = NetManager.download(UrlId.DATA_ATHENA_INGREDIENT_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();

@@ -5,7 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Map;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -24,7 +24,7 @@ public class ViewPlayerStatsButton extends AbstractButton {
     @Override
     public void onPress() {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-        NetManager.openLink(UrlManager.NetUrls.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName));
+        NetManager.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName));
     }
 
     @Override

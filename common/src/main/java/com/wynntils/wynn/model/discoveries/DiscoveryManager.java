@@ -9,8 +9,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.Response;
-import com.wynntils.core.net.UrlManager;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
@@ -83,7 +83,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        NetManager.openLink(UrlManager.NetUrls.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
+        NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {
@@ -125,7 +125,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        Response response = NetManager.callApi(UrlManager.NetUrls.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
+        Response response = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
@@ -181,7 +181,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_DISCOVERIES);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_DISCOVERIES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);

@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class TokenCommand extends CommandBase {
                         .withClickEvent((new ClickEvent(
                                 ClickEvent.Action.OPEN_URL,
                                 UrlManager.buildUrl(
-                                        UrlManager.NetUrls.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token)))))
+                                        UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token)))))
                         .withColor(ChatFormatting.DARK_AQUA)
                         .withUnderlined(true));
         text.append(response);

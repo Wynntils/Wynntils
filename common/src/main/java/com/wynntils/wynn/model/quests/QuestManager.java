@@ -7,8 +7,8 @@ package com.wynntils.wynn.model.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.Response;
-import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
@@ -102,15 +102,15 @@ public class QuestManager extends CoreManager {
 
             String wikiName = "Quests#" + type + "ing_Posts";
 
-            NetManager.openLink(UrlManager.NetUrls.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
+            NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
             return;
         }
 
         Response response =
-                NetManager.callApi(UrlManager.NetUrls.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
+                NetManager.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            NetManager.openLink(UrlManager.NetUrls.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+            NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
             return true;
         });
     }

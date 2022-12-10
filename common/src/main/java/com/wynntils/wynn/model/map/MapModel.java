@@ -10,7 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.wynn.model.map.poi.CombatKind;
 import com.wynntils.wynn.model.map.poi.CombatPoi;
@@ -60,7 +60,7 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_MAPS);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_MAPS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -83,7 +83,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_PLACES);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_PLACES);
         dl.onCompletion(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -93,7 +93,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_SERVICES);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_SERVICES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
@@ -112,7 +112,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadCombat() {
-        Download dl = NetManager.download(UrlManager.NetUrls.DATA_STATIC_COMBAT_LOCATIONS);
+        Download dl = NetManager.download(UrlId.DATA_STATIC_COMBAT_LOCATIONS);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
