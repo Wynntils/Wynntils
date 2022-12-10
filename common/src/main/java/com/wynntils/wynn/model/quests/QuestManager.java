@@ -6,8 +6,8 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.Response;
 import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.Response;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
