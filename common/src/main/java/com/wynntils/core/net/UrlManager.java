@@ -97,6 +97,10 @@ public final class UrlManager extends CoreManager {
         return Optional.ofNullable(urlMap.get(urlId).md5);
     }
 
+    public static List<String> getArguments(String urlId) {
+        return urlMap.get(urlId).arguments;
+    }
+
     public static String buildUrl(String urlId, String... arguments) {
         // Verify that argument count is correct
         assert (urlMap.get(urlId).numArguments != null && urlMap.get(urlId).numArguments == arguments.length);
@@ -151,6 +155,8 @@ public final class UrlManager extends CoreManager {
     private static final class UrlInfo {
         String id;
         String url;
+        String method;
+        List<String> arguments;
         String md5;
         String encoding;
         Integer numArguments;
