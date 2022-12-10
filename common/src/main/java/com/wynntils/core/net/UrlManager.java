@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class UrlManager extends CoreManager {
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
@@ -46,18 +45,15 @@ public final class UrlManager extends CoreManager {
         // Verify that arguments match with what is specified
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
-        Map<String, String> encodedArguments = arguments.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        // First encode with specified encoder (if any), then finish by
-                        // always url encoding arguments
-                        entry -> StringUtils.encodeUrl(urlInfo.encoding().encode(entry.getValue()))));
-
         // Replace %{argKey} with arg value in URL string
-        String url = encodedArguments.keySet().stream()
+        String url = arguments.keySet().stream()
                 .reduce(
                         urlInfo.url(),
-                        (str, argKey) -> str.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
+                        (str, argKey) -> str.replaceAll(
+                                "%\\{" + argKey + "\\}",
+                                // First encode with specified encoder (if any), then finish by
+                                // always url encoding arguments
+                                StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
         return url;
     }
 
