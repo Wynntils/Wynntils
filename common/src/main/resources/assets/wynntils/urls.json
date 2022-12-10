@@ -8,8 +8,8 @@
     "url": "https://athena.wynntils.com/auth/responseEncryption",
     "method": "post",
     "arguments": [
-      "username",
       "key",
+      "username",
       "version"
     ]
   },
