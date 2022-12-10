@@ -84,7 +84,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        NetManager.openLink(UrlManager.buildUrl(UrlManager.LINK_WIKI_LOOKUP, discoveryInfo.getName()));
+        NetManager.openLink(UrlManager.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {
@@ -126,10 +126,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        Map<String, String> arguments = new HashMap<>();
-        arguments.put("name", name);
-
-        Response response = NetManager.callApi(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
+        Response response = NetManager.callApi(UrlManager.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(

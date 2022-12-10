@@ -32,10 +32,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
 
         fetching.add(uuid); // temporary, avoid extra loads
 
-        Map<String, String> arguments = new HashMap<>();
-        arguments.put("uuid", uuid.toString());
-
-        Response response = NetManager.callApi(UrlManager.API_ATHENA_USER_INFO, arguments);
+        Response response = NetManager.callApi(UrlManager.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;
 

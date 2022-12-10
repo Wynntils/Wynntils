@@ -15,6 +15,7 @@ import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.item.IngredientItemStack;
+import java.util.Map;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
@@ -74,7 +75,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            NetManager.openLink(UrlManager.buildUrl(UrlManager.LINK_WYNNDATA_ITEM_LOOKUP, unformattedName));
+            NetManager.openLink(UrlManager.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {

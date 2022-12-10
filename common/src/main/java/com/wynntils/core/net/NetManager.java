@@ -76,11 +76,16 @@ public class NetManager {
         return new Download(localFile);
     }
 
+    public static void openLink(String urlId, Map<String, String> arguments) {
+        URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+        openLink(uri);
+    }
+
     /**
      * Open the specified URL in the user's browser.
      * @param url The url to open
      */
-    public static void openLink(String url) {
+    public static void openLink(URI url) {
         Util.getPlatform().openUri(url);
     }
 
