@@ -68,6 +68,7 @@ import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
+import com.wynntils.features.user.inventory.IntelligenceManaTableFeature;
 import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
@@ -160,6 +161,7 @@ public final class FeatureRegistry {
         registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
+        registerFeature(new IntelligenceManaTableFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new InventoryRedirectFeature());
         registerFeature(new ItemCompareFeature());
