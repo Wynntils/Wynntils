@@ -121,7 +121,7 @@ public class TerritoryManager extends CoreManager {
     }
 
     private static void updateTerritoryProfileMap() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_TERRITORY_LIST);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_TERRITORY_LIST);
         Reader reader = dl.waitAndGetReader();
         JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 

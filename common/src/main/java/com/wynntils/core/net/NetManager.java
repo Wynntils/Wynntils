@@ -60,7 +60,7 @@ public class NetManager {
         return callApi(urlId, Map.of());
     }
 
-    public static DownloadableResource toCacheMd5Async(
+    public static DownloadableResource download(
             String uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
@@ -69,7 +69,7 @@ public class NetManager {
         return new DownloadableResource(localFile);
     }
 
-    public static DownloadableResource toCacheAsync(String urlId) {
+    public static DownloadableResource download(String urlId) {
         URI uri = URI.create(UrlManager.getUrl(urlId));
         File localFile = new File(RESOURCE_ROOT, urlId);
         downloadToLocal(uri, localFile);

@@ -188,7 +188,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_DISCOVERIES);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_DISCOVERIES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = GSON.fromJson(reader, type);

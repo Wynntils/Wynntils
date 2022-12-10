@@ -33,7 +33,7 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_SPLASHES);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_SPLASHES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = GSON.fromJson(reader, type);

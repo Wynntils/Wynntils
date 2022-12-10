@@ -75,7 +75,7 @@ public class ServerListModel extends Model {
     }
 
     private static DownloadableResource updateServerList(int timeOutMs) {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_SERVER_LIST);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);
         }

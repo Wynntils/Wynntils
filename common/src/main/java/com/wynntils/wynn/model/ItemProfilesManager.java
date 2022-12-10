@@ -62,7 +62,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_STATIC_ITEM_GUESSES);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_ITEM_GUESSES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
 
@@ -78,7 +78,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemList() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_ITEM_LIST);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_ITEM_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -113,7 +113,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadIngredientList() {
-        DownloadableResource dl = NetManager.toCacheAsync(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
+        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
