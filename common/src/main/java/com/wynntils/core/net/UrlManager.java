@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.net;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
@@ -15,7 +14,9 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -23,63 +24,39 @@ import java.util.stream.Collectors;
 
 public final class UrlManager extends CoreManager {
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
-    private static final Gson GSON = new Gson();
 
-    private static Map<String, UrlInfo> urlMap;
+    private static Map<UrlId, UrlInfo> urlMap = Map.of();
 
-    public static String getUrl(UrlId urlId2) {
-        String urlId = urlId2.getId();
-        // Verify that argument count is correct
-        assert (urlMap.get(urlId).arguments == null
-                || urlMap.get(urlId).arguments.size() == 0);
+    public static String getUrl(UrlId urlId) {
+        UrlInfo urlInfo = urlMap.get(urlId);
 
-        return urlMap.get(urlId).url;
+        // This is only valid for POST URLs, or GET URLs with no arguments
+        assert (urlInfo.method() == Method.POST || urlInfo.arguments().isEmpty());
+
+        return urlInfo.url();
     }
 
-    public static Optional<String> getMd5(String urlId) {
-        return Optional.ofNullable(urlMap.get(urlId).md5);
+    public static UrlInfo getUrlInfo(UrlId urlId) {
+        return urlMap.get(urlId);
     }
 
-    public static List<String> getArguments(String urlId) {
-        return urlMap.get(urlId).arguments;
-    }
+    public static String buildUrl(UrlId urlId, Map<String, String> arguments) {
+        UrlInfo urlInfo = urlMap.get(urlId);
 
-    public static String getMethod(UrlId urlId2) {
-        String urlId = urlId2.getId();
-        return urlMap.get(urlId).method;
-    }
-
-    // FIXME: Not done. Also, replace all old buildUrl calls.
-    public static String buildUrl(UrlId urlId2, Map<String, String> arguments) {
-        String urlId = urlId2.getId();
-        // Verify that argument count is correct
-        assert (urlMap.get(urlId).arguments != null
-                && urlMap.get(urlId).arguments.size() == arguments.size());
-        // FIXME: Verify that argument keys are exactly matching argument list in urlMap
+        // Verify that arguments match with what is specified
+        assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
         Map<String, String> encodedArguments = arguments.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry ->
-                                // FIXME: Also call proper specific encoding!
-                                StringUtils.encodeUrl(entry.getValue())));
+                        // First encode with specified encoder (if any), then finish by
+                        // always url encoding arguments
+                        entry -> StringUtils.encodeUrl(urlInfo.encoding().encode(entry.getValue()))));
 
-        String str = urlMap.get(urlId).url;
         // Replace %{argKey} with arg value in URL string
-        String result = encodedArguments.keySet().stream()
-                .reduce(str, (s, argKey) -> s.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
-
-        return result;
-    }
-
-    private static Function<String, String> getEncoding(String encoding) {
-        if (encoding == null || encoding.isEmpty()) return Function.identity();
-
-        return switch (encoding) {
-            case "cargo" -> (s -> "'" + s.replace("'", "\\'") + "'");
-            case "wiki" -> (s -> s.replace(" ", "_"));
-            default -> throw new RuntimeException("Unknown URL encoding: " + encoding);
-        };
+        String url = encodedArguments.keySet().stream()
+                .reduce(urlInfo.url(), (str, argKey) -> str.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
+        return url;
     }
 
     public static void reloadUrls() {
@@ -101,22 +78,71 @@ public final class UrlManager extends CoreManager {
     }
 
     private static void readUrls(InputStream inputStream) throws IOException {
+        final class UrlProfile {
+            String id;
+            String url;
+            String method;
+            List<String> arguments;
+            String md5;
+            String encoding;
+        }
+
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
-        Type type = new TypeToken<List<UrlInfo>>() {}.getType();
-        List<UrlInfo> urlInfos = GSON.fromJson(json, type);
-        urlMap = new HashMap<>();
-        for (UrlInfo urlInfo : urlInfos) {
-            urlMap.put(urlInfo.id, urlInfo);
+        Type type = new TypeToken<List<UrlProfile>>() {}.getType();
+        List<UrlProfile> urlProfiles = WynntilsMod.GSON.fromJson(json, type);
+
+        Map<UrlId, UrlInfo> newMap = new HashMap<>();
+
+        for (UrlProfile urlProfile : urlProfiles) {
+            List<String> arguments = urlProfile.arguments == null ? List.of() : urlProfile.arguments;
+            newMap.put(
+                    UrlId.from(urlProfile.id),
+                    new UrlInfo(
+                            urlProfile.url,
+                            arguments,
+                            Method.from(urlProfile.method),
+                            Encoding.from(urlProfile.encoding),
+                            Optional.ofNullable(urlProfile.md5)));
+        }
+
+        // Sanity check that we got all ids
+        if (newMap.size() != UrlId.values().length) {
+            throw new IOException("Not all urlIds present in urls.json");
+        }
+        urlMap = newMap;
+    }
+
+    public enum Method {
+        GET,
+        POST;
+
+        public static Method from(String str) {
+            if (str == null || str.isEmpty()) return GET; // GET is default if unspecified
+            return Method.valueOf(str.toUpperCase(Locale.ROOT));
         }
     }
 
-    private static final class UrlInfo {
-        String id;
-        String url;
-        String method;
-        List<String> arguments;
-        String md5;
-        String encoding;
+    public enum Encoding {
+        NONE(s -> s),
+        CARGO(s -> "'" + s.replace("'", "\\'") + "'"),
+        WIKI(s -> s.replace(" ", "_"));
+
+        private final Function<String, String> encoder;
+
+        Encoding(Function<String, String> encoder) {
+            this.encoder = encoder;
+        }
+
+        public static Encoding from(String str) {
+            if (str == null || str.isEmpty()) return NONE; // NONE is default if unspecified
+            return Encoding.valueOf(str.toUpperCase(Locale.ROOT));
+        }
+
+        String encode(String input) {
+            return encoder.apply(input);
+        }
     }
+
+    public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {}
 }

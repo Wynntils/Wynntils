@@ -42,18 +42,22 @@ public class NetManager {
                     .build());
 
     public static Response callApi(UrlId urlId, Map<String, String> arguments) {
-        if (UrlManager.getMethod(urlId).equals("post")) {
+        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+        if (urlInfo.method() == UrlManager.Method.GET) {
+            URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+            byte[] blob = getToMemory(uri);
+            return new Response(blob);
+        } else {
+            assert (urlInfo.method() == UrlManager.Method.POST);
+
             JsonObject jsonArgs = new JsonObject();
             arguments.entrySet().stream().forEach(entry -> {
                 jsonArgs.addProperty(entry.getKey(), entry.getValue());
             });
-            URI uri = URI.create(UrlManager.getUrl(urlId));
+            URI uri = URI.create(urlInfo.url());
             byte[] blob = postToMemory(uri, jsonArgs);
             return new Response(blob);
-        } else {
-            URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
-            byte[] blob = getToMemory(uri);
-            return new Response(blob);
+
         }
     }
 

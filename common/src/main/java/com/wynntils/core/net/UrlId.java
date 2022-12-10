@@ -50,4 +50,13 @@ public enum UrlId {
     public String getId() {
         return id;
     }
+
+    public static UrlId from(String str) {
+        for (UrlId urlId : values()) {
+            if (urlId.id.equals(str)) {
+                return urlId;
+            }
+        }
+        throw new IllegalArgumentException("No known enum for UrlId: " + str);
+    }
 }
