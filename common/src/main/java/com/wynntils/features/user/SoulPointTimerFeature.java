@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.model.item.SoulPointItemStackModel;
 import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE)
@@ -16,7 +16,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+        return List.of(SoulPointItemStackModel.class);
     }
 
     public static SoulPointTimerFeature INSTANCE;

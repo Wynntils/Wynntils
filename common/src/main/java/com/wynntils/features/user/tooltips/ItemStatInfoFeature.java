@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wynn.item.ItemStackTransformModel;
+import com.wynntils.wynn.model.item.GearItemStackModel;
 import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
@@ -52,6 +52,6 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+        return List.of(GearItemStackModel.class);
     }
 }

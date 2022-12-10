@@ -14,10 +14,10 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
+import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -94,7 +94,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+        return ItemStackTransformManager.TEXT_OVERLAY_PROPERTIES;
     }
 
     @SubscribeEvent

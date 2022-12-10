@@ -15,10 +15,10 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.HighlightProperty;
+import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -141,7 +141,7 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+        return ItemStackTransformManager.HIGHLIGHT_PROPERTIES;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
