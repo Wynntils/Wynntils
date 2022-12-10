@@ -5,8 +5,6 @@
 package com.wynntils.wynn.model.map;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
@@ -40,7 +38,6 @@ public final class MapModel extends Model {
     private static final String COMBAT_LOCATIONS_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json";
 
-    private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
     private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
     private static final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
@@ -81,7 +78,7 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
-                    List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
+                    List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(json, type);
                     for (MapPartProfile mapPart : mapPartList) {
                         String fileName = mapPart.md5 + ".png";
 
@@ -119,7 +116,7 @@ public final class MapModel extends Model {
                 .cacheTo(new File(mapDirectory, "places.json"))
                 .useCacheAsBackup()
                 .handleJsonObject(json -> {
-                    PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
+                    PlacesProfile places = WynntilsMod.GSON.fromJson(json, PlacesProfile.class);
                     for (Label label : places.labels) {
                         LABEL_POIS.add(new LabelPoi(label));
                     }
@@ -137,7 +134,7 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
-                    List<ServiceProfile> serviceList = GSON.fromJson(json, type);
+                    List<ServiceProfile> serviceList = WynntilsMod.GSON.fromJson(json, type);
                     for (var service : serviceList) {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
@@ -163,7 +160,7 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
-                    List<CombatProfileList> combatProfileLists = GSON.fromJson(json, type);
+                    List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(json, type);
                     for (var combatList : combatProfileLists) {
                         CombatKind kind = CombatKind.fromString(combatList.type);
                         if (kind != null) {
