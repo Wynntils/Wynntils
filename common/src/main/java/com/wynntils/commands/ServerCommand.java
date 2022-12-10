@@ -13,13 +13,8 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
-import com.wynntils.wynn.utils.WynnUtils;
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -28,6 +23,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public class ServerCommand extends CommandBase {
+    private static final int UPDATE_TIME_OUT_MS = 3000;
+
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(getBaseCommandBuilder());
@@ -82,10 +79,7 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
-        HashMap<String, ServerProfile> servers;
-        try {
-            servers = ServerListModel.getServerList();
-        } catch (IOException e) {
+        if (!ServerListModel.forceUpdate(UPDATE_TIME_OUT_MS)) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
@@ -102,12 +96,12 @@ public class ServerCommand extends CommandBase {
         } catch (Exception ignored) {
         }
 
-        if (!servers.containsKey(server)) {
+        ServerProfile serverProfile = ServerListModel.getServer(server);
+        if (serverProfile == null) {
             context.getSource().sendFailure(new TextComponent(server + " not found.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        ServerProfile serverProfile = servers.get(server);
         Set<String> players = serverProfile.getPlayers();
         MutableComponent message = new TextComponent(server + ":" + "\n")
                 .withStyle(ChatFormatting.GOLD)
@@ -128,10 +122,7 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        Map<String, ServerProfile> serverList;
-        try {
-            serverList = ServerListModel.getServerList();
-        } catch (IOException e) {
+        if (!ServerListModel.forceUpdate(3000)) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
@@ -140,16 +131,8 @@ public class ServerCommand extends CommandBase {
 
         MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
-        for (String serverType : WynnUtils.getWynnServerTypes()) {
-            List<String> currentTypeServers = serverList.keySet().stream()
-                    .filter(server -> server.startsWith(serverType))
-                    .sorted((o1, o2) -> {
-                        int number1 = Integer.parseInt(o1.substring(serverType.length()));
-                        int number2 = Integer.parseInt(o2.substring(serverType.length()));
-
-                        return number1 - number2;
-                    })
-                    .toList();
+        for (String serverType : ServerListModel.getWynnServerTypes()) {
+            List<String> currentTypeServers = ServerListModel.getServersSortedOnNameOfType(serverType);
 
             if (currentTypeServers.isEmpty()) continue;
 
@@ -168,24 +151,21 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverUptimeList(CommandContext<CommandSourceStack> context) {
-        HashMap<String, ServerProfile> servers;
-        try {
-            servers = ServerListModel.getServerList();
-        } catch (IOException e) {
+        if (!ServerListModel.forceUpdate(3000)) {
             context.getSource()
                     .sendFailure(
                             new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
             return 1;
         }
 
+        List<String> sortedServers = ServerListModel.getServersSortedOnUptime();
+
         MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
-        for (Map.Entry<String, ServerProfile> entry : servers.entrySet().stream()
-                .sorted(Comparator.comparing(profile -> profile.getValue().getUptime()))
-                .toList()) {
+        for (String server : sortedServers) {
             message.append("\n");
-            message.append(
-                    new TextComponent(entry.getKey() + ": " + entry.getValue().getUptime())
-                            .withStyle(ChatFormatting.AQUA));
+            message.append(new TextComponent(
+                            server + ": " + ServerListModel.getServer(server).getUptime())
+                    .withStyle(ChatFormatting.AQUA));
         }
 
         context.getSource().sendSuccess(message, false);

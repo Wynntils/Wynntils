@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URLConnection;
 import java.util.function.Consumer;
 
 public class DownloadableResource {
@@ -31,5 +32,20 @@ public class DownloadableResource {
 
     public InputStream waitAndGetInputStream() {
         return null;
+    }
+
+    public long getTimestamp() {
+        URLConnection st = null;
+        return Long.parseLong(st.getHeaderField("timestamp"));
+    }
+
+    public void waitForCompletion() {
+    }
+
+    public void setTimeoutMs(int timeOutMs) {
+    }
+
+    public boolean isSuccessful() {
+        return true;
     }
 }

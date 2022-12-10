@@ -8,36 +8,62 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.UrlManager;
-import com.wynntils.core.net.api.ApiRequester;
+import com.wynntils.core.net.downloader.DownloadableResource;
+import com.wynntils.core.net.downloader.Downloader;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ServerListModel extends Model {
+    private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB");
     private static final Gson GSON = new Gson();
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
 
-    public static void init() {}
+    public static void init() {
+        updateServerList(0);
+    }
 
-    private static synchronized void updateServers() {
-        try {
-            availableServers = getServerList();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to update server list", e);
-        }
+    public static List<String> getWynnServerTypes() {
+        return SERVER_TYPES;
+    }
+
+    public static Set<String> getServers() {
+        return availableServers.keySet();
+    }
+
+    public static List<String> getServersSortedOnUptime() {
+        return getServers().stream()
+                .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
+                .toList();
+    }
+
+    public static List<String> getServersSortedOnNameOfType(String serverType) {
+        return getServers().stream()
+                .filter(server -> server.startsWith(serverType))
+                .sorted((o1, o2) -> {
+                    int number1 = Integer.parseInt(o1.substring(serverType.length()));
+                    int number2 = Integer.parseInt(o2.substring(serverType.length()));
+
+                    return number1 - number2;
+                })
+                .toList();
     }
 
     public static ServerProfile getServer(String worldId) {
         return availableServers.get(worldId);
+    }
+
+    public static boolean forceUpdate(int timeOutMs) {
+        DownloadableResource dl = updateServerList(timeOutMs);
+        dl.waitForCompletion();
+        return dl.isSuccessful();
     }
 
     @SubscribeEvent
@@ -45,26 +71,30 @@ public class ServerListModel extends Model {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
-        // Run async to avoid blocking the render thread
-        new Thread(ServerListModel::updateServers).start();
+        updateServerList(0);
     }
 
-    public static HashMap<String, ServerProfile> getServerList() throws IOException {
-        URLConnection st = ApiRequester.generateURLRequest(UrlManager.getUrl(UrlManager.DATA_ATHENA_SERVER_LIST));
-        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-        JsonObject servers = json.getAsJsonObject("servers");
-        HashMap<String, ServerProfile> result = new HashMap<>();
-
-        long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
-        for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
-            ServerProfile profile = GSON.fromJson(entry.getValue(), ServerProfile.class);
-            profile.matchTime(serverTime);
-
-            result.put(entry.getKey(), profile);
+    private static DownloadableResource updateServerList(int timeOutMs) {
+        DownloadableResource dl = Downloader.toCacheAsync(UrlManager.DATA_ATHENA_SERVER_LIST);
+        if (timeOutMs > 0) {
+            dl.setTimeoutMs(timeOutMs);
         }
+        dl.onCompletion(reader -> {
+            JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
-        return result;
+            JsonObject servers = json.getAsJsonObject("servers");
+            Map<String, ServerProfile> newMap = new HashMap<>();
+
+            long serverTime = dl.getTimestamp();
+            for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                ServerProfile profile = GSON.fromJson(entry.getValue(), ServerProfile.class);
+                profile.matchTime(serverTime);
+
+                newMap.put(entry.getKey(), profile);
+            }
+
+            availableServers = newMap;
+        });
+        return dl;
     }
 }
