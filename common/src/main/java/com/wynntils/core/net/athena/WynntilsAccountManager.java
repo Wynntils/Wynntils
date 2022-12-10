@@ -7,7 +7,7 @@ package com.wynntils.core.net.athena;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.Response;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -81,7 +81,7 @@ public class WynntilsAccountManager extends CoreManager {
         String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
 
         // generating secret key
-        ApiRequestResponse response = NetManager.callApi(UrlManager.API_ATHENA_AUTH_PUBLIC_KEY);
+        Response response = NetManager.callApi(UrlManager.API_ATHENA_AUTH_PUBLIC_KEY);
         response.handleJsonObject(json -> {
             if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
@@ -95,7 +95,7 @@ public class WynntilsAccountManager extends CoreManager {
         arguments.put("username", McUtils.mc().getUser().getName());
         arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        ApiRequestResponse response2 = NetManager.callApi(UrlManager.API_ATHENA_AUTH_RESPONSE, arguments);
+        Response response2 = NetManager.callApi(UrlManager.API_ATHENA_AUTH_RESPONSE, arguments);
         response2.handleJsonObject(json -> {
             if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/

@@ -6,7 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.Response;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
@@ -35,7 +35,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("uuid", uuid.toString());
 
-        ApiRequestResponse response = NetManager.callApi(UrlManager.API_ATHENA_USER_INFO, arguments);
+        Response response = NetManager.callApi(UrlManager.API_ATHENA_USER_INFO, arguments);
         response.handleJsonObject(json -> {
             if (!json.has("user")) return false;
 

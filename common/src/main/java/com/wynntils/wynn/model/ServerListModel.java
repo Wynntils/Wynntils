@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -61,7 +61,7 @@ public class ServerListModel extends Model {
     }
 
     public static boolean forceUpdate(int timeOutMs) {
-        DownloadableResource dl = updateServerList(timeOutMs);
+        Download dl = updateServerList(timeOutMs);
         dl.waitForCompletion();
         return dl.isSuccessful();
     }
@@ -74,8 +74,8 @@ public class ServerListModel extends Model {
         updateServerList(0);
     }
 
-    private static DownloadableResource updateServerList(int timeOutMs) {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_SERVER_LIST);
+    private static Download updateServerList(int timeOutMs) {
+        Download dl = NetManager.download(UrlManager.DATA_ATHENA_SERVER_LIST);
         if (timeOutMs > 0) {
             dl.setTimeoutMs(timeOutMs);
         }

@@ -7,8 +7,8 @@ package com.wynntils.wynn.model.discoveries;
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.ApiRequestResponse;
-import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.Response;
+import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -130,7 +130,7 @@ public class DiscoveryManager extends CoreManager {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("name", name);
 
-        ApiRequestResponse response = NetManager.callApi(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
+        Response response = NetManager.callApi(UrlManager.API_WIKI_DISCOVERY_QUERY, arguments);
         response.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
@@ -186,7 +186,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_DISCOVERIES);
+        Download dl = NetManager.download(UrlManager.DATA_STATIC_DISCOVERIES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);

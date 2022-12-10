@@ -40,7 +40,7 @@ public class NetManager {
                     .setNameFormat("wynntils-web-request-pool-%d")
                     .build());
 
-    public static ApiRequestResponse callApi(String urlId, Map<String, String> arguments) {
+    public static Response callApi(String urlId, Map<String, String> arguments) {
         if (UrlManager.getMethod(urlId).equals("post")) {
             JsonObject jsonArgs = new JsonObject();
             arguments.entrySet().stream().forEach(entry -> {
@@ -48,31 +48,31 @@ public class NetManager {
             });
             URI uri = URI.create(UrlManager.getUrl(urlId));
             byte[] blob = postToMemory(uri, jsonArgs);
-            return new ApiRequestResponse(blob);
+            return new Response(blob);
         } else {
             URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
             byte[] blob = getToMemory(uri);
-            return new ApiRequestResponse(blob);
+            return new Response(blob);
         }
     }
 
-    public static ApiRequestResponse callApi(String urlId) {
+    public static Response callApi(String urlId) {
         return callApi(urlId, Map.of());
     }
 
-    public static DownloadableResource download(String uri, String localFileName, String expectedHash, String id) {
+    public static Download download(String uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
             downloadToLocal(URI.create(uri), localFile);
         }
-        return new DownloadableResource(localFile);
+        return new Download(localFile);
     }
 
-    public static DownloadableResource download(String urlId) {
+    public static Download download(String urlId) {
         URI uri = URI.create(UrlManager.getUrl(urlId));
         File localFile = new File(RESOURCE_ROOT, urlId);
         downloadToLocal(uri, localFile);
-        return new DownloadableResource(localFile);
+        return new Download(localFile);
     }
 
     private static byte[] postToMemory(URI uri, JsonObject arguments) {

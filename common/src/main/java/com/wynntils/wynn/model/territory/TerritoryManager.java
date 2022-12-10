@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
@@ -124,7 +124,7 @@ public class TerritoryManager extends CoreManager {
     }
 
     private static void updateTerritoryProfileMap() {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = NetManager.download(UrlManager.DATA_ATHENA_TERRITORY_LIST);
         Reader reader = dl.waitAndGetReader();
         JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 

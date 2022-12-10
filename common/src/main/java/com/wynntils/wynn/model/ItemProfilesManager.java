@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.net.DownloadableResource;
+import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.wynn.item.IdentificationOrderer;
@@ -65,7 +65,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_STATIC_ITEM_GUESSES);
+        Download dl = NetManager.download(UrlManager.DATA_STATIC_ITEM_GUESSES);
         dl.onCompletion(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
             itemGuesses = new HashMap<>();
@@ -76,7 +76,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemList() {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_ITEM_LIST);
+        Download dl = NetManager.download(UrlManager.DATA_ATHENA_ITEM_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -112,7 +112,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadIngredientList() {
-        DownloadableResource dl = NetManager.download(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
+        Download dl = NetManager.download(UrlManager.DATA_ATHENA_INGREDIENT_LIST);
         dl.onCompletion(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();

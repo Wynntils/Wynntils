@@ -9,10 +9,10 @@ import com.google.gson.JsonObject;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class ApiRequestResponse {
+public class Response {
     private final byte[] blob;
 
-    public ApiRequestResponse(byte[] blob) {
+    public Response(byte[] blob) {
         this.blob = blob;
     }
 

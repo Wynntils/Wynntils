@@ -5,7 +5,7 @@
 package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.net.ApiRequestResponse;
+import com.wynntils.core.net.Response;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.utils.FileUtils;
@@ -28,7 +28,7 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        ApiRequestResponse response = NetManager.callApi(UrlManager.API_ATHENA_UPDATE_CHECK);
+        Response response = NetManager.callApi(UrlManager.API_ATHENA_UPDATE_CHECK);
         response.handleJsonObject(json -> {
             String version = json.getAsJsonPrimitive("version").getAsString();
             future.complete(version);
@@ -50,7 +50,7 @@ public class UpdateManager extends CoreManager {
             return future;
         }
 
-        ApiRequestResponse response = NetManager.callApi(UrlManager.API_ATHENA_UPDATE_CHECK);
+        Response response = NetManager.callApi(UrlManager.API_ATHENA_UPDATE_CHECK);
         response.handleJsonObject(json -> {
             String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 

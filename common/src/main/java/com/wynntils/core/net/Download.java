@@ -11,10 +11,10 @@ import java.io.Reader;
 import java.net.URLConnection;
 import java.util.function.Consumer;
 
-public class DownloadableResource {
+public class Download {
     private final File localFile;
 
-    public DownloadableResource(File localFile) {
+    public Download(File localFile) {
         this.localFile = localFile;
     }
 
