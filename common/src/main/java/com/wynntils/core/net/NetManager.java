@@ -57,7 +57,6 @@ public class NetManager {
             URI uri = URI.create(urlInfo.url());
             byte[] blob = postToMemory(uri, jsonArgs);
             return new Response(blob);
-
         }
     }
 

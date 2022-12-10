@@ -55,7 +55,9 @@ public final class UrlManager extends CoreManager {
 
         // Replace %{argKey} with arg value in URL string
         String url = encodedArguments.keySet().stream()
-                .reduce(urlInfo.url(), (str, argKey) -> str.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
+                .reduce(
+                        urlInfo.url(),
+                        (str, argKey) -> str.replaceAll("%\\{" + argKey + "\\}", encodedArguments.get(argKey)));
         return url;
     }
 

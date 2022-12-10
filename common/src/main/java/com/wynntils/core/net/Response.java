@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Response {
-    public static class FailureResponse extends Response {
+    public static class FailureResponse extends Response {}
 
-    }
-    private  byte[] blob;
-    public Response() { }
+    private byte[] blob;
+
+    public Response() {}
 
     public Response(byte[] blob) {
         this.blob = blob;
