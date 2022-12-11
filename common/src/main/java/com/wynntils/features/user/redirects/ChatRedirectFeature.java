@@ -427,7 +427,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class MageTeleporationFailRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("§cSorry, you can't teleport... Try moving away from blocks.");
+                Pattern.compile("^§cSorry, you can't teleport... Try moving away from blocks.$");
 
         @Override
         protected Pattern getSystemPattern() {
