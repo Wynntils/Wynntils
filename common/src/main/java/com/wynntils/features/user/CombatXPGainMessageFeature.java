@@ -6,7 +6,6 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.wynn.model.CharacterManager;
