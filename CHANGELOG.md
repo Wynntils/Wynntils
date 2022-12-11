@@ -1,9 +1,21 @@
+## [0.0.1-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.142...v0.0.1-alpha.143) (2022-12-11)
+
+
+### Bug Fixes
+
+* Ability Point Redirect Message now works with Pluralization ([#809](https://github.com/Wynntils/Artemis/issues/809)) ([b6aa22e](https://github.com/Wynntils/Artemis/commit/b6aa22e2c17c9b99b48b6ea48e55f9822c6d29d4))
+
 ## [0.0.1-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.141...v0.0.1-alpha.142) (2022-12-10)
 
 
 ### Code Refactoring
 
 * Gson cleanups ([#804](https://github.com/Wynntils/Artemis/issues/804)) ([42007de](https://github.com/Wynntils/Artemis/commit/42007de2ff4d34d96e95df1f23fcd819a074f7cb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.142 [skip ci] ([58a8abe](https://github.com/Wynntils/Artemis/commit/58a8abee8c4a22e37a56222e83e651a8855fe1d7))
 
 ## [0.0.1-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.140...v0.0.1-alpha.141) (2022-12-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.139 [skip ci] ([69a7d9c](https://github.com/Wynntils/Artemis/commit/69a7d9c92c6ba348a019348699846b9761fdbf0c))
-
-## [0.0.1-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.137...v0.0.1-alpha.138) (2022-12-09)
-
-
-### New Features
-
-* Redirects "Scared Horse" messages to Overlay ([#800](https://github.com/Wynntils/Artemis/issues/800)) ([18d2da2](https://github.com/Wynntils/Artemis/commit/18d2da2f16f409bd6e2dd592f926a345fac492a7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.138 [skip ci] ([de05b2b](https://github.com/Wynntils/Artemis/commit/de05b2bda3ec2f1c4fd1c8f2a12539196f7c5c36))
 
