@@ -46,6 +46,12 @@ public class CombatXPGainMessageFeature extends UserFeature {
         if (newTickXP == lastTickXP) return;
 
         int neededXP = data.getXpPointsNeededToLevelUp();
+        // The purpose of this if/else statement here is to account for the case when a player joins a
+        // Wynncraft world and the lastTickXP variable is still 0, because it hasn't been updated yet.
+        // Wynncraft will send the saved XP points to the player within a few ticks of joining the world,
+        // but lastTickXP will still equal 0. So, what we do here to ensure that we don't get some message
+        // like "+56403 XP (0.0%)" is to just gather the percentage from the newTickXP variable instead.
+        // Thus giving us a message like "+56403 XP (42.7%)".
         if (lastTickXP != 0) {
             trackedPercentage = (int) lastTickXP / neededXP;
         } else {
