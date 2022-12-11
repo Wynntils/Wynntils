@@ -22,7 +22,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
     private static float newTickXP = 0;
     private static float lastTickXP = 0;
-    private static int trackedPercentage = 0;
+    private static float trackedPercentage = 0;
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
