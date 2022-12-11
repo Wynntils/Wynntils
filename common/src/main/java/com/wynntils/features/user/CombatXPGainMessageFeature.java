@@ -19,30 +19,20 @@ public class CombatXPGainMessageFeature extends UserFeature {
     public boolean getCombatXPGainMessages = true;
 
     private static final DecimalFormat percentFormat = new DecimalFormat("##.##'%'");
-    private static float startTickXP = 0;
-    private static float endTickXP = 0;
+    private static float newTickXP = 0;
+    private static float lastTickXP = 0;
 
     @SubscribeEvent
-    public void onTickStart (ClientTickEvent.Start event) {
-        if(!getCombatXPGainMessages) { return; }
-        CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
-
-        startTickXP = data.getCurrentXp();
-
-        WynntilsMod.info("START TICK XP IS " + startTickXP); //FIXME DEBUG
-    }
-
-    @SubscribeEvent
-    public void onTickEnd (ClientTickEvent.End event) {
-        if(!getCombatXPGainMessages) { return; }
+    public void onTick (ClientTickEvent.End event) {
+        if(!WynnUtils.onWorld() || !getCombatXPGainMessages) { return; }
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
     
-        endTickXP = data.getCurrentXp();
-        WynntilsMod.info("END TICK XP IS " + endTickXP); //FIXME DEBUG
+        newTickXP = data.getCurrentXp();
+        WynntilsMod.info("NEW TICK XP IS " + newTickXP); //FIXME DEBUG
 
-        if (endTickXP == startTickXP) { return; }
+        if (newTickXP == lastTickXP) { return; }
 
-        int gainedXP = Math.round(endTickXP) - Math.round(startTickXP);
+        int gainedXP = Math.round(newTickXP) - Math.round(lastTickXP);
         int neededXP = data.getXpPointsNeededToLevelUp();
         float percentGained = (float) (gainedXP / neededXP) * 100;
 
@@ -51,5 +41,8 @@ public class CombatXPGainMessageFeature extends UserFeature {
         String message = String.format("§a+%d XP (§b%s§a)", gainedXP, percentGained);
 
         NotificationManager.queueMessage(message);
+
+        lastTickXP = newTickXP;
+        WynntilsMod.info("LAST TICK XP IS " + lastTickXP); //FIXME DEBUG
     }
 }
