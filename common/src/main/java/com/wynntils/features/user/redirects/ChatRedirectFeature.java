@@ -77,14 +77,15 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseSpawnFailRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
+        register(new MageTeleporationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
         register(new PotionsMaxRedirector());
         register(new PotionsReplacedRedirector());
+        register(new ScrollTeleportationFailRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
-        register(new TeleportationFailRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
         register(new UnusedSkillAndAbilityPointsRedirector());
@@ -424,6 +425,26 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class MageTeleporationFailRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§cSorry, you can't teleport... Try moving away from blocks.");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return teleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.";
+        }
+    }
+
     private class ManaDeficitRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("^§4You don't have enough mana to cast that spell!$");
@@ -503,7 +524,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class TeleportationFailRedirector extends SimpleRedirector {
+    private class ScrollTeleportationFailRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
 
         @Override
