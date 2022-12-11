@@ -62,8 +62,8 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         String message = String.format("§2+%d XP (§6%.2f%%§2)", gainedXP, percentChange);
 
-        NotificationManager.queueMessage(message);
-
         lastTickXP = newTickXP;
+
+        NotificationManager.queueMessage(message);
     }
 }
