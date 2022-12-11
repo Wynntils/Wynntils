@@ -75,7 +75,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
         // The reason we do this is for the same reason as the if/else statement above. You can get cases where
         // both trackedPercentage and percentGained are equal, which would result in a (0.0%) message.
         if (trackedPercentage != percentGained) {
-            percentChange = (percentGained - trackedPercentage) * 100;
+            percentChange = percentGained * 100;
         } else {
             percentChange = trackedPercentage * 100;
         }
