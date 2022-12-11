@@ -28,7 +28,6 @@ public class CombatXPGainMessageFeature extends UserFeature {
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
     
         newTickXP = data.getCurrentXp();
-        WynntilsMod.info("NEW TICK XP IS " + newTickXP); //FIXME DEBUG
 
         if (newTickXP == lastTickXP) { return; }
 
@@ -52,6 +51,5 @@ public class CombatXPGainMessageFeature extends UserFeature {
         NotificationManager.queueMessage(message);
 
         lastTickXP = newTickXP;
-        WynntilsMod.info("LAST TICK XP IS " + lastTickXP); //FIXME DEBUG
     }
 }
