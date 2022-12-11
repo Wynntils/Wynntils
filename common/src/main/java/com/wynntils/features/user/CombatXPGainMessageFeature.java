@@ -26,15 +26,11 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
-        if (!WynnUtils.onWorld()) {
-            return;
-        }
+        if (!WynnUtils.onWorld()) return;
 
         tickCounter++;
 
-        if (tickCounter % tickDelay != 0) {
-            return;
-        }
+        if (tickCounter % tickDelay != 0) return;
 
         tickCounter = 0;
 
@@ -42,9 +38,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         newTickXP = data.getCurrentXp();
 
-        if (newTickXP == lastTickXP) {
-            return;
-        }
+        if (newTickXP == lastTickXP) return;
 
         int neededXP = data.getXpPointsNeededToLevelUp();
         if (lastTickXP != 0) {
