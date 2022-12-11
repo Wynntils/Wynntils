@@ -53,9 +53,9 @@ public class CombatXPGainMessageFeature extends UserFeature {
         // like "+56403 XP (0.0%)" is to just gather the percentage from the newTickXP variable instead.
         // Thus giving us a message like "+56403 XP (42.7%)".
         if (lastTickXP != 0) {
-            trackedPercentage = (int) lastTickXP / neededXP;
+            trackedPercentage = (float) lastTickXP / neededXP;
         } else {
-            trackedPercentage = (int) newTickXP / neededXP;
+            trackedPercentage = (float) newTickXP / neededXP;
         }
 
         int gainedXP = Math.round(newTickXP) - Math.round(lastTickXP);
