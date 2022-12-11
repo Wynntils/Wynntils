@@ -23,6 +23,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
     private float newTickXP = 0;
     private float lastTickXP = 0;
     private float trackedPercentage = 0;
+    private int trackedLevel = 0;
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -44,11 +45,22 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
 
-        int level = data.getXpLevel();
+        int newLevel = data.getXpLevel();
 
         // You get division by zero errors when you're at the level cap (i.e. 106 in Wynncraft 2.0.1).
         // This needs to be updated if the level cap is ever raised.
-        if (level > 105) return;
+        if (newLevel > 105) return;
+
+        if(trackedLevel == 0) {
+            trackedLevel = newLevel;
+        }
+        
+        // Handle levelling up in an active session, otherwise you might see a message like "+500 XP (-90.37%)"
+        if (newLevel != trackedLevel) {
+            trackedLevel = newLevel;
+            lastTickXP = 0;
+            trackedPercentage = 0;
+        }
 
         newTickXP = data.getCurrentXp();
 
