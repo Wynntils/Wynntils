@@ -1,9 +1,21 @@
+## [0.0.1-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.144...v0.0.1-alpha.145) (2022-12-11)
+
+
+### New Features
+
+* Redirects "Crafted Excess Potions" Message to Overlay ([#807](https://github.com/Wynntils/Artemis/issues/807)) ([dc4e597](https://github.com/Wynntils/Artemis/commit/dc4e5978d0307c1d58d8a5ffb6707d35af21b240))
+
 ## [0.0.1-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.143...v0.0.1-alpha.144) (2022-12-11)
 
 
 ### Bug Fixes
 
 * Healing Yourself With A Potion properly redirects to overlay ([#808](https://github.com/Wynntils/Artemis/issues/808)) ([18a1baf](https://github.com/Wynntils/Artemis/commit/18a1baf9bd9981f4a67ff8b81edf484c93cd4042))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.144 [skip ci] ([3f761bc](https://github.com/Wynntils/Artemis/commit/3f761bcf532e05f7587ec9361c98e4b4447c355d))
 
 ## [0.0.1-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.142...v0.0.1-alpha.143) (2022-12-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.141 [skip ci] ([7f18fff](https://github.com/Wynntils/Artemis/commit/7f18fff148235e98888998a2e765806d71e1652f))
-
-## [0.0.1-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.139...v0.0.1-alpha.140) (2022-12-09)
-
-
-### New Features
-
-* Redirects "Selling Ingredients" Ingredient Pouch Message to Overlay ([#801](https://github.com/Wynntils/Artemis/issues/801)) ([5dd84b1](https://github.com/Wynntils/Artemis/commit/5dd84b10476fe152b1db9650fab2577c925b5237))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.140 [skip ci] ([cd3745f](https://github.com/Wynntils/Artemis/commit/cd3745fff76149671208957b8fce2b9a49b3ce9b))
 
