@@ -704,6 +704,8 @@
   "function.wynntils.horse_xp.name": "Horse XP",
   "function.wynntils.inventoryFree.description": "Number of free slots in inventory",
   "function.wynntils.inventoryFree.name": "Free Inventory Slots",
+  "function.wynntils.inventoryUsed.description": "Number of used slots in inventory",
+  "function.wynntils.inventoryUsed.name": "Used Inventory Slots",
   "function.wynntils.level.description": "Your current combat level",
   "function.wynntils.level.name": "Lvl",
   "function.wynntils.liquidEmerald.description": "Amount of money liquid emeralds in inventory",

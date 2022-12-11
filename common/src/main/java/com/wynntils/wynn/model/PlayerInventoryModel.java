@@ -10,6 +10,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,8 +20,6 @@ public class PlayerInventoryModel extends Model {
     private static int emeralds = 0;
     private static int openSlots = 0;
     private static int usedSlots = 0;
-    private static int openSlotsEq = 0;
-    private static int usedSlotsEq = 0;
 
     public static void init() {
         resetCache();
@@ -58,15 +57,14 @@ public class PlayerInventoryModel extends Model {
     private static void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
-        openSlots = 28 - ContainerUtils.getUsedSlotsInPlayerContainer(inventory, false);
-        usedSlots = ContainerUtils.getUsedSlotsInPlayerContainer(inventory, false);
-        openSlotsEq = 36 - ContainerUtils.getUsedSlotsInPlayerContainer(inventory, true);
-        usedSlotsEq = ContainerUtils.getUsedSlotsInPlayerContainer(inventory, true);
+        openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
+        usedSlots = 28 - InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
     private static void resetCache() {
         emeralds = 0;
         openSlots = 0;
+        usedSlots = 0;
     }
 
     public static int getCurrentEmeraldCount() {
@@ -79,13 +77,5 @@ public class PlayerInventoryModel extends Model {
 
     public static int getUsedInvSlots() {
         return usedSlots;
-    }
-
-    public static int getOpenInvSlotsWithEquipment() {
-        return openSlotsEq;
-    }
-
-    public static int getUsedInvSlotsWithEquipment() {
-        return usedSlotsEq;
     }
 }

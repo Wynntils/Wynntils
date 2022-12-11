@@ -306,9 +306,7 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.InventoryFreeFunction());
-        registerFunction(new CharacterFunctions.InventoryWithEquipmentFreeFunction());
         registerFunction(new CharacterFunctions.InventoryUsedFunction());
-        registerFunction(new CharacterFunctions.InventoryWithEqipmentUsedFunction());
         registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
