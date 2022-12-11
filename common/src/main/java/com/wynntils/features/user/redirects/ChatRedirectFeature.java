@@ -451,7 +451,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class PotionsMovedRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("^§7You already are holding the maximum amount of potions allowed so your crafting results was moved to your bank.$");
+                Pattern.compile("^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
 
         @Override
         protected Pattern getSystemPattern() {
@@ -465,7 +465,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            return ChatFormatting.GRAY + "Moved excess potions to bank.";
+            return ChatFormatting.GRAY + "Moved excess healing items to bank.";
         }
     }
 
