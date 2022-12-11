@@ -1,16 +1,17 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.mc.event.ClientTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.text.DecimalFormat;
-
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo
 public class CombatXPGainMessageFeature extends UserFeature {
@@ -23,19 +24,22 @@ public class CombatXPGainMessageFeature extends UserFeature {
     private static int trackedPercentage = 0;
 
     @SubscribeEvent
-    public void onTick (ClientTickEvent.End event) {
-        if(!WynnUtils.onWorld() || !getCombatXPGainMessages) { return; }
+    public void onTick(ClientTickEvent.End event) {
+        if (!WynnUtils.onWorld() || !getCombatXPGainMessages) {
+            return;
+        }
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
-    
+
         newTickXP = data.getCurrentXp();
 
-        if (newTickXP == lastTickXP) { return; }
+        if (newTickXP == lastTickXP) {
+            return;
+        }
 
         int neededXP = data.getXpPointsNeededToLevelUp();
         if (lastTickXP != 0) {
             trackedPercentage = (int) lastTickXP / neededXP;
-        }
-        else {
+        } else {
             trackedPercentage = (int) newTickXP / neededXP;
         }
 
