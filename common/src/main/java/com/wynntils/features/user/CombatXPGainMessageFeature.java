@@ -8,6 +8,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,14 @@ public class CombatXPGainMessageFeature extends UserFeature {
     private float newTickXP = 0;
     private float lastTickXP = 0;
     private float trackedPercentage = 0;
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        tickCounter = 0;
+        newTickXP = 0;
+        lastTickXP = 0;
+        trackedPercentage = 0;
+    }
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
