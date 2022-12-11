@@ -14,7 +14,6 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -28,26 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class ContainerUtils {
-    public static boolean isLootChest(Screen screen) {
-        return screen instanceof ContainerScreen containerScreen
-                && containerScreen.getTitle().getString().contains("Loot Chest ");
-    }
-
-    public static boolean isLootOrRewardChest(Screen screen) {
-        if (!(screen instanceof AbstractContainerScreen)) return false;
-
-        String title = screen.getTitle().getString();
-        return isLootOrRewardChest(title);
-    }
-
-    public static boolean isLootOrRewardChest(String title) {
-        return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
-    }
-
-    public static boolean isLootChest(String title) {
-        return title.startsWith("Loot Chest");
-    }
-
     public static NonNullList<ItemStack> getItems(Screen screen) {
         if (screen instanceof AbstractContainerScreen<?> containerScreen) {
             return containerScreen.getMenu().getItems();

@@ -17,7 +17,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.wynn.model.LootrunModel;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +65,7 @@ public class LootrunFeature extends StateManagedFeature {
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
-        if (ContainerUtils.isLootChest(event.getScreen())) {
+        if (WynnScreenMatchers.isLootChest(event.getScreen())) {
             LootrunModel.addChestIfRecording();
         }
     }
