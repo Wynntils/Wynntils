@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
@@ -23,9 +24,10 @@ public class ItemRendererMixin {
             at =
                     @At(
                             target =
-                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
+                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
+                            shift = At.Shift.AFTER,
                             value = "INVOKE"))
-    public void onRender(
+    public void onRenderItem(
             ItemStack itemStack,
             ItemTransforms.TransformType transformType,
             boolean leftHand,
@@ -33,7 +35,8 @@ public class ItemRendererMixin {
             MultiBufferSource buffer,
             int combinedLight,
             int combinedOverlay,
-            BakedModel model) {
-        EventFactory.onGroundItemRender(poseStack, itemStack);
+            BakedModel model,
+            CallbackInfo ci) {
+        if (transformType == ItemTransforms.TransformType.GROUND) EventFactory.onGroundItemRender(poseStack, itemStack);
     }
 }
