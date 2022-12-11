@@ -1,9 +1,21 @@
+## [0.0.1-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.146...v0.0.1-alpha.147) (2022-12-11)
+
+
+### New Features
+
+* Redirects Mage Failing to Teleport to overlay ([#810](https://github.com/Wynntils/Artemis/issues/810)) ([6688255](https://github.com/Wynntils/Artemis/commit/668825522b219a8e2fcef3a5f29f9caee62c7b4d))
+
 ## [0.0.1-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.145...v0.0.1-alpha.146) (2022-12-11)
 
 
 ### Code Refactoring
 
 * Move screen matcher methods to WynnScreenMatchers ([#815](https://github.com/Wynntils/Artemis/issues/815)) ([d05c281](https://github.com/Wynntils/Artemis/commit/d05c281692879bbdc36a913be64945a1c40234fe))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.146 [skip ci] ([1b7d225](https://github.com/Wynntils/Artemis/commit/1b7d22525ef0dfc250c33a0c1205c13e279e849f))
 
 ## [0.0.1-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.144...v0.0.1-alpha.145) (2022-12-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.143 [skip ci] ([1b24223](https://github.com/Wynntils/Artemis/commit/1b242239a5f24551bde8b41f86136a25021d07c4))
-
-## [0.0.1-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.141...v0.0.1-alpha.142) (2022-12-10)
-
-
-### Code Refactoring
-
-* Gson cleanups ([#804](https://github.com/Wynntils/Artemis/issues/804)) ([42007de](https://github.com/Wynntils/Artemis/commit/42007de2ff4d34d96e95df1f23fcd819a074f7cb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.142 [skip ci] ([58a8abe](https://github.com/Wynntils/Artemis/commit/58a8abee8c4a22e37a56222e83e651a8855fe1d7))
 
