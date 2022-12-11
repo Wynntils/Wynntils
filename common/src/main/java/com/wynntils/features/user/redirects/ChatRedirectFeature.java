@@ -261,11 +261,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -617,7 +617,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile(
-                "^§4You have §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         protected Pattern getSystemPattern() {
@@ -644,7 +644,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile(
-                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
