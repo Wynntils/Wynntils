@@ -1,6 +1,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -11,7 +12,7 @@ import java.text.DecimalFormat;
 
 
 @FeatureInfo
-public class CombatXPGainMessage {
+public class CombatXPGainMessageFeature extends UserFeature {
 
     @Config
     public boolean getCombatXPGainMessages = true;
@@ -21,7 +22,7 @@ public class CombatXPGainMessage {
     private static float endTickXP = 0;
 
     @SubscribeEvent
-    private void onTick (ClientTickEvent.Start event) {
+    public void onTick (ClientTickEvent.Start event) {
         if(!getCombatXPGainMessages) { return; }
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
 
@@ -29,7 +30,7 @@ public class CombatXPGainMessage {
     }
 
     @SubscribeEvent
-    private void onTick(ClientTickEvent.End event) {
+    public void onTick(ClientTickEvent.End event) {
         if(!getCombatXPGainMessages) { return; }
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
     

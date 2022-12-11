@@ -28,6 +28,7 @@ import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
+import com.wynntils.features.user.CombatXPGainMessageFeature;
 import com.wynntils.features.user.CommandAliasesFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.ContainerSearchFeature;
@@ -136,6 +137,7 @@ public final class FeatureRegistry {
         registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
+        registerFeature(new CombatXPGainMessageFeature());
         registerFeature(new CommandAliasesFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
