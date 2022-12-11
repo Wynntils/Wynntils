@@ -262,10 +262,16 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class HealRedirector extends SimpleRedirector {
         private static final Pattern NORMAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§r§7§o\\[\\+(\\d+) ❤\\]$");
 
         @Override
         protected Pattern getNormalPattern() {
             return NORMAL_PATTERN;
+        }
+
+        @Override
+        protected Pattern getBackgroundPattern() {
+            return BACKGROUND_PATTERN;
         }
 
         @Override
