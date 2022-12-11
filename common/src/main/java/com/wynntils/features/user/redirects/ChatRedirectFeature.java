@@ -41,6 +41,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction mage = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
     @Config
@@ -436,7 +439,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         public RedirectAction getAction() {
-            return teleport;
+            return mage;
         }
 
         @Override
