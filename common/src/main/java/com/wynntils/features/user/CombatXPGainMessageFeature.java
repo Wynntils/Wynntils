@@ -17,11 +17,11 @@ public class CombatXPGainMessageFeature extends UserFeature {
     @Config
     public int tickDelay = 20;
 
-    private static long tickCounter = 0;
+    private long tickCounter = 0;
 
-    private static float newTickXP = 0;
-    private static float lastTickXP = 0;
-    private static float trackedPercentage = 0;
+    private float newTickXP = 0;
+    private float lastTickXP = 0;
+    private float trackedPercentage = 0;
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
