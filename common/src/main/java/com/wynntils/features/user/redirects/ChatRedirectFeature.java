@@ -80,7 +80,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseSpawnFailRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
-        register(new MageTeleporationFailRedirector());
+        register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
         register(new PotionsMaxRedirector());
@@ -428,7 +428,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class MageTeleporationFailRedirector extends SimpleRedirector {
+    private class MageTeleportationFailRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("^§cSorry, you can't teleport... Try moving away from blocks.$");
 
