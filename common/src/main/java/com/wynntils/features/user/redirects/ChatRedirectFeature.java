@@ -59,7 +59,7 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction speed = RedirectAction.REDIRECT;
 
     @Config
-    public RedirectAction teleport = RedirectAction.REDIRECT;
+    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
@@ -537,7 +537,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         public RedirectAction getAction() {
-            return teleport;
+            return scrollTeleport;
         }
 
         @Override
