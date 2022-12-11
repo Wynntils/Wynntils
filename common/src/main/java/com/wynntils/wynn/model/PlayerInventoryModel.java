@@ -18,6 +18,9 @@ public class PlayerInventoryModel extends Model {
 
     private static int emeralds = 0;
     private static int openSlots = 0;
+    private static int usedSlots = 0;
+    private static int openSlotsEq = 0;
+    private static int usedSlotsEq = 0;
 
     public static void init() {
         resetCache();
@@ -55,7 +58,10 @@ public class PlayerInventoryModel extends Model {
     private static void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
-        openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
+        openSlots = 28 - ContainerUtils.getUsedSlotsInPlayerContainer(inventory, false);
+        usedSlots = ContainerUtils.getUsedSlotsInPlayerContainer(inventory, false);
+        openSlotsEq = 36 - ContainerUtils.getUsedSlotsInPlayerContainer(inventory, true);
+        usedSlotsEq = ContainerUtils.getUsedSlotsInPlayerContainer(inventory, true);
     }
 
     private static void resetCache() {
@@ -69,5 +75,17 @@ public class PlayerInventoryModel extends Model {
 
     public static int getOpenInvSlots() {
         return openSlots;
+    }
+
+    public static int getUsedInvSlots() {
+        return usedSlots;
+    }
+
+    public static int getOpenInvSlotsWithEquipment() {
+        return openSlotsEq;
+    }
+
+    public static int getUsedInvSlotsWithEquipment() {
+        return usedSlotsEq;
     }
 }

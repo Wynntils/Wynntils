@@ -131,4 +131,23 @@ public final class ContainerUtils {
         }
         return slots;
     }
+
+    public static int getUsedSlotsInPlayerContainer(AbstractContainerMenu containerMenu, boolean includeEquipment) {
+        if (containerMenu == null) return 0;
+        int slots = 0;
+        for (int i = 14; i <= 41; i++) {
+            if (!containerMenu.getSlot(i).getItem().isEmpty()) {
+                slots++;
+            }
+        }
+        if (includeEquipment) {
+            for (int i = 5; i <= 12; i++) {
+                if (!containerMenu.getSlot(i).getItem().isEmpty()
+                        && containerMenu.getSlot(i).getItem().getItem() != Items.SNOW) {
+                    slots++;
+                }
+            }
+        }
+        return slots;
+    }
 }
