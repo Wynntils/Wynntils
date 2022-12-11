@@ -80,6 +80,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
         register(new PotionsMaxRedirector());
+        register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
@@ -480,6 +481,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "At potion charge limit!";
+        }
+    }
+
+    private class PotionsMovedRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "Moved excess healing items to bank.";
         }
     }
 
