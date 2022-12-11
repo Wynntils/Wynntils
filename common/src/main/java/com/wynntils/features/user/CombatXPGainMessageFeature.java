@@ -61,7 +61,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
         int gainedXP = Math.round(newTickXP) - Math.round(lastTickXP);
 
         float percentGained = (float) gainedXP / neededXP;
-        // to keep the math as striaght as possible, we only multiply by 100
+        // to keep the math as straight as possible, we only multiply by 100
         // at the very end of all percentage calculations.
         float percentChange = (percentGained - trackedPercentage) * 100;
 
