@@ -18,7 +18,6 @@ public class CombatXPGainMessageFeature extends UserFeature {
     @Config
     public boolean getCombatXPGainMessages = true;
 
-    private static final DecimalFormat percentFormat = new DecimalFormat("##.#");
     private static float newTickXP = 0;
     private static float lastTickXP = 0;
     private static int trackedPercentage = 0;
@@ -44,11 +43,11 @@ public class CombatXPGainMessageFeature extends UserFeature {
         int gainedXP = Math.round(newTickXP) - Math.round(lastTickXP);
 
         float percentGained = (float) gainedXP / neededXP;
-        float percentChange = trackedPercentage - percentGained;
+        // to keep the math as striaght as possible, we only multiply by 100
+        // at the very end of all percentage calculations.
+        float percentChange = (percentGained - trackedPercentage) * 100;
 
-        percentFormat.format(percentChange);
-
-        String message = String.format("§a+%d XP (§b%s%%§a)", gainedXP, percentChange);
+        String message = String.format("§a+%d XP (§b%.2f%%§a)", gainedXP, percentChange);
 
         NotificationManager.queueMessage(message);
 
