@@ -10,6 +10,7 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
@@ -23,7 +24,7 @@ public class MythicBlockerFeature extends UserFeature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
-        if (!ContainerUtils.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!WynnScreenMatchers.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
