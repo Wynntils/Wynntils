@@ -41,13 +41,16 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
-    public RedirectAction mage = RedirectAction.REDIRECT;
+    public RedirectAction mageTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction potion = RedirectAction.REDIRECT;
+
+    @Config
+    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction shaman = RedirectAction.REDIRECT;
@@ -57,9 +60,6 @@ public class ChatRedirectFeature extends UserFeature {
 
     @Config
     public RedirectAction speed = RedirectAction.REDIRECT;
-
-    @Config
-    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
@@ -439,7 +439,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         public RedirectAction getAction() {
-            return mage;
+            return mageTeleport;
         }
 
         @Override
