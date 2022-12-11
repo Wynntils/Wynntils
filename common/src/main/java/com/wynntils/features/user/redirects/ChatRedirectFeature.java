@@ -450,8 +450,8 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionsMovedRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
 
         @Override
         protected Pattern getSystemPattern() {
