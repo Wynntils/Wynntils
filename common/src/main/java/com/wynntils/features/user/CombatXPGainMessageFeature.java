@@ -35,6 +35,12 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
 
+        int level = data.getXpLevel();
+
+        // You get division by zero errors when you're at the level cap (i.e. 106 in Wynncraft 2.0.1).
+        // This needs to be updated if the level cap is ever raised.
+        if (level > 105) return;
+
         newTickXP = data.getCurrentXp();
 
         if (newTickXP == lastTickXP) return;
