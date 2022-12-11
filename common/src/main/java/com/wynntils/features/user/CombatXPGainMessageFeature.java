@@ -46,7 +46,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
         // at the very end of all percentage calculations.
         float percentChange = (percentGained - trackedPercentage) * 100;
 
-        String message = String.format("§a+%d XP (§b%.2f%%§a)", gainedXP, percentChange);
+        String message = String.format("§2+%d XP (§6%.2f%%§2)", gainedXP, percentChange);
 
         NotificationManager.queueMessage(message);
 
