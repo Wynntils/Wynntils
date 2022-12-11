@@ -9,6 +9,8 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -20,7 +22,7 @@ public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
-    private final List<Component> tooltip;
+    private List<Component> tooltip;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
@@ -60,4 +62,12 @@ public class BasicTexturedButton extends AbstractButton {
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public void editTooltip(List<Component> newTooltip) {
+        tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);
+    }
+
+    public List<Component> getTooltip() {
+        return Collections.unmodifiableList(tooltip);
+    }
 }

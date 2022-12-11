@@ -43,6 +43,14 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+        if (McUtils.mc().screen instanceof GuildMapScreen guildMapScreen) {
+            if (territoryInfo != null &&
+                    guildMapScreen.getTerritoryDefenseFilterLevel() != GuildMapScreen.TerritoryDefenseLevel.Off &&
+                    !territoryInfo.getDefences().asColoredString().equals(guildMapScreen.getTerritoryDefenseFilterLevel().asColoredString())) {
+                return;
+            }
+        }
+
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 

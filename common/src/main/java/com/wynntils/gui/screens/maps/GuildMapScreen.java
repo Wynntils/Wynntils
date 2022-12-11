@@ -27,12 +27,30 @@ import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
+    private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.Off;
+
+    private BasicTexturedButton territoryDefenseFilterButton;
+    private List<Component> getTerritoryDefenseFilterButtonTooltip(TerritoryDefenseLevel tdfl) {
+        return List.of(
+                new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.BLUE)
+                        .append(new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.name")),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(tdfl.asColoredString()));
+    }
 
     @Override
     protected void init() {
@@ -73,6 +91,22 @@ public class GuildMapScreen extends AbstractMapScreen {
                                         "screens.wynntils.guildMap.toggleResourceColor.name")),
                         new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+
+
+        territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 1,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
+                (b) -> {
+                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.next();
+                    territoryDefenseFilterButton.editTooltip(getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel));
+                }, getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel)));
     }
 
     @Override
@@ -320,5 +354,33 @@ public class GuildMapScreen extends AbstractMapScreen {
 
     public boolean isResourceMode() {
         return resourceMode;
+    }
+
+    public TerritoryDefenseLevel getTerritoryDefenseFilterLevel() {
+        return territoryDefenseFilterLevel;
+    }
+
+    public enum TerritoryDefenseLevel {
+        Off(ChatFormatting.GRAY + "Off"),
+        VeryLow(ChatFormatting.DARK_GREEN + "Very Low"),
+        Low(ChatFormatting.GREEN + "Low"),
+        Medium(ChatFormatting.YELLOW + "Medium"),
+        High(ChatFormatting.RED + "High"),
+        VeryHigh(ChatFormatting.DARK_RED + "Very High");
+
+        private final String asColoredString;
+        private static final TerritoryDefenseLevel[] VALUES = values();
+
+        TerritoryDefenseLevel(String asColoredString) {
+            this.asColoredString = asColoredString;
+        }
+
+        public String asColoredString() {
+            return asColoredString;
+        }
+
+        public TerritoryDefenseLevel next() {
+            return VALUES[(ordinal() + 1) % VALUES.length];
+        }
     }
 }
