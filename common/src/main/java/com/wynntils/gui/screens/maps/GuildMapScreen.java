@@ -34,7 +34,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
-    private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.Off;
+    private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
 
     private BasicTexturedButton territoryDefenseFilterButton;
 
@@ -361,15 +361,14 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     public enum TerritoryDefenseLevel {
-        Off(ChatFormatting.GRAY + "Off"),
-        VeryLow(ChatFormatting.DARK_GREEN + "Very Low"),
-        Low(ChatFormatting.GREEN + "Low"),
-        Medium(ChatFormatting.YELLOW + "Medium"),
-        High(ChatFormatting.RED + "High"),
-        VeryHigh(ChatFormatting.DARK_RED + "Very High");
+        OFF(ChatFormatting.GRAY + "Off"),
+        VERY_LOW(ChatFormatting.DARK_GREEN + "Very Low"),
+        LOW(ChatFormatting.GREEN + "Low"),
+        MEDIUM(ChatFormatting.YELLOW + "Medium"),
+        HIGH(ChatFormatting.RED + "High"),
+        VERY_HIGH(ChatFormatting.DARK_RED + "Very High");
 
         private final String asColoredString;
-        private static final TerritoryDefenseLevel[] VALUES = values();
 
         TerritoryDefenseLevel(String asColoredString) {
             this.asColoredString = asColoredString;
@@ -380,7 +379,7 @@ public class GuildMapScreen extends AbstractMapScreen {
         }
 
         public TerritoryDefenseLevel next() {
-            return VALUES[(ordinal() + 1) % VALUES.length];
+            return values()[(ordinal() + 1) % values().length];
         }
     }
 }

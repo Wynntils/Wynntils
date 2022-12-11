@@ -65,8 +65,4 @@ public class BasicTexturedButton extends AbstractButton {
     public void editTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);
     }
-
-    public List<Component> getTooltip() {
-        return Collections.unmodifiableList(tooltip);
-    }
 }
