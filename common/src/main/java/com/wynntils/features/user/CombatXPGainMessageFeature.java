@@ -19,6 +19,11 @@ public class CombatXPGainMessageFeature extends UserFeature {
     @Config
     public boolean getCombatXPGainMessages = true;
 
+    @Config
+    public int combatXPGainMessageTickDelay = 20;
+
+    private static long tickCounter = 0;
+
     private static float newTickXP = 0;
     private static float lastTickXP = 0;
     private static int trackedPercentage = 0;
@@ -28,6 +33,15 @@ public class CombatXPGainMessageFeature extends UserFeature {
         if (!WynnUtils.onWorld() || !getCombatXPGainMessages) {
             return;
         }
+
+        tickCounter++;
+
+        if (tickCounter % combatXPGainMessageTickDelay != 0) {
+            return;
+        }
+
+        tickCounter = 0;
+
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
 
         newTickXP = data.getCurrentXp();

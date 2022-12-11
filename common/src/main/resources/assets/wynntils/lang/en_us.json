@@ -173,6 +173,8 @@
   "feature.wynntils.gearViewer.name": "Gear Viewer",
   "feature.wynntils.getCombatXPGainMessages.description": "Do you want to see updates to your XP as overlay messages?",
   "feature.wynntils.getCombatXPGainMessages.name": "Combat XP Gain Messages",
+  "feature.wynntils.combatXPGainMessageTickDelay.description": "How long (in ticks) should a combat XP gain message remain on the screen? 20 ticks = 1 second.",
+  "feature.wynntils.combatXPGainMessageTickDelay.name": "Combat XP Gain Message Expiry Time",
   "feature.wynntils.guildAttackTimerOverlay.disableAttackTimersOnScoreboard.description": "Should guild attack timers be removed from the scoreboard? This option only works if Guild Attack Timers is turned on.",
   "feature.wynntils.guildAttackTimerOverlay.disableAttackTimersOnScoreboard.name": "Disable Guild Attack Timers on Scoreboard",
   "feature.wynntils.guildAttackTimerOverlay.name": "Guild Attack Timers",
