@@ -5,7 +5,6 @@
 package com.wynntils.wynn.model.discoveries;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.WebManager;
@@ -39,7 +38,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscoveryManager extends CoreManager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
-    private static final Gson GSON = new Gson();
 
     private static List<DiscoveryInfo> discoveries = List.of();
     private static List<DiscoveryInfo> secretDiscoveries = List.of();
@@ -210,7 +208,7 @@ public class DiscoveryManager extends CoreManager {
                         .handleJsonArray(discoveriesJson -> {
                             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
 
-                            List<DiscoveryProfile> discoveries = GSON.fromJson(discoveriesJson, type);
+                            List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(discoveriesJson, type);
                             discoveryInfoList =
                                     discoveries.stream().map(DiscoveryInfo::new).toList();
                             return true;
