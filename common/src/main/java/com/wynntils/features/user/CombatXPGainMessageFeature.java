@@ -51,10 +51,10 @@ public class CombatXPGainMessageFeature extends UserFeature {
         // This needs to be updated if the level cap is ever raised.
         if (newLevel > 105) return;
 
-        if(trackedLevel == 0) {
+        if (trackedLevel == 0) {
             trackedLevel = newLevel;
         }
-        
+
         // Handle levelling up in an active session, otherwise you might see a message like "+500 XP (-90.37%)"
         if (newLevel != trackedLevel) {
             trackedLevel = newLevel;
