@@ -35,6 +35,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction horse = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
@@ -53,6 +56,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction speed = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction teleport = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
 
     @Config
@@ -67,15 +73,19 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
+        register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
+        register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
         register(new PotionsMaxRedirector());
+        register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
+        register(new TeleportationFailRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
         register(new UnusedSkillAndAbilityPointsRedirector());
@@ -252,11 +262,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -319,6 +329,26 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class HorseScaredRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§dYour horse is scared to come out right now, too many mobs are nearby.");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return horse;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!";
+        }
+    }
+
     private class HorseSpawnFailRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4There is no room for a horse.");
 
@@ -335,6 +365,33 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "No room for a horse!";
+        }
+    }
+
+    private class IngredientPouchSellRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return ingredientPouch;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            Integer ingredientCount = Integer.parseInt(matcher.group(1));
+            String ingredientString = ingredientCount.toString() + " §dingredient" + (ingredientCount == 1 ? "" : "s");
+
+            String emeraldString = matcher.group(2);
+
+            String formattedOverlayString = String.format("§dSold §7%s §dfor §a%s§d.", ingredientString, emeraldString);
+
+            return formattedOverlayString;
         }
     }
 
@@ -427,6 +484,26 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class PotionsMovedRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "Moved excess healing items to bank.";
+        }
+    }
+
     private class PotionsReplacedRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
@@ -444,6 +521,25 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.GRAY + "Lesser potion replaced.";
+        }
+    }
+
+    private class TeleportationFailRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return teleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!";
         }
     }
 
@@ -541,12 +637,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -568,17 +664,16 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Skill Points? and (\\d+) unused Ability Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
-            return null;
-        }
-
-        @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+            if (messageType == MessageType.SYSTEM) {
+                return SYSTEM_PATTERN;
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -598,12 +693,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillPointsRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "You have (\\d+) unused Skill Points?! Right-Click while holding your compass to use them");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§4You have §r§c§l(\\d+) unused Skill Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
