@@ -13,14 +13,10 @@ import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo
 public class CombatXPGainMessageFeature extends UserFeature {
 
     @Config
-    public boolean getCombatXPGainMessages = true;
-
-    @Config
-    public int combatXPGainMessageTickDelay = 20;
+    public int tickDelay = 20;
 
     private static long tickCounter = 0;
 
@@ -30,13 +26,13 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
-        if (!WynnUtils.onWorld() || !getCombatXPGainMessages) {
+        if (!WynnUtils.onWorld()) {
             return;
         }
 
         tickCounter++;
 
-        if (tickCounter % combatXPGainMessageTickDelay != 0) {
+        if (tickCounter % tickDelay != 0) {
             return;
         }
 
