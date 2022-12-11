@@ -28,7 +28,6 @@ import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
@@ -38,6 +37,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.Off;
 
     private BasicTexturedButton territoryDefenseFilterButton;
+
     private List<Component> getTerritoryDefenseFilterButtonTooltip(TerritoryDefenseLevel tdfl) {
         return List.of(
                 new TextComponent("[>] ")
@@ -92,8 +92,6 @@ public class GuildMapScreen extends AbstractMapScreen {
                         new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
-
-
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 1,
                 (int) (this.renderHeight
@@ -105,8 +103,10 @@ public class GuildMapScreen extends AbstractMapScreen {
                 Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
                 (b) -> {
                     territoryDefenseFilterLevel = territoryDefenseFilterLevel.next();
-                    territoryDefenseFilterButton.editTooltip(getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel));
-                }, getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel)));
+                    territoryDefenseFilterButton.editTooltip(
+                            getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel));
+                },
+                getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel)));
     }
 
     @Override
