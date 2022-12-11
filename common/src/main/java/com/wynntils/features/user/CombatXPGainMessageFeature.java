@@ -38,7 +38,7 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         percentFormat.format(percentGained);
 
-        String message = String.format("§a+%d XP (§b%s%§a)", gainedXP, percentGained);
+        String message = String.format("§a+%d XP (§b%s%%§a)", gainedXP, percentGained);
 
         NotificationManager.queueMessage(message);
 
