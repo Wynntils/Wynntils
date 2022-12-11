@@ -9,7 +9,6 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
