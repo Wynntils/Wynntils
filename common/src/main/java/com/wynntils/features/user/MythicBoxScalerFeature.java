@@ -22,6 +22,7 @@ public class MythicBoxScalerFeature extends UserFeature {
 
         PoseStack stack = e.getPoseStack();
 
+        // Value of constant from ItemEntityRenderer#render
         // cancel out old scale y transform and later replace it after scaling
         stack.translate(0f, -0.25f, 0f);
 
