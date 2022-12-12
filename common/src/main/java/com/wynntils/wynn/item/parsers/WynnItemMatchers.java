@@ -165,7 +165,7 @@ public final class WynnItemMatchers {
 
     public static boolean isMythic(ItemStack itemStack) {
         // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack)) || !isMythicBox(itemStack)) return false;
+        if (!(isUnidentified(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
 
         return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
