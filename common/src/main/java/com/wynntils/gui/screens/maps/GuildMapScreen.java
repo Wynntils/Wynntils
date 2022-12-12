@@ -18,6 +18,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.wynn.model.map.TerritoryDefenseLevel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.TerritoryManager;
@@ -27,7 +28,6 @@ import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
@@ -37,20 +37,6 @@ public class GuildMapScreen extends AbstractMapScreen {
     private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
 
     private BasicTexturedButton territoryDefenseFilterButton;
-
-    private List<Component> getTerritoryDefenseFilterButtonTooltip(TerritoryDefenseLevel tdfl) {
-        return List.of(
-                new TextComponent("[>] ")
-                        .withStyle(ChatFormatting.BLUE)
-                        .append(new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description1")
-                        .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
-                        .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(tdfl.asColoredString()));
-    }
 
     @Override
     protected void init() {
@@ -104,9 +90,9 @@ public class GuildMapScreen extends AbstractMapScreen {
                 (b) -> {
                     territoryDefenseFilterLevel = territoryDefenseFilterLevel.next();
                     territoryDefenseFilterButton.editTooltip(
-                            getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel));
+                            territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip());
                 },
-                getTerritoryDefenseFilterButtonTooltip(territoryDefenseFilterLevel)));
+                territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip()));
     }
 
     @Override
@@ -358,28 +344,5 @@ public class GuildMapScreen extends AbstractMapScreen {
 
     public TerritoryDefenseLevel getTerritoryDefenseFilterLevel() {
         return territoryDefenseFilterLevel;
-    }
-
-    public enum TerritoryDefenseLevel {
-        OFF(ChatFormatting.GRAY + "Off"),
-        VERY_LOW(ChatFormatting.DARK_GREEN + "Very Low"),
-        LOW(ChatFormatting.GREEN + "Low"),
-        MEDIUM(ChatFormatting.YELLOW + "Medium"),
-        HIGH(ChatFormatting.RED + "High"),
-        VERY_HIGH(ChatFormatting.DARK_RED + "Very High");
-
-        private final String asColoredString;
-
-        TerritoryDefenseLevel(String asColoredString) {
-            this.asColoredString = asColoredString;
-        }
-
-        public String asColoredString() {
-            return asColoredString;
-        }
-
-        public TerritoryDefenseLevel next() {
-            return values()[(ordinal() + 1) % values().length];
-        }
     }
 }
