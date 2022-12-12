@@ -43,6 +43,10 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         tickCounter = 0;
 
+        gatherAndDispatchMessage();
+    }
+
+    private void gatherAndDispatchMessage() {
         CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
 
         int newLevel = data.getXpLevel();
