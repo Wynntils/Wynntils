@@ -41,8 +41,8 @@ public class SortOrderWidget extends AbstractButton {
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
                 };
 
-        float renderX = this.x;
-        float renderY = this.y;
+        float renderX = this.getX();
+        float renderY = this.getY();
 
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
@@ -78,5 +78,5 @@ public class SortOrderWidget extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -43,8 +43,8 @@ public class ClassSelectionDeleteButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.REMOVE_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -68,5 +68,5 @@ public class ClassSelectionDeleteButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -31,7 +31,7 @@ public class BasicTexturedButton extends AbstractButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(poseStack, texture, this.x, this.y);
+        RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
 
         if (this.isHovered) {
             RenderUtils.drawTooltipAt(
@@ -58,5 +58,5 @@ public class BasicTexturedButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

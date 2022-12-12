@@ -75,4 +75,8 @@ public final class McUtils {
     public static void sendSequencedPacket(PredictiveAction predictiveAction) {
         mc().gameMode.startPrediction(mc().level, predictiveAction);
     }
+
+    public static void sendCommand(String command) {
+        mc().getConnection().sendCommand(command);
+    }
 }

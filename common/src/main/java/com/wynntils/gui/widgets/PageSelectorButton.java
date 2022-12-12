@@ -40,8 +40,8 @@ public class PageSelectorButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -55,8 +55,8 @@ public class PageSelectorButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -70,5 +70,5 @@ public class PageSelectorButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

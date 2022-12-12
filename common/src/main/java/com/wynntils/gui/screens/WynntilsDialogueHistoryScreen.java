@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -39,7 +39,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                     .withStyle(ChatFormatting.WHITE),
             Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.description")
                     .withStyle(ChatFormatting.GRAY));
-    private Widget hovered = null;
+    private Renderable hovered = null;
 
     private int currentPage = 0;
     private List<List<String>> dialogues = new ArrayList<>();
@@ -222,7 +222,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
-        for (Widget renderable : new ArrayList<>(this.renderables)) {
+        for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof AbstractButton button) {

@@ -14,7 +14,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.io.File;
 import java.util.Objects;
-import net.minecraft.client.resources.ClientPackSource;
+import net.minecraft.client.resources.DownloadedPackSource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -56,13 +56,13 @@ public class AutoApplyResourcePackFeature extends UserFeature {
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
         if (packHash == null || packHash.isEmpty() || Objects.equals(appliedHash, packHash)) return;
 
-        ClientPackSource clientPackSource = McUtils.mc().getClientPackSource();
+        DownloadedPackSource downloadedPackSource = McUtils.mc().getDownloadedPackSource();
 
         File[] files = SERVER_RESOURCE_PACK_DIR.listFiles();
 
         for (File file : files != null ? files : new File[0]) {
-            if (clientPackSource.checkHash(packHash, file)) {
-                clientPackSource.setServerPack(file, PackSource.DEFAULT);
+            if (downloadedPackSource.checkHash(packHash, file)) {
+                downloadedPackSource.setServerPack(file, PackSource.DEFAULT);
                 appliedHash = packHash;
                 break;
             }

@@ -6,11 +6,6 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -32,6 +27,11 @@ import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class WorldWaypointDistanceFeature extends UserFeature {
 
@@ -71,13 +71,17 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         if (CompassModel.getCompassLocation().isEmpty()) return;
 
         Location location = CompassModel.getCompassLocation().get();
-        Matrix4f projection = event.getProjectionMatrix().copy();
+        Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
         Camera camera = event.getCamera();
         Vec3 cameraPos = camera.getPosition();
 
         // apply camera rotation
-        projection.multiply(Vector3f.XP.rotationDegrees(camera.getXRot()));
-        projection.multiply(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
+        Vector3f xp = new Vector3f(1, 0, 0);
+        Vector3f yp = new Vector3f(0, 1, 0);
+        Quaternionf xRotation = new Quaternionf().rotationAxis(camera.getXRot(), xp);
+        Quaternionf yRotation = new Quaternionf().rotationAxis(camera.getYRot() + 180f, yp);
+        projection.mul(new Matrix4f().rotation(xRotation));
+        projection.mul(new Matrix4f().rotation(yRotation));
 
         // offset to put text to the center of the block
         float dx = (float) (location.x + 0.5 - cameraPos.x);
@@ -185,7 +189,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
             poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
-            poseStack.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0, 0, (float) angle)));
+            poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) angle));
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
             CompassModel.getCompassWaypoint()
@@ -198,7 +202,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     private Vec3 worldToScreen(Vector3f delta, Matrix4f projection) {
         Vector4f clipCoords = new Vector4f(delta.x(), delta.y(), delta.z(), 1.0f);
-        clipCoords.transform(projection);
+        clipCoords.mulTranspose(projection);
 
         // stands for Normalized Device Coordinates
         Vector3d ndc = new Vector3d(

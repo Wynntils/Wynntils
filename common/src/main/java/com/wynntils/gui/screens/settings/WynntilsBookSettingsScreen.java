@@ -28,7 +28,6 @@ import com.wynntils.gui.widgets.SearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -63,8 +62,6 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     public WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         searchWidget = new SearchWidget(
                 95,
@@ -162,7 +159,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         mouseX -= getTranslationX();
         mouseY -= getTranslationY();
 
-        for (Widget renderable : renderables) {
+        for (Renderable renderable : renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
@@ -329,7 +326,6 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         ConfigManager.loadConfigFile();
         ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
         super.onClose();

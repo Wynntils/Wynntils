@@ -40,7 +40,7 @@ public class DiscoveryButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
 
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
@@ -50,8 +50,8 @@ public class DiscoveryButton extends AbstractButton {
                                 discoveryInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
@@ -73,8 +73,8 @@ public class DiscoveryButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 stateTexture.resource(),
-                this.x + 1,
-                this.y + 1,
+                this.getX() + 1,
+                this.getY() + 1,
                 stateTexture.width(),
                 stateTexture.height(),
                 stateTexture.width(),
@@ -99,7 +99,7 @@ public class DiscoveryButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public List<Component> getTooltipLines() {
         List<Component> lines = new ArrayList<>(discoveryInfo.getLore());

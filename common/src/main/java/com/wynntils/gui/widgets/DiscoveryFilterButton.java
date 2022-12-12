@@ -51,8 +51,8 @@ public class DiscoveryFilterButton extends AbstractButton {
         RenderUtils.drawRect(
                 poseStack,
                 isEnabled.get() ? BUTTON_COLOR_ENABLED : isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
-                x,
-                y,
+                this.getX(),
+                this.getY(),
                 0,
                 width,
                 height);
@@ -61,8 +61,8 @@ public class DiscoveryFilterButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    x + (width - texture.width()) / 2f,
-                    y + (height - texture.height()) / 2f,
+                    this.getX() + (width - texture.width()) / 2f,
+                    this.getY() + (height - texture.height()) / 2f,
                     1,
                     texture.width(),
                     texture.height(),
@@ -77,8 +77,8 @@ public class DiscoveryFilterButton extends AbstractButton {
                 RenderUtils.drawTexturedRect(
                         poseStack,
                         texture.resource(),
-                        x + (width - texture.width()) / 2f,
-                        y + (height - texture.height() / 2f) / 2f,
+                        this.getX() + (width - texture.width()) / 2f,
+                        this.getY() + (height - texture.height() / 2f) / 2f,
                         1,
                         texture.width(),
                         texture.height() / 2f,
@@ -92,8 +92,8 @@ public class DiscoveryFilterButton extends AbstractButton {
                 RenderUtils.drawTexturedRect(
                         poseStack,
                         texture.resource(),
-                        x + (width - texture.width()) / 2f,
-                        y + (height - texture.height() / 2f) / 2f,
+                        this.getX() + (width - texture.width()) / 2f,
+                        this.getY() + (height - texture.height() / 2f) / 2f,
                         1,
                         texture.width(),
                         texture.height() / 2f,
@@ -127,5 +127,5 @@ public class DiscoveryFilterButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

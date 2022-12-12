@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[44,)"
 #issueTrackerURL = ""
 license = "GNU AGPL 3"
 
@@ -17,7 +17,7 @@ description = "The best Wynncraft mod you'll probably find!"
 [[dependencies.wynntils]]
 modId = "forge"
 mandatory = true
-versionRange = "[43.1.52,)"
+versionRange = "[44,)"
 ordering = "NONE"
 side = "BOTH"
 

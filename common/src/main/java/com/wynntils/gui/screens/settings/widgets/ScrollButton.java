@@ -51,20 +51,27 @@ public class ScrollButton extends AbstractButton {
 
         if (scrollAreaColor != CustomColor.NONE) {
             RenderUtils.drawRect(
-                    poseStack, scrollAreaColor, this.x, this.y + 2, 0, this.width, this.y2 - this.y - 4 + this.height);
+                    poseStack,
+                    scrollAreaColor,
+                    this.getX(),
+                    this.getY() + 2,
+                    0,
+                    this.width,
+                    this.y2 - this.getY() - 4 + this.height);
         }
 
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, y, y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, this.getY(), y2);
 
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.SETTING_SCROLL_BUTTON, this.x, renderY, isHovered);
+        RenderUtils.drawHoverableTexturedRect(
+                poseStack, Texture.SETTING_SCROLL_BUTTON, this.getX(), renderY, isHovered);
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, y, y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, this.getY(), y2);
 
-        return mouseX >= this.x
-                && mouseX <= this.x + this.width
+        return mouseX >= this.getX()
+                && mouseX <= this.getX() + this.width
                 && mouseY >= renderY
                 && mouseY <= renderY + this.height;
     }
@@ -118,5 +125,5 @@ public class ScrollButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -28,8 +28,8 @@ public class DiscoveryProgressButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    x + (width - texture.width()) / 2f,
-                    y + (height - texture.height() / 2f) / 2f,
+                    this.getX() + (width - texture.width()) / 2f,
+                    this.getY() + (height - texture.height() / 2f) / 2f,
                     1,
                     texture.width(),
                     texture.height() / 2f,
@@ -43,8 +43,8 @@ public class DiscoveryProgressButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    x + (width - texture.width()) / 2f,
-                    y + (height - texture.height() / 2f) / 2f,
+                    this.getX() + (width - texture.width()) / 2f,
+                    this.getY() + (height - texture.height() / 2f) / 2f,
                     1,
                     texture.width(),
                     texture.height() / 2f,
@@ -61,7 +61,7 @@ public class DiscoveryProgressButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public boolean isSecretDiscoveryButton() {
         return isSecretDiscoveryButton;

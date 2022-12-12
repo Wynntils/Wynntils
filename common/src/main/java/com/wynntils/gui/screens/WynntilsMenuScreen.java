@@ -169,22 +169,6 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
 
-        buttons.add(new WynntilsMenuButton(
-                Texture.DISCOVERIES_ICON,
-                true,
-                new WynntilsDiscoveriesScreen(),
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.name")
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.GOLD)),
-                        Component.translatable("screens.wynntils.wynntilsDiscoveries.description")
-                                .withStyle(ChatFormatting.GRAY),
-                        Component.literal(""),
-                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                .withStyle(ChatFormatting.GREEN))));
-
         assert buttons.size() <= 8;
     }
 

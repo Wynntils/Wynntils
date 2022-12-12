@@ -8,20 +8,31 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.LastSeenMessagesTracker;
+import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.network.chat.RemoteChatSession;
+import net.minecraft.network.chat.SignedMessageBody;
+import net.minecraft.network.chat.SignedMessageChain;
+import net.minecraft.network.chat.SignedMessageLink;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -29,7 +40,8 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
@@ -41,13 +53,17 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
+import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
+import net.minecraft.util.Crypt;
+import net.minecraft.world.flag.FeatureFlagSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
@@ -58,7 +74,7 @@ public abstract class ClientPacketListenerMixin {
     protected abstract void send(ServerboundResourcePackPacket.Action action);
 
     @Shadow
-    private RegistryAccess.Frozen registryAccess;
+    public abstract void send(Packet<?> packet);
 
     @Shadow
     private CommandDispatcher<SharedSuggestionProvider> commands;
@@ -67,8 +83,61 @@ public abstract class ClientPacketListenerMixin {
     @Final
     private Minecraft minecraft;
 
+    @Shadow
+    public abstract FeatureFlagSet enabledFeatures();
+
+    @Shadow
+    private LayeredRegistryAccess<ClientRegistryLayer> registryAccess;
+
+    @Shadow
+    private MessageSignatureCache messageSignatureCache;
+
+    @Shadow
+    private SignedMessageChain.Encoder signedMessageEncoder;
+
+    @Shadow
+    private LastSeenMessagesTracker lastSeenMessages;
+
     private static boolean isRenderThread() {
-        return (McUtils.mc().isSameThread());
+        return McUtils.mc().isSameThread();
+    }
+
+    @Inject(method = "sendChat", at = @At("HEAD"), cancellable = true)
+    private void onChatPre(String string, CallbackInfo ci) {
+        ChatSentEvent result = EventFactory.onChatSent(string);
+        if (result.isCanceled()) {
+            ci.cancel();
+        }
+
+        if (!Objects.equals(string, result.getMessage())) {
+            // Note: This code is taken from the MC source code. I don't think there is a sane way of not doing this,
+            // unfortunately (in 1.19.2, there was, not in 1.19.3).
+            //       For anyone concerned, this does not mess with NoChatReport at the time of writing.
+
+            Instant instant = Instant.now();
+            long l = Crypt.SaltSupplier.getLong();
+            LastSeenMessagesTracker.Update update = this.lastSeenMessages.generateAndApplyUpdate();
+            MessageSignature messageSignature =
+                    this.signedMessageEncoder.pack(new SignedMessageBody(string, instant, l, update.lastSeen()));
+            this.send(new ServerboundChatPacket(string, instant, l, messageSignature, update.update()));
+
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    private void onSignedCommandPre(String string, CallbackInfo ci) {
+        if (EventFactory.onCommandSent(string, true).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
+    private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onCommandSent(command, false).isCanceled()) {
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
     }
 
     @Inject(
@@ -76,7 +145,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"))
     private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        RootCommandNode<SharedSuggestionProvider> root = packet.getRoot(new CommandBuildContext(this.registryAccess));
+        RootCommandNode<SharedSuggestionProvider> root = packet.getRoot(
+                CommandBuildContext.simple(this.registryAccess.compositeAccess(), this.enabledFeatures()));
         CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
         if (event.getRoot() != root) {
             // We modified command root, so inject it
@@ -84,12 +154,16 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(
-            method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
-            at = @At("RETURN"))
-    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoPacket(packet);
+        EventFactory.onPlayerInfoUpdatePacket(packet);
+    }
+
+    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onPlayerInfoRemovePacket(packet);
     }
 
     @Inject(
@@ -243,23 +317,46 @@ public abstract class ClientPacketListenerMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
             cancellable = true)
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
-                com.wynntils.mc.objects.ChatType.CHAT, packet.message().serverContent());
+        ChatPacketReceivedEvent result =
+                EventFactory.onChatReceived(com.wynntils.mc.objects.ChatType.CHAT, packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!result.getMessage().equals(packet.message().serverContent())) {
-            PlayerChatMessage modified = packet.message().withUnsignedContent(result.getMessage());
+        if (!result.getMessage().equals(packet.unsignedContent())) {
+            // Because of the injection point, we know these optionals are present
+            SignedMessageBody signedMessageBody =
+                    packet.body().unpack(this.messageSignatureCache).get();
+            ChatType.Bound bound = packet.chatType()
+                    .resolve(this.registryAccess.compositeAccess())
+                    .get();
 
-            // Because of the injection point, we know this option is present
-            Optional<ChatType.Bound> optional = packet.resolveChatType(this.registryAccess);
-            this.minecraft.getChatListener().handleChatMessage(modified, optional.get());
+            UUID uuid = packet.sender();
+            PlayerInfo playerInfo = this.getPlayerInfo(uuid);
+            RemoteChatSession remoteChatSession = playerInfo.getChatSession();
+
+            SignedMessageLink signedMessageLink;
+            if (remoteChatSession != null) {
+                signedMessageLink = new SignedMessageLink(packet.index(), uuid, remoteChatSession.sessionId());
+            } else {
+                signedMessageLink = SignedMessageLink.unsigned(uuid);
+            }
+
+            PlayerChatMessage playerChatMessage = new PlayerChatMessage(
+                    signedMessageLink,
+                    packet.signature(),
+                    signedMessageBody,
+                    packet.unsignedContent(),
+                    packet.filterMask());
+
+            this.minecraft.getChatListener().handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), bound);
+            this.messageSignatureCache.push(playerChatMessage);
+
             ci.cancel();
         }
     }

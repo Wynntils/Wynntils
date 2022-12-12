@@ -267,7 +267,7 @@ public class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
-        McUtils.player().commandUnsigned("friend list");
+        McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
@@ -275,7 +275,7 @@ public class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
-        McUtils.player().commandUnsigned("party list");
+        McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 }

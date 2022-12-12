@@ -24,11 +24,11 @@ public abstract class OptionInstanceMixin {
      * */
     @Inject(
             method =
-                    "<init>(Ljava/lang/String;Lnet/minecraft/client/OptionInstance$TooltipSupplierFactory;Lnet/minecraft/client/OptionInstance$CaptionBasedToString;Lnet/minecraft/client/OptionInstance$ValueSet;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Ljava/util/function/Consumer;)V",
+                    "<init>(Ljava/lang/String;Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/OptionInstance$CaptionBasedToString;Lnet/minecraft/client/OptionInstance$ValueSet;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Ljava/util/function/Consumer;)V",
             at = @At("RETURN"))
     public void onInit(
             String string,
-            OptionInstance.TooltipSupplierFactory tooltipSupplierFactory,
+            OptionInstance.TooltipSupplier tooltipSupplier,
             OptionInstance.CaptionBasedToString captionBasedToString,
             OptionInstance.ValueSet valueSet,
             Codec codec,

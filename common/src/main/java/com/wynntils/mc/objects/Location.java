@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.objects;
 
-import com.mojang.math.Vector3d;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 
 public class Location extends Vector3d implements Position {
     public Location(double x, double y, double z) {

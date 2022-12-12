@@ -28,9 +28,9 @@ public class CategoryButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         I18n.get(featureCategory.toString()),
-                        this.x,
-                        this.x + this.width,
-                        this.y,
+                        this.getX(),
+                        this.getX() + this.width,
+                        this.getY(),
                         0,
                         CommonColors.CYAN,
                         HorizontalAlignment.Center,
@@ -41,5 +41,5 @@ public class CategoryButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

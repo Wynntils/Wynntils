@@ -23,11 +23,11 @@ public class ViewPlayerStatsButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         Utils.openUrl(STATS_URL_BASE + playerName);
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

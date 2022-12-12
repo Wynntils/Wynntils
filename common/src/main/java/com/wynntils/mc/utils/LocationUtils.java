@@ -52,11 +52,11 @@ public class LocationUtils {
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            McUtils.player().commandUnsigned("/g " + locationString);
+            McUtils.sendCommand("/g " + locationString);
         } else if (target.equals("party")) {
-            McUtils.player().commandUnsigned("/p " + locationString);
+            McUtils.sendCommand("/p " + locationString);
         } else {
-            McUtils.player().commandUnsigned("/msg " + target + " " + locationString);
+            McUtils.sendCommand("/msg " + target + " " + locationString);
         }
     }
 }

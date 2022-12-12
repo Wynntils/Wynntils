@@ -37,8 +37,8 @@ public class GuidePowderItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getElement().getColor();
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + this.getX();
+        float actualY = screen.getTranslationY() + this.getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -59,9 +59,9 @@ public class GuidePowderItemStack extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         MathUtils.toRoman(itemStack.getTier()),
-                        x + 2,
-                        x + 14,
-                        y + 8,
+                        this.getX() + 2,
+                        this.getX() + 14,
+                        this.getY() + 8,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -73,8 +73,8 @@ public class GuidePowderItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    this.getX() + 12,
+                    this.getY() - 4,
                     200,
                     9,
                     9,
@@ -108,7 +108,7 @@ public class GuidePowderItemStack extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public PowderItemStack getItemStack() {
         return itemStack;

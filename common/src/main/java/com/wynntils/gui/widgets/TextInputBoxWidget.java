@@ -74,7 +74,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
-        poseStack.translate(this.x, this.y, 0);
+        poseStack.translate(this.getX(), this.getY(), 0);
 
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
@@ -144,7 +144,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
             textboxScreen.setFocusedTextInput(this);
@@ -254,7 +254,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private String getRenderCursorChar() {
         String cursorChar;

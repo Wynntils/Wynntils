@@ -156,7 +156,7 @@ public class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            McUtils.player().commandUnsigned("gu territory " + territoryPoi.getName());
+            McUtils.sendCommand("gu territory " + territoryPoi.getName());
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

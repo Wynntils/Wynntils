@@ -23,8 +23,8 @@ public class DialogueHistoryButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.DIALOGUE_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 this.width,
                 this.height,
                 Texture.DIALOGUE_BUTTON.width(),
@@ -37,5 +37,5 @@ public class DialogueHistoryButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

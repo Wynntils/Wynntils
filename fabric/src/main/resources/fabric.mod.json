@@ -7,7 +7,7 @@
     "sources": "https://github.com/Wynntils/Artemis"
   },
   "depends": {
-    "minecraft": "1.19.2"
+    "minecraft": "1.19.3"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {

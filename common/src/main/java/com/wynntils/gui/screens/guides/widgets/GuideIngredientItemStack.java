@@ -34,8 +34,8 @@ public class GuideIngredientItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getIngredientProfile().getTier().getHighlightColor();
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + this.getX();
+        float actualY = screen.getTranslationY() + this.getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -55,8 +55,8 @@ public class GuideIngredientItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    this.getX() + 12,
+                    this.getY() - 4,
                     200,
                     9,
                     9,
@@ -93,7 +93,7 @@ public class GuideIngredientItemStack extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public IngredientItemStack getItemStack() {
         return itemStack;

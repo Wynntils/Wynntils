@@ -9,8 +9,8 @@ import com.google.common.io.Files;
 import com.wynntils.mc.EventFactory;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.client.resources.ClientPackSource;
-import net.minecraft.server.packs.AbstractPackResources;
+import net.minecraft.client.resources.DownloadedPackSource;
+import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.repository.Pack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientPackSource.class)
-public abstract class ClientPackSourceMixin {
+@Mixin(DownloadedPackSource.class)
+public abstract class DownloadedPackSourceMixin {
     @Shadow
     private Pack serverPack;
 
@@ -30,20 +30,23 @@ public abstract class ClientPackSourceMixin {
             return;
         }
 
-        PackResources packResources = this.serverPack.supplier.get();
+        PackResources packResources = this.serverPack.open();
 
         // We can calculate this here as this is always going to be posted anyway
-        if (packResources instanceof AbstractPackResources abstractPackResources) {
+        if (packResources instanceof FilePackResources filePackResources) {
             try {
-                String hash = Files.asByteSource(abstractPackResources.file)
+                String hash = Files.asByteSource(filePackResources.file)
                         .hash(Hashing.sha1())
                         .toString();
+
                 if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
                     cir.setReturnValue(CompletableFuture.completedFuture(null));
+                    cir.cancel();
                 }
             } catch (IOException e) {
                 // ignored
             }
+
         } else {
             EventFactory.onResourcePackClearEvent(null);
         }

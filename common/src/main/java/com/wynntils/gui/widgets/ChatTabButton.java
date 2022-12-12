@@ -29,7 +29,14 @@ public class ChatTabButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (tab == null) return;
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
+        RenderUtils.drawRect(
+                poseStack,
+                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
+                this.getX(),
+                this.getY(),
+                0,
+                width,
+                height);
 
         CustomColor color = ChatTabModel.getFocusedTab() == tab
                 ? CommonColors.GREEN
@@ -38,10 +45,10 @@ public class ChatTabButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         tab.getName(),
-                        x + 1,
-                        x + width,
-                        y + 1,
-                        y + height,
+                        this.getX() + 1,
+                        this.getX() + width,
+                        this.getY() + 1,
+                        this.getY() + height,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -55,5 +62,5 @@ public class ChatTabButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

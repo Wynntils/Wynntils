@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.language.I18n;
@@ -67,16 +68,15 @@ public class OverlayManagementScreen extends Screen {
             Component.literal("Shift-Middle click on an overlay to reset it to it's original state.")
                     .withStyle(ChatFormatting.RED));
 
-    private static final List<Component> CLOSE_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to stop editing and reset changes."));
+    private static final Component CLOSE_TOOLTIP_LINES =
+            Component.literal("Click here to stop editing and reset changes.");
 
-    private static final List<Component> TEST_TOOLTIP_LINES = List.of(
-            Component.literal("Click here to toggle test mode."),
-            Component.literal("In test mode, you can see how your overlay setup would look in-game,"),
-            Component.literal("using preview render mode."));
+    private static final Component TEST_TOOLTIP_LINES = Component.literal("Click here to toggle test mode.")
+            .append(Component.literal("In test mode, you can see how your overlay setup would look in-game,"))
+            .append(Component.literal("using preview render mode."));
 
-    private static final List<Component> APPLY_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to apply changes to current overlay."));
+    private static final Component APPLY_TOOLTIP_LINES =
+            Component.literal("Click here to apply changes to current overlay.");
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
@@ -702,58 +702,32 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void setupButtons() {
-        this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH * 2,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"),
-                button -> {
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
-                    onClose();
-                },
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        CLOSE_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
-        this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH / 2,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.overlayManagement.testSettings"),
-                button -> testMode = !testMode,
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        TEST_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
-        this.addRenderableWidget(new Button(
-                this.width / 2 + BUTTON_WIDTH,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.overlayManagement.applySettings"),
-                button -> {
-                    ConfigManager.saveConfig();
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
-                    onClose();
-                },
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        APPLY_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"), button -> {
+                            McUtils.mc().setScreen(new OverlaySelectionScreen());
+                            onClose();
+                        })
+                .bounds(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(CLOSE_TOOLTIP_LINES))
+                .build());
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.testSettings"), button -> {
+                            McUtils.mc().setScreen(new OverlaySelectionScreen());
+                            onClose();
+                        })
+                .bounds(this.width / 2 - BUTTON_WIDTH / 2, this.height - 150, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(TEST_TOOLTIP_LINES))
+                .build());
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.applySettings"), button -> {
+                            McUtils.mc().setScreen(new OverlaySelectionScreen());
+                            onClose();
+                        })
+                .bounds(this.width / 2 + BUTTON_WIDTH, this.height - 150, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(APPLY_TOOLTIP_LINES))
+                .build());
     }
 
     private void resetSelection() {
