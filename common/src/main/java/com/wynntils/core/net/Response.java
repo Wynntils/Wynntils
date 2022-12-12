@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Response {
+public class Response extends NetAction {
     public static class FailureResponse extends Response {}
 
     private byte[] blob;

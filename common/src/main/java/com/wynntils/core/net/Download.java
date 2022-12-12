@@ -11,7 +11,7 @@ import java.io.Reader;
 import java.net.URLConnection;
 import java.util.function.Consumer;
 
-public class Download {
+public class Download extends NetAction {
     private final File localFile;
 
     public Download(File localFile) {
