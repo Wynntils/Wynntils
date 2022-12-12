@@ -41,10 +41,16 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction mageTeleport = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction potion = RedirectAction.REDIRECT;
+
+    @Config
+    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction shaman = RedirectAction.REDIRECT;
@@ -54,9 +60,6 @@ public class ChatRedirectFeature extends UserFeature {
 
     @Config
     public RedirectAction speed = RedirectAction.REDIRECT;
-
-    @Config
-    public RedirectAction teleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
@@ -77,14 +80,16 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseSpawnFailRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
+        register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
         register(new PotionsMaxRedirector());
+        register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
+        register(new ScrollTeleportationFailRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
-        register(new TeleportationFailRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
         register(new UnusedSkillAndAbilityPointsRedirector());
@@ -261,11 +266,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
         }
 
         @Override
@@ -424,6 +429,26 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class MageTeleportationFailRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("^§cSorry, you can't teleport... Try moving away from blocks.$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return mageTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.";
+        }
+    }
+
     private class ManaDeficitRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("^§4You don't have enough mana to cast that spell!$");
@@ -483,6 +508,26 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class PotionsMovedRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "Moved excess healing items to bank.";
+        }
+    }
+
     private class PotionsReplacedRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
@@ -503,7 +548,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class TeleportationFailRedirector extends SimpleRedirector {
+    private class ScrollTeleportationFailRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
 
         @Override
@@ -513,7 +558,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         public RedirectAction getAction() {
-            return teleport;
+            return scrollTeleport;
         }
 
         @Override
@@ -617,7 +662,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile(
-                "^§4You have §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         protected Pattern getSystemPattern() {
@@ -644,7 +689,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
         private static final Pattern SYSTEM_PATTERN = Pattern.compile(
-                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Point?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
