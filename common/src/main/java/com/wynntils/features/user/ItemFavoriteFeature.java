@@ -23,6 +23,7 @@ import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.model.item.GearItemStackModel;
 import com.wynntils.wynn.model.item.IngredientItemStackModel;
 import com.wynntils.wynn.model.item.UnidentifiedItemStackModel;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
@@ -52,7 +53,7 @@ public class ItemFavoriteFeature extends UserFeature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
-        if (!ContainerUtils.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!WynnScreenMatchers.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {

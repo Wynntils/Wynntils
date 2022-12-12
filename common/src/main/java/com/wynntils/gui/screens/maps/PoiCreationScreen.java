@@ -72,6 +72,8 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     public PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(new TextComponent("Poi Creation Screen"));
         this.oldMapScreen = oldMapScreen;
+
+        this.firstSetup = true;
     }
 
     public PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
@@ -104,6 +106,10 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                         nameInput));
         if (oldPoi != null && firstSetup) {
             nameInput.setTextBoxInput(oldPoi.getName());
+        }
+
+        if (firstSetup) {
+            setFocusedTextInput(nameInput);
         }
         // endregion
 
@@ -382,6 +388,12 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // When tab is pressed, focus the next text box
         if (keyCode == GLFW.GLFW_KEY_TAB) {
@@ -392,7 +404,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
             // From index - end
             for (int i = actualIndex; i < children().size(); i++) {
                 if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    focusedTextInput = textInputBoxWidget;
+                    setFocusedTextInput(textInputBoxWidget);
                     return true;
                 }
             }
@@ -400,13 +412,14 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
             // From 0 - index
             for (int i = 0; i < Math.min(actualIndex, children().size()); i++) {
                 if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    focusedTextInput = textInputBoxWidget;
+                    setFocusedTextInput(textInputBoxWidget);
                     return true;
                 }
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

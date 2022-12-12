@@ -3,7 +3,7 @@ Artemis
 [![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
 [![CurseForge](https://cf.way2muchnoise.eu/short_wynntils.svg)](https://www.curseforge.com/minecraft/mc-mods/wynntils)
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/Wynntils?label=modrinth)
-[![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/statuseffecttimer/releases)
+[![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/Artemis/releases)
 [![License](https://img.shields.io/badge/license-AGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
 
 <div align="center">
