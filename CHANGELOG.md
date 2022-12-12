@@ -1,9 +1,21 @@
+## [0.0.1-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.148...v0.0.1-alpha.149) (2022-12-12)
+
+
+### Bug Fixes
+
+* Readme Button Now Goes To Artemis Download Page ([#816](https://github.com/Wynntils/Artemis/issues/816)) ([fb34503](https://github.com/Wynntils/Artemis/commit/fb345031bce838baeb7a4c8090de6fe0d050682f))
+
 ## [0.0.1-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.147...v0.0.1-alpha.148) (2022-12-11)
 
 
 ### Bug Fixes
 
 * AuraTimerOverlayFeature should be in overlay category ([#814](https://github.com/Wynntils/Artemis/issues/814)) ([11989d5](https://github.com/Wynntils/Artemis/commit/11989d577a6a3bc652076b0f90b6b380874aab73))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.148 [skip ci] ([adad3c3](https://github.com/Wynntils/Artemis/commit/adad3c37602194d8e246cefab94aea4ee40be3c1))
 
 ## [0.0.1-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.146...v0.0.1-alpha.147) (2022-12-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.145 [skip ci] ([f4e1a0d](https://github.com/Wynntils/Artemis/commit/f4e1a0d496ac27599f362a712a36e5887756f8d6))
-
-## [0.0.1-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.143...v0.0.1-alpha.144) (2022-12-11)
-
-
-### Bug Fixes
-
-* Healing Yourself With A Potion properly redirects to overlay ([#808](https://github.com/Wynntils/Artemis/issues/808)) ([18a1baf](https://github.com/Wynntils/Artemis/commit/18a1baf9bd9981f4a67ff8b81edf484c93cd4042))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.144 [skip ci] ([3f761bc](https://github.com/Wynntils/Artemis/commit/3f761bcf532e05f7587ec9361c98e4b4447c355d))
 
