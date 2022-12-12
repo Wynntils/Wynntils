@@ -1,9 +1,21 @@
+## [0.0.1-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.149...v0.0.1-alpha.150) (2022-12-12)
+
+
+### Bug Fixes
+
+* PoiCreationScreen text box focus now works as intended ([#819](https://github.com/Wynntils/Artemis/issues/819)) ([9c7f076](https://github.com/Wynntils/Artemis/commit/9c7f076f9432b703286c9851d98c63b08b227cda))
+
 ## [0.0.1-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.148...v0.0.1-alpha.149) (2022-12-12)
 
 
 ### Bug Fixes
 
 * Readme Button Now Goes To Artemis Download Page ([#816](https://github.com/Wynntils/Artemis/issues/816)) ([fb34503](https://github.com/Wynntils/Artemis/commit/fb345031bce838baeb7a4c8090de6fe0d050682f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.149 [skip ci] ([236bab5](https://github.com/Wynntils/Artemis/commit/236bab5402a570eb57972392769ef1ede66c1f03))
 
 ## [0.0.1-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.147...v0.0.1-alpha.148) (2022-12-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.146 [skip ci] ([1b7d225](https://github.com/Wynntils/Artemis/commit/1b7d22525ef0dfc250c33a0c1205c13e279e849f))
-
-## [0.0.1-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.144...v0.0.1-alpha.145) (2022-12-11)
-
-
-### New Features
-
-* Redirects "Crafted Excess Potions" Message to Overlay ([#807](https://github.com/Wynntils/Artemis/issues/807)) ([dc4e597](https://github.com/Wynntils/Artemis/commit/dc4e5978d0307c1d58d8a5ffb6707d35af21b240))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.145 [skip ci] ([f4e1a0d](https://github.com/Wynntils/Artemis/commit/f4e1a0d496ac27599f362a712a36e5887756f8d6))
 
