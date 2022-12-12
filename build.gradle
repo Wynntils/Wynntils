@@ -14,12 +14,8 @@ architectury {
 // or ~/.gradle/gradle.properties on Linux/MacOS.
 def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
 
-// If we are running in a CI environment, we want to use the version else dev version
 // On the release branches, this string will be automatically updated by the bots
 version = "0.0.1-main-dev"
-if (!System.getenv("CI")) {
-    version = "0.0.1-DEV"
-}
 
 subprojects {
     apply plugin: "dev.architectury.loom"

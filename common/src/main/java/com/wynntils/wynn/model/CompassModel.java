@@ -10,7 +10,7 @@ import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -50,7 +50,7 @@ public final class CompassModel extends Model {
             WaypointPoi waypointPoi = new WaypointPoi(() -> {
                 Location location = locationSupplier.get();
 
-                return MapLocation.fromLocation(location);
+                return PoiLocation.fromLocation(location);
             });
 
             return Optional.of(waypointPoi);

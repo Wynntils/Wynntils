@@ -5,8 +5,6 @@
 package com.wynntils.wynn.model.map;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
@@ -14,9 +12,11 @@ import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
 import com.wynntils.utils.BoundingBox;
+import com.wynntils.wynn.model.map.poi.CombatKind;
+import com.wynntils.wynn.model.map.poi.CombatPoi;
 import com.wynntils.wynn.model.map.poi.Label;
 import com.wynntils.wynn.model.map.poi.LabelPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.ByteArrayInputStream;
@@ -35,18 +35,19 @@ public final class MapModel extends Model {
             "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json";
     private static final String MAPS_JSON_URL =
             "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json";
-    private static final String SPIRITS_JSON_URL =
-            "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/spirits.json";
+    private static final String COMBAT_LOCATIONS_JSON_URL =
+            "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json";
 
-    private static final Gson GSON = new GsonBuilder().create();
     private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
     private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
     private static final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
+    private static final Set<CombatPoi> COMBAT_POIS = new HashSet<>();
 
     public static void init() {
         loadMaps();
         loadPlaces();
         loadServices();
+        loadCombat();
     }
 
     public static Set<LabelPoi> getLabelPois() {
@@ -55,6 +56,10 @@ public final class MapModel extends Model {
 
     public static Set<ServicePoi> getServicePois() {
         return SERVICE_POIS;
+    }
+
+    public static Set<CombatPoi> getCombatPois() {
+        return COMBAT_POIS;
     }
 
     public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
@@ -73,7 +78,7 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
-                    List<MapPartProfile> mapPartList = GSON.fromJson(json, type);
+                    List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(json, type);
                     for (MapPartProfile mapPart : mapPartList) {
                         String fileName = mapPart.md5 + ".png";
 
@@ -111,7 +116,7 @@ public final class MapModel extends Model {
                 .cacheTo(new File(mapDirectory, "places.json"))
                 .useCacheAsBackup()
                 .handleJsonObject(json -> {
-                    PlacesProfile places = GSON.fromJson(json, PlacesProfile.class);
+                    PlacesProfile places = WynntilsMod.GSON.fromJson(json, PlacesProfile.class);
                     for (Label label : places.labels) {
                         LABEL_POIS.add(new LabelPoi(label));
                     }
@@ -129,15 +134,41 @@ public final class MapModel extends Model {
                 .handleJsonArray(json -> {
                     Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
-                    List<ServiceProfile> serviceList = GSON.fromJson(json, type);
+                    List<ServiceProfile> serviceList = WynntilsMod.GSON.fromJson(json, type);
                     for (var service : serviceList) {
                         ServiceKind kind = ServiceKind.fromString(service.type);
                         if (kind != null) {
-                            for (MapLocation location : service.locations) {
+                            for (PoiLocation location : service.locations) {
                                 SERVICE_POIS.add(new ServicePoi(location, kind));
                             }
                         } else {
                             WynntilsMod.warn("Unknown service type in services.json: " + service.type);
+                        }
+                    }
+
+                    return true;
+                })
+                .build());
+    }
+
+    private static void loadCombat() {
+        File mapDirectory = new File(WebManager.API_CACHE_ROOT, "maps");
+        RequestHandler handler = WebManager.getHandler();
+        handler.addAndDispatch(new RequestBuilder(COMBAT_LOCATIONS_JSON_URL, "maps-combat")
+                .cacheTo(new File(mapDirectory, "combat.json"))
+                .useCacheAsBackup()
+                .handleJsonArray(json -> {
+                    Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
+
+                    List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(json, type);
+                    for (var combatList : combatProfileLists) {
+                        CombatKind kind = CombatKind.fromString(combatList.type);
+                        if (kind != null) {
+                            for (CombatProfileList.CombatProfile profile : combatList.locations) {
+                                COMBAT_POIS.add(new CombatPoi(profile.coordinates, profile.name, kind));
+                            }
+                        } else {
+                            WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);
                         }
                     }
 
@@ -152,7 +183,17 @@ public final class MapModel extends Model {
 
     private static class ServiceProfile {
         String type;
-        List<MapLocation> locations;
+        List<PoiLocation> locations;
+    }
+
+    private static class CombatProfileList {
+        String type;
+        List<CombatProfile> locations;
+
+        private static class CombatProfile {
+            String name;
+            PoiLocation coordinates;
+        }
     }
 
     private static class MapPartProfile {

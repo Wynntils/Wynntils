@@ -5,7 +5,6 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -16,32 +15,27 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
-import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
-    private final MapLocation territoryCenter;
+    private final PoiLocation territoryCenter;
     private final int width;
     private final int height;
 
-    private final GuildTerritoryInfo territoryInfo;
+    private final TerritoryInfo territoryInfo;
 
     public TerritoryPoi(TerritoryProfile territoryProfile) {
-        this.territoryProfile = territoryProfile;
-        this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
-        this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
-        this.territoryCenter =
-                new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
-
-        this.territoryInfo = null;
+        this(territoryProfile, null);
     }
 
-    public TerritoryPoi(TerritoryProfile territoryProfile, GuildTerritoryInfo territoryInfo) {
+    public TerritoryPoi(TerritoryProfile territoryProfile, TerritoryInfo territoryInfo) {
         this.territoryProfile = territoryProfile;
         this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
         this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
-        this.territoryCenter =
-                new MapLocation(territoryProfile.getStartX() + width / 2, 0, territoryProfile.getStartZ() + height / 2);
+        this.territoryCenter = new PoiLocation(
+                territoryProfile.getStartX() + width / 2, null, territoryProfile.getStartZ() + height / 2);
 
         this.territoryInfo = territoryInfo;
     }
@@ -139,7 +133,7 @@ public class TerritoryPoi implements Poi {
     }
 
     @Override
-    public MapLocation getLocation() {
+    public PoiLocation getLocation() {
         return territoryCenter;
     }
 
@@ -163,7 +157,12 @@ public class TerritoryPoi implements Poi {
         return territoryProfile.getName();
     }
 
-    public GuildTerritoryInfo getTerritoryInfo() {
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.HIGHEST;
+    }
+
+    public TerritoryInfo getTerritoryInfo() {
         return territoryInfo;
     }
 

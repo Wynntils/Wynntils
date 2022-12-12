@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -21,11 +20,11 @@ import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
-import com.wynntils.wynn.model.territory.GuildTerritoryModel;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
-import com.wynntils.wynn.model.territory.objects.GuildTerritoryInfo;
+import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
-import java.util.ArrayList;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -47,7 +46,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_HELP_BUTTON,
-                () -> {},
+                (b) -> {},
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
@@ -65,7 +64,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                () -> resourceMode = !resourceMode,
+                (b) -> resourceMode = !resourceMode,
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -130,8 +129,7 @@ public class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi =
-                        GuildTerritoryModel.getGuildTerritoryMap().get(tradingRoute);
+                TerritoryPoi routePoi = TerritoryManager.getTerritoryPoiFromAdvancement(tradingRoute);
                 if (routePoi != null) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
@@ -170,7 +168,7 @@ public class GuildMapScreen extends AbstractMapScreen {
         poseStack.pushPose();
         poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
 
-        final GuildTerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
+        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
         final float centerHeight = 55
                 + (territoryInfo.getStorage().values().size()
@@ -307,7 +305,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = new ArrayList<>(GuildTerritoryModel.getGuildTerritoryPois());
+        List<Poi> pois = TerritoryManager.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,

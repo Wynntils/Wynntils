@@ -6,7 +6,6 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -74,7 +73,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected void init() {
-        reloadDiscoveries();
+        DiscoveryManager.reloadDiscoveries();
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
@@ -197,7 +196,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                this::reloadDiscoveries));
+                DiscoveryManager::reloadDiscoveries));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -340,7 +339,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        WebManager.getDiscoveryInfoList().stream()
+                        DiscoveryManager.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
@@ -357,10 +356,5 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());
-    }
-
-    private void reloadDiscoveries() {
-        WebManager.updateDiscoveries();
-        DiscoveryManager.queryDiscoveries();
     }
 }

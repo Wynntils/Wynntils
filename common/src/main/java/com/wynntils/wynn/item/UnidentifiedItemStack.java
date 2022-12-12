@@ -5,14 +5,14 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.ItemGuessProfile;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
-import com.wynntils.core.webapi.profiles.item.ItemType;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +62,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
         }
 
         if (levelRange == null) return;
-        if (WebManager.getItemGuesses() == null || WebManager.getItemsMap() == null) return;
+        if (ItemProfilesManager.getItemGuesses() == null || ItemProfilesManager.getItemsMap() == null) return;
 
-        ItemGuessProfile guessProfile = WebManager.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = ItemProfilesManager.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
@@ -78,7 +78,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = WebManager.getItemsMap().get(item);
+            ItemProfile profile = ItemProfilesManager.getItemsMap().get(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

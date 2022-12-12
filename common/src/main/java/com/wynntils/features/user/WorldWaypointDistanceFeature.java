@@ -12,6 +12,7 @@ import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
@@ -82,6 +83,10 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         float dx = (float) (location.x + 0.5 - cameraPos.x);
         float dy = (float) (location.y + 0.5 - cameraPos.y);
         float dz = (float) (location.z + 0.5 - cameraPos.z);
+
+        if (location.y <= 0 || location.y > 255) {
+            dy = 0;
+        }
 
         double squaredDistance = dx * dx + dy * dy + dz * dz;
 
@@ -229,7 +234,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         }
 
         // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the
-        // slope
+        // line's slope
         double angle = StrictMath.atan2(centerRelativePosition.y, centerRelativePosition.x);
         double m = StrictMath.tan(angle);
 
@@ -263,5 +268,24 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                 && position.y > 0
                 && position.y < window.getGuiScaledHeight()
                 && position.z < 1;
+    }
+
+    // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        Window window = McUtils.window();
+
+        switch (configHolder.getFieldName()) {
+            case "topBoundingDistance", "bottomBoundingDistance" -> {
+                if ((float) configHolder.getValue() > window.getGuiScaledHeight() * 0.4f) {
+                    configHolder.setValue(window.getGuiScaledHeight() * 0.4f);
+                }
+            }
+            case "horizontalBoundingDistance" -> {
+                if ((float) configHolder.getValue() > window.getGuiScaledWidth() * 0.4f) {
+                    configHolder.setValue(window.getGuiScaledWidth() * 0.4f);
+                }
+            }
+        }
     }
 }

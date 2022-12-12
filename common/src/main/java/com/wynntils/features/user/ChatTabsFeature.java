@@ -16,10 +16,12 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.widgets.ChatTabButton;
+import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -29,19 +31,20 @@ import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
 
     @Config(visible = false)
     public List<ChatTab> chatTabs = Arrays.asList(
-            new ChatTab("All", false, null, null),
-            new ChatTab("Global", false, Sets.newHashSet(RecipientType.GLOBAL), null),
-            new ChatTab("Local", false, Sets.newHashSet(RecipientType.LOCAL), null),
-            new ChatTab("Guild", false, Sets.newHashSet(RecipientType.GUILD), null),
-            new ChatTab("Party", false, Sets.newHashSet(RecipientType.PARTY), null),
-            new ChatTab("Private", false, Sets.newHashSet(RecipientType.PRIVATE), null),
-            new ChatTab("Shout", false, Sets.newHashSet(RecipientType.SHOUT), null));
+            new ChatTab("All", false, null, null, null),
+            new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
+            new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
+            new ChatTab("Guild", false, "/g ", Sets.newHashSet(RecipientType.GUILD), null),
+            new ChatTab("Party", false, "/p ", Sets.newHashSet(RecipientType.PARTY), null),
+            new ChatTab("Private", false, "/r ", Sets.newHashSet(RecipientType.PRIVATE), null),
+            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null));
 
     @TypeOverride
     private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
@@ -131,6 +134,18 @@ public class ChatTabsFeature extends UserFeature {
         // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
         // rendering command suggestions on top of chat tab buttons.
         chatScreen.commandSuggestions.render(event.getPoseStack(), event.getMouseX(), event.getMouseY());
+    }
+
+    @SubscribeEvent
+    public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
+        // We can't use keybinds here to not conflict with TAB key's other behaviours.
+        if (event.getKeyCode() != GLFW.GLFW_KEY_TAB) return;
+        if (!(McUtils.mc().screen instanceof ChatScreen)) return;
+        if (!KeyboardUtils.isShiftDown()) return;
+
+        event.setCanceled(true);
+        ChatTabModel.setFocusedTab(
+                chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) + 1) % chatTabs.size()));
     }
 
     @Override

@@ -92,7 +92,7 @@ public class LocateCommand extends CommandBase {
         Vec3 currentLocation = McUtils.player().position();
         services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                 poi.getLocation().getX(),
-                poi.getLocation().getY(),
+                poi.getLocation().getY().orElse((int) currentLocation.y),
                 poi.getLocation().getZ())));
         // Removes from element 4 to the end of the list
         services.subList(4, services.size()).clear();
@@ -136,7 +136,7 @@ public class LocateCommand extends CommandBase {
         Vec3 currentLocation = McUtils.player().position();
         places.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                 poi.getLocation().getX(),
-                poi.getLocation().getY(),
+                poi.getLocation().getY().orElse((int) currentLocation.y),
                 poi.getLocation().getZ())));
 
         MutableComponent response = Component.literal("Found places matching '" + searchedName + "':")

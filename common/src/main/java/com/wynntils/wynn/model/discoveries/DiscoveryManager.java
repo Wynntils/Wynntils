@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.discoveries;
 
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.core.webapi.request.Request;
 import com.wynntils.core.webapi.request.RequestBuilder;
 import com.wynntils.core.webapi.request.RequestHandler;
@@ -22,6 +22,12 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
+import com.wynntils.wynn.model.territory.TerritoryManager;
+import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
+import com.wynntils.wynn.objects.profiles.TerritoryProfile;
+import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -34,6 +40,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static List<DiscoveryInfo> discoveries = List.of();
     private static List<DiscoveryInfo> secretDiscoveries = List.of();
+    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
     private static List<Component> discoveriesTooltip = List.of();
     private static List<Component> secretDiscoveriesTooltip = List.of();
@@ -52,9 +59,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        if (discoveryInfo.getGuildTerritory() != null) {
-            TerritoryProfile guildTerritory = discoveryInfo.getGuildTerritory();
-
+        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
@@ -68,9 +74,8 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        if (discoveryInfo.getGuildTerritory() != null) {
-            TerritoryProfile guildTerritory = discoveryInfo.getGuildTerritory();
-
+        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
@@ -83,7 +88,7 @@ public class DiscoveryManager extends CoreManager {
         Utils.openUrl(wikiUrl);
     }
 
-    public static void queryDiscoveries() {
+    private static void queryDiscoveries() {
         CONTAINER_QUERIES.queryDiscoveries();
     }
 
@@ -115,6 +120,10 @@ public class DiscoveryManager extends CoreManager {
 
     public static Stream<DiscoveryInfo> getAllDiscoveries() {
         return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
+    }
+
+    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+        return discoveryInfoList;
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
@@ -186,6 +195,29 @@ public class DiscoveryManager extends CoreManager {
         RequestHandler handler = new RequestHandler();
 
         handler.addAndDispatch(query, true);
+    }
+
+    private static void updateDiscoveriesResource() {
+        if (WebManager.apiUrls == null) return;
+
+        String url = WebManager.apiUrls.get("Discoveries");
+        WebManager.getHandler()
+                .addRequest(new RequestBuilder(url, "discoveries")
+                        .cacheTo(new File(WebManager.API_CACHE_ROOT, "discoveries.json"))
+                        .handleJsonArray(discoveriesJson -> {
+                            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+
+                            List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(discoveriesJson, type);
+                            discoveryInfoList =
+                                    discoveries.stream().map(DiscoveryInfo::new).toList();
+                            return true;
+                        })
+                        .build());
+    }
+
+    public static void reloadDiscoveries() {
+        updateDiscoveriesResource();
+        queryDiscoveries();
     }
 
     public enum DiscoveryOpenAction {

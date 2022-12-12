@@ -16,6 +16,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -120,7 +121,8 @@ public class DiscoveryButton extends AbstractButton {
             }
         }
 
-        if (discoveryInfo.getType() == DiscoveryType.SECRET || discoveryInfo.getGuildTerritory() != null) {
+        if (discoveryInfo.getType() == DiscoveryType.SECRET
+                || TerritoryManager.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(Component.empty());
             lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)

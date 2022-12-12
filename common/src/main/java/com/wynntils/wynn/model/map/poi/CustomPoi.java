@@ -16,7 +16,7 @@ public class CustomPoi extends StaticIconPoi {
     private Texture icon;
     private float minZoom;
 
-    public CustomPoi(MapLocation location, String name, CustomColor color, Texture icon, float minZoom) {
+    public CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, float minZoom) {
         super(location);
 
         this.name = name;
@@ -41,6 +41,11 @@ public class CustomPoi extends StaticIconPoi {
 
     public float getMinZoom() {
         return minZoom;
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOW;
     }
 
     @Override

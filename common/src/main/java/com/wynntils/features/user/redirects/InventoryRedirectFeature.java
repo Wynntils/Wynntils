@@ -69,12 +69,14 @@ public class InventoryRedirectFeature extends UserFeature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    NotificationManager.editMessage(emeraldPouchMessage, codedString);
+                    emeraldPouchMessage = NotificationManager.editMessage(emeraldPouchMessage, codedString);
                 } else {
                     emeraldPouchMessage = NotificationManager.queueMessage(codedString);
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
+
+                return;
             }
         }
 
@@ -85,6 +87,8 @@ public class InventoryRedirectFeature extends UserFeature {
                 String potionCount = matcher.group(1);
                 String potionMessage = String.format("§a+%s Potion Charges", potionCount);
                 NotificationManager.queueMessage(potionMessage);
+
+                return;
             }
         }
     }

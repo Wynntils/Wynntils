@@ -50,6 +50,7 @@ public abstract class MultiPlayerGameModeMixin {
         if (EventFactory.onRightClickBlock(player, hand, result.getBlockPos(), result)
                 .isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
+            cir.cancel();
         }
     }
 
@@ -57,6 +58,7 @@ public abstract class MultiPlayerGameModeMixin {
     private void useItemPre(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (EventFactory.onUseItem(player, McUtils.mc().level, hand).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
+            cir.cancel();
         }
     }
 
@@ -69,6 +71,7 @@ public abstract class MultiPlayerGameModeMixin {
             CallbackInfoReturnable<InteractionResult> cir) {
         if (EventFactory.onInteractAt(player, hand, target, ray).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
+            cir.cancel();
         }
     }
 
@@ -77,6 +80,7 @@ public abstract class MultiPlayerGameModeMixin {
             Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (EventFactory.onInteract(player, hand, target).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
+            cir.cancel();
         }
     }
 

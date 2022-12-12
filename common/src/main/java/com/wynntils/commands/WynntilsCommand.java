@@ -14,6 +14,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -79,6 +80,7 @@ public class WynntilsCommand extends CommandBase {
         }
 
         WebManager.reset();
+        ItemProfilesManager.reset();
         WebManager.init(); // reloads api urls as well as web manager
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be

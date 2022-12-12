@@ -9,7 +9,7 @@ import com.wynntils.gui.render.Texture;
 public class ServicePoi extends StaticIconPoi {
     private final ServiceKind kind;
 
-    public ServicePoi(MapLocation location, ServiceKind kind) {
+    public ServicePoi(PoiLocation location, ServiceKind kind) {
         super(location);
         this.kind = kind;
     }
@@ -26,5 +26,10 @@ public class ServicePoi extends StaticIconPoi {
 
     public ServiceKind getKind() {
         return kind;
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOWEST;
     }
 }

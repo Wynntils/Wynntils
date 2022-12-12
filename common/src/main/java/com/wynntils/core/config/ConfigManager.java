@@ -39,11 +39,16 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class ConfigManager extends CoreManager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
+    private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
+    private static final Gson CONFIG_GSON = new GsonBuilder()
+            .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
+            .setPrettyPrinting()
+            .serializeNulls()
+            .create();
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
+
     private static File userConfig;
-    private static final File defaultConfig = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static JsonObject configObject;
-    private static Gson gson;
 
     public static void registerFeature(Feature feature) {
         for (Overlay overlay : feature.getOverlays()) {
@@ -62,12 +67,6 @@ public final class ConfigManager extends CoreManager {
     }
 
     public static void init() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-
         loadConfigFile();
     }
 
@@ -133,7 +132,7 @@ public final class ConfigManager extends CoreManager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value = gson.fromJson(holderJson, holder.getType());
+            Object value = CONFIG_GSON.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
     }
@@ -151,14 +150,14 @@ public final class ConfigManager extends CoreManager {
                 if (!holder.valueChanged()) continue; // only save options that have been set by the user
                 Object value = holder.getValue();
 
-                JsonElement holderElement = gson.toJsonTree(value);
+                JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
                 holderJson.add(holder.getJsonName(), holderElement);
             }
 
             // write json to file
             OutputStreamWriter fileWriter =
                     new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-            gson.toJson(holderJson, fileWriter);
+            CONFIG_GSON.toJson(holderJson, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             WynntilsMod.error("Failed to save user config file!", e);
@@ -168,8 +167,8 @@ public final class ConfigManager extends CoreManager {
     public static void saveDefaultConfig() {
         try {
             // create file if necessary
-            if (!defaultConfig.exists()) {
-                FileUtils.createNewFile(defaultConfig);
+            if (!DEFAULT_CONFIG.exists()) {
+                FileUtils.createNewFile(DEFAULT_CONFIG);
             }
 
             // create json object, with entry for each option of each container
@@ -177,14 +176,14 @@ public final class ConfigManager extends CoreManager {
             for (ConfigHolder holder : CONFIG_HOLDERS) {
                 Object value = holder.getValue();
 
-                JsonElement holderElement = gson.toJsonTree(value);
+                JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
                 holderJson.add(holder.getJsonName(), holderElement);
             }
 
             // write json to file
             OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(defaultConfig), StandardCharsets.UTF_8);
-            gson.toJson(holderJson, fileWriter);
+                    new OutputStreamWriter(new FileOutputStream(DEFAULT_CONFIG), StandardCharsets.UTF_8);
+            CONFIG_GSON.toJson(holderJson, fileWriter);
             fileWriter.close();
             WynntilsMod.info("Default config file created with " + holderJson.size() + " config values.");
         } catch (IOException e) {
@@ -240,11 +239,11 @@ public final class ConfigManager extends CoreManager {
         return options;
     }
 
-    public static Gson getGson() {
-        return gson;
-    }
-
     public static List<ConfigHolder> getConfigHolders() {
         return CONFIG_HOLDERS;
+    }
+
+    public static Object deepCopy(Object value, Type fieldType) {
+        return CONFIG_GSON.fromJson(CONFIG_GSON.toJson(value), fieldType);
     }
 }

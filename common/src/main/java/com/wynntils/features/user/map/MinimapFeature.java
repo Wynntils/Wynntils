@@ -254,12 +254,14 @@ public class MinimapFeature extends UserFeature {
             List<PlayerMiniMapPoi> playerPois = HadesUserModel.getHadesUserMap().values().stream()
                     .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                             || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .sorted(Comparator.comparing(
-                            hadesUser -> hadesUser.getMapLocation().getY()))
                     .map(PlayerMiniMapPoi::new)
                     .toList();
             poisToRender.addAll(playerPois);
 
+            poisToRender.addAll(MapModel.getCombatPois());
+
+            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+            poisToRender.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
             for (Poi poi : poisToRender) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;

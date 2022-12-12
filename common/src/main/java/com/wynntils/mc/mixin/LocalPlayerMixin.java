@@ -52,6 +52,7 @@ public abstract class LocalPlayerMixin {
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onDropPre(fullStack).isCanceled()) {
+            cir.setReturnValue(false);
             cir.cancel();
         }
     }

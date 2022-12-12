@@ -4,10 +4,8 @@
  */
 package com.wynntils.wynn.utils;
 
-import com.google.common.collect.Lists;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
-import java.util.List;
 
 public final class WynnUtils {
     /**
@@ -41,9 +39,5 @@ public final class WynnUtils {
 
     public static boolean hasCharacterInfo() {
         return CharacterManager.hasCharacter();
-    }
-
-    public static List<String> getWynnServerTypes() {
-        return Lists.newArrayList("WC", "lobby", "GM", "DEV", "WAR", "HB");
     }
 }

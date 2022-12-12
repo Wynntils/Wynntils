@@ -6,7 +6,6 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.profiles.ingredient.ProfessionType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.utils.ItemUtils;
@@ -17,6 +16,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.ProfessionInfo;
+import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.HashMap;
 import java.util.List;

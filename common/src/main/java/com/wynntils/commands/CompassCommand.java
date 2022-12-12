@@ -102,11 +102,7 @@ public class CompassCommand extends CommandBase {
 
         String target = StringArgumentType.getString(context, "target");
 
-        Location compass = compassLocation.get();
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareCompass(target, compassLocation.get());
 
         return 1;
     }
@@ -114,11 +110,7 @@ public class CompassCommand extends CommandBase {
     private int shareLocation(CommandContext<CommandSourceStack> context) {
         String target = StringArgumentType.getString(context, "target");
 
-        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
-                + (int) McUtils.player().position().y + ", "
-                + (int) McUtils.player().position().z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareLocation(target);
 
         return 1;
     }
@@ -191,7 +183,7 @@ public class CompassCommand extends CommandBase {
                 .filter(poi -> poi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
-                        poi.getLocation().getY(),
+                        poi.getLocation().getY().orElse((int) currentLocation.y),
                         poi.getLocation().getZ())));
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...

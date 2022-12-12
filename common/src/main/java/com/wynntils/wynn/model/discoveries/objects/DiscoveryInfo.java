@@ -4,12 +4,10 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
-import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.core.webapi.profiles.DiscoveryProfile;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ public class DiscoveryInfo {
     private final DiscoveryType type;
     private final String description;
     private final int minLevel;
-    private final TerritoryProfile guildTerritory;
     private final boolean discovered;
     private final List<String> requirements;
     private List<Component> displayLore = null;
@@ -33,7 +30,6 @@ public class DiscoveryInfo {
         this.type = DiscoveryType.valueOf(discoveryProfile.getType().toUpperCase(Locale.ROOT));
         this.description = "";
         this.minLevel = discoveryProfile.getLevel();
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = false;
         this.requirements = discoveryProfile.getRequirements();
     }
@@ -43,7 +39,6 @@ public class DiscoveryInfo {
         this.type = type;
         this.description = description;
         this.minLevel = minLevel;
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = true;
         this.requirements = List.of();
     }
@@ -131,10 +126,6 @@ public class DiscoveryInfo {
 
     public int getMinLevel() {
         return minLevel;
-    }
-
-    public TerritoryProfile getGuildTerritory() {
-        return guildTerritory;
     }
 
     public List<String> getRequirements() {

@@ -42,3 +42,4 @@ accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPred
 accessible class net/minecraft/client/OptionInstance$ValueSet
 accessible class net/minecraft/client/OptionInstance$SliderableValueSet
 mutable field net/minecraft/client/OptionInstance values Lnet/minecraft/client/OptionInstance$ValueSet;
+accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;

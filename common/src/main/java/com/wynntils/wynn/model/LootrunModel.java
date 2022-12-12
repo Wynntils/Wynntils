@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -873,7 +872,7 @@ public final class LootrunModel {
                         DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
                                 .format(new Date()));
                 FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
-                new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
+                WynntilsMod.GSON.toJson(json, writer);
                 writer.close();
                 return LootrunSaveResult.SAVED;
             } catch (IOException ex) {

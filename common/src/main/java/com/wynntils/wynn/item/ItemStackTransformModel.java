@@ -85,7 +85,7 @@ public class ItemStackTransformModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetSlot(SetSlotEvent event) {
+    public static void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack stack = event.getItem();
 
         stack = tryTransformItem(stack);

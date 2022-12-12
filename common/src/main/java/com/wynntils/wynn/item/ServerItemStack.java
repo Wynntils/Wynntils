@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.webapi.ServerListModel;
-import com.wynntils.core.webapi.profiles.ServerProfile;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.model.ServerListModel;
+import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

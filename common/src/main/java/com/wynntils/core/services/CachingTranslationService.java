@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.services;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.TaskUtils;
@@ -19,7 +18,6 @@ import org.apache.commons.io.FileUtils;
 
 public abstract class CachingTranslationService implements TranslationService {
     private static final File TRANSLATION_CACHE_ROOT = WynntilsMod.getModStorageDir("translationcache");
-    private static final Gson GSON = new Gson();
 
     // Map language code (String) to a translation map (String -> String)
     private static Map<String, ConcurrentHashMap<String, String>> translationCaches = new HashMap<>();
@@ -59,7 +57,7 @@ public abstract class CachingTranslationService implements TranslationService {
             if (translationCaches == null) return;
 
             File f = new File(TRANSLATION_CACHE_ROOT, "translations.json");
-            String json = GSON.toJson(translationCaches);
+            String json = WynntilsMod.GSON.toJson(translationCaches);
             FileUtils.writeStringToFile(f, json, "UTF-8");
         } catch (IOException e) {
             WynntilsMod.error("Error when trying to save translation cache.", e);
@@ -78,7 +76,7 @@ public abstract class CachingTranslationService implements TranslationService {
             String json = FileUtils.readFileToString(f, "UTF-8");
 
             Type type = new TypeToken<HashMap<String, ConcurrentHashMap<String, String>>>() {}.getType();
-            translationCaches = GSON.fromJson(json, type);
+            translationCaches = WynntilsMod.GSON.fromJson(json, type);
         } catch (IOException e) {
             WynntilsMod.error("Error when trying to load translation cache.", e);
         } finally {

@@ -38,6 +38,8 @@ public class PlayerRelationsModel extends Model {
     private static final Pattern PARTY_NO_LIST_MESSAGE_PATTERN = Pattern.compile("§eYou must be in a party to list.");
     private static final Pattern PARTY_OTHER_LEAVE_MESSAGE_PATTERN = Pattern.compile("§e(.+) has left the party.");
     private static final Pattern PARTY_OTHER_JOIN_MESSAGE_PATTERN = Pattern.compile("§e(.+) has joined the party.");
+    private static final Pattern PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN =
+            Pattern.compile("§eSay hello to (.+) which just joined your party!");
     private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
             Pattern.compile("§eYou have been removed from the party.");
     private static final Pattern PARTY_SELF_JOIN_MESSAGE_PATTERN =
@@ -141,6 +143,18 @@ public class PlayerRelationsModel extends Model {
             String player = matcher.group(1);
 
             WynntilsMod.info("Player's party has a new member: " + player);
+
+            partyMembers.add(player);
+            WynntilsMod.postEvent(
+                    new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
+            return true;
+        }
+
+        matcher = PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN.matcher(coded);
+        if (matcher.matches()) {
+            String player = matcher.group(1);
+
+            WynntilsMod.info("Player's party has a new member #2: " + player);
 
             partyMembers.add(player);
             WynntilsMod.postEvent(

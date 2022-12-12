@@ -296,46 +296,51 @@ public final class FunctionManager extends CoreManager {
     public static void init() {
         registerFunction(new WorldFunction());
 
+        registerFunction(new CharacterFunctions.BpsFunction());
+        registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.EmeraldBlockFunction());
+        registerFunction(new CharacterFunctions.EmeraldsFunction());
+        registerFunction(new CharacterFunctions.HealthFunction());
+        registerFunction(new CharacterFunctions.HealthMaxFunction());
+        registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.InventoryFreeFunction());
+        registerFunction(new CharacterFunctions.LevelFunction());
+        registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
+        registerFunction(new CharacterFunctions.ManaFunction());
+        registerFunction(new CharacterFunctions.ManaMaxFunction());
+        registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MoneyFunction());
         registerFunction(new CharacterFunctions.SoulpointFunction());
         registerFunction(new CharacterFunctions.SoulpointMaxFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
-        registerFunction(new CharacterFunctions.ClassFunction());
-        registerFunction(new CharacterFunctions.ManaFunction());
-        registerFunction(new CharacterFunctions.ManaMaxFunction());
-        registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.HealthFunction());
-        registerFunction(new CharacterFunctions.HealthMaxFunction());
-        registerFunction(new CharacterFunctions.HealthPctFunction());
-        registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.XpFunction());
+        registerFunction(new CharacterFunctions.XpPctFunction());
         registerFunction(new CharacterFunctions.XpRawFunction());
         registerFunction(new CharacterFunctions.XpReqFunction());
         registerFunction(new CharacterFunctions.XpReqRawFunction());
-        registerFunction(new CharacterFunctions.XpPctFunction());
-        registerFunction(new CharacterFunctions.BpsFunction());
-        registerFunction(new CharacterFunctions.BpsXzFunction());
 
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
-        registerFunction(new EnvironmentFunctions.MemUsedFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
+        registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
-        registerFunction(new HorseFunctions.HorseXpFunction());
-        registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
+        registerFunction(new HorseFunctions.HorseTierFunction());
+        registerFunction(new HorseFunctions.HorseXpFunction());
 
         registerFunction(new LootrunFunctions.DryBoxesFunction());
         registerFunction(new LootrunFunctions.DryStreakFunction());
 
+        registerFunction(new MinecraftFunctions.DirFunction());
+        registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());
         registerFunction(new MinecraftFunctions.ZFunction());
-        registerFunction(new MinecraftFunctions.DirFunction());
-        registerFunction(new MinecraftFunctions.FpsFunction());
     }
 }

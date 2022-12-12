@@ -4,14 +4,14 @@
  */
 package com.wynntils.wynn.item.parsers;
 
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
+import com.wynntils.wynn.model.ItemProfilesManager;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,8 +150,9 @@ public final class WynnItemMatchers {
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
-        ItemProfile profile = WebManager.getItemsMap().get(strippedName);
+        if (ItemProfilesManager.getItemsMap() == null
+                || !ItemProfilesManager.getItemsMap().containsKey(strippedName)) return false;
+        ItemProfile profile = ItemProfilesManager.getItemsMap().get(strippedName);
         return (profile != null
                 && name.startsWith(profile.getTier().getChatFormatting().toString()));
     }

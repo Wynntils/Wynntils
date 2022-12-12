@@ -5,7 +5,7 @@
 package com.wynntils.mc.objects;
 
 import com.mojang.math.Vector3d;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
@@ -24,8 +24,8 @@ public class Location extends Vector3d implements Position {
         this(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public Location(MapLocation location) {
-        this(location.getX(), location.getY(), location.getZ());
+    public Location(PoiLocation location) {
+        this(location.getX(), location.getY().orElse(0), location.getZ());
     }
 
     public Location(Position location) {

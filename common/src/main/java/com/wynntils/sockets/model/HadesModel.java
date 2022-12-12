@@ -6,7 +6,7 @@ package com.wynntils.sockets.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -56,8 +56,8 @@ public class HadesModel extends Model {
     }
 
     private static void tryCreateConnection() {
-        if (WebManager.getAccount().isEmpty()) {
-            WynntilsMod.error("Cannot connect to HadesServer when WebManager does not have account.");
+        if (!WynntilsAccountManager.isLoggedIn()) {
+            WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
             return;
         }
 

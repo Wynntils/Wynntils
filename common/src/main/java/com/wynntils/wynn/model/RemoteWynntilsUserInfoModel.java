@@ -6,6 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.webapi.WebManager;
 import com.wynntils.core.webapi.request.PostRequestBuilder;
 import com.wynntils.core.webapi.request.Request;
@@ -27,7 +28,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
     private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
     public static void loadUser(UUID uuid) {
-        if (!WebManager.isAthenaOnline() || WebManager.getApiUrls().isEmpty()) return;
+        if (!WynntilsAccountManager.isLoggedIn() || WebManager.getApiUrls().isEmpty()) return;
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads

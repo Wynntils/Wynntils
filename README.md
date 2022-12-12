@@ -1,14 +1,17 @@
+Artemis
+========
+[![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
+[![CurseForge](https://cf.way2muchnoise.eu/short_wynntils.svg)](https://www.curseforge.com/minecraft/mc-mods/wynntils)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/Wynntils?label=modrinth)
+[![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/Artemis/releases)
+[![License](https://img.shields.io/badge/license-AGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
+
 <div align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=30%>
-<p align="center"><i>(Image in public domain)</i></p>
-<br>
-<a href="https://discord.gg/ve49m9J"><img src="https://discordapp.com/api/guilds/394189072635133952/widget.png"></a>
-<a href="https://ci.wynntils.com/job/Artemis/"><img src="http://ci.wynntils.com/buildStatus/icon?job=Artemis"></a>
-<a href="https://github.com/Wynntils/Artemis/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL%203.0-green.svg"></a>
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=20%>
+
+*(Image in public domain)*
 </div>
 
-About Artemis
-========
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
 Artemis is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.18.2 using Architectury, to support **Fabric**, **Forge** and **Quilt**.
@@ -24,8 +27,7 @@ All pull requests are welcome. We'll analyse it and if we determine it should a 
 We welcome all forms of assistance. =)
 <br>
 
-**Make sure you set the title of your pull request according to the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits</a> specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build.**
-
+**Make sure you set the title of your pull request according to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) specification. Otherwise, your pull request won't be visible in release logs, and will fail to auto-build.**
 
 Workspace Setup
 ========
@@ -59,5 +61,6 @@ The project has [LoomQuiltflower](https://github.com/Juuxel/LoomQuiltflower) set
 License
 ========
 
-Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/alpha/LICENSE)<br>
+Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/alpha/LICENSE)
+
 Unless specified otherwise, All the assets **are over Wynntils domain © Wynntils**.

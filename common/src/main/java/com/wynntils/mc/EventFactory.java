@@ -15,6 +15,7 @@ import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -328,8 +329,12 @@ public final class EventFactory {
         post(new ContainerCloseEvent.Post());
     }
 
-    public static SetSlotEvent onSetSlot(Container container, int slot, ItemStack item) {
-        return post(new SetSlotEvent(container, slot, item));
+    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack item) {
+        return post(new SetSlotEvent.Pre(container, slot, item));
+    }
+
+    public static void onSetSlotPost(Container container, int slot, ItemStack item) {
+        post(new SetSlotEvent.Post(container, slot, item));
     }
 
     public static InventoryKeyPressEvent onInventoryKeyPress(
@@ -363,6 +368,10 @@ public final class EventFactory {
 
     public static KeyInputEvent onKeyInput(int key, int scanCode, int action, int modifiers) {
         return post(new KeyInputEvent(key, scanCode, action, modifiers));
+    }
+
+    public static ChatScreenKeyTypedEvent onChatScreenKeyInput(int keyCode, int scanCode, int modifiers) {
+        return post(new ChatScreenKeyTypedEvent(keyCode, scanCode, modifiers));
     }
 
     public static Event onRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult hitVec) {

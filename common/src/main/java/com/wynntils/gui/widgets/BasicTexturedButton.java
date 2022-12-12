@@ -10,6 +10,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -17,11 +18,11 @@ import net.minecraft.network.chat.Component;
 public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
-    private final Runnable onClick;
+    private final Consumer<Integer> onClick;
     private final List<Component> tooltip;
 
     public BasicTexturedButton(
-            int x, int y, int width, int height, Texture texture, Runnable onClick, List<Component> tooltip) {
+            int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
         super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
@@ -45,9 +46,16 @@ public class BasicTexturedButton extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
-        onClick.run();
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+
+        onClick.accept(button);
+
+        return true;
     }
+
+    @Override
+    public void onPress() {}
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}

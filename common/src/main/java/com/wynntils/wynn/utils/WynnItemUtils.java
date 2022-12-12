@@ -8,11 +8,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.IdentificationModifier;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
@@ -21,9 +16,14 @@ import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
+import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -310,7 +310,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return WebManager.getTranslatedReferences()
+        return ItemProfilesManager.getTranslatedReferences()
                 .getOrDefault(unformattedItemName, unformattedItemName)
                 .replace("֎", "");
     }
@@ -339,7 +339,7 @@ public final class WynnItemUtils {
             return itemStack;
         }
 
-        ItemProfile itemProfile = WebManager.getItemsMap().get(itemName);
+        ItemProfile itemProfile = ItemProfilesManager.getItemsMap().get(itemName);
 
         if (itemProfile == null) {
             return null;
@@ -366,7 +366,8 @@ public final class WynnItemUtils {
                 float percent = idInfo.get("percent").getAsInt() / 100f;
 
                 // get wynntils name from internal wynncraft name
-                String translatedId = WebManager.getInternalIdentifications().get(id);
+                String translatedId =
+                        ItemProfilesManager.getInternalIdentifications().get(id);
                 if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value

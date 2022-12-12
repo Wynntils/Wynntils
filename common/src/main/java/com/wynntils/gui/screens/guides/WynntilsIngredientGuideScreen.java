@@ -5,7 +5,6 @@
 package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -22,6 +21,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.item.IngredientItemStack;
+import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -48,7 +48,7 @@ public class WynntilsIngredientGuideScreen
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = WebManager.getIngredientsCollection().stream()
+            parsedItemCache = ItemProfilesManager.getIngredientsCollection().stream()
                     .map(IngredientItemStack::new)
                     .toList();
         }

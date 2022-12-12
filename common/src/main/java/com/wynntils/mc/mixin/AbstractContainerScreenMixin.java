@@ -46,6 +46,7 @@ public abstract class AbstractContainerScreenMixin {
         if (EventFactory.onInventoryKeyPress(keyCode, scanCode, modifiers, this.hoveredSlot)
                 .isCanceled()) {
             cir.setReturnValue(true);
+            cir.cancel();
         }
     }
 
@@ -54,6 +55,7 @@ public abstract class AbstractContainerScreenMixin {
         if (EventFactory.onInventoryMouseClick(mouseX, mouseY, button, this.hoveredSlot)
                 .isCanceled()) {
             cir.setReturnValue(true);
+            cir.cancel();
         }
     }
 

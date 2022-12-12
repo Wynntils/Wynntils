@@ -7,12 +7,12 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.webapi.TerritoryManager;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
@@ -22,11 +22,12 @@ import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.IconPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
 import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -59,7 +60,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_HELP_BUTTON,
-                () -> {},
+                (b) -> {},
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
@@ -93,6 +94,24 @@ public class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_SHARE_BUTTON,
+                this::shareLocationOrCompass,
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.name")),
+                        Component.translatable("screens.wynntils.map.share.description1"),
+                        Component.translatable("screens.wynntils.map.share.description2"),
+                        Component.translatable("screens.wynntils.map.share.description3"))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -101,7 +120,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_WAYPOINT_FOCUS_BUTTON,
-                () -> {
+                (b) -> {
                     if (KeyboardUtils.isShiftDown()) {
                         centerMapAroundPlayer();
                         return;
@@ -132,7 +151,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                () -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
+                (b) -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -182,6 +201,7 @@ public class MainMapScreen extends AbstractMapScreen {
         List<Poi> pois = new ArrayList<>();
 
         pois.addAll(MapModel.getServicePois());
+        pois.addAll(MapModel.getCombatPois());
         pois.addAll(MapModel.getLabelPois());
 
         pois.addAll(MapFeature.INSTANCE.customPois);
@@ -191,11 +211,7 @@ public class MainMapScreen extends AbstractMapScreen {
                         hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
                                 || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
                         /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
-                .sorted(Comparator.comparing(
-                        hadesUser -> hadesUser.getMapLocation().getY()))
                 .toList();
-
-        pois.sort(Comparator.comparing(poi -> poi.getLocation().getY()));
 
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
@@ -203,6 +219,9 @@ public class MainMapScreen extends AbstractMapScreen {
         if (KeyboardUtils.isControlDown()) {
             pois.addAll(TerritoryManager.getTerritoryPois());
         }
+
+        // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+        pois.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
 
         renderPois(
                 pois,
@@ -255,9 +274,9 @@ public class MainMapScreen extends AbstractMapScreen {
                     int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
 
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, new MapLocation(gameX, 0, gameZ)));
+                    McUtils.mc().setScreen(new PoiCreationScreen(this, new PoiLocation(gameX, null, gameZ)));
                 }
-            } else if (KeyboardUtils.isControlDown()) {
+            } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
                     ConfigManager.saveConfig();
@@ -277,6 +296,27 @@ public class MainMapScreen extends AbstractMapScreen {
         CompassModel.setCompassLocation(compassLocation);
 
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+    }
+
+    private void shareLocationOrCompass(int button) {
+        boolean shareCompass =
+                KeyboardUtils.isShiftDown() && CompassModel.getCompassLocation().isPresent();
+
+        String target = null;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            target = "guild";
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            target = "party";
+        }
+
+        if (target == null) return;
+
+        if (shareCompass) {
+            LocationUtils.shareCompass(target, CompassModel.getCompassLocation().get());
+        } else {
+            LocationUtils.shareLocation(target);
+        }
     }
 
     public void setHovered(Poi hovered) {
