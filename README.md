@@ -40,7 +40,7 @@ To build the mod just call the `buildDependents` and the artifacts should be gen
 ### Code Formatting
 The code format is checked by Spotless using the Palantir engine. When opening a PR, Spotless checks will be run automatically by GitHub Actions. This bot runs the `spotlessApply` so it fixes all formatting errors that it can. If such errors are found, the bot will then push a commit to your branch with these fixes.
 
-However, it can be nice to fix the formatting locally before pushing. There are several ways to do this. 
+However, it can be nice to fix the formatting locally before pushing. There are several ways to do this.
 
 * The most basic is to run the same gradle target as the bot, `spotlessApply`. This can be done from the command line `./gradlew spotlessApply` or as a gradle target from your IDE.
 
