@@ -95,6 +95,7 @@ public class ChatTabModel extends Model {
             // If chat screen is open, and current message is empty or the previous auto command, set our auto command
             if (McUtils.mc().screen instanceof ChatScreen chatScreen
                     && (chatScreen.input.getValue().isEmpty()
+                            || oldFocused == null
                             || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
                 String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
                 replaceChatText(chatScreen, autoCommand);
