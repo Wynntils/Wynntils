@@ -18,7 +18,7 @@ buildscript {
          */
 
         dependencies {
-            classpath "com.github.kristofbolyai:EventBusTransformer:${rootProject.event_bus_transformer_version}"
+            classpath "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
         }
     }
 }
@@ -72,7 +72,7 @@ dependencies {
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
-    runtimeOnly "com.github.kristofbolyai:EventBusTransformer:${rootProject.event_bus_transformer_version}"
+    runtimeOnly "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
     modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}"
 }
 
