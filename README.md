@@ -38,9 +38,17 @@ To set up the workspace, just import the project as a gradle project into your I
 To build the mod just call the `buildDependents` and the artifacts should be generated in `fabric/build/libs`, `quilt/build/libs` and `forge/build/libs`. There are a lot of jars there, use the jar which has the respective loader at the end (eg. `wynntils-VERSION-fabric.jar`).
 
 ### Code Formatting
-The code format is checked by Spotless using the Palantir engine. To make sure your commits pass the Spotless check, you can install a git pre-commit hook. The hook is optional to use. If you want to use it, you must tell git to pick up hooks from the directory containing the hook. To do this, run this from your repo root: `git config core.hooksPath utils/git-hooks`.
+The code format is checked by Spotless using the Palantir engine. When opening a PR, Spotless checks will be run automatically by GitHub Actions. This bot runs the `spotlessApply` so it fixes all formatting errors that it can. If such errors are found, the bot will then push a commit to your branch with these fixes.
 
-If you are using IntelliJ IDEA, it is recommended to install the [Palantir plugin](https://plugins.jetbrains.com/plugin/13180-palantir-java-format), to get proper formatting using the "Reformat code" command.
+However, it can be nice to fix the formatting locally before pushing. There are several ways to do this.
+
+* The most basic is to run the same gradle target as the bot, `spotlessApply`. This can be done from the command line `./gradlew spotlessApply` or as a gradle target from your IDE.
+
+* If you are using IntelliJ IDEA, you can install the [Spotless Gradle plugin](https://plugins.jetbrains.com/plugin/18321-spotless-gradle) to get an easy and quick way of running the Spotless target for the current editor.
+
+* To make sure your commits always pass the Spotless check, you can install a git pre-commit hook. The hook is optional to use. If you want to use it, you must tell git to pick up hooks from the directory containing the hook. To do this, run this from your repo root: `git config core.hooksPath utils/git-hooks`.
+
+* Finally, you can also use the Palantir formatting directly. This will skip the additional non-Palantir rules we have in Spotless, but these are few and unlikely to affect most cases. For IntelliJ, there is the [Palantir plugin](https://plugins.jetbrains.com/plugin/13180-palantir-java-format) that is supposed to do that, but at the moment it unfortunately seems to be broken.
 
 ### Hot-swapping
 Using the Hotswap Agent is recommended if you want to do live code editing. See [Hotswap Agent installation instructions](http://hotswapagent.org/mydoc_quickstart-jdk17.html),
