@@ -84,11 +84,13 @@ public class NetManager {
     }
 
     public static Download download(URI uri, String localFileName) {
+        RESOURCE_ROOT.mkdirs();
         File localFile = new File(RESOURCE_ROOT, localFileName);
         return download(uri, localFile);
     }
 
     public static Download download(URI uri, String localFileName, String expectedHash) {
+        RESOURCE_ROOT.mkdirs();
         File localFile = new File(RESOURCE_ROOT, localFileName);
         return download(uri, localFile, expectedHash);
     }
@@ -106,6 +108,7 @@ public class NetManager {
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {
         // Alternative solution: MD5Verification.isMd5Digest(expectedHash)
+        if (!localFile.exists()) return false;
         try {
             try (InputStream is = Files.newInputStream(localFile.toPath())) {
                 String fileHash = DigestUtils.md5Hex(is);

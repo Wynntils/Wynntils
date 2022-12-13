@@ -76,15 +76,6 @@ public final class UrlManager extends CoreManager {
     }
 
     private static void readUrls(InputStream inputStream) throws IOException {
-        final class UrlProfile {
-            String id;
-            String url;
-            String method;
-            List<String> arguments;
-            String md5;
-            String encoding;
-        }
-
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();
@@ -143,4 +134,13 @@ public final class UrlManager extends CoreManager {
     }
 
     public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {}
+
+    private static final class UrlProfile {
+        String id;
+        String url;
+        String method;
+        List<String> arguments;
+        String md5;
+        String encoding;
+    }
 }
