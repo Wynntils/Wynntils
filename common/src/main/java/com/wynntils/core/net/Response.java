@@ -10,7 +10,6 @@ import com.google.gson.JsonParser;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -19,15 +18,9 @@ public class Response extends NetAction {
         super(request);
     }
 
-    private CompletableFuture<InputStream> getInputStreamAsync() {
-        return NetManager11.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(HttpResponse::body);
-    }
-
     public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> errorHandler) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
-        CompletableFuture<Void> a = inputStreamAsync
+        CompletableFuture<Void> newFuture = inputStreamAsync
                 .thenAccept(is -> handler.accept(
                         JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()))
                 .exceptionally(e -> {
@@ -35,6 +28,7 @@ public class Response extends NetAction {
                     errorHandler.accept(e);
                     return null;
                 });
+        storeNewFuture(newFuture);
     }
 
     // JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()
@@ -44,7 +38,7 @@ public class Response extends NetAction {
 
     public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> errorHandler) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
-        CompletableFuture<Void> a = inputStreamAsync
+        CompletableFuture<Void> newFuture = inputStreamAsync
                 .thenAccept(is -> handler.accept(
                         JsonParser.parseReader(new InputStreamReader(is)).getAsJsonArray()))
                 .exceptionally(e -> {
@@ -52,6 +46,7 @@ public class Response extends NetAction {
                     errorHandler.accept(e);
                     return null;
                 });
+        storeNewFuture(newFuture);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
