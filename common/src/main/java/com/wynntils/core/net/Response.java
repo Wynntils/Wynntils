@@ -6,7 +6,12 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -15,21 +20,29 @@ public class Response extends NetAction {
         super(request);
     }
 
-    // public static class FailureResponse extends Response {}
-
-    private byte[] blob;
-
-    public void handleJsonObject(Predicate<JsonObject> handler) {
-        //        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-        //        JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
+    private CompletableFuture<InputStream> getInputStreamAsync() {
+        return NetManager11.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .thenApply(HttpResponse::body);
     }
 
-    public void handleJsonArray(Predicate<JsonArray> handler) {}
+    public void handleJsonObject(Predicate<JsonObject> handler, Consumer<Void> errorHandler) {
+        CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
+        inputStreamAsync.thenApply(is ->
+                handler.test(JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()));
+    }
 
-    public void handleBytes(Predicate<byte[]> handler) {}
+    public void handleJsonObject(Predicate<JsonObject> handler) {
+        handleJsonObject(handler, (ignored) -> {});
+    }
 
-    public void handleJsonArray(Predicate<JsonArray> handler, Consumer<Void> errorHandler) {}
+    public void handleJsonArray(Predicate<JsonArray> handler, Consumer<Void> errorHandler) {
+        CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
+        inputStreamAsync.thenApply(is ->
+                handler.test(JsonParser.parseReader(new InputStreamReader(is)).getAsJsonArray()));
+    }
 
-    public void onError(Runnable handler) {}
+    public void handleJsonArray(Predicate<JsonArray> handler) {
+        handleJsonArray(handler, (ignore) -> {});
+    }
 }

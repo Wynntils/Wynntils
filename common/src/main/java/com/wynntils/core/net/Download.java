@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URLConnection;
+import java.net.http.HttpRequest;
 import java.util.function.Consumer;
 
 public class Download extends NetAction {
@@ -17,6 +18,14 @@ public class Download extends NetAction {
     public Download(File localFile) {
         super(null);
         this.localFile = localFile;
+    }
+
+    public static Download fromCache(File localFile) {
+        return new Download(localFile);
+    }
+
+    public static Download downloadAndCache(File localFile, HttpRequest request) {
+        return new Download(localFile);
     }
 
     public Reader waitAndGetReader() {

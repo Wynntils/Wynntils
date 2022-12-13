@@ -33,8 +33,8 @@ public class UpdateManager extends CoreManager {
             String version = json.getAsJsonPrimitive("version").getAsString();
             future.complete(version);
             return true;
-        });
-        response.onError(() -> {
+        },
+        onError -> {
             WynntilsMod.error("Exception while trying to fetch update.");
             future.complete(null);
         });
@@ -69,8 +69,7 @@ public class UpdateManager extends CoreManager {
 
             tryFetchNewUpdate(latestDownload, future);
             return true;
-        });
-        response.onError(() -> {
+        }, onError -> {
             WynntilsMod.error("Exception while trying to load new update.");
             future.complete(UpdateResult.ERROR);
         });

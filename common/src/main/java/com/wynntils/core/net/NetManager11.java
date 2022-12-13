@@ -30,7 +30,7 @@ import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class NetManager11 {
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("net-resources");
@@ -54,13 +54,13 @@ public class NetManager11 {
         return request;
     }
 
-    private static HttpRequest postRequest(URI uri, String data) {
+    private static HttpRequest postRequest(URI uri, JsonObject jsonArgs) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
                 .header("User-Agent", USER_AGENT)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(data))
+                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
                 .build();
         return request;
     }
@@ -79,7 +79,7 @@ public class NetManager11 {
                 jsonArgs.addProperty(entry.getKey(), entry.getValue());
             });
             URI uri = URI.create(urlInfo.url());
-            HttpRequest request = postRequest(uri, jsonArgs.toString());
+            HttpRequest request = postRequest(uri, jsonArgs);
             return new Response(request);
         }
     }
@@ -88,12 +88,18 @@ public class NetManager11 {
         return callApi(urlId, Map.of());
     }
 
+    public static Download download(UrlId urlId) {
+        URI uri = URI.create(UrlManager.getUrl(urlId));
+        File localFile = new File(RESOURCE_ROOT, urlId.getId());
+        return Download.downloadAndCache(localFile, getRequest(uri));
+    }
+
     public static Download download(URI uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
-        if (!checkLocalHash(localFile, expectedHash)) {
-            downloadToLocal(uri, localFile);
+        if (checkLocalHash(localFile, expectedHash)) {
+            return Download.fromCache(localFile);
         }
-        return new Download(localFile);
+        return Download.downloadAndCache(localFile, getRequest(uri));
     }
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {
@@ -106,13 +112,6 @@ public class NetManager11 {
             WynntilsMod.warn("Error when calculading md5 for " + localFile.getPath(), e);
             return false;
         }
-    }
-
-    public static Download download(UrlId urlId) {
-        URI uri = URI.create(UrlManager.getUrl(urlId));
-        File localFile = new File(RESOURCE_ROOT, urlId.getId());
-        downloadToLocal(uri, localFile);
-        return new Download(localFile);
     }
 
     private static void downloadToLocal(URI uri, File localFile) {}
