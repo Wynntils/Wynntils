@@ -79,7 +79,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 1,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
@@ -356,9 +356,5 @@ public class GuildMapScreen extends AbstractMapScreen {
 
     public boolean isResourceMode() {
         return resourceMode;
-    }
-
-    public TerritoryDefenseLevel getTerritoryDefenseFilterLevel() {
-        return territoryDefenseFilterLevel;
     }
 }
