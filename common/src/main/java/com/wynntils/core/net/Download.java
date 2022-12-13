@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+import org.apache.commons.io.FileUtils;
 
 public class Download extends NetAction {
     private final File localFile;
@@ -25,12 +26,13 @@ public class Download extends NetAction {
         this.localFile = localFile;
     }
 
-    public static Download fromCache(File localFile) {
+    public static Download readFromCache(File localFile) {
         // FIXME: implement
         return new Download(localFile);
     }
 
-    public static Download downloadAndCache(File localFile, HttpRequest request) {
+    public static Download downloadAndStore(File localFile, HttpRequest request) {
+        FileUtils.deleteQuietly(localFile);
         // FIXME: implement
         // HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt"))
 
@@ -55,6 +57,7 @@ public class Download extends NetAction {
     }
 
     public long getTimestamp() {
+        // FIXME: handle case if we read from cache as fallback!
         try {
             HttpHeaders headers = future.get().headers();
             OptionalLong a = headers.firstValueAsLong("timestamp");
@@ -67,6 +70,7 @@ public class Download extends NetAction {
     }
 
     public boolean waitForCompletion(int timeOutMs) {
+        // FIXME: handle case where we read from cache
         try {
             future.get(timeOutMs, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {

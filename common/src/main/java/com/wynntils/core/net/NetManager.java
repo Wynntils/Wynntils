@@ -72,18 +72,36 @@ public class NetManager {
         return callApi(urlId, Map.of());
     }
 
-    public static Download download(UrlId urlId) {
-        URI uri = URI.create(UrlManager.getUrl(urlId));
-        File localFile = new File(RESOURCE_ROOT, urlId.getId());
-        return Download.downloadAndCache(localFile, getRequest(uri));
+    public static Download download(URI uri, File file) {
+        return Download.downloadAndStore(file, getRequest(uri));
     }
 
-    public static Download download(URI uri, String localFileName, String expectedHash, String id) {
-        File localFile = new File(RESOURCE_ROOT, localFileName);
-        if (checkLocalHash(localFile, expectedHash)) {
-            return Download.fromCache(localFile);
+    public static Download download(URI uri, File file, String expectedHash) {
+        if (checkLocalHash(file, expectedHash)) {
+            return Download.readFromCache(file);
         }
-        return Download.downloadAndCache(localFile, getRequest(uri));
+        return download(uri, file);
+    }
+
+    public static Download download(URI uri, String localFileName) {
+        File localFile = new File(RESOURCE_ROOT, localFileName);
+        return download(uri, localFile);
+    }
+
+    public static Download download(URI uri, String localFileName, String expectedHash) {
+        File localFile = new File(RESOURCE_ROOT, localFileName);
+        return download(uri, localFile, expectedHash);
+    }
+
+    public static Download download(UrlId urlId) {
+        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+        URI uri = URI.create(urlInfo.url());
+        String localFileName = urlId.name();
+
+        if (urlInfo.md5().isPresent()) {
+            return download(uri, localFileName, urlInfo.md5().get());
+        }
+        return download(uri, localFileName);
     }
 
     private static boolean checkLocalHash(File localFile, String expectedHash) {

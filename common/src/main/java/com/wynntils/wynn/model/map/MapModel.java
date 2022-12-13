@@ -68,7 +68,7 @@ public final class MapModel extends Model {
                 String fileName = mapPart.md5 + ".png";
 
                 Download dlPart = NetManager.download(
-                        URI.create(mapPart.url), "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
+                        URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
                 dlPart.onCompletionInputStream(inputStream -> {
                     try {
                         NativeImage nativeImage = NativeImage.read(inputStream);
