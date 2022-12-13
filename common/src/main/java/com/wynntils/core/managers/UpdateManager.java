@@ -32,7 +32,6 @@ public class UpdateManager extends CoreManager {
         response.handleJsonObject(json -> {
             String version = json.getAsJsonPrimitive("version").getAsString();
             future.complete(version);
-            return true;
         },
         onError -> {
             WynntilsMod.error("Exception while trying to fetch update.");
@@ -57,18 +56,17 @@ public class UpdateManager extends CoreManager {
             String currentMd5 = getCurrentMd5();
             if (Objects.equals(currentMd5, latestMd5)) {
                 future.complete(UpdateResult.ALREADY_ON_LATEST);
-                return true;
+                return;
             }
 
             if (latestMd5 == null) {
                 future.complete(UpdateResult.ERROR);
-                return true;
+                return;
             }
 
             String latestDownload = json.getAsJsonPrimitive("url").getAsString();
 
             tryFetchNewUpdate(latestDownload, future);
-            return true;
         }, onError -> {
             WynntilsMod.error("Exception while trying to load new update.");
             future.complete(UpdateResult.ERROR);

@@ -83,9 +83,7 @@ public class WynntilsAccountManager extends CoreManager {
         // generating secret key
         Response response = NetManager.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
         response.handleJsonObject(json -> {
-            if (!json.has("publicKeyIn")) return false;
             secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
-            return true;
         });
 
         // response
@@ -97,7 +95,6 @@ public class WynntilsAccountManager extends CoreManager {
 
         Response response2 = NetManager.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
         response2.handleJsonObject(json -> {
-            if (!json.has("authToken")) return false;
             token = json.get("authToken").getAsString(); /* md5 hashes*/
             JsonObject hashes = json.getAsJsonObject("hashes");
             hashes.entrySet()
@@ -109,7 +106,6 @@ public class WynntilsAccountManager extends CoreManager {
                     .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
             loggedIn = true;
             WynntilsMod.info("Successfully connected to Athena!");
-            return true;
         });
     }
 

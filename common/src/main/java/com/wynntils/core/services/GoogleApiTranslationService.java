@@ -42,8 +42,6 @@ public class GoogleApiTranslationService extends CachingTranslationService {
                     String translatedMessage = builder.toString();
                     saveTranslation(toLanguage, message, translatedMessage);
                     handleTranslation.accept(translatedMessage);
-
-                    return true;
                 },
                 onError -> {
                     // If Google translate return no data ( 500 error ), display default lang

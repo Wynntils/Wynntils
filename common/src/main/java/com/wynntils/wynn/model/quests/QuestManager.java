@@ -110,7 +110,6 @@ public class QuestManager extends CoreManager {
         response.handleJsonArray(json -> {
             String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
             NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
-            return true;
         });
     }
 

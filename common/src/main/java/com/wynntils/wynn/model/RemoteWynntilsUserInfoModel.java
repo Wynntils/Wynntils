@@ -33,15 +33,11 @@ public class RemoteWynntilsUserInfoModel extends Model {
 
         Response response = NetManager.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         response.handleJsonObject(json -> {
-            if (!json.has("user")) return false;
-
             JsonObject user = json.getAsJsonObject("user");
             users.put(
                     uuid,
                     new WynntilsUser(AccountType.valueOf(user.get("accountType").getAsString())));
             fetching.remove(uuid);
-
-            return true;
         });
     }
 

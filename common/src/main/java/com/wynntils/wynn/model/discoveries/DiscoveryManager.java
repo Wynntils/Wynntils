@@ -130,7 +130,6 @@ public class DiscoveryManager extends CoreManager {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
-                return true;
             }
 
             String wikiText = json.get("parse")
@@ -157,13 +156,13 @@ public class DiscoveryManager extends CoreManager {
             } catch (NumberFormatException e) {
                 McUtils.sendMessageToClient(new TextComponent(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
-                return true;
+                return;
             }
 
             if (x == 0 && z == 0) {
                 McUtils.sendMessageToClient(new TextComponent(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
-                return true;
+                return;
             }
 
             switch (action) {
@@ -175,8 +174,6 @@ public class DiscoveryManager extends CoreManager {
                     CompassModel.setCompassLocation(new Location(x, 0, z));
                 }
             }
-
-            return true;
         });
     }
 
