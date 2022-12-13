@@ -74,6 +74,10 @@ public class NetManager extends CoreManager {
         return download(uri, localFileName);
     }
 
+    public static File getCacheFile(String localFileName) {
+        return new File(CACHE_DIR, localFileName);
+    }
+
     public static void openLink(URI url) {
         Util.getPlatform().openUri(url);
     }

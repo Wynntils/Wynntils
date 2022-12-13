@@ -8,6 +8,8 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.utils.StringUtils;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -68,13 +70,31 @@ public final class UrlManager extends CoreManager {
 
     private static void loadUrls() {
         try {
-            // FIXME: First check if there is a local cache in CACHE_DIR; if so, use it
-            // If not, use the one included in the mod resources
-            // In both cases, trigger a re-download from the net to the cache
+            // First check if there is a copy in the local cache
+            File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+            if (cacheFile.exists()) {
+                // Yes, we have a cache. Use it for the initial population
+                try (InputStream inputStream = new FileInputStream(cacheFile)) {
+                    readUrls(inputStream);
+                }
+            } else {
+                // No cache. Start by reading the URLs from the resource embedded in the mod,
+                // so we have something to rely on
+                try (InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json")) {
+                    readUrls(inputStream);
+                }
+            }
 
-            // But right now, we just use the one from the resources
-            InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json");
-            readUrls(inputStream);
+            // In any case, trigger a re-download from the net to the cache
+            Download dl = NetManager.download(UrlId.DATA_STATIC_URLS);
+            dl.handleInputStream(inputStream -> {
+                try {
+                    readUrls(inputStream);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            // If not, use the one included in the mod resources
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
