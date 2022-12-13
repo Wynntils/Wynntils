@@ -53,6 +53,7 @@ import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
+import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
@@ -179,6 +180,7 @@ public final class FeatureRegistry {
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new MythicBoxScalerFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
