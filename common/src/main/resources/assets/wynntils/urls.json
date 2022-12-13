@@ -68,7 +68,7 @@
   {
     "id": "dataStaticCombatLocations",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json",
-    "md5": "029a6e54066b3348830049f5c1162523"
+    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9"
   },
   {
     "id": "dataStaticDiscoveries",
@@ -83,7 +83,7 @@
   {
     "id": "dataStaticMaps",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
-    "md5": "89af9a38646d4d369abfacf7fa3a9614"
+    "md5": "dbb7c99accd944be4efc8fe991a4ac7c"
   },
   {
     "id": "dataStaticPlaces",
@@ -93,7 +93,7 @@
   {
     "id": "dataStaticServices",
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json",
-    "md5": "09ffa3b1a40f74c815c8c430c528575f"
+    "md5": "1ac715226310b61c2e078d58e9ca7026"
   },
   {
     "id": "dataStaticSplashes",
