@@ -114,7 +114,7 @@ public class NetManager extends CoreManager {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
             JsonObject jsonArgs = new JsonObject();
-            arguments.entrySet().forEach(entry -> jsonArgs.addProperty(entry.getKey(), entry.getValue()));
+            arguments.forEach((key, value) -> jsonArgs.addProperty(key, value));
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);
