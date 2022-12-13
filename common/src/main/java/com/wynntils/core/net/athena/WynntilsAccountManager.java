@@ -17,6 +17,10 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -78,35 +82,41 @@ public class WynntilsAccountManager extends CoreManager {
     }
 
     private static void doLogin() {
-        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
-
+        CompletableFuture future = new CompletableFuture<>();
         // generating secret key
         Response response = NetManager.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
         response.handleJsonObject(json -> {
-            secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
+            String secretKey = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
+
+            Map<String, String> arguments = new HashMap<>();
+            arguments.put("key", secretKey);
+            arguments.put("username", McUtils.mc().getUser().getName());
+            arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
+
+            Response response2 = NetManager.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
+            response2.handleJsonObject(json2 -> {
+                token = json2.get("authToken").getAsString(); /* md5 hashes*/
+                JsonObject hashes = json2.getAsJsonObject("hashes");
+                hashes.entrySet()
+                        .forEach(
+                                (k) -> md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
+                JsonObject configFiles = json2.getAsJsonObject("configFiles");
+                configFiles
+                        .entrySet()
+                        .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
+                loggedIn = true;
+                future.complete(true);
+                WynntilsMod.info("Successfully connected to Athena!");
+            });
         });
-
-        // response
-
-        Map<String, String> arguments = new HashMap<>();
-        arguments.put("key", secretKey[0]);
-        arguments.put("username", McUtils.mc().getUser().getName());
-        arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
-
-        Response response2 = NetManager.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
-        response2.handleJsonObject(json -> {
-            token = json.get("authToken").getAsString(); /* md5 hashes*/
-            JsonObject hashes = json.getAsJsonObject("hashes");
-            hashes.entrySet()
-                    .forEach(
-                            (k) -> md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
-            JsonObject configFiles = json.getAsJsonObject("configFiles");
-            configFiles
-                    .entrySet()
-                    .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
-            loggedIn = true;
-            WynntilsMod.info("Successfully connected to Athena!");
-        });
+        try {
+            // FIXME: Wait up to 5 seconds for login to complete
+            // This is not ideal, but the rest of the code assumes that login is done
+            // when further down the manager init chain.
+            future.get(5000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // if timeout is reached, return false
+        }
     }
 
     private static String parseAndJoinPublicKey(String key) {
