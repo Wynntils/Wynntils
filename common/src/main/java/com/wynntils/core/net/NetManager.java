@@ -98,7 +98,7 @@ public class NetManager {
         return null;
     }
 
-    private static byte[] getToMemory(URI uri)  {
+    private static byte[] getToMemory(URI uri) {
         /*
         URL url = new URL("test");
         String fileName = "";

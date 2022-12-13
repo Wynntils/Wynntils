@@ -64,7 +64,7 @@ public class NetManager11 {
                 .build();
         return request;
     }
-    
+
     public static Response callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
         if (urlInfo.method() == UrlManager.Method.GET) {
@@ -115,23 +115,18 @@ public class NetManager11 {
         return new Download(localFile);
     }
 
-    private static void downloadToLocal(URI uri, File localFile) {
-    }
+    private static void downloadToLocal(URI uri, File localFile) {}
 
     public void getSyncToString(String uri) throws Exception {
         HttpRequest request = getRequest(URI.create(uri));
 
-        HttpResponse<String> response =
-                HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
         System.out.println(response.body());
     }
 
-
     public void getSyncToFile(String uri) throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).build();
 
         HttpResponse<Path> response =
                 HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt")));
@@ -140,22 +135,20 @@ public class NetManager11 {
     }
 
     public CompletableFuture<String> getAsyncToString(String uri) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).build();
 
         // kan returnera inputstream, är antagligen bäst.
 
-        return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        return HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
     }
 
     public CompletableFuture<Path> getAsyncToFile(String uri) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).build();
 
-        return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt")))
+        return HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt")))
                 .thenApply(HttpResponse::body);
     }
 
@@ -169,10 +162,7 @@ public class NetManager11 {
         System.out.println(response.statusCode());
     }
 
-    public CompletableFuture<Void> postJSON(URI uri,
-                                            Map<String,String> map)
-            throws IOException
-    {
+    public CompletableFuture<Void> postJSON(URI uri, Map<String, String> map) throws IOException {
         String requestBody = new Gson().toJson(map);
 
         HttpRequest request = HttpRequest.newBuilder(uri)
@@ -189,9 +179,8 @@ public class NetManager11 {
     public CompletableFuture<JsonElement> JSONBodyAsMap(URI uri) {
         UncheckedObjectMapper objectMapper = new UncheckedObjectMapper();
 
-        HttpRequest request = HttpRequest.newBuilder(uri)
-                .header("Accept", "application/json")
-                .build();
+        HttpRequest request =
+                HttpRequest.newBuilder(uri).header("Accept", "application/json").build();
 
         return HttpClient.newHttpClient()
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString())
@@ -212,7 +201,6 @@ public class NetManager11 {
         }
     }
 
-
     public static void openLink(UrlId urlId, Map<String, String> arguments) {
         URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
         openLink(uri);
@@ -225,5 +213,4 @@ public class NetManager11 {
     public static void openLink(URI url) {
         Util.getPlatform().openUri(url);
     }
-
 }

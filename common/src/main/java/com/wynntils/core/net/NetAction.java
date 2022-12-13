@@ -17,6 +17,4 @@ public class NetAction {
     }
 
     HttpRequest request;
-
-
 }
