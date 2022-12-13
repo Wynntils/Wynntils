@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.net;
 
-import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -79,7 +78,6 @@ public class Download extends NetResult {
 
     private FileInputStream getFileInputStreamFromCache() {
         try {
-            // FIXME: How close the is?
             return new FileInputStream(localFile);
         } catch (FileNotFoundException e) {
             // FIXME: Error handling

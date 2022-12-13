@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -63,7 +64,7 @@ public abstract class NetResult {
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture<Void> future = getInputStreamFuture()
-                .thenAccept(onCompletion)
+                .thenAccept(closingHandler(onCompletion))
                 .exceptionally(e -> {
                     // FIXME: Error handling
                     onError.accept(e);
@@ -72,6 +73,16 @@ public abstract class NetResult {
                 .whenComplete((ignored, exc) -> PROCESS_FUTURES.remove(request));
 
         PROCESS_FUTURES.put(request, future);
+    }
+
+    private Consumer<InputStream> closingHandler(Consumer<InputStream> c) {
+        return (is) -> {
+            c.accept(is);
+            try {
+                is.close();
+            } catch (IOException ignored) {
+            }
+        };
     }
 
     protected abstract CompletableFuture<InputStream> getInputStreamFuture();
