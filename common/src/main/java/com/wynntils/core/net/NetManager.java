@@ -20,10 +20,10 @@ import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class NetManager extends CoreManager {
-    public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
-    private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("cache");
+    private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
             WynntilsMod.getVersion(),
@@ -32,43 +32,9 @@ public class NetManager extends CoreManager {
 
     public static void init() {}
 
-    private static HttpRequest getRequest(URI uri) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
-                .header("User-Agent", USER_AGENT)
-                .build();
-        return request;
-    }
-
-    private static HttpRequest postRequest(URI uri, JsonObject jsonArgs) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
-                .header("User-Agent", USER_AGENT)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
-                .build();
-        return request;
-    }
-
     public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
-        if (urlInfo.method() == UrlManager.Method.GET) {
-            URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
-            HttpRequest request = getRequest(uri);
-            return new ApiResponse(request);
-        } else {
-            assert (urlInfo.method() == UrlManager.Method.POST);
-
-            JsonObject jsonArgs = new JsonObject();
-            arguments.entrySet().stream().forEach(entry -> {
-                jsonArgs.addProperty(entry.getKey(), entry.getValue());
-            });
-            URI uri = URI.create(urlInfo.url());
-            HttpRequest request = postRequest(uri, jsonArgs);
-            return new ApiResponse(request);
-        }
+        return createApiResponse(urlInfo, arguments);
     }
 
     public static ApiResponse callApi(UrlId urlId) {
@@ -76,23 +42,24 @@ public class NetManager extends CoreManager {
     }
 
     public static Download download(URI uri, File file) {
-        return new Download(file, getRequest(uri));
+        return new Download(file, createGetRequest(uri));
     }
 
     public static Download download(URI uri, File file, String expectedHash) {
         if (checkLocalHash(file, expectedHash)) {
             return new Download(file);
         }
+
         return download(uri, file);
     }
 
     public static Download download(URI uri, String localFileName) {
-        File localFile = new File(RESOURCE_ROOT, localFileName);
+        File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile);
     }
 
     public static Download download(URI uri, String localFileName, String expectedHash) {
-        File localFile = new File(RESOURCE_ROOT, localFileName);
+        File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, expectedHash);
     }
 
@@ -107,9 +74,57 @@ public class NetManager extends CoreManager {
         return download(uri, localFileName);
     }
 
+    public static void openLink(URI url) {
+        Util.getPlatform().openUri(url);
+    }
+
+    public static void openLink(UrlId urlId, Map<String, String> arguments) {
+        URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+        openLink(uri);
+    }
+
+    private static HttpRequest createGetRequest(URI uri) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
+                .header("User-Agent", USER_AGENT)
+                .build();
+        return request;
+    }
+
+    private static HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
+                .header("User-Agent", USER_AGENT)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
+                .build();
+        return request;
+    }
+
+    private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
+        if (urlInfo.method() == UrlManager.Method.GET) {
+            URI uri = URI.create(UrlManager.buildUrl(urlInfo, arguments));
+            HttpRequest request = createGetRequest(uri);
+            return new ApiResponse(request);
+        } else {
+            assert (urlInfo.method() == UrlManager.Method.POST);
+
+            JsonObject jsonArgs = new JsonObject();
+            arguments.entrySet().stream().forEach(entry -> {
+                jsonArgs.addProperty(entry.getKey(), entry.getValue());
+            });
+
+            URI uri = URI.create(urlInfo.url());
+            HttpRequest request = createPostRequest(uri, jsonArgs);
+            return new ApiResponse(request);
+        }
+    }
+
     private static boolean checkLocalHash(File localFile, String expectedHash) {
-        // Alternative solution: MD5Verification.isMd5Digest(expectedHash)
         if (!localFile.exists()) return false;
+
         try {
             try (InputStream is = Files.newInputStream(localFile.toPath())) {
                 String fileHash = DigestUtils.md5Hex(is);
@@ -119,18 +134,5 @@ public class NetManager extends CoreManager {
             WynntilsMod.warn("Error when calculading md5 for " + localFile.getPath(), e);
             return false;
         }
-    }
-
-    public static void openLink(UrlId urlId, Map<String, String> arguments) {
-        URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
-        openLink(uri);
-    }
-
-    /**
-     * Open the specified URL in the user's browser.
-     * @param url The url to open
-     */
-    public static void openLink(URI url) {
-        Util.getPlatform().openUri(url);
     }
 }

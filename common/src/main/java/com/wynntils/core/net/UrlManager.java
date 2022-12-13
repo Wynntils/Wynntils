@@ -23,6 +23,14 @@ import java.util.function.Function;
 public final class UrlManager extends CoreManager {
     private static Map<UrlId, UrlInfo> urlMap = Map.of();
 
+    public static void init() {
+        loadUrls();
+    }
+
+    public static UrlInfo getUrlInfo(UrlId urlId) {
+        return urlMap.get(urlId);
+    }
+
     public static String getUrl(UrlId urlId) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
@@ -32,13 +40,13 @@ public final class UrlManager extends CoreManager {
         return urlInfo.url();
     }
 
-    public static UrlInfo getUrlInfo(UrlId urlId) {
-        return urlMap.get(urlId);
-    }
-
     public static String buildUrl(UrlId urlId, Map<String, String> arguments) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
+        return buildUrl(urlInfo, arguments);
+    }
+
+    public static String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
         // Verify that arguments match with what is specified
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
@@ -55,10 +63,10 @@ public final class UrlManager extends CoreManager {
     }
 
     public static void reloadUrls() {
-        init();
+        loadUrls();
     }
 
-    public static void init() {
+    private static void loadUrls() {
         try {
             // FIXME: First check if there is a local cache in CACHE_DIR; if so, use it
             // If not, use the one included in the mod resources
