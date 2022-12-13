@@ -88,7 +88,10 @@ public class GuildMapScreen extends AbstractMapScreen {
                 16,
                 Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
                 (b) -> {
-                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.next();
+                    // Left and right clicks cycle through the defense levels, middle click resets to OFF
+                    territoryDefenseFilterLevel = (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
+                            ? TerritoryDefenseLevel.OFF
+                            : territoryDefenseFilterLevel.next();
                     territoryDefenseFilterButton.setTooltip(
                             territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip());
                 },

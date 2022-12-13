@@ -42,6 +42,8 @@ public enum TerritoryDefenseLevel {
                 new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
                         .withStyle(ChatFormatting.GRAY),
                 new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
                         .append(asColoredString));
     }
