@@ -31,7 +31,9 @@ import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
 public class WynntilsAccountManager extends CoreManager {
-    private static String token;
+    private static final String NO_TOKEN = "<no token>";
+
+    private static String token = NO_TOKEN;
     private static boolean loggedIn = false;
 
     private static final HashMap<String, String> encodedConfigs = new HashMap<>();
@@ -82,7 +84,7 @@ public class WynntilsAccountManager extends CoreManager {
     }
 
     private static void doLogin() {
-        CompletableFuture future = new CompletableFuture<>();
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         // generating secret key
         ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
         apiResponse.handleJsonObject(json -> {

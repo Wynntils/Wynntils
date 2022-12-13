@@ -53,7 +53,7 @@ public enum UrlId {
 
     public static UrlId from(String str) {
         for (UrlId urlId : values()) {
-            if (urlId.id.equals(str)) {
+            if (urlId.getId().equals(str)) {
                 return urlId;
             }
         }

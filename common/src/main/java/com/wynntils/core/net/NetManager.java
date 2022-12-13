@@ -88,23 +88,21 @@ public class NetManager extends CoreManager {
     }
 
     private static HttpRequest createGetRequest(URI uri) {
-        HttpRequest request = HttpRequest.newBuilder()
+        return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
                 .header("User-Agent", USER_AGENT)
                 .build();
-        return request;
     }
 
     private static HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
-        HttpRequest request = HttpRequest.newBuilder()
+        return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
                 .header("User-Agent", USER_AGENT)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
                 .build();
-        return request;
     }
 
     private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
@@ -116,9 +114,7 @@ public class NetManager extends CoreManager {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
             JsonObject jsonArgs = new JsonObject();
-            arguments.entrySet().stream().forEach(entry -> {
-                jsonArgs.addProperty(entry.getKey(), entry.getValue());
-            });
+            arguments.entrySet().forEach(entry -> jsonArgs.addProperty(entry.getKey(), entry.getValue()));
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);
@@ -129,11 +125,9 @@ public class NetManager extends CoreManager {
     private static boolean checkLocalHash(File localFile, String expectedHash) {
         if (!localFile.exists()) return false;
 
-        try {
-            try (InputStream is = Files.newInputStream(localFile.toPath())) {
-                String fileHash = DigestUtils.md5Hex(is);
-                return fileHash.equalsIgnoreCase(expectedHash);
-            }
+        try (InputStream is = Files.newInputStream(localFile.toPath())) {
+            String fileHash = DigestUtils.md5Hex(is);
+            return fileHash.equalsIgnoreCase(expectedHash);
         } catch (IOException e) {
             WynntilsMod.warn("Error when calculading md5 for " + localFile.getPath(), e);
             return false;

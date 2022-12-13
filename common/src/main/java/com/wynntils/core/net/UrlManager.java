@@ -53,7 +53,7 @@ public final class UrlManager extends CoreManager {
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
         // Replace %{argKey} with arg value in URL string
-        String url = arguments.keySet().stream()
+        return arguments.keySet().stream()
                 .reduce(
                         urlInfo.url(),
                         (str, argKey) -> str.replaceAll(
@@ -61,7 +61,6 @@ public final class UrlManager extends CoreManager {
                                 // First encode with specified encoder (if any), then finish by
                                 // always url encoding arguments
                                 StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
-        return url;
     }
 
     public static void reloadUrls() {
@@ -69,35 +68,38 @@ public final class UrlManager extends CoreManager {
     }
 
     private static void loadUrls() {
-        try {
-            // First check if there is a copy in the local cache
-            File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
-            if (cacheFile.exists()) {
-                // Yes, we have a cache. Use it for the initial population
-                try (InputStream inputStream = new FileInputStream(cacheFile)) {
-                    readUrls(inputStream);
-                }
-            } else {
-                // No cache. Start by reading the URLs from the resource embedded in the mod,
-                // so we have something to rely on
-                try (InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json")) {
-                    readUrls(inputStream);
-                }
+        // First check if there is a copy in the local cache
+        File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+        if (cacheFile.exists()) {
+            // Yes, we have a cache. Use it for the initial population
+            try (InputStream inputStream = new FileInputStream(cacheFile)) {
+                readUrls(inputStream);
+            } catch (IOException e) {
+                // FIXME: Error handling
+                throw new RuntimeException(e);
             }
-
-            // In any case, trigger a re-download from the net to the cache
-            Download dl = NetManager.download(UrlId.DATA_STATIC_URLS);
-            dl.handleInputStream(inputStream -> {
-                try {
-                    readUrls(inputStream);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            // If not, use the one included in the mod resources
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } else {
+            // No cache. Start by reading the URLs from the resource embedded in the mod,
+            // so we have something to rely on
+            try (InputStream inputStream = WynntilsMod.getModResourceAsStream("urls.json")) {
+                readUrls(inputStream);
+            } catch (IOException e) {
+                // FIXME: Error handling
+                throw new RuntimeException(e);
+            }
         }
+
+        // In any case, trigger a re-download from the net to the cache
+        Download dl = NetManager.download(UrlId.DATA_STATIC_URLS);
+        dl.handleInputStream(inputStream -> {
+            try {
+                readUrls(inputStream);
+            } catch (IOException e) {
+                // FIXME: Error handling
+                throw new RuntimeException(e);
+            }
+        });
+        // If not, use the one included in the mod resources
     }
 
     private static void readUrls(InputStream inputStream) throws IOException {

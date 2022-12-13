@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
@@ -26,7 +27,7 @@ public class Download extends NetResult {
     private final File localFile;
 
     // Saved since we might need to get timestamps from the HttpResponse
-    private CompletableFuture<HttpResponse<Path>> future;
+    private CompletableFuture<HttpResponse<Path>> future = null;
 
     public Download(File localFile) {
         super(null); // Only use cached file
@@ -53,18 +54,22 @@ public class Download extends NetResult {
 
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
-            try {
-                InputStream inputStream = new FileInputStream(localFile);
-                return CompletableFuture.supplyAsync(() -> inputStream);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            return CompletableFuture.supplyAsync(() -> {
+                try {
+                    // FIXME: How close the is?
+                    return new FileInputStream(localFile);
+                } catch (FileNotFoundException e) {
+                    // FIXME: Error handling
+                    throw new RuntimeException(e);
+                }
+            });
         } else {
             return downloadToCacheAsync().thenApply(response -> {
                 try {
+                    // FIXME: How close the is?
                     return new FileInputStream(response.body().toFile());
                 } catch (FileNotFoundException e) {
-                    // FIXME
+                    // FIXME: Error handling
                     throw new RuntimeException(e);
                 }
             });
@@ -73,12 +78,15 @@ public class Download extends NetResult {
 
     private CompletableFuture<HttpResponse<Path>> downloadToCacheAsync() {
         FileUtils.deleteQuietly(localFile);
-        localFile.getParentFile().mkdirs();
+        try {
+            FileUtils.forceMkdirParent(localFile);
+        } catch (IOException e) {
+            // FIXME: Error handling
+            throw new RuntimeException(e);
+        }
         future = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
-                .whenComplete((ignored, exc) -> {
-                    DOWNLOAD_FUTURES.remove(request);
-                });
+                .whenComplete((ignored, exc) -> DOWNLOAD_FUTURES.remove(request));
         // in case of failure:
         //        FileUtils.deleteQuietly(cacheFile);
         DOWNLOAD_FUTURES.put(request, future);

@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -31,17 +32,15 @@ public abstract class NetResult {
     }
 
     public void handleInputStream(Consumer<InputStream> handler) {
-        handleInputStream(handler, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
+        handleInputStream(handler, onError -> WynntilsMod.warn("Error while reading resource"));
     }
 
     public void handleReader(Consumer<Reader> handler, Consumer<Throwable> onError) {
-        handleInputStream(is -> handler.accept(new InputStreamReader(is)), onError);
+        handleInputStream(is -> handler.accept(new InputStreamReader(is, StandardCharsets.UTF_8)), onError);
     }
 
     public void handleReader(Consumer<Reader> handler) {
-        handleInputStream(is -> handler.accept(new InputStreamReader(is)));
+        handleInputStream(is -> handler.accept(new InputStreamReader(is, StandardCharsets.UTF_8)));
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
@@ -49,9 +48,7 @@ public abstract class NetResult {
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler) {
-        handleJsonObject(handler, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
+        handleJsonObject(handler, onError -> WynntilsMod.warn("Error while reading resource"));
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
@@ -59,24 +56,20 @@ public abstract class NetResult {
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
-        handleJsonArray(handler, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
+        handleJsonArray(handler, onError -> WynntilsMod.warn("Error while reading resource"));
     }
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamFuture();
         CompletableFuture<Void> newFuture = inputStreamAsync
-                .thenAccept((is) -> onCompletion.accept(is))
+                .thenAccept(onCompletion)
                 .exceptionally(e -> {
                     // FIXME: fix error handling correctly!
                     onError.accept(e);
                     return null;
                 });
 
-        CompletableFuture<Void> newFuture1 = newFuture.whenComplete((ignored, exc) -> {
-            PROCESS_FUTURES.remove(request);
-        });
+        CompletableFuture<Void> newFuture1 = newFuture.whenComplete((ignored, exc) -> PROCESS_FUTURES.remove(request));
         PROCESS_FUTURES.put(request, newFuture1);
     }
 

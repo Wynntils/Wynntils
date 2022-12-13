@@ -22,9 +22,7 @@ public class ApiResponse extends NetResult {
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         CompletableFuture<HttpResponse<InputStream>> future = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .whenComplete((ignored, exc) -> {
-                    DOWNLOAD_FUTURES.remove(request);
-                });
+                .whenComplete((ignored, exc) -> DOWNLOAD_FUTURES.remove(request));
         DOWNLOAD_FUTURES.put(request, future);
         return future.thenApply(HttpResponse::body);
     }
