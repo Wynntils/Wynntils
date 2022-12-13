@@ -29,14 +29,15 @@ public class UpdateManager extends CoreManager {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         Response response = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
-        response.handleJsonObject(json -> {
-            String version = json.getAsJsonPrimitive("version").getAsString();
-            future.complete(version);
-        },
-        onError -> {
-            WynntilsMod.error("Exception while trying to fetch update.");
-            future.complete(null);
-        });
+        response.handleJsonObject(
+                json -> {
+                    String version = json.getAsJsonPrimitive("version").getAsString();
+                    future.complete(version);
+                },
+                onError -> {
+                    WynntilsMod.error("Exception while trying to fetch update.");
+                    future.complete(null);
+                });
         return future;
     }
 
@@ -50,27 +51,29 @@ public class UpdateManager extends CoreManager {
         }
 
         Response response = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
-        response.handleJsonObject(json -> {
-            String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
+        response.handleJsonObject(
+                json -> {
+                    String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 
-            String currentMd5 = getCurrentMd5();
-            if (Objects.equals(currentMd5, latestMd5)) {
-                future.complete(UpdateResult.ALREADY_ON_LATEST);
-                return;
-            }
+                    String currentMd5 = getCurrentMd5();
+                    if (Objects.equals(currentMd5, latestMd5)) {
+                        future.complete(UpdateResult.ALREADY_ON_LATEST);
+                        return;
+                    }
 
-            if (latestMd5 == null) {
-                future.complete(UpdateResult.ERROR);
-                return;
-            }
+                    if (latestMd5 == null) {
+                        future.complete(UpdateResult.ERROR);
+                        return;
+                    }
 
-            String latestDownload = json.getAsJsonPrimitive("url").getAsString();
+                    String latestDownload = json.getAsJsonPrimitive("url").getAsString();
 
-            tryFetchNewUpdate(latestDownload, future);
-        }, onError -> {
-            WynntilsMod.error("Exception while trying to load new update.");
-            future.complete(UpdateResult.ERROR);
-        });
+                    tryFetchNewUpdate(latestDownload, future);
+                },
+                onError -> {
+                    WynntilsMod.error("Exception while trying to load new update.");
+                    future.complete(UpdateResult.ERROR);
+                });
 
         return future;
     }
