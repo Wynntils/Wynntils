@@ -6,12 +6,19 @@ package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.OptionalLong;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -20,30 +27,71 @@ import org.apache.commons.io.FileUtils;
 
 public class Download extends NetAction {
     private final File localFile;
+    private CompletableFuture<HttpResponse<Path>> future_dl;
+    private Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> currentRequests_dl =
+            new HashMap<HttpRequest, CompletableFuture<HttpResponse<Path>>>();
 
     public Download(File localFile) {
         super(null);
         this.localFile = localFile;
     }
 
+    public Download(File localFile, HttpRequest request) {
+        super(request);
+        this.localFile = localFile;
+    }
+
+    protected CompletableFuture<HttpResponse<Path>> cacheHttpResponseAsync() {
+        FileUtils.deleteQuietly(localFile);
+        future_dl = NetManager.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
+                .whenComplete((ignored, exc) -> {
+                    currentRequests_dl.remove(request);
+                });
+        // in case of failure:
+        //        FileUtils.deleteQuietly(cacheFile);
+        currentRequests_dl.put(request, future_dl);
+        return future_dl;
+    }
+
+    protected CompletableFuture<InputStream> cacheInputStreamAsync() {
+        if (request == null) {
+            try {
+                InputStream inputStream = new FileInputStream(localFile);
+                return CompletableFuture.supplyAsync(() -> inputStream);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return cacheHttpResponseAsync().thenApply(response -> {
+                try {
+                    return new FileInputStream(response.body().toFile());
+                } catch (FileNotFoundException e) {
+                    // FIXME
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
     public static Download readFromCache(File localFile) {
-        // FIXME: implement
         return new Download(localFile);
     }
 
     public static Download downloadAndStore(File localFile, HttpRequest request) {
-        FileUtils.deleteQuietly(localFile);
-        // FIXME: implement
-        // HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt"))
-
-        // in case of failure:
-        //        FileUtils.deleteQuietly(cacheFile);
-
-        return new Download(localFile);
+        return new Download(localFile, request);
     }
 
     public void onCompletionInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
-        // FIXME: implement
+        CompletableFuture newFuture;
+        newFuture = cacheInputStreamAsync()
+                .thenAccept((is) -> onCompletion.accept(is))
+                .exceptionally(e -> {
+                    // FIXME: fix error handling correctly!
+                    onError.accept(e);
+                    return null;
+                });
+        storeNewFuture(newFuture);
     }
 
     public void onCompletionInputStream(Consumer<InputStream> onCompletion) {
