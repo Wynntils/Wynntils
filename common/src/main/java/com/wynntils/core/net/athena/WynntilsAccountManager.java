@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.Response;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -84,8 +84,8 @@ public class WynntilsAccountManager extends CoreManager {
     private static void doLogin() {
         CompletableFuture future = new CompletableFuture<>();
         // generating secret key
-        Response response = NetManager.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
-        response.handleJsonObject(json -> {
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
+        apiResponse.handleJsonObject(json -> {
             String secretKey = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
 
             Map<String, String> arguments = new HashMap<>();
@@ -93,8 +93,8 @@ public class WynntilsAccountManager extends CoreManager {
             arguments.put("username", McUtils.mc().getUser().getName());
             arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-            Response response2 = NetManager.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
-            response2.handleJsonObject(json2 -> {
+            ApiResponse apiResponse2 = NetManager.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
+            apiResponse2.handleJsonObject(json2 -> {
                 token = json2.get("authToken").getAsString(); /* md5 hashes*/
                 JsonObject hashes = json2.getAsJsonObject("hashes");
                 hashes.entrySet()

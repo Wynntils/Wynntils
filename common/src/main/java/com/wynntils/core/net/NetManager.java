@@ -49,12 +49,12 @@ public class NetManager {
         return request;
     }
 
-    public static Response callApi(UrlId urlId, Map<String, String> arguments) {
+    public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
             HttpRequest request = getRequest(uri);
-            return new Response(request);
+            return new ApiResponse(request);
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
@@ -64,11 +64,11 @@ public class NetManager {
             });
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = postRequest(uri, jsonArgs);
-            return new Response(request);
+            return new ApiResponse(request);
         }
     }
 
-    public static Response callApi(UrlId urlId) {
+    public static ApiResponse callApi(UrlId urlId) {
         return callApi(urlId, Map.of());
     }
 

@@ -13,8 +13,8 @@ import java.net.http.HttpRequest;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class Response extends NetAction {
-    public Response(HttpRequest request) {
+public class ApiResponse extends NetAction {
+    public ApiResponse(HttpRequest request) {
         super(request);
     }
 

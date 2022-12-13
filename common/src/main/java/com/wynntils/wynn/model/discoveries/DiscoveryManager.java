@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
-import com.wynntils.core.net.Response;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
@@ -125,8 +125,8 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        Response response = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
-        response.handleJsonObject(json -> {
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
+        apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
