@@ -24,7 +24,7 @@ public class NetAction {
     }
 
     protected CompletableFuture<HttpResponse<InputStream>> getHttpResponseAsync() {
-        future = NetManager11.HTTP_CLIENT
+        future = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .whenComplete((ignored, exc) -> {
                     currentRequests.remove(request);

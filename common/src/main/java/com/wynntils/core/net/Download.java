@@ -32,6 +32,11 @@ public class Download extends NetAction {
 
     public static Download downloadAndCache(File localFile, HttpRequest request) {
         // FIXME: implement
+        // HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt"))
+
+        // in case of failure:
+//        FileUtils.deleteQuietly(cacheFile);
+
         return new Download(localFile);
     }
 
