@@ -15,7 +15,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
-import com.wynntils.wynn.model.map.TerritoryDefenseLevel;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 
@@ -44,18 +43,6 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
-        if (McUtils.mc().screen instanceof GuildMapScreen guildMapScreen) {
-            if (territoryInfo != null
-                    && guildMapScreen.getTerritoryDefenseFilterLevel() != TerritoryDefenseLevel.OFF
-                    && !territoryInfo
-                            .getDefences()
-                            .asColoredString()
-                            .equals(guildMapScreen
-                                    .getTerritoryDefenseFilterLevel()
-                                    .asColoredString())) {
-                return;
-            }
-        }
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
