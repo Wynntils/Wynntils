@@ -12,6 +12,7 @@ import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
@@ -41,6 +42,7 @@ public final class ManagerRegistry {
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
+        registerPersistentDependency(NetManager.class);
         registerPersistentDependency(UrlManager.class);
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);

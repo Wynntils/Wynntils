@@ -6,6 +6,7 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.CoreManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ import java.util.Map;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class NetManager {
+public class NetManager extends CoreManager {
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
@@ -28,6 +29,8 @@ public class NetManager {
             WynntilsMod.getVersion(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
+
+    public static void init() {}
 
     private static HttpRequest getRequest(URI uri) {
         HttpRequest request = HttpRequest.newBuilder()

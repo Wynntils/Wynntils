@@ -22,8 +22,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public final class UrlManager extends CoreManager {
-    private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
-
     private static Map<UrlId, UrlInfo> urlMap = Map.of();
 
     public static String getUrl(UrlId urlId) {
