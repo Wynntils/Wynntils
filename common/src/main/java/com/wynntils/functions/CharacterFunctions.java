@@ -195,6 +195,23 @@ public class CharacterFunctions {
         }
     }
 
+    public static class InventoryUsedFunction extends DependantFunction<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            return PlayerInventoryModel.getUsedInvSlots();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("inv_used");
+        }
+
+        @Override
+        public List<Class<? extends Model>> getModelDependencies() {
+            return List.of(PlayerInventoryModel.class);
+        }
+    }
+
     public static class ManaFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
