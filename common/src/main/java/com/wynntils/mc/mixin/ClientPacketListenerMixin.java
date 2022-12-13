@@ -25,6 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -155,6 +156,12 @@ public abstract class ClientPacketListenerMixin {
         if (EventFactory.onSetPlayerTeam(packet).isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "handleSetExperience", at = @At("HEAD"))
+    private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onSetExperience(packet);
     }
 
     @Inject(

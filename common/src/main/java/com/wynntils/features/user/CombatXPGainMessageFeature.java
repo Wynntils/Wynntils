@@ -7,18 +7,17 @@ package com.wynntils.features.user;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.SetExperienceEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CombatXPGainMessageFeature extends UserFeature {
-
     @Config
-    public int tickDelay = 20;
+    public float secondDelay = 0.5f;
 
-    private long tickCounter = 0;
+    private long lastExperienceDisplayTime = 0;
 
     private float newTickXP = 0;
     private float lastTickXP = 0;
@@ -27,21 +26,17 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        tickCounter = 0;
+        lastExperienceDisplayTime = 0;
         newTickXP = 0;
         lastTickXP = 0;
         trackedPercentage = 0;
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.End event) {
+    public void onExperienceChange(SetExperienceEvent event) {
         if (!WynnUtils.onWorld()) return;
 
-        tickCounter++;
-
-        if (tickCounter % tickDelay != 0) return;
-
-        tickCounter = 0;
+        if (System.currentTimeMillis() - lastExperienceDisplayTime < secondDelay * 1000) return;
 
         gatherAndDispatchMessage();
     }
@@ -69,6 +64,10 @@ public class CombatXPGainMessageFeature extends UserFeature {
         newTickXP = data.getCurrentXp();
 
         if (newTickXP == lastTickXP) return;
+
+        // Only set this here, so we do not display the experience gains every x seconds,
+        // but display it instantly when we first get one, then every x seconds after that.
+        lastExperienceDisplayTime = System.currentTimeMillis();
 
         int neededXP = data.getXpPointsNeededToLevelUp();
         // The purpose of this if/else statement here is to account for the case when a player joins a
