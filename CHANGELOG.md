@@ -1,9 +1,21 @@
+## [0.0.1-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.154...v0.0.1-alpha.155) (2022-12-13)
+
+
+### Bug Fixes
+
+* Use correct date object in config loading fail case ([#823](https://github.com/Wynntils/Artemis/issues/823)) ([9c6ef92](https://github.com/Wynntils/Artemis/commit/9c6ef922ce64202c1bf50a05cf9b7db522aad890))
+
 ## [0.0.1-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.153...v0.0.1-alpha.154) (2022-12-13)
 
 
 ### Bug Fixes
 
 * ItemRendererMixin now correctly loads on every mod loader (added a specific Forge version) ([#822](https://github.com/Wynntils/Artemis/issues/822)) ([80a4d35](https://github.com/Wynntils/Artemis/commit/80a4d35b5fe01545be0d76d8ec1544cf82121198))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.154 [skip ci] ([9f3a1fd](https://github.com/Wynntils/Artemis/commit/9f3a1fd111b1560c648662c0e2a60f97657cd1dd))
 
 ## [0.0.1-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.152...v0.0.1-alpha.153) (2022-12-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.151 [skip ci] ([8eb66a4](https://github.com/Wynntils/Artemis/commit/8eb66a48e1ae55deb04cee020061221819b44037))
-
-## [0.0.1-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.149...v0.0.1-alpha.150) (2022-12-12)
-
-
-### Bug Fixes
-
-* PoiCreationScreen text box focus now works as intended ([#819](https://github.com/Wynntils/Artemis/issues/819)) ([9c7f076](https://github.com/Wynntils/Artemis/commit/9c7f076f9432b703286c9851d98c63b08b227cda))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.150 [skip ci] ([889f548](https://github.com/Wynntils/Artemis/commit/889f5486ce34096d3a2606d1cde6cee01e4088d1))
 
