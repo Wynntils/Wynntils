@@ -5,7 +5,6 @@
 package com.wynntils.core.net;
 
 import java.io.InputStream;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NetAction {
