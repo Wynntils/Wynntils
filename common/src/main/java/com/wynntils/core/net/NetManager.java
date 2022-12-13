@@ -22,7 +22,7 @@ public class NetManager {
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
-    private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("net-resources");
+    private static final File RESOURCE_ROOT = WynntilsMod.getModStorageDir("cache");
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s (%s) %s",
             WynntilsMod.getVersion(),
@@ -98,7 +98,7 @@ public class NetManager {
     public static Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
-        String localFileName = urlId.name();
+        String localFileName = urlId.getId();
 
         if (urlInfo.md5().isPresent()) {
             return download(uri, localFileName, urlInfo.md5().get());
