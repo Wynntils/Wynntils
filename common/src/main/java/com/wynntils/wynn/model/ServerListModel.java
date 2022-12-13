@@ -27,7 +27,7 @@ public class ServerListModel extends Model {
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public static void init() {
-        updateServerList(0);
+        updateServerList();
     }
 
     public static List<String> getWynnServerTypes() {
@@ -61,8 +61,8 @@ public class ServerListModel extends Model {
     }
 
     public static boolean forceUpdate(int timeOutMs) {
-        Download dl = updateServerList(timeOutMs);
-        dl.waitForCompletion();
+        Download dl = updateServerList();
+        dl.waitForCompletion(timeOutMs);
         return dl.isSuccessful();
     }
 
@@ -71,17 +71,14 @@ public class ServerListModel extends Model {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
-        updateServerList(0);
+        updateServerList();
     }
 
-    private static Download updateServerList(int timeOutMs) {
+    private static Download updateServerList() {
         // dataAthenaServerList is based on
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
         Download dl = NetManager.download(UrlId.DATA_ATHENA_SERVER_LIST);
-        if (timeOutMs > 0) {
-            dl.setTimeoutMs(timeOutMs);
-        }
         dl.onCompletion(reader -> {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 

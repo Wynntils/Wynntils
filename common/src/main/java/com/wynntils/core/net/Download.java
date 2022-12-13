@@ -15,6 +15,7 @@ public class Download extends NetAction {
     private final File localFile;
 
     public Download(File localFile) {
+        super(null);
         this.localFile = localFile;
     }
 
@@ -39,7 +40,7 @@ public class Download extends NetAction {
         return Long.parseLong(st.getHeaderField("timestamp"));
     }
 
-    public void waitForCompletion() {}
+    public void waitForCompletion(int timeOutMs) {}
 
     public void setTimeoutMs(int timeOutMs) {}
 
