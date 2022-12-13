@@ -19,7 +19,6 @@ public class PlayerInventoryModel extends Model {
 
     private static int emeralds = 0;
     private static int openSlots = 0;
-    private static int usedSlots = 0;
 
     public static void init() {
         resetCache();
@@ -58,13 +57,11 @@ public class PlayerInventoryModel extends Model {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
-        usedSlots = 28 - openSlots;
     }
 
     private static void resetCache() {
         emeralds = 0;
         openSlots = 0;
-        usedSlots = 0;
     }
 
     public static int getCurrentEmeraldCount() {
@@ -76,6 +73,6 @@ public class PlayerInventoryModel extends Model {
     }
 
     public static int getUsedInvSlots() {
-        return usedSlots;
+        return 28 - openSlots;
     }
 }
