@@ -58,7 +58,7 @@ public class PlayerInventoryModel extends Model {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
-        usedSlots = 28 - InventoryUtils.getEmptySlots(McUtils.inventory());
+        usedSlots = 28 - openSlots;
     }
 
     private static void resetCache() {
