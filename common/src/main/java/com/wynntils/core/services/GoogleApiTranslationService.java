@@ -6,8 +6,8 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import java.util.HashMap;
 import java.util.Map;
