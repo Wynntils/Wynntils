@@ -84,13 +84,11 @@ public class NetManager {
     }
 
     public static Download download(URI uri, String localFileName) {
-        RESOURCE_ROOT.mkdirs();
         File localFile = new File(RESOURCE_ROOT, localFileName);
         return download(uri, localFile);
     }
 
     public static Download download(URI uri, String localFileName, String expectedHash) {
-        RESOURCE_ROOT.mkdirs();
         File localFile = new File(RESOURCE_ROOT, localFileName);
         return download(uri, localFile, expectedHash);
     }

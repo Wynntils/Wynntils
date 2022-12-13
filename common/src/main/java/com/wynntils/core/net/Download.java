@@ -43,6 +43,7 @@ public class Download extends NetAction {
 
     protected CompletableFuture<HttpResponse<Path>> cacheHttpResponseAsync() {
         FileUtils.deleteQuietly(localFile);
+        localFile.getParentFile().mkdirs();
         future_dl = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
                 .whenComplete((ignored, exc) -> {
