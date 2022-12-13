@@ -1,9 +1,21 @@
+## [0.0.1-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.155...v0.0.1-alpha.156) (2022-12-13)
+
+
+### New Features
+
+* Add used slots inventory function and fix free slots ([#813](https://github.com/Wynntils/Artemis/issues/813)) ([2967474](https://github.com/Wynntils/Artemis/commit/296747463888770514feaa8c10f2b9577117a850))
+
 ## [0.0.1-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.154...v0.0.1-alpha.155) (2022-12-13)
 
 
 ### Bug Fixes
 
 * Use correct date object in config loading fail case ([#823](https://github.com/Wynntils/Artemis/issues/823)) ([9c6ef92](https://github.com/Wynntils/Artemis/commit/9c6ef922ce64202c1bf50a05cf9b7db522aad890))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.155 [skip ci] ([18c87e4](https://github.com/Wynntils/Artemis/commit/18c87e429410a728c190306641f74df5ba704522))
 
 ## [0.0.1-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.153...v0.0.1-alpha.154) (2022-12-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.152 [skip ci] ([9c7cf0f](https://github.com/Wynntils/Artemis/commit/9c7cf0fef6c5bcf383dde9e8397efd402b583322))
-
-## [0.0.1-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.150...v0.0.1-alpha.151) (2022-12-12)
-
-
-### Bug Fixes
-
-* Fix i18n titles ([#818](https://github.com/Wynntils/Artemis/issues/818)) ([3d0e897](https://github.com/Wynntils/Artemis/commit/3d0e89756f97ce8bebe50fb900316f5bfdab3944))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.151 [skip ci] ([8eb66a4](https://github.com/Wynntils/Artemis/commit/8eb66a48e1ae55deb04cee020061221819b44037))
 
