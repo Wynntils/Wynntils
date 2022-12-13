@@ -40,14 +40,18 @@ public class Download extends NetResult {
     }
 
     public long getResponseTimestamp() {
-        // FIXME: handle case if we read from cache as fallback!
+        if (httpResponse == null) {
+            // We have either not yet made the request, or we have read from the cache
+            // In either case, the best we can do is to return the current time
+            return System.currentTimeMillis();
+        }
+
         try {
             HttpHeaders headers = httpResponse.get().headers();
             OptionalLong a = headers.firstValueAsLong("timestamp");
             if (a.isEmpty()) return System.currentTimeMillis();
             return a.getAsLong();
         } catch (InterruptedException | ExecutionException e) {
-            WynntilsMod.warn("Cannot retrieve http header timestamp");
             return System.currentTimeMillis();
         }
     }
