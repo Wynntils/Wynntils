@@ -70,7 +70,7 @@ public final class UrlManager extends CoreManager {
 
     private static void loadUrls() {
         // Figure out where to load the URLs from initially
-        try (InputStream inputStream = getInitialInputStream()) {
+        try (InputStream inputStream = getLocalInputStream()) {
             readUrls(inputStream);
         } catch (IOException e) {
             // FIXME: Error handling
@@ -89,7 +89,7 @@ public final class UrlManager extends CoreManager {
         });
     }
 
-    private static InputStream getInitialInputStream() {
+    private static InputStream getLocalInputStream() {
         // First check if there is a copy in the local cache
         File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists()) {
