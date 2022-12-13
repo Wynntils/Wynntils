@@ -15,6 +15,7 @@ import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -122,6 +123,10 @@ public final class WynntilsMod {
 
     public static File getModStorageDir(String dirName) {
         return new File(MOD_STORAGE_ROOT, dirName);
+    }
+
+    public static InputStream getModResourceAsStream(String resourceName) {
+        return WynntilsMod.class.getClassLoader().getResourceAsStream("assets/" + MOD_ID + "/" + resourceName);
     }
 
     public static Logger getLogger() {
