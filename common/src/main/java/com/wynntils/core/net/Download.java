@@ -7,9 +7,14 @@ package com.wynntils.core.net;
 import com.wynntils.core.WynntilsMod;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URLConnection;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
+import java.util.OptionalLong;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 public class Download extends NetAction {
@@ -21,39 +26,48 @@ public class Download extends NetAction {
     }
 
     public static Download fromCache(File localFile) {
+        // FIXME: implement
         return new Download(localFile);
     }
 
     public static Download downloadAndCache(File localFile, HttpRequest request) {
+        // FIXME: implement
         return new Download(localFile);
     }
 
-    public Reader waitAndGetReader() {
-        return null;
+    public void onCompletionInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+        // FIXME: implement
     }
 
-    public void onCompletion(Consumer<Reader> onCompletion, Consumer<Throwable> onError) {}
-
-    public void onCompletion(Consumer<Reader> onCompletion) {
-        onCompletion(onCompletion, onError -> {
+    public void onCompletionInputStream(Consumer<InputStream> onCompletion) {
+        onCompletionInputStream(onCompletion, onError -> {
             WynntilsMod.warn("Error while reading resource");
         });
     }
 
-    public InputStream waitAndGetInputStream() {
-        return null;
+    public void onCompletion(Consumer<Reader> onCompletion) {
+        onCompletionInputStream(is -> onCompletion.accept(new InputStreamReader(is)));
     }
 
     public long getTimestamp() {
-        URLConnection st = null;
-        return Long.parseLong(st.getHeaderField("timestamp"));
+        try {
+            HttpHeaders headers = future.get().headers();
+            OptionalLong a = headers.firstValueAsLong("timestamp");
+            if (a.isEmpty()) return System.currentTimeMillis();
+            return a.getAsLong();
+        } catch (InterruptedException|ExecutionException e) {
+            WynntilsMod.warn("Cannot retrieve http header timestamp");
+            return System.currentTimeMillis();
+        }
     }
 
-    public void waitForCompletion(int timeOutMs) {}
-
-    public void setTimeoutMs(int timeOutMs) {}
-
-    public boolean isSuccessful() {
+    public boolean waitForCompletion(int timeOutMs) {
+        try {
+            future.get(timeOutMs, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // if timeout is reached, return false
+            return false;
+        }
         return true;
     }
 }

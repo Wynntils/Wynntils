@@ -19,7 +19,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,13 +130,14 @@ public class TerritoryManager extends CoreManager {
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
         Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
-        Reader reader = dl.waitAndGetReader();
-        JsonObject json = (JsonObject) JsonParser.parseReader(reader);
+        dl.onCompletion(reader -> {
+            JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 
-        Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-        territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
-        allTerritoryPois =
-                territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
-        // TODO: Add events
+            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+            territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+            allTerritoryPois =
+                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            // TODO: Add events
+        });
     }
 }

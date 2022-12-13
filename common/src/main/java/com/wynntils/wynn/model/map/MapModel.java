@@ -20,7 +20,6 @@ import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.HashSet;
@@ -70,14 +69,18 @@ public final class MapModel extends Model {
 
                 Download dlPart = NetManager.download(
                         URI.create(mapPart.url), "maps/" + fileName, mapPart.md5, "map-part-" + mapPart.name);
-                try (InputStream inputStream = dlPart.waitAndGetInputStream()) {
-                    NativeImage nativeImage = NativeImage.read(inputStream);
-                    MapTexture mapPartImage =
-                            new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                    MAPS.add(mapPartImage);
-                } catch (IOException e) {
+                dlPart.onCompletionInputStream(inputStream -> {
+                    try {
+                        NativeImage nativeImage = NativeImage.read(inputStream);
+                        MapTexture mapPartImage =
+                                new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                        MAPS.add(mapPartImage);
+                    } catch (IOException e) {
+                        WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                    }
+                }, onError -> {
                     WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
-                }
+                });
             }
         });
     }

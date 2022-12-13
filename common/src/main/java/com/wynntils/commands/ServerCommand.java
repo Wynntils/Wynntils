@@ -82,8 +82,7 @@ public class ServerCommand extends CommandBase {
         if (!ServerListModel.forceUpdate(UPDATE_TIME_OUT_MS)) {
             context.getSource()
                     .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
-            return 1;
+                            new TextComponent("Network problems; using cached data").withStyle(ChatFormatting.RED));
         }
 
         String server = context.getArgument("server", String.class);
@@ -125,8 +124,7 @@ public class ServerCommand extends CommandBase {
         if (!ServerListModel.forceUpdate(3000)) {
             context.getSource()
                     .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
-            return 1;
+                            new TextComponent("Network problems; using cached data").withStyle(ChatFormatting.RED));
         }
 
         MutableComponent message = new TextComponent("Server list:").withStyle(ChatFormatting.DARK_AQUA);
@@ -154,8 +152,7 @@ public class ServerCommand extends CommandBase {
         if (!ServerListModel.forceUpdate(3000)) {
             context.getSource()
                     .sendFailure(
-                            new TextComponent("Failed to get server data from API.").withStyle(ChatFormatting.RED));
-            return 1;
+                            new TextComponent("Network problems; using cached data").withStyle(ChatFormatting.RED));
         }
 
         List<String> sortedServers = ServerListModel.getServersSortedOnUptime();

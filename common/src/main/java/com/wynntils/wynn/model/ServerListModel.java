@@ -62,8 +62,7 @@ public class ServerListModel extends Model {
 
     public static boolean forceUpdate(int timeOutMs) {
         Download dl = updateServerList();
-        dl.waitForCompletion(timeOutMs);
-        return dl.isSuccessful();
+        return dl.waitForCompletion(timeOutMs);
     }
 
     @SubscribeEvent
