@@ -37,7 +37,7 @@ public class Download extends NetAction {
         // HttpResponse.BodyHandlers.ofFile(Paths.get("body.txt"))
 
         // in case of failure:
-//        FileUtils.deleteQuietly(cacheFile);
+        //        FileUtils.deleteQuietly(cacheFile);
 
         return new Download(localFile);
     }
@@ -63,7 +63,7 @@ public class Download extends NetAction {
             OptionalLong a = headers.firstValueAsLong("timestamp");
             if (a.isEmpty()) return System.currentTimeMillis();
             return a.getAsLong();
-        } catch (InterruptedException|ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             WynntilsMod.warn("Cannot retrieve http header timestamp");
             return System.currentTimeMillis();
         }

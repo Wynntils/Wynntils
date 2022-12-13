@@ -39,9 +39,9 @@ public class NetAction {
 
     protected void storeNewFuture(CompletableFuture<Void> newFuture) {
         CompletableFuture<Void> newFuture2 = newFuture.whenComplete((ignored, exc) -> {
-            currentRequests.remove(request); });
+            currentRequests.remove(request);
+        });
         currentNewRequests.put(request, newFuture2);
         this.newFuture = newFuture2;
     }
-
 }

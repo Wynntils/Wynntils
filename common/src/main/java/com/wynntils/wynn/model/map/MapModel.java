@@ -67,20 +67,21 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                Download dlPart = NetManager.download(
-                        URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
-                dlPart.onCompletionInputStream(inputStream -> {
-                    try {
-                        NativeImage nativeImage = NativeImage.read(inputStream);
-                        MapTexture mapPartImage =
-                                new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                        MAPS.add(mapPartImage);
-                    } catch (IOException e) {
-                        WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
-                    }
-                }, onError -> {
-                    WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
-                });
+                Download dlPart = NetManager.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
+                dlPart.onCompletionInputStream(
+                        inputStream -> {
+                            try {
+                                NativeImage nativeImage = NativeImage.read(inputStream);
+                                MapTexture mapPartImage = new MapTexture(
+                                        fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                                MAPS.add(mapPartImage);
+                            } catch (IOException e) {
+                                WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                            }
+                        },
+                        onError -> {
+                            WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                        });
             }
         });
     }
