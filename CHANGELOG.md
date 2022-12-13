@@ -1,9 +1,21 @@
+## [0.0.1-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.152...v0.0.1-alpha.153) (2022-12-13)
+
+
+### New Features
+
+* mythic box scaling ([#789](https://github.com/Wynntils/Artemis/issues/789)) ([35671d8](https://github.com/Wynntils/Artemis/commit/35671d87c14dea681f8302ff33c424de37d97a9e))
+
 ## [0.0.1-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.151...v0.0.1-alpha.152) (2022-12-12)
 
 
 ### Bug Fixes
 
 * Fix ChatTabModel NPE ([#817](https://github.com/Wynntils/Artemis/issues/817)) ([08fb571](https://github.com/Wynntils/Artemis/commit/08fb5712f343d0a89055c904c48912f6afd9649a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.152 [skip ci] ([9c7cf0f](https://github.com/Wynntils/Artemis/commit/9c7cf0fef6c5bcf383dde9e8397efd402b583322))
 
 ## [0.0.1-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.150...v0.0.1-alpha.151) (2022-12-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.149 [skip ci] ([236bab5](https://github.com/Wynntils/Artemis/commit/236bab5402a570eb57972392769ef1ede66c1f03))
-
-## [0.0.1-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.147...v0.0.1-alpha.148) (2022-12-11)
-
-
-### Bug Fixes
-
-* AuraTimerOverlayFeature should be in overlay category ([#814](https://github.com/Wynntils/Artemis/issues/814)) ([11989d5](https://github.com/Wynntils/Artemis/commit/11989d577a6a3bc652076b0f90b6b380874aab73))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.148 [skip ci] ([adad3c3](https://github.com/Wynntils/Artemis/commit/adad3c37602194d8e246cefab94aea4ee40be3c1))
 
