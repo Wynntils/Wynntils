@@ -142,19 +142,21 @@ public class GuildMapScreen extends AbstractMapScreen {
 
         List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
 
-        filteredPois.removeIf( // Remove territories that do not match the filtered defense level
-                poi -> {
-                    // Do not filter anything if the filter is off or if the poi is not a territory (shouldn't happen)
-                    if (territoryDefenseFilterLevel == TerritoryDefenseLevel.OFF || !(poi instanceof TerritoryPoi))
-                        return false;
+        if (territoryDefenseFilterLevel != TerritoryDefenseLevel.OFF) {
+            filteredPois.removeIf( // Remove territories that do not match the filtered defense level
+                    poi -> {
+                        // Do not filter anything if the filter is off or if the poi is not a territory (shouldn't
+                        // happen)
+                        if (!(poi instanceof TerritoryPoi)) return false;
 
-                    return !territoryDefenseFilterLevel
-                            .asColoredString()
-                            .equals(((TerritoryPoi) poi)
-                                    .getTerritoryInfo()
-                                    .getDefences()
-                                    .asColoredString());
-                });
+                        return !territoryDefenseFilterLevel
+                                .asColoredString()
+                                .equals(((TerritoryPoi) poi)
+                                        .getTerritoryInfo()
+                                        .getDefences()
+                                        .asColoredString());
+                    });
+        }
 
         // Render trading routes
         // We render them in both directions because optimizing it is not cheap either
