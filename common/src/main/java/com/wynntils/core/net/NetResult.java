@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 public abstract class NetResult {
     private static final Map<HttpRequest, CompletableFuture<Void>> PROCESS_FUTURES = new HashMap<>();
+    private static final Consumer<Throwable> DEFAULT_ERROR_HANDLER = (exception) -> WynntilsMod.warn("Error while processing net request", exception);
 
     protected final HttpRequest request;
 
@@ -32,7 +33,7 @@ public abstract class NetResult {
     }
 
     public void handleInputStream(Consumer<InputStream> handler) {
-        handleInputStream(handler, onError -> WynntilsMod.warn("Error while reading resource"));
+        handleInputStream(handler, DEFAULT_ERROR_HANDLER);
     }
 
     public void handleReader(Consumer<Reader> handler, Consumer<Throwable> onError) {
@@ -48,7 +49,7 @@ public abstract class NetResult {
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler) {
-        handleJsonObject(handler, onError -> WynntilsMod.warn("Error while reading resource"));
+        handleJsonObject(handler, DEFAULT_ERROR_HANDLER);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
@@ -56,7 +57,7 @@ public abstract class NetResult {
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
-        handleJsonArray(handler, onError -> WynntilsMod.warn("Error while reading resource"));
+        handleJsonArray(handler, DEFAULT_ERROR_HANDLER);
     }
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
@@ -74,4 +75,5 @@ public abstract class NetResult {
     }
 
     protected abstract CompletableFuture<InputStream> getInputStreamFuture();
+
 }
