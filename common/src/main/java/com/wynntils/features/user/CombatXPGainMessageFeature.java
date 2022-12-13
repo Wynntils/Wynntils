@@ -46,10 +46,6 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         int newLevel = data.getXpLevel();
 
-        // You get division by zero errors when you're at the level cap (i.e. 106 in Wynncraft 2.0.1).
-        // This needs to be updated if the level cap is ever raised.
-        if (newLevel > 105) return;
-
         if (trackedLevel == 0) {
             trackedLevel = newLevel;
         }
@@ -65,11 +61,11 @@ public class CombatXPGainMessageFeature extends UserFeature {
 
         if (newTickXP == lastTickXP) return;
 
-        // Only set this here, so we do not display the experience gains every x seconds,
-        // but display it instantly when we first get one, then every x seconds after that.
-        lastExperienceDisplayTime = System.currentTimeMillis();
-
         int neededXP = data.getXpPointsNeededToLevelUp();
+
+        // Something went wrong, or you're at the level cap.
+        if (neededXP == 0) return;
+
         // The purpose of this if/else statement here is to account for the case when a player joins a
         // Wynncraft world and the lastTickXP variable is still 0, because it hasn't been updated yet.
         // Wynncraft will send the saved XP points to the player within a few ticks of joining the world,
@@ -83,6 +79,13 @@ public class CombatXPGainMessageFeature extends UserFeature {
         }
 
         float gainedXP = newTickXP - lastTickXP;
+
+        // If the gain, rounded to 2 decimals is 0, we should not display it.
+        if (Math.round(gainedXP * 100) / 100 == 0) return;
+
+        // Only set this here, so we do not display the experience gains every x seconds,
+        // but display it instantly when we first get one, then every x seconds after that.
+        lastExperienceDisplayTime = System.currentTimeMillis();
 
         float percentGained = gainedXP / neededXP;
 
