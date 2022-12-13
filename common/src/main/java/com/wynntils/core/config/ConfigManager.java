@@ -27,7 +27,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +94,7 @@ public final class ConfigManager extends CoreManager {
                         userConfig,
                         new File(
                                 CONFIGS,
-                                "invalid_" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
+                                "invalid_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
                                         + RandomStringUtils.random(5) + "_" + userConfig.getName()));
                 FileUtils.deleteFile(userConfig);
                 FileUtils.createNewFile(userConfig);
