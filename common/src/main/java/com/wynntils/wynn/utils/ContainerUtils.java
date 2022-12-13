@@ -101,13 +101,4 @@ public final class ContainerUtils {
     public static void closeContainer(int containerId) {
         McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
     }
-
-    public static int getEmptySlotsInContainer(AbstractContainerMenu containerMenu) {
-        if (containerMenu == null) return 0;
-        int slots = 0;
-        for (ItemStack itemStack : containerMenu.getItems()) {
-            if (itemStack.isEmpty()) slots++;
-        }
-        return slots;
-    }
 }
