@@ -13,7 +13,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class Response extends NetAction {
     public Response(HttpRequest request) {
@@ -26,23 +25,36 @@ public class Response extends NetAction {
                 .thenApply(HttpResponse::body);
     }
 
-    public void handleJsonObject(Predicate<JsonObject> handler, Consumer<Void> errorHandler) {
+    public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> errorHandler) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
-        inputStreamAsync.thenApply(is ->
-                handler.test(JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()));
+        CompletableFuture<Void> a = inputStreamAsync
+                .thenAccept(is -> handler.accept(
+                        JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()))
+                .exceptionally(e -> {
+                    // FIXME: fix error handling correctly!
+                    errorHandler.accept(e);
+                    return null;
+                });
     }
 
-    public void handleJsonObject(Predicate<JsonObject> handler) {
+    // JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()
+    public void handleJsonObject(Consumer<JsonObject> handler) {
         handleJsonObject(handler, (ignored) -> {});
     }
 
-    public void handleJsonArray(Predicate<JsonArray> handler, Consumer<Void> errorHandler) {
+    public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> errorHandler) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
-        inputStreamAsync.thenApply(is ->
-                handler.test(JsonParser.parseReader(new InputStreamReader(is)).getAsJsonArray()));
+        CompletableFuture<Void> a = inputStreamAsync
+                .thenAccept(is -> handler.accept(
+                        JsonParser.parseReader(new InputStreamReader(is)).getAsJsonArray()))
+                .exceptionally(e -> {
+                    // FIXME: fix error handling correctly!
+                    errorHandler.accept(e);
+                    return null;
+                });
     }
 
-    public void handleJsonArray(Predicate<JsonArray> handler) {
+    public void handleJsonArray(Consumer<JsonArray> handler) {
         handleJsonArray(handler, (ignore) -> {});
     }
 }
