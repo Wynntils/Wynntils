@@ -19,27 +19,41 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ApiResponse {
-    static Map<HttpRequest, CompletableFuture<HttpResponse<InputStream>>> downloadFutures = new HashMap<>();
-    static Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
+    private static final Map<HttpRequest, CompletableFuture<HttpResponse<InputStream>>> downloadFutures = new HashMap<>();
+    private static final Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
 
-    HttpRequest request;
+    private final HttpRequest request;
 
     public ApiResponse(HttpRequest request) {
         this.request = request;
     }
 
-    private CompletableFuture<HttpResponse<InputStream>> getHttpResponseAsync() {
-        CompletableFuture<HttpResponse<InputStream>> future = NetManager.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .whenComplete((ignored, exc) -> {
-                    downloadFutures.remove(request);
-                });
-        downloadFutures.put(request, future);
-        return future;
+    public void handleInputStream(Consumer<InputStream> handler, Consumer<Throwable> onError) {
+        doHandle(handler, onError);
     }
 
-    private CompletableFuture<InputStream> getInputStreamAsync() {
-        return getHttpResponseAsync().thenApply(HttpResponse::body);
+    public void handleReader(Consumer<Reader> handler, Consumer<Throwable> onError) {
+        handleInputStream(is -> handler.accept(new InputStreamReader(is)), onError);
+    }
+
+    public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
+        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonObject()), onError);
+    }
+
+    public void handleJsonObject(Consumer<JsonObject> handler) {
+        handleJsonObject(handler, onError -> {
+            WynntilsMod.warn("Error while reading resource");
+        });
+    }
+
+    public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
+        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonArray()), onError);
+    }
+
+    public void handleJsonArray(Consumer<JsonArray> handler) {
+        handleJsonArray(handler, onError -> {
+            WynntilsMod.warn("Error while reading resource");
+        });
     }
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
@@ -61,31 +75,13 @@ public class ApiResponse {
         processFutures.put(request, newFuture);
     }
 
-    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
-        doHandle(onCompletion, onError);
-    }
-
-    public void handleReader(Consumer<Reader> onCompletion, Consumer<Throwable> onError) {
-        handleInputStream(is -> onCompletion.accept(new InputStreamReader(is)), onError);
-    }
-
-    public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonObject()), onError);
-    }
-
-    public void handleJsonObject(Consumer<JsonObject> handler) {
-        handleJsonObject(handler, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
-    }
-
-    public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonArray()), onError);
-    }
-
-    public void handleJsonArray(Consumer<JsonArray> handler) {
-        handleJsonArray(handler, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
+    private CompletableFuture<InputStream> getInputStreamAsync() {
+        CompletableFuture<HttpResponse<InputStream>> future = NetManager.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .whenComplete((ignored, exc) -> {
+                    downloadFutures.remove(request);
+                });
+        downloadFutures.put(request, future);
+        return future.thenApply(HttpResponse::body);
     }
 }

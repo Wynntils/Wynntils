@@ -24,17 +24,18 @@ import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 
 public class Download {
-    static Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> downloadFutures = new HashMap<>();
-    static Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
+    private static final Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> downloadFutures = new HashMap<>();
+    private static final Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
 
-    HttpRequest request;
+    private final HttpRequest request;
     private final File localFile;
 
     // Saved since we might need to get timestamps from the HttpResponse
-    CompletableFuture<HttpResponse<Path>> future;
+    private CompletableFuture<HttpResponse<Path>> future;
 
     public Download(File localFile) {
         this.localFile = localFile;
+        this.request = null; // Only use cached file
     }
 
     public Download(File localFile, HttpRequest request) {
@@ -42,37 +43,30 @@ public class Download {
         this.request = request;
     }
 
-    private CompletableFuture<HttpResponse<Path>> downloadToCacheAsync() {
-        FileUtils.deleteQuietly(localFile);
-        localFile.getParentFile().mkdirs();
-        future = NetManager.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
-                .whenComplete((ignored, exc) -> {
-                    downloadFutures.remove(request);
-                });
-        // in case of failure:
-        //        FileUtils.deleteQuietly(cacheFile);
-        downloadFutures.put(request, future);
-        return future;
+    public void handleInputStream(Consumer<InputStream> handler, Consumer<Throwable> onError) {
+        doHandle(handler, onError);
     }
 
-    private CompletableFuture<InputStream> getInputStreamAsync() {
-        if (request == null) {
-            try {
-                InputStream inputStream = new FileInputStream(localFile);
-                return CompletableFuture.supplyAsync(() -> inputStream);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return downloadToCacheAsync().thenApply(response -> {
-                try {
-                    return new FileInputStream(response.body().toFile());
-                } catch (FileNotFoundException e) {
-                    // FIXME
-                    throw new RuntimeException(e);
-                }
-            });
+    public void handleInputStream(Consumer<InputStream> handler) {
+        handleInputStream(handler, onError -> {
+            WynntilsMod.warn("Error while reading resource");
+        });
+    }
+
+    public void handleReader(Consumer<Reader> handler) {
+        handleInputStream(is -> handler.accept(new InputStreamReader(is)));
+    }
+
+    public long getResponseTimestamp() {
+        // FIXME: handle case if we read from cache as fallback!
+        try {
+            HttpHeaders headers = future.get().headers();
+            OptionalLong a = headers.firstValueAsLong("timestamp");
+            if (a.isEmpty()) return System.currentTimeMillis();
+            return a.getAsLong();
+        } catch (InterruptedException | ExecutionException e) {
+            WynntilsMod.warn("Cannot retrieve http header timestamp");
+            return System.currentTimeMillis();
         }
     }
 
@@ -95,30 +89,37 @@ public class Download {
         processFutures.put(request, newFuture);
     }
 
-    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
-        doHandle(onCompletion, onError);
-    }
-
-    public void handleInputStream(Consumer<InputStream> onCompletion) {
-        handleInputStream(onCompletion, onError -> {
-            WynntilsMod.warn("Error while reading resource");
-        });
-    }
-
-    public void handleReader(Consumer<Reader> onCompletion) {
-        handleInputStream(is -> onCompletion.accept(new InputStreamReader(is)));
-    }
-
-    public long getTimestamp() {
-        // FIXME: handle case if we read from cache as fallback!
-        try {
-            HttpHeaders headers = future.get().headers();
-            OptionalLong a = headers.firstValueAsLong("timestamp");
-            if (a.isEmpty()) return System.currentTimeMillis();
-            return a.getAsLong();
-        } catch (InterruptedException | ExecutionException e) {
-            WynntilsMod.warn("Cannot retrieve http header timestamp");
-            return System.currentTimeMillis();
+    private CompletableFuture<InputStream> getInputStreamAsync() {
+        if (request == null) {
+            try {
+                InputStream inputStream = new FileInputStream(localFile);
+                return CompletableFuture.supplyAsync(() -> inputStream);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return downloadToCacheAsync().thenApply(response -> {
+                try {
+                    return new FileInputStream(response.body().toFile());
+                } catch (FileNotFoundException e) {
+                    // FIXME
+                    throw new RuntimeException(e);
+                }
+            });
         }
+    }
+
+    private CompletableFuture<HttpResponse<Path>> downloadToCacheAsync() {
+        FileUtils.deleteQuietly(localFile);
+        localFile.getParentFile().mkdirs();
+        future = NetManager.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
+                .whenComplete((ignored, exc) -> {
+                    downloadFutures.remove(request);
+                });
+        // in case of failure:
+        //        FileUtils.deleteQuietly(cacheFile);
+        downloadFutures.put(request, future);
+        return future;
     }
 }

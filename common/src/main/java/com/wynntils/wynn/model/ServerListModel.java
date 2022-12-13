@@ -96,7 +96,7 @@ public class ServerListModel extends Model {
             JsonObject servers = json.getAsJsonObject("servers");
             Map<String, ServerProfile> newMap = new HashMap<>();
 
-            long serverTime = dl.getTimestamp();
+            long serverTime = dl.getResponseTimestamp();
             for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
                 ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
                 profile.matchTime(serverTime);
