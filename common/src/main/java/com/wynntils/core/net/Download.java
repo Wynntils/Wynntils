@@ -27,7 +27,7 @@ public class Download extends NetResult {
     private final File localFile;
 
     // Saved since we might need to get timestamps from the HttpResponse
-    private CompletableFuture<HttpResponse<Path>> future = null;
+    private CompletableFuture<HttpResponse<Path>> httpResponse = null;
 
     public Download(File localFile) {
         super(null); // Only use cached file
@@ -42,7 +42,7 @@ public class Download extends NetResult {
     public long getResponseTimestamp() {
         // FIXME: handle case if we read from cache as fallback!
         try {
-            HttpHeaders headers = future.get().headers();
+            HttpHeaders headers = httpResponse.get().headers();
             OptionalLong a = headers.firstValueAsLong("timestamp");
             if (a.isEmpty()) return System.currentTimeMillis();
             return a.getAsLong();
@@ -54,29 +54,36 @@ public class Download extends NetResult {
 
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
-            return CompletableFuture.supplyAsync(() -> {
-                try {
-                    // FIXME: How close the is?
-                    return new FileInputStream(localFile);
-                } catch (FileNotFoundException e) {
-                    // FIXME: Error handling
-                    throw new RuntimeException(e);
-                }
-            });
+            // File is already in downloaded, just read from the cache
+            return CompletableFuture.supplyAsync(() -> getFileInputStreamFromCache());
         } else {
-            return downloadToCacheAsync().thenApply(response -> {
-                try {
-                    // FIXME: How close the is?
-                    return new FileInputStream(response.body().toFile());
-                } catch (FileNotFoundException e) {
-                    // FIXME: Error handling
-                    throw new RuntimeException(e);
-                }
-            });
+            prepareForDownload();
+            return getDownloadInputStreamFuture().thenApply(response -> getFileInputStreamFromCache());
         }
     }
 
-    private CompletableFuture<HttpResponse<Path>> downloadToCacheAsync() {
+    private CompletableFuture<HttpResponse<Path>> getDownloadInputStreamFuture() {
+        CompletableFuture<HttpResponse<Path>> future = NetManager.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
+                .whenComplete((ignored, exc) -> DOWNLOAD_FUTURES.remove(request));
+
+        DOWNLOAD_FUTURES.put(request, future);
+        // We must save the response so we can get the timestamp
+        this.httpResponse = future;
+        return future;
+    }
+
+    private FileInputStream getFileInputStreamFromCache() {
+        try {
+            // FIXME: How close the is?
+            return new FileInputStream(localFile);
+        } catch (FileNotFoundException e) {
+            // FIXME: Error handling
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void prepareForDownload() {
         FileUtils.deleteQuietly(localFile);
         try {
             FileUtils.forceMkdirParent(localFile);
@@ -84,12 +91,5 @@ public class Download extends NetResult {
             // FIXME: Error handling
             throw new RuntimeException(e);
         }
-        future = NetManager.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
-                .whenComplete((ignored, exc) -> DOWNLOAD_FUTURES.remove(request));
-        // in case of failure:
-        //        FileUtils.deleteQuietly(cacheFile);
-        DOWNLOAD_FUTURES.put(request, future);
-        return future;
     }
 }
