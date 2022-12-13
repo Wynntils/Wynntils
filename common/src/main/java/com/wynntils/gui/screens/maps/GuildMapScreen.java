@@ -89,7 +89,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                 Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
                 (b) -> {
                     territoryDefenseFilterLevel = territoryDefenseFilterLevel.next();
-                    territoryDefenseFilterButton.editTooltip(
+                    territoryDefenseFilterButton.setTooltip(
                             territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip());
                 },
                 territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip()));
