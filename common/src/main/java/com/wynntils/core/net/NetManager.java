@@ -46,7 +46,7 @@ public class NetManager {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
             byte[] blob = getToMemory(uri);
-            return new Response(blob);
+            return new Response(null);
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
@@ -56,7 +56,7 @@ public class NetManager {
             });
             URI uri = URI.create(urlInfo.url());
             byte[] blob = postToMemory(uri, jsonArgs);
-            return new Response(blob);
+            return new Response(null);
         }
     }
 
@@ -64,6 +64,7 @@ public class NetManager {
         return callApi(urlId, Map.of());
     }
 
+    // THIS SHOULD ALSO BE CALLED FROM UpdateManager.tryFetchNewUpdate
     public static Download download(URI uri, String localFileName, String expectedHash, String id) {
         File localFile = new File(RESOURCE_ROOT, localFileName);
         if (!checkLocalHash(localFile, expectedHash)) {
@@ -97,7 +98,21 @@ public class NetManager {
         return null;
     }
 
-    private static byte[] getToMemory(URI uri) {
+    private static byte[] getToMemory(URI uri)  {
+        /*
+        URL url = new URL("test");
+        String fileName = "";
+        ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        FileChannel fileChannel = fileOutputStream.getChannel();
+        fileOutputStream.getChannel()
+                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+
+
+
+        BufferedInputStream in = new BufferedInputStream(new URL(uri.toString()).openStream());
+
+         */
         // FIXME: implement
         return null;
     }

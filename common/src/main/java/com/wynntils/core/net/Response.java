@@ -6,19 +6,18 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.net.http.HttpRequest;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Response extends NetAction {
-    public static class FailureResponse extends Response {}
+    public Response(HttpRequest request) {
+        super(request);
+    }
+
+    // public static class FailureResponse extends Response {}
 
     private byte[] blob;
-
-    public Response() {}
-
-    public Response(byte[] blob) {
-        this.blob = blob;
-    }
 
     public void handleJsonObject(Predicate<JsonObject> handler) {
         //        InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);

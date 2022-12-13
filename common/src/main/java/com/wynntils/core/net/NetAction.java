@@ -5,9 +5,18 @@
 package com.wynntils.core.net;
 
 import java.io.InputStream;
+import java.net.http.HttpRequest;
 import java.util.function.Supplier;
 
 public class NetAction {
     Supplier<InputStream> opener;
     Supplier<Object> processor;
+
+    public NetAction(HttpRequest request) {
+        this.request = request;
+    }
+
+    HttpRequest request;
+
+
 }
