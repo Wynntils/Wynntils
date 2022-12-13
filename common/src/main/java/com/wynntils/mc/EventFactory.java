@@ -31,6 +31,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
+import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -152,6 +153,10 @@ public final class EventFactory {
     // region Render Events
     public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
         return post(new PlayerArmorRenderEvent(player, slot));
+    }
+
+    public static GroundItemEntityTransformEvent onGroundItemRender(PoseStack poseStack, ItemStack stack) {
+        return post(new GroundItemEntityTransformEvent(poseStack, stack));
     }
 
     public static NametagRenderEvent onNameTagRender(
