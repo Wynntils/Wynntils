@@ -42,7 +42,7 @@ public class Download {
         this.request = request;
     }
 
-    protected CompletableFuture<HttpResponse<Path>> cacheHttpResponseAsync() {
+    private CompletableFuture<HttpResponse<Path>> downloadToCacheAsync() {
         FileUtils.deleteQuietly(localFile);
         localFile.getParentFile().mkdirs();
         future = NetManager.HTTP_CLIENT
@@ -56,7 +56,7 @@ public class Download {
         return future;
     }
 
-    protected CompletableFuture<InputStream> cacheInputStreamAsync() {
+    private CompletableFuture<InputStream> getInputStreamAsync() {
         if (request == null) {
             try {
                 InputStream inputStream = new FileInputStream(localFile);
@@ -65,7 +65,7 @@ public class Download {
                 throw new RuntimeException(e);
             }
         } else {
-            return cacheHttpResponseAsync().thenApply(response -> {
+            return downloadToCacheAsync().thenApply(response -> {
                 try {
                     return new FileInputStream(response.body().toFile());
                 } catch (FileNotFoundException e) {
@@ -76,9 +76,9 @@ public class Download {
         }
     }
 
-    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+    private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture newFuture;
-        newFuture = cacheInputStreamAsync()
+        newFuture = getInputStreamAsync()
                 .thenAccept((is) -> onCompletion.accept(is))
                 .exceptionally(e -> {
                     // FIXME: fix error handling correctly!
@@ -86,6 +86,17 @@ public class Download {
                     return null;
                 });
         storeProcessFuture(newFuture);
+    }
+
+    private void storeProcessFuture(CompletableFuture<Void> processFuture) {
+        CompletableFuture<Void> newFuture = processFuture.whenComplete((ignored, exc) -> {
+            processFutures.remove(request);
+        });
+        processFutures.put(request, newFuture);
+    }
+
+    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+        doHandle(onCompletion, onError);
     }
 
     public void handleInputStream(Consumer<InputStream> onCompletion) {
@@ -109,12 +120,5 @@ public class Download {
             WynntilsMod.warn("Cannot retrieve http header timestamp");
             return System.currentTimeMillis();
         }
-    }
-
-    protected void storeProcessFuture(CompletableFuture<Void> newFuture) {
-        CompletableFuture<Void> newFuture2 = newFuture.whenComplete((ignored, exc) -> {
-            downloadFutures.remove(request);
-        });
-        processFutures.put(request, newFuture2);
     }
 }

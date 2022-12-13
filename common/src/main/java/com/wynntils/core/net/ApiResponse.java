@@ -7,8 +7,10 @@ package com.wynntils.core.net;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wynntils.core.WynntilsMod;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class ApiResponse {
         this.request = request;
     }
 
-    protected CompletableFuture<HttpResponse<InputStream>> getHttpResponseAsync() {
+    private CompletableFuture<HttpResponse<InputStream>> getHttpResponseAsync() {
         CompletableFuture<HttpResponse<InputStream>> future = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .whenComplete((ignored, exc) -> {
@@ -36,49 +38,54 @@ public class ApiResponse {
         return future;
     }
 
-    protected CompletableFuture<InputStream> getInputStreamAsync() {
+    private CompletableFuture<InputStream> getInputStreamAsync() {
         return getHttpResponseAsync().thenApply(HttpResponse::body);
     }
 
-    public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> errorHandler) {
+    private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
         CompletableFuture<Void> newFuture = inputStreamAsync
-                .thenAccept(is -> handler.accept(
-                        JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()))
+                .thenAccept((is) -> onCompletion.accept(is))
                 .exceptionally(e -> {
                     // FIXME: fix error handling correctly!
-                    errorHandler.accept(e);
+                    onError.accept(e);
                     return null;
                 });
         storeProcessFuture(newFuture);
     }
 
-    // JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()
+    private void storeProcessFuture(CompletableFuture<Void> processFuture) {
+        CompletableFuture<Void> newFuture = processFuture.whenComplete((ignored, exc) -> {
+            processFutures.remove(request);
+        });
+        processFutures.put(request, newFuture);
+    }
+
+    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+        doHandle(onCompletion, onError);
+    }
+
+    public void handleReader(Consumer<Reader> onCompletion, Consumer<Throwable> onError) {
+        handleInputStream(is -> onCompletion.accept(new InputStreamReader(is)), onError);
+    }
+
+    public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
+        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonObject()), onError);
+    }
+
     public void handleJsonObject(Consumer<JsonObject> handler) {
-        handleJsonObject(handler, (ignored) -> {});
+        handleJsonObject(handler, onError -> {
+            WynntilsMod.warn("Error while reading resource");
+        });
     }
 
-    public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> errorHandler) {
-        CompletableFuture<InputStream> inputStreamAsync = getInputStreamAsync();
-        CompletableFuture<Void> newFuture = inputStreamAsync
-                .thenAccept(is -> handler.accept(
-                        JsonParser.parseReader(new InputStreamReader(is)).getAsJsonArray()))
-                .exceptionally(e -> {
-                    // FIXME: fix error handling correctly!
-                    errorHandler.accept(e);
-                    return null;
-                });
-        storeProcessFuture(newFuture);
+    public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
+        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonArray()), onError);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
-        handleJsonArray(handler, (ignore) -> {});
-    }
-
-    private void storeProcessFuture(CompletableFuture<Void> newFuture) {
-        CompletableFuture<Void> newFuture2 = newFuture.whenComplete((ignored, exc) -> {
-            downloadFutures.remove(request);
+        handleJsonArray(handler, onError -> {
+            WynntilsMod.warn("Error while reading resource");
         });
-        processFutures.put(request, newFuture2);
     }
 }
