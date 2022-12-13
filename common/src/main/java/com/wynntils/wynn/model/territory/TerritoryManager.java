@@ -130,7 +130,7 @@ public class TerritoryManager extends CoreManager {
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
         Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             JsonObject json = (JsonObject) JsonParser.parseReader(reader);
 
             Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();

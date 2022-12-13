@@ -76,12 +76,12 @@ public class NetManager extends CoreManager {
     }
 
     public static Download download(URI uri, File file) {
-        return Download.downloadAndStore(file, getRequest(uri));
+        return new Download(file, getRequest(uri));
     }
 
     public static Download download(URI uri, File file, String expectedHash) {
         if (checkLocalHash(file, expectedHash)) {
-            return Download.readFromCache(file);
+            return new Download(file);
         }
         return download(uri, file);
     }

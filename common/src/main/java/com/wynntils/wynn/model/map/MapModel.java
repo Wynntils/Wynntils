@@ -60,7 +60,7 @@ public final class MapModel extends Model {
         MAPS.clear();
 
         Download dl = NetManager.download(UrlId.DATA_STATIC_MAPS);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
             List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
@@ -68,7 +68,7 @@ public final class MapModel extends Model {
                 String fileName = mapPart.md5 + ".png";
 
                 Download dlPart = NetManager.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
-                dlPart.onCompletionInputStream(
+                dlPart.handleInputStream(
                         inputStream -> {
                             try {
                                 NativeImage nativeImage = NativeImage.read(inputStream);
@@ -88,7 +88,7 @@ public final class MapModel extends Model {
 
     private static void loadPlaces() {
         Download dl = NetManager.download(UrlId.DATA_STATIC_PLACES);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
                 LABEL_POIS.add(new LabelPoi(label));
@@ -98,7 +98,7 @@ public final class MapModel extends Model {
 
     private static void loadServices() {
         Download dl = NetManager.download(UrlId.DATA_STATIC_SERVICES);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
             List<ServiceProfile> serviceList = WynntilsMod.GSON.fromJson(reader, type);
@@ -117,7 +117,7 @@ public final class MapModel extends Model {
 
     private static void loadCombat() {
         Download dl = NetManager.download(UrlId.DATA_STATIC_COMBAT_LOCATIONS);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
             List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(reader, type);

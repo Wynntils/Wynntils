@@ -20,39 +20,40 @@ import java.util.Map;
 import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 
-public class Download extends NetAction {
+public class Download {
+    static Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> downloadFutures = new HashMap<>();
+    static Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
+
+    HttpRequest request;
     private final File localFile;
-    private CompletableFuture<HttpResponse<Path>> future_dl;
-    private Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> currentRequests_dl =
-            new HashMap<HttpRequest, CompletableFuture<HttpResponse<Path>>>();
+
+    // Saved since we might need to get timestamps from the HttpResponse
+    CompletableFuture<HttpResponse<Path>> future;
 
     public Download(File localFile) {
-        super(null);
         this.localFile = localFile;
     }
 
     public Download(File localFile, HttpRequest request) {
-        super(request);
         this.localFile = localFile;
+        this.request = request;
     }
 
     protected CompletableFuture<HttpResponse<Path>> cacheHttpResponseAsync() {
         FileUtils.deleteQuietly(localFile);
         localFile.getParentFile().mkdirs();
-        future_dl = NetManager.HTTP_CLIENT
+        future = NetManager.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
                 .whenComplete((ignored, exc) -> {
-                    currentRequests_dl.remove(request);
+                    downloadFutures.remove(request);
                 });
         // in case of failure:
         //        FileUtils.deleteQuietly(cacheFile);
-        currentRequests_dl.put(request, future_dl);
-        return future_dl;
+        downloadFutures.put(request, future);
+        return future;
     }
 
     protected CompletableFuture<InputStream> cacheInputStreamAsync() {
@@ -75,15 +76,7 @@ public class Download extends NetAction {
         }
     }
 
-    public static Download readFromCache(File localFile) {
-        return new Download(localFile);
-    }
-
-    public static Download downloadAndStore(File localFile, HttpRequest request) {
-        return new Download(localFile, request);
-    }
-
-    public void onCompletionInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+    public void handleInputStream(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture newFuture;
         newFuture = cacheInputStreamAsync()
                 .thenAccept((is) -> onCompletion.accept(is))
@@ -92,17 +85,17 @@ public class Download extends NetAction {
                     onError.accept(e);
                     return null;
                 });
-        storeNewFuture(newFuture);
+        storeProcessFuture(newFuture);
     }
 
-    public void onCompletionInputStream(Consumer<InputStream> onCompletion) {
-        onCompletionInputStream(onCompletion, onError -> {
+    public void handleInputStream(Consumer<InputStream> onCompletion) {
+        handleInputStream(onCompletion, onError -> {
             WynntilsMod.warn("Error while reading resource");
         });
     }
 
-    public void onCompletion(Consumer<Reader> onCompletion) {
-        onCompletionInputStream(is -> onCompletion.accept(new InputStreamReader(is)));
+    public void handleReader(Consumer<Reader> onCompletion) {
+        handleInputStream(is -> onCompletion.accept(new InputStreamReader(is)));
     }
 
     public long getTimestamp() {
@@ -118,14 +111,10 @@ public class Download extends NetAction {
         }
     }
 
-    public boolean waitForCompletion(int timeOutMs) {
-        // FIXME: handle case where we read from cache
-        try {
-            future.get(timeOutMs, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            // if timeout is reached, return false
-            return false;
-        }
-        return true;
+    protected void storeProcessFuture(CompletableFuture<Void> newFuture) {
+        CompletableFuture<Void> newFuture2 = newFuture.whenComplete((ignored, exc) -> {
+            downloadFutures.remove(request);
+        });
+        processFutures.put(request, newFuture2);
     }
 }

@@ -10,12 +10,34 @@ import com.google.gson.JsonParser;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class ApiResponse extends NetAction {
+public class ApiResponse {
+    static Map<HttpRequest, CompletableFuture<HttpResponse<InputStream>>> downloadFutures = new HashMap<>();
+    static Map<HttpRequest, CompletableFuture<Void>> processFutures = new HashMap<>();
+
+    HttpRequest request;
+
     public ApiResponse(HttpRequest request) {
-        super(request);
+        this.request = request;
+    }
+
+    protected CompletableFuture<HttpResponse<InputStream>> getHttpResponseAsync() {
+        CompletableFuture<HttpResponse<InputStream>> future = NetManager.HTTP_CLIENT
+                .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .whenComplete((ignored, exc) -> {
+                    downloadFutures.remove(request);
+                });
+        downloadFutures.put(request, future);
+        return future;
+    }
+
+    protected CompletableFuture<InputStream> getInputStreamAsync() {
+        return getHttpResponseAsync().thenApply(HttpResponse::body);
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> errorHandler) {
@@ -28,7 +50,7 @@ public class ApiResponse extends NetAction {
                     errorHandler.accept(e);
                     return null;
                 });
-        storeNewFuture(newFuture);
+        storeProcessFuture(newFuture);
     }
 
     // JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject()
@@ -46,10 +68,17 @@ public class ApiResponse extends NetAction {
                     errorHandler.accept(e);
                     return null;
                 });
-        storeNewFuture(newFuture);
+        storeProcessFuture(newFuture);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
         handleJsonArray(handler, (ignore) -> {});
+    }
+
+    private void storeProcessFuture(CompletableFuture<Void> newFuture) {
+        CompletableFuture<Void> newFuture2 = newFuture.whenComplete((ignored, exc) -> {
+            downloadFutures.remove(request);
+        });
+        processFutures.put(request, newFuture2);
     }
 }

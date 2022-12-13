@@ -179,7 +179,7 @@ public class DiscoveryManager extends CoreManager {
 
     private static void updateDiscoveriesResource() {
         Download dl = NetManager.download(UrlId.DATA_STATIC_DISCOVERIES);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);
             discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();

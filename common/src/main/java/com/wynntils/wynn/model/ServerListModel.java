@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ServerListModel extends Model {
@@ -61,8 +65,14 @@ public class ServerListModel extends Model {
     }
 
     public static boolean forceUpdate(int timeOutMs) {
-        Download dl = updateServerList();
-        return dl.waitForCompletion(timeOutMs);
+        CompletableFuture future = updateServerList();
+        try {
+            future.get(timeOutMs, TimeUnit.MILLISECONDS);
+            return true;
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // if timeout is reached, return false
+            return false;
+        }
     }
 
     @SubscribeEvent
@@ -73,12 +83,14 @@ public class ServerListModel extends Model {
         updateServerList();
     }
 
-    private static Download updateServerList() {
+    private static CompletableFuture updateServerList() {
+        CompletableFuture future = new CompletableFuture<>();
+
         // dataAthenaServerList is based on
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
         Download dl = NetManager.download(UrlId.DATA_ATHENA_SERVER_LIST);
-        dl.onCompletion(reader -> {
+        dl.handleReader(reader -> {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
             JsonObject servers = json.getAsJsonObject("servers");
@@ -93,7 +105,8 @@ public class ServerListModel extends Model {
             }
 
             availableServers = newMap;
+            future.complete(true);
         });
-        return dl;
+        return future;
     }
 }
