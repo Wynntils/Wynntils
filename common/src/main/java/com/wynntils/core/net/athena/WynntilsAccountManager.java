@@ -98,12 +98,13 @@ public class WynntilsAccountManager extends CoreManager {
                 token = json2.get("authToken").getAsString(); /* md5 hashes*/
                 JsonObject hashes = json2.getAsJsonObject("hashes");
                 hashes.entrySet()
-                        .forEach(
-                                (k) -> md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
+                        .forEach((k) ->
+                                md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
                 JsonObject configFiles = json2.getAsJsonObject("configFiles");
                 configFiles
                         .entrySet()
-                        .forEach((k) -> encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
+                        .forEach((k) ->
+                                encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                 loggedIn = true;
                 future.complete(true);
                 WynntilsMod.info("Successfully connected to Athena!");
