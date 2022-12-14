@@ -41,7 +41,8 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        CompletableFuture.runAsync(() -> UpdateManager.getLatestBuild()
+        CompletableFuture.runAsync(() -> Managers.UPDATE
+                .getLatestBuild()
                 .whenCompleteAsync((version, throwable) -> Managers.MINECRAFT_SCHEDULER.queueRunnable(() -> {
                     if (version == null) {
                         WynntilsMod.info(
@@ -69,7 +70,7 @@ public class UpdatesFeature extends UserFeature {
                         McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
+                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.UPDATE.tryUpdate();
 
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {
