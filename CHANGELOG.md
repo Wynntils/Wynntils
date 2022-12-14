@@ -1,9 +1,21 @@
+## [0.0.1-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.158...v0.0.1-alpha.159) (2022-12-14)
+
+
+### New Features
+
+* Introduce NetManager and UrlManager ([#825](https://github.com/Wynntils/Artemis/issues/825)) ([001395f](https://github.com/Wynntils/Artemis/commit/001395fb797c71cb6e61aae6b0813a5321d04b1a))
+
 ## [0.0.1-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.157...v0.0.1-alpha.158) (2022-12-14)
 
 
 ### New Features
 
 * Sends an Overlay Message Whenever You Gain Combat XP ([#811](https://github.com/Wynntils/Artemis/issues/811)) ([4536ada](https://github.com/Wynntils/Artemis/commit/4536adaa758f1c927dc781913b3032e95986ff93))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.158 [skip ci] ([be3a282](https://github.com/Wynntils/Artemis/commit/be3a2823dc26a5c1333fb5e4746e4ba919a0d1a5))
 
 ## [0.0.1-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.156...v0.0.1-alpha.157) (2022-12-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.155 [skip ci] ([18c87e4](https://github.com/Wynntils/Artemis/commit/18c87e429410a728c190306641f74df5ba704522))
-
-## [0.0.1-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.153...v0.0.1-alpha.154) (2022-12-13)
-
-
-### Bug Fixes
-
-* ItemRendererMixin now correctly loads on every mod loader (added a specific Forge version) ([#822](https://github.com/Wynntils/Artemis/issues/822)) ([80a4d35](https://github.com/Wynntils/Artemis/commit/80a4d35b5fe01545be0d76d8ec1544cf82121198))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.154 [skip ci] ([9f3a1fd](https://github.com/Wynntils/Artemis/commit/9f3a1fd111b1560c648662c0e2a60f97657cd1dd))
 
