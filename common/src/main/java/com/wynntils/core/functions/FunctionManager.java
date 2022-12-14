@@ -7,7 +7,6 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -113,7 +112,7 @@ public final class FunctionManager extends CoreManager {
         } catch (Throwable throwable) {
             WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
             McUtils.sendMessageToClient(new TextComponent(String.format(
-                    "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
+                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
             disableFunction(function);
