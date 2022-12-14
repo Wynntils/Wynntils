@@ -9,7 +9,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,7 +26,7 @@ public class TokenCommand extends CommandBase {
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
-        if (!WynntilsAccountManager.isLoggedIn()) {
+        if (!Managers.WYNNTILS_ACCOUNT.isLoggedIn()) {
             MutableComponent failed = new TextComponent(
                             "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
@@ -39,7 +38,7 @@ public class TokenCommand extends CommandBase {
             return 1;
         }
 
-        String token = WynntilsAccountManager.getToken();
+        String token = Managers.WYNNTILS_ACCOUNT.getToken();
 
         MutableComponent text = new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
         MutableComponent response = new TextComponent(token)

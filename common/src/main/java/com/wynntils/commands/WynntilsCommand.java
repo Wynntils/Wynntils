@@ -13,7 +13,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -88,7 +87,7 @@ public class WynntilsCommand extends CommandBase {
         Managers.URL.reloadUrls();
         Managers.ITEM_PROFILES.init();
         Managers.SPLASH.init();
-        WynntilsAccountManager.init();
+        Managers.WYNNTILS_ACCOUNT.init();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {

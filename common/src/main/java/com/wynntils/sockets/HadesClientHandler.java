@@ -6,7 +6,6 @@ package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -35,7 +34,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onConnect() {
-        if (!WynntilsAccountManager.isLoggedIn()) {
+        if (!Managers.WYNNTILS_ACCOUNT.isLoggedIn()) {
             hadesConnection.disconnect();
 
             if (Managers.WORLD_STATE.onServer()) {
@@ -47,7 +46,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(WynntilsAccountManager.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Managers.WYNNTILS_ACCOUNT.getToken()));
     }
 
     @Override
