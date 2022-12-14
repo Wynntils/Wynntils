@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.widgets.SearchWidget;
@@ -21,8 +22,10 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.wynn.model.item.properties.SearchOverlayPropertyModel;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -48,6 +51,11 @@ public class ContainerSearchFeature extends UserFeature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(SearchOverlayPropertyModel.class);
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
