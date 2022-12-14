@@ -23,9 +23,6 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FileUtils;
 
 public class Download extends NetResult {
-    // By storing the Future here we assure it will not be GC'ed before we are done with it
-    private static final Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> DOWNLOAD_FUTURES = new HashMap<>();
-
     private final File localFile;
 
     // Saved since we might need to get timestamps from the HttpResponse
@@ -70,10 +67,8 @@ public class Download extends NetResult {
 
     private CompletableFuture<HttpResponse<Path>> getDownloadInputStreamFuture() {
         CompletableFuture<HttpResponse<Path>> future = NetManager.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()))
-                .whenComplete((ignored, exc) -> DOWNLOAD_FUTURES.remove(request));
+                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
 
-        DOWNLOAD_FUTURES.put(request, future);
         // We must save the response so we can get the timestamp
         this.httpResponse = future;
         return future;
