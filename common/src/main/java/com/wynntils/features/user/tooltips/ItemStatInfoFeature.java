@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.tooltips;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -44,11 +43,6 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Config
     public boolean groupIdentifications = true;
-
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new WebLoadedCondition());
-    }
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
