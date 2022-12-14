@@ -15,6 +15,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -140,7 +141,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestManager.getCurrentQuest();
+            QuestInfo currentQuest = Managers.QUEST.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;

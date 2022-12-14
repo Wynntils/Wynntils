@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
@@ -29,7 +30,7 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
@@ -57,7 +58,7 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
@@ -79,7 +80,7 @@ public class DialogueHistoryQueries {
             int page = i;
             queryBuilder
                     .clickOnSlot(0)
-                    .matchTitle(QuestManager.getQuestBookTitle(1))
+                    .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                     .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
@@ -95,7 +96,7 @@ public class DialogueHistoryQueries {
                         newDialogueHistory.add(current);
 
                         if (page == pageCount) {
-                            QuestManager.setDialogueHistory(newDialogueHistory);
+                            Managers.QUEST.setDialogueHistory(newDialogueHistory);
                         }
                     });
         }

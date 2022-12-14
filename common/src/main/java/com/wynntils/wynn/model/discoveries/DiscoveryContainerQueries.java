@@ -12,7 +12,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class DiscoveryContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Count Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting discovery count in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack discoveriesItem = c.items().get(DISCOVERIES_SLOT);
                     ItemStack secretDiscoveriesItem = c.items().get(SECRET_DISCOVERIES_SLOT);
@@ -108,7 +107,7 @@ public class DiscoveryContainerQueries {
                             new TextComponent("Error updating discoveries.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .processContainer(c -> {})
                 .clickOnSlot(DISCOVERIES_SLOT)
                 .matchTitle(getDiscoveryPageTitle(1))

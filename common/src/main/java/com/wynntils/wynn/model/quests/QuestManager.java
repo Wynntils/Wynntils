@@ -119,7 +119,7 @@ public class QuestManager extends CoreManager {
     }
 
     public static Location getCurrentQuestLocation() {
-        QuestInfo questInfo = QuestManager.getCurrentQuest();
+        QuestInfo questInfo = getCurrentQuest();
 
         if (questInfo == null) return null;
 

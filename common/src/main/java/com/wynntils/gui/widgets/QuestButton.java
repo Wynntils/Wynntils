@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -18,7 +19,6 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -106,7 +106,7 @@ public class QuestButton extends AbstractButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.playSound(SoundEvents.ANVIL_LAND);
-            QuestManager.toggleTracking(this.questInfo);
+            Managers.QUEST.toggleTracking(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
                 questBookScreen.setTracked(this.questInfo);
@@ -118,7 +118,7 @@ public class QuestButton extends AbstractButton {
 
     private void openQuestWiki() {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
-        QuestManager.openQuestOnWiki(questInfo);
+        Managers.QUEST.openQuestOnWiki(questInfo);
     }
 
     @Override

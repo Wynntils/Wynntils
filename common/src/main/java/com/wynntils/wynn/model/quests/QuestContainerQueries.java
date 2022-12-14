@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.container.ContainerContent;
 import com.wynntils.wynn.model.container.ScriptedContainerQuery;
@@ -38,14 +39,14 @@ public class QuestContainerQueries {
                             new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .processContainer(c -> processQuestBookPage(c, 1));
 
         for (int i = 2; i < 5; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(QuestManager.getQuestBookTitle(page))
+                    .matchTitle(Managers.QUEST.getQuestBookTitle(page))
                     .processContainer(c -> processQuestBookPage(c, page));
         }
 
@@ -75,7 +76,7 @@ public class QuestContainerQueries {
 
         if (page == 4) {
             // Last page finished
-            QuestManager.setQuests(newQuests);
+            Managers.QUEST.setQuests(newQuests);
         }
     }
 
@@ -91,7 +92,7 @@ public class QuestContainerQueries {
                             new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1))
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
                 .processContainer(c -> {})
                 .clickOnSlot(MINI_QUESTS_SLOT)
                 .matchTitle(getMiniQuestBookTitle(1))
@@ -128,7 +129,7 @@ public class QuestContainerQueries {
 
         if (page == 3) {
             // Last page finished
-            QuestManager.setMiniQuests(newMiniQuests);
+            Managers.QUEST.setMiniQuests(newMiniQuests);
         }
     }
 
@@ -140,7 +141,7 @@ public class QuestContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
                 .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(QuestManager.getQuestBookTitle(1));
+                .matchTitle(Managers.QUEST.getQuestBookTitle(1));
 
         if (questInfo.isMiniQuest()) {
             queryBuilder.processContainer(c -> {}).clickOnSlot(MINI_QUESTS_SLOT).matchTitle(getMiniQuestBookTitle(1));
@@ -151,7 +152,7 @@ public class QuestContainerQueries {
                 queryBuilder
                         .processContainer(container -> {}) // we ignore this because this is not the correct page
                         .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(i))
-                        .matchTitle(QuestManager.getQuestBookTitle(i));
+                        .matchTitle(Managers.QUEST.getQuestBookTitle(i));
             }
         }
         queryBuilder
