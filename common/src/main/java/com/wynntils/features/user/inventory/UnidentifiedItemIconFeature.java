@@ -14,8 +14,8 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
+import com.wynntils.wynn.model.item.UnidentifiedItemStackModel;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+        return List.of(UnidentifiedItemStackModel.class);
     }
 
     @SubscribeEvent

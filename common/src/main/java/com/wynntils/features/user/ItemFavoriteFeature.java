@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerCloseEvent;
@@ -19,11 +20,15 @@ import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
+import com.wynntils.wynn.model.item.GearItemStackModel;
+import com.wynntils.wynn.model.item.IngredientItemStackModel;
+import com.wynntils.wynn.model.item.UnidentifiedItemStackModel;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -39,6 +44,11 @@ public class ItemFavoriteFeature extends UserFeature {
 
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
+
+    @Override
+    public List<Class<? extends Model>> getModelDependencies() {
+        return List.of(GearItemStackModel.class, IngredientItemStackModel.class, UnidentifiedItemStackModel.class);
+    }
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

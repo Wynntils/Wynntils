@@ -14,13 +14,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public abstract class NetResult {
-    private static final Map<HttpRequest, CompletableFuture<Void>> PROCESS_FUTURES = new HashMap<>();
     private static final Consumer<Throwable> DEFAULT_ERROR_HANDLER =
             (exception) -> WynntilsMod.warn("Error while processing network request", exception);
 
@@ -69,10 +66,7 @@ public abstract class NetResult {
                     // FIXME: Error handling
                     onError.accept(e);
                     return null;
-                })
-                .whenComplete((ignored, exc) -> PROCESS_FUTURES.remove(request));
-
-        PROCESS_FUTURES.put(request, future);
+                });
     }
 
     private Consumer<InputStream> wrappingHandler(Consumer<InputStream> c) {

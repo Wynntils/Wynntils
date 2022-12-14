@@ -26,8 +26,8 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.model.ActionBarModel;
+import com.wynntils.wynn.model.item.GearItemStackModel;
 import com.wynntils.wynn.objects.Powder;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class, ItemStackTransformModel.class);
+        return List.of(ActionBarModel.class, GearItemStackModel.class);
     }
 
     public static class PowderAbilityBarOverlay extends Overlay {
