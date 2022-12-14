@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.discoveries;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -82,8 +83,8 @@ public class DiscoveryContainerQueries {
                                 return;
                             }
 
-                            DiscoveryManager.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
-                            DiscoveryManager.setSecretDiscoveriesTooltip(
+                            Managers.DISCOVERY.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
+                            Managers.DISCOVERY.setSecretDiscoveriesTooltip(
                                     ItemUtils.getTooltipLines(secretDiscoveriesItem));
 
                             int discoveryPages = discoveryCount / DISCOVERIES_PER_PAGE
@@ -158,10 +159,10 @@ public class DiscoveryContainerQueries {
             // Last page finished
             if (secretDiscovery) {
                 // Secret discoveries finished
-                DiscoveryManager.setSecretDiscoveries(newDiscoveries);
+                Managers.DISCOVERY.setSecretDiscoveries(newDiscoveries);
             } else {
                 // Normal discoveries finished
-                DiscoveryManager.setDiscoveries(newDiscoveries);
+                Managers.DISCOVERY.setDiscoveries(newDiscoveries);
             }
         }
     }

@@ -14,7 +14,6 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import java.util.ArrayList;
@@ -86,11 +85,11 @@ public class DiscoveryButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            DiscoveryManager.setDiscoveryCompass(discoveryInfo);
+            Managers.DISCOVERY.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            DiscoveryManager.openDiscoveryOnMap(discoveryInfo);
+            Managers.DISCOVERY.openDiscoveryOnMap(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.getType() == DiscoveryType.SECRET) {
-            DiscoveryManager.openSecretDiscoveryWiki(discoveryInfo);
+            Managers.DISCOVERY.openSecretDiscoveryWiki(discoveryInfo);
         }
 
         return true;
@@ -109,7 +108,8 @@ public class DiscoveryButton extends AbstractButton {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> DiscoveryManager.getAllDiscoveries()
+                    .filter(requirement -> Managers.DISCOVERY
+                            .getAllDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 
