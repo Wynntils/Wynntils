@@ -151,8 +151,7 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = Managers.Character
-                                    .getCharacterInfo()
+            MutableComponent base = Managers.Character.getCharacterInfo()
                                     .getProfessionInfo()
                                     .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()

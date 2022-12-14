@@ -65,8 +65,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
                 helpModified.add(new TextComponent(""));
                 helpModified.add(new TextComponent("Feature: "
-                        + Managers.Overlay
-                                .getOverlayParent(hovered.getOverlay())
+                        + Managers.Overlay.getOverlayParent(hovered.getOverlay())
                                 .getTranslatedName()));
 
                 RenderUtils.drawTooltipAt(

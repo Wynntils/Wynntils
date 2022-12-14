@@ -311,8 +311,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Managers.ItemProfiles
-                .getTranslatedReferences()
+        return Managers.ItemProfiles.getTranslatedReferences()
                 .getOrDefault(unformattedItemName, unformattedItemName)
                 .replace("֎", "");
     }

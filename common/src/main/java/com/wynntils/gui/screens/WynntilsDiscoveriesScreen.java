@@ -350,12 +350,10 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
                                 })
-                                .filter(discoveryInfo -> Managers.Discovery
-                                        .getAllDiscoveries()
+                                .filter(discoveryInfo -> Managers.Discovery.getAllDiscoveries()
                                         .noneMatch(
                                                 discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        Managers.Discovery
-                                .getAllDiscoveries()
+                        Managers.Discovery.getAllDiscoveries()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showFoundTerritory;
                                     case WORLD -> showFoundWorld;

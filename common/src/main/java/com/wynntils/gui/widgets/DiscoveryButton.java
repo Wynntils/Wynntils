@@ -108,8 +108,7 @@ public class DiscoveryButton extends AbstractButton {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> Managers.Discovery
-                            .getAllDiscoveries()
+                    .filter(requirement -> Managers.Discovery.getAllDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 

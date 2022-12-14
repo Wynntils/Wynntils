@@ -16,8 +16,7 @@ public class ApiResponse extends NetResult {
     }
 
     protected CompletableFuture<InputStream> getInputStreamFuture() {
-        CompletableFuture<InputStream> future = Managers.Net
-                .HTTP_CLIENT
+        CompletableFuture<InputStream> future = Managers.Net.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(HttpResponse::body);
 
