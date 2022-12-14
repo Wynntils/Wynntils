@@ -217,7 +217,6 @@
   "feature.wynntils.infoMessageFilter.hideWelcome.name": "Hide Welcome Messages",
   "feature.wynntils.infoMessageFilter.name": "Info Message Filter",
   "feature.wynntils.ingredientPouchHotkey.name": "Ingredient Pouch Keybind",
-  "feature.wynntils.intelligenceManaTable.name": "Intelligence Mana Table",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.description": "How should emerald count be displayed?",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.name": "Emerald Count Render Type",
   "feature.wynntils.inventoryEmeraldCount.name": "Inventory Emerald Count",
