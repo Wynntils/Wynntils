@@ -78,8 +78,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         // apply camera rotation
         Vector3f xp = new Vector3f(1, 0, 0);
         Vector3f yp = new Vector3f(0, 1, 0);
-        Quaternionf xRotation = new Quaternionf().rotationAxis(camera.getXRot(), xp);
-        Quaternionf yRotation = new Quaternionf().rotationAxis(camera.getYRot() + 180f, yp);
+        Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
+        Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
         projection.mul(new Matrix4f().rotation(xRotation));
         projection.mul(new Matrix4f().rotation(yRotation));
 
@@ -189,7 +189,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
             poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
-            poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) angle));
+            poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
             CompassModel.getCompassWaypoint()
