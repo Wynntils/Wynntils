@@ -158,10 +158,10 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handleSetExperience", at = @At("HEAD"))
+    @Inject(method = "handleSetExperience", at = @At("RETURN"))
     private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onSetExperience(packet);
+        EventFactory.onSetXp(packet);
     }
 
     @Inject(

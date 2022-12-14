@@ -67,10 +67,10 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
-import com.wynntils.mc.event.SetExperienceEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -467,9 +467,8 @@ public final class EventFactory {
                 ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
     }
 
-    public static void onSetExperience(ClientboundSetExperiencePacket packet) {
-        post(new SetExperienceEvent(
-                packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
+    public static void onSetXp(ClientboundSetExperiencePacket packet) {
+        post(new SetXpEvent(packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
     }
 
     public static AddEntityLookupEvent onAddEntityLookup(UUID uuid, Map<UUID, EntityAccess> entityMap) {
