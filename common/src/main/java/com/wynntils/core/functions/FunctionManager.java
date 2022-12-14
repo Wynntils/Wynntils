@@ -7,6 +7,7 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -84,7 +85,7 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static Optional<Function<?>> forName(String functionName) {
-        for (Function<?> function : FunctionManager.getFunctions()) {
+        for (Function<?> function : Managers.FUNCTION.getFunctions()) {
             if (hasName(function, functionName)) {
                 return Optional.of(function);
             }
@@ -115,7 +116,7 @@ public final class FunctionManager extends CoreManager {
                             "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
-            FunctionManager.disableFunction(function);
+            Managers.FUNCTION.disableFunction(function);
             CRASHED_FUNCTIONS.add(function);
         }
 
@@ -223,9 +224,9 @@ public final class FunctionManager extends CoreManager {
 
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
-            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && Managers.FUNCTION.forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = FunctionManager.forName(m.group(1)).get();
+                Function<?> function = Managers.FUNCTION.forName(m.group(1)).get();
                 dependencies.add(function);
             }
         }
@@ -238,11 +239,11 @@ public final class FunctionManager extends CoreManager {
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
             String replacement = null;
-            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && Managers.FUNCTION.forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = FunctionManager.forName(m.group(1)).get();
+                Function<?> function = Managers.FUNCTION.forName(m.group(1)).get();
 
-                replacement = FunctionManager.getRawValueString(function, "");
+                replacement = Managers.FUNCTION.getRawValueString(function, "");
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));

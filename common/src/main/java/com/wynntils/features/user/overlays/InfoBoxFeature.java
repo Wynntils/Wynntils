@@ -16,7 +16,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.FunctionManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
@@ -83,7 +83,7 @@ public class InfoBoxFeature extends UserFeature {
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                cachedLines = FunctionManager.getLinesFromLegacyTemplate(content);
+                cachedLines = Managers.FUNCTION.getLinesFromLegacyTemplate(content);
             }
 
             float renderX = this.getRenderX();
@@ -114,7 +114,7 @@ public class InfoBoxFeature extends UserFeature {
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment
 
-            String line = FunctionManager.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
+            String line = Managers.FUNCTION.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
 
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
@@ -136,13 +136,13 @@ public class InfoBoxFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             for (Function<?> oldDependency : functionDependencies) {
-                FunctionManager.disableFunction(oldDependency);
+                Managers.FUNCTION.disableFunction(oldDependency);
             }
 
             functionDependencies.clear();
 
-            for (Function<?> function : FunctionManager.getDependenciesFromStringLegacy(content)) {
-                FunctionManager.enableFunction(function);
+            for (Function<?> function : Managers.FUNCTION.getDependenciesFromStringLegacy(content)) {
+                Managers.FUNCTION.enableFunction(function);
             }
         }
 
