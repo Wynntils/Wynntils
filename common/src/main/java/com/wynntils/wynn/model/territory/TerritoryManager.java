@@ -7,18 +7,16 @@ package com.wynntils.wynn.model.territory;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
@@ -49,11 +49,11 @@ public class TerritoryManager extends CoreManager {
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private static Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
-    private static TerritoryUpdateThread territoryUpdateThread;
+    private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public static void init() {
-        territoryUpdateThread = new TerritoryUpdateThread("Territory Update Thread");
-        territoryUpdateThread.start();
+        timerExecutor.scheduleWithFixedDelay(
+                TerritoryManager::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public static TerritoryProfile getTerritoryProfile(String name) {
@@ -120,57 +120,23 @@ public class TerritoryManager extends CoreManager {
         }
     }
 
-    public static boolean isTerritoryListLoaded() {
-        return !territoryProfileMap.isEmpty();
-    }
+    private static void updateTerritoryProfileMap() {
+        // dataAthenaTerritoryList is based on
+        // https://api.wynncraft.com/public_api.php?action=territoryList
+        // but guild prefix is injected based on
+        // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
+        // and guild color is injected based on values maintained on Athena, and a constant
+        // level = 1 is also injected.
 
-    public static boolean updateTerritoryProfileMap() {
-        tryLoadTerritories(WebManager.getHandler());
-        return isTerritoryListLoaded();
-    }
+        Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        dl.handleJsonObject(json -> {
+            if (!json.has("territories")) return;
 
-    private static void tryLoadTerritories(RequestHandler handler) {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return;
-
-        String url = WebManager.getApiUrls().get().get("Athena") + "/cache/get/territoryList";
-
-        handler.addAndDispatch(new RequestBuilder(url, "territory")
-                .cacheTo(new File(WebManager.API_CACHE_ROOT, "territories.json"))
-                .handleJsonObject(json -> {
-                    if (!json.has("territories")) return false;
-
-                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-                    territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
-                    allTerritoryPois = territoryProfileMap.values().stream()
-                            .map(TerritoryPoi::new)
-                            .collect(Collectors.toSet());
-                    return true;
-                })
-                .build());
-    }
-
-    private static class TerritoryUpdateThread extends Thread {
-        public TerritoryUpdateThread(String name) {
-            super(name);
-        }
-
-        @Override
-        public void run() {
-            RequestHandler handler = new RequestHandler();
-
-            try {
-                Thread.sleep(TERRITORY_UPDATE_MS);
-                while (!isInterrupted()) {
-                    tryLoadTerritories(handler);
-                    handler.dispatch();
-
-                    // TODO: Add events
-                    Thread.sleep(TERRITORY_UPDATE_MS);
-                }
-            } catch (InterruptedException ignored) {
-            }
-
-            WynntilsMod.info("Terminating territory update thread.");
-        }
+            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+            territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+            allTerritoryPois =
+                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
+            // TODO: Add events if territories changed
+        });
     }
 }

@@ -17,14 +17,11 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
@@ -219,29 +216,6 @@ public abstract class Feature extends AbstractConfigurable
                 .compare(this.getCategory().toString(), other.getCategory().toString())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
-    }
-
-    public static class WebLoadedCondition extends Condition {
-        @Override
-        public void init() {
-            if (WebManager.isSetup()) {
-                setSatisfied(true);
-                return;
-            }
-
-            WynntilsMod.registerEventListener(this);
-        }
-
-        @SubscribeEvent
-        public void onWebSetup(WebSetupEvent e) {
-            setSatisfied(true);
-            WynntilsMod.unregisterEventListener(this);
-        }
-
-        @Override
-        public boolean isSatisfied() {
-            return super.isSatisfied() || WebManager.isSetup();
-        }
     }
 
     public abstract static class Condition {

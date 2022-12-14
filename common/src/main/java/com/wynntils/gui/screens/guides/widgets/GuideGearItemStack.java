@@ -6,6 +6,8 @@ package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -13,8 +15,8 @@ import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.GearItemStack;
+import java.util.Map;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
@@ -74,7 +76,7 @@ public class GuideGearItemStack extends AbstractButton {
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Utils.openUrl("https://www.wynndata.tk/i/" + Utils.encodeUrl(unformattedName));
+            NetManager.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {

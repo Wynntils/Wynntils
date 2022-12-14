@@ -7,7 +7,6 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.objects.Location;
@@ -27,14 +26,8 @@ public class TerritoryCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
-                        .suggests((context, builder) -> {
-                            if (!TerritoryManager.isTerritoryListLoaded()
-                                    && !TerritoryManager.updateTerritoryProfileMap()) {
-                                return Suggestions.empty();
-                            }
-
-                            return SharedSuggestionProvider.suggest(TerritoryManager.getTerritoryNames(), builder);
-                        })
+                        .suggests((context, builder) ->
+                                SharedSuggestionProvider.suggest(TerritoryManager.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -49,13 +42,8 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.updateTerritoryProfileMap()) {
-            context.getSource()
-                    .sendFailure(new TextComponent("Can't access territory data").withStyle(ChatFormatting.RED));
-            return 1;
-        }
-
         String territoryArg = context.getArgument("territory", String.class);
+
         TerritoryProfile territoryProfile = TerritoryManager.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {

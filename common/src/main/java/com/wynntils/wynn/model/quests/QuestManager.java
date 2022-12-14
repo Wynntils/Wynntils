@@ -6,28 +6,23 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class QuestManager extends CoreManager {
-    private static final String WIKI_BASE_URL = "https://wynncraft.fandom.com/wiki/";
-    private static final String WIKI_QUEST_PAGE_QUERY =
-            "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
-
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
@@ -105,28 +100,18 @@ public class QuestManager extends CoreManager {
         if (questInfo.isMiniQuest()) {
             String type = questInfo.getName().split(" ")[0];
 
-            String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
+            String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(WIKI_BASE_URL + wikiName);
+            NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
             return;
         }
 
-        String url = WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(questInfo.getName());
-        Request req = new RequestBuilder(url, "WikiQuestQuery")
-                .handleJsonArray(jsonOutput -> {
-                    String pageTitle = jsonOutput
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("_pageTitle")
-                            .getAsString();
-                    Utils.openUrl(WIKI_BASE_URL + WebUtils.encodeForWikiTitle(pageTitle));
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(req, true);
+        ApiResponse apiResponse =
+                NetManager.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
+        apiResponse.handleJsonArray(json -> {
+            String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
+            NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+        });
     }
 
     public static QuestInfo getCurrentQuest() {
