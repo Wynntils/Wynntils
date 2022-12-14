@@ -14,8 +14,8 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
@@ -148,7 +148,7 @@ public abstract class Feature extends AbstractConfigurable
         }
         OverlayManager.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
-            KeyBindManager.registerKeybind(keyBind);
+            Managers.KEY_BIND.registerKeybind(keyBind);
         }
 
         // Reload configs to load new keybinds
@@ -176,7 +176,7 @@ public abstract class Feature extends AbstractConfigurable
         }
         OverlayManager.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
-            KeyBindManager.unregisterKeybind(keyBind);
+            Managers.KEY_BIND.unregisterKeybind(keyBind);
         }
     }
 
