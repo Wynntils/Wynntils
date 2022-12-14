@@ -12,7 +12,6 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
@@ -168,7 +167,8 @@ public class DiscoveryManager extends CoreManager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    MinecraftSchedulerManager.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MINECRAFT_SCHEDULER.queueRunnable(
+                            () -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
                 }
                 case COMPASS -> {
                     CompassModel.setCompassLocation(new Location(x, 0, z));
