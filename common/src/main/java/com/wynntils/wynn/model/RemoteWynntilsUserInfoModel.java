@@ -6,10 +6,9 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.PostRequestBuilder;
-import com.wynntils.core.webapi.request.Request;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
@@ -28,33 +27,20 @@ public class RemoteWynntilsUserInfoModel extends Model {
     private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
     public static void loadUser(UUID uuid) {
-        if (!WynntilsAccountManager.isLoggedIn() || WebManager.getApiUrls().isEmpty()) return;
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads
 
-        JsonObject body = new JsonObject();
-        body.addProperty("uuid", uuid.toString());
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
+        apiResponse.handleJsonObject(json -> {
+            if (!json.has("user")) return;
 
-        Request req = new PostRequestBuilder(
-                        WebManager.getApiUrls().get().get("Athena") + "/user/getInfo", "getInfo(" + uuid + ")")
-                .postJsonElement(body)
-                .handleJsonObject(json -> {
-                    if (!json.has("user")) return false;
-
-                    JsonObject user = json.getAsJsonObject("user");
-                    users.put(
-                            uuid,
-                            new WynntilsUser(
-                                    AccountType.valueOf(user.get("accountType").getAsString())));
-                    fetching.remove(uuid);
-
-                    return true;
-                })
-                .onError(() -> {})
-                .build();
-
-        WebManager.getHandler().addAndDispatch(req, true);
+            JsonObject user = json.getAsJsonObject("user");
+            users.put(
+                    uuid,
+                    new WynntilsUser(AccountType.valueOf(user.get("accountType").getAsString())));
+            fetching.remove(uuid);
+        });
     }
 
     public static WynntilsUser getUser(UUID uuid) {

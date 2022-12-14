@@ -7,16 +7,14 @@ package com.wynntils.wynn.model.discoveries;
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
@@ -25,10 +23,10 @@ import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -85,8 +83,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        String wikiUrl = "https://wynncraft.fandom.com/wiki/" + WebUtils.encodeForWikiTitle(discoveryInfo.getName());
-        Utils.openUrl(wikiUrl);
+        NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {
@@ -128,92 +125,66 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        String queryUrl = WebManager.getApiUrl("WikiDiscoveryQuery");
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
+        apiResponse.handleJsonObject(json -> {
+            if (json.has("error")) { // Returns error if page does not exist
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
+                return;
+            }
 
-        if (queryUrl == null) {
-            McUtils.sendMessageToClient(new TextComponent(
-                    ChatFormatting.RED + "Unable to find discovery coordinates. ApiUrls are not loaded."));
-            return;
-        }
+            String wikiText = json.get("parse")
+                    .getAsJsonObject()
+                    .get("wikitext")
+                    .getAsJsonObject()
+                    .get("*")
+                    .getAsString()
+                    .replace(" ", "")
+                    .replace("\n", "");
 
-        Request query = new RequestBuilder(queryUrl + WebUtils.encodeForWikiTitle(name), "SecretWikiQuery")
-                .handleJsonObject(jsonOutput -> {
-                    if (jsonOutput.has("error")) { // Returns error if page does not exist
-                        McUtils.sendMessageToClient(new TextComponent(
-                                ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
-                        return true;
-                    }
+            String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
+            String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
 
-                    String wikiText = jsonOutput
-                            .get("parse")
-                            .getAsJsonObject()
-                            .get("wikitext")
-                            .getAsJsonObject()
-                            .get("*")
-                            .getAsString()
-                            .replace(" ", "")
-                            .replace("\n", "");
+            int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
+            int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
 
-                    String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
-                    String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
+            int x;
+            int z;
 
-                    int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
-                    int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
+            try {
+                x = Integer.parseInt(xLocation.substring(12, xEnd));
+                z = Integer.parseInt(zLocation.substring(12, zEnd));
+            } catch (NumberFormatException e) {
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
+                return;
+            }
 
-                    int x;
-                    int z;
+            if (x == 0 && z == 0) {
+                McUtils.sendMessageToClient(new TextComponent(
+                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
+                return;
+            }
 
-                    try {
-                        x = Integer.parseInt(xLocation.substring(12, xEnd));
-                        z = Integer.parseInt(zLocation.substring(12, zEnd));
-                    } catch (NumberFormatException e) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
-                                + "Unable to find discovery coordinates. (Wiki template not located)"));
-                        return true;
-                    }
-
-                    if (x == 0 && z == 0) {
-                        McUtils.sendMessageToClient(new TextComponent(ChatFormatting.RED
-                                + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
-                        return true;
-                    }
-
-                    switch (action) {
-                        case MAP -> {
-                            // We can't run this is on request thread
-                            MinecraftSchedulerManager.queueRunnable(
-                                    () -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
-                        }
-                        case COMPASS -> {
-                            CompassModel.setCompassLocation(new Location(x, 0, z));
-                        }
-                    }
-
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(query, true);
+            switch (action) {
+                case MAP -> {
+                    // We can't run this is on request thread
+                    MinecraftSchedulerManager.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                }
+                case COMPASS -> {
+                    CompassModel.setCompassLocation(new Location(x, 0, z));
+                }
+            }
+        });
     }
 
     private static void updateDiscoveriesResource() {
-        if (WebManager.apiUrls == null) return;
-
-        String url = WebManager.apiUrls.get("Discoveries");
-        WebManager.getHandler()
-                .addRequest(new RequestBuilder(url, "discoveries")
-                        .cacheTo(new File(WebManager.API_CACHE_ROOT, "discoveries.json"))
-                        .handleJsonArray(discoveriesJson -> {
-                            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
-
-                            List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(discoveriesJson, type);
-                            discoveryInfoList =
-                                    discoveries.stream().map(DiscoveryInfo::new).toList();
-                            return true;
-                        })
-                        .build());
+        Download dl = NetManager.download(UrlId.DATA_STATIC_DISCOVERIES);
+        dl.handleReader(reader -> {
+            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
+            List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);
+            discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
+        });
     }
 
     public static void reloadDiscoveries() {
