@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.Utils;
 import java.lang.reflect.Type;
@@ -21,6 +22,9 @@ public class SplashManager extends CoreManager {
 
     private static List<String> allSplashes = new ArrayList<>();
     private static String currentSplash = DEFAULT_SPLASH;
+
+    public SplashManager(NetManager netManager) {
+    }
 
     public static String getCurrentSplash() {
         return currentSplash;

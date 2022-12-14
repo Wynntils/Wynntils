@@ -31,6 +31,9 @@ public class NetManager extends CoreManager {
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
+    public NetManager(UrlManager urlManager) {
+    }
+
     public static void init() {}
 
     public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {

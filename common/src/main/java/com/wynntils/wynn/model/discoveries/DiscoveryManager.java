@@ -10,8 +10,10 @@ import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
+import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
@@ -19,6 +21,7 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
+import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
@@ -41,6 +44,9 @@ public class DiscoveryManager extends CoreManager {
 
     private static List<Component> discoveriesTooltip = List.of();
     private static List<Component> secretDiscoveriesTooltip = List.of();
+
+    public DiscoveryManager(NetManager netManager, TerritoryManager territoryManager, MinecraftSchedulerManager minecraftSchedulerManager) {
+    }
 
     public static void init() {}
 

@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -38,6 +39,9 @@ public class WynntilsAccountManager extends CoreManager {
 
     private static final HashMap<String, String> encodedConfigs = new HashMap<>();
     private static final HashMap<String, String> md5Verifications = new HashMap<>();
+
+    public WynntilsAccountManager(NetManager netManager) {
+    }
 
     public static void init() {
         login();

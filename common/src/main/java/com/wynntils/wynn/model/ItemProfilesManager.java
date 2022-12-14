@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
@@ -38,6 +39,9 @@ public class ItemProfilesManager extends CoreManager {
     private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
     private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+
+    public ItemProfilesManager(NetManager netManager) {
+    }
 
     public static void init() {
         loadCommonObjects();

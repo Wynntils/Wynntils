@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
@@ -31,6 +32,9 @@ public class QuestManager extends CoreManager {
     private static List<QuestInfo> miniQuests = List.of();
     private static List<List<String>> dialogueHistory = List.of();
     private static QuestInfo currentQuest = null;
+
+    public QuestManager(NetManager netManager) {
+    }
 
     public static void init() {}
 

@@ -6,6 +6,7 @@ package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
@@ -21,6 +22,9 @@ import java.util.concurrent.CompletableFuture;
 public class UpdateManager extends CoreManager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
+
+    public UpdateManager(NetManager netManager) {
+    }
 
     public static void init() {}
 

@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -50,6 +51,9 @@ public class TerritoryManager extends CoreManager {
     private static Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
+
+    public TerritoryManager(NetManager netManager) {
+    }
 
     public static void init() {
         timerExecutor.scheduleWithFixedDelay(
