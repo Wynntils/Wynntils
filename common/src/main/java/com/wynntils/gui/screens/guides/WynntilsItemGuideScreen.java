@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -21,7 +22,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -49,7 +49,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = ItemProfilesManager.getItemsCollection().stream()
+            parsedItemCache = Managers.ITEM_PROFILES.getItemsCollection().stream()
                     .map(GearItemStack::new)
                     .toList();
         }

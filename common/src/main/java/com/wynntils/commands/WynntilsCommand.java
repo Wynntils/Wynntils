@@ -15,7 +15,6 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -85,9 +84,9 @@ public class WynntilsCommand extends CommandBase {
         // to do. The entire /wynntils reload needs to be rethought. See
         // https://github.com/Wynntils/Artemis/issues/824
 
-        ItemProfilesManager.reset();
+        Managers.ITEM_PROFILES.reset();
         Managers.URL.reloadUrls();
-        ItemProfilesManager.init();
+        Managers.ITEM_PROFILES.init();
         Managers.SPLASH.init();
         WynntilsAccountManager.init();
 
