@@ -1,9 +1,21 @@
+## [0.0.1-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.160...v0.0.1-alpha.161) (2022-12-14)
+
+
+### Bug Fixes
+
+* NetManager conversions and removal of WebManager ([#826](https://github.com/Wynntils/Artemis/issues/826)) ([ee3109f](https://github.com/Wynntils/Artemis/commit/ee3109f9068e1aa6a5056ae3103a49342ab5413f))
+
 ## [0.0.1-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.159...v0.0.1-alpha.160) (2022-12-14)
 
 
 ### Code Refactoring
 
 * ItemRendererMixin now only exists on common side ([#828](https://github.com/Wynntils/Artemis/issues/828)) ([62f2ad6](https://github.com/Wynntils/Artemis/commit/62f2ad6a86a1a91caf10b884768e16180baf5f4d)), closes [#822](https://github.com/Wynntils/Artemis/issues/822)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.160 [skip ci] ([4f06e90](https://github.com/Wynntils/Artemis/commit/4f06e90062695a9c471df98530ca2965dd113e7c))
 
 ## [0.0.1-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.158...v0.0.1-alpha.159) (2022-12-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.157 [skip ci] ([6a186c3](https://github.com/Wynntils/Artemis/commit/6a186c323da671902b303b8160a5e067aa60e336))
-
-## [0.0.1-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.155...v0.0.1-alpha.156) (2022-12-13)
-
-
-### New Features
-
-* Add used slots inventory function and fix free slots ([#813](https://github.com/Wynntils/Artemis/issues/813)) ([2967474](https://github.com/Wynntils/Artemis/commit/296747463888770514feaa8c10f2b9577117a850))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.156 [skip ci] ([ee892dc](https://github.com/Wynntils/Artemis/commit/ee892dc150226aa2faa1e3f454912c821ab3bc1c))
 
