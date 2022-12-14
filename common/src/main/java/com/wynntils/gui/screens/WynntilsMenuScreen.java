@@ -215,7 +215,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
-        CharacterManager.CharacterInfo characterInfo = CharacterManager.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.CHARACTER.getCharacterInfo();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,

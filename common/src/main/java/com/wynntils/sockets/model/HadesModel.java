@@ -5,6 +5,7 @@
 package com.wynntils.sockets.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.features.user.HadesFeature;
@@ -26,7 +27,6 @@ import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -186,7 +186,7 @@ public class HadesModel extends Model {
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
                 WorldStateManager.getCurrentWorldName(),
-                CharacterManager.getCharacterInfo().getId()));
+                Managers.CHARACTER.getCharacterInfo().getId()));
     }
 
     public static void resetSocialType(SocialType socialType) {

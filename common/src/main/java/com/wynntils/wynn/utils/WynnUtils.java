@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.WorldStateManager;
 
@@ -34,10 +35,10 @@ public final class WynnUtils {
     }
 
     public static CharacterManager.CharacterInfo getCharacterInfo() {
-        return CharacterManager.getCharacterInfo();
+        return Managers.CHARACTER.getCharacterInfo();
     }
 
     public static boolean hasCharacterInfo() {
-        return CharacterManager.hasCharacter();
+        return Managers.CHARACTER.hasCharacter();
     }
 }
