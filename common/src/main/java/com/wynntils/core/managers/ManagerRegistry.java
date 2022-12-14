@@ -12,8 +12,9 @@ import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
@@ -22,6 +23,7 @@ import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
+import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.lang.reflect.InvocationTargetException;
@@ -41,6 +43,8 @@ public final class ManagerRegistry {
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
+        registerPersistentDependency(NetManager.class);
+        registerPersistentDependency(UrlManager.class);
         registerPersistentDependency(ConfigManager.class);
         registerPersistentDependency(CharacterManager.class);
         registerPersistentDependency(CharacterSelectionManager.class);
@@ -53,9 +57,9 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
-        registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(ItemProfilesManager.class);
+        registerPersistentDependency(ItemStackTransformManager.class);
         registerPersistentDependency(SplashManager.class);
         registerPersistentDependency(WorldStateManager.class);
         registerPersistentDependency(TerritoryManager.class);

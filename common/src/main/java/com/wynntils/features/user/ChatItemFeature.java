@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
@@ -27,11 +26,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
-
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new WebLoadedCondition());
-    }
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {

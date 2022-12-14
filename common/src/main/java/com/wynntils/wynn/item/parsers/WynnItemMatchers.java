@@ -54,7 +54,7 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isIntelligenceSkillPoints(ItemStack itemStack) {
-        if (itemStack.getItem() != Items.BOOK) return false;
+        if (itemStack.getItem() != Items.GOLDEN_AXE) return false;
 
         Component name = itemStack.getHoverName();
         String unformattedLoreLine = ComponentUtils.getCoded(name);
