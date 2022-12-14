@@ -1,7 +1,6 @@
 {
   "client": [
-    "ForgeIngameGuiMixin",
-    "ItemRendererMixin"
+    "ForgeIngameGuiMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {

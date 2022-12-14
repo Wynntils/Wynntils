@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.quilt.mixins;
+package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
@@ -16,10 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// This mixin is duplicated in the Fabric and Quilt side, because there has to be a special Forge version.
-// If you modify this, then you should modify the other one too.
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
+
     @Inject(
             method = "render",
             at =
