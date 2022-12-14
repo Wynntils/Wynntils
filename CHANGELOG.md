@@ -1,9 +1,21 @@
+## [0.0.1-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.157...v0.0.1-alpha.158) (2022-12-14)
+
+
+### New Features
+
+* Sends an Overlay Message Whenever You Gain Combat XP ([#811](https://github.com/Wynntils/Artemis/issues/811)) ([4536ada](https://github.com/Wynntils/Artemis/commit/4536adaa758f1c927dc781913b3032e95986ff93))
+
 ## [0.0.1-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.156...v0.0.1-alpha.157) (2022-12-14)
 
 
 ### Code Refactoring
 
 * item transformer model rework ([#794](https://github.com/Wynntils/Artemis/issues/794)) ([14f7163](https://github.com/Wynntils/Artemis/commit/14f7163504e67fc8bb3982553eb6457ee1102a99))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.157 [skip ci] ([6a186c3](https://github.com/Wynntils/Artemis/commit/6a186c323da671902b303b8160a5e067aa60e336))
 
 ## [0.0.1-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.155...v0.0.1-alpha.156) (2022-12-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.154 [skip ci] ([9f3a1fd](https://github.com/Wynntils/Artemis/commit/9f3a1fd111b1560c648662c0e2a60f97657cd1dd))
-
-## [0.0.1-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.152...v0.0.1-alpha.153) (2022-12-13)
-
-
-### New Features
-
-* mythic box scaling ([#789](https://github.com/Wynntils/Artemis/issues/789)) ([35671d8](https://github.com/Wynntils/Artemis/commit/35671d87c14dea681f8302ff33c424de37d97a9e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.153 [skip ci] ([0681a43](https://github.com/Wynntils/Artemis/commit/0681a43b2fe25ba5b7010ed7685a8a4804d53c51))
 
