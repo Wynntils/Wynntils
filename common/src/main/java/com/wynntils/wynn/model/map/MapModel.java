@@ -76,11 +76,11 @@ public final class MapModel extends Model {
                                         fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
                                 MAPS.add(mapPartImage);
                             } catch (IOException e) {
-                                WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                                WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                             }
                         },
                         onError -> {
-                            WynntilsMod.info("IOException occurred while loading map image of " + mapPart.name);
+                            WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError);
                         });
             }
         });
