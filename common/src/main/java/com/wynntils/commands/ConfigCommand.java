@@ -12,10 +12,10 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.managers.Managers;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -187,9 +187,9 @@ public class ConfigCommand extends CommandBase {
     }
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        ConfigManager.loadConfigFile();
-        ConfigManager.loadAllConfigOptions(true);
-        ConfigManager.saveConfig();
+        Managers.CONFIG.loadConfigFile();
+        Managers.CONFIG.loadAllConfigOptions(true);
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -212,7 +212,7 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -236,7 +236,7 @@ public class ConfigCommand extends CommandBase {
 
         overlay.getConfigOptions().forEach(ConfigHolder::reset);
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -337,7 +337,7 @@ public class ConfigCommand extends CommandBase {
             return 0;
         }
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -461,7 +461,7 @@ public class ConfigCommand extends CommandBase {
             return 0;
         }
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -496,7 +496,7 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -517,7 +517,7 @@ public class ConfigCommand extends CommandBase {
         if (feature == null) return 0;
         feature.getVisibleConfigOptions().forEach(ConfigHolder::reset);
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
 
         context.getSource()
                 .sendSuccess(

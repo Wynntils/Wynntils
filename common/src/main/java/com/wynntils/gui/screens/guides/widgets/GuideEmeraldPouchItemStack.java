@@ -5,7 +5,7 @@
 package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -103,7 +103,7 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
             }
 
-            ConfigManager.saveConfig();
+            Managers.CONFIG.saveConfig();
         }
 
         return true;

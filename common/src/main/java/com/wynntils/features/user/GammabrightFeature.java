@@ -6,12 +6,12 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -73,7 +73,7 @@ public class GammabrightFeature extends UserFeature {
         gammabrightEnabled = !gammabrightEnabled;
         applyGammabright();
 
-        ConfigManager.saveConfig();
+        Managers.CONFIG.saveConfig();
     }
 
     private void resetGamma() {

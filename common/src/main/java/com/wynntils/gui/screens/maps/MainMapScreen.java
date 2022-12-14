@@ -6,7 +6,7 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -280,7 +280,7 @@ public class MainMapScreen extends AbstractMapScreen {
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
-                    ConfigManager.saveConfig();
+                    Managers.CONFIG.saveConfig();
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);
