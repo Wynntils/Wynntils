@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -24,7 +25,7 @@ public class CustomCharacterSelectionScreenFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpen(ScreenOpenedEvent event) {
         if ((onlyOpenOnce && openedInThisCharacterSelectionState)
-                || WorldStateManager.getCurrentState() != WorldStateManager.State.CHARACTER_SELECTION) return;
+                || Managers.WORLD_STATE.getCurrentState() != WorldStateManager.State.CHARACTER_SELECTION) return;
 
         if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals("§8§lSelect a Character")) {
             return;

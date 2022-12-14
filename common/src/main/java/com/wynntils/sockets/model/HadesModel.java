@@ -27,7 +27,6 @@ import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -132,7 +131,7 @@ public class HadesModel extends Model {
     @SubscribeEvent
     public static void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
-        if (!WorldStateManager.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Managers.WORLD_STATE.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -185,7 +184,7 @@ public class HadesModel extends Model {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                WorldStateManager.getCurrentWorldName(),
+                Managers.WORLD_STATE.getCurrentWorldName(),
                 Managers.CHARACTER.getCharacterInfo().getId()));
     }
 

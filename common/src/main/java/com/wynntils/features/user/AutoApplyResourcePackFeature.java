@@ -11,7 +11,6 @@ import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.client.resources.ClientPackSource;
@@ -29,7 +28,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
-        if (!WorldStateManager.onServer()) return;
+        if (!Managers.WORLD_STATE.onServer()) return;
 
         if (Objects.equals(event.getHash(), appliedHash)) {
             event.setCanceled(true);

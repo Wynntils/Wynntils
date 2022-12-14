@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ClientTickEvent;
@@ -13,7 +14,6 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +45,7 @@ public class LowHealthVignetteFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
-        if (!WorldStateManager.onWorld()) return;
+        if (!Managers.WORLD_STATE.onWorld()) return;
 
         RenderUtils.renderVignetteOverlay(event.getPoseStack(), color, value);
     }

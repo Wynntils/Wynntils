@@ -6,7 +6,6 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.managers.Managers;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.WorldStateManager;
 
 public final class WynnUtils {
     /**
@@ -27,11 +26,11 @@ public final class WynnUtils {
     }
 
     public static boolean onServer() {
-        return WorldStateManager.onServer();
+        return Managers.WORLD_STATE.onServer();
     }
 
     public static boolean onWorld() {
-        return WorldStateManager.onWorld();
+        return Managers.WORLD_STATE.onWorld();
     }
 
     public static CharacterManager.CharacterInfo getCharacterInfo() {
