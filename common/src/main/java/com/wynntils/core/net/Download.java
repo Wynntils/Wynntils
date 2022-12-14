@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FileUtils;
 
 public class Download extends NetResult {
+    // By storing the Future here we assure it will not be GC'ed before we are done with it
     private static final Map<HttpRequest, CompletableFuture<HttpResponse<Path>>> DOWNLOAD_FUTURES = new HashMap<>();
 
     private final File localFile;

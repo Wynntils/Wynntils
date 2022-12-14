@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class ApiResponse extends NetResult {
+    // By storing the Future here we assure it will not be GC'ed before we are done with it
     private static final Map<HttpRequest, CompletableFuture<InputStream>> DOWNLOAD_FUTURES = new HashMap<>();
 
     public ApiResponse(HttpRequest request) {

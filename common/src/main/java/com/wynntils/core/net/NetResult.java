@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public abstract class NetResult {
+    // By storing the Future here we assure it will not be GC'ed before we are done with it
     private static final Map<HttpRequest, CompletableFuture<Void>> PROCESS_FUTURES = new HashMap<>();
     private static final Consumer<Throwable> DEFAULT_ERROR_HANDLER =
             (exception) -> WynntilsMod.warn("Error while processing network request", exception);
