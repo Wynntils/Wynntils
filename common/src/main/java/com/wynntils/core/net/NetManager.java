@@ -129,7 +129,7 @@ public class NetManager extends CoreManager {
             String fileHash = DigestUtils.md5Hex(is);
             return fileHash.equalsIgnoreCase(expectedHash);
         } catch (IOException e) {
-            WynntilsMod.warn("Error when calculading md5 for " + localFile.getPath(), e);
+            WynntilsMod.warn("Error when calculating md5 for " + localFile.getPath(), e);
             return false;
         }
     }
