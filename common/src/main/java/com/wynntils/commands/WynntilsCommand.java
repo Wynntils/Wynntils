@@ -8,7 +8,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -33,7 +32,7 @@ public class WynntilsCommand extends CommandBase {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : ClientCommandManager.getCommandInstanceSet()) {
+        for (CommandBase commandInstance : Managers.CLIENT_COMMAND.getCommandInstanceSet()) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
