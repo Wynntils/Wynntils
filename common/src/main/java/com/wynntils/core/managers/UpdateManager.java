@@ -6,7 +6,6 @@ package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
@@ -28,7 +27,7 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -50,7 +49,7 @@ public class UpdateManager extends CoreManager {
             return future;
         }
 
-        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
         apiResponse.handleJsonObject(
                 json -> {
                     String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();

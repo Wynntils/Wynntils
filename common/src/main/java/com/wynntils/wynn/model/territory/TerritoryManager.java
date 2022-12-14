@@ -8,8 +8,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -128,7 +128,7 @@ public class TerritoryManager extends CoreManager {
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
 
-        Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return;
 

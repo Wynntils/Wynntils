@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
@@ -63,7 +63,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        Download dl = NetManager.download(UrlId.DATA_STATIC_ITEM_GUESSES);
+        Download dl = Managers.NET.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
             itemGuesses = new HashMap<>();
@@ -79,7 +79,7 @@ public class ItemProfilesManager extends CoreManager {
         // but the data is massaged into another form, and wynnBuilderID is injected from
         // https://wynnbuilder.github.io/compress.json
 
-        Download dl = NetManager.download(UrlId.DATA_ATHENA_ITEM_LIST);
+        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_ITEM_LIST);
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WynntilsMod.GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -119,7 +119,7 @@ public class ItemProfilesManager extends CoreManager {
         // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
         // in Athena
 
-        Download dl = NetManager.download(UrlId.DATA_ATHENA_INGREDIENT_LIST);
+        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_INGREDIENT_LIST);
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WynntilsMod.GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

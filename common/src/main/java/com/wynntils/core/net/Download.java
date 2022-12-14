@@ -5,6 +5,7 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,7 +66,7 @@ public class Download extends NetResult {
 
     private CompletableFuture<HttpResponse<Path>> getDownloadInputStreamFuture() {
         CompletableFuture<HttpResponse<Path>> future =
-                NetManager.HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
+                Managers.NET.HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
 
         // We must save the response so we can get the timestamp
         this.httpResponse = future;

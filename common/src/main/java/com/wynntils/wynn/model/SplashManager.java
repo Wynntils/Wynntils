@@ -7,8 +7,8 @@ package com.wynntils.wynn.model;
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.Utils;
 import java.lang.reflect.Type;
@@ -31,7 +31,7 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        Download dl = NetManager.download(UrlId.DATA_STATIC_SPLASHES);
+        Download dl = Managers.NET.download(UrlId.DATA_STATIC_SPLASHES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = WynntilsMod.GSON.fromJson(reader, type);
