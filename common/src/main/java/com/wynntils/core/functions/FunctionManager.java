@@ -85,7 +85,7 @@ public final class FunctionManager extends CoreManager {
     }
 
     public static Optional<Function<?>> forName(String functionName) {
-        for (Function<?> function : Managers.Function.getFunctions()) {
+        for (Function<?> function : getFunctions()) {
             if (hasName(function, functionName)) {
                 return Optional.of(function);
             }
@@ -113,10 +113,10 @@ public final class FunctionManager extends CoreManager {
         } catch (Throwable throwable) {
             WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
             McUtils.sendMessageToClient(new TextComponent(String.format(
-                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
+                    "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
-            Managers.Function.disableFunction(function);
+            disableFunction(function);
             CRASHED_FUNCTIONS.add(function);
         }
 
@@ -224,9 +224,9 @@ public final class FunctionManager extends CoreManager {
 
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
-            if (m.group(1) != null && Managers.Function.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = Managers.Function.forName(m.group(1)).get();
+                Function<?> function = forName(m.group(1)).get();
                 dependencies.add(function);
             }
         }
@@ -239,11 +239,11 @@ public final class FunctionManager extends CoreManager {
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
             String replacement = null;
-            if (m.group(1) != null && Managers.Function.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = Managers.Function.forName(m.group(1)).get();
+                Function<?> function = forName(m.group(1)).get();
 
-                replacement = Managers.Function.getRawValueString(function, "");
+                replacement = getRawValueString(function, "");
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));
