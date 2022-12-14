@@ -1,9 +1,21 @@
+## [0.0.1-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.159...v0.0.1-alpha.160) (2022-12-14)
+
+
+### Code Refactoring
+
+* ItemRendererMixin now only exists on common side ([#828](https://github.com/Wynntils/Artemis/issues/828)) ([62f2ad6](https://github.com/Wynntils/Artemis/commit/62f2ad6a86a1a91caf10b884768e16180baf5f4d)), closes [#822](https://github.com/Wynntils/Artemis/issues/822)
+
 ## [0.0.1-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.158...v0.0.1-alpha.159) (2022-12-14)
 
 
 ### New Features
 
 * Introduce NetManager and UrlManager ([#825](https://github.com/Wynntils/Artemis/issues/825)) ([001395f](https://github.com/Wynntils/Artemis/commit/001395fb797c71cb6e61aae6b0813a5321d04b1a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.159 [skip ci] ([3d9b097](https://github.com/Wynntils/Artemis/commit/3d9b0975c0fd11495d34b06a0aa19069f2930de7))
 
 ## [0.0.1-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.157...v0.0.1-alpha.158) (2022-12-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.156 [skip ci] ([ee892dc](https://github.com/Wynntils/Artemis/commit/ee892dc150226aa2faa1e3f454912c821ab3bc1c))
-
-## [0.0.1-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.154...v0.0.1-alpha.155) (2022-12-13)
-
-
-### Bug Fixes
-
-* Use correct date object in config loading fail case ([#823](https://github.com/Wynntils/Artemis/issues/823)) ([9c6ef92](https://github.com/Wynntils/Artemis/commit/9c6ef922ce64202c1bf50a05cf9b7db522aad890))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.155 [skip ci] ([18c87e4](https://github.com/Wynntils/Artemis/commit/18c87e429410a728c190306641f74df5ba704522))
 
