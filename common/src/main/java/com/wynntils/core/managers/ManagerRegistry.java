@@ -15,7 +15,6 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.webapi.WebManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
@@ -57,7 +56,6 @@ public final class ManagerRegistry {
         registerPersistentDependency(OverlayManager.class);
         registerPersistentDependency(QuestManager.class);
         registerPersistentDependency(UpdateManager.class);
-        registerPersistentDependency(WebManager.class);
         registerPersistentDependency(WynntilsAccountManager.class);
         registerPersistentDependency(ItemProfilesManager.class);
         registerPersistentDependency(SplashManager.class);
