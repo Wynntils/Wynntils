@@ -42,7 +42,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 ITEM_HEIGHT);
 
-        List<Overlay> overlays = Managers.OVERLAY.getOverlays().stream()
+        List<Overlay> overlays = Managers.Overlay.getOverlays().stream()
                 .sorted(Overlay::compareTo)
                 .toList();
 
@@ -65,7 +65,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
                 helpModified.add(new TextComponent(""));
                 helpModified.add(new TextComponent("Feature: "
-                        + Managers.OVERLAY
+                        + Managers.Overlay
                                 .getOverlayParent(hovered.getOverlay())
                                 .getTranslatedName()));
 

@@ -15,10 +15,10 @@ public class IngredientPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isIngredient, IngredientProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(INGREDIENT_WRITER);
+        Managers.ItemStackTransform.registerProperty(INGREDIENT_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(INGREDIENT_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(INGREDIENT_WRITER);
     }
 }

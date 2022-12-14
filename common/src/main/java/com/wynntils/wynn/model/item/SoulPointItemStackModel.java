@@ -15,10 +15,10 @@ public class SoulPointItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerTransformer(SOUL_POINT_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(SOUL_POINT_TRANSFORMER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(SOUL_POINT_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(SOUL_POINT_TRANSFORMER);
     }
 }

@@ -15,10 +15,10 @@ public class MaterialPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isMaterial, MaterialProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(MATERIAL_WRITER);
+        Managers.ItemStackTransform.registerProperty(MATERIAL_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(MATERIAL_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(MATERIAL_WRITER);
     }
 }

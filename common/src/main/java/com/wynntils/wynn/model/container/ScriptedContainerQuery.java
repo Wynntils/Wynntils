@@ -38,7 +38,7 @@ public class ScriptedContainerQuery {
         if (steps.isEmpty()) return;
 
         ScriptedQueryStep firstStep = steps.pop();
-        Managers.CONTAINER_QUERY.runQuery(firstStep);
+        Managers.ContainerQuery.runQuery(firstStep);
     }
 
     private void setErrorHandler(Consumer<String> errorHandler) {

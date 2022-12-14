@@ -50,7 +50,7 @@ public class WynntilsIngredientGuideScreen
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = Managers.ITEM_PROFILES.getIngredientsCollection().stream()
+            parsedItemCache = Managers.ItemProfiles.getIngredientsCollection().stream()
                     .map(IngredientItemStack::new)
                     .toList();
         }

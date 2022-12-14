@@ -15,10 +15,10 @@ public class IntelligenceSkillPointsItemStackModel extends Model {
             WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 }

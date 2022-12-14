@@ -34,7 +34,7 @@ public class UpdateCommand extends CommandBase {
 
         CompletableFuture.runAsync(() -> {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
-            CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.UPDATE.tryUpdate();
+            CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
             completableFuture.whenComplete((result, throwable) -> {
                 switch (result) {

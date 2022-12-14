@@ -15,10 +15,10 @@ public class HorsePropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isHorse, HorseProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(HORSE_WRITER);
+        Managers.ItemStackTransform.registerProperty(HORSE_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(HORSE_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(HORSE_WRITER);
     }
 }

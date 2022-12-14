@@ -153,7 +153,7 @@ public class OverlayManagementScreen extends Screen {
                 renderSections(poseStack);
             }
 
-            Set<Overlay> overlays = Managers.OVERLAY.getOverlays().stream()
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
                     .filter(OverlayManager::isEnabled)
                     .collect(Collectors.toSet());
 
@@ -255,7 +255,7 @@ public class OverlayManagementScreen extends Screen {
         resetSelection();
 
         if (!fixedSelection) {
-            Set<Overlay> overlays = Managers.OVERLAY.getOverlays().stream()
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
                     .filter(OverlayManager::isEnabled)
                     .collect(Collectors.toSet());
 
@@ -371,7 +371,7 @@ public class OverlayManagementScreen extends Screen {
         animationLengthRemaining = 0;
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
             McUtils.mc().setScreen(new OverlaySelectionScreen());
             onClose();
             return true;
@@ -460,8 +460,8 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void reloadConfigForOverlay() {
-        Managers.CONFIG.loadConfigFile();
-        Managers.CONFIG.loadAllConfigOptions(true);
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadAllConfigOptions(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
@@ -639,7 +639,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void renderSections(PoseStack poseStack) {
-        for (SectionCoordinates section : Managers.OVERLAY.getSections()) {
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
             RenderUtils.drawRectBorders(
                     poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
         }
@@ -687,7 +687,7 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        for (Overlay overlay : Managers.OVERLAY.getOverlays().stream()
+        for (Overlay overlay : Managers.Overlay.getOverlays().stream()
                 .filter(Overlay::isEnabled)
                 .toList()) {
             if (overlay == selectedOverlay) continue;
@@ -745,7 +745,7 @@ public class OverlayManagementScreen extends Screen {
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.applySettings"),
                 button -> {
-                    Managers.CONFIG.saveConfig();
+                    Managers.Config.saveConfig();
                     McUtils.mc().setScreen(new OverlaySelectionScreen());
                     onClose();
                 },

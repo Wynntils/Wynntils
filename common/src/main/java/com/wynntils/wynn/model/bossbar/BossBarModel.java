@@ -64,7 +64,7 @@ public class BossBarModel extends Model {
             TrackedBar trackedBar = null;
             Matcher matcher = null;
 
-            ClassType userClass = Managers.CHARACTER.getCharacterInfo().getClassType();
+            ClassType userClass = Managers.Character.getCharacterInfo().getClassType();
 
             for (TrackedBar potentialTrackedBar :
                     Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar)) {

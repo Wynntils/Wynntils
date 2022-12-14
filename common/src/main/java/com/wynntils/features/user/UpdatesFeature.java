@@ -41,9 +41,9 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        CompletableFuture.runAsync(() -> Managers.UPDATE
+        CompletableFuture.runAsync(() -> Managers.Update
                 .getLatestBuild()
-                .whenCompleteAsync((version, throwable) -> Managers.MINECRAFT_SCHEDULER.queueRunnable(() -> {
+                .whenCompleteAsync((version, throwable) -> Managers.MinecraftScheduler.queueRunnable(() -> {
                     if (version == null) {
                         WynntilsMod.info(
                                 "Couldn't fetch latest version, not attempting update reminder or auto-update.");
@@ -70,7 +70,7 @@ public class UpdatesFeature extends UserFeature {
                         McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.UPDATE.tryUpdate();
+                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {

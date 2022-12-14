@@ -187,9 +187,9 @@ public class ConfigCommand extends CommandBase {
     }
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        Managers.CONFIG.loadConfigFile();
-        Managers.CONFIG.loadAllConfigOptions(true);
-        Managers.CONFIG.saveConfig();
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadAllConfigOptions(true);
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -212,7 +212,7 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -236,7 +236,7 @@ public class ConfigCommand extends CommandBase {
 
         overlay.getConfigOptions().forEach(ConfigHolder::reset);
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -337,7 +337,7 @@ public class ConfigCommand extends CommandBase {
             return 0;
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -461,7 +461,7 @@ public class ConfigCommand extends CommandBase {
             return 0;
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -496,7 +496,7 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -517,7 +517,7 @@ public class ConfigCommand extends CommandBase {
         if (feature == null) return 0;
         feature.getVisibleConfigOptions().forEach(ConfigHolder::reset);
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(

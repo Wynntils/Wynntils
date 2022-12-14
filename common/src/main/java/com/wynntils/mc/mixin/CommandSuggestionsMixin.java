@@ -40,7 +40,7 @@ public abstract class CommandSuggestionsMixin {
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
-        return Managers.CLIENT_COMMAND.getCompletionSuggestions(
+        return Managers.ClientCommand.getCompletionSuggestions(
                 input.getValue(), serverDispatcher, clientParse, serverParse, cursor);
     }
 
@@ -54,8 +54,8 @@ public abstract class CommandSuggestionsMixin {
                             remap = false))
     private ParseResults<SharedSuggestionProvider> redirectParse(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher, StringReader command, Object source) {
-        CommandDispatcher<CommandSourceStack> clientDispatcher = Managers.CLIENT_COMMAND.getClientDispatcher();
-        clientParse = clientDispatcher.parse(command, Managers.CLIENT_COMMAND.getSource());
+        CommandDispatcher<CommandSourceStack> clientDispatcher = Managers.ClientCommand.getClientDispatcher();
+        clientParse = clientDispatcher.parse(command, Managers.ClientCommand.getSource());
 
         return serverDispatcher.parse(command, (SharedSuggestionProvider) source);
     }

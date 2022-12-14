@@ -30,7 +30,7 @@ public class WynntilsCommand extends CommandBase {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : Managers.CLIENT_COMMAND.getCommandInstanceSet()) {
+        for (CommandBase commandInstance : Managers.ClientCommand.getCommandInstanceSet()) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
@@ -83,11 +83,11 @@ public class WynntilsCommand extends CommandBase {
         // to do. The entire /wynntils reload needs to be rethought. See
         // https://github.com/Wynntils/Artemis/issues/824
 
-        Managers.ITEM_PROFILES.reset();
-        Managers.URL.reloadUrls();
-        Managers.ITEM_PROFILES.init();
-        Managers.SPLASH.init();
-        Managers.WYNNTILS_ACCOUNT.init();
+        Managers.ItemProfiles.reset();
+        Managers.Url.reloadUrls();
+        Managers.ItemProfiles.init();
+        Managers.Splash.init();
+        Managers.WynntilsAccount.init();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {
@@ -115,12 +115,12 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent(Managers.URL.getUrl(UrlId.LINK_WYNNTILS_PATREON))
+        MutableComponent url = new TextComponent(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
                         .withClickEvent(new ClickEvent(
-                                ClickEvent.Action.OPEN_URL, Managers.URL.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
+                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -156,7 +156,7 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = Managers.URL.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
+        String discordInvite = Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
         MutableComponent link =
                 new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()

@@ -15,10 +15,10 @@ public class AmplifierTierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(AMPLIFIER_TIER_WRITER);
+        Managers.ItemStackTransform.registerProperty(AMPLIFIER_TIER_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(AMPLIFIER_TIER_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(AMPLIFIER_TIER_WRITER);
     }
 }

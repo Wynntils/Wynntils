@@ -89,7 +89,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 14,
                 new TranslatableComponent("screens.wynntils.settingsScreen.apply"),
                 () -> {
-                    Managers.CONFIG.saveConfig();
+                    Managers.Config.saveConfig();
                     this.onClose();
                 },
                 List.of(new TranslatableComponent("screens.wynntils.settingsScreen.apply.description")
@@ -330,8 +330,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     @Override
     public void onClose() {
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        Managers.CONFIG.loadConfigFile();
-        Managers.CONFIG.loadConfigOptions(Managers.CONFIG.getConfigHolders(), true);
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadConfigOptions(Managers.Config.getConfigHolders(), true);
         super.onClose();
     }
 

@@ -304,7 +304,7 @@ public final class ScoreboardModel extends Model {
 
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(Managers.QUEST.SCOREBOARD_HANDLER, SegmentType.Quest);
+        registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
         registerHandler(GuildAttackTimerModel.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
         startThread();

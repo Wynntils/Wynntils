@@ -15,10 +15,10 @@ public class DailyRewardMultiplierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
+        Managers.ItemStackTransform.registerProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 }

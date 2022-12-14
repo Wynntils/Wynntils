@@ -15,10 +15,10 @@ public class EmeraldPouchItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerTransformer(EMERALD_POUCH_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(EMERALD_POUCH_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 }

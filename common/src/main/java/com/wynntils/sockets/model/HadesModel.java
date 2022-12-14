@@ -54,7 +54,7 @@ public class HadesModel extends Model {
     }
 
     private static void tryCreateConnection() {
-        if (!Managers.WYNNTILS_ACCOUNT.isLoggedIn()) {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
             return;
         }
@@ -130,7 +130,7 @@ public class HadesModel extends Model {
     @SubscribeEvent
     public static void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
-        if (!Managers.WORLD_STATE.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -183,8 +183,8 @@ public class HadesModel extends Model {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                Managers.WORLD_STATE.getCurrentWorldName(),
-                Managers.CHARACTER.getCharacterInfo().getId()));
+                Managers.WorldState.getCurrentWorldName(),
+                Managers.Character.getCharacterInfo().getId()));
     }
 
     public static void resetSocialType(SocialType socialType) {

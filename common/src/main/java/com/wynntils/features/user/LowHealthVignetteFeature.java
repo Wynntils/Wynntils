@@ -45,7 +45,7 @@ public class LowHealthVignetteFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
-        if (!Managers.WORLD_STATE.onWorld()) return;
+        if (!Managers.WorldState.onWorld()) return;
 
         RenderUtils.renderVignetteOverlay(event.getPoseStack(), color, value);
     }

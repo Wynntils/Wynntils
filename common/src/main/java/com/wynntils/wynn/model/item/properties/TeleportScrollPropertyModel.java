@@ -15,10 +15,10 @@ public class TeleportScrollPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(TELEPORT_SCROLL_WRITER);
+        Managers.ItemStackTransform.registerProperty(TELEPORT_SCROLL_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(TELEPORT_SCROLL_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(TELEPORT_SCROLL_WRITER);
     }
 }

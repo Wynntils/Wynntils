@@ -81,7 +81,7 @@ public final class UrlManager extends CoreManager {
         }
 
         // Then trigger a (re-)download from the net to the cache
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_URLS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_URLS);
         dl.handleInputStream(inputStream -> {
             try {
                 readUrls(inputStream);
@@ -93,7 +93,7 @@ public final class UrlManager extends CoreManager {
 
     private static InputStream getLocalInputStream() {
         // First check if there is a copy in the local cache
-        File cacheFile = Managers.NET.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+        File cacheFile = Managers.Net.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {

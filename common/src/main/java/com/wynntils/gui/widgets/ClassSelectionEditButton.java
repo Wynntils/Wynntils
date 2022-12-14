@@ -37,7 +37,7 @@ public class ClassSelectionEditButton extends AbstractButton {
         AbstractContainerMenu menu =
                 characterSelectorScreen.getActualClassSelectionScreen().getMenu();
 
-        Managers.CHARACTER_SELECTION.editCharacters(menu);
+        Managers.CharacterSelection.editCharacters(menu);
     }
 
     @Override

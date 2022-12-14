@@ -103,7 +103,7 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
             }
 
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
         }
 
         return true;

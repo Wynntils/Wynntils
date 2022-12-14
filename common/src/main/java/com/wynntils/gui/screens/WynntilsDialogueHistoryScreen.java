@@ -62,7 +62,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @Override
     protected void init() {
-        Managers.QUEST.rescanDialogueHistory();
+        Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -178,7 +178,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(Managers.QUEST.getDialogueHistory());
+        this.setDialogues(Managers.Quest.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

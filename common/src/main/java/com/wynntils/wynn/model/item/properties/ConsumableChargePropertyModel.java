@@ -15,10 +15,10 @@ public class ConsumableChargePropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(CONSUMABLE_CHARGE_WRITER);
+        Managers.ItemStackTransform.registerProperty(CONSUMABLE_CHARGE_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(CONSUMABLE_CHARGE_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(CONSUMABLE_CHARGE_WRITER);
     }
 }

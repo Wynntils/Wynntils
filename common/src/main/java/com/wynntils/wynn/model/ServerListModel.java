@@ -89,7 +89,7 @@ public class ServerListModel extends Model {
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
 
-        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_SERVER_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_SERVER_LIST);
         dl.handleJsonObject(json -> {
             JsonObject servers = json.getAsJsonObject("servers");
             Map<String, ServerProfile> newMap = new HashMap<>();

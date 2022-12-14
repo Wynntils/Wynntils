@@ -141,7 +141,7 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return Managers.ITEM_STACK_TRANSFORM.HIGHLIGHT_PROPERTIES;
+        return Managers.ItemStackTransform.HIGHLIGHT_PROPERTIES;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

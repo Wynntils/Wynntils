@@ -59,7 +59,7 @@ public final class MapModel extends Model {
     private static void loadMaps() {
         MAPS.clear();
 
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_MAPS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPS);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
@@ -67,7 +67,7 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                Download dlPart = Managers.NET.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
+                Download dlPart = Managers.Net.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
                 dlPart.handleInputStream(
                         inputStream -> {
                             try {
@@ -87,7 +87,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadPlaces() {
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_PLACES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_PLACES);
         dl.handleReader(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
@@ -97,7 +97,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadServices() {
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_SERVICES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SERVICES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
@@ -116,7 +116,7 @@ public final class MapModel extends Model {
     }
 
     private static void loadCombat() {
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_COMBAT_LOCATIONS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_COMBAT_LOCATIONS);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 

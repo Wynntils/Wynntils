@@ -31,7 +31,7 @@ public class SplashManager extends CoreManager {
     }
 
     private static void updateCurrentSplash() {
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_SPLASHES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SPLASHES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();
             allSplashes = WynntilsMod.GSON.fromJson(reader, type);

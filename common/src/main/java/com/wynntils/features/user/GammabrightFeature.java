@@ -73,7 +73,7 @@ public class GammabrightFeature extends UserFeature {
         gammabrightEnabled = !gammabrightEnabled;
         applyGammabright();
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
     }
 
     private void resetGamma() {

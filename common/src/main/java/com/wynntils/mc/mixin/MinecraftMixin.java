@@ -28,7 +28,7 @@ public abstract class MinecraftMixin {
     private void tickPre(CallbackInfo ci) {
         EventFactory.onTickStart();
 
-        Managers.MINECRAFT_SCHEDULER.onTick();
+        Managers.MinecraftScheduler.onTick();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))

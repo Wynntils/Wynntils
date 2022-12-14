@@ -15,10 +15,10 @@ public class SkillPointPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(SKILL_POINT_WRITER);
+        Managers.ItemStackTransform.registerProperty(SKILL_POINT_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(SKILL_POINT_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(SKILL_POINT_WRITER);
     }
 }

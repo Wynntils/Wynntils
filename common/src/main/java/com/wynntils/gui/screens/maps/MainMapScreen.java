@@ -217,7 +217,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(Managers.TERRITORY.getTerritoryPois());
+            pois.addAll(Managers.Territory.getTerritoryPois());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
@@ -279,7 +279,7 @@ public class MainMapScreen extends AbstractMapScreen {
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
-                    Managers.CONFIG.saveConfig();
+                    Managers.Config.saveConfig();
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);

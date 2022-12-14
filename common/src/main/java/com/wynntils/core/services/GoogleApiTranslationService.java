@@ -30,7 +30,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
         arguments.put("lang", toLanguage);
         arguments.put("text", message);
 
-        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_GOOGLE_TRANSLATION, arguments);
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_GOOGLE_TRANSLATION, arguments);
         apiResponse.handleJsonArray(
                 json -> {
                     StringBuilder builder = new StringBuilder();

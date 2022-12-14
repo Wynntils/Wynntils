@@ -27,7 +27,7 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) ->
-                                SharedSuggestionProvider.suggest(Managers.TERRITORY.getTerritoryNames(), builder))
+                                SharedSuggestionProvider.suggest(Managers.Territory.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -44,7 +44,7 @@ public class TerritoryCommand extends CommandBase {
     private int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
 
-        TerritoryProfile territoryProfile = Managers.TERRITORY.getTerritoryProfile(territoryArg);
+        TerritoryProfile territoryProfile = Managers.Territory.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {
             context.getSource()

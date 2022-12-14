@@ -94,7 +94,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return Managers.ITEM_STACK_TRANSFORM.TEXT_OVERLAY_PROPERTIES;
+        return Managers.ItemStackTransform.TEXT_OVERLAY_PROPERTIES;
     }
 
     @SubscribeEvent

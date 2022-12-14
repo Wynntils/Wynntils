@@ -25,6 +25,6 @@ public abstract class KeyMappingMixin {
             method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
     private void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
-        Managers.KEY_BIND.initKeyMapping(category, CATEGORY_SORT_ORDER);
+        Managers.KeyBind.initKeyMapping(category, CATEGORY_SORT_ORDER);
     }
 }

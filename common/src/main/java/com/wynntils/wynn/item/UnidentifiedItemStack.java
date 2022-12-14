@@ -64,9 +64,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
         }
 
         if (levelRange == null) return;
-        if (Managers.ITEM_PROFILES.getItemGuesses() == null || Managers.ITEM_PROFILES.getItemsMap() == null) return;
+        if (Managers.ItemProfiles.getItemGuesses() == null || Managers.ItemProfiles.getItemsMap() == null) return;
 
-        ItemGuessProfile guessProfile = Managers.ITEM_PROFILES.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
@@ -80,7 +80,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = Managers.ITEM_PROFILES.getItemsMap().get(item);
+            ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

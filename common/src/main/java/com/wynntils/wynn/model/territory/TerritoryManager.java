@@ -128,7 +128,7 @@ public class TerritoryManager extends CoreManager {
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
 
-        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return;
 

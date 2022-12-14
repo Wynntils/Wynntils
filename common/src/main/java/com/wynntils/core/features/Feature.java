@@ -66,7 +66,7 @@ public abstract class Feature extends AbstractConfigurable
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                Managers.OVERLAY.registerOverlay(overlay, annotation, this);
+                Managers.Overlay.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
@@ -145,9 +145,9 @@ public abstract class Feature extends AbstractConfigurable
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
-        Managers.OVERLAY.enableOverlays(this.overlays, false);
+        Managers.Overlay.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
-            Managers.KEY_BIND.registerKeybind(keyBind);
+            Managers.KeyBind.registerKeybind(keyBind);
         }
 
         // Reload configs to load new keybinds
@@ -173,9 +173,9 @@ public abstract class Feature extends AbstractConfigurable
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
         }
-        Managers.OVERLAY.disableOverlays(this.overlays);
+        Managers.Overlay.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
-            Managers.KEY_BIND.unregisterKeybind(keyBind);
+            Managers.KeyBind.unregisterKeybind(keyBind);
         }
     }
 

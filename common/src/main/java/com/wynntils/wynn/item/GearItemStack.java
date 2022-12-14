@@ -69,9 +69,9 @@ public class GearItemStack extends WynnItemStack {
         super(stack);
 
         // get item profile
-        if (Managers.ITEM_PROFILES.getItemsMap() == null
-                || !Managers.ITEM_PROFILES.getItemsMap().containsKey(itemName)) return;
-        itemProfile = Managers.ITEM_PROFILES.getItemsMap().get(itemName);
+        if (Managers.ItemProfiles.getItemsMap() == null
+                || !Managers.ItemProfiles.getItemsMap().containsKey(itemName)) return;
+        itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
 
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();

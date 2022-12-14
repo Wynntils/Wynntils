@@ -28,7 +28,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
-        if (!Managers.WORLD_STATE.onServer()) return;
+        if (!Managers.WorldState.onServer()) return;
 
         if (Objects.equals(event.getHash(), appliedHash)) {
             event.setCanceled(true);
@@ -36,7 +36,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
         }
 
         packHash = event.getHash();
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
     }
 
     @SubscribeEvent

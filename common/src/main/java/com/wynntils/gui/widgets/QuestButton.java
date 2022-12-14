@@ -106,7 +106,7 @@ public class QuestButton extends AbstractButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.playSound(SoundEvents.ANVIL_LAND);
-            Managers.QUEST.toggleTracking(this.questInfo);
+            Managers.Quest.toggleTracking(this.questInfo);
 
             if (questBookScreen.getTracked() != this.questInfo) {
                 questBookScreen.setTracked(this.questInfo);
@@ -118,7 +118,7 @@ public class QuestButton extends AbstractButton {
 
     private void openQuestWiki() {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
-        Managers.QUEST.openQuestOnWiki(questInfo);
+        Managers.Quest.openQuestOnWiki(questInfo);
     }
 
     @Override

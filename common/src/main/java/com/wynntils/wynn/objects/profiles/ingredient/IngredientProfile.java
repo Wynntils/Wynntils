@@ -89,7 +89,7 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            HashMap<String, String> ingredientHeadTextures = Managers.ITEM_PROFILES.getIngredientHeadTextures();
+            HashMap<String, String> ingredientHeadTextures = Managers.ItemProfiles.getIngredientHeadTextures();
 
             if (ingredientHeadTextures.containsKey(name)) {
                 CompoundTag skullData = new CompoundTag();

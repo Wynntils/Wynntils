@@ -150,9 +150,9 @@ public final class WynnItemMatchers {
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        if (Managers.ITEM_PROFILES.getItemsMap() == null
-                || !Managers.ITEM_PROFILES.getItemsMap().containsKey(strippedName)) return false;
-        ItemProfile profile = Managers.ITEM_PROFILES.getItemsMap().get(strippedName);
+        if (Managers.ItemProfiles.getItemsMap() == null
+                || !Managers.ItemProfiles.getItemsMap().containsKey(strippedName)) return false;
+        ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(strippedName);
         return (profile != null
                 && name.startsWith(profile.getTier().getChatFormatting().toString()));
     }

@@ -15,10 +15,10 @@ public class GatheringToolPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(GATHERING_TOOL_WRITER);
+        Managers.ItemStackTransform.registerProperty(GATHERING_TOOL_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(GATHERING_TOOL_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(GATHERING_TOOL_WRITER);
     }
 }

@@ -142,7 +142,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -188,7 +188,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(

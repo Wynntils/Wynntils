@@ -30,7 +30,7 @@ public class LootChestModel extends Model {
             nextExpectedLootContainerId = event.getContainerId();
 
             DataStorageFeature.INSTANCE.dryCount++;
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 
@@ -52,7 +52,7 @@ public class LootChestModel extends Model {
             DataStorageFeature.INSTANCE.dryBoxes += 1;
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
     }
 
     @SubscribeEvent

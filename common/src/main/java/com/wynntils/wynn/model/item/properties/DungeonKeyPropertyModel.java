@@ -15,10 +15,10 @@ public class DungeonKeyPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(DUNGEON_KEY_WRITER);
+        Managers.ItemStackTransform.registerProperty(DUNGEON_KEY_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(DUNGEON_KEY_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(DUNGEON_KEY_WRITER);
     }
 }

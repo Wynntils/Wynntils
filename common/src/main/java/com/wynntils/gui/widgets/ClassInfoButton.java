@@ -100,7 +100,7 @@ public class ClassInfoButton extends AbstractButton {
     @Override
     public void onPress() {
         if (characterSelectorScreen.getSelected() == this) {
-            Managers.CHARACTER_SELECTION.playWithCharacter(classInfo.slot());
+            Managers.CharacterSelection.playWithCharacter(classInfo.slot());
         }
     }
 

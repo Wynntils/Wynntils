@@ -15,10 +15,10 @@ public class ItemTierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(ITEM_TIER_WRITER);
+        Managers.ItemStackTransform.registerProperty(ITEM_TIER_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(ITEM_TIER_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(ITEM_TIER_WRITER);
     }
 }

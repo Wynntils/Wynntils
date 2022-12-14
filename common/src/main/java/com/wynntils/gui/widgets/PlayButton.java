@@ -36,7 +36,7 @@ public class PlayButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getSelected() != null) {
             int slot = characterSelectorScreen.getSelected().getClassInfo().slot();
-            Managers.CHARACTER_SELECTION.playWithCharacter(slot);
+            Managers.CharacterSelection.playWithCharacter(slot);
         }
     }
 

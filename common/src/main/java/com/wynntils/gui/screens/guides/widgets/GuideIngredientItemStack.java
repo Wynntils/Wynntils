@@ -74,7 +74,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Managers.NET.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
+            Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
@@ -83,7 +83,7 @@ public class GuideIngredientItemStack extends AbstractButton {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
             }
 
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
         }
 
         return true;

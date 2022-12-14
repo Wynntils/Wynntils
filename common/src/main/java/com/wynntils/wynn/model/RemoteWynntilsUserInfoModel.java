@@ -31,7 +31,7 @@ public class RemoteWynntilsUserInfoModel extends Model {
 
         fetching.add(uuid); // temporary, avoid extra loads
 
-        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(json -> {
             if (!json.has("user")) return;
 

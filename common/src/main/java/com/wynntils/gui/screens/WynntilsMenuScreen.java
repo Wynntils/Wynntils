@@ -215,7 +215,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
-        CharacterManager.CharacterInfo characterInfo = Managers.CHARACTER.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -229,7 +229,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
 
-        String currentSplash = Managers.SPLASH.getCurrentSplash();
+        String currentSplash = Managers.Splash.getCurrentSplash();
         currentSplash = currentSplash == null ? "" : currentSplash;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

@@ -26,18 +26,18 @@ public final class WynnUtils {
     }
 
     public static boolean onServer() {
-        return Managers.WORLD_STATE.onServer();
+        return Managers.WorldState.onServer();
     }
 
     public static boolean onWorld() {
-        return Managers.WORLD_STATE.onWorld();
+        return Managers.WorldState.onWorld();
     }
 
     public static CharacterManager.CharacterInfo getCharacterInfo() {
-        return Managers.CHARACTER.getCharacterInfo();
+        return Managers.Character.getCharacterInfo();
     }
 
     public static boolean hasCharacterInfo() {
-        return Managers.CHARACTER.hasCharacter();
+        return Managers.Character.hasCharacter();
     }
 }

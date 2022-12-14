@@ -46,11 +46,11 @@ public class FunctionCommand extends CommandBase {
 
     private final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.FUNCTION.getFunctions().stream().map(Function::getName), builder);
+                    Managers.Function.getFunctions().stream().map(Function::getName), builder);
 
     private final SuggestionProvider<CommandSourceStack> activeFunctionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.FUNCTION.getFunctions().stream()
+                    Managers.Function.getFunctions().stream()
                             .filter(function -> function instanceof ActiveFunction<?>)
                             .map(Function::getName),
                     builder);
@@ -60,7 +60,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
-        List<Function<?>> functions = Managers.FUNCTION.getFunctions().stream()
+        List<Function<?>> functions = Managers.Function.getFunctions().stream()
                 .sorted(Comparator.comparing(Function::getName))
                 .toList();
 
@@ -101,7 +101,7 @@ public class FunctionCommand extends CommandBase {
     private int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = Managers.FUNCTION.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
@@ -116,7 +116,7 @@ public class FunctionCommand extends CommandBase {
             return 0;
         }
 
-        boolean success = Managers.FUNCTION.enableFunction(activeFunction);
+        boolean success = Managers.Function.enableFunction(activeFunction);
 
         if (!success) {
             context.getSource()
@@ -142,7 +142,7 @@ public class FunctionCommand extends CommandBase {
     private int disableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = Managers.FUNCTION.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
@@ -156,7 +156,7 @@ public class FunctionCommand extends CommandBase {
             return 0;
         }
 
-        Managers.FUNCTION.disableFunction(activeFunction);
+        Managers.Function.disableFunction(activeFunction);
 
         Component response = new TextComponent(function.getName())
                 .withStyle(ChatFormatting.AQUA)
@@ -191,7 +191,7 @@ public class FunctionCommand extends CommandBase {
         }
 
         String functionName = context.getArgument("function", String.class);
-        Optional<Function<?>> functionOptional = Managers.FUNCTION.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
@@ -202,7 +202,7 @@ public class FunctionCommand extends CommandBase {
         String extraInfo = "";
         if (function instanceof ActiveFunction<?> activeFunction) {
             StringBuilder activeInfo = new StringBuilder(" [");
-            if (!Managers.FUNCTION.isEnabled(activeFunction)) {
+            if (!Managers.Function.isEnabled(activeFunction)) {
                 activeInfo.append("not enabled; ");
             }
             long updateDelay = System.currentTimeMillis() - activeFunction.lastUpdateTime();
@@ -215,7 +215,7 @@ public class FunctionCommand extends CommandBase {
 
         MutableComponent result = new TextComponent("");
         result.append(
-                Managers.FUNCTION.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
+                Managers.Function.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
         if (!extraInfo.isEmpty()) {
             result.append(new TextComponent(extraInfo).withStyle(ChatFormatting.GRAY));
         }
@@ -234,7 +234,7 @@ public class FunctionCommand extends CommandBase {
     private int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = Managers.FUNCTION.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));

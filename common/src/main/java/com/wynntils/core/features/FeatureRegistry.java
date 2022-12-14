@@ -206,10 +206,10 @@ public final class FeatureRegistry {
         registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
 
         // save/create default config file containing all config holders
-        Managers.CONFIG.saveDefaultConfig();
+        Managers.Config.saveDefaultConfig();
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
@@ -280,7 +280,7 @@ public final class FeatureRegistry {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        Managers.CONFIG.registerFeature(feature);
+        Managers.Config.registerFeature(feature);
 
         // initialize & enable
         feature.init();

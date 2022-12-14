@@ -16,7 +16,7 @@ public class CommandsFeature extends UserFeature {
         String message = e.getMessage();
 
         if (message.startsWith("/")) {
-            if (Managers.CLIENT_COMMAND.handleCommand(message)) {
+            if (Managers.ClientCommand.handleCommand(message)) {
                 e.setCanceled(true);
             }
         }

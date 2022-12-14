@@ -15,10 +15,10 @@ public class IngredientItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerTransformer(INGREDIENT_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(INGREDIENT_TRANSFORMER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(INGREDIENT_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(INGREDIENT_TRANSFORMER);
     }
 }

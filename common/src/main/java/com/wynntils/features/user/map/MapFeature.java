@@ -141,7 +141,7 @@ public class MapFeature extends UserFeature {
             NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 

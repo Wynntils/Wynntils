@@ -15,10 +15,10 @@ public class ServerItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerTransformer(SERVER_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(SERVER_TRANSFORMER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(SERVER_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(SERVER_TRANSFORMER);
     }
 }

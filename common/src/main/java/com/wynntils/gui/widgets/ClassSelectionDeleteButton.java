@@ -35,7 +35,7 @@ public class ClassSelectionDeleteButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getSelected() == null) return;
 
-        Managers.CHARACTER_SELECTION.deleteCharacter(
+        Managers.CharacterSelection.deleteCharacter(
                 characterSelectorScreen.getSelected().getClassInfo().slot());
     }
 

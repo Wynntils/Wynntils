@@ -41,7 +41,7 @@ public class DiscoveryContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Count Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting discovery count in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
+                .matchTitle(Managers.Quest.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack discoveriesItem = c.items().get(DISCOVERIES_SLOT);
                     ItemStack secretDiscoveriesItem = c.items().get(SECRET_DISCOVERIES_SLOT);
@@ -82,8 +82,8 @@ public class DiscoveryContainerQueries {
                                 return;
                             }
 
-                            Managers.DISCOVERY.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
-                            Managers.DISCOVERY.setSecretDiscoveriesTooltip(
+                            Managers.Discovery.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
+                            Managers.Discovery.setSecretDiscoveriesTooltip(
                                     ItemUtils.getTooltipLines(secretDiscoveriesItem));
 
                             int discoveryPages = discoveryCount / DISCOVERIES_PER_PAGE
@@ -107,7 +107,7 @@ public class DiscoveryContainerQueries {
                             new TextComponent("Error updating discoveries.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
+                .matchTitle(Managers.Quest.getQuestBookTitle(1))
                 .processContainer(c -> {})
                 .clickOnSlot(DISCOVERIES_SLOT)
                 .matchTitle(getDiscoveryPageTitle(1))
@@ -158,10 +158,10 @@ public class DiscoveryContainerQueries {
             // Last page finished
             if (secretDiscovery) {
                 // Secret discoveries finished
-                Managers.DISCOVERY.setSecretDiscoveries(newDiscoveries);
+                Managers.Discovery.setSecretDiscoveries(newDiscoveries);
             } else {
                 // Normal discoveries finished
-                Managers.DISCOVERY.setDiscoveries(newDiscoveries);
+                Managers.Discovery.setDiscoveries(newDiscoveries);
             }
         }
     }

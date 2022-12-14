@@ -66,7 +66,7 @@ public class Download extends NetResult {
 
     private CompletableFuture<HttpResponse<Path>> getDownloadInputStreamFuture() {
         CompletableFuture<HttpResponse<Path>> future =
-                Managers.NET.HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
+                Managers.Net.HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
 
         // We must save the response so we can get the timestamp
         this.httpResponse = future;

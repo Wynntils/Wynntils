@@ -83,7 +83,7 @@ public class InfoBoxFeature extends UserFeature {
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                cachedLines = Managers.FUNCTION.getLinesFromLegacyTemplate(content);
+                cachedLines = Managers.Function.getLinesFromLegacyTemplate(content);
             }
 
             float renderX = this.getRenderX();
@@ -114,7 +114,7 @@ public class InfoBoxFeature extends UserFeature {
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment
 
-            String line = Managers.FUNCTION.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
+            String line = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
 
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
@@ -136,13 +136,13 @@ public class InfoBoxFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             for (Function<?> oldDependency : functionDependencies) {
-                Managers.FUNCTION.disableFunction(oldDependency);
+                Managers.Function.disableFunction(oldDependency);
             }
 
             functionDependencies.clear();
 
-            for (Function<?> function : Managers.FUNCTION.getDependenciesFromStringLegacy(content)) {
-                Managers.FUNCTION.enableFunction(function);
+            for (Function<?> function : Managers.Function.getDependenciesFromStringLegacy(content)) {
+                Managers.Function.enableFunction(function);
             }
         }
 

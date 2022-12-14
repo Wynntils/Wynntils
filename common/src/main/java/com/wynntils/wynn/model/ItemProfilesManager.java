@@ -63,7 +63,7 @@ public class ItemProfilesManager extends CoreManager {
     }
 
     private static void tryLoadItemGuesses() {
-        Download dl = Managers.NET.download(UrlId.DATA_STATIC_ITEM_GUESSES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
             itemGuesses = new HashMap<>();
@@ -79,7 +79,7 @@ public class ItemProfilesManager extends CoreManager {
         // but the data is massaged into another form, and wynnBuilderID is injected from
         // https://wynnbuilder.github.io/compress.json
 
-        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_ITEM_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_ITEM_LIST);
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WynntilsMod.GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
@@ -119,7 +119,7 @@ public class ItemProfilesManager extends CoreManager {
         // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
         // in Athena
 
-        Download dl = Managers.NET.download(UrlId.DATA_ATHENA_INGREDIENT_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_INGREDIENT_LIST);
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WynntilsMod.GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);

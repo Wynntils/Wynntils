@@ -141,7 +141,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = Managers.QUEST.getCurrentQuest();
+            QuestInfo currentQuest = Managers.Quest.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;

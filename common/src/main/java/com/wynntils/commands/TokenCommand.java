@@ -26,7 +26,7 @@ public class TokenCommand extends CommandBase {
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
-        if (!Managers.WYNNTILS_ACCOUNT.isLoggedIn()) {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             MutableComponent failed = new TextComponent(
                             "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
@@ -38,7 +38,7 @@ public class TokenCommand extends CommandBase {
             return 1;
         }
 
-        String token = Managers.WYNNTILS_ACCOUNT.getToken();
+        String token = Managers.WynntilsAccount.getToken();
 
         MutableComponent text = new TextComponent("Wynntils Token ").withStyle(ChatFormatting.AQUA);
         MutableComponent response = new TextComponent(token)
@@ -47,7 +47,7 @@ public class TokenCommand extends CommandBase {
                                 HoverEvent.Action.SHOW_TEXT, new TextComponent("Click me to register an account.")))
                         .withClickEvent((new ClickEvent(
                                 ClickEvent.Action.OPEN_URL,
-                                Managers.URL.buildUrl(UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token)))))
+                                Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token)))))
                         .withColor(ChatFormatting.DARK_AQUA)
                         .withUnderlined(true));
         text.append(response);

@@ -160,6 +160,6 @@ public class ItemLockFeature extends UserFeature {
             classSet.add(hoveredSlot.getContainerSlot());
         }
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
     }
 }

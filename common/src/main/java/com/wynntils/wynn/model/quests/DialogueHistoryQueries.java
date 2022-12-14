@@ -30,7 +30,7 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
+                .matchTitle(Managers.Quest.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
@@ -58,7 +58,7 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.QUEST.getQuestBookTitle(1))
+                .matchTitle(Managers.Quest.getQuestBookTitle(1))
                 .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
@@ -80,7 +80,7 @@ public class DialogueHistoryQueries {
             int page = i;
             queryBuilder
                     .clickOnSlot(0)
-                    .matchTitle(Managers.QUEST.getQuestBookTitle(1))
+                    .matchTitle(Managers.Quest.getQuestBookTitle(1))
                     .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
@@ -96,7 +96,7 @@ public class DialogueHistoryQueries {
                         newDialogueHistory.add(current);
 
                         if (page == pageCount) {
-                            Managers.QUEST.setDialogueHistory(newDialogueHistory);
+                            Managers.Quest.setDialogueHistory(newDialogueHistory);
                         }
                     });
         }

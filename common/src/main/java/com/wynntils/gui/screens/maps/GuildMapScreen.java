@@ -131,7 +131,7 @@ public class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = Managers.TERRITORY.getTerritoryPoiFromAdvancement(tradingRoute);
+                TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
                 if (routePoi != null) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
@@ -307,7 +307,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = Managers.TERRITORY.getTerritoryPoisFromAdvancement();
+        List<Poi> pois = Managers.Territory.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,

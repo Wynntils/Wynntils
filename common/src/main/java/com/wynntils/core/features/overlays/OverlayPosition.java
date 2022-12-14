@@ -93,11 +93,11 @@ public class OverlayPosition {
         // 1. Get the best section (section with the center point of overlay)
         AnchorSection section = Arrays.stream(AnchorSection.values())
                 .filter(anchorSection ->
-                        Managers.OVERLAY.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
+                        Managers.Overlay.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
                 .findAny()
                 .orElse(AnchorSection.Middle);
 
-        SectionCoordinates sectionCoordinates = Managers.OVERLAY.getSection(section);
+        SectionCoordinates sectionCoordinates = Managers.Overlay.getSection(section);
 
         // 2. Calculate the best alignment inside the section
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;

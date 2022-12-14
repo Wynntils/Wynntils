@@ -76,7 +76,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected void init() {
-        Managers.DISCOVERY.reloadDiscoveries();
+        Managers.Discovery.reloadDiscoveries();
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
@@ -269,9 +269,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
             tooltipLines = discoveryButton.getTooltipLines();
         } else if (this.hovered instanceof DiscoveryProgressButton progressButton) {
             if (progressButton.isSecretDiscoveryButton()) {
-                tooltipLines = Managers.DISCOVERY.getSecretDiscoveriesTooltip();
+                tooltipLines = Managers.Discovery.getSecretDiscoveriesTooltip();
             } else {
-                tooltipLines = Managers.DISCOVERY.getDiscoveriesTooltip();
+                tooltipLines = Managers.Discovery.getDiscoveriesTooltip();
             }
         }
 
@@ -344,17 +344,17 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        Managers.DISCOVERY.getDiscoveryInfoList().stream()
+                        Managers.Discovery.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
                                 })
-                                .filter(discoveryInfo -> Managers.DISCOVERY
+                                .filter(discoveryInfo -> Managers.Discovery
                                         .getAllDiscoveries()
                                         .noneMatch(
                                                 discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        Managers.DISCOVERY
+                        Managers.Discovery
                                 .getAllDiscoveries()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showFoundTerritory;

@@ -37,7 +37,7 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
             }
         }
 
-        Optional<QuestInfo> questInfoOpt = Managers.QUEST.getQuestFromName(
+        Optional<QuestInfo> questInfoOpt = Managers.Quest.getQuestFromName(
                 WynnUtils.normalizeBadString(questName.toString().trim()));
         if (questInfoOpt.isEmpty()) {
             WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + questName);
@@ -47,16 +47,16 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
         QuestInfo questInfo = questInfoOpt.get();
         questInfo.setNextTask(nextTask.toString().trim());
 
-        Managers.QUEST.setCurrentQuest(questInfo);
+        Managers.Quest.setCurrentQuest(questInfo);
     }
 
     @Override
     public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-        Managers.QUEST.setCurrentQuest(null);
+        Managers.Quest.setCurrentQuest(null);
     }
 
     @Override
     public void resetHandler() {
-        Managers.QUEST.setCurrentQuest(null);
+        Managers.Quest.setCurrentQuest(null);
     }
 }

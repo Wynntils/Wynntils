@@ -19,7 +19,7 @@ public class CharacterFunctions {
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getSoulPoints();
+            return Managers.Character.getCharacterInfo().getSoulPoints();
         }
 
         @Override
@@ -31,7 +31,7 @@ public class CharacterFunctions {
     public static class SoulpointMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getMaxSoulPoints();
+            return Managers.Character.getCharacterInfo().getMaxSoulPoints();
         }
 
         @Override
@@ -64,7 +64,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            int totalSeconds = Managers.CHARACTER.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
             int seconds = totalSeconds % 60;
             int minutes = totalSeconds / 60;
@@ -80,7 +80,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerMFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.CHARACTER.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
             return totalSeconds / 60;
         }
@@ -94,7 +94,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerSFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.CHARACTER.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
 
             return totalSeconds % 60;
         }
@@ -109,7 +109,7 @@ public class CharacterFunctions {
         // FIXME: original had upper/lower case versions. Make a upper/lower function instead.
         @Override
         public String getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getActualName();
+            return Managers.Character.getCharacterInfo().getActualName();
         }
     }
 
@@ -291,7 +291,7 @@ public class CharacterFunctions {
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getLevel();
+            return Managers.Character.getCharacterInfo().getLevel();
         }
 
         @Override
@@ -304,14 +304,14 @@ public class CharacterFunctions {
         @Override
         public String getValue(String argument) {
             return StringUtils.integerToShortString(
-                    (int) Managers.CHARACTER.getCharacterInfo().getCurrentXp());
+                    (int) Managers.Character.getCharacterInfo().getCurrentXp());
         }
     }
 
     public static class XpRawFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getCurrentXp();
+            return Managers.Character.getCharacterInfo().getCurrentXp();
         }
     }
 
@@ -319,21 +319,21 @@ public class CharacterFunctions {
         @Override
         public String getValue(String argument) {
             return StringUtils.integerToShortString(
-                    Managers.CHARACTER.getCharacterInfo().getXpPointsNeededToLevelUp());
+                    Managers.Character.getCharacterInfo().getXpPointsNeededToLevelUp());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getXpPointsNeededToLevelUp();
+            return Managers.Character.getCharacterInfo().getXpPointsNeededToLevelUp();
         }
     }
 
     public static class XpPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.CHARACTER.getCharacterInfo().getXpProgress() * 100.0f;
+            return Managers.Character.getCharacterInfo().getXpProgress() * 100.0f;
         }
     }
 }

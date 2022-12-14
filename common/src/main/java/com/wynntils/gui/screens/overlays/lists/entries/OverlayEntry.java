@@ -57,7 +57,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         poseStack.pushPose();
         poseStack.translate(left + PADDING, top + PADDING, 0);
 
-        boolean enabled = Managers.OVERLAY.isEnabled(this.overlay);
+        boolean enabled = Managers.Overlay.isEnabled(this.overlay);
         int y = index != 0 ? 2 : 0;
 
         CustomColor borderColor = overlay.isParentEnabled()
@@ -103,12 +103,12 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         // right click
         if (button == 1) {
-            Managers.CONFIG.getConfigHolders().stream()
+            Managers.Config.getConfigHolders().stream()
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()
                     .ifPresent(configHolder -> configHolder.setValue(!overlay.isEnabled()));
-            Managers.CONFIG.saveConfig();
+            Managers.Config.saveConfig();
             return true;
         }
 

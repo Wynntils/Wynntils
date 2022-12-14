@@ -15,10 +15,10 @@ public class SkillIconPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(SKILL_ICON_WRITER);
+        Managers.ItemStackTransform.registerProperty(SKILL_ICON_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(SKILL_ICON_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(SKILL_ICON_WRITER);
     }
 }

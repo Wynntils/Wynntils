@@ -49,7 +49,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = Managers.ITEM_PROFILES.getItemsCollection().stream()
+            parsedItemCache = Managers.ItemProfiles.getItemsCollection().stream()
                     .map(GearItemStack::new)
                     .toList();
         }

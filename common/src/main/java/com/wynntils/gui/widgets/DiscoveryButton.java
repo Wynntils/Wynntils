@@ -85,11 +85,11 @@ public class DiscoveryButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Managers.DISCOVERY.setDiscoveryCompass(discoveryInfo);
+            Managers.Discovery.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Managers.DISCOVERY.openDiscoveryOnMap(discoveryInfo);
+            Managers.Discovery.openDiscoveryOnMap(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.getType() == DiscoveryType.SECRET) {
-            Managers.DISCOVERY.openSecretDiscoveryWiki(discoveryInfo);
+            Managers.Discovery.openSecretDiscoveryWiki(discoveryInfo);
         }
 
         return true;
@@ -108,7 +108,7 @@ public class DiscoveryButton extends AbstractButton {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> Managers.DISCOVERY
+                    .filter(requirement -> Managers.Discovery
                             .getAllDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
@@ -124,7 +124,7 @@ public class DiscoveryButton extends AbstractButton {
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
-                || Managers.TERRITORY.getTerritoryProfile(discoveryInfo.getName()) != null) {
+                || Managers.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(TextComponent.EMPTY);
             lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)

@@ -63,7 +63,7 @@ public class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public static void onAuth(SocketEvent.Authenticated event) {
-        if (!Managers.WORLD_STATE.onWorld()) return;
+        if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
         requestPartyListUpdate();

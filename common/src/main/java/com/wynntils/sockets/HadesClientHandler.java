@@ -34,10 +34,10 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onConnect() {
-        if (!Managers.WYNNTILS_ACCOUNT.isLoggedIn()) {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             hadesConnection.disconnect();
 
-            if (Managers.WORLD_STATE.onServer()) {
+            if (Managers.WorldState.onServer()) {
                 McUtils.sendMessageToClient(
                         new TextComponent("Could not connect to HadesServer because you are not logged in on Athena.")
                                 .withStyle(ChatFormatting.RED));
@@ -46,14 +46,14 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Managers.WYNNTILS_ACCOUNT.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Managers.WynntilsAccount.getToken()));
     }
 
     @Override
     public void onDisconnect() {
         WynntilsMod.postEvent(new SocketEvent.Disconnected());
 
-        if (Managers.WORLD_STATE.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(
                     new TextComponent("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
         }
@@ -86,7 +86,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             }
         }
 
-        if (Managers.WORLD_STATE.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(userComponent);
         }
     }
@@ -123,7 +123,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
     public void handleDisconnect(HSPacketDisconnect packet) {
         WynntilsMod.info("Disconnected from HadesServer. Reason: " + packet.getReason());
 
-        if (Managers.WORLD_STATE.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis] Disconnected from HadesServer.")
                     .withStyle(ChatFormatting.YELLOW));
         }

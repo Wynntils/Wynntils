@@ -40,7 +40,7 @@ public class ClassSelectionAddButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getFirstNewCharacterSlot() == -1) return;
 
-        Managers.CHARACTER_SELECTION.createNewClass();
+        Managers.CharacterSelection.createNewClass();
     }
 
     @Override

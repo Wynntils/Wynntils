@@ -86,7 +86,7 @@ public class WynntilsAccountManager extends CoreManager {
     private static void doLogin() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         // generating secret key
-        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
         apiResponse.handleJsonObject(json -> {
             String secretKey = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
 
@@ -95,7 +95,7 @@ public class WynntilsAccountManager extends CoreManager {
             arguments.put("username", McUtils.mc().getUser().getName());
             arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-            ApiResponse apiAuthResponse = Managers.NET.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
+            ApiResponse apiAuthResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
             apiAuthResponse.handleJsonObject(authJson -> {
                 token = authJson.get("authToken").getAsString(); /* md5 hashes*/
                 JsonObject hashes = authJson.getAsJsonObject("hashes");

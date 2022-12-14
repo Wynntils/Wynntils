@@ -27,7 +27,7 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -49,7 +49,7 @@ public class UpdateManager extends CoreManager {
             return future;
         }
 
-        ApiResponse apiResponse = Managers.NET.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
         apiResponse.handleJsonObject(
                 json -> {
                     String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();

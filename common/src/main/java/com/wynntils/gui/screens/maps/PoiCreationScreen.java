@@ -465,7 +465,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         MapFeature.INSTANCE.customPois.add(poi);
 
-        Managers.CONFIG.saveConfig();
+        Managers.Config.saveConfig();
     }
 
     public enum Visibility {

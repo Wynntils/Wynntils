@@ -15,10 +15,10 @@ public class DurabilityPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
 
     public static void init() {
-        Managers.ITEM_STACK_TRANSFORM.registerProperty(DURABILITY_WRITER);
+        Managers.ItemStackTransform.registerProperty(DURABILITY_WRITER);
     }
 
     public static void disable() {
-        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(DURABILITY_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(DURABILITY_WRITER);
     }
 }

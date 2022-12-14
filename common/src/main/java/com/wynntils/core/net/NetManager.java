@@ -34,7 +34,7 @@ public class NetManager extends CoreManager {
     public static void init() {}
 
     public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
-        UrlManager.UrlInfo urlInfo = Managers.URL.getUrlInfo(urlId);
+        UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         return createApiResponse(urlInfo, arguments);
     }
 
@@ -65,7 +65,7 @@ public class NetManager extends CoreManager {
     }
 
     public static Download download(UrlId urlId) {
-        UrlManager.UrlInfo urlInfo = Managers.URL.getUrlInfo(urlId);
+        UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
         String localFileName = urlId.getId();
 
@@ -84,7 +84,7 @@ public class NetManager extends CoreManager {
     }
 
     public static void openLink(UrlId urlId, Map<String, String> arguments) {
-        URI uri = URI.create(Managers.URL.buildUrl(urlId, arguments));
+        URI uri = URI.create(Managers.Url.buildUrl(urlId, arguments));
         openLink(uri);
     }
 
@@ -108,7 +108,7 @@ public class NetManager extends CoreManager {
 
     private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
-            URI uri = URI.create(Managers.URL.buildUrl(urlInfo, arguments));
+            URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
             return new ApiResponse(request);
         } else {
