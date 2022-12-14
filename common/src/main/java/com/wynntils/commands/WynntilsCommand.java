@@ -82,10 +82,12 @@ public class WynntilsCommand extends CommandBase {
             feature.disable();
         }
 
-        // Try to reload data from the web. Likely to be broken, see
+        // Try to reload downloaded data.
+        // It is highly unclear if this achieves anything like what it was supposed
+        // to do. The entire /wynntils reload needs to be rethought. See
         // https://github.com/Wynntils/Artemis/issues/824
+
         ItemProfilesManager.reset();
-        // reloads api urls as well as web manager
         UrlManager.reloadUrls();
         ItemProfilesManager.init();
         SplashManager.init();
