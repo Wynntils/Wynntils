@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -12,7 +13,6 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.objects.ClassInfo;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -100,7 +100,7 @@ public class ClassInfoButton extends AbstractButton {
     @Override
     public void onPress() {
         if (characterSelectorScreen.getSelected() == this) {
-            CharacterSelectionManager.playWithCharacter(classInfo.slot());
+            Managers.CHARACTER_SELECTION.playWithCharacter(classInfo.slot());
         }
     }
 
